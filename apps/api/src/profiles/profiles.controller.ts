@@ -530,6 +530,54 @@ export class ProfilesController {
     });
   }
 
+  @Get(':profileId/addresses/access')
+  @RateLimit({ namespace: 'profiles:addresses:access:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Check access to manage saved addresses on a profile' })
+  @ApiResponse({ status: 200, description: 'Address management access for this profile.' })
+  @ApiResponse({ status: 404, description: 'Profile unavailable for address management.' })
+  addressAccess(
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return readWithCurrentAccount(req.session, async (client) => {
+      await this.profilesService.requireAddressEditor(
+        req.session.userId,
+        profileId,
+        client,
+        'read'
+      );
+      return { profileId, canEdit: true };
+    });
+  }
+
+  @Get(':profileId/addresses/:addressId')
+  @RateLimit({ namespace: 'profiles:addresses:detail:user', limit: 60, windowMs: 60_000 })
+  @ApiOperation({ summary: 'Get one saved address for a profile' })
+  @ApiResponse({ status: 200, description: 'Address details.' })
+  @ApiResponse({ status: 404, description: 'Profile or address unavailable.' })
+  addressDetail(
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
+    @Param('addressId', new ParseUUIDPipe()) addressId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const userId = req.session.userId;
+    return readWithCurrentAccount(req.session, async (client) => {
+      await this.profilesService.requireAddressEditor(userId, profileId, client, 'read');
+      const [address] = await this.profilesService.getProfileAddresses(
+        profileId,
+        client,
+        addressId
+      );
+      if (!address)
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404
+        );
+      await this.profilesService.requireAddressEditor(userId, profileId, client, 'read');
+      return address;
+    });
+  }
+
   /**
    * POST /api/profiles/:profileId/addresses
    *

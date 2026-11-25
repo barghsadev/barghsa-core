@@ -18,7 +18,10 @@ import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { NotificationsService } from './notifications.service.js';
 import { escapeHtml, renderTemplate, validateTemplate } from './template-engine.js';
-import { buildTemplateSampleData } from '@barghsa/shared/notifications';
+import {
+  buildTemplateSampleData,
+  notificationSubjectRequiredForPublish,
+} from '@barghsa/shared/notifications';
 
 export type TemplateMutationActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
@@ -728,13 +731,16 @@ export class NotificationTemplateService {
       const template = await this.lockTemplate(client, id);
       if (template.status !== 'draft' || template.published_at !== null)
         throw new HttpException({ error: 'NOTIFICATION_TEMPLATE_NOT_DRAFT' }, 400);
+      if (notificationSubjectRequiredForPublish(template.channel, template.subject))
+        throw new InputFieldException(['subject']);
       this.validateVariables(
         template.body_template as string,
         template.variables as TemplateVariableInput[]
       );
       this.validateVariables(
         (template.subject as string | null) ?? '',
-        template.variables as TemplateVariableInput[]
+        template.variables as TemplateVariableInput[],
+        'subject'
       );
       const previous = await client.query<{ version: number }>(
         `UPDATE notification_templates SET is_active=false,status='archived',updated_at=NOW()

@@ -82,12 +82,14 @@ export function NotificationDeliveryHistory({
   onClose,
   onDenied,
   queries,
+  standalone = false,
 }: {
   target?: Target | undefined;
   locale: Locale;
-  onClose: () => void;
+  onClose?: () => void;
   onDenied?: () => void;
   queries?: ListQueryBinding | undefined;
+  standalone?: boolean;
 }) {
   const compact = useCompactRecords();
   const label = (key: string) => t(`admin.notifications.history.${key}`, locale);
@@ -206,11 +208,183 @@ export function NotificationDeliveryHistory({
     },
   ];
 
+  const description = target ? (
+    <>
+      <bdi>{target.eventKey}</bdi> · {channelLabel(target.channel)}
+    </>
+  ) : (
+    label('allDescription')
+  );
+
+  const content = (
+    <>
+      {!target && (
+        <form
+          className="flex flex-wrap items-end gap-3"
+          onSubmit={(event) => {
+            event.preventDefault();
+            const filters = { ...draft, notificationId: draft.notificationId.trim() };
+            if (
+              filters.notificationId === notificationId &&
+              filters.channel === channel &&
+              filters.status === status &&
+              offset === 0
+            )
+              setRevision((value) => value + 1);
+            if (queries) queries.setQuery({ filters: { ...filters }, page: 1 });
+            else {
+              setFilters(filters);
+              setOffset(0);
+            }
+          }}
+        >
+          <label className="min-w-0 flex-1 space-y-1">
+            {label('notificationId')}
+            <Input
+              dir="ltr"
+              value={draft.notificationId}
+              pattern={UUID.source.slice(1, -1)}
+              onChange={(event) =>
+                setDraft({ ...draft, notificationId: event.target.value.trim() })
+              }
+            />
+          </label>
+          <label className="space-y-1">
+            {label('channel')}
+            <select
+              className="block rounded border p-2"
+              value={draft.channel}
+              onChange={(event) => setDraft({ ...draft, channel: event.target.value })}
+            >
+              <option value="">{label('all')}</option>
+              {['in_app', 'email', 'sms'].map((channel) => (
+                <option key={channel} value={channel}>
+                  {channelLabel(channel)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="space-y-1">
+            {label('status')}
+            <select
+              className="block rounded border p-2"
+              value={draft.status}
+              onChange={(event) => setDraft({ ...draft, status: event.target.value })}
+            >
+              <option value="">{label('all')}</option>
+              {['delivered', 'failed', 'sending', 'unknown'].map((status) => (
+                <option key={status} value={status}>
+                  {label(status)}
+                </option>
+              ))}
+            </select>
+          </label>
+          <Button type="submit">{label('search')}</Button>
+        </form>
+      )}
+      {time.notice}
+      <p className="text-sm">{label('attemptHelp')}</p>
+      {loading && rows.length > 0 && <LoadingStatus>{label('loading')}</LoadingStatus>}
+      {loading && rows.length === 0 ? (
+        <LoadingStatus>{label('loading')}</LoadingStatus>
+      ) : error ? (
+        <div role="alert">
+          <p>{label('loadFailed')}</p>
+          <Button onClick={() => setRevision((value) => value + 1)}>
+            {t('admin.jobs.reload', locale)}
+          </Button>
+        </div>
+      ) : rows.length === 0 ? (
+        <p role="status">{label('empty')}</p>
+      ) : compact ? (
+        <CardListView
+          data={rows}
+          keyExtractor={(row) => row.id}
+          label={label('title')}
+          locale={locale}
+          renderCard={(row) => <RecordFields item={row} columns={columns} />}
+        />
+      ) : (
+        <div
+          className="overflow-x-auto"
+          // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users must be able to scroll this region.
+          tabIndex={0}
+          role="region"
+          aria-label={label('title')}
+          aria-busy={loading}
+        >
+          <table className="w-full text-start text-sm">
+            <caption className="sr-only">{label('title')}</caption>
+            <thead>
+              <tr>
+                {columns.map((column) => (
+                  <th scope="col" className="border-b p-2 text-start" key={column.id}>
+                    {column.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr key={row.id}>
+                  {columns.map((column) => (
+                    <td key={column.id} className="border-b p-2">
+                      {column.render(row)}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {!error && (
+        <nav aria-label={label('pagination')} className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            disabled={loading || offset === 0}
+            onClick={() =>
+              queries
+                ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
+                : setOffset((value) => Math.max(0, value - 25))
+            }
+          >
+            {t('admin.jobs.previous', locale)}
+          </Button>
+          <span>{numbers.number(offset / 25 + 1)}</span>
+          <Button
+            variant="outline"
+            disabled={
+              loading || !hasMore || (queries !== undefined && queries.query.page >= 1_000_000)
+            }
+            onClick={() =>
+              queries
+                ? queries.setQuery({ page: queries.query.page + 1 })
+                : setOffset((value) => value + 25)
+            }
+          >
+            {t('admin.jobs.next', locale)}
+          </Button>
+        </nav>
+      )}
+    </>
+  );
+
+  if (standalone)
+    return (
+      <section
+        className="min-w-0 space-y-4 rounded-xl border bg-card p-4 sm:p-6"
+        aria-label={label('title')}
+      >
+        <p className="text-sm text-muted-foreground [overflow-wrap:anywhere]">{description}</p>
+        {content}
+      </section>
+    );
   return (
     <Dialog
       open
       onOpenChange={(open) => {
-        if (!open) onClose();
+        if (!open) onClose?.();
       }}
     >
       <DialogContent
@@ -219,165 +393,9 @@ export function NotificationDeliveryHistory({
       >
         <DialogHeader>
           <DialogTitle>{label('title')}</DialogTitle>
-          <DialogDescription>
-            {target ? (
-              <>
-                <bdi>{target.eventKey}</bdi> · {channelLabel(target.channel)}
-              </>
-            ) : (
-              label('allDescription')
-            )}
-          </DialogDescription>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        {!target && (
-          <form
-            className="flex flex-wrap items-end gap-3"
-            onSubmit={(event) => {
-              event.preventDefault();
-              const filters = { ...draft, notificationId: draft.notificationId.trim() };
-              if (
-                filters.notificationId === notificationId &&
-                filters.channel === channel &&
-                filters.status === status &&
-                offset === 0
-              )
-                setRevision((value) => value + 1);
-              if (queries) queries.setQuery({ filters: { ...filters }, page: 1 });
-              else {
-                setFilters(filters);
-                setOffset(0);
-              }
-            }}
-          >
-            <label className="min-w-0 flex-1 space-y-1">
-              {label('notificationId')}
-              <Input
-                dir="ltr"
-                value={draft.notificationId}
-                pattern={UUID.source.slice(1, -1)}
-                onChange={(event) =>
-                  setDraft({ ...draft, notificationId: event.target.value.trim() })
-                }
-              />
-            </label>
-            <label className="space-y-1">
-              {label('channel')}
-              <select
-                className="block rounded border p-2"
-                value={draft.channel}
-                onChange={(event) => setDraft({ ...draft, channel: event.target.value })}
-              >
-                <option value="">{label('all')}</option>
-                {['in_app', 'email', 'sms'].map((channel) => (
-                  <option key={channel} value={channel}>
-                    {channelLabel(channel)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="space-y-1">
-              {label('status')}
-              <select
-                className="block rounded border p-2"
-                value={draft.status}
-                onChange={(event) => setDraft({ ...draft, status: event.target.value })}
-              >
-                <option value="">{label('all')}</option>
-                {['delivered', 'failed', 'sending', 'unknown'].map((status) => (
-                  <option key={status} value={status}>
-                    {label(status)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <Button type="submit">{label('search')}</Button>
-          </form>
-        )}
-        {time.notice}
-        <p className="text-sm">{label('attemptHelp')}</p>
-        {loading && rows.length > 0 && <LoadingStatus>{label('loading')}</LoadingStatus>}
-        {loading && rows.length === 0 ? (
-          <LoadingStatus>{label('loading')}</LoadingStatus>
-        ) : error ? (
-          <div role="alert">
-            <p>{label('loadFailed')}</p>
-            <Button onClick={() => setRevision((value) => value + 1)}>
-              {t('admin.jobs.reload', locale)}
-            </Button>
-          </div>
-        ) : rows.length === 0 ? (
-          <p role="status">{label('empty')}</p>
-        ) : compact ? (
-          <CardListView
-            data={rows}
-            keyExtractor={(row) => row.id}
-            label={label('title')}
-            locale={locale}
-            renderCard={(row) => <RecordFields item={row} columns={columns} />}
-          />
-        ) : (
-          <div
-            className="overflow-x-auto"
-            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users must be able to scroll this region.
-            tabIndex={0}
-            role="region"
-            aria-label={label('title')}
-            aria-busy={loading}
-          >
-            <table className="w-full text-start text-sm">
-              <caption className="sr-only">{label('title')}</caption>
-              <thead>
-                <tr>
-                  {columns.map((column) => (
-                    <th scope="col" className="border-b p-2 text-start" key={column.id}>
-                      {column.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row) => (
-                  <tr key={row.id}>
-                    {columns.map((column) => (
-                      <td key={column.id} className="border-b p-2">
-                        {column.render(row)}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-        {!error && (
-          <nav aria-label={label('pagination')} className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              disabled={loading || offset === 0}
-              onClick={() =>
-                queries
-                  ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
-                  : setOffset((value) => Math.max(0, value - 25))
-              }
-            >
-              {t('admin.jobs.previous', locale)}
-            </Button>
-            <span>{numbers.number(offset / 25 + 1)}</span>
-            <Button
-              variant="outline"
-              disabled={
-                loading || !hasMore || (queries !== undefined && queries.query.page >= 1_000_000)
-              }
-              onClick={() =>
-                queries
-                  ? queries.setQuery({ page: queries.query.page + 1 })
-                  : setOffset((value) => value + 25)
-              }
-            >
-              {t('admin.jobs.next', locale)}
-            </Button>
-          </nav>
-        )}
+        {content}
       </DialogContent>
     </Dialog>
   );

@@ -1,22 +1,25 @@
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { useQueryClient } from '@tanstack/react-query';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { toast } from '../lib/toast-api.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
-import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
-import { LoadingStatus, Alert, AlertDescription, Button, Input } from '@barghsa/ui';
+import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useZodForm,
-} from '@barghsa/ui/form';
+  LoadingStatus,
+  Alert,
+  AlertDescription,
+  Button,
+  Input,
+  ListRefreshButton,
+  NativeSelect,
+  buttonVariants,
+} from '@barghsa/ui';
+import { CompactFieldFeedback } from './CompactFieldFeedback.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
+import { Form, FormControl, FormField, FormItem, FormLabel, useZodForm } from '@barghsa/ui/form';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
@@ -65,7 +68,19 @@ export function SolarPostalPanel(props: Parameters<typeof OwnedSolarPostalPanel>
   const profileRevision = useProfileContextRevision();
   return <OwnedSolarPostalPanel key={JSON.stringify([actor, profileRevision])} {...props} />;
 }
-function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; profileId: string }) {
+function OwnedSolarPostalPanel({
+  requestId,
+  profileId,
+  receiptView,
+  siteAddress,
+  editorHeader,
+}: {
+  requestId: string;
+  profileId: string;
+  receiptView?: 'shipment' | 'upload';
+  siteAddress?: string | null;
+  editorHeader?: (blocked: () => boolean, disabled: boolean) => ReactNode;
+}) {
   const client = useQueryClient();
   const reader = useId();
   const profileRevision = useProfileContextRevision();
@@ -147,7 +162,7 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
   const [unconfirmed, setUnconfirmed] = useState(false);
   const [imageStatus, setImageStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const pendingShipment = useRef<{ scope: string; body: ShipmentBody } | null>(null);
-  const [upload, setUpload] = useState(false);
+  const [latestReceipt, setLatestReceipt] = useState<BusinessDocument | null>(null);
   const [revision, setRevision] = useState(0);
   const [imageRevision, setImageRevision] = useState(0);
   const [error, setError] = useState(false);
@@ -171,7 +186,7 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
     setState(null);
     setError(false);
     setLoadError(false);
-    setUpload(false);
+    setLatestReceipt(null);
     ++editGeneration.current;
   }, [scope]);
   useEffect(
@@ -228,7 +243,6 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
       editedAtRead = editGeneration.current;
     setState(null);
     setLoadError(false);
-    setUpload(false);
     void readPostal(controller.signal)
       .then(async (response) => {
         if (!response.ok) throw new Error('postal');
@@ -398,218 +412,396 @@ function OwnedSolarPostalPanel({ requestId, profileId }: { requestId: string; pr
   const showForm =
     editable || (!!visible && unconfirmed && pendingShipment.current?.scope === scope);
   const uploadGeneration = generation.current;
+  const returningToShipment = useRef(false);
+  const uploadingReceipt = receiptView === 'upload';
+  useEffect(() => {
+    if (uploadingReceipt) returningToShipment.current = true;
+    else if (returningToShipment.current && showForm) {
+      returningToShipment.current = false;
+      form.setFocus('receiptImageId');
+    }
+  }, [uploadingReceipt, showForm, form.setFocus]);
+  const selectableImages =
+    latestReceipt && !images.some((image) => image.id === latestReceipt.id)
+      ? [latestReceipt, ...images]
+      : images;
+
+  if (uploadingReceipt)
+    return (
+      <ShipmentReceiptEditor
+        requestId={requestId}
+        profileId={profileId}
+        siteAddress={siteAddress}
+        available={editable && !unconfirmed && !sending}
+        loading={!visible && !loadError}
+        loadError={loadError}
+        onRetry={() => setRevision((value) => value + 1)}
+        onUploaded={(document) => {
+          if (uploadGeneration !== generation.current) return;
+          if (document.state === 'Available') {
+            ++editGeneration.current;
+            setLatestReceipt(document);
+            form.setValue('receiptImageId', document.id, {
+              shouldDirty: true,
+              shouldValidate: true,
+            });
+          }
+          setImageRevision((value) => value + 1);
+        }}
+      />
+    );
   return (
-    <section className="space-y-4 rounded-xl border p-5" aria-label={copy('postalStage')}>
-      <h2 className="text-xl font-semibold">{copy('postalStage')}</h2>
-      {!visible && !loadError && <LoadingStatus>{copy('loading')}</LoadingStatus>}
-      {visible && (
-        <>
-          <p>{visible.guidance[locale]}</p>
-          {visible.guidance.destinationAddress && (
-            <p>
-              <strong>{copy('postalDestination')}:</strong> {visible.guidance.destinationAddress}
-            </p>
-          )}
-          {visible.guidance.contactDetails && (
-            <p>
-              <strong>{copy('postalContact')}:</strong> {visible.guidance.contactDetails}
-            </p>
-          )}
-          {!!visible.guidance.originals.length && (
-            <>
-              <h3 className="font-medium">{copy('postalOriginals')}</h3>
-              <ul className="list-inside list-disc">
-                {visible.guidance.originals.map((item, index) => (
-                  <li key={index}>{item[locale]}</li>
-                ))}
-              </ul>
-            </>
-          )}
-          <p role="status">
-            {copy('postalStatus')}:{' '}
-            {copy(`postal_${visible.postal?.status ?? 'waiting_for_shipment'}`)}
-          </p>
-          {visible.postal?.staff_notes && (
-            <p role="alert">
-              {copy('postalStaffNotes')}: {visible.postal.staff_notes}
-            </p>
-          )}
-          {!editable && visible.postal && (
-            <>
-              {visible.postal.courier && (
-                <p>
-                  {copy('postalCourier')}: <bdi>{visible.postal.courier}</bdi>
-                </p>
+    <>
+      {editorHeader?.(() => form.isSubmissionPending(), sending)}
+      <section className="min-w-0 space-y-3" aria-label={copy('postalStage')}>
+        <header className="flex items-center justify-between gap-2">
+          <div className="space-y-0.5">
+            <h2 className="text-base font-semibold">{copy('postalStage')}</h2>
+            {visible && (
+              <p role="status" className="text-sm text-muted-foreground">
+                {copy('postalStatus')}{' '}
+                <span className="ms-1 font-medium text-foreground">
+                  {copy(`postal_${visible.postal?.status ?? 'waiting_for_shipment'}`)}
+                </span>
+              </p>
+            )}
+          </div>
+          <ListRefreshButton
+            label={copy('postalTrackingReload')}
+            disabled={sending}
+            onClick={() => {
+              if (!form.isSubmissionPending()) setRevision((value) => value + 1);
+            }}
+          />
+        </header>
+        {!visible && !loadError && <LoadingStatus>{copy('loading')}</LoadingStatus>}
+        {visible && (
+          <>
+            <div className="space-y-3 rounded-xl border bg-card px-4 py-3.5 text-sm sm:px-5">
+              <p className="whitespace-pre-wrap wrap-anywhere">{visible.guidance[locale]}</p>
+              {(visible.guidance.destinationAddress || visible.guidance.contactDetails) && (
+                <dl className="grid gap-3 sm:grid-cols-2">
+                  {visible.guidance.destinationAddress && (
+                    <div>
+                      <dt className="font-semibold">{copy('postalDestination')}</dt>
+                      <dd
+                        dir="auto"
+                        className="mt-1 whitespace-pre-wrap wrap-anywhere text-muted-foreground"
+                      >
+                        {visible.guidance.destinationAddress}
+                      </dd>
+                    </div>
+                  )}
+                  {visible.guidance.contactDetails && (
+                    <div>
+                      <dt className="font-semibold">{copy('postalContact')}</dt>
+                      <dd
+                        dir="auto"
+                        className="mt-1 whitespace-pre-wrap wrap-anywhere text-muted-foreground"
+                      >
+                        {visible.guidance.contactDetails}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
               )}
-              <SolarPostalTrackingSummary
-                key={`${requestId}:${revision}`}
-                tracking={{
-                  postalStatus: visible.postal.status,
-                  trackingNumber: visible.postal.tracking_number,
-                  sendDate: visible.postal.send_date,
-                  estimatedArrivalDate: visible.postal.estimated_arrival_date ?? null,
-                  trackingUrl: visible.postal.tracking_url ?? null,
-                  note: visible.postal.tracking_note ?? null,
-                  recordedAt: visible.postal.tracking_recorded_at ?? null,
-                }}
-              />
+              {!!visible.guidance.originals.length && (
+                <div className="space-y-1 border-t pt-2.5">
+                  <h3 className="font-semibold">{copy('postalOriginals')}</h3>
+                  <ul className="list-disc space-y-1 ps-5 text-muted-foreground">
+                    {visible.guidance.originals.map((item, index) => (
+                      <li key={index} className="wrap-anywhere">
+                        {item[locale]}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+            {visible.postal?.staff_notes && (
+              <div className="space-y-1 rounded-lg border-s-2 border-warning/45 bg-muted/25 px-3 py-2.5 text-sm">
+                <p className="font-semibold">{copy('postalStaffNotes')}</p>
+                <p dir="auto" className="whitespace-pre-wrap wrap-anywhere">
+                  {visible.postal.staff_notes}
+                </p>
+              </div>
+            )}
+            {!editable && visible.postal && (
+              <>
+                {visible.postal.courier && (
+                  <p>
+                    {copy('postalCourier')}: <bdi>{visible.postal.courier}</bdi>
+                  </p>
+                )}
+                <SolarPostalTrackingSummary
+                  key={`${requestId}:${revision}`}
+                  tracking={{
+                    postalStatus: visible.postal.status,
+                    trackingNumber: visible.postal.tracking_number,
+                    sendDate: visible.postal.send_date,
+                    estimatedArrivalDate: visible.postal.estimated_arrival_date ?? null,
+                    trackingUrl: visible.postal.tracking_url ?? null,
+                    note: visible.postal.tracking_note ?? null,
+                    recordedAt: visible.postal.tracking_recorded_at ?? null,
+                  }}
+                />
+              </>
+            )}
+          </>
+        )}
+        {showForm && (
+          <Form {...form}>
+            <div className="space-y-3" role="group" aria-label={copy('postalShipment')}>
+              <form className={recordEditorSurface} onSubmit={submit} noValidate>
+                <div className="border-b bg-muted/25 px-4 py-3 sm:px-5">
+                  <h3 className="text-sm font-semibold">{copy('postalShipment')}</h3>
+                </div>
+                <div className="space-y-3 px-4 py-4 sm:px-5">
+                  {form.formState.errors.root && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
+                    </Alert>
+                  )}
+                  <div className="grid min-w-0 gap-3 sm:grid-cols-2">
+                    {(
+                      [
+                        ['courier', 'solar-postal-courier', 'postalCourier', 'postalCourierHelp'],
+                        [
+                          'trackingNumber',
+                          'solar-postal-tracking-number',
+                          'postalTracking',
+                          'postalTrackingHelp',
+                        ],
+                        [
+                          'sendDate',
+                          'solar-postal-send-date',
+                          'postalSendDate',
+                          'postalSendDateHelp',
+                        ],
+                        [
+                          'receiptImageId',
+                          'solar-postal-receipt-image',
+                          'postalReceipt',
+                          'postalReceiptHelp',
+                        ],
+                      ] as const
+                    ).map(([name, id, label, help]) => (
+                      <FormField
+                        key={name}
+                        control={form.control}
+                        name={name}
+                        render={({ field, fieldState }) => (
+                          <FormItem
+                            id={id}
+                            className={
+                              name === 'receiptImageId'
+                                ? 'min-w-0 border-t pt-3 sm:col-span-2'
+                                : 'min-w-0'
+                            }
+                          >
+                            <FormLabel>{copy(label)}</FormLabel>
+                            {name === 'receiptImageId' ? (
+                              <div className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+                                <FormControl>
+                                  <NativeSelect
+                                    {...field}
+                                    disabled={sending || unconfirmed}
+                                    className="w-full min-w-0 sm:flex-1"
+                                    onChange={(event) => {
+                                      ++editGeneration.current;
+                                      field.onChange(event);
+                                    }}
+                                  >
+                                    <option value="">{copy('postalNoReceipt')}</option>
+                                    {selectableImages.map((image) => (
+                                      <option key={image.id} value={image.id}>
+                                        {image.originalName}
+                                      </option>
+                                    ))}
+                                  </NativeSelect>
+                                </FormControl>
+                                {receiptView && (
+                                  <Link
+                                    to="/solar/requests/$requestId/shipment/upload-receipt"
+                                    params={{ requestId }}
+                                    className={buttonVariants({ variant: 'outline' })}
+                                    disabled={sending || unconfirmed}
+                                    onClick={(event) => {
+                                      if (form.isSubmissionPending()) event.preventDefault();
+                                    }}
+                                  >
+                                    {copy('postalUploadReceipt')}
+                                  </Link>
+                                )}
+                              </div>
+                            ) : (
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  disabled={sending || unconfirmed}
+                                  aria-required="true"
+                                  type={name === 'sendDate' ? 'date' : 'text'}
+                                  dir={name === 'courier' ? 'auto' : 'ltr'}
+                                  onChange={(event) => {
+                                    ++editGeneration.current;
+                                    field.onChange(event);
+                                  }}
+                                />
+                              </FormControl>
+                            )}
+                            <CompactFieldFeedback
+                              help={copy(help)}
+                              validationMessage={messages[name]}
+                              invalid={!!fieldState.error?.message}
+                            />
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                  </div>
+                  {imageStatus === 'loading' && (
+                    <LoadingStatus>{copy('postalReceiptLoading')}</LoadingStatus>
+                  )}
+                  {imageStatus === 'ready' && selectableImages.length === 0 && (
+                    <p role="status" className="text-sm text-muted-foreground">
+                      {copy('postalReceiptEmpty')}
+                    </p>
+                  )}
+                  {imageStatus === 'error' && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{copy('postalReceiptLoadError')}</AlertDescription>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={sending}
+                        onClick={() => setImageRevision((value) => value + 1)}
+                      >
+                        {copy('retry')}
+                      </Button>
+                    </Alert>
+                  )}
+                </div>
+                <RecordEditorActions className="max-sm:justify-start">
+                  <Button type="submit" loading={sending} disabled={unconfirmed}>
+                    {copy('postalSubmit')}
+                  </Button>
+                </RecordEditorActions>
+              </form>
+            </div>
+          </Form>
+        )}
+        {error && (
+          <Alert variant="destructive">
+            <AlertDescription>
+              {copy(unconfirmed ? 'postalShipmentUnconfirmed' : 'postalError')}
+            </AlertDescription>
+          </Alert>
+        )}
+        {loadError && <p role="alert">{copy('postalLoadError')}</p>}
+      </section>
+    </>
+  );
+}
+
+function ShipmentReceiptEditor({
+  requestId,
+  profileId,
+  siteAddress,
+  available,
+  loading,
+  loadError,
+  onRetry,
+  onUploaded,
+}: {
+  requestId: string;
+  profileId: string;
+  siteAddress: string | null | undefined;
+  available: boolean;
+  loading: boolean;
+  loadError: boolean;
+  onRetry: () => void;
+  onUploaded: (document: BusinessDocument) => void;
+}) {
+  const locale = useLocale();
+  const copy = (key: string) => tSolar(key, locale);
+  const title = copy('postalUploadReceipt');
+  const navigate = useNavigate();
+  const shipment = {
+    to: '/solar/requests/$requestId/shipment',
+    params: { requestId },
+  } as const;
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    const active = document.activeElement;
+    if (!active || active === document.body || active.contains(heading.current))
+      heading.current?.focus({ preventScroll: true });
+  }, [available]);
+
+  return (
+    <div className="min-w-0 space-y-3" data-slot="shipment-receipt" data-toast-anchor>
+      <Link
+        {...shipment}
+        className="touch-action inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
+      >
+        {copy('postalBackToShipment')}
+      </Link>
+      {available ? (
+        <DocumentUpload
+          staff={false}
+          profileId={profileId}
+          replacement={null}
+          imageOnly
+          association={{ businessRecordType: 'solar_request', businessRecordId: requestId }}
+          recordPage
+          recordTitle={title}
+          recordHeadingRef={heading}
+          recordContext={
+            <>
+              {siteAddress && (
+                <dl className="mt-3 rounded-lg bg-muted/40 px-3 py-2.5 text-sm">
+                  <dt className="text-xs text-muted-foreground">{copy('address')}</dt>
+                  <dd dir="auto" className="mt-1 font-medium wrap-anywhere">
+                    {siteAddress}
+                  </dd>
+                </dl>
+              )}
+              <p className="mt-2 text-sm text-muted-foreground">
+                {copy('postalReceiptUploadHelp')}
+              </p>
             </>
+          }
+          onClose={() => void navigate(shipment)}
+          onUploaded={(document) => {
+            onUploaded(document);
+            void navigate({ ...shipment, replace: true });
+          }}
+        />
+      ) : (
+        <>
+          <h1
+            ref={heading}
+            data-slot="editor-heading"
+            tabIndex={-1}
+            className="text-2xl font-semibold outline-none!"
+          >
+            {title}
+          </h1>
+          {loading ? (
+            <LoadingStatus>{copy('loading')}</LoadingStatus>
+          ) : (
+            <Alert variant="destructive">
+              <AlertDescription>
+                {copy(loadError ? 'postalLoadError' : 'shipmentPageUnavailable')}
+              </AlertDescription>
+              {loadError && (
+                <Button variant="outline" onClick={onRetry}>
+                  {copy('retry')}
+                </Button>
+              )}
+            </Alert>
           )}
         </>
       )}
-      {showForm && (
-        <Form {...form}>
-          <div role="group" aria-label={copy('postalShipment')}>
-            <form className="space-y-3" onSubmit={submit} noValidate>
-              {form.formState.errors.root && (
-                <Alert variant="destructive">
-                  <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
-                </Alert>
-              )}
-              {(
-                [
-                  ['courier', 'solar-postal-courier', 'postalCourier', 'postalCourierHelp'],
-                  [
-                    'trackingNumber',
-                    'solar-postal-tracking-number',
-                    'postalTracking',
-                    'postalTrackingHelp',
-                  ],
-                  ['sendDate', 'solar-postal-send-date', 'postalSendDate', 'postalSendDateHelp'],
-                  [
-                    'receiptImageId',
-                    'solar-postal-receipt-image',
-                    'postalReceipt',
-                    'postalReceiptHelp',
-                  ],
-                ] as const
-              ).map(([name, id, label, help]) => (
-                <FormField
-                  key={name}
-                  control={form.control}
-                  name={name}
-                  render={({ field }) => (
-                    <FormItem id={id}>
-                      <FormLabel>{copy(label)}</FormLabel>
-                      <FormControl>
-                        {name === 'receiptImageId' ? (
-                          <select
-                            {...field}
-                            disabled={sending || unconfirmed}
-                            className="w-full rounded-md border bg-background p-2"
-                            onChange={(event) => {
-                              ++editGeneration.current;
-                              field.onChange(event);
-                            }}
-                          >
-                            <option value="">{copy('postalNoReceipt')}</option>
-                            {images.map((image) => (
-                              <option key={image.id} value={image.id}>
-                                {image.originalName}
-                              </option>
-                            ))}
-                          </select>
-                        ) : (
-                          <Input
-                            {...field}
-                            disabled={sending || unconfirmed}
-                            aria-required="true"
-                            type={name === 'sendDate' ? 'date' : 'text'}
-                            dir={name === 'trackingNumber' ? 'ltr' : undefined}
-                            onChange={(event) => {
-                              ++editGeneration.current;
-                              field.onChange(event);
-                            }}
-                          />
-                        )}
-                      </FormControl>
-                      <FormDescription>{copy(help)}</FormDescription>
-                      <div className="grid">
-                        <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
-                          {messages[name]}
-                        </p>
-                        <FormMessage className="col-start-1 row-start-1" />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              ))}
-              {imageStatus === 'loading' && (
-                <LoadingStatus>{copy('postalReceiptLoading')}</LoadingStatus>
-              )}
-              {imageStatus === 'ready' && images.length === 0 && (
-                <p role="status" className="text-sm text-muted-foreground">
-                  {copy('postalReceiptEmpty')}
-                </p>
-              )}
-              {imageStatus === 'error' && (
-                <Alert variant="destructive">
-                  <AlertDescription>{copy('postalReceiptLoadError')}</AlertDescription>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={sending}
-                    onClick={() => setImageRevision((value) => value + 1)}
-                  >
-                    {copy('retry')}
-                  </Button>
-                </Alert>
-              )}
-              <Button
-                type="button"
-                variant="link"
-                disabled={sending || unconfirmed}
-                onClick={() => setUpload((value) => !value)}
-              >
-                {copy('postalUploadReceipt')}
-              </Button>
-              {upload && (
-                <DocumentUpload
-                  staff={false}
-                  profileId={profileId}
-                  replacement={null}
-                  imageOnly
-                  association={{ businessRecordType: 'solar_request', businessRecordId: requestId }}
-                  onClose={() => {
-                    if (uploadGeneration === generation.current) setUpload(false);
-                  }}
-                  onUploaded={(document) => {
-                    if (uploadGeneration !== generation.current) return;
-                    setUpload(false);
-                    ++editGeneration.current;
-                    form.setValue('receiptImageId', document.id, {
-                      shouldDirty: true,
-                      shouldValidate: true,
-                    });
-                    setImageRevision((value) => value + 1);
-                  }}
-                />
-              )}
-              <Button type="submit" loading={sending} disabled={unconfirmed}>
-                {copy('postalSubmit')}
-              </Button>
-            </form>
-          </div>
-        </Form>
-      )}
-      {error && (
-        <Alert variant="destructive">
-          <AlertDescription>
-            {copy(unconfirmed ? 'postalShipmentUnconfirmed' : 'postalError')}
-          </AlertDescription>
-        </Alert>
-      )}
-      {loadError && <p role="alert">{copy('postalLoadError')}</p>}
-      <button
-        type="button"
-        className="underline"
-        disabled={sending}
-        onClick={() => {
-          if (!form.isSubmissionPending()) setRevision((value) => value + 1);
-        }}
-      >
-        {copy('postalTrackingReload')}
-      </button>
-    </section>
+    </div>
   );
 }

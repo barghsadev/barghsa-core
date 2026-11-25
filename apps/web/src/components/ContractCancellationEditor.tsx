@@ -12,11 +12,14 @@ import {
   FieldLabel,
   FinancialReviewSummary,
   Input,
+  ListRefreshButton,
+  NativeSelect,
   PageLoading,
   StatusBadge,
   Textarea,
 } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
+import { cancellationEditorMessages } from '@barghsa/i18n/cancellation-editor';
 import { useLocale } from '../hooks/useLocale.js';
 import {
   useCancellationDecisionForm,
@@ -29,6 +32,12 @@ import type {
   CancellationRefund,
 } from '../lib/contract-cancellation.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorGrid,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 
 const isIrr = (value: unknown) => typeof value === 'string' && /^\d+$/.test(value);
 
@@ -44,6 +53,8 @@ function OwnedCancellationEditor({
   canChooseRefund,
   onChanged,
   unavailable,
+  versionId,
+  onLocked,
 }: {
   id: string;
   terminalAction?: 'cancel' | 'reject';
@@ -51,6 +62,8 @@ function OwnedCancellationEditor({
   canChooseRefund: boolean;
   unavailable: boolean;
   onChanged: () => void;
+  versionId?: string | undefined;
+  onLocked?: ((locked: boolean) => void) | undefined;
 }) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
@@ -135,6 +148,12 @@ function OwnedCancellationEditor({
   const unavailableRef = useRef(unavailable);
   unavailableRef.current = unavailable;
   const busy = unavailable || loading || !!action || draft.form.formState.isSubmitting;
+  const submitting = !!action || draft.form.formState.isSubmitting;
+  useEffect(() => {
+    if (!onLocked) return;
+    onLocked(submitting);
+    return () => onLocked(false);
+  }, [onLocked, submitting]);
   const permitted =
     !!preview &&
     !preview.blockers.length &&
@@ -168,6 +187,7 @@ function OwnedCancellationEditor({
           (snapshot.terminalAction ?? 'cancel') !== terminalAction ||
           (terminalAction === 'reject' && snapshot.serviceType !== 'electricity') ||
           typeof snapshot.versionId !== 'string' ||
+          (versionId !== undefined && snapshot.versionId !== versionId) ||
           typeof snapshot.fingerprint !== 'string' ||
           !Array.isArray(snapshot.blockers) ||
           !Array.isArray(snapshot.invoices) ||
@@ -237,7 +257,7 @@ function OwnedCancellationEditor({
         else setError(true);
       });
     return () => controller.abort();
-  }, [id, reload, customerRequestId, terminalAction, readContract]);
+  }, [id, reload, customerRequestId, terminalAction, readContract, versionId]);
   function prepare(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (busy || needsRead || error || denied || !permitted || draft.form.isSubmissionPending())
@@ -356,16 +376,41 @@ function OwnedCancellationEditor({
     preview &&
     (saved.versionId !== preview.versionId || saved.financialFingerprint !== preview.fingerprint)
   );
+  const copy = cancellationEditorMessages[locale];
+  const refresh = () => setReload((n) => n + 1);
   return (
-    <div className="flex flex-col gap-4 border-t pt-4">
-      <Button
-        disabled={busy}
-        variant="ghost"
-        className="self-start"
-        onClick={() => setReload((n) => n + 1)}
+    <div
+      className={
+        versionId ? 'flex min-w-0 flex-col gap-3' : 'flex min-w-0 flex-col gap-3 border-t pt-3'
+      }
+    >
+      <div
+        className={`flex flex-wrap items-center justify-between gap-2${versionId && preview ? ' rounded-xl border bg-card px-4 py-2.5 sm:px-6' : ''}`}
       >
-        {needsRead ? confirmationText('checkStatus', locale) : word('cancellationRefresh')}
-      </Button>
+        {preview && (
+          <dl
+            className={
+              versionId ? 'min-w-0 text-sm' : 'min-w-0 rounded-lg bg-muted/45 px-3 py-2 text-sm'
+            }
+          >
+            <dt className="text-muted-foreground">{word('cancellationAvailable')}</dt>
+            <dd className="break-words text-lg font-semibold tabular-nums">
+              <bdi>{money(preview.refundableAmount)}</bdi> {word('irr')}
+            </dd>
+          </dl>
+        )}
+        {needsRead ? (
+          <Button disabled={busy} variant="outline" onClick={refresh}>
+            {confirmationText('checkStatus', locale)}
+          </Button>
+        ) : (
+          <ListRefreshButton
+            label={word('cancellationRefresh')}
+            disabled={busy}
+            onClick={refresh}
+          />
+        )}
+      </div>
       {needsRead && (
         <Alert variant="destructive">
           <AlertDescription>{confirmationText('unconfirmed', locale)}</AlertDescription>
@@ -383,10 +428,6 @@ function OwnedCancellationEditor({
         ) : null
       ) : (
         <>
-          <p className="font-medium">
-            {word('cancellationAvailable')}: <bdi>{money(preview.refundableAmount)}</bdi>{' '}
-            {word('irr')}
-          </p>
           {preview.blockers.length ? (
             <Alert variant="destructive">
               <AlertDescription>
@@ -440,154 +481,174 @@ function OwnedCancellationEditor({
             </>
           ) : (
             <form
-              className="flex flex-col gap-4"
+              className={recordEditorSurface}
               noValidate
               aria-busy={!!action || draft.form.formState.isSubmitting || undefined}
               onSubmit={prepare}
             >
-              <p className="text-sm">
-                {word(
-                  preview.serviceType === 'electricity'
-                    ? 'cancellationElectricity'
-                    : 'cancellationFinance'
-                )}
-              </p>
-              {preview.serviceType !== 'electricity' && canChooseRefund ? (
-                <label className="touch-label flex items-center gap-2">
-                  <input
-                    type="checkbox"
+              <RecordEditorSection title={copy.refundPlan}>
+                {preview.serviceType !== 'electricity' && canChooseRefund ? (
+                  <label className="touch-label flex min-h-11 cursor-pointer items-center gap-2.5 rounded-lg bg-muted/40 px-3 py-2 text-sm font-medium">
+                    <input
+                      type="checkbox"
+                      className="size-4 shrink-0 accent-primary"
+                      disabled={busy || needsRead || error}
+                      checked={custom}
+                      onChange={(e) => setCustom(e.target.checked)}
+                    />
+                    {word('cancellationCustom')}
+                  </label>
+                ) : null}
+                {preview.serviceType === 'electricity' ? (
+                  <p className="text-sm text-muted-foreground">{word('cancellationElectricity')}</p>
+                ) : canChooseRefund ? (
+                  <p className="text-sm text-muted-foreground">
+                    {custom ? copy.customAmounts : copy.defaultWallet}
+                  </p>
+                ) : !permitted ? (
+                  <p className="text-sm text-muted-foreground">{word('cancellationFinance')}</p>
+                ) : null}
+                {custom ? (
+                  <div className="space-y-2.5">
+                    {preview.invoices.map((invoice, index) => {
+                      const amountField = `lines.${invoice.id}.amount` as const;
+                      const destinationField = `lines.${invoice.id}.destination` as const;
+                      const availableId = `available-${invoice.id}`;
+                      const amountInput = draft.bind(amountField);
+                      const amountError = draft.form.getFieldState(amountField).error;
+                      const destinationError = draft.form.getFieldState(destinationField).error;
+                      return (
+                        <fieldset key={invoice.id} className="min-w-0 rounded-lg border p-3">
+                          <legend className="px-1 text-sm font-medium">
+                            {word('cancellationInvoice')} {index + 1}
+                          </legend>
+                          <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                            <bdi className="break-all">{invoice.id}</bdi>
+                            <p id={availableId}>
+                              {word('cancellationAvailable')}{' '}
+                              <bdi className="font-semibold text-foreground">
+                                {money(invoice.availableRefundAmount)} {word('irr')}
+                              </bdi>
+                            </p>
+                          </div>
+                          <div className={recordEditorGrid}>
+                            <Field className="min-w-0 gap-1">
+                              <FieldLabel htmlFor={'return-' + invoice.id}>
+                                {word('amount')} ({word('irr')})
+                              </FieldLabel>
+                              <Input
+                                id={'return-' + invoice.id}
+                                dir="ltr"
+                                inputMode="numeric"
+                                value={lines[invoice.id]?.amount ?? ''}
+                                {...amountInput}
+                                aria-describedby={[availableId, amountInput['aria-describedby']]
+                                  .filter(Boolean)
+                                  .join(' ')}
+                                disabled={busy || needsRead || error}
+                                aria-required="true"
+                                onChange={(e) => draft.field(amountField)[1](e.target.value)}
+                              />
+                              <p
+                                id={draft.errorId(amountField)}
+                                role={amountError ? 'alert' : undefined}
+                                aria-hidden={!amountError || undefined}
+                                className={`text-sm text-destructive${amountError ? '' : ' invisible'}`}
+                              >
+                                {amountError?.message ?? word('cancellationAmountInvalid')}
+                              </p>
+                            </Field>
+                            <Field className="min-w-0 gap-1">
+                              <FieldLabel htmlFor={'destination-' + invoice.id}>
+                                {word('cancellationDestination')}
+                              </FieldLabel>
+                              <NativeSelect
+                                id={'destination-' + invoice.id}
+                                className="w-full min-w-0"
+                                value={lines[invoice.id]?.destination ?? 'wallet'}
+                                {...draft.bind(destinationField)}
+                                disabled={busy || needsRead || error}
+                                aria-required="true"
+                                onChange={(e) =>
+                                  draft.field(destinationField)[1](
+                                    e.target.value as 'wallet' | 'external_bank'
+                                  )
+                                }
+                              >
+                                <option value="wallet">{word('cancellation.wallet')}</option>
+                                <option value="external_bank">
+                                  {word('cancellation.external_bank')}
+                                </option>
+                              </NativeSelect>
+                              <p
+                                id={draft.errorId(destinationField)}
+                                role={destinationError ? 'alert' : undefined}
+                                aria-hidden={!destinationError || undefined}
+                                className={`text-sm text-destructive${destinationError ? '' : ' invisible'}`}
+                              >
+                                {destinationError?.message ??
+                                  word('cancellationDestinationInvalid')}
+                              </p>
+                            </Field>
+                          </div>
+                        </fieldset>
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </RecordEditorSection>
+              <div className="space-y-3 px-4 py-4 sm:px-6">
+                <Field className="min-w-0 gap-1">
+                  <FieldLabel htmlFor="cancellation-reason">
+                    {word('cancellationReason')}
+                  </FieldLabel>
+                  <Textarea
+                    {...draft.bind('reason')}
                     disabled={busy || needsRead || error}
-                    checked={custom}
-                    onChange={(e) => setCustom(e.target.checked)}
+                    required
+                    aria-required="true"
+                    id="cancellation-reason"
+                    maxLength={1000}
+                    rows={2}
+                    dir="auto"
+                    placeholder={
+                      terminalAction === 'reject' ? copy.rejectionExample : copy.decisionExample
+                    }
+                    className={`min-h-14 max-h-48 ${locale === 'fa' ? 'placeholder:text-right' : ''}`}
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
                   />
-                  {word('cancellationCustom')}
-                </label>
-              ) : null}
-              {custom ? (
-                <div className="flex flex-col gap-3">
-                  {preview.invoices.map((invoice, index) => (
-                    <div key={invoice.id} className="grid gap-3 rounded border p-3 sm:grid-cols-2">
-                      <Field>
-                        <FieldLabel htmlFor={'return-' + invoice.id}>
-                          {word('cancellationInvoice')} {index + 1} · {word('amount')} {word('irr')}
-                        </FieldLabel>
-                        <Input
-                          id={'return-' + invoice.id}
-                          dir="ltr"
-                          inputMode="numeric"
-                          value={lines[invoice.id]?.amount ?? ''}
-                          {...draft.bind(`lines.${invoice.id}.amount`)}
-                          disabled={busy || needsRead || error}
-                          aria-required="true"
-                          onChange={(e) =>
-                            draft.field(`lines.${invoice.id}.amount`)[1](e.target.value)
-                          }
-                        />
-                        <p
-                          id={draft.errorId(`lines.${invoice.id}.amount`)}
-                          role={
-                            draft.form.getFieldState(`lines.${invoice.id}.amount`).invalid
-                              ? 'alert'
-                              : undefined
-                          }
-                          aria-hidden={
-                            !draft.form.getFieldState(`lines.${invoice.id}.amount`).invalid ||
-                            undefined
-                          }
-                          className={`text-sm text-destructive${draft.form.getFieldState(`lines.${invoice.id}.amount`).invalid ? '' : ' invisible'}`}
-                        >
-                          {draft.form.getFieldState(`lines.${invoice.id}.amount`).error?.message ??
-                            word('cancellationAmountInvalid')}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {word('cancellationAvailable')}: {money(invoice.availableRefundAmount)}
-                        </p>
-                        <p className="break-all text-xs text-muted-foreground">
-                          <bdi>{invoice.id}</bdi>
-                        </p>
-                      </Field>
-                      <Field>
-                        <FieldLabel htmlFor={'destination-' + invoice.id}>
-                          {word('cancellationDestination')}
-                        </FieldLabel>
-                        <select
-                          id={'destination-' + invoice.id}
-                          className="h-10 rounded-md border bg-background px-3 text-sm"
-                          value={lines[invoice.id]?.destination ?? 'wallet'}
-                          {...draft.bind(`lines.${invoice.id}.destination`)}
-                          disabled={busy || needsRead || error}
-                          aria-required="true"
-                          onChange={(e) =>
-                            draft.field(`lines.${invoice.id}.destination`)[1](
-                              e.target.value as 'wallet' | 'external_bank'
-                            )
-                          }
-                        >
-                          <option value="wallet">{word('cancellation.wallet')}</option>
-                          <option value="external_bank">
-                            {word('cancellation.external_bank')}
-                          </option>
-                        </select>
-                        <p
-                          id={draft.errorId(`lines.${invoice.id}.destination`)}
-                          role={
-                            draft.form.getFieldState(`lines.${invoice.id}.destination`).invalid
-                              ? 'alert'
-                              : undefined
-                          }
-                          aria-hidden={
-                            !draft.form.getFieldState(`lines.${invoice.id}.destination`).invalid ||
-                            undefined
-                          }
-                          className={`text-sm text-destructive${draft.form.getFieldState(`lines.${invoice.id}.destination`).invalid ? '' : ' invisible'}`}
-                        >
-                          {draft.form.getFieldState(`lines.${invoice.id}.destination`).error
-                            ?.message ?? word('cancellationDestinationInvalid')}
-                        </p>
-                      </Field>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
-              <Field>
-                <FieldLabel htmlFor="cancellation-reason">{word('cancellationReason')}</FieldLabel>
-                <Textarea
-                  {...draft.bind('reason')}
-                  disabled={busy || needsRead || error}
-                  required
-                  aria-required="true"
-                  id="cancellation-reason"
-                  maxLength={1000}
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                />
-                <p
-                  id={draft.errorId('reason')}
-                  role={draft.errors.reason ? 'alert' : undefined}
-                  aria-hidden={!draft.errors.reason || undefined}
-                  className={`text-sm text-destructive${draft.errors.reason ? '' : ' invisible'}`}
+                  <p
+                    id={draft.errorId('reason')}
+                    role={draft.errors.reason ? 'alert' : undefined}
+                    aria-hidden={!draft.errors.reason || undefined}
+                    hidden={!draft.errors.reason}
+                    className="text-sm text-destructive"
+                  >
+                    {draft.errors.reason?.message ?? word('cancellationReasonInvalid')}
+                  </p>
+                </Field>
+                {draft.errors.root?.validation ? (
+                  <Alert variant="destructive">
+                    <AlertDescription>{draft.errors.root.validation.message}</AlertDescription>
+                  </Alert>
+                ) : null}
+              </div>
+              <RecordEditorActions>
+                <Button
+                  type="submit"
+                  className="h-auto min-h-11 max-w-full whitespace-normal text-start"
+                  disabled={busy || needsRead || error || !permitted}
                 >
-                  {draft.errors.reason?.message ?? word('cancellationReasonInvalid')}
-                </p>
-              </Field>
-              {draft.errors.root?.validation ? (
-                <Alert variant="destructive">
-                  <AlertDescription>{draft.errors.root.validation.message}</AlertDescription>
-                </Alert>
-              ) : null}
-              <Button
-                type="submit"
-                className="self-start"
-                disabled={busy || needsRead || error || !permitted}
-              >
-                {draft.form.formState.isSubmitting && (
-                  <span
-                    aria-hidden="true"
-                    className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                  />
-                )}
-                {word('cancellationSave')}
-              </Button>
+                  {draft.form.formState.isSubmitting && (
+                    <span
+                      aria-hidden="true"
+                      className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                    />
+                  )}
+                  {word('cancellationSave')}
+                </Button>
+              </RecordEditorActions>
             </form>
           )}
         </>

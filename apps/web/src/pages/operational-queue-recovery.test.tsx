@@ -5,6 +5,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import Jobs from './AdminFailedJobsPage.js';
 import DeadLetters from '../components/DeadLetterPanel.js';
 import { failedJob, deadLetter } from '../test/operational-queue-fixtures.js';
+import { tWorkspace } from '@barghsa/i18n/workspace-admin';
 vi.mock('../hooks/useTimezone.js', () => ({
   useTimezone: () => ({ status: 'ready', timezone: 'UTC', retry: () => {} }),
 }));
@@ -22,12 +23,18 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 const response = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status });
+const reviewText = (key: string) => tWorkspace(`admin.operationalReview.${key}`, 'en');
 async function click(name: string, dialog = false) {
   const area = dialog ? document.querySelector('[role=dialog]')! : host;
   const button = [...area.querySelectorAll<HTMLButtonElement>('button')].find(
     (b) => b.textContent?.trim() === name
   );
   expect(button, name).toBeDefined();
+  const disclosure = button!.closest('details');
+  if (disclosure && !disclosure.open) {
+    await act(async () => disclosure.querySelector('summary')!.click());
+    expect(disclosure.open).toBe(true);
+  }
   await act(async () => button!.click());
 }
 async function submit() {
@@ -107,9 +114,9 @@ for (const scenario of cases) {
       )
     ).toHaveLength(1);
     detailFails = false;
-    await click('Read selected records again', true);
+    await click(reviewText('retry'), true);
     queueFails = true;
-    await click('I reviewed the state; return to queue', true);
+    await click(reviewText('reviewed'), true);
     await click('Retry');
     expect(writes).toBe(1);
     expect(document.querySelector('[role=dialog]')).toBeNull();
@@ -218,13 +225,13 @@ for (const scenario of cases) {
     await render();
     await click('Retry');
     pending = true;
-    if (scenario.name === 'jobs') await click('Dead letter');
-    else
-      await act(async () => {
-        const select = host.querySelector<HTMLSelectElement>('select')!;
-        select.value = 'resolved';
-        select.dispatchEvent(new Event('change', { bubbles: true }));
-      });
+    await act(async () => {
+      const select = host.querySelector<HTMLSelectElement>(
+        scenario.name === 'jobs' ? '#job-status' : 'select'
+      )!;
+      select.value = scenario.name === 'jobs' ? 'dead_letter' : 'resolved';
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    });
     expect(document.querySelector('[role=dialog]')).toBeNull();
     expect(host.querySelectorAll('tbody tr')).toHaveLength(0);
   });
@@ -359,7 +366,7 @@ it('bulk job selection survives read failure and accepts only a unique acknowled
   await act(async () => {
     host.querySelectorAll<HTMLInputElement>('table input[type=checkbox]').forEach((n) => n.click());
   });
-  await click('Retry selected (2)');
+  await click('Retry selected');
   fail = true;
   await click('Retry queue', true);
   expect(host.querySelectorAll('table input:checked')).toHaveLength(2);
@@ -370,12 +377,12 @@ it('bulk job selection survives read failure and accepts only a unique acknowled
   expect(document.querySelector('[role=dialog]')).not.toBeNull();
   expect(document.querySelector('[role=dialog]')?.textContent).toContain('Review action outcome');
   expect(document.querySelector('[role=dialog] button[type=submit]')).toBeNull();
-  await click('I reviewed the state; return to queue', true);
+  await click(reviewText('reviewed'), true);
   await act(async () => {
     host.querySelectorAll<HTMLInputElement>('table input[type=checkbox]').forEach((n) => n.click());
   });
   valid = true;
-  await click('Retry selected (2)');
+  await click('Retry selected');
   await submit();
   expect(document.querySelector('[role=dialog]')).toBeNull();
   expect(host.textContent).toContain('1 selections were skipped');

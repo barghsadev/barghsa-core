@@ -153,9 +153,7 @@ it.each(['en', 'fa'] as const)(
         'consultation-reason-message'
       );
       expect(view.container.querySelector('label[for=consultation-reason]')).not.toBeNull();
-      expect(message.parentElement?.querySelector('[aria-hidden=true]')?.textContent).toBe(
-        message.textContent
-      );
+      expect(message.getAttribute('role')).toBe('alert');
       expect(
         view.container.querySelector(
           `form[aria-label="${tConsultation('reasonFormTitle', locale)}"]`

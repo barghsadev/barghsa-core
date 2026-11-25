@@ -1,6 +1,7 @@
 const en = {
   title: 'Pay from wallet',
   reviewTitle: 'Review this payment',
+  reviewContent: 'Payment details',
   profile: 'Profile',
   invoice: 'Invoice',
   service: 'Service',
@@ -46,8 +47,7 @@ const en = {
     'Pay {amount} from your wallet. Review the invoice and conditions below before confirming.',
   conflict: 'The invoice or wallet changed. Close this dialog and review the latest amount.',
   denied: 'Your payment access is unavailable. Sign in again and check the active profile.',
-  retryHint:
-    'If the result is unclear, retry this payment. The same request is kept until you review changed payment details.',
+  retryHint: 'Retry to check the outcome of the same payment request.',
   request: 'Payment request',
   paid: 'Invoice paid from wallet.',
   reference: 'Wallet transaction',
@@ -57,6 +57,7 @@ const en = {
 const fa: Record<keyof typeof en, string> = {
   title: 'پرداخت از کیف پول',
   reviewTitle: 'بررسی این پرداخت',
+  reviewContent: 'جزئیات پرداخت',
   profile: 'پروفایل',
   invoice: 'فاکتور',
   service: 'خدمت',
@@ -101,8 +102,7 @@ const fa: Record<keyof typeof en, string> = {
     'مبلغ {amount} از کیف پول پرداخت شود. پیش از تأیید، فاکتور و شرایط زیر را بررسی کنید.',
   conflict: 'فاکتور یا کیف پول تغییر کرده است. این پنجره را ببندید و مبلغ فعلی را بررسی کنید.',
   denied: 'دسترسی پرداخت شما در دسترس نیست. دوباره وارد شوید و پروفایل فعال را بررسی کنید.',
-  retryHint:
-    'اگر نتیجه مشخص نیست، همین پرداخت را دوباره ارسال کنید. تا زمان بررسی جزئیات تغییریافته پرداخت، همان درخواست حفظ می‌شود.',
+  retryHint: 'برای مشخص شدن نتیجه، همین درخواست پرداخت را دوباره ارسال کنید.',
   request: 'درخواست پرداخت',
   paid: 'فاکتور از کیف پول پرداخت شد.',
   reference: 'تراکنش کیف پول',

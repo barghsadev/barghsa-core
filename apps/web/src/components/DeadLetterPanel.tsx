@@ -1,17 +1,43 @@
+import {
+  Check as TableCheckIcon,
+  RotateCw as TableRotateCwIcon,
+  X as TableXIcon,
+} from 'lucide-react';
+import { TableActionIcon } from './TableActionIcon.js';
+import { Link } from '@tanstack/react-router';
+import { SendIcon } from 'lucide-react';
+import { t as workspaceText } from '@barghsa/i18n/workspace';
 import { CommandFeedback } from './CommandFeedback.js';
 import { OperationalQueueTable, QueueRecordDetails } from './OperationalQueueTable.js';
-import { OperationalCommandReview } from './OperationalCommandReview.js';
+import {
+  OperationalCommandChecks,
+  OperationalCommandRecords,
+  OperationalCommandReview,
+} from './OperationalCommandReview.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useState, useEffect, useId, useRef, useMemo } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
-import { LoadingStatus, Button, DateCell, TextCell, ListPage, NativeSelect } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  Badge,
+  DateCell,
+  TextCell,
+  ListPage,
+  ListRefreshButton,
+  NativeSelect,
+  buttonVariants,
+} from '@barghsa/ui';
 import type { Locale } from '@barghsa/i18n/app';
 import { NotificationDeliveryHistory } from './NotificationDeliveryHistory.js';
 
 import { useOperationalQueue } from '../hooks/useOperationalQueue.js';
+import { QueueEmptyState, statusAlternatives } from './QueueEmptyState.js';
+import { useNavigation } from '../hooks/useNavigation.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import { failedNotificationsSearch } from '../lib/notification-panel-query.js';
 /**
  * Admin dead-letter queue panel (E-05, T-05.01.06).
  *
@@ -103,14 +129,21 @@ export default function DeadLetterPanel({
   uiLocale,
   queries,
   historyQueries,
+  historySearch,
+  recordId,
+  recordHistory = false,
   headingLevel = 2,
 }: {
   uiLocale: Locale;
   headingLevel?: 1 | 2;
   queries?: ListQueryBinding | undefined;
   historyQueries?: ListQueryBinding | undefined;
+  historySearch?: Record<string, unknown> | undefined;
+  recordId?: string | undefined;
+  recordHistory?: boolean | undefined;
 }) {
   const Heading = headingLevel === 1 ? 'h1' : 'h2';
+  const canOpenJob = useNavigation()?.paths.includes('/admin/failed-jobs');
   const time = useAccountTime(uiLocale);
   const numbers = useNumberFormatting(uiLocale);
   const filterId = useId();
@@ -177,11 +210,20 @@ export default function DeadLetterPanel({
     criteria,
     offset,
     isDeadLetterRow,
-    clearPrivate
+    clearPrivate,
+    recordId
   );
   const { access, loading, error } = queue;
   const rows = queue.data?.rows ?? [],
     hasMore = queue.data?.hasMore ?? false;
+  function changeStatus(value: string) {
+    if (locked) return;
+    if (queries) queries.setQuery({ filters: { status: value || 'all' } });
+    else {
+      setStatus(value);
+      setOffset(0);
+    }
+  }
   useEffect(() => {
     if (reviewReload && queue.ready && queue.data !== reloadBase.current) {
       reloadBase.current = null;
@@ -191,6 +233,7 @@ export default function DeadLetterPanel({
   }, [reviewReload, queue.ready, queue.data]);
   function returnToQueue() {
     ++actionGeneration.current;
+    savedTrigger.current = unconfirmed?.trigger ?? refreshButton.current;
     setUnconfirmed(null);
     setAction(null);
     reloadBase.current = queue.data;
@@ -299,20 +342,48 @@ export default function DeadLetterPanel({
     return () => cancelAnimationFrame(frame);
   }, [queue.ready, action]);
   const recovery = (
-    <div className="space-y-2">
-      <Button type="button" variant="outline" disabled={access.loading} onClick={access.retry}>
-        {t('admin.jobs.accessRetry', uiLocale)}
-      </Button>
-      <Button
-        type="button"
-        variant="outline"
-        disabled={loading || !queue.canView}
-        onClick={queue.retry}
-      >
-        {t('admin.jobs.queueRetry', uiLocale)}
-      </Button>
-      {(error || access.error) && <p role="alert">{label('loadFailed')}</p>}
-    </div>
+    <>
+      {(error || access.error) && (
+        <p role="alert" className="text-sm">
+          {label('loadFailed')}
+        </p>
+      )}
+      <OperationalCommandChecks locale={uiLocale}>
+        <Button type="button" variant="outline" disabled={access.loading} onClick={access.retry}>
+          {t('admin.jobs.accessRetry', uiLocale)}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={loading || !queue.canView}
+          onClick={queue.retry}
+        >
+          {t('admin.jobs.queueRetry', uiLocale)}
+        </Button>
+      </OperationalCommandChecks>
+    </>
+  );
+  const renderNotification = (row: DeadLetterRow, available: boolean) => (
+    <>
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <p className="font-semibold">
+          <bdi>{row.eventKey}</bdi>
+        </p>
+        {available && <Badge variant="outline">{statusLabel(row.status, uiLocale)}</Badge>}
+      </div>
+      <p className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+        <span>{channelLabel(row.channel, uiLocale)}</span>
+        {row.recipientKey && <bdi>{row.recipientKey}</bdi>}
+        {available && (
+          <span>
+            {label('attempts')}{' '}
+            <bdi dir="ltr">
+              {numbers.number(row.attempts)} / {numbers.number(row.maxAttempts)}
+            </bdi>
+          </span>
+        )}
+      </p>
+    </>
   );
   function act(row: DeadLetterRow, kind: 'retry' | 'resolve' | 'dismiss') {
     if (!queue.canRetry || owned.current || row.status !== 'open') return;
@@ -326,7 +397,7 @@ export default function DeadLetterPanel({
       kind,
       ...(kind === 'dismiss' ? { risk: 'destructive' as const } : {}),
       title: label(kind),
-      description: `${label(`${kind}Confirm`)} ${row.eventKey} · ${channelLabel(row.channel, uiLocale)} · ${row.recipientKey ?? ''}`,
+      description: label(`${kind}Confirm`),
       path: `/api/admin/failed-notifications/${row.id}/${kind}`,
       method: 'POST',
       responseDeadline: true,
@@ -336,130 +407,328 @@ export default function DeadLetterPanel({
     });
   }
 
+  const recordActions = (row: DeadLetterRow) => (
+    <>
+      {row.status === 'open' && access.data?.canRetry ? (
+        <div className="flex flex-wrap gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => act(row, 'retry')}
+            disabled={action !== null || locked || !queue.canRetry}
+            aria-label={`${t('admin.notifications.deadLetter.retry', uiLocale)} ${row.eventKey}`}
+            data-table-action-tooltip={t('admin.notifications.deadLetter.retry', uiLocale)}
+          >
+            <TableActionIcon icon={TableRotateCwIcon}>
+              {t('admin.notifications.deadLetter.retry', uiLocale)}
+            </TableActionIcon>
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => act(row, 'resolve')}
+            disabled={action !== null || locked || !queue.canRetry}
+            aria-label={`${t('admin.notifications.deadLetter.resolve', uiLocale)} ${row.eventKey}`}
+            data-table-action-tooltip={t('admin.notifications.deadLetter.resolve', uiLocale)}
+          >
+            <TableActionIcon icon={TableCheckIcon}>
+              {t('admin.notifications.deadLetter.resolve', uiLocale)}
+            </TableActionIcon>
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => act(row, 'dismiss')}
+            disabled={action !== null || locked || !queue.canRetry}
+            aria-label={`${t('admin.notifications.deadLetter.dismiss', uiLocale)} ${row.eventKey}`}
+            data-table-action-tooltip={t('admin.notifications.deadLetter.dismiss', uiLocale)}
+          >
+            <TableActionIcon icon={TableXIcon}>
+              {t('admin.notifications.deadLetter.dismiss', uiLocale)}
+            </TableActionIcon>
+          </Button>
+        </div>
+      ) : (
+        <span className="text-xs text-muted-foreground">—</span>
+      )}
+    </>
+  );
+  const record = recordId ? rows[0] : undefined;
+  const detailSearch = historySearch ?? {};
   return (
     <section className="space-y-3" dir={uiLocale === 'fa' ? 'rtl' : 'ltr'}>
       {time.notice}
+      {recordId && !locked && !action && (
+        <Link
+          to={
+            recordHistory
+              ? '/admin/failed-notifications/$deliveryId/{-$section}'
+              : '/admin/failed-notifications'
+          }
+          params={recordHistory ? { deliveryId: recordId, section: undefined } : {}}
+          search={detailSearch}
+          className="touch-action text-sm text-primary underline underline-offset-4"
+        >
+          {label(recordHistory ? 'recordTitle' : 'title')}
+        </Link>
+      )}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Heading
-          className={headingLevel === 1 ? 'text-2xl font-semibold' : 'text-lg font-semibold'}
+          className={
+            headingLevel === 1
+              ? 'text-2xl font-semibold [overflow-wrap:anywhere]'
+              : 'text-lg font-semibold'
+          }
         >
-          {label('title')}
+          {record ? record.eventKey : label(recordId ? 'recordTitle' : 'title')}
         </Heading>
-        {queue.canView && (
-          <Button
-            variant="outline"
-            onClick={() =>
-              historyQueries
-                ? historyQueries.setQuery({
-                    filters: {
-                      mode: 'all',
-                      ...(historyMode === 'target'
-                        ? { notificationId: '', channel: '', status: '' }
-                        : {}),
-                    },
-                    page: 1,
-                  })
-                : setAllHistory(true)
-            }
+        {!recordId && queue.canView && historySearch ? (
+          <Link
+            to="/admin/failed-notifications/history"
+            search={historySearch}
+            className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
           >
             {t('admin.notifications.history.browse', uiLocale)}
+          </Link>
+        ) : (
+          !recordId &&
+          queue.canView && (
+            <Button
+              variant="outline"
+              onClick={() =>
+                historyQueries
+                  ? historyQueries.setQuery({
+                      filters: {
+                        mode: 'all',
+                        ...(historyMode === 'target'
+                          ? { notificationId: '', channel: '', status: '' }
+                          : {}),
+                      },
+                      page: 1,
+                    })
+                  : setAllHistory(true)
+              }
+            >
+              {t('admin.notifications.history.browse', uiLocale)}
+            </Button>
+          )
+        )}
+        {recordId && (
+          <Button
+            variant="outline"
+            disabled={pending || !!unconfirmed || loading || access.loading}
+            ref={refreshButton}
+            onClick={queue.refresh}
+          >
+            {t('admin.jobs.refresh', uiLocale)}
           </Button>
         )}
-        <Button
-          variant="outline"
-          disabled={pending || !!unconfirmed || loading || access.loading}
-          ref={refreshButton}
-          onClick={queue.refresh}
-        >
-          {t('admin.jobs.refresh', uiLocale)}
-        </Button>
       </div>
       <CommandFeedback message={notice ? label(`${notice}Notice`) : null} />
       <ListPage>
-        <ListPage.Toolbar>
-          <div className="flex flex-wrap gap-3">
-            <div className="space-y-1">
-              <label htmlFor={`${filterId}-status`}>{label('status')}</label>
-              <NativeSelect
-                id={`${filterId}-status`}
-                disabled={locked}
-                value={status}
-                onChange={(e) => {
-                  if (queries) queries.setQuery({ filters: { status: e.target.value || 'all' } });
-                  else {
-                    setStatus(e.target.value);
-                    setOffset(0);
-                  }
-                }}
-              >
-                <option value="">{label('all')}</option>
-                {(['open', 'retried', 'resolved', 'dismissed'] as const).map((value) => (
-                  <option key={value} value={value}>
-                    {statusLabel(value, uiLocale)}
-                  </option>
-                ))}
-              </NativeSelect>
+        {!recordId && (
+          <ListPage.Toolbar
+            refresh={
+              <ListRefreshButton
+                label={t('admin.jobs.refresh', uiLocale)}
+                refreshing={loading || access.loading}
+                disabled={pending || !!unconfirmed}
+                ref={refreshButton}
+                onClick={queue.refresh}
+              />
+            }
+          >
+            <div className="flex flex-wrap gap-3">
+              <div className="space-y-1">
+                <label htmlFor={`${filterId}-status`}>{label('status')}</label>
+                <NativeSelect
+                  id={`${filterId}-status`}
+                  disabled={locked}
+                  value={status}
+                  onChange={(event) => changeStatus(event.target.value)}
+                >
+                  <option value="">{label('all')}</option>
+                  {(['open', 'retried', 'resolved', 'dismissed'] as const).map((value) => (
+                    <option key={value} value={value}>
+                      {statusLabel(value, uiLocale)}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </div>
+              <div className="space-y-1">
+                <label htmlFor={`${filterId}-channel`}>{label('channel')}</label>
+                <NativeSelect
+                  id={`${filterId}-channel`}
+                  disabled={locked}
+                  value={channel}
+                  onChange={(e) => {
+                    if (queries) queries.setQuery({ filters: { channel: e.target.value } });
+                    else {
+                      setChannel(e.target.value);
+                      setOffset(0);
+                    }
+                  }}
+                >
+                  <option value="">{label('all')}</option>
+                  {(['in_app', 'email', 'sms'] as const).map((value) => (
+                    <option key={value} value={value}>
+                      {channelLabel(value, uiLocale)}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </div>
+              <div className="space-y-1">
+                <label htmlFor={`${filterId}-severity`}>{label('severity')}</label>
+                <NativeSelect
+                  id={`${filterId}-severity`}
+                  disabled={locked}
+                  value={severity}
+                  onChange={(e) => {
+                    if (queries) queries.setQuery({ filters: { severity: e.target.value } });
+                    else {
+                      setSeverity(e.target.value);
+                      setOffset(0);
+                    }
+                  }}
+                >
+                  <option value="">{label('all')}</option>
+                  <option value="error">{label('severityError')}</option>
+                  <option value="critical">{label('severityCritical')}</option>
+                </NativeSelect>
+              </div>
             </div>
-            <div className="space-y-1">
-              <label htmlFor={`${filterId}-channel`}>{label('channel')}</label>
-              <NativeSelect
-                id={`${filterId}-channel`}
-                disabled={locked}
-                value={channel}
-                onChange={(e) => {
-                  if (queries) queries.setQuery({ filters: { channel: e.target.value } });
-                  else {
-                    setChannel(e.target.value);
-                    setOffset(0);
-                  }
-                }}
-              >
-                <option value="">{label('all')}</option>
-                {(['in_app', 'email', 'sms'] as const).map((value) => (
-                  <option key={value} value={value}>
-                    {channelLabel(value, uiLocale)}
-                  </option>
-                ))}
-              </NativeSelect>
-            </div>
-            <div className="space-y-1">
-              <label htmlFor={`${filterId}-severity`}>{label('severity')}</label>
-              <NativeSelect
-                id={`${filterId}-severity`}
-                disabled={locked}
-                value={severity}
-                onChange={(e) => {
-                  if (queries) queries.setQuery({ filters: { severity: e.target.value } });
-                  else {
-                    setSeverity(e.target.value);
-                    setOffset(0);
-                  }
-                }}
-              >
-                <option value="">{label('all')}</option>
-                <option value="error">{label('severityError')}</option>
-                <option value="critical">{label('severityCritical')}</option>
-              </NativeSelect>
-            </div>
-          </div>
-        </ListPage.Toolbar>
+          </ListPage.Toolbar>
+        )}
         {queue.denied && <p role="alert">{label('accessDenied')}</p>}
         <ListPage.Content
           loading={loading || access.loading}
           error={error || access.error}
           retainContent={queue.data !== null && rows.length > 0}
           empty={queue.ready && !rows.length}
-          emptyView={<p>{label('empty')}</p>}
+          emptyView={
+            !recordId && offset === 0 && status ? (
+              <QueueEmptyState
+                locale={uiLocale}
+                message={label('empty')}
+                status={statusLabel(status as DeadLetterRow['status'], uiLocale)}
+                alternatives={statusAlternatives(
+                  ['open', 'retried', 'resolved', 'dismissed'],
+                  status,
+                  (value) => statusLabel(value as DeadLetterRow['status'], uiLocale),
+                  '/api/admin/failed-notifications',
+                  criteria
+                )}
+                hasResults={(body, value) =>
+                  Array.isArray(body) &&
+                  body.some((row) => isDeadLetterRow(row) && row.status === value)
+                }
+                select={changeStatus}
+                all={() => changeStatus('')}
+                disabled={locked}
+              />
+            ) : (
+              <p>{label('empty')}</p>
+            )
+          }
           loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
           errorView={
             <div role="alert">
-              <p>{label('loadFailed')}</p>
+              <p>{label(queue.missing ? 'recordUnavailable' : 'loadFailed')}</p>
               <Button onClick={queue.refresh}>{t('admin.jobs.reload', uiLocale)}</Button>
             </div>
           }
         >
-          {queue.data && (
+          {record && !recordHistory && (
+            <section className="space-y-4 rounded-xl border bg-card p-4 sm:p-6">
+              <div className="flex flex-wrap items-center gap-3">
+                <Badge variant="outline">{statusLabel(record.status, uiLocale)}</Badge>
+                <span className="text-sm text-muted-foreground">
+                  {channelLabel(record.channel, uiLocale)}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  {label('attempts')}{' '}
+                  <bdi>
+                    {numbers.number(record.attempts)} / {numbers.number(record.maxAttempts)}
+                  </bdi>
+                </span>
+              </div>
+              <dl className="grid gap-4 text-sm sm:grid-cols-2">
+                <div>
+                  <dt className="text-muted-foreground">{label('recipient')}</dt>
+                  <dd>
+                    <bdi className="break-all">{record.recipientKey ?? '—'}</bdi>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">{label('date')}</dt>
+                  <dd>
+                    <DateCell value={record.createdAt} format={(stamp) => time.format(stamp)} />
+                  </dd>
+                </div>
+                {record.resolvedAt && (
+                  <div>
+                    <dt className="text-muted-foreground">{label('actedBy')}</dt>
+                    <dd>
+                      <DateCell value={record.resolvedAt} format={(stamp) => time.format(stamp)} />
+                      {record.resolvedById && (
+                        <bdi className="ms-2 break-all">{record.resolvedById}</bdi>
+                      )}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+              <section aria-labelledby="delivery-cause">
+                <h2 id="delivery-cause" className="mb-2 font-semibold">
+                  {label('cause')}
+                </h2>
+                <p className="whitespace-pre-wrap rounded-lg bg-muted p-3 text-sm [overflow-wrap:anywhere]">
+                  {record.cause ?? '—'}
+                </p>
+              </section>
+              {record.data && (
+                <details className="rounded-lg border p-3">
+                  <summary className="touch-action cursor-pointer font-medium">
+                    {label('details')}
+                  </summary>
+                  <pre dir="ltr" className="mt-1 whitespace-pre-wrap break-all text-sm">
+                    {JSON.stringify(record.data, null, 2)}
+                  </pre>
+                </details>
+              )}
+              {!locked && !action && (
+                <div className="flex flex-wrap justify-start gap-x-4">
+                  <Link
+                    to="/admin/failed-notifications/$deliveryId/{-$section}"
+                    params={{ deliveryId: record.id, section: 'history' }}
+                    search={failedNotificationsSearch(detailSearch)}
+                    className="touch-action text-sm text-primary underline underline-offset-4"
+                  >
+                    {t('admin.notifications.history.title', uiLocale)}
+                  </Link>
+                  {canOpenJob && (
+                    <Link
+                      to="/admin/failed-jobs/$jobId"
+                      params={{ jobId: record.jobId }}
+                      className="touch-action text-sm text-primary underline underline-offset-4"
+                    >
+                      {t('admin.jobs.recordTitle', uiLocale)}
+                    </Link>
+                  )}
+                </div>
+              )}
+              {recordActions(record)}
+            </section>
+          )}
+          {!recordId && queue.data && (
             <OperationalQueueTable
+              tableClassName="min-w-[48rem]"
+              fieldGroups={[
+                {
+                  label: workspaceText('recordTable.delivery', uiLocale),
+                  fields: ['channel', 'attempts', 'date'],
+                  icon: SendIcon,
+                },
+              ]}
               locale={uiLocale}
               rows={rows}
               caption={label('title')}
@@ -471,7 +740,18 @@ export default function DeadLetterPanel({
               renderName={(row) => (
                 <>
                   <span className="font-mono text-xs">
-                    <TextCell value={row.eventKey} />
+                    {historySearch && !locked && !action ? (
+                      <Link
+                        to="/admin/failed-notifications/$deliveryId/{-$section}"
+                        params={{ deliveryId: row.id, section: undefined }}
+                        search={detailSearch}
+                        className="touch-action font-medium text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
+                      >
+                        {row.eventKey}
+                      </Link>
+                    ) : (
+                      <TextCell value={row.eventKey} />
+                    )}
                   </span>
                 </>
               )}
@@ -512,44 +792,46 @@ export default function DeadLetterPanel({
                   render: (row) => (
                     <div className="max-w-md [overflow-wrap:anywhere]">
                       <TextCell value={row.cause ?? '—'} />
-                      <QueueRecordDetails
-                        open={!!expanded[row.id]}
-                        onToggle={() => toggleDetails(row.id)}
-                        label={label('details')}
-                      >
-                        <p>
-                          {label('recipient')}: <bdi>{row.recipientKey ?? '—'}</bdi>
-                        </p>
-                        {row.resolvedById && (
+                      {!historySearch && (
+                        <QueueRecordDetails
+                          open={!!expanded[row.id]}
+                          onToggle={() => toggleDetails(row.id)}
+                          label={label('details')}
+                        >
                           <p>
-                            {label('actedBy')}: <bdi>{row.resolvedById}</bdi>
+                            {label('recipient')}: <bdi>{row.recipientKey ?? '—'}</bdi>
                           </p>
-                        )}
-                        <pre
-                          dir="ltr"
-                          className="max-w-sm overflow-auto whitespace-pre-wrap break-words"
-                        >
-                          {JSON.stringify(row.data, null, 2)}
-                        </pre>
-                        <Button
-                          variant="outline"
-                          onClick={() =>
-                            historyQueries
-                              ? historyQueries.setQuery({
-                                  filters: {
-                                    mode: 'target',
-                                    notificationId: row.outboxId,
-                                    channel: row.channel,
-                                    status: '',
-                                  },
-                                  page: 1,
-                                })
-                              : setHistory(row)
-                          }
-                        >
-                          {t('admin.notifications.history.title', uiLocale)}
-                        </Button>
-                      </QueueRecordDetails>
+                          {row.resolvedById && (
+                            <p>
+                              {label('actedBy')}: <bdi>{row.resolvedById}</bdi>
+                            </p>
+                          )}
+                          <pre
+                            dir="ltr"
+                            className="max-w-sm overflow-auto whitespace-pre-wrap break-words"
+                          >
+                            {JSON.stringify(row.data, null, 2)}
+                          </pre>
+                          <Button
+                            variant="outline"
+                            onClick={() =>
+                              historyQueries
+                                ? historyQueries.setQuery({
+                                    filters: {
+                                      mode: 'target',
+                                      notificationId: row.outboxId,
+                                      channel: row.channel,
+                                      status: '',
+                                    },
+                                    page: 1,
+                                  })
+                                : setHistory(row)
+                            }
+                          >
+                            {t('admin.notifications.history.title', uiLocale)}
+                          </Button>
+                        </QueueRecordDetails>
+                      )}
                     </div>
                   ),
                 },
@@ -573,47 +855,11 @@ export default function DeadLetterPanel({
                 },
               ]}
               actionHeader={label('actions')}
-              renderActions={(row) => (
-                <>
-                  {row.status === 'open' && access.data?.canRetry ? (
-                    <div className="flex flex-wrap gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => act(row, 'retry')}
-                        disabled={action !== null || locked || !queue.canRetry}
-                        aria-label={`${t('admin.notifications.deadLetter.retry', uiLocale)} ${row.eventKey}`}
-                      >
-                        {t('admin.notifications.deadLetter.retry', uiLocale)}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => act(row, 'resolve')}
-                        disabled={action !== null || locked || !queue.canRetry}
-                        aria-label={`${t('admin.notifications.deadLetter.resolve', uiLocale)} ${row.eventKey}`}
-                      >
-                        {t('admin.notifications.deadLetter.resolve', uiLocale)}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => act(row, 'dismiss')}
-                        disabled={action !== null || locked || !queue.canRetry}
-                        aria-label={`${t('admin.notifications.deadLetter.dismiss', uiLocale)} ${row.eventKey}`}
-                      >
-                        {t('admin.notifications.deadLetter.dismiss', uiLocale)}
-                      </Button>
-                    </div>
-                  ) : (
-                    <span className="text-xs text-muted-foreground">—</span>
-                  )}
-                </>
-              )}
+              renderActions={recordActions}
             />
           )}
         </ListPage.Content>
-        {queue.canView && (
+        {!recordId && queue.canView && (
           <nav aria-label={label('pagination')} className="flex flex-wrap items-center gap-3">
             <Button
               variant="outline"
@@ -648,7 +894,16 @@ export default function DeadLetterPanel({
           </nav>
         )}
       </ListPage>
-      {historyQueries && historyMode && queue.canView && (
+      {recordHistory && record && queue.canView && (
+        <NotificationDeliveryHistory
+          standalone
+          target={record}
+          locale={uiLocale}
+          queries={historyQueries}
+          onDenied={denyHistory}
+        />
+      )}
+      {!recordId && historyQueries && historyMode && queue.canView && (
         <NotificationDeliveryHistory
           locale={uiLocale}
           target={historyTarget}
@@ -682,30 +937,25 @@ export default function DeadLetterPanel({
           identity={deadLetterIdentity}
           onDenied={queue.deny}
           onReviewed={returnToQueue}
-          renderRecord={(row, available) => (
-            <>
-              <p className="font-semibold">
-                {row.eventKey} · {channelLabel(row.channel, uiLocale)}
-              </p>
-              {available && (
-                <p>
-                  {statusLabel(row.status, uiLocale)} ·{' '}
-                  <bdi dir="ltr">
-                    {numbers.number(row.attempts)} / {numbers.number(row.maxAttempts)}
-                  </bdi>
-                </p>
-              )}
-              <p className="text-muted-foreground">{row.recipientKey}</p>
-            </>
-          )}
+          renderRecord={renderNotification}
         />
       )}
       {action && !queue.denied && (
         <TeamActionDialog
           action={action}
+          focusSummary
           onDenied={queue.deny}
           confirmationDisabled={!queue.canRetry}
-          summary={recovery}
+          summary={
+            <>
+              <OperationalCommandRecords
+                locale={uiLocale}
+                rows={[action.row]}
+                render={(row) => renderNotification(row, true)}
+              />
+              {recovery}
+            </>
+          }
           finalFocus={() =>
             action.trigger?.isConnected &&
             action.trigger.getClientRects().length > 0 &&

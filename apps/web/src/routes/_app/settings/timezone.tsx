@@ -1,15 +1,19 @@
 import { useState, useEffect, useMemo } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
-import { timezoneText } from '@barghsa/i18n/timezone';
-import { GlobeIcon, ClockIcon, Loader2Icon, SaveIcon, SearchIcon } from 'lucide-react';
-import { Button, Card, CardContent, Input } from '@barghsa/ui';
+import { timezoneCityName, timezoneText } from '@barghsa/i18n/timezone';
+import { ClockIcon, SearchIcon } from 'lucide-react';
+import { Button, Input } from '@barghsa/ui';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@barghsa/ui/form';
 import {
   usePreferenceSettingsOwner,
   usePreferenceSettingsForm,
 } from '../../../hooks/usePreferenceSettingsForm.js';
 import { PreferenceSettingsStatus } from '../../../components/PreferenceSettingsStatus.js';
+import {
+  RecordEditorActions,
+  recordEditorSurface,
+} from '../../../components/RecordEditorLayout.js';
 import { timezoneSettings, type TimezoneValues } from '../../../lib/preference-settings-form.js';
 import { tPreferenceSettingsForms } from '@barghsa/i18n/preference-settings-forms';
 import { useLocale } from '../../../hooks/useLocale.js';
@@ -138,14 +142,18 @@ function getAllTimezones(): string[] {
   return FALLBACK_TIMEZONES;
 }
 
-const ALL_TIMEZONES = getAllTimezones();
+const ALL_TIMEZONES = [...new Set(['Asia/Tehran', 'UTC', ...getAllTimezones()])];
 
 // ─── Helpers ───────────────────────────────────────────────────────────
 
-function getRegion(tz: string): string {
-  if (tz === 'UTC' || tz === 'GMT' || tz === 'Etc/UTC') return 'UTC';
-  const parts = tz.split('/');
-  return parts[0] || 'Other';
+function searchTerms(value: string): string {
+  return value
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/[يى]/g, 'ی')
+    .replace(/ك/g, 'ک')
+    .replace(/[_/\s\u200c]+/g, ' ')
+    .trim();
 }
 
 function formatOffset(tz: string): string {
@@ -169,7 +177,6 @@ function getCurrentTimeInTimezone(tz: string, locale: 'en' | 'fa'): string {
       timeZone: tz,
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit',
       hour12: false,
     }).format(new Date());
   } catch {
@@ -218,50 +225,46 @@ function SettingsTimezonePage() {
   useEffect(() => {
     setSearchQuery('');
   }, [scope.key, scope.denied]);
-  const filteredTimezones = useMemo(() => {
-    if (!searchQuery.trim()) return ALL_TIMEZONES;
-    const query = searchQuery.toLowerCase();
-    return ALL_TIMEZONES.filter(
-      (tz) => tz.toLowerCase().includes(query) || getRegion(tz).toLowerCase().includes(query)
-    );
-  }, [searchQuery]);
-  const groupedTimezones = useMemo(() => {
-    const groups: Record<string, string[]> = {};
-    for (const tz of filteredTimezones) {
-      const region = getRegion(tz);
-      (groups[region] ??= []).push(tz);
-    }
-    return groups;
-  }, [filteredTimezones]);
+  const savedTimezone = editor.source?.timezone;
+  const timezoneOptions = useMemo(() => {
+    if (!savedTimezone) return [];
+    const query = searchTerms(searchQuery);
+    return [...new Set([savedTimezone, ...ALL_TIMEZONES])].flatMap((value) => {
+      const city = timezoneCityName(value, locale);
+      if (query && !searchTerms(value).includes(query) && !searchTerms(city).includes(query))
+        return [];
+      return [{ value, label: city ? `${city} · ${value}` : value }];
+    });
+  }, [savedTimezone, searchQuery, locale]);
   const currentTime = timezone ? getCurrentTimeInTimezone(timezone, locale) : '';
   const currentDate = timezone ? getCurrentDateInTimezone(timezone, locale) : '';
   const offset = timezone ? formatOffset(timezone) : '';
   return (
-    <div className="container mx-auto max-w-2xl py-8 px-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <h1 className="text-2xl font-bold mb-6">{timezoneText('title', locale)}</h1>
+    <div className="mx-auto max-w-2xl min-w-0 space-y-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <header className="space-y-1">
+        <h1 className="text-2xl font-semibold">{timezoneText('title', locale)}</h1>
+        <p className="max-w-prose text-sm text-muted-foreground">
+          {timezoneText('description', locale)}
+        </p>
+      </header>
       {scope.denied ? (
         <p role="alert">{copy('forbidden')}</p>
       ) : (
-        <Card>
-          <CardContent className="pt-6 space-y-4">
-            <h2 className="flex items-center gap-2 text-lg font-semibold">
-              <GlobeIcon className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
-              {timezoneText('title', locale)}
-            </h2>
-            <p className="text-sm text-muted-foreground">{timezoneText('description', locale)}</p>
-            <Form {...editor.form}>
-              <form
-                noValidate
-                ref={editor.feedback.element}
-                onSubmit={editor.submit}
-                aria-label={timezoneText('title', locale)}
-                className="space-y-4"
-              >
-                {editor.source && (
-                  <>
+        <>
+          <Form {...editor.form}>
+            <form
+              noValidate
+              ref={editor.feedback.element}
+              onSubmit={editor.submit}
+              aria-label={timezoneText('title', locale)}
+              className={recordEditorSurface}
+            >
+              {editor.source && (
+                <div className="grid min-w-0 gap-4 px-4 py-4 sm:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] sm:gap-5 sm:px-6">
+                  <div className="min-w-0 space-y-2">
                     <div className="relative">
                       <SearchIcon
-                        className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                        className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
                         aria-hidden="true"
                       />
                       <Input
@@ -270,9 +273,9 @@ function SettingsTimezonePage() {
                         onChange={(event) => {
                           if (!scope.isLocked()) setSearchQuery(event.target.value);
                         }}
-                        placeholder={timezoneText('searchPlaceholder', locale)}
+                        placeholder={copy('timezoneSearchExample')}
                         aria-label={timezoneText('searchPlaceholder', locale)}
-                        className="ps-10"
+                        className="ps-9"
                         disabled={editor.locked}
                       />
                     </div>
@@ -281,37 +284,32 @@ function SettingsTimezonePage() {
                       name="timezone"
                       render={({ field }) => (
                         <FormItem id="settings-timezone">
-                          <FormLabel>{timezoneText('title', locale)}</FormLabel>
+                          <FormLabel>{copy('timezoneZoneLabel')}</FormLabel>
                           <FormControl>
                             <select
                               name={field.name}
                               ref={field.ref}
                               onBlur={field.onBlur}
-                              aria-label={timezoneText('title', locale)}
                               aria-required="true"
-                              size={10}
+                              size={4}
                               value={field.value}
                               onChange={(event) => {
                                 if (!scope.isLocked() && editor.ready)
                                   field.onChange(event.target.value);
                               }}
                               disabled={editor.locked}
-                              className="w-full rounded-lg border border-input bg-background p-2 text-foreground"
+                              className="w-full min-w-0 rounded-lg border border-input bg-background p-2 text-sm text-foreground"
                               dir="ltr"
                             >
-                              {!filteredTimezones.includes(timezone) && (
+                              {!timezoneOptions.some((option) => option.value === timezone) && (
                                 <option value={timezone} hidden>
                                   {timezone}
                                 </option>
                               )}
-                              {Object.entries(groupedTimezones).map(([region, zones]) => (
-                                <optgroup key={region} label={region}>
-                                  {zones.map((zone) => (
-                                    <option key={zone} value={zone}>
-                                      {zone} ({formatOffset(zone)})
-                                    </option>
-                                  ))}
-                                </optgroup>
+                              {timezoneOptions.map(({ value, label }) => (
+                                <option key={value} value={value}>
+                                  {label}
+                                </option>
                               ))}
                             </select>
                           </FormControl>
@@ -319,54 +317,70 @@ function SettingsTimezonePage() {
                         </FormItem>
                       )}
                     />
-                    {filteredTimezones.length === 0 && (
+                    {timezoneOptions.length === 0 && (
                       <p role="status" className="text-sm text-muted-foreground">
-                        {locale === 'fa' ? 'نتیجه‌ای یافت نشد' : 'No results found'}
+                        {copy('timezoneNoMatches')}
                       </p>
                     )}
-                    {timezone && (
-                      <div className="rounded-lg border bg-muted/30 p-4 space-y-2">
-                        <div className="flex items-center gap-2 text-sm font-medium">
-                          <ClockIcon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                          <span>{timezoneText('preview', locale)}</span>
-                        </div>
-                        <div className="text-2xl font-mono font-bold tracking-tight">
-                          {currentTime}
-                        </div>
-                        <div className="text-sm text-muted-foreground">{currentDate}</div>
-                        <div className="text-xs text-muted-foreground" dir="ltr">
-                          {timezone} ({offset})
-                        </div>
+                  </div>
+                  {timezone && (
+                    <section
+                      aria-labelledby="timezone-preview-title"
+                      className="min-w-0 self-start space-y-2 rounded-lg border bg-muted/35 p-3 sm:p-4"
+                    >
+                      <h2
+                        id="timezone-preview-title"
+                        className="flex items-center gap-2 text-sm font-medium"
+                      >
+                        <ClockIcon
+                          className="size-4 shrink-0 text-muted-foreground"
+                          aria-hidden="true"
+                        />
+                        {copy('timezonePreview')}
+                      </h2>
+                      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 sm:flex-col">
+                        <bdi className="text-xl font-semibold tabular-nums">{currentTime}</bdi>
+                        <span className="text-sm text-muted-foreground">{currentDate}</span>
                       </div>
-                    )}
-                  </>
-                )}
-                <div className="flex justify-end">
-                  <Button type="submit" disabled={editor.locked} className="gap-2">
-                    {editor.busy ? (
-                      <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
-                    ) : (
-                      <SaveIcon className="h-4 w-4" aria-hidden="true" />
-                    )}
-                    {editor.busy
-                      ? timezoneText('saving', locale)
-                      : t('settings.profile.save', locale)}
-                  </Button>
+                      <bdi
+                        className="block text-xs text-muted-foreground [overflow-wrap:anywhere]"
+                        dir="ltr"
+                      >
+                        {timezone} ({offset})
+                      </bdi>
+                      {savedTimezone && timezone !== savedTimezone && (
+                        <p className="border-t pt-2 text-xs text-muted-foreground [overflow-wrap:anywhere]">
+                          {timezoneText('savedZone', locale)} <bdi>{savedTimezone}</bdi>
+                        </p>
+                      )}
+                    </section>
+                  )}
                 </div>
-              </form>
-            </Form>
-            <PreferenceSettingsStatus
-              editor={editor}
-              locale={locale}
-              locked={scope.locked}
-              enabled={scope.isCurrent()}
-              loadError={timezoneText('error.load', locale)}
-              retry={timezoneText('retry', locale)}
-              success={timezoneText('success', locale)}
-              saveError={timezoneText('error.save', locale)}
-            />
-          </CardContent>
-        </Card>
+              )}
+              <RecordEditorActions
+                secondary={
+                  <PreferenceSettingsStatus
+                    editor={editor}
+                    locale={locale}
+                    locked={scope.locked}
+                    enabled={scope.isCurrent()}
+                    loadError={timezoneText('error.load', locale)}
+                    retry={timezoneText('retry', locale)}
+                    success={timezoneText('success', locale)}
+                    saveError={timezoneText('error.save', locale)}
+                    compactRefresh
+                  />
+                }
+              >
+                <Button type="submit" loading={editor.busy} disabled={editor.locked}>
+                  {editor.busy
+                    ? timezoneText('saving', locale)
+                    : t('settings.profile.save', locale)}
+                </Button>
+              </RecordEditorActions>
+            </form>
+          </Form>
+        </>
       )}
     </div>
   );

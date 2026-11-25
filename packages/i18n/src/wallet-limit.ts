@@ -1,6 +1,7 @@
 import { lookup } from './lookup.js';
 const fa: Record<string, string> = {
   'admin.walletLimit.title': 'سقف شارژ آنلاین کیف پول',
+  'admin.walletLimit.editTitle': 'ویرایش سقف شارژ',
   'admin.walletLimit.description':
     'سقف هر تراکنش شارژ آنلاین به ریال. مقدار صفر همه شارژهای آنلاین را مسدود می‌کند.',
   'admin.walletLimit.label': 'سقف هر تراکنش (ریال)',
@@ -11,6 +12,7 @@ const fa: Record<string, string> = {
   'admin.walletLimit.saving': 'در حال ذخیره…',
   'admin.walletLimit.saved': 'ذخیره شد',
   'admin.walletLimit.blocked': 'همه شارژهای آنلاین مسدود خواهند شد.',
+  'admin.walletLimit.blockedCurrent': 'شارژ آنلاین در حال حاضر مسدود است.',
   'admin.walletLimit.validationUnavailable':
     'بررسی ورودی در دسترس نیست. پیش از ذخیره دوباره تلاش کنید.',
   'admin.walletLimit.unverified':
@@ -21,6 +23,7 @@ const fa: Record<string, string> = {
   'admin.walletLimit.invalid': 'سقف باید یک عدد صحیح بین ۰ و {max} باشد',
   'admin.walletLimit.reload': 'بارگذاری دوباره مقدار فعلی',
   'admin.walletLimit.current': 'سقف فعلی',
+  'admin.walletLimit.proposed': 'سقف پیشنهادی',
   'admin.walletLimit.version': 'نسخه پیکربندی: {version}',
   'admin.walletLimit.recoveryTitle': 'بازیابی سقف پیشین شارژ',
   'admin.walletLimit.recoveryActivateConfirm':
@@ -32,6 +35,7 @@ const fa: Record<string, string> = {
 };
 const en: Record<string, string> = {
   'admin.walletLimit.title': 'Online wallet top-up limit',
+  'admin.walletLimit.editTitle': 'Edit top-up limit',
   'admin.walletLimit.description':
     'Per-transaction ceiling for online wallet top-ups, in IRR. A value of 0 blocks all online top-ups.',
   'admin.walletLimit.label': 'Per-transaction limit (IRR)',
@@ -42,6 +46,7 @@ const en: Record<string, string> = {
   'admin.walletLimit.saving': 'Saving…',
   'admin.walletLimit.saved': 'Saved',
   'admin.walletLimit.blocked': 'All online top-ups will be blocked.',
+  'admin.walletLimit.blockedCurrent': 'Online top-ups are currently blocked.',
   'admin.walletLimit.validationUnavailable': 'Validation is unavailable. Retry before saving.',
   'admin.walletLimit.unverified':
     'The saved amount or version could not be verified. Cancel and reload before saving again.',
@@ -51,6 +56,7 @@ const en: Record<string, string> = {
   'admin.walletLimit.invalid': 'Limit must be an integer between 0 and {max}',
   'admin.walletLimit.reload': 'Reload current value',
   'admin.walletLimit.current': 'Current limit',
+  'admin.walletLimit.proposed': 'Proposed limit',
   'admin.walletLimit.version': 'Config version: {version}',
   'admin.walletLimit.recoveryTitle': 'Restore a previous top-up limit',
   'admin.walletLimit.recoveryActivateConfirm':

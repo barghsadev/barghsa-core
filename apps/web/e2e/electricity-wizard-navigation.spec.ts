@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
+import { simpleElectricityOrderText } from '@barghsa/i18n/simple-electricity-order';
 import { t as fundingText } from '@barghsa/i18n/workspace';
 import { fullNavigation } from './navigation-fixture';
 import { checkRoutePresentation } from './route-presentation';
@@ -45,7 +46,8 @@ const products = (['thermal', 'green', 'free_market', 'energy_saving'] as const)
 const startAt = '2026-10-04T10:00:00.000Z';
 const endAt = '2026-10-11T10:00:00.000Z';
 const fixtureNow = new Date('2026-10-02T10:00:00.000Z');
-const path = (mode: Mode) => (mode === 'simple' ? '/electricity/order' : '/electricity/advanced');
+const path = (mode: Mode) =>
+  mode === 'simple' ? '/electricity/order' : '/electricity/orders/new/advanced';
 const field = (page: Page, mode: Mode) =>
   page.locator(mode === 'simple' ? '#electricity-kwh' : '#advanced-thermal');
 
@@ -95,18 +97,33 @@ for (const locale of ['en', 'fa'] as const)
       .filter({ hasText: t('electricity.order.cityLoadFailed', locale) });
     await expect(error).toBeVisible();
     await page.locator('#order-address-fullAddress').fill('Retained power address');
-    await page.locator('#order-address-postalCode').fill('2345678901');
+    const postalCode = page.locator('#order-address-postalCode');
+    await expect(postalCode).toHaveAttribute('inputmode', 'numeric');
+    await postalCode.fill(locale === 'fa' ? '۰۳۴۵۶۷۸۹۰۱' : '0345678901');
     valid = true;
     await error.getByRole('button').click();
     await city.selectOption(cityId);
     await expect(page.locator('#order-address-fullAddress')).toHaveValue('Retained power address');
-    await page
-      .getByRole('button', { name: t('electricity.order.saveAndUse', locale), exact: true })
-      .click();
+    const saveAddress = page.getByRole('button', {
+      name: t('electricity.order.saveAndUse', locale),
+      exact: true,
+    });
+    await saveAddress.click();
+    await expect(postalCode).toHaveAttribute('aria-invalid', 'true');
+    await expect(postalCode).toHaveAccessibleDescription(
+      locale === 'fa'
+        ? 'کد پستی باید ۱۰ رقمی باشد و با صفر شروع نشود.'
+        : 'Enter 10 digits, starting with a digit from 1 to 9.'
+    );
+    await expect(postalCode).toBeFocused();
+    expect(writes).toHaveLength(0);
+    await postalCode.fill(locale === 'fa' ? '۲۳۴۵۶۷۸۹۰۱' : '2345678901');
+    await saveAddress.click();
     await expect(city).toHaveCount(0);
     expect(writes).toEqual([
       { provinceId, cityId, fullAddress: 'Retained power address', postalCode: '2345678901' },
     ]);
+    await expect(page.locator(`#order-address-${receipt.invoiceId}`)).toBeChecked();
     expect(state.orders).toHaveLength(0);
   });
 
@@ -336,6 +353,107 @@ async function fixture(page: Page, mode: Mode, locale: Locale, step = 2) {
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`advanced electricity confirms the intended delivery address (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, 'advanced', locale, 4);
+    delete state.draft.data.addressId;
+    const timestamps = { createdAt: startAt, updatedAt: startAt };
+    const saved = { ...address, ...timestamps, mainAddress: false };
+    const alternate = {
+      ...saved,
+      id: 'aa111111-1111-4111-8111-111111111111',
+      fullAddress: 'Other delivery site',
+    };
+    const added = {
+      ...saved,
+      id: receipt.invoiceId,
+      fullAddress: 'New Power Street',
+      postalCode: '2345678901',
+      mainAddress: false,
+    };
+    let created = false;
+    await page.route('**/api/profiles', (route) =>
+      route.fulfill({
+        json: {
+          profiles: [
+            {
+              id: profileId,
+              profileType: 'LEGAL',
+              title: 'Buyer',
+              status: 'ACTIVE',
+              isDefault: true,
+              firstName: null,
+              lastName: null,
+              nationalId: null,
+            },
+          ],
+          activeProfileId: profileId,
+          hasDefault: true,
+        },
+      })
+    );
+    await page.route(`**/api/profiles/${profileId}/addresses/access`, (route) =>
+      route.fulfill({ json: { profileId, canEdit: true } })
+    );
+    await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
+      if (route.request().method() === 'POST') {
+        created = true;
+        return route.fulfill({ status: 201, json: added });
+      }
+      return route.fulfill({
+        json: { addresses: created ? [saved, alternate, added] : [saved, alternate] },
+      });
+    });
+    await page.goto(`${path('advanced')}?step=4`);
+    const oldRadio = page.locator(`input[type=radio][value="${saved.id}"]`);
+    await expect(oldRadio).toBeVisible();
+    await expect(page.locator('input[name="addressId"]:checked')).toHaveCount(0);
+    const next = page.getByRole('button', {
+      name: t('electricity.order.next', locale),
+      exact: true,
+    });
+    await expect(next).toBeDisabled();
+    const deliveryTimes = page.locator('main time');
+    await expect(deliveryTimes.first()).toHaveAttribute('datetime', startAt);
+    await expect(deliveryTimes.last()).toHaveAttribute('datetime', endAt);
+    await expect(page.getByText('0.6 kW', { exact: true })).toBeVisible();
+    await oldRadio.check();
+    await expect(next).toBeEnabled();
+    if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches))
+      await expect(next).toBeInViewport({ ratio: 1 });
+    await page
+      .getByRole('button', { name: t('electricity.order.addAddress', locale), exact: true })
+      .click();
+    await page.locator('#addresses-field-1').selectOption(added.provinceId);
+    await page.locator('#addresses-field-2').selectOption(added.cityId);
+    await page.locator('#addresses-field-3').fill(added.fullAddress);
+    await page.locator('#addresses-field-4').fill(added.postalCode);
+    await page
+      .getByRole('button', { name: t('settings.addresses.form.save', locale), exact: true })
+      .click();
+    await expect(page).toHaveURL(/\/electricity\/orders\/new\/advanced\?step=4$/);
+    await expect(page.locator(`input[type=radio][value="${added.id}"]`)).toBeChecked();
+    expect(state.orders).toHaveLength(0);
+    const save = page.getByRole('button', {
+      name: t('electricity.order.saveDraft', locale),
+      exact: true,
+    });
+    await save.click();
+    await expect.poll(() => state.draft.data.addressId).toBe(added.id);
+    expect(state.draft).toMatchObject({ currentStep: 4, data: { quantities: { thermal: '100' } } });
+    await oldRadio.check();
+    await save.click();
+    await expect.poll(() => state.draft.data.addressId).toBe(saved.id);
+    await page.reload();
+    await expect(oldRadio).toBeChecked();
+    await next.click();
+    const reviewTimes = page.locator('[data-review-section="period"] time');
+    await expect(reviewTimes.first()).toHaveAttribute('datetime', startAt);
+    await expect(reviewTimes.last()).toHaveAttribute('datetime', endAt);
+    await expect(page.getByText('0.6 kW', { exact: true })).toBeVisible();
+  });
+
   for (const mode of ['simple', 'advanced'] as const) {
     test(
       `${mode} electricity quantity intake is accessible (${locale})`,
@@ -372,7 +490,7 @@ for (const locale of ['en', 'fa'] as const) {
           : [address];
         return route.fulfill({ json: { addresses } });
       });
-      await page.goto(`/electricity/${mode === 'simple' ? 'order' : 'advanced'}?step=4`);
+      await page.goto(`${path(mode)}?step=4`);
       const errorKey = mode === 'simple' ? 'addressLoadFailed' : 'draftLoadFailed';
       const alert = page
         .getByRole('alert')
@@ -460,7 +578,13 @@ for (const locale of ['en', 'fa'] as const)
       await field(page, mode).fill('120');
       try {
         await page
-          .getByRole('button', { name: t('electricity.order.next', locale), exact: true })
+          .getByRole('button', {
+            name: t(
+              mode === 'simple' ? 'electricity.order.review' : 'electricity.order.next',
+              locale
+            ),
+            exact: true,
+          })
           .click();
         await expect.poll(() => state.saves.length).toBe(1);
         await page.clock.fastForward(15_001);
@@ -484,7 +608,7 @@ for (const locale of ['en', 'fa'] as const)
           })
           .click();
         await expect(field(page, mode)).toHaveValue('160');
-        await expect(page).toHaveURL(/\?step=2$/);
+        await expect(page).toHaveURL(mode === 'simple' ? /\?step=1$/ : /\?step=2$/);
         expect(state.saves).toHaveLength(1);
         expect(state.orders).toHaveLength(0);
       } finally {
@@ -494,6 +618,145 @@ for (const locale of ['en', 'fa'] as const)
 
 const button = (page: Page, key: Parameters<typeof t>[0], locale: Locale) =>
   page.getByRole('button', { name: t(key, locale), exact: true });
+const next = (page: Page, mode: Mode, locale: Locale) =>
+  button(page, mode === 'simple' ? 'electricity.order.review' : 'electricity.order.next', locale);
+const back = (page: Page, mode: Mode, locale: Locale) =>
+  button(page, mode === 'simple' ? 'electricity.order.edit' : 'electricity.order.back', locale);
+
+test('advanced electricity updates the visible total after a quantity edit', async ({ page }) => {
+  await fixture(page, 'advanced', 'fa');
+  await page.goto('/electricity/orders/new/advanced');
+  const continueOrder = next(page, 'advanced', 'fa');
+  const price = page.getByRole('status').filter({ hasText: t('electricity.order.total', 'fa') });
+  await expect(price).toBeVisible();
+
+  let releaseQuote!: () => void;
+  const heldQuote = new Promise<void>((resolve) => (releaseQuote = resolve));
+  await page.route('**/api/electricity/preview/advanced', async (route) => {
+    await heldQuote;
+    await route.fallback();
+  });
+  try {
+    const request = page.waitForRequest('**/api/electricity/preview/advanced');
+    const amount = field(page, 'advanced');
+    await amount.fill('۱۲۳');
+    await expect(amount).toHaveValue('123');
+    expect((await request).postDataJSON().quantities.thermal).toBe('123');
+    await expect(price).toHaveCount(0);
+    await expect(continueOrder).toBeDisabled();
+  } finally {
+    releaseQuote();
+  }
+
+  await expect(price).toBeVisible();
+  await expect(continueOrder).toBeEnabled();
+});
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`simple electricity reloads delivery periods without discarding an edit (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, 'simple', locale);
+    let reads = 0;
+    await page.route('**/api/electricity/periods/simple', (route) => {
+      reads++;
+      if (reads === 1) return route.fulfill({ status: 503, json: {} });
+      if (reads === 2)
+        return route.fulfill({
+          json: { periods: [{ key: 'next_week', start: 'invalid', end: endAt }] },
+        });
+      return route.fallback();
+    });
+    await page.goto('/electricity/orders/new');
+    const retry = page.getByRole('button', {
+      name: simpleElectricityOrderText('retryPeriods', locale),
+      exact: true,
+    });
+    const period = page.locator('#electricity-period');
+    const quantity = field(page, 'simple');
+    await expect(retry).toBeEnabled();
+    await expect(period).toBeDisabled();
+    await quantity.fill(locale === 'fa' ? '۱۲۳' : '123');
+    await retry.press('Enter');
+    await expect.poll(() => reads).toBe(2);
+    await expect(retry).toBeEnabled();
+    await expect(period).toBeDisabled();
+    await retry.press('Enter');
+    await expect(period).toHaveValue('next_week');
+    await expect(period).toBeFocused();
+    await expect(quantity).toHaveValue('123');
+    await expect(next(page, 'simple', locale)).toBeEnabled();
+    const dates = page.locator('#electricity-period-dates');
+    for (const calendar of ['jalaliCalendar', 'gregorianCalendar'] as const)
+      await expect(dates).toContainText(simpleElectricityOrderText(calendar, locale));
+    expect(reads).toBe(3);
+    expect(state.saves).toHaveLength(0);
+    expect(state.orders).toHaveLength(0);
+  });
+
+  test(`simple electricity reloads delivery periods from a restored review (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, 'simple', locale, 5);
+    let reads = 0;
+    await page.route('**/api/electricity/periods/simple', (route) =>
+      ++reads === 1 ? route.fulfill({ status: 503, json: {} }) : route.fallback()
+    );
+    await page.goto('/electricity/orders/new?step=2');
+    const price = page.locator('[data-review-section="price"]');
+    const retry = price.getByRole('button', {
+      name: simpleElectricityOrderText('retryPeriods', locale),
+      exact: true,
+    });
+    await expect(retry).toBeVisible();
+    const quantity = page.locator('[data-review-section="quantity"]');
+    await expect(quantity).toContainText(new Intl.NumberFormat(locale).format(100));
+    await expect(
+      price.getByText(t('electricity.order.total', locale), { exact: true })
+    ).toHaveCount(0);
+    const preview = page.waitForRequest('**/api/electricity/preview/simple');
+    await retry.press('Enter');
+    expect((await preview).postDataJSON()).toMatchObject({ period: 'next_week', totalKwh: '100' });
+    await expect(page.locator('[data-review-section="period"]')).toContainText(
+      simpleElectricityOrderText('gregorianCalendar', locale)
+    );
+    await expect(
+      price.getByText(t('electricity.order.total', locale), { exact: true })
+    ).toBeInViewport();
+    await expect(page).toHaveURL(/\?step=2$/);
+    await expect(button(page, 'electricity.order.submit', locale)).toBeDisabled();
+    expect(reads).toBe(2);
+    expect(state.saves).toHaveLength(0);
+    expect(state.orders).toHaveLength(0);
+  });
+
+  test(`simple electricity keeps the review action within reach (${locale})`, async ({
+    page,
+    isMobile,
+  }) => {
+    await page.setViewportSize({ width: isMobile ? 390 : 1227, height: 716 });
+    const state = await fixture(page, 'simple', locale);
+    await page.goto('/electricity/orders/new');
+    const review = next(page, 'simple', locale);
+    await expect(review).toBeEnabled();
+    await expect(review).toBeInViewport({ ratio: 1 });
+
+    if (isMobile) {
+      await page.getByRole('main').evaluate((main) => {
+        main.scrollTop = 230;
+      });
+      await expect(review).toBeInViewport({ ratio: 1 });
+    }
+
+    await review.click();
+    await expect(page).toHaveURL(/\/electricity\/orders\/new\?step=2$/);
+    const reviewedPeriod = page.locator('[data-review-section="period"]');
+    for (const calendar of ['jalaliCalendar', 'gregorianCalendar'] as const)
+      await expect(reviewedPeriod).toContainText(simpleElectricityOrderText(calendar, locale));
+    expect(state.saves).toHaveLength(1);
+    expect(state.orders).toHaveLength(0);
+  });
+}
 
 for (const locale of ['en', 'fa'] as const)
   for (const mode of ['simple', 'advanced'] as const) {
@@ -521,6 +784,19 @@ for (const locale of ['en', 'fa'] as const)
       await expect(error).toBeVisible();
       await expect(error.getByRole('link')).toHaveAttribute('href', '/support');
       await expect(submit).toBeDisabled();
+      if (mode === 'advanced') {
+        await expect(page.locator('[data-review-section=products]')).toContainText(
+          `${new Intl.NumberFormat(locale).format(100)} kWh`
+        );
+        await expect(page.locator('[data-review-section=address]')).toContainText(
+          address.fullAddress
+        );
+        await expect(
+          page
+            .locator('[data-review-section=price]')
+            .getByText(t('electricity.order.total', locale), { exact: true })
+        ).toHaveCount(0);
+      }
       expect(previews).toHaveLength(1);
       await error
         .getByRole('button', { name: t('electricity.order.retry', locale), exact: true })
@@ -529,6 +805,11 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('[data-review-section=address]')).toContainText(
         address.fullAddress
       );
+      await expect(
+        page
+          .locator('[data-review-section=price]')
+          .getByText(t('electricity.order.total', locale), { exact: true })
+      ).toBeVisible();
       expect(previews).toEqual([previews[0], previews[0]]);
       await expect(submit).toBeDisabled();
       await approveRiskConfirmation(page, locale, 'financial');
@@ -539,6 +820,11 @@ for (const locale of ['en', 'fa'] as const)
   }
 
 async function leave(page: Page, locale: Locale) {
+  const catalogue = page.getByRole('main').locator('a[href="/electricity"]');
+  if (await catalogue.isVisible()) {
+    await catalogue.click();
+    return;
+  }
   const menu = page.getByRole('button', { name: locale === 'fa' ? 'فهرست' : 'Menu', exact: true });
   if ((await menu.isVisible()) && (await menu.getAttribute('aria-expanded')) === 'false')
     await menu.click();
@@ -594,15 +880,16 @@ for (const locale of ['en', 'fa'] as const)
           errorId!
         )
       ).toBe(true);
-      await expect(button(page, 'electricity.order.next', locale)).toBeDisabled();
-      await quantity.fill('120');
+      await expect(next(page, mode, locale)).toBeDisabled();
+      await quantity.fill(locale === 'fa' ? '۱۲۰' : '120');
+      await expect(quantity).toHaveValue('120');
       await expect(quantity).not.toHaveAttribute('aria-invalid', 'true');
-      await button(page, 'electricity.order.next', locale).click();
-      await expect(page).toHaveURL(/step=3$/);
+      await next(page, mode, locale).click();
+      await expect(page).toHaveURL(mode === 'simple' ? /step=2$/ : /step=3$/);
       expect(state.saves.at(-1)?.data[mode === 'simple' ? 'totalKwh' : 'quantities']).toEqual(
         mode === 'simple' ? '120' : expect.objectContaining({ thermal: '120' })
       );
-      await button(page, 'electricity.order.back', locale).click();
+      await back(page, mode, locale).click();
       await expect(quantity).toHaveValue('120');
     });
 
@@ -613,42 +900,45 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto(`${path(mode)}?step=2`);
       await expect(field(page, mode)).toHaveValue('100');
       await field(page, mode).fill('120');
-      await button(page, 'electricity.order.next', locale).click();
-      await expect(page).toHaveURL(new RegExp(`${path(mode)}\\?step=3$`));
+      await next(page, mode, locale).click();
+      const reviewUrl =
+        mode === 'simple'
+          ? /\/electricity\/orders\/new\?step=2$/
+          : /\/electricity\/orders\/new\/advanced\?step=3$/;
+      await expect(page).toHaveURL(reviewUrl);
       await page.goBack();
       await expect(field(page, mode)).toHaveValue('120');
       await page.goForward();
-      await expect(page).toHaveURL(/\?step=3$/);
+      await expect(page).toHaveURL(reviewUrl);
       await page.reload();
-      await expect(page.locator('li[aria-current="step"]')).toContainText(
-        t(mode === 'simple' ? 'electricity.order.step3' : 'electricity.advanced.stepPrice', locale)
-      );
+      if (mode === 'simple')
+        await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toHaveText(
+          t('electricity.order.review', locale)
+        );
+      else
+        await expect(page.locator('li[aria-current="step"]')).toContainText(
+          t('electricity.advanced.stepPrice', locale)
+        );
       await page.goto(`${path(mode)}?step=5`);
-      await expect(page).toHaveURL(/\?step=3$/);
+      await expect(page).toHaveURL(reviewUrl);
       state.saveStatus = 503;
-      await button(page, 'electricity.order.back', locale).click();
-      await expect(page).toHaveURL(/\?step=3$/);
+      await back(page, mode, locale).click();
+      await expect(page).toHaveURL(reviewUrl);
       await expect(
         page.getByRole('alert').filter({ hasText: confirmationText('unconfirmed', locale) })
       ).toBeVisible();
       await page.goto(`${path(mode)}?step=garbage`);
       await expect(page).toHaveURL(/\?step=1$/);
-      await expect(page.locator('li[aria-current="step"]')).toContainText(
-        t(mode === 'simple' ? 'electricity.order.step1' : 'electricity.advanced.stepDates', locale)
-      );
       if (mode === 'simple') {
-        await expect(
-          page.getByRole('radiogroup', {
-            name: t('electricity.order.selectProduct', locale),
-            exact: true,
-          })
-        ).toHaveAttribute('aria-required', 'true');
-        await expect(page.locator('#electricity-period-type')).toHaveAttribute(
-          'aria-required',
-          'true'
+        await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toHaveText(
+          t('electricity.order.title', locale)
         );
+        await expect(page.getByRole('main')).toContainText(products[0]!.title[locale]);
         await expect(page.locator('#electricity-period')).toHaveAttribute('aria-required', 'true');
       } else {
+        await expect(page.locator('li[aria-current="step"]')).toContainText(
+          t('electricity.advanced.stepDates', locale)
+        );
         for (const id of ['start', 'end'])
           await expect(page.locator(`#advanced-${id}-date`)).toHaveAttribute(
             'aria-required',
@@ -692,7 +982,7 @@ for (const locale of ['en', 'fa'] as const)
       await leave(page, locale);
       await actions.save.click();
       await expect(actions.dialog.getByRole('alert')).toBeVisible();
-      await expect(page).toHaveURL(/\?step=2$/);
+      await expect(page).toHaveURL(mode === 'simple' ? /\?step=1$/ : /\?step=2$/);
       state.saveMismatch = false;
       let finish!: () => void;
       state.saveGate = new Promise((resolve) => {
@@ -740,16 +1030,18 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.goto(`${path(mode)}?step=5`);
       const submit = button(page, 'electricity.order.submit', locale);
-      const review = page.getByRole('region', {
-        name: t('electricity.order.review', locale),
-        exact: true,
-      });
       // Acknowledgment belongs to the loaded quote and resets when its scope changes.
       if (mode === 'simple') {
         await expect(
-          review.getByRole('region', { name: t('electricity.order.total', locale), exact: true })
+          page
+            .locator('[data-review-section="price"]')
+            .getByText(t('electricity.order.total', locale), { exact: true })
         ).toBeVisible();
       } else {
+        const review = page.getByRole('region', {
+          name: t('electricity.order.review', locale),
+          exact: true,
+        });
         await expect(review.getByText(address.fullAddress, { exact: true })).toBeVisible();
       }
       await expect(submit).toBeDisabled();
@@ -774,20 +1066,20 @@ for (const locale of ['en', 'fa'] as const)
       await expect(retry).toBeEnabled();
       await expect(retry).toBeFocused();
       await expect(submit).toBeDisabled();
-      await expect(button(page, 'electricity.order.back', locale)).toBeDisabled();
+      await expect(back(page, mode, locale)).toBeDisabled();
       await expect(button(page, 'electricity.order.saveDraft', locale)).toBeDisabled();
       expect(state.orders).toHaveLength(1);
       finish();
       await expect.poll(() => state.orderReplies).toBe(1);
       state.orderGate = null;
       await expect(alert).toBeVisible();
-      await expect(page).toHaveURL(/\?step=5$/);
+      await expect(page).toHaveURL(mode === 'simple' ? /\?step=2$/ : /\?step=5$/);
       state.invalidOrder = true;
       await retry.click();
       await expect.poll(() => state.orderReplies).toBe(2);
       await expect(alert).toBeVisible();
       await expect(retry).toBeEnabled();
-      await expect(page).toHaveURL(/\?step=5$/);
+      await expect(page).toHaveURL(mode === 'simple' ? /\?step=2$/ : /\?step=5$/);
       state.invalidOrder = false;
       await retry.click();
       await expect(page).toHaveURL(new RegExp(`/electricity/orders/${receipt.orderId}$`));
@@ -803,7 +1095,7 @@ for (const locale of ['en', 'fa'] as const)
   test(`simple ordering protects an unfinished new address (${locale})`, async ({ page }) => {
     const state = await fixture(page, 'simple', locale, 4);
     await page.goto('/electricity/order?step=4');
-    await button(page, 'electricity.order.addAddress', locale).click();
+    await button(page, 'electricity.order.addNewAddress', locale).click();
     await page.locator('#order-address-fullAddress').fill('Unfinished address');
     await leave(page, locale);
     const actions = controls(page, locale);
@@ -847,7 +1139,9 @@ test('simple order submission waits for the financial review code to load', asyn
   } finally {
     release();
   }
-  await expect(page.getByRole('region', { name: 'Review Order', exact: true })).toBeVisible();
+  await expect(
+    page.getByRole('region', { name: t('electricity.order.detail.title', 'en'), exact: true })
+  ).toBeVisible();
   await approveRiskConfirmation(page, 'en', 'financial');
   await expect(button(page, 'electricity.order.submit', 'en')).toBeEnabled();
 });
@@ -908,7 +1202,7 @@ for (const locale of ['en', 'fa'] as const)
         const state = await fixture(page, mode, locale, 5);
         await page.goto(`${path(mode)}?step=5`);
         const sections = page.locator('[data-review-section]');
-        await expect(sections).toHaveCount(7);
+        await expect(sections).toHaveCount(mode === 'simple' ? 7 : 6);
         await expect(sections.locator('input,select,textarea')).toHaveCount(0);
         await expect(page.locator('[data-review-section=address]')).toContainText(
           address.fullAddress
@@ -923,25 +1217,27 @@ for (const locale of ['en', 'fa'] as const)
           .getByRole('alert')
           .filter({ hasText: confirmationText('unconfirmed', locale) });
         await expect(recoveryNotice).toBeVisible();
-        await expect(page).toHaveURL(/step=5$/);
+        await expect(page).toHaveURL(mode === 'simple' ? /step=2$/ : /step=5$/);
         await expect(quantity).toBeVisible();
         if (mode === 'advanced') await expectNoticeBelowPageHeader(recoveryNotice);
         state.saveStatus = 200;
         await checkDraft(page, locale).click();
         await retryDraft(page, locale).click();
-        await expect(page).toHaveURL(/step=2$/);
+        await expect(page).toHaveURL(mode === 'simple' ? /step=1$/ : /step=2$/);
         await expect(field(page, mode)).toHaveValue('100');
         await checkRoutePresentation(page, info, locale);
         await field(page, mode).fill('120');
-        await button(page, 'electricity.order.next', locale).click();
-        await button(page, 'electricity.order.next', locale).click();
+        if (mode === 'advanced') {
+          await next(page, mode, locale).click();
+          await next(page, mode, locale).click();
+        }
         await expect(
           page.locator(
             mode === 'simple' ? `#order-address-${address.id}` : 'input[name="addressId"]'
           )
         ).toBeChecked();
-        await button(page, 'electricity.order.next', locale).click();
-        await expect(page).toHaveURL(/step=5$/);
+        await next(page, mode, locale).click();
+        await expect(page).toHaveURL(mode === 'simple' ? /step=2$/ : /step=5$/);
         await expect(
           page.locator(`[data-review-section=${mode === 'simple' ? 'quantity' : 'products'}]`)
         ).toContainText(locale === 'fa' ? '۱۲۰' : '120');
@@ -951,7 +1247,7 @@ for (const locale of ['en', 'fa'] as const)
           await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
         ).toBe(true);
         await page.locator('[data-review-section=address]').getByRole('button').click();
-        await expect(page).toHaveURL(/step=4$/);
+        await expect(page).toHaveURL(mode === 'simple' ? /step=1$/ : /step=4$/);
         await expect(
           page.locator(
             mode === 'simple' ? `#order-address-${address.id}` : 'input[name="addressId"]'

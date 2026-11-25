@@ -116,7 +116,8 @@ export async function readWalletHistory(
   client: Pick<PoolClient, 'query'>,
   profileId: string,
   query: HistoryQuery,
-  audience: 'customer' | 'reconciliation'
+  audience: 'customer' | 'reconciliation',
+  linkBankReceipts = false
 ) {
   const includeReceipt = audience === 'customer';
   const scope = createHash('sha256')
@@ -190,14 +191,42 @@ export async function readWalletHistory(
     description: string | null;
     created_at: string;
     metadata?: unknown;
+    channel?: string | null;
+    pending_id?: string | null;
   }>(
-    `SELECT id, type, amount::text, state, ref_id, description${includeReceipt ? ', metadata' : ''},
+    `SELECT id, type, amount::text, state, ref_id, description${
+      includeReceipt
+        ? ', metadata'
+        : ", metadata->>'channel' AS channel, metadata->>'pendingTransactionId' AS pending_id"
+    },
     to_char(created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') AS created_at
     FROM wallet_transactions WHERE ${where.join(' AND ')}
     ORDER BY wallet_transactions.created_at ${direction}, id ${direction} LIMIT ${bind(limit + 1)}`,
     values
   );
   const page = result.rows.slice(0, limit);
+  const relatedReceipts = linkBankReceipts
+    ? page.flatMap((row) =>
+        row.type === 'topup' &&
+        row.channel === 'bank_receipt' &&
+        row.pending_id &&
+        z.uuid().safeParse(row.pending_id).success
+          ? [row.pending_id]
+          : []
+      )
+    : [];
+  const verifiedReceipts = new Set(
+    relatedReceipts.length
+      ? (
+          await client.query<{ id: string }>(
+            `SELECT id FROM wallet_transactions WHERE wallet_id=$1 AND id=ANY($2::uuid[])
+             AND type='topup' AND state IN ('Pending','Released','Rejected')
+             AND metadata->>'channel'='bank_receipt' AND NOT (metadata ? 'pendingTransactionId')`,
+            [profileId, relatedReceipts]
+          )
+        ).rows.map((row) => row.id)
+      : []
+  );
   const last = page.at(-1);
   return {
     transactions: page.map((row) => {
@@ -209,6 +238,22 @@ export async function readWalletHistory(
           createdAt: row.created_at,
           metadata: row.metadata,
         });
+      const staffSource =
+        row.type === 'topup' && (row.channel === 'bank_receipt' || row.channel === 'online')
+          ? row.channel
+          : row.type === 'payment' && row.ref_id
+            ? 'invoice'
+            : 'ledger';
+      const receiptId =
+        linkBankReceipts && staffSource === 'bank_receipt'
+          ? row.pending_id
+            ? verifiedReceipts.has(row.pending_id)
+              ? row.pending_id
+              : null
+            : ['Pending', 'Released', 'Rejected'].includes(row.state)
+              ? row.id
+              : null
+          : null;
       return {
         id: row.id,
         type: row.type,
@@ -218,6 +263,7 @@ export async function readWalletHistory(
         description: row.description,
         createdAt: row.created_at,
         ...(bankReceipt ? { bankReceipt } : {}),
+        ...(!includeReceipt ? { staffSource, ...(receiptId ? { receiptId } : {}) } : {}),
       };
     }),
     nextCursor:

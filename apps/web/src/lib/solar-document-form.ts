@@ -2,47 +2,58 @@ export interface SolarReviewDraft {
   reason: string;
 }
 export type SolarReviewIntent = 'reject' | 'request_additional';
+export type SolarGuidanceItem = { fa: string; en: string };
 export interface SolarGuidanceDraft {
   fa: string;
   en: string;
-  faSuggestions: string;
-  enSuggestions: string;
+  items: SolarGuidanceItem[];
 }
 export interface SolarGuidance {
   fa: string;
   en: string;
-  suggestions: Array<{ fa: string; en: string }>;
+  suggestions: SolarGuidanceItem[];
 }
 export const emptySolarGuidance: SolarGuidanceDraft = {
   fa: '',
   en: '',
-  faSuggestions: '',
-  enSuggestions: '',
+  items: [],
 };
-export const suggestionLines = (text: string) =>
-  text
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean);
+export const normalizeGuidanceItems = (items: SolarGuidanceItem[]) =>
+  items.map(({ fa, en }) => ({ fa: fa.trim(), en: en.trim() }));
+
+export function guidanceErrorPaths(
+  fields: unknown[],
+  kind: 'suggestions' | 'originals',
+  hasItems: boolean
+) {
+  const owned: Record<string, string> = {
+    fa: 'fa',
+    en: 'en',
+    [kind + 'Fa']: hasItems ? 'items.0.fa' : 'items',
+    [kind + 'En']: hasItems ? 'items.0.en' : 'items',
+    ...(kind === 'originals'
+      ? { destinationAddress: 'destinationAddress', contactDetails: 'contactDetails' }
+      : {}),
+  };
+  if (
+    !fields.length ||
+    !fields.every((field) => typeof field === 'string' && Object.hasOwn(owned, field))
+  )
+    return [];
+  return fields.map((field) => owned[field as string]);
+}
 export function solarGuidanceBody(draft: SolarGuidanceDraft): SolarGuidance {
-  const fa = suggestionLines(draft.faSuggestions),
-    en = suggestionLines(draft.enSuggestions);
   return {
     fa: draft.fa.trim(),
     en: draft.en.trim(),
-    suggestions: fa.map((text, index) => {
-      const translation = en[index];
-      if (translation === undefined) throw new Error('Unpaired suggestions');
-      return { fa: text, en: translation };
-    }),
+    suggestions: normalizeGuidanceItems(draft.items),
   };
 }
 export function solarGuidanceDraft(value: SolarGuidance): SolarGuidanceDraft {
   return {
     fa: value.fa,
     en: value.en,
-    faSuggestions: value.suggestions.map((item) => item.fa).join('\n'),
-    enSuggestions: value.suggestions.map((item) => item.en).join('\n'),
+    items: value.suggestions,
   };
 }
 export function validSolarGuidance(value: unknown): value is SolarGuidance {

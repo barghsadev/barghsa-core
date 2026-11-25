@@ -102,7 +102,10 @@ export function isAccountSettingsPath(pathname: string): boolean {
   return [
     '/settings',
     '/settings/security',
+    '/settings/security/telegram',
     '/settings/privacy',
+    '/settings/privacy/requests',
+    '/settings/conversation-identity',
     '/settings/username',
     '/settings/timezone',
   ].includes(pathname.replace(/\/$/, ''));

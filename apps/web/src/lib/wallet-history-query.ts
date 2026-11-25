@@ -67,3 +67,10 @@ export function walletHistorySearch(raw: Record<string, unknown>): Record<string
     ),
   };
 }
+
+export function walletTopUpSearch(raw: Record<string, unknown>) {
+  const search = walletHistorySearch(raw);
+  delete search.paymentOrderId;
+  delete search.paymentAuthority;
+  return search;
+}

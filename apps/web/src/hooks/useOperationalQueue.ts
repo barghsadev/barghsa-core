@@ -20,21 +20,25 @@ export function useOperationalQueue<T extends { id: string }>(
   criteria: string,
   offset: number,
   validate: (value: unknown) => value is T,
-  clearPrivate: () => void
+  clearPrivate: () => void,
+  recordId?: string
 ) {
   const scope = useCatalogueScope(clearPrivate);
+  const clear = useRef(clearPrivate);
+  clear.current = clearPrivate;
   const { live, version, denied, deny } = scope;
   const access = useCatalogueResource(scope, `${endpoint}/access`, isAccess);
   const canView = !denied && access.data?.canView === true;
   const [revision, setRevision] = useState(0);
   const accountId = useAccountUser();
   const profileRevision = useProfileContextRevision();
+  const resource = recordId ? `${endpoint}/${encodeURIComponent(recordId)}` : endpoint;
   const key = JSON.stringify([
     scope.identity,
     accountId,
     profileRevision,
     version,
-    endpoint,
+    resource,
     criteria,
   ]);
   const request = JSON.stringify([key, offset, revision]);
@@ -59,7 +63,7 @@ export function useOperationalQueue<T extends { id: string }>(
     queryKey: canView
       ? queryKeys.operations.queue(
           { context: 'staff', ownerId: scope.identity, accountId, revision: profileRevision },
-          endpoint,
+          resource,
           params,
           version,
           readSequence.current.revision
@@ -67,9 +71,13 @@ export function useOperationalQueue<T extends { id: string }>(
       : null,
     manual: true,
     read: async (signal) => {
-      const response = await fetch(`${endpoint}?${params}`, { signal });
+      const response = await fetch(recordId ? resource : `${resource}?${params}`, { signal });
       if (!response.ok) throw new ServerQueryError(response.status);
       const rows: unknown = await response.json();
+      if (recordId) {
+        if (!validate(rows) || rows.id !== recordId) throw new Error('Invalid queue record');
+        return { rows: [rows], hasMore: false };
+      }
       if (
         !Array.isArray(rows) ||
         rows.length > 26 ||
@@ -83,6 +91,8 @@ export function useOperationalQueue<T extends { id: string }>(
   const forbidden =
     query.error instanceof ServerQueryError &&
     (query.error.status === 401 || query.error.status === 403);
+  const missing =
+    !!recordId && query.error instanceof ServerQueryError && query.error.status === 404;
   useEffect(() => {
     if (!canView) {
       if (denied) setAccepted(null);
@@ -91,6 +101,11 @@ export function useOperationalQueue<T extends { id: string }>(
     if (live.current !== version) return;
     if (forbidden) {
       deny();
+      return;
+    }
+    if (missing) {
+      clear.current();
+      setAccepted(null);
       return;
     }
     if (query.isSuccess && !query.isFetching && !query.isPlaceholderData)
@@ -105,12 +120,13 @@ export function useOperationalQueue<T extends { id: string }>(
     version,
     deny,
     forbidden,
+    missing,
     query.isSuccess,
     query.isFetching,
     query.isPlaceholderData,
     query.data,
   ]);
-  const data = canView && !forbidden && accepted?.key === key ? accepted : null;
+  const data = canView && !forbidden && !missing && accepted?.key === key ? accepted : null;
   const loading =
     canView &&
     (query.isPending || query.isFetching || (query.isSuccess && accepted?.request !== request));
@@ -131,6 +147,7 @@ export function useOperationalQueue<T extends { id: string }>(
     ready,
     loading,
     error,
+    missing,
     denied,
     retry,
     refresh,

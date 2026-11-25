@@ -1,6 +1,12 @@
 import { listChoice, listPage, type ListQueryOptions } from './list-query.js';
 import { isInvoiceUuid } from './invoice-uuid.js';
 
+declare module '@tanstack/react-router' {
+  interface HistoryState {
+    crmCorrectionProfileId?: string;
+  }
+}
+
 const correctionStatus = (value: unknown) =>
   listChoice(['Open', 'Under Review', 'Approved', 'Rejected'])(value) || 'Open';
 export const crmCorrectionQueryOptions: ListQueryOptions = {

@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { createServer, type IncomingHttpHeaders } from 'node:http';
 import { t } from '@barghsa/i18n/recovery';
+import { t as authText } from '@barghsa/i18n/auth';
 import { t as appText } from '@barghsa/i18n/app';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { confirmationText } from '@barghsa/i18n/confirmation';
@@ -29,10 +30,14 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ status: fail ? 401 : 200, json: fail ? {} : { verified: true } });
     });
     await page.goto('/support');
+    await page
+      .getByRole('link', { name: authText('auth.support.contactLink', locale), exact: true })
+      .click();
+    await expect(page).toHaveURL(/\/support#recovery-support-contact$/);
     for (const key of ['caseId', 'challengeId'] as const) {
-      await expect(
-        page.getByLabel(t(`auth.recovery.${key}`, locale), { exact: true })
-      ).toHaveAttribute('aria-required', 'true');
+      const field = page.getByLabel(t(`auth.recovery.${key}`, locale), { exact: true });
+      await expect(field).toHaveAttribute('aria-required', 'true');
+      await expect(field).toHaveAccessibleDescription(t('auth.recovery.instructions', locale));
     }
     const digits = page
       .getByRole('group', { name: t('auth.otp.inputLabel', locale) })
@@ -40,8 +45,8 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(digits).toHaveCount(6);
     for (const input of await digits.all())
       await expect(input).toHaveAttribute('aria-required', 'true');
-    await page.locator('#recovery-caseId').fill(id);
-    await page.locator('#recovery-challengeId').fill(challengeId);
+    await page.locator('#recovery-caseId').fill(` ${id} `);
+    await page.locator('#recovery-challengeId').fill(` ${challengeId} `);
     const digit = page.getByRole('textbox', {
       name: t('auth.otp.digitLabel', locale) + ' 1',
       exact: true,
@@ -202,23 +207,29 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: { id, state } });
     });
     await page.goto('/admin/crm/recovery');
-    for (const key of [
-      'profileId',
-      'newLogin',
-      'supportReference',
-      'reason',
-      'evidence',
-      'caseId',
-    ] as const)
+    await page.getByRole('link', { name: t('auth.recovery.newCase', locale), exact: true }).click();
+    await expect(page).toHaveURL(/\/admin\/crm\/recovery\/new$/);
+    for (const key of ['profileId', 'newLogin', 'supportReference', 'reason', 'evidence'] as const)
       await expect(
         page.getByLabel(t(`auth.recovery.${key}`, locale), { exact: true })
       ).toHaveAttribute('aria-required', 'true');
-    await page.locator('#recovery-case-id').fill(id);
-    await page
-      .getByRole('button', { name: t('auth.recovery.load', locale), exact: true })
-      .first()
-      .click();
+    await expect(page.locator('#recovery-case-id')).toHaveCount(0);
+    await page.getByRole('link', { name: t('auth.recovery.title', locale), exact: true }).click();
+    const lookup = page.locator('#recovery-case-id');
+    await expect(lookup).toHaveAttribute('aria-required', 'true');
+    await lookup.fill('invalid-case-id');
+    await page.getByRole('button', { name: t('auth.recovery.load', locale), exact: true }).click();
+    await expect(lookup).toHaveAttribute('aria-invalid', 'true');
+    await lookup.fill(id);
+    await page.getByRole('button', { name: t('auth.recovery.load', locale), exact: true }).click();
+    await expect(page).toHaveURL(`/admin/crm/recovery/${id}`);
+    await expect(page.getByText('n•••@example.test', { exact: true })).toBeVisible();
+    await expect(page.getByText('new@example.test', { exact: true })).toBeHidden();
+    await page.reload();
+    await expect(page.getByText('n•••@example.test', { exact: true })).toBeVisible();
+    await page.getByText(t('auth.recovery.showContactDetails', locale), { exact: true }).click();
     await expect(page.getByText('new@example.test', { exact: true })).toBeVisible();
+    await expect(page.locator('#recovery-case-id')).toHaveCount(0);
     const notes = page.getByLabel(t('auth.recovery.notes', locale), { exact: true });
     await expect(notes).toHaveAttribute('aria-required', 'true');
     const apply = page.getByRole('button', { name: t('auth.recovery.apply', locale), exact: true });
@@ -237,16 +248,17 @@ for (const locale of ['en', 'fa'] as const) {
     // No recovery command executes merely by opening its explicit confirmation.
     expect(writes).toHaveLength(0);
     await page.keyboard.press('Escape');
-    const reload = page
-      .getByRole('button', { name: t('auth.recovery.load', locale), exact: true })
-      .last();
+    const reload = page.getByRole('button', {
+      name: t('auth.recovery.refresh', locale),
+      exact: true,
+    });
     state = 'applied';
     await reload.click();
     for (const key of ['oldNotice', 'newNotice'] as const)
       await expect(
         page.getByLabel(t(`auth.recovery.${key}`, locale), { exact: true })
       ).toHaveAttribute('aria-required', 'true');
-    await expect(notes).not.toHaveAttribute('aria-required', 'true');
+    await expect(notes).toHaveCount(0);
     denied = true;
     await reload.click();
     await expect(page.getByText('new@example.test', { exact: true })).toHaveCount(0);
@@ -328,7 +340,7 @@ for (const locale of ['en', 'fa'] as const) {
       readFailure = true;
       return route.fulfill({ status: 503, json: {} });
     });
-    await page.goto('/admin/crm/recovery');
+    await page.goto('/admin/crm/recovery/new');
     for (const [key, value] of Object.entries({
       profileId,
       newLogin: 'new@example.test',
@@ -369,7 +381,8 @@ for (const locale of ['en', 'fa'] as const) {
     expect(submissions).toHaveLength(1);
     await confirm.click();
     await expect(dialog).toHaveCount(0);
-    await expect(page.getByText('old@example.test', { exact: true })).toBeVisible();
+    await expect(page).toHaveURL(`/admin/crm/recovery/${id}`);
+    await expect(page.getByText('o•••@example.test', { exact: true })).toBeVisible();
     expect(uploads).toBe(1);
     expect(submissions).toHaveLength(2);
     expect(submissions[0]).toMatchObject({
@@ -379,10 +392,7 @@ for (const locale of ['en', 'fa'] as const) {
     });
     expect(submissions[1]).toEqual(submissions[0]);
     approved = true;
-    await page
-      .getByRole('button', { name: word('load'), exact: true })
-      .last()
-      .click();
+    await page.getByRole('button', { name: word('refresh'), exact: true }).click();
     const send = page.getByRole('button', { name: word('sendCode'), exact: true });
     await send.click();
     await confirm.click();
@@ -396,6 +406,7 @@ for (const locale of ['en', 'fa'] as const) {
       .filter({ hasText: word('error') })
       .getByRole('button')
       .click();
+    await page.getByText(word('showContactDetails'), { exact: true }).click();
     await expect(page.getByText(challengeId, { exact: true })).toBeVisible();
     expect(sends).toHaveLength(1);
   });

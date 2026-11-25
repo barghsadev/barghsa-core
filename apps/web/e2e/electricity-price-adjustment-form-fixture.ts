@@ -259,6 +259,30 @@ export async function setupElectricityPriceAdjustmentForms(
       return route.fulfill({ json: priceReview(body) });
     }
   );
+  await page.route(
+    (url) =>
+      /^\/api\/staff\/electricity\/contracts\/[^/]+\/price-adjustments\/[0-9a-f-]+$/.test(
+        url.pathname
+      ),
+    (route) => {
+      const id = new URL(route.request().url()).pathname.split('/').at(-1);
+      const record = state.rows.find((row) => row.adjustmentId === id);
+      if (!record) return route.fulfill({ status: 404, json: {} });
+      return route.fulfill({
+        json: {
+          contractId,
+          profileId,
+          versionId,
+          periodEnd,
+          canPropose: false,
+          canCancel: true,
+          canFinalize: true,
+          blockedByIncrease: false,
+          adjustments: [record],
+        },
+      });
+    }
+  );
   for (const id of [adjustmentId, creditAdjustmentId, cancelledAdjustmentId]) {
     for (const kind of ['finalize', 'cancel'] as const) {
       await page.route(`**/api/staff/electricity/price-adjustments/${id}/${kind}`, (route) => {

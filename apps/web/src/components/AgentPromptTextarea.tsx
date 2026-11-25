@@ -46,7 +46,7 @@ export const AgentPromptTextarea = forwardRef<
   const backdrop = useRef<HTMLPreElement>(null);
   const parts = useMemo(() => promptParts(value), [value]);
   const typography =
-    'w-full whitespace-pre-wrap break-words border p-3 font-mono text-sm leading-6 [tab-size:2] [scrollbar-gutter:stable]';
+    'w-full whitespace-pre-wrap break-words border p-3 font-sans text-sm leading-6 [tab-size:2] [scrollbar-gutter:stable]';
   return (
     <div className="relative min-w-0">
       <pre
@@ -75,9 +75,10 @@ export const AgentPromptTextarea = forwardRef<
       </pre>
       <textarea
         {...props}
+        data-slot="agent-prompt"
         ref={ref}
         value={value}
-        className={`relative block min-h-40 resize-y rounded-md bg-transparent text-transparent caret-foreground selection:bg-muted selection:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground forced-colors:text-[CanvasText] ${typography} ${className}`}
+        className={`relative block min-h-28 resize-y rounded-lg border-input bg-transparent text-transparent caret-foreground selection:bg-muted selection:text-foreground placeholder:text-muted-foreground placeholder-shown:[direction:inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground aria-invalid:border-destructive forced-colors:text-[CanvasText] ${typography} ${className}`}
         onScroll={(event) => {
           if (backdrop.current) {
             backdrop.current.scrollTop = event.currentTarget.scrollTop;

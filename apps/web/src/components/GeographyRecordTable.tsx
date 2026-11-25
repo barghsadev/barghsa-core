@@ -13,6 +13,7 @@ export function GeographyRecordTable<T extends Province>({
   loading,
   error,
   renderActions,
+  renderName,
   headingLevel = 2,
 }: {
   rows: T[];
@@ -22,6 +23,7 @@ export function GeographyRecordTable<T extends Province>({
   loading: boolean;
   error: boolean;
   renderActions: (row: T) => ReactNode;
+  renderName?: (row: T, name: ReactNode) => ReactNode;
   headingLevel?: 2 | 3;
 }) {
   const locale = useLocale();
@@ -38,6 +40,10 @@ export function GeographyRecordTable<T extends Province>({
       <TextCell value={row.nameEn} />
     </span>
   );
+  const primaryName = (row: T) => {
+    const name = locale === 'fa' ? faName(row) : enName(row);
+    return renderName ? renderName(row, name) : name;
+  };
   return (
     <div aria-busy={loading || undefined}>
       <DataTable
@@ -63,14 +69,14 @@ export function GeographyRecordTable<T extends Province>({
           {
             id: 'nameFa',
             header: t('nameFa'),
-            cell: faName,
+            cell: locale === 'fa' ? primaryName : faName,
             rowHeader: locale === 'fa',
             cellClassName: 'p-3 align-top',
           },
           {
             id: 'nameEn',
             header: t('nameEn'),
-            cell: enName,
+            cell: locale === 'en' ? primaryName : enName,
             rowHeader: locale === 'en',
             cellClassName: 'p-3 align-top',
           },
@@ -89,9 +95,7 @@ export function GeographyRecordTable<T extends Province>({
         ]}
         renderCard={(row) => (
           <div className="min-w-0 space-y-3 [overflow-wrap:anywhere]">
-            <Heading className="font-semibold">
-              {locale === 'fa' ? faName(row) : enName(row)}
-            </Heading>
+            <Heading className="font-semibold">{primaryName(row)}</Heading>
             <dl className="space-y-2 text-sm">
               <div>
                 <dt className="font-medium text-muted-foreground">

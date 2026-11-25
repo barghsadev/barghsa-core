@@ -3,15 +3,11 @@ import {
   isStandardMaintenanceNotice,
   standardMaintenanceNotice,
 } from '@barghsa/i18n/maintenance-public';
-import type { MaintenanceCapability } from '../hooks/useMaintenance.js';
-
-const capabilities: MaintenanceCapability[] = [
-  'electricity_checkout',
-  'saving_orders',
-  'solar_requests',
-  'wallet_topup',
-  'ai_chat',
-];
+import {
+  maintenanceCapabilities as capabilities,
+  isMaintenanceCapability,
+  type MaintenanceCapability,
+} from './maintenance-capabilities.js';
 export interface MaintenanceSetting {
   capability: MaintenanceCapability;
   active: boolean;
@@ -20,6 +16,13 @@ export interface MaintenanceSetting {
   owner: string | null;
   version: number;
   updatedAt: string | null;
+}
+export interface MaintenanceView extends MaintenanceSetting {
+  canEdit: boolean;
+}
+
+export function isMaintenanceView(value: unknown): value is MaintenanceView {
+  return isMaintenanceSetting(value) && 'canEdit' in value && typeof value.canEdit === 'boolean';
 }
 export interface MaintenanceHistoryEntry {
   id: string;
@@ -160,7 +163,7 @@ export function isMaintenanceSetting(value: unknown): value is MaintenanceSettin
   const instant = (value: unknown) =>
     typeof value === 'string' && Number.isFinite(Date.parse(value));
   return (
-    capabilities.includes(row.capability) &&
+    isMaintenanceCapability(row.capability) &&
     typeof row.active === 'boolean' &&
     Number.isSafeInteger(row.version) &&
     row.version >= 0 &&

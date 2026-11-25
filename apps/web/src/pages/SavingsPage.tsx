@@ -7,6 +7,7 @@ import {
   Card,
   CardContent,
   ListPage,
+  ListRefreshButton,
   PageHeader,
   buttonVariants,
 } from '@barghsa/ui';
@@ -88,13 +89,11 @@ export function SavingsPage() {
       <ListPage>
         <ListPage.Toolbar
           actions={
-            <Button
-              variant="outline"
+            <ListRefreshButton
+              label={copy('refresh')}
               disabled={state === 'loading'}
               onClick={() => setRevision((value) => value + 1)}
-            >
-              {copy('refresh')}
-            </Button>
+            />
           }
         />
         <ListPage.Content
@@ -178,7 +177,8 @@ export function SavingsPage() {
                   )}
                   {state === 'ready' && plan.available && (
                     <Link
-                      to="/savings/order"
+                      to="/savings/orders/new"
+                      search={{ plan: plan.id }}
                       className="touch-action inline-flex min-h-11 items-center rounded-md bg-primary px-4 text-primary-foreground hover:shadow-md"
                     >
                       {copy('startOrder')}

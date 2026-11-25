@@ -1,7 +1,7 @@
 import { listChoice, listText, parseListQuery, type ListQueryOptions } from './list-query.js';
-import { GIFT_CODE_PAGE_SIZE } from './gift-code-catalogue.js';
+export const GIFT_CODE_PAGE_SIZE = 50;
 
-const uuid = (value: unknown) =>
+export const giftCodeId = (value: unknown) =>
   typeof value === 'string' && /^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(value)
     ? value.toLowerCase()
     : '';
@@ -20,15 +20,20 @@ export const giftQueryOptions: ListQueryOptions = {
   defaultPageSize: GIFT_CODE_PAGE_SIZE,
   pagination: 'cursor',
 };
-export function giftListSearch(raw: Record<string, unknown>): Record<string, unknown> {
+export function giftListSearch(raw: Record<string, unknown>) {
   const query = parseListQuery(raw, giftQueryOptions);
-  return Object.fromEntries(
+  return Object.fromEntries<string>(
     Object.entries({
       ...query.filters,
-      cursor: uuid(query.cursor),
-      selected: raw.selected === 'new' ? 'new' : uuid(raw.selected),
+      cursor: giftCodeId(query.cursor),
     }).filter(([, value]) => value !== '')
   );
+}
+export function legacyGiftListSearch(raw: Record<string, unknown>) {
+  return {
+    ...giftListSearch(raw),
+    selected: raw.selected === 'new' ? 'new' : giftCodeId(raw.selected) || undefined,
+  };
 }
 export const giftFilter = (filters: Record<string, string>) =>
   new URLSearchParams(Object.entries(filters).filter(([, value]) => value !== '')).toString();

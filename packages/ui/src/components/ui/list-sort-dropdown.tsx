@@ -16,8 +16,15 @@ export function ListSortDropdown({
   const id = useId();
   return (
     <Field>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
-      <NativeSelect id={id} value={value} onChange={(event) => onChange(event.target.value)}>
+      <FieldLabel htmlFor={id} data-slot="list-sort-label">
+        {label}
+      </FieldLabel>
+      <NativeSelect
+        className="max-w-full"
+        id={id}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+      >
         {options.map((option) => (
           <NativeSelectOption key={option.value} value={option.value}>
             {option.label}

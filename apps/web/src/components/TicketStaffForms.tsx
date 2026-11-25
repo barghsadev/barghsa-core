@@ -25,7 +25,8 @@ import {
   type TicketOwner,
 } from '../lib/ticket-form.js';
 import { useTicketFormFeedback } from '../hooks/useTicketFormFeedback.js';
-export function TicketStaffForms({
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
+export default function TicketStaffForms({
   ticket,
   scope,
   locale,
@@ -229,74 +230,88 @@ export function TicketStaffForms({
               aria-label={text('assign')}
               noValidate
               onSubmit={(e) => void assign(e)}
+              className={recordEditorSurface}
             >
               <fieldset
                 disabled={locked || optionsLoading || !!optionsError}
-                className="flex min-w-0 flex-wrap items-end gap-3"
+                className="min-w-0 border-0 p-0"
               >
-                <FormField
-                  control={assignment.control}
-                  name="teamId"
-                  render={({ field }) => (
-                    <FormItem id="ticket-team">
-                      <FormLabel>{text('team')}</FormLabel>
-                      <FormControl>
-                        <NativeSelect
-                          {...field}
-                          disabled={locked}
-                          onChange={(e) => {
-                            if (coordination.isLocked()) return;
-                            field.onChange(e);
-                            assignment.setValue('assigneeId', '');
-                          }}
-                        >
-                          <option value="">{text('directAssignment')}</option>
-                          {groups.map((g) => (
-                            <option key={g.id} value={g.id}>
-                              {g.name}
-                            </option>
-                          ))}
-                        </NativeSelect>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={assignment.control}
-                  name="assigneeId"
-                  render={({ field }) => (
-                    <FormItem id="ticket-assignee">
-                      <FormLabel>{text('assignee')}</FormLabel>
-                      <FormControl>
-                        <NativeSelect {...field} aria-required="true" disabled={locked}>
-                          <option value="">{text('choose')}</option>
-                          {people
-                            .filter(
-                              (p) =>
-                                !teamId ||
-                                groups.find((g) => g.id === teamId)?.members.includes(p.id)
-                            )
-                            .map((p) => (
-                              <option key={p.id} value={p.id}>
-                                {p.name}
-                              </option>
-                            ))}
-                        </NativeSelect>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" disabled={locked}>
-                  {assignment.formState.isSubmitting && (
-                    <span
-                      aria-hidden="true"
-                      className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+                <div className="space-y-2.5 p-3">
+                  <h3 className="text-sm font-semibold">{copy('assignmentTitle')}</h3>
+                  <div className="grid min-w-0 gap-2.5 sm:max-lg:grid-cols-2">
+                    <FormField
+                      control={assignment.control}
+                      name="teamId"
+                      render={({ field }) => (
+                        <FormItem id="ticket-team" className="min-w-0">
+                          <FormLabel>{text('team')}</FormLabel>
+                          <FormControl>
+                            <NativeSelect
+                              {...field}
+                              className="w-full min-w-0"
+                              disabled={locked}
+                              onChange={(e) => {
+                                if (coordination.isLocked()) return;
+                                field.onChange(e);
+                                assignment.setValue('assigneeId', '');
+                              }}
+                            >
+                              <option value="">{text('directAssignment')}</option>
+                              {groups.map((g) => (
+                                <option key={g.id} value={g.id}>
+                                  {g.name}
+                                </option>
+                              ))}
+                            </NativeSelect>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  )}
-                  {text(assignment.formState.isSubmitting ? 'saving' : 'assign')}
-                </Button>
+                    <FormField
+                      control={assignment.control}
+                      name="assigneeId"
+                      render={({ field }) => (
+                        <FormItem id="ticket-assignee" className="min-w-0">
+                          <FormLabel>{text('assignee')}</FormLabel>
+                          <FormControl>
+                            <NativeSelect
+                              {...field}
+                              className="w-full min-w-0"
+                              aria-required="true"
+                              disabled={locked}
+                            >
+                              <option value="">{text('choose')}</option>
+                              {people
+                                .filter(
+                                  (p) =>
+                                    !teamId ||
+                                    groups.find((g) => g.id === teamId)?.members.includes(p.id)
+                                )
+                                .map((p) => (
+                                  <option key={p.id} value={p.id}>
+                                    {p.name}
+                                  </option>
+                                ))}
+                            </NativeSelect>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+                <RecordEditorActions>
+                  <Button type="submit" disabled={locked}>
+                    {assignment.formState.isSubmitting && (
+                      <span
+                        aria-hidden="true"
+                        className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+                      />
+                    )}
+                    {text(assignment.formState.isSubmitting ? 'saving' : 'assign')}
+                  </Button>
+                </RecordEditorActions>
               </fieldset>
             </form>
           </Form>
@@ -310,58 +325,75 @@ export function TicketStaffForms({
             aria-label={text('saveStatus')}
             noValidate
             onSubmit={(e) => void saveStatus(e)}
-            className="flex flex-wrap items-end gap-3"
+            className={recordEditorSurface}
           >
-            <fieldset disabled={locked} className="contents">
-              <FormField
-                control={status.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem id="ticket-next-status">
-                    <FormLabel>{text('changeStatus')}</FormLabel>
-                    <FormControl>
-                      <NativeSelect {...field} aria-required="true" disabled={locked}>
-                        {!transitions.includes(statusTarget) && (
-                          <option value={statusTarget} disabled>
-                            {text(statusTarget)}
-                          </option>
-                        )}
-                        {transitions.map((v) => (
-                          <option key={v} value={v}>
-                            {text(v)}
-                          </option>
-                        ))}
-                      </NativeSelect>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={status.control}
-                name="reason"
-                render={({ field }) => (
-                  <FormItem id="ticket-status-reason" className="min-w-0 flex-1 basis-full">
-                    <FormLabel>{text('statusReason')}</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} aria-required="true" rows={2} disabled={locked} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                type="submit"
-                disabled={locked || (ticket.status === 'open' && !ticket.assignedTo)}
-              >
-                {status.formState.isSubmitting && (
-                  <span
-                    aria-hidden="true"
-                    className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-                  />
-                )}
-                {text(status.formState.isSubmitting ? 'saving' : 'saveStatus')}
-              </Button>
+            <fieldset disabled={locked} className="min-w-0 border-0 p-0">
+              <div className="space-y-2.5 p-3">
+                <h3 className="text-sm font-semibold">{copy('statusTitle')}</h3>
+                <FormField
+                  control={status.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem id="ticket-next-status" className="min-w-0">
+                      <FormLabel>{text('changeStatus')}</FormLabel>
+                      <FormControl>
+                        <NativeSelect
+                          {...field}
+                          className="w-full min-w-0"
+                          aria-required="true"
+                          disabled={locked}
+                        >
+                          {!transitions.includes(statusTarget) && (
+                            <option value={statusTarget} disabled>
+                              {text(statusTarget)}
+                            </option>
+                          )}
+                          {transitions.map((v) => (
+                            <option key={v} value={v}>
+                              {text(v)}
+                            </option>
+                          ))}
+                        </NativeSelect>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={status.control}
+                  name="reason"
+                  render={({ field }) => (
+                    <FormItem id="ticket-status-reason" className="min-w-0">
+                      <FormLabel>{text('statusReason')}</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          aria-required="true"
+                          rows={2}
+                          disabled={locked}
+                          placeholder={copy('statusReasonExample')}
+                          className="min-h-14 max-h-48"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <RecordEditorActions>
+                <Button
+                  type="submit"
+                  disabled={locked || (ticket.status === 'open' && !ticket.assignedTo)}
+                >
+                  {status.formState.isSubmitting && (
+                    <span
+                      aria-hidden="true"
+                      className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+                    />
+                  )}
+                  {text(status.formState.isSubmitting ? 'saving' : 'saveStatus')}
+                </Button>
+              </RecordEditorActions>
             </fieldset>
           </form>
         </Form>

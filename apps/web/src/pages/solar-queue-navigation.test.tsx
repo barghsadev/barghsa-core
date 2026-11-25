@@ -97,9 +97,9 @@ it('a contract created on a restored postal page keeps its result link after ref
   await click('First solar buyer');
   await click('Create contract');
   expect(reads.at(-1)?.searchParams.has('before')).toBe(false);
-  expect(host.querySelector<HTMLAnchorElement>('a[href^="/admin/contracts"]')?.href).toContain(
-    `contractId=${olderSolar}`
-  );
+  expect(
+    host.querySelector<HTMLAnchorElement>('a[href^="/admin/contracts"]')?.getAttribute('href')
+  ).toBe(`/admin/contracts/${olderSolar}`);
   expect(host.textContent).toContain('Solar contract created');
 });
 for (const kind of ['requests', 'files', 'postal'] as const) {

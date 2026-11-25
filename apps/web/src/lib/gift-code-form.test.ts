@@ -1,4 +1,5 @@
 import { expect, it } from 'vitest';
+import { computeGiftDiscount } from '@barghsa/shared/promotions';
 import { giftCode } from '../test/gift-code-fixtures.js';
 import {
   giftDraftFrom,
@@ -6,6 +7,7 @@ import {
   giftDraftPayload,
   giftPercentBps,
   giftDateField,
+  giftCapSubtotal,
 } from './gift-code-form.js';
 const zone = 'Asia/Tehran';
 it('keeps financial values exact across Persian, Arabic and Western input without rounding', () => {
@@ -66,6 +68,20 @@ it('validates related eligibility, percentage caps and cancellation policy toget
       true
     )
   ).toEqual([]);
+});
+it('finds the first eligible subtotal that actually reaches the cap', () => {
+  const subtotal = giftCapSubtotal({ value: '۷٫۵', cap: '۱۰۰' });
+  expect(subtotal).toBe(1334n);
+  const promotion = {
+    discountType: 'percentage' as const,
+    discountValue: '750',
+    maxCapIrr: '100',
+  };
+  expect(computeGiftDiscount({ ...promotion, orderAmount: subtotal! - 1n })).toBe('99');
+  expect(computeGiftDiscount({ ...promotion, orderAmount: subtotal! })).toBe('100');
+  expect(giftCapSubtotal({ value: '0.01', cap: '9007199254740993' })).toBe(90071992547409930000n);
+  expect(giftCapSubtotal({ value: '12.345', cap: '100' })).toBeNull();
+  expect(giftCapSubtotal({ value: '5', cap: '' })).toBeNull();
 });
 it('preserves original instants and rejects invalid windows and DST gaps in the account zone', () => {
   const draft = giftDraftFrom(giftCode(), zone);

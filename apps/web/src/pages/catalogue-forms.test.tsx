@@ -356,7 +356,7 @@ it('a missing scheduled date focuses the calendar trigger and exposes its linked
     await act(async () => fill(host, 'price', '123'));
     await act(async () =>
       host
-        .querySelector<HTMLInputElement>('form[aria-label="Price editor"] input[type="checkbox"]')!
+        .querySelector<HTMLInputElement>('input[name="catalogue-price-timing"][value="scheduled"]')!
         .click()
     );
     await act(async () => button(host, 'Save price').click());

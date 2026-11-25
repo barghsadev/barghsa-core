@@ -5,7 +5,12 @@ import {
   type HistoryQuery,
 } from '@barghsa/shared/validation';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { v7 as uuidv7 } from 'uuid';
 import type { ValidatedSession } from '../session/session.service.js';
@@ -28,6 +33,7 @@ export interface ConsultationSubmission {
   profileId: string;
   productId: string;
   submissionKey: string;
+  brief?: string | undefined;
 }
 
 @Injectable()
@@ -125,6 +131,16 @@ export class ConsultationRequestService {
       if (previous) {
         if (previous.profile_id !== input.profileId || previous.product_id !== input.productId)
           throw new BadRequestException('Submission key belongs to another request');
+        const firstEvent = (
+          await client.query<{ reason: string | null }>(
+            `SELECT reason FROM consultation_request_events
+               WHERE request_id=$1 AND status='submitted' AND actor_user_id=$2
+               ORDER BY created_at,id LIMIT 1`,
+            [previous.id, actor.userId]
+          )
+        ).rows[0];
+        if ((firstEvent?.reason ?? null) !== (input.brief || null))
+          throw new ConflictException('Submission is already recorded');
         await client.query('COMMIT');
         return { requestId: previous.id, status: 'submitted' as const };
       }
@@ -163,9 +179,9 @@ export class ConsultationRequestService {
         ]
       );
       await client.query(
-        `INSERT INTO consultation_request_events(id,request_id,status,actor_user_id)
-         VALUES($1,$2,'submitted',$3)`,
-        [uuidv7(), requestId, actor.userId]
+        `INSERT INTO consultation_request_events(id,request_id,status,actor_user_id,reason)
+           VALUES($1,$2,'submitted',$3,$4)`,
+        [uuidv7(), requestId, actor.userId, input.brief || null]
       );
       const notifiedOwner = await notifyOrderSubmitted(client, 'consultation', requestId);
       for (const userId of new Set([profile.user_id, actor.userId])) {
@@ -209,7 +225,7 @@ export class ConsultationRequestService {
                 body: 'A consultation request has been assigned to you for review.',
               },
             },
-            link: `/admin/consultations?requestId=${requestId}`,
+            link: `/admin/consultations/${requestId}`,
           },
           client
         );
@@ -237,6 +253,31 @@ export class ConsultationRequestService {
       await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return { requestId, status: 'submitted' as const };
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async receipt(actor: Actor, { profileId, productId, submissionKey }: ConsultationSubmission) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireCurrentSession(client, actor);
+      if (!(await this.orders.mayManageOrders(client, actor.userId, profileId)))
+        throw new NotFoundException('Profile not found');
+      const request = (
+        await client.query<{ id: string }>(
+          `SELECT id FROM consultation_requests
+           WHERE submitted_by=$1 AND submission_key=$2 AND profile_id=$3 AND product_id=$4`,
+          [actor.userId, submissionKey, profileId, productId]
+        )
+      ).rows[0];
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return request ? { requestId: request.id, status: 'submitted' as const } : null;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

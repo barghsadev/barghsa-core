@@ -1,3 +1,4 @@
+import { electricityDraftDecisionText } from '@barghsa/i18n/electricity-draft-decision';
 import { test, expect } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -119,7 +120,7 @@ for (const locale of ['en', 'fa'] as const)
     approval = 'approved';
     await details.getByRole('button', { name: word('review'), exact: true }).click();
     dialog = page.getByRole('dialog');
-    await expect(dialog).toContainText(word('approvalRequired'));
+    await expect(dialog).toContainText(electricityDraftDecisionText('approvalRecorded', locale));
     await expect(dialog).toContainText(orderId);
     await expect(dialog).toContainText(profileId);
     await expect(dialog).toContainText(invoiceId);

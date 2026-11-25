@@ -218,6 +218,7 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     const owner = form(page, 'username');
     const destination = page.locator('#new-username');
+    await expect(destination).toBeFocused();
     await destination.fill('  NEXT@example.test  ');
     await submit(owner).click();
     await expect.poll(() => !!state.held).toBe(true);
@@ -236,7 +237,7 @@ for (const locale of ['en', 'fa'] as const) {
     await action(page, locale, 'restart').click();
     state.sendMode = 'success';
     await submit(owner).click();
-    await expect(page.locator('#previous-otp')).toBeVisible();
+    await expect(page.locator('#previous-otp')).toBeFocused();
     expect(state.writes).toEqual([original, original]);
   });
 
@@ -305,6 +306,9 @@ for (const locale of ['en', 'fa'] as const) {
     expect(state.writes).toHaveLength(3);
     await action(page, locale, 'confirm').click();
     await expect(page.locator('#previous-otp')).toHaveCount(0);
+    await expect(
+      page.getByRole('button', { name: t('settings.username.change', locale), exact: true })
+    ).toBeFocused();
     await expect(companion).toHaveValue(' 09120000003 ');
     expect(state.writes).toHaveLength(3);
     await crop(

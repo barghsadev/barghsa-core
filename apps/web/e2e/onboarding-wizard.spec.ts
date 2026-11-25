@@ -885,7 +885,7 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page
       .getByRole('button', {
-        name: locale === 'fa' ? 'رفتن به داشبورد' : 'Go to dashboard',
+        name: locale === 'fa' ? 'رفتن به خانه' : 'Go to Home',
         exact: true,
       })
       .click();
@@ -1294,7 +1294,7 @@ for (const locale of ['fa', 'en'] as const)
           .getByRole('button', { name: t('onboarding.journey.done', locale), exact: true })
           .click();
         await expect(page).toHaveURL(/\/app$/);
-        const welcome = page.getByRole('heading', { name: new RegExp(name) });
+        const welcome = page.getByRole('main').locator('header').getByText(name, { exact: true });
         await expect(welcome).toBeVisible();
         if (!isLegal) return;
 
@@ -1659,7 +1659,7 @@ for (const locale of ['en', 'fa'] as const) {
         fullPage: true,
       });
     const done = page.getByRole('button', {
-      name: locale === 'fa' ? 'پایان و ورود به داشبورد' : 'Done and open dashboard',
+      name: t('onboarding.journey.done', locale),
       exact: true,
     });
     state.finishMode = 'fail';
@@ -1970,6 +1970,18 @@ for (const locale of ['en', 'fa'] as const)
       const sections = page.locator('[data-review-section]');
       await expect(sections).toHaveCount(last - 1);
       await expect(sections.locator('input,select,textarea')).toHaveCount(0);
+      if (type === 'LEGAL') {
+        await expect(sections.first()).toContainText('Representative Street');
+        await expect(sections.nth(2)).toContainText('Company Street');
+        await expect(sections.nth(2)).not.toContainText('Representative Street');
+      }
+      if (page.viewportSize()!.width < 640) {
+        const progress = page.getByRole('navigation', {
+          name: t('onboarding.wizard.progress', locale),
+        });
+        await expect(progress.locator('li[aria-current="step"]')).toHaveCount(1);
+        expect((await progress.boundingBox())!.height).toBeLessThan(80);
+      }
       await sections.first().getByRole('button').click();
       await expect(page).toHaveURL(/step=1$/);
       const field = page.locator(type === 'INDIVIDUAL' ? '#firstName' : '#representativeFirstName');

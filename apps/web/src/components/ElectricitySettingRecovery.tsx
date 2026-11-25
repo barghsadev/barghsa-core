@@ -13,7 +13,7 @@ import ConfigRecovery from './ConfigRecovery.js';
 
 type CommonProps = Pick<
   ComponentProps<typeof ConfigRecovery<RetentionSetting>>,
-  'label' | 'disabled' | 'onBusyChange' | 'onDenied' | 'onActivated'
+  'label' | 'disabled' | 'onBusyChange' | 'onDenied' | 'onActivated' | 'showRevisions'
 >;
 type Props = CommonProps &
   (
@@ -34,7 +34,8 @@ const settingsCopy: Record<string, string> = {
 };
 
 export default function ElectricitySettingRecovery(props: Props) {
-  const { setting, label, disabled, onBusyChange, onDenied, onActivated } = props;
+  const { setting, label, disabled, onBusyChange, onDenied, onActivated, showRevisions = false } =
+    props;
   const numbers = useNumberFormatting(useLocale());
   const title = setting === 'wizard-draft-ttl' ? 'retentionRecoveryTitle' : 'templateRecoveryTitle';
   const common = {
@@ -44,6 +45,7 @@ export default function ElectricitySettingRecovery(props: Props) {
     onBusyChange,
     onDenied,
     onActivated,
+    showRevisions,
   };
   if (setting === 'wizard-draft-ttl')
     return (

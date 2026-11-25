@@ -1,9 +1,10 @@
-import { test, expect, type Page } from './coverage-fixture';
+import { expandListFilters, test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { fullNavigation } from './navigation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { t as appText } from '@barghsa/i18n/app';
-import { tConsultation } from '@barghsa/i18n/consultation';
+import { tStaffConsultation } from '@barghsa/i18n/consultation-staff';
+import { tTicketForms } from '@barghsa/i18n/ticket-forms';
 import {
   supportTicket,
   supportQueue,
@@ -119,7 +120,11 @@ for (const locale of ['en', 'fa'] as const)
           }
         );
         for (const id of [supportTicket.id, second, last]) {
-          await page.route(`**${base}/${id}`, (route) => route.fulfill({ json: row(id) }));
+          await page.route(`**${base}/${id}`, (route) =>
+            route.fulfill({
+              json: { ...row(id), ...(staff ? { viewer: supportQueue.viewer } : {}) },
+            })
+          );
           await page.route(`**${base}/${id}/comments`, (route) =>
             route.fulfill({ json: supportComments })
           );
@@ -134,13 +139,20 @@ for (const locale of ['en', 'fa'] as const)
         const list = page.locator('[data-slot="list-page"]').first();
         const content = list.locator('[data-slot="list-content"]');
         const reply = page.locator('#ticket-reply');
+        const back = page.locator('[data-slot=tickets-page]').getByRole('link', {
+          name: tTicketForms(staff ? 'backToStaffQueue' : 'backToTickets', locale),
+          exact: true,
+        });
+        const subject = (name: string) => content.getByRole('link', { name, exact: true });
         await expect(
-          content.getByRole('button', { name: 'Another question', exact: true })
+          page.getByRole('heading', { name: 'Delivery question', level: 1 })
         ).toBeVisible();
-        await expect(page.locator('article h2')).toHaveText('Delivery question');
-        await expect(page.locator('#ticket-search')).toHaveValue('Delivery');
-        await expect(page.locator('#ticket-filter')).toHaveValue('in_progress');
-        await expect(page.locator('#ticket-sort')).toHaveValue('asc');
+        expect(new URL(page.url()).pathname).toBe(`${path}/${supportTicket.id}`);
+        expect(params(page).has('ticketId')).toBe(false);
+        await expect(list).toHaveCount(0);
+        expect(reads).toHaveLength(0);
+        await back.click();
+        await expect(subject('Another question')).toBeVisible();
         expect(Object.fromEntries(reads.at(-1)!.searchParams)).toMatchObject({
           page: '2',
           search: 'Delivery',
@@ -148,51 +160,29 @@ for (const locale of ['en', 'fa'] as const)
           sortOrder: 'asc',
           ...(staff ? {} : { scope: 'active' }),
         });
-        await reply.fill('Private reply draft');
         await list.getByRole('button', { name: word('next'), exact: true }).click();
-        await expect(
-          content.getByRole('button', { name: 'Last question', exact: true })
-        ).toBeVisible();
-        await expect(reply).toHaveValue('Private reply draft');
-        expect(params(page).get('page')).toBe('3');
+        await expect(subject('Last question')).toBeVisible();
         const count = reads.length;
-        await content.getByRole('button', { name: 'Last question', exact: true }).click();
-        await expect(page.locator('article h2')).toHaveText('Last question');
-        await expect(reply).toHaveValue('');
+        await subject('Last question').click();
+        await expect(page.getByRole('heading', { name: 'Last question', level: 1 })).toBeFocused();
+        expect(new URL(page.url()).pathname).toBe(`${path}/${last}`);
+        expect(params(page).get('page')).toBe('3');
+        await page.reload();
+        await expect(reply).toBeVisible();
         expect(reads).toHaveLength(count);
-        expect(params(page).get('ticketId')).toBe(last);
         await page.goBack();
-        await expect(page.locator('article h2')).toHaveText('Delivery question');
-        await expect(
-          content.getByRole('button', { name: 'Last question', exact: true })
-        ).toBeVisible();
-        await page.goBack();
-        await expect(
-          content.getByRole('button', { name: 'Another question', exact: true })
-        ).toBeVisible();
-        await page.goForward();
-        await expect(
-          content.getByRole('button', { name: 'Last question', exact: true })
-        ).toBeVisible();
+        await expect(subject('Last question')).toBeVisible();
         await page.locator('#ticket-sort').selectOption('desc');
-        await expect(
-          content.getByRole('button', { name: 'Delivery question', exact: true })
-        ).toBeVisible();
+        await expect(subject('Delivery question')).toBeVisible();
         expect(params(page).has('page')).toBe(false);
-        await reply.fill('Keep this draft');
         await page.locator('#ticket-filter').selectOption('resolved');
-        await expect.poll(() => params(page).get('status')).toBe('resolved');
-        await expect(reply).toHaveValue('Keep this draft');
         await page.locator('#ticket-search').fill('Revised');
         await expect.poll(() => reads.at(-1)?.searchParams.get('search')).toBe('Revised');
         await page.reload();
         await expect(page.locator('#ticket-search')).toHaveValue('Revised');
         await expect(page.locator('#ticket-filter')).toHaveValue('resolved');
         await expect(page.locator('#ticket-sort')).toHaveValue('desc');
-        await expect(page.locator('article h2')).toHaveText('Delivery question');
-        await expect(reply).toHaveValue('');
-        if (!staff) expect(params(page).get('scope')).toBe('active');
-        await list.scrollIntoViewIfNeeded();
+        expect(params(page).get('scope')).toBe(staff ? null : 'active');
         await inspect(
           page,
           locale,
@@ -206,7 +196,7 @@ for (const locale of ['en', 'fa'] as const)
     }, info) => {
       await shell(page, locale, dark);
       const base = '/api/admin/consultations/requests';
-      const word = (key: string) => tConsultation(key, locale);
+      const word = (key: string) => tStaffConsultation(key, locale);
       const reads: URL[] = [];
       await page.route('**/api/admin/consultations/teams', (route) =>
         route.fulfill({ json: { teams: [] } })
@@ -233,17 +223,45 @@ for (const locale of ['en', 'fa'] as const)
       );
       for (const id of [firstWork, olderWork, last])
         await page.route(`**${base}/${id}`, (route) =>
-          route.fulfill({ json: { request: consultationWork(id), history: [] } })
+          route.fulfill({
+            json: {
+              request: consultationWork(id),
+              history: [
+                {
+                  status: 'under_review',
+                  actor_type: 'customer',
+                  reason: 'Workshop consumption data supplied',
+                  created_at: '2026-09-25T10:00:00.000Z',
+                },
+              ],
+            },
+          })
         );
       await page.goto(
         `/admin/consultations?status=under_review&assignment=mine&priority=high&minAgeDays=7&cursor=${firstWork}&requestId=${olderWork}`
       );
       const list = page.locator('[data-slot="list-page"]');
       const content = list.locator('[data-slot="list-content"]');
-      const input = page.locator('#consultation-reason');
-      await expect(content.getByRole('button', { name: /Older buyer/ })).toBeVisible();
-      await expect(content.getByRole('button', { name: /First buyer/ })).toHaveCount(0);
-      await expect(input).toBeVisible();
+      const decision = page.locator('a[href*="/decisions/request-info"]');
+      const back = page.getByRole('link', { name: word('backToStaffRequests'), exact: true });
+      const row = (name: string) => content.getByRole('link', { name: new RegExp(name) });
+      await expect(decision).toBeVisible();
+      expect(new URL(page.url()).pathname).toBe('/admin/consultations/' + olderWork);
+      expect(params(page).has('requestId')).toBe(false);
+      expect(reads).toHaveLength(0);
+      await expect(list).toHaveCount(0);
+      await expect(
+        page.getByRole('region', { name: word('customerResponse'), exact: true })
+      ).toContainText('Workshop consumption data supplied');
+      await decision.click();
+      await expect(page.locator('#consultation-reason')).toBeVisible();
+      expect(new URL(page.url()).pathname).toBe(
+        '/admin/consultations/' + olderWork + '/decisions/request-info'
+      );
+      expect(reads).toHaveLength(0);
+      await page.getByRole('link', { name: word('backToFeeRequest'), exact: true }).click();
+      await back.click();
+      await expect(row('Older buyer')).toBeVisible();
       expect(Object.fromEntries(reads.at(-1)!.searchParams)).toMatchObject({
         status: 'under_review',
         assignment: 'mine',
@@ -251,6 +269,7 @@ for (const locale of ['en', 'fa'] as const)
         minAgeDays: '7',
         after: firstWork,
       });
+      await expandListFilters(page, locale);
       await expect(
         page.getByRole('combobox', { name: word('filterAssignment'), exact: true })
       ).toHaveValue('mine');
@@ -262,39 +281,42 @@ for (const locale of ['en', 'fa'] as const)
           exact: true,
         })
       ).toBeDisabled();
-      await input.fill('Private review draft');
       await more.click();
-      await expect(content.getByRole('button', { name: /Last buyer/ })).toBeVisible();
-      await expect(input).toHaveValue('Private review draft');
+      await expect(row('Last buyer')).toBeVisible();
       await page.reload();
-      await expect(content.getByRole('button', { name: /Last buyer/ })).toBeVisible();
-      await expect(content.getByRole('button', { name: /Older buyer/ })).toHaveCount(0);
-      await expect(input).toHaveValue('');
+      await expect(row('Last buyer')).toBeVisible();
+      await expect(row('Older buyer')).toHaveCount(0);
       await expect(
         list.getByRole('navigation', {
           name: appText('historyPagination.label', locale),
           exact: true,
         })
       ).toHaveCount(0);
+      const count = reads.length;
+      await row('Last buyer').click();
+      await expect(decision).toBeVisible();
+      expect(new URL(page.url()).pathname).toBe('/admin/consultations/' + last);
+      await decision.click();
+      const input = page.locator('#consultation-reason');
+      await expect(input).toBeVisible();
+      await expect(input).toHaveValue('');
+      expect(params(page).get('cursor')).toBe(olderWork);
+      expect(reads).toHaveLength(count);
+      await page.goBack();
+      await expect(decision).toBeVisible();
+      await page.goBack();
+      await expect(row('Last buyer')).toBeVisible();
+      await expandListFilters(page, locale);
       await page
         .getByRole('combobox', { name: word('priority'), exact: true })
         .selectOption('normal');
       await expect.poll(() => params(page).get('priority')).toBe('normal');
       await expect.poll(() => params(page).get('cursor')).toBeNull();
-      await expect.poll(() => params(page).get('requestId')).toBeNull();
-      await expect(input).toHaveCount(0);
-      await expect(content.getByRole('button', { name: /First buyer/ })).toBeVisible();
+      await expect(row('First buyer')).toBeVisible();
       await page.goBack();
-      await expect(content.getByRole('button', { name: /Last buyer/ })).toBeVisible();
-      await expect(input).toBeVisible();
-      expect(params(page).get('requestId')).toBe(olderWork);
+      await expect(row('Last buyer')).toBeVisible();
       await page.goForward();
-      await expect(content.getByRole('button', { name: /First buyer/ })).toBeVisible();
-      const count = reads.length;
-      await content.getByRole('button', { name: /First buyer/ }).click();
-      await expect(input).toBeVisible();
-      expect(reads).toHaveLength(count);
-      await expect.poll(() => params(page).get('requestId')).toBe(firstWork);
+      await expect(row('First buyer')).toBeVisible();
       await list.scrollIntoViewIfNeeded();
       await inspect(page, locale, info.project.name, 'consultation', dark);
     });

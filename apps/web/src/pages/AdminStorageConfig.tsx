@@ -1,10 +1,28 @@
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/admin-ui';
 import { storagePolicyFormText, storageRecoveryText } from '@barghsa/i18n/storage-policy-forms';
-import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Alert,
+  Badge,
+  Button,
+  Input,
+  Label,
+  ListRefreshButton,
+  buttonVariants,
+} from '@barghsa/ui';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
@@ -46,6 +64,19 @@ const CleanupRecovery = lazy(async () => {
   return { default: Recovery<CleanupSettings> };
 });
 type Owner = 'config' | 'cleanup';
+const storageExamples = {
+  endpoint: 'https://objects.example.com',
+  region: 'eu-central-1',
+  bucket: 'customer-documents',
+  privateEndpointUrl: 'https://private.example.com',
+  publicEndpointUrl: 'https://files.example.com',
+} satisfies Partial<Record<(typeof storageTextFields)[number], string>>;
+type StorageSection = 'overview' | 'edit' | 'cleanup';
+type ConnectionCheck = {
+  at: string;
+  state: 'tested' | 'connectionFailed' | 'unknown';
+  saved: boolean;
+};
 const basis = (value: StorageConfigView | CleanupPolicyView) =>
   JSON.stringify(
     'hasSecretKey' in value
@@ -57,9 +88,17 @@ const basis = (value: StorageConfigView | CleanupPolicyView) =>
         ]
       : [value.hours, value.version]
   );
-export default function AdminStorageConfig() {
+export default function AdminStorageConfig({ section }: { section?: StorageSection } = {}) {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
+  const [connectionCheck, setConnectionCheck] = useState<ConnectionCheck | null>(null);
+  const time = useAccountTime(locale, !!connectionCheck);
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (section && section !== 'overview') heading.current?.focus({ preventScroll: true });
+  }, [section]);
+  const showConfig = section !== 'cleanup';
+  const showCleanup = !section || section === 'cleanup';
   const label = (key: string) => t(`admin.storage.${key}`, locale);
   const text = (key: Parameters<typeof storagePolicyFormText>[0]) =>
     storagePolicyFormText(key, locale);
@@ -142,12 +181,17 @@ export default function AdminStorageConfig() {
     setUncertain({ config: false, cleanup: false });
     setRecovered({ config: false, cleanup: false });
     setNotice(null);
+    setConnectionCheck(null);
   }, [closeAction, resetConfig, resetCleanup, setRecoveryBusy]);
   const scope = useCatalogueScope(clearPrivate);
-  const config = useCatalogueResource(scope, '/api/admin/storage/config', validStorageConfig);
+  const config = useCatalogueResource(
+    scope,
+    showConfig ? '/api/admin/storage/config' : null,
+    validStorageConfig
+  );
   const cleanup = useCatalogueResource(
     scope,
-    '/api/admin/storage/multipart-cleanup-policy',
+    showCleanup ? '/api/admin/storage/multipart-cleanup-policy' : null,
     validCleanupPolicy
   );
   const configReady =
@@ -179,12 +223,22 @@ export default function AdminStorageConfig() {
     if (!previous) resetConfig(storageDraft(config.data));
     else if (basis(previous) !== basis(config.data)) {
       closeAction();
-      setChanged((value) => ({ ...value, config: true }));
+      setConnectionCheck(null);
+      if (section === 'overview') resetConfig(storageDraft(config.data));
+      else setChanged((value) => ({ ...value, config: true }));
     }
     acceptedConfig.current = config.data;
     if (uncertain.config && recoveryLoading.current.config)
       setRecovered((value) => ({ ...value, config: true }));
-  }, [config.data, config.loading, config.error, uncertain.config, closeAction, resetConfig]);
+  }, [
+    config.data,
+    config.loading,
+    config.error,
+    uncertain.config,
+    closeAction,
+    resetConfig,
+    section,
+  ]);
   useEffect(() => {
     if (uncertain.cleanup && cleanup.loading) recoveryLoading.current.cleanup = true;
     if (!cleanup.data || cleanup.loading || cleanup.error) return;
@@ -204,8 +258,8 @@ export default function AdminStorageConfig() {
     setNotice(null);
     if (scope.denied) scope.recover();
     else {
-      if (owner !== 'cleanup') config.retry();
-      if (owner !== 'config') cleanup.retry();
+      if (owner !== 'cleanup' && showConfig) config.retry();
+      if (owner !== 'config' && showCleanup) cleanup.retry();
     }
   }
   function resetSaved(owner: Owner) {
@@ -233,6 +287,10 @@ export default function AdminStorageConfig() {
     recoveryLoading.current[owner] = false;
     if (owner === 'config') config.retry();
     else cleanup.retry();
+  }
+  function recordCheck(state: ConnectionCheck['state']) {
+    if (section)
+      setConnectionCheck({ at: new Date().toISOString(), state, saved: section === 'overview' });
   }
   async function prepare(kind: 'save' | 'test' | 'cleanup', event?: FormEvent) {
     event?.preventDefault();
@@ -264,6 +322,7 @@ export default function AdminStorageConfig() {
         })();
       if (epoch !== generation.current || scope.denied || body === undefined) return;
       closeAction();
+      const actionGeneration = generation.current;
       actionOwner.current = owner;
       const next: TeamAction = {
         title: label(kind === 'cleanup' ? 'cleanupSave' : kind),
@@ -282,7 +341,15 @@ export default function AdminStorageConfig() {
         forbiddenMessage: label('forbidden'),
         errorMessages: {
           'STORAGE:CONFIG_CHANGED': label('changed'),
-          'STORAGE:CONNECTION_FAILED': label('connectionFailed'),
+          'STORAGE:CONNECTION_FAILED': () => {
+            if (
+              kind === 'test' &&
+              generation.current === actionGeneration &&
+              actionRef.current === next
+            )
+              recordCheck('connectionFailed');
+            return label('connectionFailed');
+          },
           'STORAGE:LOCATION_IN_USE': label('locationInUse'),
           'STORAGE:SECRET_REENTRY_REQUIRED': label('secretReentry'),
           'STORAGE:CREDENTIAL_PAIR_REQUIRED': label('credentialPair'),
@@ -308,16 +375,12 @@ export default function AdminStorageConfig() {
   const cleanupDisabled =
     busy || storageRecoveryBusy || !cleanupReady || changed.cleanup || uncertain.cleanup;
   const recovery = (section?: Owner) => (
-    <div className="space-y-2">
-      <Button
-        type="button"
-        variant="outline"
-        disabled={dialogPending || storageRecoveryBusy || config.loading || cleanup.loading}
-        onClick={() => refresh(section)}
-      >
-        {label('refresh')}
-      </Button>
-    </div>
+    <ListRefreshButton
+      label={label('refresh')}
+      disabled={dialogPending || storageRecoveryBusy}
+      refreshing={config.loading || cleanup.loading}
+      onClick={() => refresh(section)}
+    />
   );
   const stateFeedback = (section: Owner) => (
     <>
@@ -340,23 +403,114 @@ export default function AdminStorageConfig() {
       )}
     </>
   );
+  const storageField = (field: (typeof storageTextFields)[number]) => (
+    <div key={field} className={recordEditorField}>
+      <Label htmlFor={`storage-${field}`}>{label(field)}</Label>
+      <Input
+        {...configForm.bind(field)}
+        id={`storage-${field}`}
+        dir="ltr"
+        placeholder={field === 'accessKeyId' ? undefined : storageExamples[field]}
+        value={draft[field]}
+        autoComplete="off"
+        spellCheck={false}
+        required={field === 'region' || field === 'bucket'}
+        aria-required={field === 'region' || field === 'bucket' || undefined}
+        maxLength={
+          field.includes('Endpoint') || field === 'endpoint'
+            ? 2048
+            : field === 'region'
+              ? 128
+              : field === 'bucket'
+                ? 255
+                : 256
+        }
+        onChange={(event) => {
+          configForm.field(field)[1](event.target.value);
+          setNotice(null);
+        }}
+      />
+      <CatalogueFieldFeedback
+        id={configForm.errorId(field)}
+        error={configForm.errors[field]}
+        message={messages[field]}
+        compact
+      />
+    </div>
+  );
   return (
     <section
-      className="mx-auto max-w-3xl space-y-5 p-4 md:p-6"
+      className={
+        section === 'overview' ? 'min-w-0 space-y-5' : 'mx-auto w-full max-w-3xl space-y-4'
+      }
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <div className="flex flex-wrap items-start justify-between gap-4">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">{label('title')}</h1>
-          <p className="mt-2 text-muted-foreground">{label('description')}</p>
+          <h1
+            ref={heading}
+            tabIndex={section && section !== 'overview' ? -1 : undefined}
+            className="text-2xl font-semibold focus-visible:shadow-none! focus-visible:outline-hidden!"
+          >
+            {section === 'edit'
+              ? text('connectionSettings')
+              : section === 'cleanup'
+                ? label('cleanupTitle')
+                : label('title')}
+          </h1>
+          {section !== 'cleanup' && (
+            <p className="mt-1 text-sm text-muted-foreground">{label('description')}</p>
+          )}
         </div>
         {recovery()}
       </div>
+      {section && (
+        <nav
+          aria-label={text('storageNavigation')}
+          className="flex flex-wrap gap-1 rounded-lg border bg-card p-1.5"
+        >
+          <Link
+            to="/admin/storage"
+            activeOptions={{ exact: true }}
+            className={buttonVariants({
+              variant: section !== 'cleanup' ? 'secondary' : 'ghost',
+              className: 'min-h-11',
+            })}
+          >
+            {text('connection')}
+          </Link>
+          <Link
+            to="/admin/storage/$section"
+            params={{ section: 'cleanup' }}
+            className={buttonVariants({
+              variant: section === 'cleanup' ? 'secondary' : 'ghost',
+              className: 'min-h-11',
+            })}
+          >
+            {label('cleanupTitle')}
+          </Link>
+        </nav>
+      )}
       {scope.denied && <p role="alert">{label('forbidden')}</p>}
       {notice && (
         <p role="status" className="rounded-md border p-3">
           {label(notice)}
         </p>
+      )}
+      {connectionCheck && (
+        <div role="status" className="max-w-3xl space-y-1 rounded-lg border bg-card p-4 text-sm">
+          <p className="font-medium">{text('lastConnectionCheck')}</p>
+          <p className="text-muted-foreground">
+            {text(connectionCheck.saved ? 'checkedSavedConnection' : 'checkedProposedConnection')}
+            {' · '}
+            <time dateTime={connectionCheck.at}>{time.format(connectionCheck.at)}</time>
+          </p>
+          <p>
+            {connectionCheck.state === 'unknown'
+              ? text('checkUnconfirmed')
+              : label(connectionCheck.state)}
+          </p>
+        </div>
       )}
       {config.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {config.error && (
@@ -367,135 +521,59 @@ export default function AdminStorageConfig() {
           </Button>
         </Alert>
       )}
-      {!scope.denied && config.data && (
-        <form
-          noValidate
-          aria-label={label('title')}
-          aria-busy={configForm.pending || undefined}
-          onSubmit={(event) => void prepare('save', event)}
-          className="space-y-5"
-        >
-          <p className="text-sm text-muted-foreground">
-            {label(config.data.version ? 'savedVersion' : 'deploymentVersion').replace(
-              '{version}',
-              numbers.number(config.data.version)
-            )}
-          </p>
-          <p className="rounded-md border bg-muted/30 p-3 text-sm">{label('locationWarning')}</p>
-          {stateFeedback('config')}
-          {catalogueRootMessage(configForm.errors) && (
-            <Alert variant="destructive">{catalogueRootMessage(configForm.errors)}</Alert>
-          )}
-          <fieldset disabled={configDisabled} className="space-y-5">
-            <div className="grid gap-5 sm:grid-cols-2">
-              {storageTextFields.map((field) => (
-                <div key={field} className="space-y-2">
-                  <Label htmlFor={`storage-${field}`}>{label(field)}</Label>
-                  <Input
-                    {...configForm.bind(field)}
-                    id={`storage-${field}`}
-                    dir="ltr"
-                    value={draft[field]}
-                    autoComplete="off"
-                    spellCheck={false}
-                    required={field === 'region' || field === 'bucket'}
-                    aria-required={field === 'region' || field === 'bucket' || undefined}
-                    maxLength={
-                      field.includes('Endpoint') || field === 'endpoint'
-                        ? 2048
-                        : field === 'region'
-                          ? 128
-                          : field === 'bucket'
-                            ? 255
-                            : 256
-                    }
-                    onChange={(event) => {
-                      configForm.field(field)[1](event.target.value);
-                      setNotice(null);
-                    }}
-                  />
-                  <CatalogueFieldFeedback
-                    id={configForm.errorId(field)}
-                    error={configForm.errors[field]}
-                    message={messages[field]}
-                  />
-                </div>
-              ))}
-              <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="storage-secret">{label('secret')}</Label>
-                <Input
-                  {...configForm.bind('secretAccessKey')}
-                  id="storage-secret"
-                  type="password"
-                  dir="ltr"
-                  autoComplete="new-password"
-                  maxLength={4096}
-                  value={draft.secretAccessKey}
-                  onChange={(event) => {
-                    configForm.field('secretAccessKey')[1](event.target.value);
-                    configForm.field('clearSecret')[1](false);
-                    setNotice(null);
-                  }}
-                  aria-describedby={[
-                    configForm.bind('secretAccessKey')['aria-describedby'],
-                    'storage-secret-help',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                />
-                <p id="storage-secret-help" className="text-sm text-muted-foreground">
-                  {label(config.data.hasSecretKey ? 'secretStored' : 'secretMissing')}
-                </p>
-                <CatalogueFieldFeedback
-                  id={configForm.errorId('secretAccessKey')}
-                  error={configForm.errors.secretAccessKey}
-                  message={messages.secretAccessKey}
-                />
-                {config.data.hasSecretKey && (
-                  <div className="flex items-center gap-2">
-                    <input
-                      {...configForm.bind('clearSecret')}
-                      id="storage-clear-secret"
-                      type="checkbox"
-                      checked={draft.clearSecret}
-                      onChange={(event) => {
-                        configForm.field('clearSecret')[1](event.target.checked);
-                        configForm.field('secretAccessKey')[1]('');
-                        setNotice(null);
-                      }}
-                    />
-                    <Label className="touch-label" htmlFor="storage-clear-secret">
-                      {label('clearSecret')}
-                    </Label>
-                  </div>
-                )}
+      {!scope.denied && config.data && section === 'overview' && (
+        <div className="max-w-3xl space-y-4 rounded-xl border bg-card p-4 sm:p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold">{text('connection')}</h2>
+            <Badge variant="secondary">
+              {label(config.data.version ? 'savedVersion' : 'deploymentVersion').replace(
+                '{version}',
+                numbers.number(config.data.version)
+              )}
+            </Badge>
+          </div>
+          <dl className="grid gap-4 text-sm sm:grid-cols-2">
+            {storageConnectionFields.map((field) => (
+              <div key={field} className="min-w-0">
+                <dt className="text-muted-foreground">{label(field)}</dt>
+                <dd className="mt-1 font-medium [overflow-wrap:anywhere]">
+                  <bdi>{config.data?.[field] || '—'}</bdi>
+                </dd>
               </div>
+            ))}
+            <div>
+              <dt className="text-muted-foreground">{label('forcePathStyle')}</dt>
+              <dd className="mt-1 font-medium">
+                {recoveryLabel(config.data.forcePathStyle ? 'recoveryOn' : 'recoveryOff')}
+              </dd>
             </div>
-            <div className="flex items-center gap-2">
-              <input
-                {...configForm.bind('forcePathStyle')}
-                id="storage-path-style"
-                type="checkbox"
-                checked={draft.forcePathStyle}
-                onChange={(event) => configForm.field('forcePathStyle')[1](event.target.checked)}
-              />
-              <Label className="touch-label" htmlFor="storage-path-style">
-                {label('forcePathStyle')}
-              </Label>
+            <div>
+              <dt className="text-muted-foreground">{label('accessKeyId')}</dt>
+              <dd className="mt-1 font-medium">
+                {config.data.accessKeyId.length > 4 ? (
+                  <bdi>
+                    {text('accessKeyEnding').replace('{suffix}', config.data.accessKeyId.slice(-4))}
+                  </bdi>
+                ) : (
+                  text(config.data.accessKeyId ? 'credentialConfigured' : 'credentialMissing')
+                )}
+              </dd>
             </div>
-            <p className="text-sm text-muted-foreground">{label('endpointHelp')}</p>
-            <CatalogueFieldFeedback
-              id={configForm.errorId('forcePathStyle')}
-              error={configForm.errors.forcePathStyle}
-              message={messages.forcePathStyle}
-            />
-          </fieldset>
-          <div className="flex flex-wrap gap-3">
-            <CatalogueSaveButton
-              label={label('save')}
-              pending={configForm.pending}
-              disabled={configDisabled}
-            />
+            <div>
+              <dt className="text-muted-foreground">{text('credentialStatus')}</dt>
+              <dd className="mt-1 font-medium">
+                {text(config.data.hasSecretKey ? 'credentialConfigured' : 'credentialMissing')}
+              </dd>
+            </div>
+          </dl>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              to="/admin/storage/$section"
+              params={{ section: 'edit' }}
+              className={buttonVariants({ className: 'min-h-11' })}
+            >
+              {text('connectionSettings')}
+            </Link>
             <Button
               type="button"
               variant="outline"
@@ -505,6 +583,136 @@ export default function AdminStorageConfig() {
               {label('test')}
             </Button>
           </div>
+        </div>
+      )}
+      {!scope.denied && config.data && section !== 'overview' && (
+        <form
+          noValidate
+          aria-label={label('title')}
+          aria-busy={configForm.pending || undefined}
+          onSubmit={(event) => void prepare('save', event)}
+          onChange={() => setConnectionCheck(null)}
+          className={recordEditorSurface}
+        >
+          <div className="space-y-2 border-b bg-muted/30 px-4 py-3 sm:px-6">
+            <p className="text-sm font-medium">
+              {label(config.data.version ? 'savedVersion' : 'deploymentVersion').replace(
+                '{version}',
+                numbers.number(config.data.version)
+              )}
+            </p>
+            <p className="text-sm text-muted-foreground">{label('locationWarning')}</p>
+            {stateFeedback('config')}
+            {catalogueRootMessage(configForm.errors) && (
+              <Alert variant="destructive">{catalogueRootMessage(configForm.errors)}</Alert>
+            )}
+          </div>
+          <fieldset disabled={configDisabled} className="m-0 min-w-0 border-0 p-0">
+            <RecordEditorSection title={text('connection')} description={text('connectionHelp')}>
+              {storageField('endpoint')}
+              <div className={recordEditorGrid}>
+                {storageField('region')}
+                {storageField('bucket')}
+              </div>
+            </RecordEditorSection>
+            <RecordEditorSection
+              title={text('endpointOverrides')}
+              description={label('endpointHelp')}
+            >
+              <div className={recordEditorGrid}>
+                {storageField('privateEndpointUrl')}
+                {storageField('publicEndpointUrl')}
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  {...configForm.bind('forcePathStyle')}
+                  id="storage-path-style"
+                  type="checkbox"
+                  checked={draft.forcePathStyle}
+                  onChange={(event) => configForm.field('forcePathStyle')[1](event.target.checked)}
+                />
+                <Label className="touch-label" htmlFor="storage-path-style">
+                  {label('forcePathStyle')}
+                </Label>
+              </div>
+              <CatalogueFieldFeedback
+                id={configForm.errorId('forcePathStyle')}
+                error={configForm.errors.forcePathStyle}
+                message={messages.forcePathStyle}
+                compact
+              />
+            </RecordEditorSection>
+            <RecordEditorSection title={text('credentials')}>
+              <div className={recordEditorGrid}>
+                {storageField('accessKeyId')}
+                <div className={recordEditorField}>
+                  <Label htmlFor="storage-secret">{label('secret')}</Label>
+                  <Input
+                    {...configForm.bind('secretAccessKey')}
+                    id="storage-secret"
+                    type="password"
+                    dir="ltr"
+                    autoComplete="new-password"
+                    maxLength={4096}
+                    value={draft.secretAccessKey}
+                    onChange={(event) => {
+                      configForm.field('secretAccessKey')[1](event.target.value);
+                      configForm.field('clearSecret')[1](false);
+                      setNotice(null);
+                    }}
+                    aria-describedby={[
+                      configForm.bind('secretAccessKey')['aria-describedby'],
+                      'storage-secret-help',
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
+                  />
+                  <p id="storage-secret-help" className="text-sm text-muted-foreground">
+                    {label(config.data.hasSecretKey ? 'secretStored' : 'secretMissing')}
+                  </p>
+                  <CatalogueFieldFeedback
+                    id={configForm.errorId('secretAccessKey')}
+                    error={configForm.errors.secretAccessKey}
+                    message={messages.secretAccessKey}
+                    compact
+                  />
+                </div>
+              </div>
+              {config.data.hasSecretKey && (
+                <div className="flex items-center gap-2">
+                  <input
+                    {...configForm.bind('clearSecret')}
+                    id="storage-clear-secret"
+                    type="checkbox"
+                    checked={draft.clearSecret}
+                    onChange={(event) => {
+                      configForm.field('clearSecret')[1](event.target.checked);
+                      configForm.field('secretAccessKey')[1]('');
+                      setNotice(null);
+                    }}
+                  />
+                  <Label className="touch-label" htmlFor="storage-clear-secret">
+                    {label('clearSecret')}
+                  </Label>
+                </div>
+              )}
+            </RecordEditorSection>
+          </fieldset>
+          <RecordEditorActions>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={configDisabled}
+              onClick={() => void prepare('test')}
+            >
+              {label('test')}
+            </Button>
+            <CatalogueSaveButton
+              label={label('save')}
+              pending={configForm.pending}
+              disabled={configDisabled}
+            />
+          </RecordEditorActions>
         </form>
       )}
       {!scope.denied && config.data && (
@@ -573,42 +781,51 @@ export default function AdminStorageConfig() {
           aria-label={label('cleanupTitle')}
           aria-busy={cleanupForm.pending || undefined}
           onSubmit={(event) => void prepare('cleanup', event)}
-          className="space-y-3 rounded-xl border p-4"
+          className={recordEditorSurface}
         >
-          <h2 className="font-semibold">{label('cleanupTitle')}</h2>
-          <p className="text-sm text-muted-foreground">{label('cleanupDescription')}</p>
-          {cleanup.data.hours === null && (
-            <Alert variant="destructive">{text('cleanupInvalidPolicy')}</Alert>
-          )}
-          {stateFeedback('cleanup')}
-          {catalogueRootMessage(cleanupForm.errors) && (
-            <Alert variant="destructive">{catalogueRootMessage(cleanupForm.errors)}</Alert>
-          )}
-          <fieldset disabled={cleanupDisabled} className="max-w-xs space-y-2">
-            <Label htmlFor="storage-cleanup-hours">{label('cleanupHours')}</Label>
-            <Input
-              {...cleanupForm.bind('hours')}
-              id="storage-cleanup-hours"
-              type="number"
-              min={1}
-              max={168}
-              required
-              aria-required="true"
-              value={hours}
-              onChange={(event) => cleanupForm.field('hours')[1](event.target.value)}
-            />
-            <CatalogueFieldFeedback
-              id={cleanupForm.errorId('hours')}
-              error={cleanupForm.errors.hours}
-              message={text('hours')}
-            />
-          </fieldset>
-          <div className="flex flex-wrap gap-3">
-            <CatalogueSaveButton
-              label={label('cleanupSave')}
-              pending={cleanupForm.pending}
-              disabled={cleanupDisabled}
-            />
+          <div className="space-y-2 px-4 py-4 sm:px-6">
+            {!section && <h2 className="font-semibold">{label('cleanupTitle')}</h2>}
+            <p className="text-sm text-muted-foreground">{label('cleanupDescription')}</p>
+            {cleanup.data.hours === null && (
+              <Alert variant="destructive">{text('cleanupInvalidPolicy')}</Alert>
+            )}
+            {stateFeedback('cleanup')}
+            {catalogueRootMessage(cleanupForm.errors) && (
+              <Alert variant="destructive">{catalogueRootMessage(cleanupForm.errors)}</Alert>
+            )}
+            <fieldset disabled={cleanupDisabled} className="m-0 min-w-0 space-y-1 border-0 p-0">
+              <Label htmlFor="storage-cleanup-hours">{label('cleanupHours')}</Label>
+              <div className="flex min-w-0 items-center gap-3">
+                <Input
+                  {...cleanupForm.bind('hours')}
+                  className="w-28 min-w-0"
+                  dir="ltr"
+                  id="storage-cleanup-hours"
+                  type="number"
+                  min={1}
+                  max={168}
+                  required
+                  aria-required="true"
+                  value={hours}
+                  onChange={(event) => cleanupForm.field('hours')[1](event.target.value)}
+                />
+                {cleanup.data.hours !== null && (
+                  <p className="min-w-0 border-s ps-3 text-sm text-muted-foreground">
+                    {text('savedCleanupHours').replace(
+                      '{hours}',
+                      numbers.number(cleanup.data.hours)
+                    )}
+                  </p>
+                )}
+              </div>
+              <CatalogueFieldFeedback
+                id={cleanupForm.errorId('hours')}
+                error={cleanupForm.errors.hours}
+                message={text('hours')}
+              />
+            </fieldset>
+          </div>
+          <RecordEditorActions>
             <Button
               type="button"
               variant="outline"
@@ -622,7 +839,12 @@ export default function AdminStorageConfig() {
             >
               {cleanupRecoveryLabel('recoveryTitle')}
             </Button>
-          </div>
+            <CatalogueSaveButton
+              label={label('cleanupSave')}
+              pending={cleanupForm.pending}
+              disabled={cleanupDisabled}
+            />
+          </RecordEditorActions>
         </form>
       )}
       {openRecovery === 'cleanup' && !scope.denied && cleanup.data && (
@@ -656,7 +878,7 @@ export default function AdminStorageConfig() {
           onClose={closeAction}
           onDenied={scope.deny}
           onPendingChange={setPending}
-          {...(action.method === 'PUT' ? { onUnconfirmed: unconfirmed } : {})}
+          onUnconfirmed={action.method === 'PUT' ? unconfirmed : () => recordCheck('unknown')}
           onValidationError={(fields) =>
             owner === 'config' ? configErrors(fields) : cleanupErrors(fields)
           }
@@ -682,7 +904,8 @@ export default function AdminStorageConfig() {
                 result.success !== true
               )
                 throw new Error('Invalid connection receipt');
-              setNotice('tested');
+              if (section) recordCheck('tested');
+              else setNotice('tested');
               closeAction();
               return;
             }
@@ -698,6 +921,7 @@ export default function AdminStorageConfig() {
               )
                 throw new Error('Invalid storage receipt');
               acceptedConfig.current = result;
+              setConnectionCheck(null);
               config.accept(result);
               resetConfig(storageDraft(result));
               config.retry();

@@ -90,7 +90,7 @@ it('links only validated IDs to the staff ledger and invoice routes', () => {
     reconciliationLinks({ walletId: ` ${paymentProfileId} `, invoiceId: paymentInvoiceId })
   ).toEqual([
     { label: 'walletLink', href: `/admin/wallet-ledger/${paymentProfileId}` },
-    { label: 'invoiceLink', href: `/admin/invoices?invoiceId=${paymentInvoiceId}` },
+    { label: 'invoiceLink', href: `/admin/invoices/${paymentInvoiceId}` },
   ]);
   expect(
     reconciliationLinks({ walletId: 'javascript:alert(1)', invoiceId: '../../login' })

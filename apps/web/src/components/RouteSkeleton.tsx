@@ -35,6 +35,11 @@ export function RouteSkeleton({ layout = 'default' }: RouteSkeletonProps) {
   );
 }
 
+export function StaffRecordLoading() {
+  const locale = useLocale();
+  return <PageLoading className="min-h-48" label={loadingText('loadingAdmin', locale)} />;
+}
+
 /** Static reduced-motion indicator retains the same accessible loading status. */
 export function RouteSpinner() {
   const locale = useLocale();

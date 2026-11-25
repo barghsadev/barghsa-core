@@ -10,7 +10,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import {
   parseDateRangeFilter,
@@ -30,6 +30,7 @@ const submission = z
     profileId: z.string().uuid(),
     productId: z.string().uuid(),
     submissionKey: z.string().uuid(),
+    brief: z.string().trim().max(2000).optional(),
   })
   .strict();
 
@@ -61,14 +62,47 @@ export class ConsultationRequestController {
         parsed.error.issues.every(
           (issue) =>
             issue.path.length === 1 &&
-            issue.path[0] === 'productId' &&
-            ['invalid_type', 'invalid_format'].includes(issue.code)
+            ((issue.path[0] === 'productId' &&
+              ['invalid_type', 'invalid_format'].includes(issue.code)) ||
+              (issue.path[0] === 'brief' && ['invalid_type', 'too_big'].includes(issue.code)))
         )
       )
-        throw new InputFieldException(['productId']);
+        throw new InputFieldException([
+          ...new Set(parsed.error.issues.map((issue) => String(issue.path[0]))),
+        ]);
       throw new HttpException({ error: 'VALIDATION:INPUT_INVALID' }, 400);
     }
     return this.service.submit(req.session, parsed.data, req.ip ?? '127.0.0.1');
+  }
+
+  @Get('requests/submissions/:submissionKey')
+  @ApiOperation({ summary: 'Read a consultation submission receipt for the current submitter' })
+  @ApiOkResponse({
+    schema: {
+      type: 'object',
+      required: ['receipt'],
+      properties: {
+        receipt: {
+          type: 'object',
+          nullable: true,
+          required: ['requestId', 'status'],
+          properties: {
+            requestId: { type: 'string', format: 'uuid' },
+            status: { type: 'string', enum: ['submitted'] },
+          },
+        },
+      },
+    },
+  })
+  async receipt(
+    @Param('submissionKey', new ParseUUIDPipe()) submissionKey: string,
+    @Query('profileId', new ParseUUIDPipe()) profileId: string,
+    @Query('productId', new ParseUUIDPipe()) productId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return {
+      receipt: await this.service.receipt(req.session, { profileId, productId, submissionKey }),
+    };
   }
 
   @Get('requests')

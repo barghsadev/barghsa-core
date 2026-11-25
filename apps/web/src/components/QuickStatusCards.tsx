@@ -2,8 +2,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/workspace';
 import { tSaving } from '@barghsa/i18n/saving';
-import { FileCheck2, Package, LifeBuoy, ReceiptText, ArrowUpRight } from 'lucide-react';
-import { cn } from '@barghsa/ui';
+import { FileCheck2Icon, MessagesSquareIcon, PackageIcon, ReceiptTextIcon } from 'lucide-react';
 
 export interface QuickStatusCardsProps {
   /** Contracts in the Active lifecycle state. */
@@ -16,7 +15,6 @@ export interface QuickStatusCardsProps {
   unpaidInvoices: number;
   /** UI locale. */
   locale?: Locale;
-  embedded?: boolean;
 }
 
 export function QuickStatusCards({
@@ -25,112 +23,70 @@ export function QuickStatusCards({
   openTickets,
   unpaidInvoices,
   locale = 'fa',
-  embedded = false,
 }: QuickStatusCardsProps) {
   const numbers = useNumberFormatting(locale);
   const cards = [
     {
       key: 'contracts',
-      icon: FileCheck2,
       label: 'dashboard.overview.contractStatus',
       href: '/contracts',
       search: { state: 'Active' },
       count: activeContracts,
+      icon: FileCheck2Icon,
     },
     {
       key: 'orders',
-      icon: Package,
       label: 'dashboard.overview.activeOrders',
       count: pendingOrders,
+      icon: PackageIcon,
     },
     {
       key: 'tickets',
-      icon: LifeBuoy,
       label: 'dashboard.overview.openTickets',
       href: '/tickets',
       search: { status: 'active', scope: 'active' },
       count: openTickets,
+      icon: MessagesSquareIcon,
     },
     {
       key: 'invoices',
-      icon: ReceiptText,
       label: 'dashboard.overview.pendingInvoices',
       href: '/invoices',
       search: { status: 'unpaid' },
       count: unpaidInvoices,
+      icon: ReceiptTextIcon,
     },
   ];
+  const row = 'flex min-h-12 min-w-0 items-center gap-2 rounded-lg px-2 text-sm';
   return (
-    <div
-      className={
-        embedded ? 'grid grid-cols-2 gap-1.5' : 'grid h-full grid-cols-1 gap-4 sm:grid-cols-2'
-      }
-      dir={locale === 'fa' ? 'rtl' : 'ltr'}
-    >
-      {cards.map(({ key, icon: Icon, label, href, search, count }) => {
-        const content = (
-          <>
-            <div
-              className={cn(
-                'flex justify-between',
-                embedded ? 'items-start gap-2' : 'items-center gap-3'
+    <div className="space-y-2" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <ul className="grid grid-cols-2 gap-x-2">
+        {cards.map(({ key, label, href, search, count, icon: Icon }) => {
+          const value = (
+            <>
+              <Icon aria-hidden="true" className="size-4 shrink-0 text-primary" />
+              <span className="min-w-0 text-muted-foreground [overflow-wrap:anywhere]">
+                {t(label, locale)}
+              </span>
+              <strong className="ms-auto shrink-0 font-semibold tabular-nums">
+                {numbers.number(count)}
+              </strong>
+            </>
+          );
+          return (
+            <li key={key} className="min-w-0">
+              {href ? (
+                <Link to={href} search={search} className={row + ' hover:bg-muted'}>
+                  {value}
+                </Link>
+              ) : (
+                <span className={row}>{value}</span>
               )}
-            >
-              <Icon
-                className={cn(
-                  embedded ? 'size-4 shrink-0' : 'size-5 shrink-0',
-                  key === 'contracts' && count > 0
-                    ? 'text-success'
-                    : key !== 'contracts' && count > 2
-                      ? 'text-destructive'
-                      : key !== 'contracts' && count > 0
-                        ? 'text-warning'
-                        : 'text-muted-foreground'
-                )}
-                strokeWidth={1.7}
-                aria-hidden="true"
-              />
-              {embedded ? (
-                <p className="min-w-0 text-xl leading-none font-semibold wrap-anywhere tabular-nums">
-                  {numbers.number(count)}
-                </p>
-              ) : href ? (
-                <ArrowUpRight
-                  className="size-4 text-muted-foreground rtl:-rotate-90"
-                  aria-hidden="true"
-                />
-              ) : null}
-            </div>
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <p className="text-sm leading-snug text-muted-foreground">{t(label, locale)}</p>
-              {!embedded && (
-                <p className="text-3xl font-semibold tabular-nums">{numbers.number(count)}</p>
-              )}
-            </div>
-          </>
-        );
-        const className = cn(
-          'flex min-w-0 flex-col rounded-xl border text-card-foreground',
-          embedded
-            ? 'gap-1 bg-muted/45 px-2 py-1.5'
-            : 'gap-5 bg-card p-5 shadow-sm transition-shadow hover:border-input hover:shadow-md'
-        );
-        return href ? (
-          <Link
-            key={key}
-            to={href}
-            search={search}
-            className={cn(className, embedded && 'hover:border-input hover:bg-muted')}
-          >
-            {content}
-          </Link>
-        ) : (
-          <div key={key} className={className}>
-            {content}
-          </div>
-        );
-      })}
-      <div className="col-span-full grid grid-cols-2 gap-x-2 border-t text-sm leading-snug font-medium">
+            </li>
+          );
+        })}
+      </ul>
+      <div className="grid grid-cols-2 gap-x-2 border-t text-sm leading-snug font-medium">
         <Link
           to="/electricity/orders"
           search={{ status: 'pending' }}

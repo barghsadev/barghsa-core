@@ -3,6 +3,7 @@ import { Button, ConfirmationFields } from '@barghsa/ui';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { commercialFetch } from '../lib/commercial-fetch.js';
+import { electricityDraftPath } from '../lib/electricity-draft.js';
 import { withCsrf } from '../lib/csrf.js';
 import { confirmedDraftReceipt, uuidReference } from '../lib/form-receipt.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
@@ -18,11 +19,6 @@ type Command = {
   confirmed: () => Promise<boolean>;
 };
 type Recovery = { phase: 'check' | 'retry' | 'stale'; command: Command };
-
-export function electricityDraftPath(mode: Mode, profileId?: string) {
-  const path = `/api/electricity/drafts/${mode}/guarded`;
-  return profileId ? `${path}?profileId=${encodeURIComponent(profileId)}` : path;
-}
 
 function draftPacket(value: unknown) {
   if (!value || typeof value !== 'object' || !('revision' in value))

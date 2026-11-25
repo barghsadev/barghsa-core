@@ -46,7 +46,7 @@ async function inspect(page: Page, locale: string, project: string, domain: stri
 }
 for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true]) {
-    test(`directory links retain exact page recovery and invalidate old confirmations (${locale}, ${dark})`, async ({
+    test(`directory pagination recovers and keeps the exact page in account links (${locale}, ${dark})`, async ({
       page,
     }, info) => {
       await shell(page, locale, dark);
@@ -74,16 +74,12 @@ for (const locale of ['en', 'fa'] as const)
         'Second Alice'
       );
       expect(Object.fromEntries(reads.at(-1)!.searchParams)).toEqual({ limit: '25', offset: '25' });
-      await page.getByRole('button', { name: word('create'), exact: true }).click();
-      await page.locator('#staff-firstName').fill('LOCAL-DRAFT');
       await page.getByRole('button', { name: word('next'), exact: true }).click();
       await expect(page.getByRole('button', { name: word('retry'), exact: true })).toBeVisible();
       await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
         'Second Alice'
       );
-      await expect(page.locator('#staff-firstName')).toHaveValue('LOCAL-DRAFT');
       expect(params(page).get('page')).toBe('3');
-      expect(page.url()).not.toContain('LOCAL-DRAFT');
       const failed = reads.at(-1)!.search;
       fail = false;
       await page.getByRole('button', { name: word('retry'), exact: true }).click();
@@ -91,7 +87,6 @@ for (const locale of ['en', 'fa'] as const)
         'Third Alice'
       );
       expect(reads.at(-1)!.search).toBe(failed);
-      await expect(page.locator('#staff-firstName')).toHaveValue('LOCAL-DRAFT');
       await page.reload();
       await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
         'Third Alice'
@@ -106,10 +101,19 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
         'Third Alice'
       );
-      await page.getByRole('button', { name: word('disable'), exact: true }).click();
-      await expect(page.getByRole('dialog')).toBeVisible();
+      await page.route(`**/api/admin/staff/accounts/${staffUser.userId}`, (route) =>
+        route.fulfill({ json: { ...staffUser, firstName: 'Third' } })
+      );
+      const beforeAccount = reads.length;
+      await page.getByRole('link', { name: 'Third Alice', exact: true }).click();
+      await expect(page.getByRole('heading', { name: 'Third Alice', exact: true })).toBeVisible();
+      expect(params(page).get('page')).toBe('3');
+      expect(reads.length).toBe(beforeAccount);
       await page.goBack();
-      await expect(page.getByRole('dialog')).toHaveCount(0);
+      await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
+        'Third Alice'
+      );
+      await page.getByRole('button', { name: word('previous'), exact: true }).click();
       await expect(page.locator('table:visible, ol[role=list]:visible')).toContainText(
         'Second Alice'
       );

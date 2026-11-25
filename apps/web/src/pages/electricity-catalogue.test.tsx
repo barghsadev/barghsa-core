@@ -95,7 +95,7 @@ it('shows four products but only offers the supported simple-order draft', async
   expect(host.textContent).toContain('250000 IRR');
   expect(host.textContent).toContain('Free market electricity');
   expect(host.textContent).toContain('Not available yet');
-  expect(host.querySelectorAll('a[href="/electricity/order"]')).toHaveLength(1);
+  expect(host.querySelectorAll('a[href="/electricity/orders/new"]')).toHaveLength(1);
 });
 
 it('blocks the draft link while the mandatory green product is unavailable', async () => {
@@ -110,7 +110,7 @@ it('blocks the draft link while the mandatory green product is unavailable', asy
   expect(host.textContent).toContain(
     'Ordering is paused until green electricity is active and priced.'
   );
-  expect(host.querySelector('a[href="/electricity/order"]')).toBeNull();
+  expect(host.querySelector('a[href="/electricity/orders/new"]')).toBeNull();
 });
 
 it.each(['title', 'description'] as const)(

@@ -59,7 +59,7 @@ export function PublishedTermsHistory({
   }
   return (
     <details
-      className="mt-8 border-t pt-4"
+      className="mt-8 border-t pt-4 print:hidden"
       onToggle={(event) => {
         if (event.currentTarget.open && !history && !loading && !error) void load();
       }}
@@ -71,8 +71,9 @@ export function PublishedTermsHistory({
         {history?.versions.map((version) => (
           <li key={version.id} className="flex flex-wrap gap-3">
             <Link
-              to="/terms"
-              search={{ lang: locale, version: version.id }}
+              to="/terms/$version"
+              params={{ version: version.id }}
+              search={{ lang: locale }}
               aria-current={version.id === currentId ? 'page' : undefined}
               className="underline underline-offset-4"
             >

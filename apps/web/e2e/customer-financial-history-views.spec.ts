@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/app';
 import { contractText } from '@barghsa/i18n/contracts';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
+import { t as workspaceText } from '@barghsa/i18n/workspace';
 
 const first = '50000000-0000-4000-8000-000000000001';
 const older = '50000000-0000-4000-8000-000000000002';
@@ -49,7 +50,10 @@ for (const locale of ['en', 'fa'] as const) {
     const invoiceRequests: string[] = [];
     await page.route(/\/api\/invoices(?:\?|$)/, (route) => {
       invoiceRequests.push(route.request().url());
-      const more = new URL(route.request().url()).searchParams.has('before');
+      const query = new URL(route.request().url()).searchParams;
+      if (query.get('status') === 'unpaid' && !query.has('statuses'))
+        return route.fulfill({ json: { invoices: [], nextBefore: null } });
+      const more = query.has('before');
       return route.fulfill({
         json: {
           invoices: [
@@ -180,6 +184,18 @@ for (const locale of ['en', 'fa'] as const) {
       exact: true,
     });
     const invoiceLink = (id: string) => page.getByRole('main').locator(`a[href="/invoices/${id}"]`);
+    await page.goto('/invoices?status=unpaid&q=Customer');
+    const empty = page.locator('[data-slot=queue-empty-state]');
+    await expect(empty.getByRole('status')).toHaveText(
+      workspaceText('listStatus.alternatives', locale)
+    );
+    await empty
+      .getByRole('button', { name: workspaceText('listStatus.all', locale), exact: true })
+      .click();
+    await expect(page).toHaveURL(
+      (url) => !url.searchParams.has('status') && url.searchParams.get('q') === 'Customer'
+    );
+    await expect(invoiceLink(first)).toBeVisible();
     await page.goto('/invoices?status=unpaid&statuses=Paid');
     await expect(invoiceLink(first)).toBeVisible();
     await expect(mobile ? cardButton : tableButton).toHaveAttribute('aria-pressed', 'true');
@@ -202,7 +218,7 @@ for (const locale of ['en', 'fa'] as const) {
       name: t('invoices.title', locale),
       exact: true,
     });
-    await expect(invoiceTable.getByRole('columnheader')).toHaveCount(8);
+    await expect(invoiceTable.getByRole('columnheader')).toHaveCount(6);
     await expect(
       invoiceTable.getByText(formatCurrencyIrr(amount, locale), { exact: true })
     ).toHaveCount(4);
@@ -267,24 +283,32 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(contractTable.getByText('9007199254740994', { exact: true })).toBeVisible();
     const loadedContracts = contractRequests.length;
     await cardButton.click();
+    await expect(
+      page.getByRole('main').getByText('9007199254740994', { exact: true })
+    ).toBeVisible();
     const firstCard = page
       .getByRole('main')
       .locator('li')
       .filter({ has: page.getByText('9007199254740993', { exact: true }) });
     await expect(firstCard).toBeVisible();
-    await firstCard.getByRole('button').click();
+    expect(contractRequests.length).toBe(loadedContracts);
+    await firstCard.locator(`a[href^="/contracts/${first}"]`).first().click();
+    await expect(page).toHaveURL((url) => url.pathname === `/contracts/${first}`);
     const detail = page.getByRole('region', { name: contractText('terms', locale), exact: true });
     await expect(detail.getByText('Retained contract terms', { exact: true })).toBeVisible();
     const loadedDetailReads = detailReads;
+    await page.goBack();
+    await expect(cardButton).toHaveAttribute('aria-pressed', 'true');
+    await expect(firstCard).toBeVisible();
+    const returnedContractReads = contractRequests.length;
     await page
       .getByRole('region', { name: contractText('title', locale), exact: true })
       .locator(':scope > [data-slot="list-toolbar"]')
       .getByRole('button', { name: t('historyView.table', locale), exact: true })
       .click();
-    await expect(detail.getByText('Retained contract terms', { exact: true })).toBeVisible();
     expect(detailReads).toBe(loadedDetailReads);
-    expect(contractRequests.length).toBe(loadedContracts);
-    await expect(contractTable.getByText('9007199254740994', { exact: true })).toBeVisible();
+    expect(contractRequests.length).toBe(returnedContractReads);
+    await expect(contractTable.getByText('9007199254740993', { exact: true })).toBeVisible();
     await page.setViewportSize({ width: 390, height: 844 });
     expect(
       (await new AxeBuilder({ page }).include('[data-slot="scroll-area"]').analyze()).violations

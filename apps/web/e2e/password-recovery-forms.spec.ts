@@ -99,7 +99,7 @@ async function capture(form: Locator, path: string) {
   expect(
     (
       await new AxeBuilder({ page })
-        .include('div.space-y-6[dir]')
+        .include('.auth-form')
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
         .analyze()
     ).violations

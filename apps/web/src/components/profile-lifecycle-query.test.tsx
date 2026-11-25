@@ -123,8 +123,8 @@ for (const kind of ['ownership', 'lifecycle']) {
               }
         )
       );
-      expect(host.querySelector('a[href="/settings/team"]')).toBeNull();
-      expect(host.querySelector(`a[href="/tickets?ticketId=${lifecycleTicketId}"]`)).toBeNull();
+      expect(host.querySelector('a[href="/settings/team/$section"]')).toBeNull();
+      expect(host.querySelector(`a[href="/tickets/${lifecycleTicketId}"]`)).toBeNull();
       expect(writes).toHaveLength(0);
     }
   );
@@ -133,13 +133,13 @@ it('withdraws an old ownership notice while the new route read is pending', asyn
   pending = false;
   payload = { transfers: [{ direction: 'incoming' }] };
   await render('ownership');
-  expect(host.querySelector('a[href="/settings/team"]')).not.toBeNull();
+  expect(host.querySelector('a[href="/settings/team/$section"]')).not.toBeNull();
   pending = true;
   route.pathname = '/tickets';
   await render('ownership');
-  expect(host.querySelector('a[href="/settings/team"]')).toBeNull();
+  expect(host.querySelector('a[href="/settings/team/$section"]')).toBeNull();
   await act(async () => finish({ transfers: [] }));
-  expect(host.querySelector('a[href="/settings/team"]')).toBeNull();
+  expect(host.querySelector('a[href="/settings/team/$section"]')).toBeNull();
   expect(writes).toHaveLength(0);
 });
 it('cancels lifecycle confirmation bytes after an accepted closure without resubmitting the request', async () => {

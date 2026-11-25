@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import * as jalaliCalendar from 'date-fns-jalali';
-import { addDays, startOfDay, format as dateFnsFormat } from 'date-fns';
+import { addDays, addYears, startOfDay, format as dateFnsFormat } from 'date-fns';
 import { format as jalaliFormat } from 'date-fns-jalali';
 import { faIR as jalaliLocale } from 'date-fns-jalali/locale';
 import { CalendarIcon } from 'lucide-react';
@@ -24,6 +24,10 @@ interface DatePickerBaseProps {
   /** IANA zone for display and selection. Defaults to Iran. */
   timezone?: string;
   numerals?: 'arabext' | 'latn';
+  /** Let users jump directly to a year when entering a historical date. */
+  showYearSelect?: boolean;
+  /** Use a shorter readout alongside a separate time input. */
+  compactLabel?: boolean;
   /** Inclusive calendar-day limits. Existing values are never silently changed. */
   minDate?: Date | undefined;
   maxDate?: Date | undefined;
@@ -62,6 +66,8 @@ function DatePicker({
   locale,
   timezone = 'Asia/Tehran',
   numerals: numeralOverride,
+  showYearSelect = false,
+  compactLabel = false,
   minDate,
   maxDate,
   disabled = false,
@@ -120,12 +126,12 @@ function DatePicker({
         calendar: jalali ? 'persian' : 'gregory',
         numberingSystem: numerals,
         timeZone: timezone,
-        weekday: 'long',
+        ...(!compactLabel ? { weekday: 'long' } : {}),
         year: 'numeric',
-        month: 'long',
+        month: compactLabel && !jalali ? 'short' : 'long',
         day: 'numeric',
       });
-      if (!jalali) return formatter.format(date);
+      if (!jalali || compactLabel) return formatter.format(date);
       const parts = formatter.formatToParts(date);
       const part = (type: Intl.DateTimeFormatPartTypes) =>
         parts.find((item) => item.type === type)?.value ?? '';
@@ -138,7 +144,7 @@ function DatePicker({
       }).format(date);
       return `${fullDate} (${gregorianYear})`;
     },
-    [jalali, timezone, numerals]
+    [compactLabel, jalali, timezone, numerals]
   );
 
   const calendarFormatters = {
@@ -166,6 +172,16 @@ function DatePicker({
   const dayStart = (date: Date) => startOfDay(new TZDate(date.getTime(), timezone));
   const interval = calendarMode === 'range' ? (value as DateRange | undefined) : undefined;
   const defaultMonth = calendarMode === 'range' ? interval?.from : (value as Date | undefined);
+  const yearNavigation = React.useMemo(() => {
+    if (!showYearSelect) return {};
+    const now = new TZDate(Date.now(), timezone);
+    const tenYearsAhead = addYears(now, 10);
+    return {
+      ...(defaultMonth && defaultMonth < addYears(now, -100) ? { startMonth: defaultMonth } : {}),
+      endMonth:
+        maxDate ?? (defaultMonth && defaultMonth > tenYearsAhead ? defaultMonth : tenYearsAhead),
+    };
+  }, [showYearSelect, timezone, defaultMonth, maxDate]);
   const calendarRange = interval
     ? {
         from: interval.from && dayStart(interval.from),
@@ -267,9 +283,10 @@ function DatePicker({
             timeZone={timezone}
             dir={jalali ? 'rtl' : 'ltr'}
             numerals={numerals}
-            captionLayout="dropdown-months"
+            captionLayout={showYearSelect ? 'dropdown' : 'dropdown-months'}
             formatters={calendarFormatters}
             locale={calendarLocale}
+            {...yearNavigation}
             {...(defaultMonth ? { defaultMonth } : {})}
           />
         ) : (
@@ -286,9 +303,10 @@ function DatePicker({
             timeZone={timezone}
             dir={jalali ? 'rtl' : 'ltr'}
             numerals={numerals}
-            captionLayout="dropdown-months"
+            captionLayout={showYearSelect ? 'dropdown' : 'dropdown-months'}
             formatters={calendarFormatters}
             locale={calendarLocale}
+            {...yearNavigation}
             {...(defaultMonth ? { defaultMonth } : {})}
           />
         )}

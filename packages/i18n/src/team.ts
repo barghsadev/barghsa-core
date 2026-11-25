@@ -3,6 +3,16 @@ import { lookup } from './lookup.js';
 
 const fa: Record<string, string> = {
   'team.details': 'مشاهده جزئیات',
+  'team.editRoles': 'ویرایش نقش‌ها',
+  'team.invitations': 'دعوت‌نامه‌ها',
+  'team.recordMissing': 'این عضو یا دعوت‌نامه در پروفایل فعال یافت نشد.',
+  'team.rolesCombine': 'دسترسی‌های نقش‌های یک عضو با هم ترکیب می‌شوند.',
+  'team.roleEffect.Owner':
+    'مدیریت پروفایل و اعضا، انتقال مالکیت و دسترسی کامل به عملیات، مالی و قراردادها.',
+  'team.roleEffect.Manager': 'مدیریت سفارش‌ها، نشانی‌ها، مدارک و اعضا و مشاهده اطلاعات مالی.',
+  'team.roleEffect.Finance':
+    'مشاهده فاکتورها، پرداخت‌ها و بازپرداخت‌ها، شارژ کیف پول و ثبت رسید بانکی.',
+  'team.roleEffect.Legal': 'مشاهده، امضا، رد یا درخواست تغییر قراردادها.',
   'team.memberDetails': 'جزئیات عضو',
   'team.invitationDetails': 'جزئیات دعوت‌نامه',
   'team.detailHint': 'اطلاعات و دسترسی در پروفایل حقوقی انتخاب‌شده.',
@@ -61,6 +71,7 @@ const fa: Record<string, string> = {
   'team.lastActiveHint':
     'آخرین ورود ثبت\u200cشده به حساب؛ وضعیت آنلاین یا تاریخچه فعالیت این پروفایل نیست.',
   'team.message': 'پیام اختیاری',
+  'team.messageExample': 'مثلاً لطفاً فاکتورهای آبان را بررسی کنید.',
   'team.messageHint':
     'حداکثر ۱۰۰۰ نویسه. گیرنده این پیام را در جزئیات دعوت\u200cنامه می\u200cبیند.',
   'team.unnamed': 'عضو تیم',
@@ -111,6 +122,7 @@ const fa: Record<string, string> = {
   'team.inviteNotConfirmed':
     'دعوت‌نامه تأیید نشد. پیش از ارسال دوباره، فهرست فعلی تیم را بررسی کنید.',
   'team.members': 'اعضا و دعوت‌نامه‌ها',
+  'team.membersOnly': 'اعضا',
   'team.empty': 'هنوز نماینده‌ای وجود ندارد. تیم خود را دعوت کنید.',
   'team.saveRoles': 'ذخیره نقش‌ها',
   'team.rolesWarning': 'نقش‌های انتخاب‌شده جایگزین دسترسی فعلی این عضو می‌شوند.',
@@ -138,6 +150,17 @@ const fa: Record<string, string> = {
 
 const en: Record<string, string> = {
   'team.details': 'View details',
+  'team.editRoles': 'Edit roles',
+  'team.invitations': 'Invitations',
+  'team.recordMissing': 'This member or invitation could not be found in the active profile.',
+  'team.rolesCombine': 'Members with multiple roles receive the permissions from each role.',
+  'team.roleEffect.Owner':
+    'Manages the profile and members, can transfer ownership, and has full access to operations, finance, and contracts.',
+  'team.roleEffect.Manager':
+    'Manages orders, addresses, documents, and members and can view financial records.',
+  'team.roleEffect.Finance':
+    'Views invoices, payments, and refunds, tops up the wallet, and submits bank receipts.',
+  'team.roleEffect.Legal': 'Views, signs, rejects, and requests changes to contracts.',
   'team.memberDetails': 'Member details',
   'team.invitationDetails': 'Invitation details',
   'team.detailHint': 'Information and access in the selected legal profile.',
@@ -197,6 +220,7 @@ const en: Record<string, string> = {
   'team.lastActiveHint':
     'Last recorded account sign-in. This does not indicate online presence or activity in this profile.',
   'team.message': 'Optional message',
+  'team.messageExample': 'For example, please review the November invoices.',
   'team.messageHint':
     'Up to 1,000 characters. The recipient sees this message in the invitation details.',
   'team.unnamed': 'Team member',
@@ -245,6 +269,7 @@ const en: Record<string, string> = {
   'team.inviteNotConfirmed':
     'The invitation could not be confirmed. Review the current team before sending again.',
   'team.members': 'Members and invitations',
+  'team.membersOnly': 'Members',
   'team.empty': 'No agents yet. Invite your team.',
   'team.saveRoles': 'Save roles',
   'team.rolesWarning': 'The selected roles replace this member’s current access.',

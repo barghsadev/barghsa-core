@@ -1,4 +1,9 @@
 import AxeBuilder from '@axe-core/playwright';
+import { receiptEditorMessages } from '@barghsa/i18n/receipt-editor';
+import {
+  enterWalletReceiptInvoiceId,
+  openWalletReceiptAction,
+} from './wallet-receipt-action-navigation';
 import { t as appText } from '@barghsa/i18n/app';
 import { tWalletReceipts as walletText } from '@barghsa/i18n/wallet-receipts';
 import { test, expect } from './coverage-fixture';
@@ -134,7 +139,7 @@ for (const locale of ['en', 'fa'] as const)
       const panel = page.getByTestId('admin-wallet-receipts-page');
       const queue = panel.getByRole('navigation', { name: word('queueLabel'), exact: true });
       const confirm = page.getByTestId('wallet-receipt-confirm');
-      await expect(confirm).toBeEnabled();
+      await expect(confirm).toHaveCount(0);
       await expect(queue.getByText(receiptId, { exact: true })).toBeVisible();
       await expect(queue.getByText(paymentInvoiceId, { exact: true })).toBeVisible();
       await expect(
@@ -147,10 +152,6 @@ for (const locale of ['en', 'fa'] as const)
       );
       await expect(queue.locator('li').first()).toContainText(`${formattedAmount} IRR`);
       await expect(queue.locator('li').first()).toContainText(receipt.bankName);
-      await expect(panel.locator('dl').first()).toContainText(receipt.bankName);
-      await expect(
-        panel.getByRole('region', { name: word('review.title'), exact: true })
-      ).toContainText(receipt.bankName);
       await expect(queue.locator('time[datetime="2026-09-01"]')).toHaveText(
         new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
           calendar: locale === 'fa' ? 'persian' : 'gregory',
@@ -170,6 +171,22 @@ for (const locale of ['en', 'fa'] as const)
       await expect(queue.locator(`time[datetime="${receipt.submittedAt}"]`).first()).toHaveText(
         submitted
       );
+      await panel.getByRole('button', { name: tableLabel, exact: true }).click();
+      await expect(queue.getByRole('columnheader')).toHaveCount(10);
+      const viewport = queue.locator('[data-slot="scroll-area-viewport"]');
+      await viewport.focus();
+      await page.keyboard.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
+      await expect
+        .poll(() => viewport.evaluate((element) => Math.abs(element.scrollLeft)))
+        .toBeGreaterThan(0);
+      const queueBefore = queueReads;
+      expect([detailReads, reviewReads]).toEqual([0, 0]);
+      await queue.locator(`a[href^="/admin/wallet-receipts/${receiptId}"]`).click();
+      await expect(page).toHaveURL(new RegExp(`/admin/wallet-receipts/${receiptId}$`));
+      await expect(page.getByTestId('wallet-receipt-open-confirm')).toBeEnabled();
+      expect(queueReads).toBe(queueBefore);
+      expect(reviewReads).toBe(0);
+      await expect(panel.locator('dl').first()).toContainText(receipt.bankName);
       const timeline = panel.getByRole('region', {
         name: walletText('wallet.receipt.timeline', locale),
         exact: true,
@@ -188,23 +205,32 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         panel.getByRole('link', { name: word('openAttachment'), exact: true })
       ).toHaveAttribute('href', receipt.attachmentUrl);
+      await openWalletReceiptAction(page, 'reject');
+      await page.locator('#reject-reason').fill('Retain invoice and bank investigation');
+      await openWalletReceiptAction(page, 'confirm');
+      await enterWalletReceiptInvoiceId(page, locale);
+      await panel
+        .locator('summary')
+        .filter({ hasText: receiptEditorMessages[locale].fullPaymentReview })
+        .click();
+      await expect(
+        panel.getByRole('region', { name: word('review.title'), exact: true })
+      ).toContainText(receipt.bankName);
       await page.locator('#apply-invoice-id').fill(paymentInvoiceId);
       await expect(confirm).toBeEnabled();
-      await page.locator('#reject-reason').fill('Retain invoice and bank investigation');
-      const reads = [queueReads, detailReads, reviewReads];
-      await panel.getByRole('button', { name: tableLabel, exact: true }).click();
-      await expect(queue.getByRole('columnheader')).toHaveCount(10);
+      const recordReads = detailReads;
+      await panel
+        .getByRole('button', { name: receiptEditorMessages[locale].refreshReceipt, exact: true })
+        .click();
+      await expect(confirm).toBeEnabled();
       await expect(page.locator('#apply-invoice-id')).toHaveValue(paymentInvoiceId);
+      await openWalletReceiptAction(page, 'reject');
       await expect(page.locator('#reject-reason')).toHaveValue(
         'Retain invoice and bank investigation'
       );
-      expect([queueReads, detailReads, reviewReads]).toEqual(reads);
-      const viewport = queue.locator('[data-slot="scroll-area-viewport"]');
-      await viewport.focus();
-      await page.keyboard.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
-      await expect
-        .poll(() => viewport.evaluate((element) => Math.abs(element.scrollLeft)))
-        .toBeGreaterThan(0);
+      expect(detailReads).toBe(recordReads + 1);
+      expect(queueReads).toBe(queueBefore);
+      await page.getByTestId('wallet-receipt-back-to-review').click();
       const accessibility = await new AxeBuilder({ page })
         .include('[data-testid="admin-wallet-receipts-page"]')
         .analyze();
@@ -217,29 +243,23 @@ for (const locale of ['en', 'fa'] as const)
         darkMode
       );
       if (locale === 'fa' && info.project.name === 'mobile-safari') {
-        await queue.scrollIntoViewIfNeeded();
-        await page.screenshot({
-          path: `/tmp/barghsa-wallet-receipt-views-${darkMode ? 'dark' : 'light'}.png`,
-          fullPage: true,
-        });
         await image.scrollIntoViewIfNeeded();
         await page.screenshot({
           path: `/tmp/barghsa-wallet-receipt-preview-${darkMode ? 'dark' : 'light'}.png`,
         });
       }
+      await page.getByRole('link', { name: word('backToQueue'), exact: true }).click();
+      await expect(queue.getByRole('columnheader')).toHaveCount(10);
+      await expect(confirm).toHaveCount(0);
       queueStatus = 503;
       await panel.getByRole('button', { name: word('queue.refresh'), exact: true }).click();
       await expect(
         panel.getByRole('button', { name: word('queue.retry'), exact: true })
       ).toBeVisible();
       await panel.getByRole('button', { name: cardLabel, exact: true }).click();
-      await expect(page.locator('#reject-reason')).toHaveValue(
-        'Retain invoice and bank investigation'
-      );
-      await expect(confirm).toBeDisabled();
       queueStatus = 200;
       await panel.getByRole('button', { name: word('queue.retry'), exact: true }).click();
-      await expect(confirm).toBeEnabled();
+      await expect(queue.getByText(receiptId, { exact: true })).toBeVisible();
       await panel.getByRole('button', { name: tableLabel, exact: true }).click();
       await page.reload();
       await expect(queue.getByRole('columnheader')).toHaveCount(10);
@@ -247,26 +267,18 @@ for (const locale of ['en', 'fa'] as const)
         'aria-pressed',
         'true'
       );
-      await expect(confirm).toBeEnabled();
-      await page.locator('#apply-invoice-id').fill(paymentInvoiceId);
-      await expect(confirm).toBeEnabled();
-      await page.locator('#reject-reason').fill('Clear this obsolete draft');
       const search = panel.getByRole('searchbox');
       await search.fill('Bank_%\\');
       await expect.poll(() => new URLSearchParams(queueQueries.at(-1)).get('q')).toBe('Bank_%\\');
-      await expect(page.locator('#apply-invoice-id')).toHaveValue('');
-      await expect(page.locator('#reject-reason')).toHaveValue('');
       await panel.getByRole('combobox').selectOption('submitted_at:desc');
       await expect
         .poll(() => new URLSearchParams(queueQueries.at(-1)).get('sort'))
         .toBe('submitted_at:desc');
-      await expect(confirm).toBeEnabled();
-      await page.locator('#reject-reason').fill('Retain this search draft');
       const queryBeforeRefresh = queueQueries.at(-1);
       await panel.getByRole('button', { name: word('queue.refresh'), exact: true }).click();
-      await expect(confirm).toBeEnabled();
+      await expect(queue.getByText(receiptId, { exact: true })).toBeVisible();
       expect(queueQueries.at(-1)).toBe(queryBeforeRefresh);
-      await expect(page.locator('#reject-reason')).toHaveValue('Retain this search draft');
+      await expect(page.locator('#reject-reason')).toHaveCount(0);
       queueStatus = 503;
       await panel
         .getByRole('button', { name: appText('invoices.receipts.older', locale), exact: true })
@@ -290,7 +302,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.reload();
       await expect(search).toHaveValue('Bank_%\\');
       await expect(panel.getByRole('combobox')).toHaveValue('submitted_at:desc');
-      await expect(confirm).toBeEnabled();
+      await expect(confirm).toHaveCount(0);
       await panel
         .getByRole('button', { name: appText('historyFilters.clearAll', locale), exact: true })
         .click();

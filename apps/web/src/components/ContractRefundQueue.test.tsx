@@ -1,12 +1,10 @@
 import { QueryComponentProvider } from '../test/query-provider.js';
-import { act } from 'react';
+import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { en } from '@barghsa/i18n/contracts';
-import { refundDecisionReviewFixture } from '../test/refund-review-fixtures.js';
 import { ContractRefundQueue } from './ContractRefundQueue.js';
 import { documentRequest, DocumentRequestError } from '../lib/documents.js';
-import type { TeamAction } from './TeamActionDialog.js';
 import type * as Documents from '../lib/documents.js';
 
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
@@ -14,13 +12,23 @@ vi.mock('../lib/documents.js', async (original) => ({
   ...(await original<typeof Documents>()),
   documentRequest: vi.fn(),
 }));
-vi.mock('./TeamActionDialog.js', () => ({
-  TeamActionDialog: ({ action, onClose }: { action: TeamAction; onClose: () => void }) => (
-    <div role="dialog">
-      <span>{action.path}</span>
-      <button onClick={onClose}>Dismiss</button>
-    </div>
-  ),
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({
+    children,
+    to,
+    params,
+    disabled,
+  }: {
+    children: ReactNode;
+    to: string;
+    params?: { operation?: string };
+    disabled?: boolean;
+  }) =>
+    disabled ? (
+      <span>{children}</span>
+    ) : (
+      <a href={params?.operation ? '/refunds/' + params.operation : to}>{children}</a>
+    ),
 }));
 const request = vi.mocked(documentRequest);
 const row = (id: string) => ({
@@ -43,23 +51,6 @@ let container: HTMLDivElement, root: Root;
 beforeEach(() => {
   request.mockReset();
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(async () =>
-      Response.json(
-        refundDecisionReviewFixture(
-          row('wallet').invoiceId,
-          row('wallet').id,
-          'wallet',
-          'Failed',
-          'process',
-          null,
-          null,
-          '100'
-        )
-      )
-    )
-  );
   container = document.createElement('div');
   document.body.append(container);
   root = createRoot(container);
@@ -78,15 +69,12 @@ async function click(label: string) {
   const button = [...container.querySelectorAll('button')].find((b) => b.textContent === label);
   expect(button).toBeTruthy();
   await act(async () => button!.click());
-  if (label === en['cancellation.queue.process'])
-    await vi.waitFor(() => expect(container.querySelector('[role=dialog]')).not.toBeNull());
-  if (label === en['cancellation.queue.reconcile'])
-    await vi.waitFor(() => expect(container.querySelector('[role=alert]')).not.toBeNull());
 }
-it('hides finance obligations from an unauthorized staff member', async () => {
+it('clears finance obligations and shows access denied for an unauthorized staff member', async () => {
   request.mockRejectedValue(new DocumentRequestError(403, null));
   await render();
-  expect(container.textContent).toBe('');
+  expect(container.querySelector('#refund-obligations')).toBeNull();
+  expect(container.textContent).toContain(en.denied);
 });
 it('recovers from a failed load and retains scheduled automatic retries without a manual action', async () => {
   request.mockRejectedValueOnce(new Error('offline'));
@@ -111,7 +99,7 @@ it('appends pages once and refreshes from the first page', async () => {
   expect(container.querySelectorAll('li')).toHaveLength(0);
   expect(container.textContent).toContain(en.cancellationQueueEmpty);
 });
-it('requires a stored transfer reference before reconciliation and allows dismissing a retry', async () => {
+it('links only actionable refunds and keeps forms out of the queue', async () => {
   request.mockResolvedValue({
     obligations: [
       { ...row('bank'), destination: 'external_bank', state: 'Processing' },
@@ -120,17 +108,11 @@ it('requires a stored transfer reference before reconciliation and allows dismis
     nextBefore: null,
   });
   await render();
-  await click(en['cancellation.queue.reconcile']);
-  expect(container.querySelector('[role="alert"]')?.textContent).toBe(
-    en.refundBankReferenceInvalid
+  expect(container.querySelector('input, textarea, form')).toBeNull();
+  expect(container.querySelector('a[href$="/reconcile"]')).toBeNull();
+  expect(container.querySelector('a[href$="/process"]')?.textContent).toBe(
+    en['cancellation.queue.process']
   );
-  expect(container.querySelector('[role="dialog"]')).toBeNull();
-  await click(en['cancellation.queue.process']);
-  expect(container.querySelector('[role="dialog"]')?.textContent).toContain(
-    '/' + row('wallet').id + '/process'
-  );
-  await click('Dismiss');
-  expect(container.querySelector('[role="dialog"]')).toBeNull();
 });
 it('ignores a response after the queue has unmounted', async () => {
   let resolve!: (value: unknown) => void;

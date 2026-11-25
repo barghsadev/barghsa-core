@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button, ListPage, ListViewToggle, PageLoading } from '@barghsa/ui';
 import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 import { useListView } from '../hooks/useListView.js';
 import { StaffInvoiceReceiptList } from './StaffInvoiceReceiptList.js';
-import { isInvoiceUuid } from '../lib/due-at-override.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useManualServerRead } from '../hooks/useServerQuery.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -61,9 +60,7 @@ function OwnedHistory({ onOpen, revision, binding }: HistoryProps) {
   const queryBinding = binding ?? local;
   const { query } = queryBinding;
   const state = query.filters.state ?? '';
-  const [invoiceInput, setInvoiceInput] = useState('');
   const invoiceId = query.filters.invoiceId ?? '';
-  const [invalidInvoice, setInvalidInvoice] = useState(false);
   const cursor = useMemo(() => decodeFinanceCursor(query.cursor), [query.cursor]);
   const cursorKey = encodeFinanceCursor(cursor);
   const [retryRevision, setRetryRevision] = useState(0);
@@ -78,10 +75,6 @@ function OwnedHistory({ onOpen, revision, binding }: HistoryProps) {
     'loading'
   );
 
-  useEffect(() => {
-    setInvoiceInput(invoiceId);
-    setInvalidInvoice(false);
-  }, [invoiceId]);
   useEffect(() => {
     const controller = new AbortController();
     const query = new URLSearchParams();
@@ -134,68 +127,12 @@ function OwnedHistory({ onOpen, revision, binding }: HistoryProps) {
     return () => controller.abort();
   }, [criteria, cursorKey, revision, retryRevision, read]);
 
-  function applyInvoice(event: FormEvent) {
-    event.preventDefault();
-    const value = invoiceInput.trim();
-    if (value && !isInvoiceUuid(value)) {
-      setInvalidInvoice(true);
-      return;
-    }
-    setInvalidInvoice(false);
-    setPage({ items: [], nextCursor: null });
-    setLoadState('loading');
-    if (value === invoiceId && !cursor) setRetryRevision((value) => value + 1);
-    queryBinding.setQuery({ filters: { invoiceId: value }, cursor: '' });
-  }
-
   return (
     <section className="space-y-4 border-t pt-4" aria-label={word('historyTitle')}>
       <h3 className="font-semibold">{word('historyTitle')}</h3>
       <ListPage>
         <ListPage.Toolbar
-          filters={
-            <div className="flex min-w-0 flex-wrap items-end gap-3">
-              <InvoiceReceiptHistoryFilters binding={queryBinding} />
-              <label className="flex min-w-0 flex-col gap-1 text-sm">
-                {word('historyState')}
-                <select
-                  value={state}
-                  onChange={(event) => {
-                    setPage({ items: [], nextCursor: null });
-                    setLoadState('loading');
-                    queryBinding.setQuery({ filters: { state: event.target.value } });
-                  }}
-                  className="min-h-10 rounded-md border bg-background px-3"
-                >
-                  <option value="">{word('historyAll')}</option>
-                  <option value="Confirmed">
-                    {appText('invoices.activity.state.Confirmed', locale)}
-                  </option>
-                  <option value="Rejected">
-                    {appText('invoices.activity.state.Rejected', locale)}
-                  </option>
-                </select>
-              </label>
-              <form onSubmit={applyInvoice} className="flex min-w-0 flex-wrap items-end gap-2">
-                <label className="flex min-w-0 flex-col gap-1 text-sm">
-                  {word('invoice')}
-                  <input
-                    value={invoiceInput}
-                    onChange={(event) => {
-                      setInvoiceInput(event.target.value);
-                      setInvalidInvoice(false);
-                    }}
-                    aria-invalid={invalidInvoice}
-                    aria-describedby={invalidInvoice ? 'receipt-history-invoice-error' : undefined}
-                    className="min-h-10 w-72 max-w-full rounded-md border bg-background px-3"
-                  />
-                </label>
-                <Button type="submit" variant="outline">
-                  {word('historyApply')}
-                </Button>
-              </form>
-            </div>
-          }
+          filters={<InvoiceReceiptHistoryFilters binding={queryBinding} />}
           actions={
             <ListViewToggle
               value={view}
@@ -208,11 +145,6 @@ function OwnedHistory({ onOpen, revision, binding }: HistoryProps) {
             />
           }
         />
-        {invalidInvoice ? (
-          <p id="receipt-history-invoice-error" role="alert">
-            {word('historyInvalidInvoice')}
-          </p>
-        ) : null}
         <ListPage.Content
           loading={loadState === 'loading'}
           error={loadState === 'error' || loadState === 'forbidden'}

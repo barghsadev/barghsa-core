@@ -21,6 +21,9 @@ export function staffDirectorySearch(raw: Record<string, unknown>): Record<strin
   const page = listPage(raw.page);
   return page > 1 ? { page } : {};
 }
+export function staffAccountId(raw: unknown): string | undefined {
+  return typeof raw === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(raw) ? raw : undefined;
+}
 export function roleComparisonSearch(raw: Record<string, unknown>): Record<string, unknown> {
   const module = parseListQuery(raw, roleComparisonQueryOptions).filters.module;
   return module ? { module } : {};

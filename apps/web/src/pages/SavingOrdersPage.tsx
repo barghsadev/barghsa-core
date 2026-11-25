@@ -1,10 +1,13 @@
+import { HistoryStatusEmpty } from '../components/QueueEmptyState.js';
 import { LoadingStatus, ListPage } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
 } from '../hooks/useHistoryFilterDraft.js';
 import { useListView } from '../hooks/useListView.js';
-import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js';
+import { HistoryTable, TableCellDetails, type HistoryColumn } from '../components/HistoryTable.js';
+import { TableActionIcon } from '../components/TableActionIcon.js';
+import { ArrowUpRight } from 'lucide-react';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { HistoryListControls } from '../components/HistoryListControls.js';
@@ -42,6 +45,7 @@ export function SavingOrdersPage({
   query = { q: '', sort: DEFAULT_HISTORY_SORT },
   onQueryChange,
   onClearFilters,
+  onShowAllStatuses,
   onApplyFilters,
   onRemoveFilter,
 }: {
@@ -53,6 +57,7 @@ export function SavingOrdersPage({
   query?: HistoryQuery;
   onQueryChange?: (query: HistoryQuery) => void;
   onClearFilters?: () => void;
+  onShowAllStatuses?: () => void;
   onApplyFilters?: (selection: HistoryFilterSelection<HistoryQuery>) => void;
   onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
 }) {
@@ -135,11 +140,27 @@ export function SavingOrdersPage({
       id: 'status',
       label: t('historyView.status', locale),
       render: (order) => (
-        <StatusBadge
-          label={
-            statusOptions.find((option) => option.value === order.status)?.label ?? order.status
-          }
-          tone={statusFilterTone(order.status)}
+        <TableCellDetails
+          fields={[
+            {
+              id: 'status',
+              label: t('historyView.status', locale),
+              value: (
+                <StatusBadge
+                  label={
+                    statusOptions.find((option) => option.value === order.status)?.label ??
+                    order.status
+                  }
+                  tone={statusFilterTone(order.status)}
+                />
+              ),
+            },
+            {
+              id: 'financial',
+              label: copy('financialStatus'),
+              value: copy('financial.' + order.financial_status),
+            },
+          ]}
         />
       ),
     },
@@ -149,11 +170,6 @@ export function SavingOrdersPage({
       render: (order) => (
         <bdi className="whitespace-nowrap">{numbers.money(order.total_amount)}</bdi>
       ),
-    },
-    {
-      id: 'financial',
-      label: copy('financialStatus'),
-      render: (order) => copy('financial.' + order.financial_status),
     },
     {
       id: 'bill',
@@ -171,6 +187,7 @@ export function SavingOrdersPage({
     },
     {
       id: 'action',
+      actions: true,
       label: copy('nextAction'),
       render: (order) => {
         const action = savingNextAction(order);
@@ -178,8 +195,9 @@ export function SavingOrdersPage({
           <Link
             className="touch-action font-medium text-primary underline underline-offset-4"
             to={action.href}
+            data-table-action-tooltip={copy('action.' + action.kind)}
           >
-            {copy('action.' + action.kind)}
+            <TableActionIcon icon={ArrowUpRight}>{copy('action.' + action.kind)}</TableActionIcon>
           </Link>
         ) : (
           copy('action.' + action.kind)
@@ -313,13 +331,22 @@ export function SavingOrdersPage({
             </div>
           }
           emptyView={
-            <p>
-              {dateRange.from || dateRange.to || query.q
-                ? t('historyDates.empty', locale)
-                : copy(
-                    statuses.length ? 'filteredEmpty' : pendingOnly ? 'noPendingOrders' : 'noOrders'
-                  )}
-            </p>
+            <HistoryStatusEmpty
+              locale={locale}
+              probe={history.statusProbe}
+              showAll={onShowAllStatuses}
+              message={
+                dateRange.from || dateRange.to || query.q
+                  ? t('historyDates.empty', locale)
+                  : copy(
+                      statuses.length
+                        ? 'filteredEmpty'
+                        : pendingOnly
+                          ? 'noPendingOrders'
+                          : 'noOrders'
+                    )
+              }
+            />
           }
         >
           {view === 'table' && orders.length ? (

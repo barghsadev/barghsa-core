@@ -80,6 +80,59 @@ function financialReview(
   };
 }
 
+for (const locale of ['en', 'fa'] as const) {
+  test(`wallet opens only the selected top-up method and restores its history filters (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale, false, '100000', () => '15000');
+    await page.route(`**/api/wallet/${profileId}`, (route) =>
+      route.fulfill({
+        json: { balance: '15000', currency: 'IRR', onlineTopUpLimit: 100000, configVersion: 1 },
+      })
+    );
+    await page.route(`**/api/wallet/${profileId}/transactions?*`, (route) =>
+      route.fulfill({ json: { transactions: [], nextCursor: null } })
+    );
+    const writes: string[] = [];
+    page.on('request', (request) => {
+      if (request.method() !== 'GET' && request.url().includes('/api/wallet/'))
+        writes.push(request.url());
+    });
+    await page.goto('/wallet?history_q=receipt');
+    const online = page.getByRole('link', {
+      name: t('wallet.page.onlineTitle', locale),
+      exact: true,
+    });
+    const bank = page.getByRole('link', {
+      name: t('wallet.page.receiptTitle', locale),
+      exact: true,
+    });
+    const back = page.getByRole('link', {
+      name: t('wallet.page.backToWallet', locale),
+      exact: true,
+    });
+    await expect(page.getByTestId('wallet-amount')).toHaveCount(0);
+    await expect(page.getByTestId('wallet-receipt-form')).toHaveCount(0);
+    await online.click();
+    await expect(page).toHaveURL(/\/wallet\/top-up\/online\?history_q=receipt$/);
+    await expect(page.getByTestId('wallet-amount')).toBeVisible();
+    await expect(page.getByTestId('wallet-receipt-form')).toHaveCount(0);
+    await back.click();
+    await bank.click();
+    await expect(page).toHaveURL(/\/wallet\/top-up\/bank-receipt\?history_q=receipt$/);
+    await expect(page.getByTestId('wallet-receipt-form')).toBeVisible();
+    await expect(page.getByTestId('wallet-amount')).toHaveCount(0);
+    await page.reload();
+    await expect(page.getByTestId('wallet-receipt-form')).toBeVisible();
+    await back.click();
+    await expect(page).toHaveURL(/\/wallet\?history_q=receipt$/);
+    await expect(
+      page.getByRole('heading', { name: t('wallet.history.title', locale), exact: true })
+    ).toBeVisible();
+    expect(writes).toEqual([]);
+  });
+}
+
 test('wallet gateway return restores only the invoice bound to its top-up', async ({ page }) => {
   await shell(page, 'en', false, '100000', () => '0');
   await page.route(`**/api/wallet/${profileId}`, (route) =>
@@ -277,7 +330,7 @@ for (const locale of ['fa', 'en'] as const) {
       await page.keyboard.press('Escape');
       await expect(dialog).toHaveCount(0);
       await expect(
-        page.getByRole('button', { name: walletText('retry', locale), exact: true })
+        page.getByRole('button', { name: walletText('pay', locale), exact: true })
       ).toBeFocused();
       expect(writes).toEqual([]);
     }
@@ -379,6 +432,9 @@ for (const locale of ['fa', 'en'] as const)
       await expect(pay).toBeEnabled();
       await expect(addFunds).toHaveCount(0);
       await expect(panel).toContainText(money);
+      await expect(panel.getByText(walletText('reviewTitle', locale), { exact: true })).toHaveCount(
+        0
+      );
       await pay.hover();
       await pay.evaluate(async (element) => {
         await Promise.all(element.getAnimations().map((a) => a.finished.catch(() => {})));
@@ -401,7 +457,14 @@ for (const locale of ['fa', 'en'] as const)
         });
       await expect(dialog).toContainText('Customer profile');
       await expect(dialog).toContainText(fa ? 'مالیات بر ارزش افزوده' : 'VAT');
-      const reviewViewport = dialog.locator('[data-slot="scroll-area-viewport"]');
+      const reviewViewport = dialog.getByRole('region', {
+        name: walletText('reviewContent', locale),
+        exact: true,
+      });
+      const cancel = dialog.getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true });
+      const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
+      await expect(confirm).toBeInViewport({ ratio: 0.99 });
+      await expect(dialog.getByRole('checkbox')).toBeInViewport({ ratio: 0.99 });
       await reviewViewport.focus();
       await expect(reviewViewport).toBeFocused();
       await reviewViewport.press('End');
@@ -417,7 +480,7 @@ for (const locale of ['fa', 'en'] as const)
         fa ? 'موجودی قابل استفاده پس از پرداخت' : 'Available balance after payment'
       );
       await expect(refresh).toBeDisabled();
-      const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
+      await expect(confirm).toBeInViewport({ ratio: 0.99 });
       await expect(confirm).toBeDisabled();
       await approveRiskConfirmation(page, locale, 'financial');
       await confirm.click();
@@ -425,10 +488,12 @@ for (const locale of ['fa', 'en'] as const)
         fa ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password'
       );
       await expect(password).toBeFocused();
+      await expect(cancel).toBeInViewport({ ratio: 0.99 });
+      await expect(confirm).toBeInViewport({ ratio: 0.99 });
       await password.fill('test-only');
       await confirm.click();
       await expect(dialog.getByRole('alert')).toBeVisible();
-      await dialog.getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true }).click();
+      await cancel.click();
       await expect(dialog).not.toBeVisible();
       await panel
         .getByRole('button', {

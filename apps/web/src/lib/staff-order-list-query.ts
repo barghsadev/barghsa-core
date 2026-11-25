@@ -21,15 +21,37 @@ const options = (key: string, values: string[]): ListQueryOptions => ({
 });
 export const electricityQueueOptions = options('view', ['review', 'conversations']);
 export const savingQueueOptions = options('lane', ['review', 'fulfillment']);
-export function staffOrdersSearch(raw: Record<string, unknown>, config: ListQueryOptions) {
-  const normalized = writeListQuery({ ...raw, cursor: staffOrderId(raw.cursor) }, config, {});
-  return Object.fromEntries([
-    ...Object.keys(config.filters).map((key) => [key, normalized[key]]),
-    ['cursor', normalized.cursor],
-    ['orderId', staffOrderId(raw.orderId) || undefined],
-  ]);
+const normalizedOrderQueue = (raw: Record<string, unknown>, config: ListQueryOptions) =>
+  writeListQuery({ ...raw, cursor: staffOrderId(raw.cursor).toLowerCase() }, config, {});
+export function electricityOrdersSearch(raw: Record<string, unknown>) {
+  const orderId = staffOrderId(raw.orderId).toLowerCase();
+  return { ...electricityOrderFilters(raw), ...(orderId ? { orderId } : {}) };
 }
-export const electricityOrdersSearch = (raw: Record<string, unknown>) =>
-  staffOrdersSearch(raw, electricityQueueOptions);
-export const savingOrdersSearch = (raw: Record<string, unknown>) =>
-  staffOrdersSearch(raw, savingQueueOptions);
+
+export interface ElectricityQueueFilters {
+  view?: 'review' | 'conversations';
+  cursor?: string;
+}
+export function electricityOrderFilters(raw: Record<string, unknown>): ElectricityQueueFilters {
+  const { view, cursor } = normalizedOrderQueue(raw, electricityQueueOptions);
+  return {
+    ...(view === 'review' || view === 'conversations' ? { view } : {}),
+    ...(typeof cursor === 'string' && cursor ? { cursor } : {}),
+  };
+}
+
+export interface SavingQueueFilters {
+  lane?: 'review' | 'fulfillment';
+  cursor?: string;
+}
+export function savingOrderFilters(raw: Record<string, unknown>): SavingQueueFilters {
+  const { lane, cursor } = normalizedOrderQueue(raw, savingQueueOptions);
+  return {
+    ...(lane === 'review' || lane === 'fulfillment' ? { lane } : {}),
+    ...(typeof cursor === 'string' && cursor ? { cursor } : {}),
+  };
+}
+export function savingOrdersSearch(raw: Record<string, unknown>) {
+  const orderId = staffOrderId(raw.orderId).toLowerCase();
+  return { ...savingOrderFilters(raw), ...(orderId ? { orderId } : {}) };
+}

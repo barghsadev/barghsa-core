@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button, Input, Label } from '@barghsa/ui';
+import { Alert, Button, Input, Label, ListRefreshButton, NativeSelect } from '@barghsa/ui';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
@@ -9,7 +9,65 @@ import {
 } from './CatalogueEditorFeedback.js';
 import { knowledgePolicyFormText } from '@barghsa/i18n/knowledge-policy-forms';
 import { policyPriority } from '../lib/knowledge-policy-form.js';
-import type { RelationOwner } from '../lib/catalogue-membership.js';
+import type { MembershipCommand, RelationOwner } from '../lib/catalogue-membership.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
+
+export type ReviewedMembershipCommand = MembershipCommand & {
+  memberTitle: string;
+  groupTitle: string;
+  currentPriority?: string;
+  newPriority?: string;
+};
+
+export function CatalogueMembershipReview({
+  command,
+  locale,
+  refresh,
+}: {
+  command: ReviewedMembershipCommand;
+  locale: 'fa' | 'en';
+  refresh?: { label: string; disabled: boolean; onClick: () => void } | undefined;
+}) {
+  const copy = (key: Parameters<typeof knowledgePolicyFormText>[0]) =>
+    knowledgePolicyFormText(key, locale);
+  return (
+    <div className="relative">
+      <dl
+        className={`grid min-w-0 gap-x-4 gap-y-2 rounded-lg border bg-muted/25 p-3 text-sm sm:grid-cols-2 ${refresh ? 'pe-14' : ''}`}
+      >
+        <div className="min-w-0">
+          <dt className="text-xs text-muted-foreground">{copy('membershipMember')}</dt>
+          <dd className="font-medium [overflow-wrap:anywhere]">
+            <bdi>{command.memberTitle}</bdi>
+          </dd>
+        </div>
+        <div className="min-w-0">
+          <dt className="text-xs text-muted-foreground">{copy('membershipGroup')}</dt>
+          <dd className="font-medium [overflow-wrap:anywhere]">
+            <bdi>{command.groupTitle}</bdi>
+          </dd>
+        </div>
+        {command.currentPriority !== undefined && (
+          <div>
+            <dt className="text-xs text-muted-foreground">{copy('currentPriority')}</dt>
+            <dd>
+              <bdi>{command.currentPriority}</bdi>
+            </dd>
+          </div>
+        )}
+        {command.newPriority !== undefined && (
+          <div>
+            <dt className="text-xs text-muted-foreground">{copy('newPriority')}</dt>
+            <dd className="font-medium">
+              <bdi>{command.newPriority}</bdi>
+            </dd>
+          </div>
+        )}
+      </dl>
+      {refresh && <ListRefreshButton {...refresh} className="absolute end-1 top-1" />}
+    </div>
+  );
+}
 
 interface Draft {
   memberId: string;
@@ -17,10 +75,12 @@ interface Draft {
 }
 interface Props {
   mode: 'kb' | 'policy' | 'priority';
+  headingLevel?: 2 | 3;
   locale: 'en' | 'fa';
   id: string;
   value: string;
   priority?: string;
+  priorityName?: string;
   savedPriority?: string;
   options?: { id: string; title: string }[];
   basis: string;
@@ -139,85 +199,122 @@ export function CatalogueRelationEditor(props: Props) {
     }
   }
   const root = catalogueRootMessage(form.errors);
+  const priorityOnly = props.mode === 'priority';
+  const Heading = props.headingLevel === 2 ? 'h2' : 'h3';
+  const priorityId = priorityOnly ? props.id : `${props.id}-priority`;
+  const hintId = `${priorityId}-hint`;
+  const priorityField = form.bind('priorityOverride');
+  const resetButton = changed && !props.disabled && (
+    <Button type="button" variant="outline" disabled={form.pending} onClick={reset}>
+      {copy('reset')}
+    </Button>
+  );
   return (
     <form
       noValidate
       onSubmit={(event) => void submit(event)}
-      className="flex min-w-0 flex-col gap-2"
+      className={priorityOnly ? 'min-w-0 space-y-2' : recordEditorSurface}
       aria-busy={form.pending}
     >
-      {changed && <p role="alert">{copy('changed')}</p>}
-      {root && <p role="alert">{root}</p>}
-      <fieldset
-        disabled={props.disabled || form.pending}
-        className="flex min-w-0 flex-wrap items-end gap-3"
-      >
-        {props.mode !== 'priority' && (
-          <div className="flex min-w-0 flex-col gap-2">
-            <Label htmlFor={props.id}>{props.labels.member}</Label>
-            <select
-              {...form.bind('memberId')}
-              id={props.id}
-              aria-required="true"
-              className="max-w-full rounded-md border bg-background p-2"
-              value={form.values.memberId}
-              onChange={(event) => {
-                form.field('memberId')[1](event.target.value);
-                props.onChange(event.target.value, form.values.priorityOverride);
-              }}
-            >
-              <option value="">{props.labels.member}</option>
-              {form.values.memberId &&
-                !props.options?.some((row) => row.id === form.values.memberId) && (
-                  <option value={form.values.memberId}>
-                    {props.labels.unavailable} ({form.values.memberId})
+      {!priorityOnly && (
+        <header className="border-b bg-muted/30 px-4 py-3">
+          <Heading className="text-base font-semibold">
+            {copy(props.mode === 'kb' ? 'addKnowledgeMember' : 'addPolicyMember')}
+          </Heading>
+        </header>
+      )}
+      <div className={priorityOnly ? 'space-y-2' : 'space-y-2 p-4'}>
+        {changed && <Alert variant="warning">{copy('changed')}</Alert>}
+        {root && <p role="alert">{root}</p>}
+        <fieldset
+          disabled={props.disabled || form.pending}
+          className={`grid min-w-0 gap-3 ${props.mode === 'policy' ? 'sm:grid-cols-2' : ''}`}
+        >
+          {props.mode !== 'priority' && (
+            <div className="min-w-0 space-y-1">
+              <Label htmlFor={props.id}>{props.labels.member}</Label>
+              <NativeSelect
+                {...form.bind('memberId')}
+                id={props.id}
+                aria-required="true"
+                className="w-full"
+                value={form.values.memberId}
+                onChange={(event) => {
+                  form.field('memberId')[1](event.target.value);
+                  props.onChange(event.target.value, form.values.priorityOverride);
+                }}
+              >
+                <option value="">{props.labels.member}</option>
+                {form.values.memberId &&
+                  !props.options?.some((row) => row.id === form.values.memberId) && (
+                    <option value={form.values.memberId}>{props.labels.unavailable}</option>
+                  )}
+                {props.options?.map((row) => (
+                  <option key={row.id} value={row.id}>
+                    {row.title}
                   </option>
+                ))}
+              </NativeSelect>
+              <CatalogueFieldFeedback
+                id={form.errorId('memberId')}
+                error={form.errors.memberId}
+                message={messages.memberId}
+                compact
+              />
+            </div>
+          )}
+          {props.mode !== 'kb' && (
+            <div className="min-w-0 space-y-1">
+              <Label htmlFor={priorityId}>{props.labels.priority}</Label>
+              <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <Input
+                  {...priorityField}
+                  id={priorityId}
+                  type="text"
+                  inputMode="numeric"
+                  dir="ltr"
+                  className={priorityOnly ? 'w-28 max-w-full' : 'w-full'}
+                  aria-label={props.priorityName}
+                  aria-describedby={priorityField['aria-describedby'] ?? hintId}
+                  value={form.values.priorityOverride}
+                  onChange={(event) => {
+                    form.field('priorityOverride')[1](event.target.value);
+                    props.onChange(form.values.memberId, event.target.value);
+                  }}
+                />
+                {priorityOnly && (
+                  <Button type="submit" variant="outline" disabled={changed} loading={form.pending}>
+                    {props.labels.save}
+                  </Button>
                 )}
-              {props.options?.map((row) => (
-                <option key={row.id} value={row.id}>
-                  {row.title}
-                </option>
-              ))}
-            </select>
-            <CatalogueFieldFeedback
-              id={form.errorId('memberId')}
-              error={form.errors.memberId}
-              message={messages.memberId}
-            />
-          </div>
-        )}
-        {props.mode !== 'kb' && (
-          <div className="flex min-w-0 flex-col gap-2">
-            <Label htmlFor={props.mode === 'priority' ? props.id : `${props.id}-priority`}>
-              {props.labels.priority}
-            </Label>
-            <Input
-              {...form.bind('priorityOverride')}
-              id={props.mode === 'priority' ? props.id : `${props.id}-priority`}
-              type="text"
-              inputMode="numeric"
-              dir="ltr"
-              placeholder={props.labels.inherit}
-              value={form.values.priorityOverride}
-              onChange={(event) => {
-                form.field('priorityOverride')[1](event.target.value);
-                props.onChange(form.values.memberId, event.target.value);
-              }}
-            />
-            <CatalogueFieldFeedback
-              id={form.errorId('priorityOverride')}
-              error={form.errors.priorityOverride}
-              message={messages.priorityOverride}
-            />
-          </div>
-        )}
-        <CatalogueSaveButton label={props.labels.save} pending={form.pending} disabled={changed} />
-        {changed && !props.disabled && (
-          <Button type="button" variant="outline" onClick={reset}>
-            {copy('reset')}
-          </Button>
-        )}
-      </fieldset>
+              </div>
+              {form.errors.priorityOverride ? (
+                <CatalogueFieldFeedback
+                  id={form.errorId('priorityOverride')}
+                  error={form.errors.priorityOverride}
+                  message={messages.priorityOverride}
+                  compact
+                />
+              ) : (
+                <p id={hintId} className="text-xs text-muted-foreground">
+                  {props.labels.inherit || copy('inheritPriorityHint')}
+                </p>
+              )}
+            </div>
+          )}
+        </fieldset>
+        {priorityOnly && resetButton}
+      </div>
+      {!priorityOnly && (
+        <RecordEditorActions>
+          {resetButton}
+          <CatalogueSaveButton
+            label={props.labels.save}
+            pending={form.pending}
+            disabled={props.disabled || form.pending || changed}
+          />
+        </RecordEditorActions>
+      )}
     </form>
   );
 }

@@ -1,4 +1,21 @@
+import { Pencil as TablePencilIcon } from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import { Link } from '@tanstack/react-router';
+import {
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+} from '../components/RecordEditorLayout.js';
+import {
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+  StickyRecordEditorActions,
+} from '../components/StickyRecordEditorActions.js';
+import {
+  CatalogueFieldFeedback,
+  CatalogueSaveButton,
+} from '../components/CatalogueEditorFeedback.js';
 import { ProductCatalogueFilters } from '../components/ProductCatalogueFilters.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
@@ -16,7 +33,9 @@ import {
   Input,
   Label,
   ListPage,
+  ListRefreshButton,
   Textarea,
+  buttonVariants,
 } from '@barghsa/ui';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
 import { confirmationText } from '@barghsa/i18n/confirmation';
@@ -52,24 +71,39 @@ import {
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 const base = '/api/admin/catalogue/products';
+export type CatalogueView = 'list' | 'new' | 'detail' | 'edit' | 'price' | 'configuration';
+export type SavingConfigurationEditor = 'agreement' | 'activate-agreement';
 export default function AdminCataloguePage({
   queries,
   initialType = 'consultation',
   onTypeChange,
   focusCategory = false,
   selection,
+  view,
+  onRecordSaved,
+  routeSearch,
+  configurationEditor,
 }: {
   queries?: ListQueryBinding;
   initialType?: ProductCatalogueType;
   focusCategory?: boolean;
   onTypeChange?: (value: ProductCatalogueType) => void;
   selection?: { id: string | null; set: (id: string | null, replace?: boolean) => void };
+  view?: CatalogueView;
+  onRecordSaved?: (id: string) => void;
+  routeSearch?: Record<string, unknown>;
+  configurationEditor?: SavingConfigurationEditor;
 } = {}) {
-  const preference = useTimezone();
+  const preference = useTimezone(!view || view === 'detail' || view === 'price');
   const locale = useLocale();
   const read = useStaffQueryRead('catalogue');
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => tCatalogue(key, locale);
+  const listView = !view || view === 'list';
+  const productFormView = !view || view === 'new' || view === 'edit';
+  const detailsView = !view || view === 'detail';
+  const pricesView = detailsView || view === 'price';
+  const configView = !view || view === 'configuration';
   const [type, setType] = useState<ProductType>(initialType),
     [rows, setRows] = useState<Product[]>([]);
   const [hardwareOptions, setHardwareOptions] = useState<Product[]>([]);
@@ -188,29 +222,23 @@ export default function AdminCataloguePage({
     };
   }
   function feedback(field: keyof Draft) {
-    const message = productForm.errors[field]?.message;
     return (
-      <p
+      <CatalogueFieldFeedback
+        compact
         id={productForm.errorId(field)}
-        role={message ? 'alert' : undefined}
-        aria-hidden={message ? undefined : true}
-        className={`text-sm text-destructive ${message ? '' : 'invisible'}`}
-      >
-        {typeof message === 'string' ? message : productMessages[field]}
-      </p>
+        error={productForm.errors[field]}
+        message={productMessages[field]}
+      />
     );
   }
   function priceFeedback(field: keyof PriceDraft) {
-    const message = priceForm.errors[field]?.message;
     return (
-      <p
+      <CatalogueFieldFeedback
+        compact
         id={priceForm.errorId(field)}
-        role={message ? 'alert' : undefined}
-        aria-hidden={message ? undefined : true}
-        className={`text-sm text-destructive ${message ? '' : 'invisible'}`}
-      >
-        {typeof message === 'string' ? message : priceMessages[field]}
-      </p>
+        error={priceForm.errors[field]}
+        message={priceMessages[field]}
+      />
     );
   }
   const generation = useRef(0),
@@ -223,6 +251,7 @@ export default function AdminCataloguePage({
     revision: number;
     editor: string | null;
   } | null>(null);
+  const readsCollection = listView || (view === 'new' && requiredRead !== null);
   const accessDenied = useRef(false);
   const hasEditor = editor !== null;
   const [action, setAction] = useState<TeamAction | null>(null),
@@ -268,7 +297,9 @@ export default function AdminCataloguePage({
     !accessDenied.current &&
     requiredRead === null &&
     live.current.detailState === 'ready' &&
-    (live.current.type !== 'saving_plan' || live.current.hardwareState === 'ready');
+    (live.current.type !== 'saving_plan' ||
+      !productFormView ||
+      live.current.hardwareState === 'ready');
   useEffect(
     () => () => {
       generation.current++;
@@ -314,7 +345,7 @@ export default function AdminCataloguePage({
   const money = (value: string | null) => (value === null ? label('unset') : numbers.money(value));
   const dateText = (value: string) => new Date(value).toLocaleString(locale, { timeZone: zone });
   function denyAccess() {
-    choose(null, 'settled');
+    choose(null, view ? 'route' : 'settled');
     setRequiredRead(null);
     accessDenied.current = true;
     setState('denied');
@@ -322,6 +353,7 @@ export default function AdminCataloguePage({
     setHardwareOptions([]);
   }
   useEffect(() => {
+    if (!readsCollection) return;
     const abort = new AbortController();
     accessDenied.current = false;
     if (previousListKey.current !== criteriaKey) {
@@ -370,10 +402,10 @@ export default function AdminCataloguePage({
         else setState('error');
       });
     return () => abort.abort();
-  }, [type, listKey, revision, listRevision, criteriaKey, read]);
+  }, [type, listKey, revision, listRevision, criteriaKey, read, readsCollection]);
   useEffect(() => {
     const abort = new AbortController();
-    if (type !== 'saving_plan' || !hasEditor || accessDenied.current) {
+    if (type !== 'saving_plan' || !hasEditor || !productFormView || accessDenied.current) {
       setHardwareState('ready');
       return;
     }
@@ -402,7 +434,7 @@ export default function AdminCataloguePage({
         else setHardwareState('error');
       });
     return () => abort.abort();
-  }, [type, hasEditor, revision, hardwareRevision, read]);
+  }, [type, hasEditor, revision, hardwareRevision, read, productFormView]);
   useEffect(() => {
     const abort = new AbortController();
     if (!editor || accessDenied.current) {
@@ -498,13 +530,15 @@ export default function AdminCataloguePage({
     return () => abort.abort();
   }, [type, editor, revision, detailRevision, read]);
   useEffect(() => {
-    if (!requiredRead || state !== 'ready' || listAccepted < requiredRead.revision) return;
+    if (!requiredRead) return;
+    if (readsCollection && (state !== 'ready' || listAccepted < requiredRead.revision)) return;
     if (
       editor !== null &&
       editor === requiredRead.editor &&
       (detailState !== 'ready' ||
         detailAccepted < requiredRead.revision ||
         (type === 'saving_plan' &&
+          productFormView &&
           (hardwareState !== 'ready' || hardwareAccepted < requiredRead.revision)))
     )
       return;
@@ -515,6 +549,8 @@ export default function AdminCataloguePage({
     setRequiredRead(null);
   }, [
     requiredRead,
+    readsCollection,
+    productFormView,
     state,
     listAccepted,
     editor,
@@ -528,6 +564,7 @@ export default function AdminCataloguePage({
   useEffect(() => {
     const current = live.current;
     if (
+      !listView ||
       !current.editor ||
       current.editor === 'new' ||
       !current.detail ||
@@ -546,7 +583,7 @@ export default function AdminCataloguePage({
       setAction(null);
       setDetailRevision((value) => value + 1);
     }
-  }, [rows]);
+  }, [rows, listView]);
   useEffect(() => {
     if (hardwareState !== 'ready' || !action || !record(action.body)) return;
     const selected = action.body.hardwareIds;
@@ -763,101 +800,197 @@ export default function AdminCataloguePage({
   const warning = referenceNames.length
     ? `${label('references')} ${referenceNames.join(' · ')}`
     : '';
+  const taskView = !!view && !listView && view !== 'detail';
+  const delegatedHeading =
+    view === 'configuration' && detail && draft && (type === 'hardware' || !!configurationEditor);
+  const catalogueHeading = (
+    <div className="min-w-0 space-y-1">
+      {configurationEditor && requestedId && !blocked ? (
+        <Link
+          to="/admin/catalogue/$category/$productId/configuration/{-$operation}"
+          params={{ category: type, productId: requestedId, operation: undefined }}
+          search={routeSearch}
+          className="touch-action text-sm text-primary underline underline-offset-4"
+        >
+          {label('backToConfiguration')}
+        </Link>
+      ) : (
+        !!view &&
+        !listView &&
+        !blocked && (
+          <Link
+            to="/admin/catalogue/$category"
+            params={{ category: type }}
+            search={routeSearch}
+            className="touch-action text-sm text-primary underline underline-offset-4"
+          >
+            {label(type)}
+          </Link>
+        )
+      )}
+      <h1 className="text-2xl font-semibold [overflow-wrap:anywhere]">
+        {view === 'detail' && detail
+          ? title(detail)
+          : label(
+              view === 'new'
+                ? 'add'
+                : view === 'edit'
+                  ? 'editProduct'
+                  : view === 'price'
+                    ? 'addPrice'
+                    : view === 'configuration'
+                      ? configurationEditor === 'agreement'
+                        ? 'agreementDraftDetails'
+                        : configurationEditor === 'activate-agreement'
+                          ? 'activateAgreement'
+                          : type === 'hardware'
+                            ? 'inventory'
+                            : 'configuration'
+                      : 'title'
+            )}
+      </h1>
+      {detail && view && view !== 'detail' && (
+        <p className="text-sm text-muted-foreground [overflow-wrap:anywhere]">{title(detail)}</p>
+      )}
+    </div>
+  );
   return (
     <div
-      className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 md:p-8"
+      className={`mx-auto flex w-full min-w-0 flex-col gap-4 ${taskView ? 'max-w-3xl' : 'max-w-6xl'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <h1 className="text-2xl font-semibold">{label('title')}</h1>
+      {!delegatedHeading && (
+        <header className="flex min-w-0 flex-wrap items-end justify-between gap-3">
+          {catalogueHeading}
+          {view &&
+            !listView &&
+            view !== 'new' &&
+            (!configView || (type === 'saving_plan' && !configurationEditor)) &&
+            state !== 'denied' && (
+              <ListRefreshButton
+                label={label('refresh')}
+                onClick={refresh}
+                disabled={commandPending}
+              />
+            )}
+        </header>
+      )}
+      {!listView && state === 'denied' && <p role="alert">{label('denied')}</p>}
+      {!listView && readsCollection && state === 'error' && (
+        <div role="alert" className="space-y-2">
+          <p>{label('error')}</p>
+          <Button variant="outline" onClick={() => setListRevision((v) => v + 1)}>
+            {label('retry')}
+          </Button>
+        </div>
+      )}
       {uncertainCreate && !action && <p role="alert">{label('unverifiedCreate')}</p>}
       {requiredRead && !uncertainCreate && !action && (
         <p role="alert">{confirmationText('unconfirmed', locale)}</p>
       )}
       <CommandFeedback message={saved ? label('saved') : null} />
+      {view === 'edit' && warning && (
+        <p role="note" className="rounded-md border p-3">
+          {warning}
+        </p>
+      )}
       <div>
-        <div className="max-w-full overflow-x-auto pb-2">
-          <div role="tablist" aria-label={label('title')} className="flex w-max gap-2">
-            {types.map((value, index) => (
-              <Button
-                key={value}
-                autoFocus={focusCategory && type === value}
-                role="tab"
-                disabled={blocked}
-                id={`catalogue-tab-${value}`}
-                aria-controls={`catalogue-panel-${value}`}
-                aria-selected={type === value}
-                tabIndex={type === value ? 0 : -1}
-                variant={type === value ? 'default' : 'outline'}
-                ref={(element) => {
-                  tabButtons.current[index] = element;
-                }}
-                onClick={() => switchType(value)}
-                onKeyDown={(event) => {
-                  const forward = locale === 'fa' ? 'ArrowLeft' : 'ArrowRight';
-                  const backward = locale === 'fa' ? 'ArrowRight' : 'ArrowLeft';
-                  const next =
-                    event.key === forward
-                      ? (index + 1) % types.length
-                      : event.key === backward
-                        ? (index + types.length - 1) % types.length
-                        : event.key === 'Home'
-                          ? 0
-                          : event.key === 'End'
-                            ? types.length - 1
-                            : -1;
-                  if (next < 0) return;
-                  event.preventDefault();
-                  switchType(types[next]!);
-                  tabButtons.current[next]?.focus();
-                }}
-              >
-                {label(value)}
-              </Button>
-            ))}
+        {listView && (
+          <div className="max-w-full overflow-x-auto pb-2">
+            <div role="tablist" aria-label={label('title')} className="flex w-max gap-2">
+              {types.map((value, index) => (
+                <Button
+                  key={value}
+                  autoFocus={focusCategory && type === value}
+                  role="tab"
+                  disabled={blocked}
+                  id={`catalogue-tab-${value}`}
+                  aria-controls={`catalogue-panel-${value}`}
+                  aria-selected={type === value}
+                  tabIndex={type === value ? 0 : -1}
+                  variant={type === value ? 'default' : 'outline'}
+                  ref={(element) => {
+                    tabButtons.current[index] = element;
+                  }}
+                  onClick={() => switchType(value)}
+                  onKeyDown={(event) => {
+                    const forward = locale === 'fa' ? 'ArrowLeft' : 'ArrowRight';
+                    const backward = locale === 'fa' ? 'ArrowRight' : 'ArrowLeft';
+                    const next =
+                      event.key === forward
+                        ? (index + 1) % types.length
+                        : event.key === backward
+                          ? (index + types.length - 1) % types.length
+                          : event.key === 'Home'
+                            ? 0
+                            : event.key === 'End'
+                              ? types.length - 1
+                              : -1;
+                    if (next < 0) return;
+                    event.preventDefault();
+                    switchType(types[next]!);
+                    tabButtons.current[next]?.focus();
+                  }}
+                >
+                  {label(value)}
+                </Button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
         {types
           .filter((value) => value === type)
           .map((value) => (
             <div
               key={value}
-              role="tabpanel"
-              id={`catalogue-panel-${value}`}
-              aria-labelledby={`catalogue-tab-${value}`}
-              tabIndex={0}
+              role={listView ? 'tabpanel' : undefined}
+              id={listView ? `catalogue-panel-${value}` : undefined}
+              aria-labelledby={listView ? `catalogue-tab-${value}` : undefined}
               className="flex flex-col gap-5"
             >
               <ListPage>
-                <ListPage.Toolbar
-                  filters={
-                    queries && (
-                      <ProductCatalogueFilters
-                        locale={locale}
-                        queries={queries}
-                        disabled={blocked || uncertainCreate || state === 'denied'}
-                      />
-                    )
-                  }
-                  actions={
-                    <>
-                      <Button variant="outline" onClick={refresh}>
-                        {label('refresh')}
-                      </Button>
-                      {type !== 'electricity' && state !== 'denied' && (
-                        <Button
-                          disabled={blocked || requiredRead !== null || uncertainCreate}
-                          onClick={() => choose('new')}
-                        >
-                          {label('add')}
-                        </Button>
-                      )}
-                    </>
-                  }
-                />
-                {preference.status === 'loading' && (
+                {listView && (
+                  <ListPage.Toolbar
+                    className="items-start"
+                    filters={
+                      queries && (
+                        <ProductCatalogueFilters
+                          locale={locale}
+                          queries={queries}
+                          disabled={blocked || uncertainCreate || state === 'denied'}
+                        />
+                      )
+                    }
+                    actions={
+                      <>
+                        <ListRefreshButton label={label('refresh')} onClick={refresh} />
+                        {type !== 'electricity' &&
+                          state !== 'denied' &&
+                          (view === 'list' && !blocked ? (
+                            <Link
+                              to="/admin/catalogue/$category/new"
+                              params={{ category: type }}
+                              search={routeSearch}
+                              className={buttonVariants({ className: 'min-h-11' })}
+                            >
+                              {label('add')}
+                            </Link>
+                          ) : (
+                            <Button
+                              disabled={blocked || requiredRead !== null || uncertainCreate}
+                              onClick={() => choose('new')}
+                            >
+                              {label('add')}
+                            </Button>
+                          ))}
+                      </>
+                    }
+                  />
+                )}
+                {pricesView && preference.status === 'loading' && (
                   <LoadingStatus>{label('loading')}</LoadingStatus>
                 )}
-                {preference.status === 'error' && (
+                {pricesView && preference.status === 'error' && (
                   <div role="alert" className="space-y-2">
                     <p>{label('timezoneError')}</p>
                     <Button variant="outline" onClick={preference.retry}>
@@ -878,240 +1011,362 @@ export default function AdminCataloguePage({
                 )}
                 {draft && (
                   <>
-                    <form
-                      aria-label={label('editor')}
-                      noValidate
-                      aria-busy={productForm.pending || undefined}
-                      onSubmit={save}
-                      className="flex flex-col gap-4 border-y py-5"
-                    >
-                      <fieldset
-                        disabled={blocked}
-                        className="flex min-w-0 flex-col gap-4 border-0 p-0"
+                    {productFormView && (
+                      <form
+                        aria-label={label('editor')}
+                        noValidate
+                        aria-busy={productForm.pending || undefined}
+                        onSubmit={save}
+                        onFocus={keepRecordFieldVisible}
+                        className={recordEditorFormSurface}
                       >
-                        {detail && (
-                          <h2 className="break-words text-xl font-semibold">{title(detail)}</h2>
-                        )}
-                        {detail?.systemKey && <p role="note">{label('system')}</p>}
-                        <div className="grid items-start gap-4 sm:grid-cols-2">
-                          {(['titleFa', 'titleEn'] as const).map((field) => (
-                            <div key={field}>
-                              <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
-                              <Input
-                                id={`catalogue-${field}`}
-                                dir={field === 'titleFa' ? 'rtl' : 'ltr'}
-                                {...productForm.bind(field)}
-                                value={draft[field]}
-                                onChange={(event) =>
-                                  setDraft({ ...draft, [field]: event.target.value })
-                                }
-                              />
-                              {feedback(field)}
-                            </div>
-                          ))}
-                        </div>
-                        <div className="grid items-start gap-4 sm:grid-cols-2">
-                          {(['descriptionFa', 'descriptionEn'] as const).map((field) => (
-                            <div key={field}>
-                              <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
-                              <Textarea
-                                id={`catalogue-${field}`}
-                                dir={field === 'descriptionFa' ? 'rtl' : 'ltr'}
-                                {...productForm.bind(field)}
-                                value={draft[field]}
-                                onChange={(event) =>
-                                  setDraft({ ...draft, [field]: event.target.value })
-                                }
-                              />
-                              {feedback(field)}
-                            </div>
-                          ))}
-                        </div>
-                        {editor === 'new' && (
-                          <div>
-                            <Label htmlFor="catalogue-initial-price">{label('initialPrice')}</Label>
-                            <Input
-                              id="catalogue-initial-price"
-                              {...productForm.bind('price')}
-                              dir="ltr"
-                              inputMode="numeric"
-                              value={draft.price}
-                              onChange={(event) =>
-                                setDraft({ ...draft, price: event.target.value })
-                              }
-                            />
-                            {feedback('price')}
-                            <p className="mt-2 text-sm">
-                              {label('status')}: {label('inactive')}
-                            </p>
-                          </div>
-                        )}
-                        {!!categoryOptions[type].length && (
-                          <fieldset
-                            id="catalogue-categories"
-                            tabIndex={-1}
-                            {...groupBinding('categories')}
-                            className="rounded-md border p-4"
+                        <fieldset disabled={blocked} className="min-w-0">
+                          <legend className="sr-only">{label('editor')}</legend>
+                          <RecordEditorSection
+                            title={label('productDetails')}
+                            {...(detail?.systemKey ? { description: label('system') } : {})}
                           >
-                            <legend className="px-1 font-semibold">{label('categories')}</legend>
-                            <div className="flex flex-col gap-3">
-                              {categoryOptions[type].map((category) => (
-                                <label key={category} className="flex items-center gap-2">
-                                  <input
-                                    type="checkbox"
-                                    checked={draft.categories.includes(category)}
+                            <div className={recordEditorGrid}>
+                              {(
+                                [
+                                  ['titleFa', 'fa', 'rtl'],
+                                  ['titleEn', 'en', 'ltr'],
+                                ] as const
+                              ).map(([titleField, language, direction]) => (
+                                <div key={titleField} className={recordEditorField}>
+                                  <Label htmlFor={`catalogue-${titleField}`}>
+                                    {label(titleField)}
+                                  </Label>
+                                  <Input
+                                    id={`catalogue-${titleField}`}
+                                    dir={direction}
+                                    lang={language}
+                                    {...productForm.bind(titleField)}
+                                    required
+                                    value={draft[titleField]}
+                                    onChange={(event) =>
+                                      setDraft({ ...draft, [titleField]: event.target.value })
+                                    }
+                                  />
+                                  {feedback(titleField)}
+                                </div>
+                              ))}
+                            </div>
+                          </RecordEditorSection>
+                          <RecordEditorSection title={label('optionalDescriptions')}>
+                            <div className={recordEditorGrid}>
+                              {(
+                                [
+                                  ['descriptionFa', 'fa', 'rtl'],
+                                  ['descriptionEn', 'en', 'ltr'],
+                                ] as const
+                              ).map(([descriptionField, language, direction]) => (
+                                <div key={descriptionField} className={recordEditorField}>
+                                  <Label htmlFor={`catalogue-${descriptionField}`}>
+                                    {label(descriptionField)}
+                                  </Label>
+                                  <Textarea
+                                    id={`catalogue-${descriptionField}`}
+                                    dir={direction}
+                                    lang={language}
+                                    {...productForm.bind(descriptionField)}
+                                    rows={2}
+                                    className="max-h-40 min-h-14 resize-y"
+                                    placeholder={tCatalogue('productDescriptionExample', language)}
+                                    value={draft[descriptionField]}
                                     onChange={(event) =>
                                       setDraft({
                                         ...draft,
-                                        categories: event.target.checked
-                                          ? [...draft.categories, category]
-                                          : draft.categories.filter((value) => value !== category),
+                                        [descriptionField]: event.target.value,
                                       })
                                     }
                                   />
-                                  {label(category)}
-                                </label>
+                                  {feedback(descriptionField)}
+                                </div>
                               ))}
                             </div>
-                            {feedback('categories')}
-                          </fieldset>
-                        )}
-                        {type === 'saving_plan' && (
-                          <fieldset
-                            id="catalogue-hardwareIds"
-                            tabIndex={-1}
-                            {...groupBinding('hardwareIds')}
-                            className="rounded-md border p-4"
-                          >
-                            <legend className="px-1 font-semibold">{label('planHardware')}</legend>
-                            <p className="mb-3 text-sm text-muted-foreground">
-                              {label('planHardwareHelp')}
-                            </p>
-                            {hardwareState === 'loading' && (
-                              <LoadingStatus>{label('loading')}</LoadingStatus>
-                            )}
-                            {hardwareState === 'error' && (
-                              <div role="alert" className="space-y-2">
-                                <p>{label('hardwareError')}</p>
-                                <Button
-                                  type="button"
-                                  variant="outline"
-                                  onClick={() => setHardwareRevision((v) => v + 1)}
-                                >
-                                  {label('retry')}
-                                </Button>
-                              </div>
-                            )}
-                            <div className="flex flex-col gap-3">
-                              {hardwareOptions
-                                .filter((item) => item.status !== 'archived')
-                                .map((item) => (
-                                  <label key={item.id} className="flex items-center gap-2">
-                                    <input
-                                      type="checkbox"
-                                      checked={draft.hardwareIds.includes(item.id)}
-                                      onChange={(event) =>
-                                        setDraft({
-                                          ...draft,
-                                          hardwareIds: event.target.checked
-                                            ? [...draft.hardwareIds, item.id]
-                                            : draft.hardwareIds.filter((id) => id !== item.id),
-                                        })
-                                      }
-                                    />
-                                    {title(item)} · {money(item.price)}
-                                  </label>
-                                ))}
-                              {draft.hardwareIds
-                                .filter(
-                                  (id) =>
-                                    !hardwareOptions.some(
-                                      (item) => item.id === id && item.status !== 'archived'
-                                    )
-                                )
-                                .map((id) => (
-                                  <label key={id} className="flex items-center gap-2">
-                                    <input
-                                      type="checkbox"
-                                      checked
-                                      onChange={() =>
-                                        setDraft({
-                                          ...draft,
-                                          hardwareIds: draft.hardwareIds.filter(
-                                            (value) => value !== id
-                                          ),
-                                        })
-                                      }
-                                    />
-                                    {label('unavailable')} · <bdi>{id}</bdi>
-                                  </label>
-                                ))}
-                            </div>
-                            {feedback('hardwareIds')}
-                          </fieldset>
-                        )}
-                        {type === 'electricity' && (
-                          <fieldset className="rounded-md border p-4">
-                            <legend className="px-1 font-semibold">{label('limits')}</legend>
-                            {!detail?.electricityLimits && (
-                              <label className="mb-3 flex items-center gap-2">
-                                <input
-                                  type="checkbox"
-                                  checked={draft.configureLimits}
-                                  onChange={(event) =>
-                                    setDraft({ ...draft, configureLimits: event.target.checked })
-                                  }
-                                />
-                                {label('configureLimits')}
-                              </label>
-                            )}
-                            {draft.configureLimits && (
-                              <>
-                                <p className="mb-3 text-sm">{label('limitsHelp')}</p>
-                                <div className="grid gap-3 sm:grid-cols-2">
-                                  {(['minKwh', 'maxKwh'] as const).map((field) => (
-                                    <div key={field}>
-                                      <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
-                                      <Input
-                                        id={`catalogue-${field}`}
-                                        inputMode="numeric"
-                                        {...productForm.bind(field)}
-                                        value={draft[field]}
+                          </RecordEditorSection>
+                          {!!categoryOptions[type].length && (
+                            <RecordEditorSection title={label('categories')}>
+                              <fieldset
+                                id="catalogue-categories"
+                                tabIndex={-1}
+                                {...groupBinding('categories')}
+                                className="min-w-0"
+                              >
+                                <legend className="sr-only">{label('categories')}</legend>
+                                <div className={recordEditorGrid}>
+                                  {categoryOptions[type].map((category) => (
+                                    <label
+                                      key={category}
+                                      className="flex min-h-9 cursor-pointer items-center gap-2"
+                                    >
+                                      <input
+                                        type="checkbox"
+                                        className="size-4 accent-primary"
+                                        checked={draft.categories.includes(category)}
                                         onChange={(event) =>
-                                          setDraft({ ...draft, [field]: event.target.value })
+                                          setDraft({
+                                            ...draft,
+                                            categories: event.target.checked
+                                              ? [...draft.categories, category]
+                                              : draft.categories.filter(
+                                                  (value) => value !== category
+                                                ),
+                                          })
                                         }
                                       />
-                                      {feedback(field)}
-                                    </div>
+                                      {label(category)}
+                                    </label>
                                   ))}
                                 </div>
-                              </>
+                                {feedback('categories')}
+                              </fieldset>
+                            </RecordEditorSection>
+                          )}
+                          {type === 'saving_plan' && (
+                            <RecordEditorSection
+                              title={label('planHardware')}
+                              description={label('planHardwareHelp')}
+                            >
+                              <fieldset
+                                id="catalogue-hardwareIds"
+                                tabIndex={-1}
+                                {...groupBinding('hardwareIds')}
+                                className="min-w-0"
+                              >
+                                <legend className="sr-only">{label('planHardware')}</legend>
+                                {hardwareState === 'loading' && (
+                                  <LoadingStatus>{label('loading')}</LoadingStatus>
+                                )}
+                                {hardwareState === 'error' && (
+                                  <div role="alert" className="space-y-2">
+                                    <p>{label('hardwareError')}</p>
+                                    <Button
+                                      type="button"
+                                      variant="outline"
+                                      onClick={() => setHardwareRevision((v) => v + 1)}
+                                    >
+                                      {label('retry')}
+                                    </Button>
+                                  </div>
+                                )}
+                                <div className="space-y-1">
+                                  {hardwareOptions
+                                    .filter((item) => item.status !== 'archived')
+                                    .map((item) => (
+                                      <label
+                                        key={item.id}
+                                        className="flex min-h-9 min-w-0 cursor-pointer items-center gap-2"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          className="size-4 shrink-0 accent-primary"
+                                          checked={draft.hardwareIds.includes(item.id)}
+                                          onChange={(event) =>
+                                            setDraft({
+                                              ...draft,
+                                              hardwareIds: event.target.checked
+                                                ? [...draft.hardwareIds, item.id]
+                                                : draft.hardwareIds.filter((id) => id !== item.id),
+                                            })
+                                          }
+                                        />
+                                        <span className="min-w-0 [overflow-wrap:anywhere]">
+                                          {title(item)} · {money(item.price)}
+                                        </span>
+                                      </label>
+                                    ))}
+                                  {draft.hardwareIds
+                                    .filter(
+                                      (id) =>
+                                        !hardwareOptions.some(
+                                          (item) => item.id === id && item.status !== 'archived'
+                                        )
+                                    )
+                                    .map((id) => (
+                                      <label
+                                        key={id}
+                                        className="flex min-h-9 min-w-0 cursor-pointer items-center gap-2"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          className="size-4 shrink-0 accent-primary"
+                                          checked
+                                          onChange={() =>
+                                            setDraft({
+                                              ...draft,
+                                              hardwareIds: draft.hardwareIds.filter(
+                                                (value) => value !== id
+                                              ),
+                                            })
+                                          }
+                                        />
+                                        <span className="min-w-0 [overflow-wrap:anywhere]">
+                                          {label('unavailable')} · <bdi>{id}</bdi>
+                                        </span>
+                                      </label>
+                                    ))}
+                                </div>
+                                {feedback('hardwareIds')}
+                              </fieldset>
+                            </RecordEditorSection>
+                          )}
+                          {type === 'electricity' && (
+                            <RecordEditorSection title={label('limits')}>
+                              {!detail?.electricityLimits && (
+                                <label className="mb-3 flex items-center gap-2">
+                                  <input
+                                    type="checkbox"
+                                    checked={draft.configureLimits}
+                                    onChange={(event) =>
+                                      setDraft({ ...draft, configureLimits: event.target.checked })
+                                    }
+                                  />
+                                  {label('configureLimits')}
+                                </label>
+                              )}
+                              {draft.configureLimits && (
+                                <>
+                                  <p className="mb-3 text-sm">{label('limitsHelp')}</p>
+                                  <div className={recordEditorGrid}>
+                                    {(['minKwh', 'maxKwh'] as const).map((field) => (
+                                      <div key={field} className={recordEditorField}>
+                                        <Label htmlFor={`catalogue-${field}`}>{label(field)}</Label>
+                                        <Input
+                                          id={`catalogue-${field}`}
+                                          inputMode="numeric"
+                                          dir="ltr"
+                                          {...productForm.bind(field)}
+                                          value={draft[field]}
+                                          onChange={(event) =>
+                                            setDraft({ ...draft, [field]: event.target.value })
+                                          }
+                                        />
+                                        {feedback(field)}
+                                      </div>
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+                            </RecordEditorSection>
+                          )}
+                          {editor === 'new' && (
+                            <RecordEditorSection title={label('priceEditor')}>
+                              <div className={`max-w-sm ${recordEditorField}`}>
+                                <Label htmlFor="catalogue-initial-price">
+                                  {label('initialPrice')}
+                                </Label>
+                                <Input
+                                  id="catalogue-initial-price"
+                                  {...productForm.bind('price')}
+                                  dir="ltr"
+                                  inputMode="numeric"
+                                  value={draft.price}
+                                  onChange={(event) =>
+                                    setDraft({ ...draft, price: event.target.value })
+                                  }
+                                />
+                                {feedback('price')}
+                              </div>
+                              <p className="text-sm text-muted-foreground">
+                                {label('launchStatus')}
+                              </p>
+                            </RecordEditorSection>
+                          )}
+                          {productForm.errors.root && (
+                            <p role="alert" className="px-4 py-3 text-sm text-destructive sm:px-6">
+                              {productForm.errors.root.validation?.message ??
+                                productForm.errors.root.message}
+                            </p>
+                          )}
+                          <StickyRecordEditorActions>
+                            {view && !blocked ? (
+                              <Link
+                                to={
+                                  detail
+                                    ? '/admin/catalogue/$category/$productId'
+                                    : '/admin/catalogue/$category'
+                                }
+                                params={
+                                  detail
+                                    ? { category: type, productId: detail.id }
+                                    : { category: type }
+                                }
+                                search={routeSearch}
+                                className={buttonVariants({ variant: 'ghost' })}
+                              >
+                                {label('cancel')}
+                              </Link>
+                            ) : (
+                              <Button type="button" variant="ghost" onClick={() => choose(null)}>
+                                {label('cancel')}
+                              </Button>
                             )}
-                          </fieldset>
-                        )}
-                        <div className="flex gap-2">
-                          <Button type="submit" disabled={!ready() || uncertainCreate}>
-                            {productForm.pending && (
-                              <span
-                                aria-hidden="true"
-                                className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                              />
-                            )}
-                            {label(productForm.pending ? 'working' : 'save')}
-                          </Button>
-                          <Button type="button" variant="outline" onClick={() => choose(null)}>
-                            {label('cancel')}
-                          </Button>
+                            <CatalogueSaveButton
+                              label={label(productForm.pending ? 'working' : 'save')}
+                              pending={productForm.pending}
+                              disabled={!ready() || uncertainCreate}
+                            />
+                          </StickyRecordEditorActions>
+                        </fieldset>
+                      </form>
+                    )}
+                    {detail && view === 'detail' && (
+                      <section
+                        aria-label={label('productName')}
+                        className="space-y-4 rounded-xl border bg-card p-4 sm:p-6"
+                      >
+                        <div className="flex flex-wrap items-center gap-3">
+                          <Badge variant="outline">{label(detail.status)}</Badge>
+                          <bdi className="font-semibold tabular-nums [overflow-wrap:anywhere]">
+                            {money(detail.price)}
+                          </bdi>
                         </div>
-                      </fieldset>
-                      {productForm.errors.root && (
-                        <p role="alert">
-                          {productForm.errors.root.validation?.message ??
-                            productForm.errors.root.message}
-                        </p>
-                      )}
-                    </form>
-                    {detail && (
+                        {(detail.description?.[locale] ||
+                          detail.description?.[locale === 'fa' ? 'en' : 'fa']) && (
+                          <p className="whitespace-pre-line [overflow-wrap:anywhere]">
+                            {detail.description[locale] ||
+                              detail.description[locale === 'fa' ? 'en' : 'fa']}
+                          </p>
+                        )}
+                        {!!detail.categories.length && (
+                          <ul className="flex flex-wrap gap-2">
+                            {detail.categories.map((category) => (
+                              <li key={category}>
+                                <Badge variant="outline">{label(category)}</Badge>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        {!blocked && (
+                          <div className="flex flex-wrap gap-2">
+                            <Link
+                              to="/admin/catalogue/$category/$productId/edit"
+                              params={{ category: type, productId: detail.id }}
+                              search={routeSearch}
+                              className={buttonVariants({ className: 'min-h-11' })}
+                            >
+                              {label('editProduct')}
+                            </Link>
+                            {(type === 'saving_plan' || type === 'hardware') && (
+                              <Link
+                                to="/admin/catalogue/$category/$productId/configuration/{-$operation}"
+                                params={{ category: type, productId: detail.id }}
+                                search={routeSearch}
+                                className={buttonVariants({
+                                  variant: 'outline',
+                                  className: 'min-h-11',
+                                })}
+                              >
+                                {label('configuration')}
+                              </Link>
+                            )}
+                          </div>
+                        )}
+                      </section>
+                    )}
+                    {detail && detailsView && (
                       <section className="flex flex-col gap-4" aria-label={label('status')}>
                         <p>
                           {label('status')}: {label(detail.status)}
@@ -1168,9 +1423,9 @@ export default function AdminCataloguePage({
                         </div>
                       </section>
                     )}
-                    {detail && type === 'saving_plan' && (
+                    {detail && configView && !configurationEditor && type === 'saving_plan' && (
                       <section
-                        className="rounded-md border p-4"
+                        className="space-y-2 rounded-xl border bg-card p-4 sm:px-6"
                         aria-label={label('duplicatePolicy')}
                       >
                         <h2 className="font-semibold">{label('duplicatePolicy')}</h2>
@@ -1200,9 +1455,13 @@ export default function AdminCataloguePage({
                         </Button>
                       </section>
                     )}
-                    {detail && type === 'saving_plan' && (
+                    {detail && configView && type === 'saving_plan' && (
                       <SavingAgreementEditor
                         planId={detail.id}
+                        mode={view ? (configurationEditor ?? 'overview') : 'inline'}
+                        search={routeSearch ?? {}}
+                        onProductRefresh={refresh}
+                        {...(delegatedHeading && { heading: catalogueHeading })}
                         onChanged={() => choose(detail.id)}
                         disabled={pending || action !== null || !ready()}
                         refreshVersion={revision + detailRevision}
@@ -1210,28 +1469,45 @@ export default function AdminCataloguePage({
                         onDenied={denyAccess}
                       />
                     )}
-                    {detail && type === 'hardware' && (
+                    {detail && configView && type === 'hardware' && (
                       <SavingInventoryPanel
                         hardwareId={detail.id}
+                        standalone={!!view}
+                        onProductRefresh={refresh}
+                        {...(delegatedHeading && { heading: catalogueHeading })}
                         disabled={pending || action !== null || !ready()}
                         refreshVersion={revision + detailRevision}
                         onBusyChange={setSavingBusy}
                         onDenied={denyAccess}
                       />
                     )}
-                    {detail && preference.status === 'ready' && (
-                      <section
-                        aria-label={label('history')}
-                        className="flex flex-col gap-3 border-y py-5"
-                      >
-                        <h2 className="text-xl font-semibold">{label('history')}</h2>
-                        <p>
-                          {label('price')}: {money(detail.price)}
-                        </p>
-                        <p className="text-sm">
-                          {label('timezone')}: <bdi>{zone}</bdi>
-                        </p>
-                        {!priceOpen && (
+                    {detail && pricesView && preference.status === 'ready' && (
+                      <section aria-label={label('history')} className="min-w-0 space-y-4">
+                        {view !== 'price' && (
+                          <div className="space-y-1">
+                            <h2 className="text-xl font-semibold">{label('history')}</h2>
+                            <p>
+                              {label('price')}: {money(detail.price)}
+                            </p>
+                            <p className="text-sm">
+                              {label('timezone')}: <bdi>{zone}</bdi>
+                            </p>
+                          </div>
+                        )}
+                        {view === 'detail' && !blocked && ready() && (
+                          <Link
+                            to="/admin/catalogue/$category/$productId/prices/new"
+                            params={{ category: type, productId: detail.id }}
+                            search={routeSearch}
+                            className={buttonVariants({
+                              variant: 'outline',
+                              className: 'w-fit min-h-11',
+                            })}
+                          >
+                            {label('addPrice')}
+                          </Link>
+                        )}
+                        {!view && !priceOpen && (
                           <div>
                             <Button
                               variant="outline"
@@ -1247,288 +1523,367 @@ export default function AdminCataloguePage({
                             </Button>
                           </div>
                         )}
-                        {priceOpen && (
+                        {(view === 'price' || priceOpen) && (
                           <form
                             aria-label={label('priceEditor')}
                             noValidate
                             aria-busy={priceForm.pending || undefined}
                             onSubmit={savePrice}
-                            className="flex flex-col gap-4"
+                            onFocus={keepRecordFieldVisible}
+                            className={recordEditorFormSurface}
                           >
-                            <fieldset
-                              disabled={blocked}
-                              className="flex min-w-0 flex-col gap-4 border-0 p-0"
-                            >
-                              <div>
-                                <Label htmlFor="catalogue-price">{label('price')}</Label>
-                                <Input
-                                  id="catalogue-price"
-                                  {...priceForm.bind('price')}
-                                  dir="ltr"
-                                  inputMode="numeric"
-                                  value={price}
-                                  onChange={(event) => setPrice(event.target.value)}
-                                />
-                                {priceFeedback('price')}
-                              </div>
-                              <label className="flex items-center gap-2">
-                                <input
-                                  type="checkbox"
-                                  checked={scheduled}
-                                  onChange={(event) => setScheduled(event.target.checked)}
-                                />
-                                {label('schedule')}
-                              </label>
-                              <p className="text-sm">{label('immediate')}</p>
-                              {scheduled && (
-                                <div className="grid gap-4 sm:grid-cols-2">
-                                  <div className="min-w-0">
-                                    <DatePicker
-                                      id="catalogue-date"
-                                      triggerProps={priceForm.bind('date')}
-                                      onBlur={priceForm.bind('date').onBlur}
-                                      label={label('date')}
-                                      placeholder={label('chooseDate')}
-                                      locale={locale}
-                                      timezone={zone}
-                                      {...(date ? { value: date } : {})}
-                                      onChange={(value) => {
-                                        setDate(value);
-                                        setInvalidDate(false);
-                                      }}
-                                    />
-                                    {priceFeedback('date')}
-                                  </div>
-                                  <div>
-                                    <Label htmlFor="catalogue-time">{label('time')}</Label>
-                                    <Input
-                                      id="catalogue-time"
-                                      {...priceForm.bind('time')}
-                                      dir="ltr"
-                                      type="time"
-                                      value={time}
-                                      onChange={(event) => setTime(event.target.value)}
-                                    />
-                                    {priceFeedback('time')}
-                                  </div>
+                            <fieldset disabled={blocked} className="min-w-0">
+                              <legend className="sr-only">{label('priceEditor')}</legend>
+                              <RecordEditorSection title={label('priceEditor')}>
+                                <div className="flex max-w-sm flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/35 px-3 py-2">
+                                  <span className="text-sm text-muted-foreground">
+                                    {label('currentPrice')}
+                                  </span>
+                                  <span className="font-semibold">{money(detail.price)}</span>
                                 </div>
-                              )}
-                              {invalidDate && <p role="alert">{label('invalidDate')}</p>}
-                              <div className="flex gap-2">
-                                <Button
-                                  type="submit"
-                                  disabled={!ready() || preference.status !== 'ready'}
+                                <div className={`max-w-sm ${recordEditorField}`}>
+                                  <Label htmlFor="catalogue-price">{label('price')}</Label>
+                                  <Input
+                                    id="catalogue-price"
+                                    {...priceForm.bind('price')}
+                                    dir="ltr"
+                                    inputMode="numeric"
+                                    value={price}
+                                    onChange={(event) => setPrice(event.target.value)}
+                                  />
+                                  {priceFeedback('price')}
+                                </div>
+                              </RecordEditorSection>
+                              <RecordEditorSection title={label('priceTiming')}>
+                                <fieldset className="grid min-w-0 gap-2 sm:grid-cols-2">
+                                  <legend className="sr-only">{label('priceTiming')}</legend>
+                                  {(['now', 'scheduled'] as const).map((option) => (
+                                    <label
+                                      key={option}
+                                      className="flex min-h-11 min-w-0 cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm has-checked:border-primary/35 has-checked:bg-primary/5"
+                                    >
+                                      <input
+                                        type="radio"
+                                        name="catalogue-price-timing"
+                                        value={option}
+                                        className="size-4 shrink-0 accent-primary"
+                                        checked={scheduled === (option === 'scheduled')}
+                                        onChange={() => setScheduled(option === 'scheduled')}
+                                        aria-describedby="catalogue-price-timing-help"
+                                      />
+                                      {label(option === 'scheduled' ? 'schedule' : 'applyNow')}
+                                    </label>
+                                  ))}
+                                </fieldset>
+                                <p
+                                  id="catalogue-price-timing-help"
+                                  className="text-sm text-muted-foreground"
                                 >
-                                  {priceForm.pending && (
-                                    <span
-                                      aria-hidden="true"
-                                      className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                                    />
-                                  )}
-                                  {label(priceForm.pending ? 'working' : 'savePrice')}
-                                </Button>
-                                <Button
-                                  type="button"
-                                  variant="outline"
-                                  onClick={() => setPriceOpen(false)}
-                                >
-                                  {label('cancel')}
-                                </Button>
-                              </div>
-                            </fieldset>
-                            {priceForm.errors.root && (
-                              <p role="alert">
-                                {priceForm.errors.root.validation?.message ??
-                                  priceForm.errors.root.message}
-                              </p>
-                            )}
-                          </form>
-                        )}
-                        {!detail.priceHistory.length && <p>{label('noHistory')}</p>}
-                        <ol className="divide-y">
-                          {detail.priceHistory.map((version) => (
-                            <li key={version.id} className="flex flex-col gap-2 py-3">
-                              <p className="font-semibold">
-                                {money(version.price)} ·{' '}
-                                {label(
-                                  Date.parse(version.effectiveFrom) > Date.now()
-                                    ? 'scheduled'
-                                    : version.effectiveUntil &&
-                                        Date.parse(version.effectiveUntil) <= Date.now()
-                                      ? 'ended'
-                                      : 'current'
+                                  {label(scheduled ? 'scheduledHelp' : 'immediate')}
+                                </p>
+                                {scheduled && (
+                                  <p className="text-xs text-muted-foreground">
+                                    {label('timezone')} · <bdi>{zone}</bdi>
+                                  </p>
                                 )}
-                              </p>
-                              <p>
-                                {label('from')}: {dateText(version.effectiveFrom)}
-                              </p>
-                              {version.effectiveUntil && (
-                                <p>
-                                  {label('until')}: {dateText(version.effectiveUntil)}
+                                {scheduled && (
+                                  <div className={recordEditorGrid}>
+                                    <div className={recordEditorField}>
+                                      <Label htmlFor="catalogue-date">{label('date')}</Label>
+                                      <DatePicker
+                                        id="catalogue-date"
+                                        className="min-h-11"
+                                        triggerProps={priceForm.bind('date')}
+                                        onBlur={priceForm.bind('date').onBlur}
+                                        label={label('date')}
+                                        placeholder={label('chooseDate')}
+                                        locale={locale}
+                                        timezone={zone}
+                                        {...(date ? { value: date } : {})}
+                                        onChange={(value) => {
+                                          setDate(value);
+                                          setInvalidDate(false);
+                                        }}
+                                      />
+                                      {priceFeedback('date')}
+                                    </div>
+                                    <div className={recordEditorField}>
+                                      <Label htmlFor="catalogue-time">{label('time')}</Label>
+                                      <Input
+                                        id="catalogue-time"
+                                        {...priceForm.bind('time')}
+                                        dir="ltr"
+                                        type="time"
+                                        value={time}
+                                        onChange={(event) => setTime(event.target.value)}
+                                      />
+                                      {priceFeedback('time')}
+                                    </div>
+                                  </div>
+                                )}
+                                {invalidDate && <p role="alert">{label('invalidDate')}</p>}
+                              </RecordEditorSection>
+                              {priceForm.errors.root && (
+                                <p
+                                  role="alert"
+                                  className="px-4 py-3 text-sm text-destructive sm:px-6"
+                                >
+                                  {priceForm.errors.root.validation?.message ??
+                                    priceForm.errors.root.message}
                                 </p>
                               )}
-                            </li>
-                          ))}
-                        </ol>
-                        {detail.type === 'electricity' && (
-                          <div className="space-y-2 border-t pt-4">
-                            <h3 className="font-semibold">{label('limitHistory')}</h3>
-                            {!detail.electricityLimitHistory.length && (
-                              <p>{label('noLimitHistory')}</p>
-                            )}
-                            <ol className="divide-y">
-                              {detail.electricityLimitHistory.map((version) => (
-                                <li key={version.id} className="space-y-1 py-3">
-                                  <p>
-                                    {label('minKwh')}: {version.minKwh} · {label('maxKwh')}:{' '}
-                                    {version.maxKwh}
-                                  </p>
-                                  <p>
-                                    {label('from')}: {dateText(version.effectiveFrom)}
-                                  </p>
-                                  {version.effectiveUntil && (
-                                    <p>
-                                      {label('until')}: {dateText(version.effectiveUntil)}
-                                    </p>
-                                  )}
-                                </li>
-                              ))}
-                            </ol>
-                          </div>
+                              <StickyRecordEditorActions>
+                                {view === 'price' && !blocked ? (
+                                  <Link
+                                    to="/admin/catalogue/$category/$productId"
+                                    params={{ category: type, productId: detail.id }}
+                                    search={routeSearch}
+                                    className={buttonVariants({ variant: 'ghost' })}
+                                  >
+                                    {label('cancel')}
+                                  </Link>
+                                ) : (
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    onClick={() => setPriceOpen(false)}
+                                  >
+                                    {label('cancel')}
+                                  </Button>
+                                )}
+                                <CatalogueSaveButton
+                                  label={label(priceForm.pending ? 'working' : 'savePrice')}
+                                  pending={priceForm.pending}
+                                  disabled={!ready() || preference.status !== 'ready'}
+                                />
+                              </StickyRecordEditorActions>
+                            </fieldset>
+                          </form>
                         )}
+                        <div className="min-w-0 space-y-2 rounded-xl border bg-card px-4 py-4 sm:px-6">
+                          {view === 'price' && (
+                            <h2 className="text-base font-semibold">{label('history')}</h2>
+                          )}
+                          {!detail.priceHistory.length && <p>{label('noHistory')}</p>}
+                          <ol className="divide-y">
+                            {detail.priceHistory.map((version) => (
+                              <li key={version.id} className="flex flex-col gap-2 py-3">
+                                <p className="font-semibold">
+                                  {money(version.price)} ·{' '}
+                                  {label(
+                                    Date.parse(version.effectiveFrom) > Date.now()
+                                      ? 'scheduled'
+                                      : version.effectiveUntil &&
+                                          Date.parse(version.effectiveUntil) <= Date.now()
+                                        ? 'ended'
+                                        : 'current'
+                                  )}
+                                </p>
+                                <p>
+                                  {label('from')}: {dateText(version.effectiveFrom)}
+                                </p>
+                                {version.effectiveUntil && (
+                                  <p>
+                                    {label('until')}: {dateText(version.effectiveUntil)}
+                                  </p>
+                                )}
+                              </li>
+                            ))}
+                          </ol>
+                          {detail.type === 'electricity' && (
+                            <div className="space-y-2 border-t pt-4">
+                              <h3 className="font-semibold">{label('limitHistory')}</h3>
+                              {!detail.electricityLimitHistory.length && (
+                                <p>{label('noLimitHistory')}</p>
+                              )}
+                              <ol className="divide-y">
+                                {detail.electricityLimitHistory.map((version) => (
+                                  <li key={version.id} className="space-y-1 py-3">
+                                    <p>
+                                      {label('minKwh')}: {version.minKwh} · {label('maxKwh')}:{' '}
+                                      {version.maxKwh}
+                                    </p>
+                                    <p>
+                                      {label('from')}: {dateText(version.effectiveFrom)}
+                                    </p>
+                                    {version.effectiveUntil && (
+                                      <p>
+                                        {label('until')}: {dateText(version.effectiveUntil)}
+                                      </p>
+                                    )}
+                                  </li>
+                                ))}
+                              </ol>
+                            </div>
+                          )}
+                        </div>
                       </section>
                     )}
                   </>
                 )}
-                <ListPage.Content
-                  loading={state === 'loading'}
-                  error={state === 'error' || state === 'denied'}
-                  empty={!rows.length}
-                  retainContent={!!rows.length && state !== 'denied'}
-                  loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
-                  errorView={
-                    state === 'denied' ? (
-                      <p role="alert">{label('denied')}</p>
-                    ) : (
-                      <div className="space-y-2">
-                        <p role="alert">{label('error')}</p>
-                        <Button variant="outline" onClick={() => setListRevision((v) => v + 1)}>
-                          {label('retry')}
-                        </Button>
-                      </div>
-                    )
-                  }
-                  emptyView={<p>{label('empty')}</p>}
-                >
-                  <OperationalQueueTable
-                    locale={locale}
-                    rows={rows}
-                    caption={`${label(type)} · ${label('title')}`}
-                    scrollLabel={`${label(type)} · ${label('title')}`}
-                    nameHeader={label('productName')}
-                    renderName={(row) => (
-                      <>
-                        <TextCell value={title(row)} />
-                        {row.systemKey && (
-                          <span className="mt-1 block text-xs font-normal text-muted-foreground">
-                            {label('systemKey')}: <TextCell value={row.systemKey} />
-                          </span>
-                        )}
-                      </>
-                    )}
-                    fields={[
-                      {
-                        id: 'description',
-                        label: label('description'),
-                        render: (row) => (
-                          <span className="whitespace-pre-wrap">
-                            <TextCell value={row.description?.[locale]} />
-                          </span>
-                        ),
-                      },
-                      {
-                        id: 'status',
-                        label: label('status'),
-                        render: (row) => (
-                          <Badge variant={row.status === 'active' ? 'secondary' : 'outline'}>
-                            {label(row.status)}
-                          </Badge>
-                        ),
-                      },
-                      {
-                        id: 'price',
-                        label: label('price'),
-                        render: (row) =>
-                          row.price === null ? (
-                            <TextCell value={label('unset')} />
-                          ) : (
-                            <CurrencyCell amount={row.price} format={numbers.money} />
-                          ),
-                      },
-                      ...(categoryOptions[type].length
-                        ? [
-                            {
-                              id: 'categories',
-                              label: label('categories'),
-                              render: (row: Product) => (
-                                <TextCell value={row.categories.map(label).join(', ') || null} />
-                              ),
-                            },
-                          ]
-                        : []),
-                      ...(type === 'electricity'
-                        ? [
-                            {
-                              id: 'minimum',
-                              label: label('minKwh'),
-                              render: (row: Product) => (
-                                <TextCell
-                                  value={
-                                    row.electricityLimits
-                                      ? numbers.irrDigits(row.electricityLimits.minKwh)
-                                      : null
-                                  }
-                                />
-                              ),
-                            },
-                            {
-                              id: 'maximum',
-                              label: label('maxKwh'),
-                              render: (row: Product) => (
-                                <TextCell
-                                  value={
-                                    row.electricityLimits
-                                      ? row.electricityLimits.maxKwh === '0'
-                                        ? label('noUpperLimit')
-                                        : numbers.irrDigits(row.electricityLimits.maxKwh)
-                                      : null
-                                  }
-                                />
-                              ),
-                            },
-                          ]
-                        : []),
-                    ]}
-                    actionHeader={label('actions')}
-                    renderActions={(row) => (
-                      <Button
-                        variant="outline"
-                        className="min-h-11"
-                        aria-label={`${label('edit')} ${title(row)}`}
-                        aria-current={editor === row.id ? 'page' : undefined}
-                        disabled={blocked}
-                        onClick={() => choose(row.id)}
-                      >
-                        {label('edit')}
-                      </Button>
-                    )}
-                    cardHeading="h2"
+                {listView && (
+                  <ListPage.Content
                     loading={state === 'loading'}
-                    emptyMessage={label('empty')}
-                    tableClassName="min-w-[60rem]"
-                  />
-                </ListPage.Content>
-                {queries && (
+                    error={state === 'error' || state === 'denied'}
+                    empty={!rows.length}
+                    retainContent={!!rows.length && state !== 'denied'}
+                    loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+                    errorView={
+                      state === 'denied' ? (
+                        <p role="alert">{label('denied')}</p>
+                      ) : (
+                        <div className="space-y-2">
+                          <p role="alert">{label('error')}</p>
+                          <Button variant="outline" onClick={() => setListRevision((v) => v + 1)}>
+                            {label('retry')}
+                          </Button>
+                        </div>
+                      )
+                    }
+                    emptyView={<p>{label('empty')}</p>}
+                  >
+                    <OperationalQueueTable
+                      locale={locale}
+                      rows={rows}
+                      caption={`${label(type)} · ${label('title')}`}
+                      scrollLabel={`${label(type)} · ${label('title')}`}
+                      nameHeader={label('productName')}
+                      renderName={(row) => (
+                        <>
+                          {view === 'list' && !blocked ? (
+                            <Link
+                              to="/admin/catalogue/$category/$productId"
+                              params={{ category: type, productId: row.id }}
+                              search={routeSearch}
+                              className="touch-action font-medium text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
+                            >
+                              {title(row)}
+                            </Link>
+                          ) : (
+                            <TextCell value={title(row)} />
+                          )}
+                          {row.systemKey && (
+                            <span className="mt-1 block text-xs font-normal text-muted-foreground">
+                              {label('systemKey')}: <TextCell value={row.systemKey} />
+                            </span>
+                          )}
+                        </>
+                      )}
+                      fields={[
+                        {
+                          id: 'description',
+                          label: label('description'),
+                          render: (row) => (
+                            <span className="whitespace-pre-wrap">
+                              <TextCell value={row.description?.[locale]} />
+                            </span>
+                          ),
+                        },
+                        {
+                          id: 'status',
+                          label: label('status'),
+                          render: (row) => (
+                            <Badge variant={row.status === 'active' ? 'secondary' : 'outline'}>
+                              {label(row.status)}
+                            </Badge>
+                          ),
+                        },
+                        {
+                          id: 'price',
+                          label: label('price'),
+                          render: (row) =>
+                            row.price === null ? (
+                              <TextCell value={label('unset')} />
+                            ) : (
+                              <CurrencyCell amount={row.price} format={numbers.money} />
+                            ),
+                        },
+                        ...(categoryOptions[type].length
+                          ? [
+                              {
+                                id: 'categories',
+                                label: label('categories'),
+                                render: (row: Product) => (
+                                  <TextCell value={row.categories.map(label).join(', ') || null} />
+                                ),
+                              },
+                            ]
+                          : []),
+                        ...(type === 'electricity'
+                          ? [
+                              {
+                                id: 'minimum',
+                                label: label('minKwh'),
+                                render: (row: Product) => (
+                                  <TextCell
+                                    value={
+                                      row.electricityLimits
+                                        ? numbers.irrDigits(row.electricityLimits.minKwh)
+                                        : null
+                                    }
+                                  />
+                                ),
+                              },
+                              {
+                                id: 'maximum',
+                                label: label('maxKwh'),
+                                render: (row: Product) => (
+                                  <TextCell
+                                    value={
+                                      row.electricityLimits
+                                        ? row.electricityLimits.maxKwh === '0'
+                                          ? label('noUpperLimit')
+                                          : numbers.irrDigits(row.electricityLimits.maxKwh)
+                                        : null
+                                    }
+                                  />
+                                ),
+                              },
+                            ]
+                          : []),
+                      ]}
+                      actionHeader={label('actions')}
+                      renderActions={(row) =>
+                        view === 'list' && !blocked ? (
+                          <Link
+                            to="/admin/catalogue/$category/$productId/edit"
+                            params={{ category: type, productId: row.id }}
+                            search={routeSearch}
+                            className={buttonVariants({
+                              variant: 'outline',
+                              className: 'min-h-11',
+                            })}
+                            aria-label={`${label('edit')} ${title(row)}`}
+                            data-table-action-tooltip={label('edit')}
+                          >
+                            <TableActionIcon icon={TablePencilIcon}>
+                              {label('edit')}
+                            </TableActionIcon>
+                          </Link>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            className="min-h-11"
+                            aria-label={`${label('edit')} ${title(row)}`}
+                            aria-current={editor === row.id ? 'page' : undefined}
+                            disabled={blocked}
+                            onClick={() => choose(row.id)}
+                            data-table-action-tooltip={label('edit')}
+                          >
+                            <TableActionIcon icon={TablePencilIcon}>
+                              {label('edit')}
+                            </TableActionIcon>
+                          </Button>
+                        )
+                      }
+                      cardHeading="h2"
+                      loading={state === 'loading'}
+                      emptyMessage={label('empty')}
+                      tableClassName="min-w-[60rem]"
+                    />
+                  </ListPage.Content>
+                )}
+                {listView && queries && (
                   <ListPage.Pagination
                     kind="cursor"
                     hasMore={hasNextPage && queries.query.page < 1_000_000}
@@ -1556,7 +1911,7 @@ export default function AdminCataloguePage({
               <Button
                 type="button"
                 variant="outline"
-                disabled={detailState === 'loading' || state === 'loading'}
+                disabled={detailState === 'loading' || (readsCollection && state === 'loading')}
                 onClick={refresh}
               >
                 {label('refresh')}
@@ -1636,7 +1991,15 @@ export default function AdminCataloguePage({
                     ? result === null
                     : matchesProductReceipt(action.body, result, selected, type);
             if (!matched) throw new Error('Invalid catalogue acknowledgement');
-            choose(action.path.endsWith('/duplicate-policy') ? editor : null, 'settled');
+            if (view && (view === 'new' || view === 'edit' || view === 'price')) {
+              const id = view === 'new' && validDetail(result) ? result.id : selected?.id;
+              if (id) onRecordSaved?.(id);
+            } else {
+              choose(
+                view ? editor : action.path.endsWith('/duplicate-policy') ? editor : null,
+                'settled'
+              );
+            }
             setSaved(true);
             setRevision((value) => value + 1);
           })(commandVersion.current, detail, commandKind.current)}

@@ -634,17 +634,18 @@ it('automatically assigns a correction to an eligible reviewer other than its cr
   expect(await detail.json()).toMatchObject({
     assignedTo: 'reviewer',
     assignedName: 'reviewer@example.test',
+    viewer: { userId: 'reviewer', canReview: true },
   });
   const notices = (
     await http.pool.query(
       "SELECT recipient_user_id,link_route,localized_content FROM in_app_notifications WHERE link_route LIKE '%'||$1||'%'",
-      [target]
+      [id]
     )
   ).rows;
   expect(notices).toMatchObject([
     {
       recipient_user_id: 'reviewer',
-      link_route: `/admin/crm/corrections?profileId=${target}`,
+      link_route: `/admin/crm/corrections/${id}`,
       localized_content: {
         en: { title: 'An identity correction was assigned to you' },
         fa: { title: 'پرونده اصلاح هویت به شما تخصیص یافت' },

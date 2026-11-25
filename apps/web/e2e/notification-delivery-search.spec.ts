@@ -54,17 +54,9 @@ for (const locale of ['en', 'fa'] as const) {
                   : entries,
       });
     });
-    await page.goto(fa ? '/admin/notifications' : '/admin/failed-notifications');
-    await page.evaluate((lang) => {
-      document.documentElement.lang = lang;
-    }, locale);
-    const browse = page.getByRole('button', {
-      name: fa ? 'جست‌وجوی همه ارسال‌ها' : 'Search all deliveries',
-      exact: true,
-    });
-    await browse.click();
-    const dialog = page.getByRole('dialog');
-    const cards = dialog.getByRole('list', {
+    await page.goto('/admin/failed-notifications/history');
+    const history = page.getByRole('main');
+    const cards = history.getByRole('list', {
       name: fa ? 'تاریخچه تلاش‌های ارسال' : 'Delivery attempt history',
       exact: true,
     });
@@ -74,51 +66,51 @@ for (const locale of ['en', 'fa'] as const) {
     ).toHaveCount(25);
     await page.setViewportSize({ width: 1024, height: 844 });
     await expect(
-      dialog
+      history
         .getByRole('table')
         .getByRole('columnheader', { name: fa ? 'نوبت پردازش' : 'Processing attempt' })
     ).toBeVisible();
-    await expect(dialog.getByRole('table').locator('tbody tr')).toHaveCount(25);
+    await expect(history.getByRole('table').locator('tbody tr')).toHaveCount(25);
     await expect(cards).toHaveCount(0);
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(cards.getByRole('listitem')).toHaveCount(25);
     expect(queries).toHaveLength(1);
-    await expect(dialog).toContainText(fa ? 'بدون ارسال دوباره' : 'without sending again');
+    await expect(history).toContainText(fa ? 'بدون ارسال دوباره' : 'without sending again');
     expect(queries.at(-1)?.has('notificationId')).toBe(false);
     expect(queries.at(-1)?.has('channel')).toBe(false);
-    await expect(dialog).toContainText(notificationId);
+    await expect(history).toContainText(notificationId);
     expect(
       await new AxeBuilder({ page })
-        .include('[role="dialog"]')
+        .include('main')
         .analyze()
         .then((r) => r.violations)
     ).toEqual([]);
-    expect(await dialog.evaluate((e) => e.scrollWidth <= e.clientWidth + 1)).toBe(true);
-    await dialog.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
+    expect(await history.evaluate((e) => e.scrollWidth <= e.clientWidth + 1)).toBe(true);
+    await history.getByRole('button', { name: fa ? 'بعدی' : 'Next', exact: true }).click();
     await expect(
-      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      history.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
     ).toHaveCount(1);
     expect(queries.at(-1)?.get('offset')).toBe('25');
-    const id = dialog.getByRole('textbox', { name: fa ? 'شناسه اعلان' : 'Notification ID' });
+    const id = history.getByRole('textbox', { name: fa ? 'شناسه اعلان' : 'Notification ID' });
     await id.fill('invalid');
-    const search = dialog.getByRole('button', { name: fa ? 'جست‌وجو' : 'Search', exact: true });
+    const search = history.getByRole('button', { name: fa ? 'جست‌وجو' : 'Search', exact: true });
     const before = queries.length;
     await search.click();
     expect(await id.evaluate((e: HTMLInputElement) => e.validity.valid)).toBe(false);
     expect(queries).toHaveLength(before);
     await id.fill(notificationId.toUpperCase());
-    await dialog
+    await history
       .getByRole('combobox', { name: fa ? 'کانال' : 'Channel', exact: true })
       .selectOption('email');
-    await dialog
+    await history
       .getByRole('combobox', { name: fa ? 'نتیجه' : 'Outcome', exact: true })
       .selectOption('delivered');
     mode = 'mismatch';
     await search.click();
-    const error = dialog.getByRole('alert');
+    const error = history.getByRole('alert');
     await expect(error).toBeVisible();
     await expect(
-      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      history.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
     ).toHaveCount(0);
     expect(queries.at(-1)?.get('offset')).toBe('0');
     expect(queries.at(-1)?.get('notificationId')).toBe(notificationId.toUpperCase());
@@ -127,19 +119,19 @@ for (const locale of ['en', 'fa'] as const) {
     mode = 'valid';
     await error.getByRole('button').click();
     await expect(
-      dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+      history.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
     ).toHaveCount(1);
     mode = 'uncertain';
     for (const [status, text] of [
       ['sending', fa ? 'آغاز شده؛ نتیجه ثبت نشده' : 'Started; outcome not recorded'],
       ['unknown', fa ? 'نتیجه نامشخص' : 'Outcome unknown'],
     ]) {
-      await dialog
+      await history
         .getByRole('combobox', { name: fa ? 'نتیجه' : 'Outcome', exact: true })
         .selectOption(status!);
       await search.click();
       await expect(
-        dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+        history.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
       ).toHaveCount(1);
       await expect(cards.getByRole('listitem')).toContainText(text!);
       expect(queries.at(-1)?.get('status')).toBe(status);
@@ -149,26 +141,25 @@ for (const locale of ['en', 'fa'] as const) {
       ? 'هیچ تلاش ارسالی ثبت نشده است.'
       : 'No delivery attempts have been recorded.';
     await search.click();
-    await expect(dialog).toContainText(emptyMessage);
-    await page.keyboard.press('Escape');
-    await expect(browse).toBeFocused();
-    await browse.click();
-    await expect(dialog).toContainText(emptyMessage);
+    await expect(history).toContainText(emptyMessage);
+    await page.reload();
+    await expect(history).toContainText(emptyMessage);
+    expect(new URL(page.url()).searchParams.get('history_notificationId')).toBe(
+      notificationId.toUpperCase()
+    );
     canView = false;
     mode = 'denied';
     const beforeDenial = queries.length;
     await search.click();
-    await expect(dialog).toHaveCount(0);
-    await expect(browse).toHaveCount(0);
+    await expect(search).toHaveCount(0);
     await expect(
       page.getByText(t('admin.notifications.deadLetter.accessDenied', locale), { exact: true })
     ).toBeVisible();
     expect(queries).toHaveLength(beforeDenial + 1);
     const reads = queries.length;
     await page.reload();
-    await expect(
-      page.getByRole('button', { name: /Search all deliveries|جست‌وجوی همه ارسال‌ها/ })
-    ).toHaveCount(0);
+    await expect(history).toContainText(t('admin.notifications.deadLetter.accessDenied', locale));
+    await expect(search).toHaveCount(0);
     expect(queries).toHaveLength(reads);
   });
 }

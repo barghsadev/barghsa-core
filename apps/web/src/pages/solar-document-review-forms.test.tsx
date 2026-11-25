@@ -1,3 +1,4 @@
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -196,8 +197,8 @@ it.each(['en', 'fa'] as const)(
     try {
       await view.change('solar-guidance-fa', ' ');
       await view.change('solar-guidance-en', 'x'.repeat(4001));
-      await view.change('solar-guidance-fa-suggestions', 'One\nTwo');
-      await view.change('solar-guidance-en-suggestions', 'One');
+      await view.click(tSolarStaffRecord('guidanceAddDocument', locale));
+      await view.change('solar-guidance-item-0-fa', 'x'.repeat(201));
       await view.submitGuidance();
       await vi.waitFor(() =>
         expect(view.container.querySelectorAll('[aria-invalid=true]')).toHaveLength(4)
@@ -214,22 +215,20 @@ it.each(['en', 'fa'] as const)(
       for (const id of [
         'solar-guidance-fa',
         'solar-guidance-en',
-        'solar-guidance-fa-suggestions',
-        'solar-guidance-en-suggestions',
+        'solar-guidance-item-0-fa',
+        'solar-guidance-item-0-en',
       ]) {
         const field = view.container.querySelector(`#${id}`)!;
         expect(view.container.querySelector(`label[for="${id}"]`)).not.toBeNull();
-        expect(field.getAttribute('aria-describedby')).toContain(`${id}-description`);
+        if (!id.includes('-item-'))
+          expect(field.getAttribute('aria-describedby')).toContain(`${id}-description`);
         expect(field.getAttribute('aria-describedby')).toContain(`${id}-message`);
-        const message = view.container.querySelector(`#${id}-message`)!;
-        const reserved = message.parentElement?.querySelector('[aria-hidden=true]');
-        expect(reserved?.textContent).toBe(message.textContent);
-        expect(reserved?.classList.contains('invisible')).toBe(true);
-        expect(reserved?.classList.contains('col-start-1')).toBe(true);
-        expect(message.classList.contains('col-start-1')).toBe(true);
+        expect(view.container.querySelector(`#${id}-message`)?.textContent).toBeTruthy();
       }
       await vi.waitFor(() => expect(document.activeElement?.id).toBe('solar-guidance-fa'));
-      expect(view.container.textContent).toContain(tSolar('documentSuggestionsInvalid', locale));
+      expect(view.container.textContent).toContain(
+        tSolarStaffRecord('guidancePairInvalid', locale)
+      );
     } finally {
       await view.close();
     }
@@ -259,8 +258,12 @@ it('successful guidance save verifies the normalized receipt and preserves selec
     const count = reads.length;
     await view.change('solar-guidance-fa', ' راهنمای جدید ');
     await view.change('solar-guidance-en', ' Updated guidance ');
-    await view.change('solar-guidance-fa-suggestions', ' سند اول \n\n سند دوم ');
-    await view.change('solar-guidance-en-suggestions', ' First file \n Second file ');
+    await view.click('Add document');
+    await view.change('solar-guidance-item-0-fa', ' سند اول ');
+    await view.change('solar-guidance-item-0-en', ' First file ');
+    await view.click('Add document');
+    await view.change('solar-guidance-item-1-fa', ' سند دوم ');
+    await view.change('solar-guidance-item-1-en', ' Second file ');
     await view.submitGuidance();
     await waitForDialog();
     expect(view.container.querySelector<HTMLInputElement>('#solar-review-reason')?.disabled).toBe(
@@ -297,20 +300,19 @@ it('maps only owned guidance field identifiers and focuses the translated list a
     options?.method === 'PUT' ? invalid(fields) : Response.json(read(url))
   );
   try {
-    await view.change('solar-guidance-fa-suggestions', 'سند');
-    await view.change('solar-guidance-en-suggestions', 'File');
+    await view.click('Add document');
+    await view.change('solar-guidance-item-0-fa', 'سند');
+    await view.change('solar-guidance-item-0-en', 'File');
     await view.submitGuidance();
     await waitForDialog();
     await view.click('Confirm', document);
     await vi.waitFor(() => expect(document.querySelector('[role=dialog]')).toBeNull());
-    await vi.waitFor(() =>
-      expect(document.activeElement?.id).toBe('solar-guidance-en-suggestions')
-    );
+    await vi.waitFor(() => expect(document.activeElement?.id).toBe('solar-guidance-item-0-en'));
     expect(
-      view.container.querySelector<HTMLTextAreaElement>('#solar-guidance-en-suggestions')?.value
+      view.container.querySelector<HTMLTextAreaElement>('#solar-guidance-item-0-en')?.value
     ).toBe('File');
-    expect(view.container.textContent).toContain(tSolar('documentSuggestionsInvalid', 'en'));
-    await view.change('solar-guidance-en-suggestions', 'Corrected file');
+    expect(view.container.textContent).toContain(tSolarStaffRecord('guidancePairInvalid', 'en'));
+    await view.change('solar-guidance-item-0-en', 'Corrected file');
     fields = ['en', 'secret_revision'];
     await view.submitGuidance();
     await waitForDialog();

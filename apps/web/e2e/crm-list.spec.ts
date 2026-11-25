@@ -2,7 +2,7 @@ import { crmShell } from './crm-shell-fixture';
 import { verifyClippedContrast } from './clipped-contrast';
 import AxeBuilder from '@axe-core/playwright';
 import { mockOppositeNumerals } from './number-preference-fixture';
-import { test, expect } from './coverage-fixture';
+import { expandListFilters, test, expect } from './coverage-fixture';
 const user = {
   userId: 'user-one',
   username: 'person@example.test',
@@ -63,6 +63,7 @@ for (const locale of ['en', 'fa'])
       page.getByText(locale === 'fa' ? 'کاربری با این مشخصات پیدا نشد.' : 'No matching users.')
     ).toBeVisible();
     expect(requests.at(-1)!.searchParams.get('cursor')).toBe('page-two');
+    await expandListFilters(page, locale);
     await page.locator('#crm-type').selectOption('LEGAL');
     await expect(page.getByRole('rowheader', { name: user.username })).toBeVisible();
     expect(requests.at(-1)!.searchParams.has('cursor')).toBe(false);
@@ -145,6 +146,7 @@ test('Persian picker uses Jalali month boundaries and sends Gregorian API dates'
     return route.fulfill({ json: { users: [], cursor: null, hasMore: false } });
   });
   await page.goto('/admin/crm');
+  await expandListFilters(page, 'fa');
   await expect(page.getByRole('combobox', { name: 'ثبت‌نام از', exact: true })).toBeEnabled();
   await page.clock.setFixedTime(new Date('2026-03-21T12:00:00Z'));
   await page.getByRole('combobox', { name: 'ثبت‌نام از', exact: true }).click();
@@ -177,6 +179,7 @@ test('Jalali leap-day selection and keyboard dismissal preserve the date', async
     return route.fulfill({ json: { users: [], cursor: null, hasMore: false } });
   });
   await page.goto('/admin/crm');
+  await expandListFilters(page, 'fa');
   const trigger = page.getByRole('combobox', { name: 'ثبت‌نام تا', exact: true });
   await expect(trigger).toBeEnabled();
   await page.clock.setFixedTime(new Date('2025-03-20T12:00:00Z'));
@@ -231,6 +234,7 @@ test('CRM waits for account timezone, retries and displays registration in that 
   failed = false;
   await page.getByRole('button', { name: 'Refresh', exact: true }).click();
   await expect(page.locator('#crm-dateFrom')).toBeEnabled();
+  await expandListFilters(page, 'en');
   await expect(page.getByText('Account timezone: Asia/Tehran', { exact: true })).toBeVisible();
   await expect(page.getByText('21 Mar 2026', { exact: true })).toBeVisible();
 });

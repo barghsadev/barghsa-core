@@ -1,5 +1,5 @@
 import { QueryProvider } from '../test/query-provider.js';
-import { act, useState } from 'react';
+import { act, useState, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import Directory from './CrmProfileList.js';
@@ -31,7 +31,10 @@ const clock = vi.hoisted(() => ({
   status: 'ready' as 'ready' | 'loading' | 'error',
   retries: 0,
 }));
-vi.mock('@tanstack/react-router', () => ({ useSearch: () => routeSearch }));
+vi.mock('@tanstack/react-router', () => ({
+  useSearch: () => routeSearch,
+  Link: ({ to, children }: { to: string; children: ReactNode }) => <a href={to}>{children}</a>,
+}));
 vi.mock('../hooks/useTimezone.js', () => ({
   useTimezone: () => ({ ...clock, retry: () => clock.retries++ }),
 }));

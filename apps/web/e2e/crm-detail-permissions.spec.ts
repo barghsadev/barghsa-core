@@ -1,6 +1,8 @@
 import type { Route } from '@playwright/test';
 import { fullNavigation } from './navigation-fixture';
 import { t } from '@barghsa/i18n/crm';
+import { tCrmForm } from '@barghsa/i18n/crm-forms';
+import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import { verifyClippedContrast } from './clipped-contrast';
 import { formatBrowserDate } from './browser-date';
 import { test, expect } from './coverage-fixture';
@@ -75,16 +77,30 @@ for (const allowed of [true, false])
       route.fulfill({ json: detail(!allowed, allowed) })
     );
     await page.goto(`/admin/crm/profiles/${id}`);
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('Individual');
-    await expect(page.getByRole('button', { name: 'Edit', exact: true })).toHaveCount(
+    await expect(page.getByRole('heading', { level: 1 }).locator('..')).toContainText('Individual');
+    await expect(page.getByRole('link', { name: 'Edit', exact: true })).toHaveCount(
       allowed ? 1 : 0
     );
     await expect(
-      page.getByRole('button', { name: 'Force Password Change', exact: true })
+      page.getByRole('link', { name: 'Force Password Change', exact: true })
     ).toHaveCount(allowed ? 1 : 0);
-    await expect(page.getByRole('button', { name: 'Expire Sessions', exact: true })).toHaveCount(
+    await expect(page.getByRole('link', { name: 'Expire Sessions', exact: true })).toHaveCount(
       allowed ? 1 : 0
     );
+    if (!allowed) {
+      for (const operation of [
+        'archive',
+        'force-password-change',
+        'expire-sessions',
+        'verification',
+      ]) {
+        await page.goto(`/admin/crm/profiles/${id}/${operation}`);
+        await expect(page.getByRole('main').getByRole('alert')).toHaveText(
+          t('crm.profile.error.accessDenied', 'en')
+        );
+        await expect(page.getByRole('main').getByRole('textbox')).toHaveCount(0);
+      }
+    }
   });
 
 for (const locale of ['fa', 'en'] as const)
@@ -115,14 +131,14 @@ for (const locale of ['fa', 'en'] as const)
     await page.route(`**/api/crm/profiles/${id}`, (route) => route.fulfill({ json: current }));
     await page.goto(`/app/crm/profiles/${id}`);
     await expect(page).toHaveURL(new RegExp(`/admin/crm/profiles/${id}$`));
-    await expect(page.getByRole('heading', { level: 1 })).toContainText(
+    await expect(page.getByRole('heading', { level: 1 }).locator('..')).toContainText(
       locale === 'fa' ? 'بایگانی‌شده' : 'Archived'
     );
     await expect(
-      page.getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
+      page.getByRole('link', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
     ).toHaveCount(0);
     await expect(
-      page.getByRole('button', {
+      page.getByRole('link', {
         name: locale === 'fa' ? 'بایگانی پروفایل' : 'Archive profile',
         exact: true,
       })
@@ -130,7 +146,7 @@ for (const locale of ['fa', 'en'] as const)
     await expect(page.getByRole('main').getByRole('combobox')).toHaveCount(0);
     // Account security remains available: only the selected profile is archived.
     await expect(
-      page.getByRole('button', {
+      page.getByRole('link', {
         name: locale === 'fa' ? 'پایان تمام نشست‌ها' : 'Expire Sessions',
         exact: true,
       })
@@ -450,29 +466,30 @@ for (const locale of ['fa', 'en'] as const) {
       await page.route(`**/api/crm/profiles/${id}`, (route) =>
         route.fulfill({ json: detail(false, true) })
       );
-      let verified = false,
-        acknowledged = false;
+      let verified = false;
+      let receipt = { success: true, userId: 'another-customer', reason: 'Lost device' };
       const bodies: unknown[] = [];
       await page.route(`**/api/crm/users/customer/${action}`, (route) => {
         bodies.push(route.request().postDataJSON());
         if (!verified) return route.fulfill({ status: 403, json: { requiresStepUp: true } });
-        return route.fulfill({
-          json: acknowledged
-            ? { success: true, userId: 'customer', reason: 'Lost device' }
-            : { success: true, userId: 'another-customer' },
-        });
+        return route.fulfill({ json: receipt });
       });
       await page.route('**/api/auth/step-up', (route) => {
         verified = true;
         return route.fulfill({ json: { verified: true } });
       });
       await page.goto(`/admin/crm/profiles/${id}`);
-      await page.getByRole('button', { name: title, exact: true }).click();
-      await expect(
-        page.getByRole('dialog').getByRole('button', { name: title, exact: true })
-      ).toBeDisabled();
-      await page.getByRole('dialog').locator('textarea').fill('  Lost device  ');
-      await page.getByRole('dialog').getByRole('button', { name: title, exact: true }).click();
+      await page.getByRole('link', { name: title, exact: true }).click();
+      await expect(page).toHaveURL(new RegExp(`/admin/crm/profiles/${id}/${action}$`));
+      await expect(page.getByRole('heading', { name: title, exact: true })).toBeFocused();
+      const form = page.getByRole('form', { name: title });
+      await expect(form).toContainText('customer@example.test');
+      const review = form.getByRole('button', {
+        name: tCrmForm('crm.profile.action.review', locale),
+      });
+      await expect(review).toBeDisabled();
+      await form.getByRole('textbox').fill('  Lost device  ');
+      await review.click();
       const dialog = page.getByRole('dialog');
       await expect(dialog).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
       await expect(dialog).toContainText('customer@example.test');
@@ -489,11 +506,16 @@ for (const locale of ['fa', 'en'] as const) {
       await confirm.click();
       await expect(dialog.getByRole('alert')).toBeVisible();
       await expect(dialog).toContainText('Lost device');
-      acknowledged = true;
       await expect(dialog.locator('input[type=password]')).toHaveCount(0);
+      receipt = { ...receipt, userId: 'customer', reason: 'Unrelated reason' };
+      await confirm.click();
+      await expect(dialog.getByRole('alert')).toBeVisible();
+      await expect(dialog).toContainText('Lost device');
+      receipt = { ...receipt, reason: 'Lost device' };
       await confirm.click();
       await expect(dialog).toHaveCount(0);
-      expect(bodies).toEqual(Array(3).fill({ reason: 'Lost device' }));
+      await expect(form).toHaveCount(0);
+      expect(bodies).toEqual(Array(4).fill({ reason: 'Lost device' }));
     });
 
   for (const action of ['verify', 'unverify', 'reverify'] as const)
@@ -549,30 +571,51 @@ for (const locale of ['fa', 'en'] as const) {
         });
       });
       await page.goto(`/admin/crm/profiles/${id}`);
+      const verificationTitle = verificationConfigText('identityReview', locale);
+      await expect(page.getByRole('form', { name: verificationTitle })).toHaveCount(0);
+      await page.getByRole('link', { name: verificationTitle, exact: true }).click();
+      await expect(page).toHaveURL(new RegExp(`/admin/crm/profiles/${id}/verification$`));
+      await expect(page.getByRole('heading', { name: verificationTitle })).toBeFocused();
       const review = page.getByRole('button', {
         name: locale === 'fa' ? 'بررسی تغییر تأیید هویت' : 'Review verification change',
       });
+      const actionPicker = page.getByLabel(t('crm.profile.verification.action', locale), {
+        exact: true,
+      });
       const reasonField = page.getByLabel(
-        locale === 'fa'
-          ? 'دلیل (برای لغو یا تجدید تأیید الزامی است)'
-          : 'Reason (required to remove or renew verification)'
+        verificationConfigText(
+          action === 'verify' ? 'optionalReviewNote' : 'decisionReason',
+          locale
+        ),
+        { exact: true }
       );
-      if (action !== 'verify') {
-        await expect(review).toBeDisabled();
-        await reasonField.fill('   ');
-        await expect(review).toBeDisabled();
-        await reasonField.fill(reason);
-      }
-      await page
-        .getByLabel(locale === 'fa' ? 'عملیات تأیید هویت' : 'Verification action', { exact: true })
-        .selectOption(action);
-      if (action === 'verify')
+      if (action === 'verify') {
+        await expect(actionPicker).toHaveCount(0);
         await expect(reasonField).not.toHaveAttribute('aria-required', 'true');
-      else await expect(reasonField).toHaveAttribute('aria-required', 'true');
+      } else {
+        await actionPicker.selectOption(action);
+        await expect(reasonField).toHaveAttribute('aria-required', 'true');
+        await review.click();
+        await expect(reasonField).toHaveAttribute('aria-invalid', 'true');
+        await expect(reasonField).toBeFocused();
+        await reasonField.fill('   ');
+        await review.click();
+        await expect(reasonField).toHaveAccessibleDescription(
+          verificationConfigText('decisionReasonRequired', locale)
+        );
+        await expect(page.getByRole('dialog')).toHaveCount(0);
+        expect(bodies).toHaveLength(0);
+        await reasonField.fill(reason);
+        await actionPicker.selectOption(action === 'unverify' ? 'reverify' : 'unverify');
+        await expect(reasonField).toHaveValue('');
+        await actionPicker.selectOption(action);
+        await expect(reasonField).toHaveValue(reason);
+      }
       await review.click();
       const dialog = page.getByRole('dialog');
       await expect(dialog).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
       await expect(dialog).toContainText('Customer profile');
+      if (reason) await expect(dialog).toContainText(reason);
       const confirm = dialog.getByRole('button', {
         name: locale === 'fa' ? 'تأیید' : 'Confirm',
         exact: true,
@@ -588,6 +631,15 @@ for (const locale of ['fa', 'en'] as const) {
       await confirm.click();
       await expect(dialog).toHaveCount(0);
       await expect(success).toHaveCount(1);
+      await expect(page.getByRole('main').getByRole('status')).toContainText(
+        t('crm.profile.verification.saved', locale)
+      );
+      const back = page.getByRole('link', {
+        name: tCrmForm('crm.profile.action.back', locale),
+        exact: true,
+      });
+      await expect(back).not.toHaveAttribute('aria-current', 'page');
+      await back.click();
       const statusText =
         newStatus === 'VERIFIED'
           ? locale === 'fa'
@@ -600,22 +652,25 @@ for (const locale of ['fa', 'en'] as const) {
             : locale === 'fa'
               ? 'در انتظار تأیید'
               : 'Pending verification';
-      await expect(page.getByRole('heading', { level: 1 })).toContainText(statusText);
+      await expect(page.getByRole('heading', { level: 1 }).locator('..')).toContainText(statusText);
       await expect(page.getByRole('tabpanel')).toContainText(
         newStatus === 'ACTIVE' ? (locale === 'fa' ? 'تأیید نشده' : 'Unverified') : statusText
       );
       expect(bodies).toEqual(Array(2).fill({ action, ...(reason ? { reason } : {}) }));
       if (action === 'reverify') {
         const archive = locale === 'fa' ? 'بایگانی پروفایل' : 'Archive profile';
-        await page.getByRole('button', { name: archive, exact: true }).click();
-        await dialog.locator('textarea').fill('Closure requested');
-        for (const checkbox of await dialog.getByRole('checkbox').all()) await checkbox.check();
-        await dialog.getByRole('button', { name: archive, exact: true }).click();
+        await page.getByRole('link', { name: archive, exact: true }).click();
+        const form = page.getByRole('form', { name: archive });
+        await form.getByRole('textbox').fill('Closure requested');
+        for (const checkbox of await form.getByRole('checkbox').all()) await checkbox.check();
+        await form
+          .getByRole('button', { name: tCrmForm('crm.profile.action.review', locale) })
+          .click();
         await expect(confirm).toBeDisabled();
         await approveRiskConfirmation(page, locale, 'destructive');
         await confirm.click();
         await expect(dialog.getByRole('alert')).toBeVisible();
-        await expect(page).toHaveURL(new RegExp(`/admin/crm/profiles/${id}$`));
+        await expect(page).toHaveURL(new RegExp(`/admin/crm/profiles/${id}/archive$`));
         archiveAllowed = true;
         await confirm.click();
         await expect(page).toHaveURL(/\/admin\/crm\/?$/);
@@ -678,13 +733,13 @@ for (const locale of ['fa', 'en'] as const)
       )
     );
     await page
-      .getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
+      .getByRole('link', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
       .click();
     const email = page.getByLabel(locale === 'fa' ? 'ایمیل' : 'Email', { exact: true });
     const mobile = page.getByLabel(locale === 'fa' ? 'شماره موبایل' : 'Mobile', { exact: true });
     await expect(email).toHaveValue('office@example.test');
     await expect(mobile).toHaveValue('+989121234567');
-    await expect(page.getByText('signin@example.test', { exact: true })).toBeVisible();
+    await expect(page.getByRole('tablist')).toHaveCount(0);
     await expect(page.locator('input[value="signin@example.test"]')).toHaveCount(0);
     await email.fill('broken');
     await mobile.fill('09121234569');
@@ -715,6 +770,9 @@ for (const locale of ['fa', 'en'] as const)
     fail = false;
     await confirm.click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page
+      .getByRole('link', { name: t('crm.profile.returnToProfile', locale), exact: true })
+      .click();
     await expect(page.getByText('new-office@example.test', { exact: true })).toBeVisible();
     await expect(page.getByText('+989121234569', { exact: true })).toBeVisible();
     await expect(page.getByText('signin@example.test', { exact: true })).toBeVisible();
@@ -797,7 +855,7 @@ for (const locale of ['fa', 'en'] as const)
     for (const action of locale === 'fa'
       ? ['ویرایش', 'تغییر اجباری رمز عبور', 'پایان تمام نشست‌ها']
       : ['Edit', 'Force Password Change', 'Expire Sessions']) {
-      const button = page.getByRole('button', { name: action, exact: true });
+      const button = page.getByRole('link', { name: action, exact: true });
       const bounds = await button.boundingBox();
       expect(bounds).not.toBeNull();
       expect(bounds!.x).toBeGreaterThanOrEqual(0);
@@ -1075,12 +1133,17 @@ for (const locale of ['en', 'fa'] as const)
       await link.focus();
       await expect(link).toBeFocused();
       await link.press('Enter');
-      await expect(page).toHaveURL(new RegExp(`profileId=${id}&fieldName=${selected}$`));
+      await expect(page).toHaveURL(
+        new RegExp(`/admin/crm/profiles/${id}/corrections/new\\?fieldName=${selected}$`)
+      );
       await expect(page.locator('#correction-field')).toHaveValue(selected);
       await page.locator('#correction-value').fill('Review required');
       // A field from the other profile type cannot preselect an unsupported correction.
       const unsupported = profileType === 'LEGAL' ? 'national_id' : 'legal_name';
       await page.goto(`/admin/crm/corrections?profileId=${id}&fieldName=${unsupported}`);
+      await expect(page).toHaveURL(
+        new RegExp(`/admin/crm/profiles/${id}/corrections/new\\?fieldName=${unsupported}$`)
+      );
       await expect(page.locator('#correction-field')).toHaveValue(fields[0]!);
       await expect(
         page.locator('#correction-field').locator(`option[value="${unsupported}"]`)
@@ -1153,159 +1216,77 @@ for (const locale of ['fa', 'en'] as const)
       });
       await page.goto(`/admin/crm/profiles/${id}`);
       const archiveLabel = locale === 'fa' ? 'بایگانی پروفایل' : 'Archive profile';
-      const archive = page.getByRole('button', { name: archiveLabel, exact: true });
+      const archive = page.getByRole('link', { name: archiveLabel, exact: true });
       await archive.click();
-      const dialog = page.getByRole('dialog');
-      await expect(dialog).toContainText('Customer profile');
-      await expect(dialog.getByRole('checkbox')).toHaveCount(3);
+      await expect(page).toHaveURL(new RegExp(`/admin/crm/profiles/${id}/archive$`));
+      const heading = page.getByRole('heading', { name: archiveLabel, exact: true });
+      await expect(heading).toBeFocused();
+      const form = page.getByRole('form', { name: archiveLabel });
+      await expect(form).toContainText('Customer profile');
+      await expect(form.getByRole('checkbox')).toHaveCount(3);
       if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
         const viewport = page.viewportSize()!;
         await page.setViewportSize({ width: 320, height: 568 });
-        await expect(dialog).toHaveCSS('opacity', '1');
-        await dialog.evaluate(async (element) => {
-          await Promise.all(element.getAnimations().map((animation) => animation.finished));
-        });
-        const position = await dialog.evaluate((node) => {
-          const { top, bottom } = node.getBoundingClientRect();
-          return { top, bottom, viewportHeight: innerHeight };
-        });
-        expect(position.top).toBeGreaterThanOrEqual(0);
-        expect(position.bottom).toBeLessThanOrEqual(position.viewportHeight);
-        const labels = dialog.locator('label').filter({ has: page.getByRole('checkbox') });
+        const bounds = await form.boundingBox();
+        expect(bounds!.x).toBeGreaterThanOrEqual(0);
+        expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(320);
+        const labels = form.locator('label').filter({ has: page.getByRole('checkbox') });
         for (const label of await labels.all()) {
           const area = await label.boundingBox();
           expect(area?.width).toBeGreaterThanOrEqual(44);
           expect(area?.height).toBeGreaterThanOrEqual(44);
         }
-        const first = dialog.getByRole('checkbox').first();
+        const first = form.getByRole('checkbox').first();
         await labels.first().tap({ position: { x: 4, y: 40 } });
         await expect(first).toBeChecked();
         await first.uncheck();
         await page.setViewportSize(viewport);
       }
-      const reason = dialog.getByRole('textbox');
-      await expect(reason).toHaveAccessibleName(/\S/);
+      const reason = form.getByRole('textbox');
+      const review = form.getByRole('button', {
+        name: tCrmForm('crm.profile.action.review', locale),
+      });
+      await expect(reason).toHaveAccessibleName(t('crm.profile.archivedReason', locale));
       await expect(reason).toHaveAttribute('aria-required', 'true');
-      await reason.fill('  ');
-      for (const checkbox of await dialog.getByRole('checkbox').all()) {
+      await reason.fill('Closure requested');
+      for (const checkbox of await form.getByRole('checkbox').all()) {
+        await expect(review).toBeDisabled();
         await expect(checkbox).toHaveAccessibleName(/\S/);
         await expect(checkbox).toHaveAttribute('aria-required', 'true');
-        await checkbox.check();
-      }
-      await expect(dialog.getByRole('button', { name: archiveLabel, exact: true })).toBeDisabled();
-      await reason.fill('Closure requested');
-      await page.keyboard.press('Escape');
-      await expect(dialog).toHaveCount(0);
-      await expect(archive).toBeFocused();
-      await archive.click();
-      await expect(dialog.getByRole('checkbox').first()).not.toBeChecked();
-      const checks = await dialog.getByRole('checkbox').all();
-      for (const checkbox of checks) {
-        await expect(
-          dialog.getByRole('button', { name: archiveLabel, exact: true })
-        ).toBeDisabled();
         await checkbox.focus();
         await checkbox.press('Space');
         await expect(checkbox).toBeChecked();
       }
-      await expect(reason).toHaveValue('Closure requested');
-      // The button fades from its disabled opacity after the last checkbox.
-      // Measure the enabled state once that transition has finished.
-      await expect
-        .poll(() =>
-          dialog
-            .getByRole('button', { name: archiveLabel, exact: true })
-            .evaluate((node) => getComputedStyle(node).opacity)
-        )
-        .toBe('1');
+      await reason.fill('  ');
+      await expect(review).toBeDisabled();
+      await reason.fill('Closure requested');
+      await expect(review).toBeEnabled();
       await expect
         .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
         .toBe(darkMode);
-      // Keyboard interaction can finish before the reopened popup fades in.
-      // Axe must measure the settled popup and backdrop, not their animation frames.
-      await expect
-        .poll(() =>
-          dialog.evaluate((node) => {
-            const overlay = document.querySelector('[data-slot="dialog-overlay"]');
-            return [node, ...(overlay ? [overlay] : [])].every(
-              (element) =>
-                getComputedStyle(element).opacity === '1' &&
-                element
-                  .getAnimations({ subtree: true })
-                  .every((animation) => animation.playState === 'finished')
-            );
-          })
-        )
-        .toBe(true);
+      await expect.poll(() => review.evaluate((node) => getComputedStyle(node).opacity)).toBe('1');
       const a11y = await new AxeBuilder({ page })
-        .include('[role="dialog"]')
+        .include('main')
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
         .analyze();
       expect(a11y.violations).toEqual([]);
-      // Axe can leave wrapped transparent descriptions unresolved on mobile.
-      // Verify only that known node using its rendered colors and unobscured text.
-      for (const item of a11y.incomplete.filter((item) => item.id === 'color-contrast')) {
-        expect(item.nodes).toHaveLength(1);
-        expect(item.nodes[0]!.html).toContain('data-slot="dialog-description"');
-        const measured = await dialog
-          .locator('[data-slot="dialog-description"]')
-          .evaluate((node) => {
-            const popup = node.closest('[role="dialog"]')!;
-            const canvas = document.createElement('canvas');
-            canvas.width = canvas.height = 1;
-            const ctx = canvas.getContext('2d')!;
-            const color = (value: string) => {
-              ctx.clearRect(0, 0, 1, 1);
-              ctx.fillStyle = value;
-              ctx.fillRect(0, 0, 1, 1);
-              return Array.from(ctx.getImageData(0, 0, 1, 1).data);
-            };
-            const fg = color(getComputedStyle(node).color),
-              bg = color(getComputedStyle(popup).backgroundColor);
-            const luminance = (rgb: number[]) =>
-              rgb.slice(0, 3).reduce((sum, value, index) => {
-                const s = value / 255;
-                return (
-                  sum +
-                  [0.2126, 0.7152, 0.0722][index]! *
-                    (s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4)
-                );
-              }, 0);
-            const f = luminance(fg),
-              b = luminance(bg);
-            const range = document.createRange();
-            range.selectNodeContents(node);
-            const unobscured = Array.from(range.getClientRects()).every((rect) =>
-              node.contains(
-                document.elementFromPoint(
-                  rect.x + Math.min(10, rect.width / 2),
-                  rect.y + rect.height / 2
-                )
-              )
-            );
-            let opaque = true;
-            for (let ancestor: Element | null = node; ancestor; ancestor = ancestor.parentElement)
-              if (getComputedStyle(ancestor).opacity !== '1') opaque = false;
-            return {
-              ratio: (Math.max(f, b) + 0.05) / (Math.min(f, b) + 0.05),
-              fg,
-              bg,
-              unobscured,
-              opaque,
-            };
-          });
-        expect(measured.fg[3]).toBe(255);
-        expect(measured.bg[3]).toBe(255);
-        expect(measured.opaque).toBe(true);
-        expect(measured.unobscured).toBe(true);
-        expect(measured.ratio).toBeGreaterThanOrEqual(4.5);
-        await testInfo.attach('resolved-description-contrast', {
-          contentType: 'application/json',
-          body: JSON.stringify(measured),
-        });
-      }
-      const bounds = await dialog.boundingBox();
-      expect(bounds!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+      expect(a11y.incomplete.find((item) => item.id === 'color-contrast')).toBeUndefined();
+      const dialog = page.getByRole('dialog');
+      await review.click();
+      await expect(dialog).toContainText('Customer profile');
+      await expect(dialog).toContainText('Closure requested');
+      await page.keyboard.press('Escape');
+      await expect(dialog).toHaveCount(0);
+      await expect(reason).toHaveValue('Closure requested');
+      for (const checkbox of await form.getByRole('checkbox').all())
+        await expect(checkbox).toBeChecked();
+      await review.click();
+      await expect(dialog).toBeVisible();
+      await dialog.evaluate(async (element) => {
+        await Promise.all(element.getAnimations().map((animation) => animation.finished));
+      });
+      const expanded = await dialog.boundingBox();
+      expect(expanded!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
       const titleBounds = await dialog.getByRole('heading').boundingBox();
       const closeBounds = await dialog
         .getByRole('button', { name: 'Close', exact: true })
@@ -1317,7 +1298,6 @@ for (const locale of ['fa', 'en'] as const)
         path: `/tmp/barghsa-archive-dialog-${locale}-${darkMode ? 'dark' : 'light'}-${testInfo.project.name}.png`,
       });
       expect(bodies).toEqual([]);
-      await dialog.getByRole('button', { name: archiveLabel, exact: true }).click();
       const confirm = dialog.getByRole('button', {
         name: locale === 'fa' ? 'تأیید' : 'Confirm',
         exact: true,
@@ -1342,7 +1322,7 @@ for (const locale of ['fa', 'en'] as const)
         reply = { status: 200, json };
         await confirm.click();
         await expect(dialog.getByRole('alert')).toBeVisible();
-        await expect(page).toHaveURL(new RegExp(`/admin/crm/profiles/${id}$`));
+        await expect(page).toHaveURL(new RegExp(`/admin/crm/profiles/${id}/archive$`));
       }
       reply = {
         status: 200,
@@ -1637,9 +1617,9 @@ for (const locale of ['fa', 'en'] as const)
       return route.fulfill({ json: { ...current, updated: true } });
     });
     await page.goto(`/admin/crm/profiles/${id}`);
-    // Editing from Overview opens the fields; hidden tabs must retain this same draft.
+    // Editing from Overview opens the dedicated editor.
     await page
-      .getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
+      .getByRole('link', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
       .click();
     const email = page.getByLabel(locale === 'fa' ? 'ایمیل' : 'Email', { exact: true });
     const title = page.getByLabel(t('crm.profile.field.title', locale), { exact: true });
@@ -1660,9 +1640,8 @@ for (const locale of ['fa', 'en'] as const)
     expect(writes).toEqual([]);
     await email.fill('draft@example.test');
     await title.fill('Draft title');
-    await page
-      .getByRole('tab', { name: locale === 'fa' ? 'خلاصه' : 'Overview', exact: true })
-      .click();
+    await expect(page).toHaveURL(`/admin/crm/profiles/${id}/edit`);
+    await expect(page.getByRole('tablist')).toHaveCount(0);
     const save = page.getByRole('button', {
       name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
       exact: true,
@@ -1693,8 +1672,11 @@ for (const locale of ['fa', 'en'] as const)
     await expect(title).toHaveValue('Draft title');
     await confirm.click();
     await expect(dialog).toHaveCount(0);
+    await page
+      .getByRole('link', { name: t('crm.profile.returnToProfile', locale), exact: true })
+      .click();
     await expect(page.getByText('corrected@example.test', { exact: true })).toBeVisible();
-    await expect(page.getByText('Draft title', { exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Draft title', exact: true })).toBeVisible();
     expect(writes).toHaveLength(4);
     expect(writes[0]).toEqual(writes[1]);
     expect(writes[2]).toEqual(writes[3]);

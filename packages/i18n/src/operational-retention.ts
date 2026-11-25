@@ -3,8 +3,15 @@ import type { Locale } from './index.js';
 
 const fa: Record<string, string> = {
   'admin.retention.title': 'نگهداری داده‌های پایش',
+  'admin.retention.editTitle': 'ویرایش سیاست نگهداری',
   'admin.retention.description': 'مدت نگهداری گزارش‌ها، سنجه‌ها و ردگیری‌های پایش را تنظیم کنید.',
   'admin.retention.savedPolicy': 'سیاست ذخیره‌شده',
+  'admin.retention.savedVersion': 'نسخه ذخیره‌شده {version}',
+  'admin.retention.savedDays': 'مدت ذخیره‌شده {days} روز',
+  'admin.retention.logsAndMetrics': 'گزارش‌ها و سنجه‌ها',
+  'admin.retention.traces': 'ردگیری‌ها',
+  'admin.retention.days': '{days} روز',
+  'admin.retention.proposedPeriods': 'مدت‌های پیشنهادی',
   'admin.retention.export': 'دانلود سیاست ذخیره‌شده',
   'admin.retention.applyHelp':
     'مسئول زیرساخت باید نسخهٔ ذخیره‌شده را روی سرویس‌های پایش اعمال و بررسی کند.',
@@ -14,6 +21,9 @@ const fa: Record<string, string> = {
   'admin.retention.ordinaryTracesDays': 'ردگیری‌های عادی (روز)',
   'admin.retention.priorityTracesDays': 'ردگیری‌های کند یا دارای خطا (روز)',
   'admin.retention.bounds': 'عدد صحیحی بین {min} و {max} وارد کنید.',
+  'admin.retention.allowedDays': 'بازه مجاز: {min} تا {max} روز',
+  'admin.retention.traceHelp':
+    'برای بررسی رخدادها، ردگیری‌های کند یا دارای خطا را دست‌کم به‌اندازه ردگیری‌های عادی نگه دارید.',
   'admin.retention.range':
     'مدت نگهداری ردگیری‌های کند یا دارای خطا باید حداقل برابر با ردگیری‌های عادی باشد.',
   'admin.retention.refresh': 'تازه‌سازی',
@@ -48,8 +58,15 @@ const fa: Record<string, string> = {
 
 const en: Record<string, string> = {
   'admin.retention.title': 'Monitoring retention',
+  'admin.retention.editTitle': 'Edit retention policy',
   'admin.retention.description': 'Set retention periods for operational logs, metrics, and traces.',
   'admin.retention.savedPolicy': 'Saved policy',
+  'admin.retention.savedVersion': 'Saved version {version}',
+  'admin.retention.savedDays': 'Saved period · {days} days',
+  'admin.retention.logsAndMetrics': 'Logs and metrics',
+  'admin.retention.traces': 'Traces',
+  'admin.retention.days': '{days} days',
+  'admin.retention.proposedPeriods': 'Proposed periods',
   'admin.retention.export': 'Download saved policy',
   'admin.retention.applyHelp':
     'An infrastructure operator applies and verifies the saved version on the monitoring services.',
@@ -60,6 +77,9 @@ const en: Record<string, string> = {
   'admin.retention.ordinaryTracesDays': 'Ordinary traces (days)',
   'admin.retention.priorityTracesDays': 'Error and slow traces (days)',
   'admin.retention.bounds': 'Enter a whole number between {min} and {max}.',
+  'admin.retention.allowedDays': 'Allowed range: {min} to {max} days',
+  'admin.retention.traceHelp':
+    'Keep error and slow traces for at least as long as ordinary traces so you can investigate incidents.',
   'admin.retention.range': 'Keep error and slow traces at least as long as ordinary traces.',
   'admin.retention.refresh': 'Refresh',
   'admin.retention.retry': 'Try again',

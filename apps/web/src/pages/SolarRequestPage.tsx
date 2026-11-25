@@ -1,4 +1,5 @@
 import { toast } from '../lib/toast-api.js';
+import { takeSavedOrderAddress } from '../lib/order-address-handoff.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { SubmissionRecovery } from '../components/SubmissionRecovery.js';
 import { ConfirmationFields } from '@barghsa/ui';
@@ -10,11 +11,24 @@ import { queryKeys } from '../lib/query-keys.js';
 import { useOwnedManualServerRead } from '../hooks/useServerQuery.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
-import { StepReviewPage } from '../components/StepReviewPage.js';
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { SolarRequestReview } from '../components/SolarRequestReview.js';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ChevronDownIcon, PlusIcon } from 'lucide-react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { LoadingStatus, Button, Card, CardContent, Input, Label, NativeSelect } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  Card,
+  CardContent,
+  DatePicker,
+  Input,
+  Label,
+  NativeSelect,
+  Textarea,
+  datePickerCalendarDate,
+} from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
+import { wizardActionSurface } from '../components/FormWizard.js';
 import { ValidatedFormWizard } from '../components/ValidatedFormWizard.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { z } from 'zod';
@@ -23,17 +37,19 @@ import { useWizardDraftProtection } from '../hooks/useWizardDraftProtection.js';
 import { useReviewedSubmission } from '../hooks/useReviewedSubmission.js';
 import { sameFormData, uuidReference } from '../lib/form-receipt.js';
 import { tSolar } from '@barghsa/i18n/solar';
+import { solarIntakeText } from '@barghsa/i18n/solar-intake';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { useFormDraft, type DraftSchema } from '../hooks/useFormDraft.js';
 import {
+  defaultIntakeAddressId,
   readIntakeProfile,
   readIntakeAddresses,
   type IntakeAddress as Address,
 } from '../lib/service-intake-records.js';
 
-interface SolarReview {
+export interface SolarReview {
   hash: string;
   data: {
     submission: Record<string, string | number | boolean>;
@@ -103,24 +119,46 @@ function completionDateValid(value: string) {
     value <= new Date().toISOString().slice(0, 10)
   );
 }
+
+const persianCompletionDate = new Intl.DateTimeFormat('fa-IR', {
+  calendar: 'persian',
+  timeZone: 'UTC',
+  dateStyle: 'long',
+});
+const gregorianCompletionDate = new Intl.DateTimeFormat('en-US', {
+  calendar: 'gregory',
+  timeZone: 'UTC',
+  dateStyle: 'long',
+});
+const persianAge = new Intl.NumberFormat('fa-IR');
+
+function normalizeQuantity(value: string) {
+  return normalizeProfileDigits(value).replace(/٫/g, '.');
+}
+function quantityValue(value: string) {
+  const normalized = normalizeQuantity(value);
+  return /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(normalized)
+    ? Number(normalized)
+    : NaN;
+}
 function unitsValid(value: string) {
-  return Number.isInteger(Number(value)) && Number(value) >= 1 && Number(value) <= 100000;
+  const units = quantityValue(value);
+  return Number.isInteger(units) && units >= 1 && units <= 100000;
 }
 function areaValid(value: string) {
-  return (
-    Number(value) > 0 &&
-    Number(value) <= 1000000 &&
-    Number.isInteger(Math.round(Number(value) * 10000) / 100)
-  );
+  const area = quantityValue(value);
+  return area >= 0.01 && area <= 1000000 && Math.round(area * 100) / 100 === area;
 }
 
 const LeaveDialog = lazy(() => import('../components/WizardLeaveDialog.js'));
+const solarChoice =
+  'flex min-w-0 cursor-pointer items-start gap-3 rounded-lg border px-3 py-2.5 hover:bg-muted/35 has-checked:border-primary has-checked:bg-primary/5';
 
 export function SolarRequestPage() {
   const navigate = useNavigate();
   const locale = useLocale();
   const copy = (key: string) => tSolar(key, locale);
-  const wizard = useWizardStep('/solar/requests/new', 4);
+  const wizard = useWizardStep('/solar/requests/new', 3);
   const { step } = wizard;
   const [profileId, setProfileId] = useState('');
   const actor = useAccountUser();
@@ -150,22 +188,23 @@ export function SolarRequestPage() {
         agreementAccepted: z.boolean(),
       })
       .superRefine((value, context) => {
-        const invalid = (name: keyof typeof value) =>
-          context.addIssue({ code: 'custom', path: [name], message: invalidField });
+        const invalid = (name: keyof typeof value, message = invalidField) =>
+          context.addIssue({ code: 'custom', path: [name], message });
         if (!addresses.some((address) => address.id === value.siteAddressId))
           invalid('siteAddressId');
         if (value.buildingType === 'building_apartment') {
           if (!completionDateValid(value.buildingCompletionDate)) invalid('buildingCompletionDate');
           if (value.propertyForm === 'apartment' && !unitsValid(value.totalUnits))
-            invalid('totalUnits');
+            invalid('totalUnits', solarIntakeText('unitsFormat', locale));
         } else {
-          if (!areaValid(value.usableAreaSqm)) invalid('usableAreaSqm');
+          if (!areaValid(value.usableAreaSqm))
+            invalid('usableAreaSqm', solarIntakeText('areaFormat', locale));
         }
         if (
           value.gridType === 'on_grid' &&
           !/^[0-9]{6,13}$/.test(normalizeProfileDigits(value.billIdentifier))
         )
-          invalid('billIdentifier');
+          invalid('billIdentifier', solarIntakeText('billFormat', locale));
         if (!value.agreementAccepted) invalid('agreementAccepted');
       }),
     {
@@ -190,11 +229,29 @@ export function SolarRequestPage() {
   const [structuralFrame, setStructuralFrame] = fields.field('structuralFrame');
   const [buildingCompletionDate, setBuildingCompletionDate] =
     fields.field('buildingCompletionDate');
+  const { onBlur: blurCompletionDate, ...completionDateField } =
+    fields.bind('buildingCompletionDate');
+  const [manualCompletionDate, setManualCompletionDate] = useState(false);
+  const focusCompletionDate = useRef(false);
+  useEffect(() => {
+    if (!focusCompletionDate.current) return;
+    focusCompletionDate.current = false;
+    document.getElementById('solar-completion')?.focus();
+  }, [manualCompletionDate]);
+  const completionDateAttributes = {
+    ...completionDateField,
+    'aria-required': true,
+    'aria-describedby': [completionDateField['aria-describedby'], 'solar-completion-hint']
+      .filter(Boolean)
+      .join(' '),
+  };
   const [totalUnits, setTotalUnits] = fields.field('totalUnits');
   const [siteCategory, setSiteCategory] = fields.field('siteCategory');
   const [installationSurface, setInstallationSurface] = fields.field('installationSurface');
   const [usableAreaSqm, setUsableAreaSqm] = fields.field('usableAreaSqm');
   const [siteAddressId, setSiteAddressId] = fields.field('siteAddressId');
+  const selectedSiteAddress = addresses.find((address) => address.id === siteAddressId);
+  const siteAddressField = fields.bind('siteAddressId');
   const [siteRelationship, setSiteRelationship] = fields.field('siteRelationship');
   const [siteDescription, setSiteDescription] = fields.field('siteDescription');
   const [gridType, setGridType] = fields.field('gridType');
@@ -222,6 +279,10 @@ export function SolarRequestPage() {
     save: saveDraft,
     retry: retryDraft,
   } = useFormDraft(draftKey, solarDraftSchema, 4);
+  const saveWizardDraft = useCallback(
+    (target: number, data: SolarDraft) => saveDraft(target === 3 ? 4 : target, data),
+    [saveDraft]
+  );
 
   useEffect(() => {
     const controller = new AbortController();
@@ -248,7 +309,7 @@ export function SolarRequestPage() {
         if (controller.signal.aborted) return;
         setProfileId(id);
         setAddresses(siteAddresses);
-        setSiteAddressId((current) => current || siteAddresses[0]?.id || '');
+        setSiteAddressId((current) => current || defaultIntakeAddressId(siteAddresses));
       })
       .catch(() => {
         if (!controller.signal.aborted) setLoadError(true);
@@ -297,7 +358,7 @@ export function SolarRequestPage() {
     data: currentDraft,
     step,
     ready: draftHydrated && !loading && !draftLoading && !draftError,
-    saveDraft,
+    saveDraft: saveWizardDraft,
     go: wizard.go,
     unconfirmed: submission.unconfirmed,
   });
@@ -314,6 +375,7 @@ export function SolarRequestPage() {
   useEffect(() => {
     if (!draft || draftHydrated || loading) return;
     const saved = draft.data;
+    const returnedAddress = takeSavedOrderAddress(profileId, addresses);
     if (saved) {
       setBuildingType(saved.buildingType);
       setPropertyForm(saved.propertyForm);
@@ -323,16 +385,16 @@ export function SolarRequestPage() {
       setSiteCategory(saved.siteCategory);
       setInstallationSurface(saved.installationSurface);
       setUsableAreaSqm(saved.usableAreaSqm);
-      setSiteAddressId(saved.siteAddressId || addresses[0]?.id || '');
+      setSiteAddressId(
+        returnedAddress ?? (saved.siteAddressId || defaultIntakeAddressId(addresses))
+      );
       setSiteRelationship(saved.siteRelationship);
       setSiteDescription(saved.siteDescription);
       setGridType(saved.gridType);
       setBillIdentifier(saved.billIdentifier);
-    }
+    } else if (returnedAddress) setSiteAddressId(returnedAddress);
     // Consent and the server review are renewed in every resumed session.
-    const restored = saved
-      ? Math.min(draft.currentStep, !propertyValid(saved) ? 1 : !gridValid(saved) ? 2 : 3)
-      : 1;
+    const restored = saved && propertyValid(saved) ? Math.min(draft.currentStep, 2) : 1;
     wizard.restore(restored);
     protection.markSaved(saved ?? currentDraft, restored);
     setDraftHydrated(true);
@@ -340,6 +402,7 @@ export function SolarRequestPage() {
     draft,
     draftHydrated,
     loading,
+    profileId,
     currentDraft,
     wizard.restore,
     protection.markSaved,
@@ -350,7 +413,7 @@ export function SolarRequestPage() {
     if (review && reviewFingerprint.current !== fingerprint) {
       setReview(null);
       setReviewInput(null);
-      wizard.restore(Math.min(step, 3));
+      wizard.restore(Math.min(step, 2));
     }
   }, [fingerprint, review, step, wizard.restore]);
 
@@ -387,18 +450,19 @@ export function SolarRequestPage() {
   }
   async function leaveForAddress() {
     if (await saveNow())
-      await navigate({ to: '/settings/addresses', search: { returnTo: '/solar/requests/new' } });
+      await navigate({
+        to: '/settings/addresses/new',
+        search: { returnTo: '/solar/requests/new' },
+      });
   }
   const canNext =
     step === 1
       ? propertyValid(currentDraft)
-      : step === 2
-        ? gridValid(currentDraft)
-        : step === 3 && propertyValid(currentDraft) && gridValid(currentDraft) && agreementAccepted;
+      : step === 2 && propertyValid(currentDraft) && gridValid(currentDraft) && agreementAccepted;
   async function advanceStep() {
     if (!canNext) return;
-    if (step < 3) {
-      await protection.save(step + 1);
+    if (step === 1) {
+      await protection.save(2);
       return;
     }
     await protection.run(async (current, alive) => {
@@ -421,13 +485,13 @@ export function SolarRequestPage() {
               propertyForm,
               structuralFrame,
               buildingCompletionDate,
-              ...(propertyForm === 'apartment' ? { totalUnits: Number(totalUnits) } : {}),
+              ...(propertyForm === 'apartment' ? { totalUnits: quantityValue(totalUnits) } : {}),
             }
           : {
               buildingType,
               siteCategory,
               installationSurface,
-              usableAreaSqm: Number(usableAreaSqm),
+              usableAreaSqm: quantityValue(usableAreaSqm),
               siteRelationship,
               ...(siteDescription.trim() ? { siteDescription: siteDescription.trim() } : {}),
             };
@@ -485,17 +549,17 @@ export function SolarRequestPage() {
         )
           throw new Error('Invalid review');
         try {
-          await saveDraft(4, currentDraft);
+          await saveWizardDraft(3, currentDraft);
         } catch (error) {
           if (current()) setDraftSaveError(true);
           throw error;
         }
         if (!current()) return;
-        protection.markSaved(currentDraft, 4);
+        protection.markSaved(currentDraft, 3);
         reviewFingerprint.current = fingerprint;
         setReview(receipt);
         setReviewInput(input);
-        await protection.move(4, step);
+        await protection.move(3, step);
       } catch {
         if (current()) {
           protection.completed.current = false;
@@ -553,13 +617,20 @@ export function SolarRequestPage() {
     await sendRequest({ ...reviewInput, expectedReviewHash: review.hash });
   }
 
-  const age = buildingCompletionDate
+  const age = completionDateValid(buildingCompletionDate)
     ? Math.max(0, new Date().getFullYear() - Number(buildingCompletionDate.slice(0, 4)))
     : null;
+  const localizedCompletion =
+    age !== null
+      ? (locale === 'fa' ? persianCompletionDate : gregorianCompletionDate).format(
+          new Date(buildingCompletionDate)
+        )
+      : null;
+  const reviewedCompletion = review?.data.submission.buildingCompletionDate;
   const stages = ['requestStage', 'uploadStage', 'verifyStage', 'postalStage', 'finalStage'];
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div className="mx-auto max-w-3xl space-y-4 py-3 sm:py-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       {protection.blocker.status === 'blocked' && (
         <Suspense fallback={<p role="status">{copy('loading')}</p>}>
           <LeaveDialog
@@ -583,8 +654,10 @@ export function SolarRequestPage() {
         <Link to="/solar/requests" className="touch-action text-sm text-primary underline">
           {copy('myRequests')}
         </Link>
-        <h1 className="text-3xl font-semibold">{copy('title')}</h1>
-        <p className="text-muted-foreground">{copy('instruction')}</p>
+        <h1 className="text-2xl font-semibold sm:text-3xl">{copy('title')}</h1>
+        {step === 1 && (
+          <p className="text-sm text-muted-foreground">{copy('uploadAfterRequest')}</p>
+        )}
       </div>
       {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {loadError && (
@@ -678,17 +751,23 @@ export function SolarRequestPage() {
               ...(gridType === 'on_grid'
                 ? [{ name: 'billIdentifier' as const, label: copy('billIdentifier') }]
                 : []),
+              { name: 'agreementAccepted', label: copy('agreement') },
             ],
-            [{ name: 'agreementAccepted', label: copy('agreement') }],
             [],
           ]}
           step={step}
-          steps={['wizardProperty', 'gridType', 'stages', 'reviewTitle'].map(copy)}
+          compactProgress
+          actionsClassName={
+            step < 3
+              ? `${wizardActionSurface} max-lg:sticky max-lg:bottom-0 max-lg:z-20 [&>button]:min-h-11`
+              : wizardActionSurface
+          }
+          steps={['wizardProperty', 'gridType', 'reviewTitle'].map(copy)}
           ariaLabel={copy('title')}
           backLabel={t('electricity.order.back', locale)}
           saveLabel={copy('saveDraft')}
           savingLabel={t('electricity.order.savingDraft', locale)}
-          nextLabel={t('electricity.order.next', locale)}
+          nextLabel={step === 2 ? copy('reviewTitle') : t('electricity.order.next', locale)}
           submitLabel={copy('submit')}
           submittingLabel={copy('submitting')}
           saving={protection.busy && !submitting}
@@ -714,7 +793,7 @@ export function SolarRequestPage() {
         >
           {(pending) => (
             <fieldset
-              className="space-y-6 min-w-0"
+              className="min-w-0 space-y-3"
               disabled={
                 pending || protection.busy || protection.completed.current || submission.unconfirmed
               }
@@ -725,40 +804,39 @@ export function SolarRequestPage() {
                     role="radiogroup"
                     aria-labelledby="solar-building-type-label"
                     aria-required="true"
-                    className="grid min-w-0 gap-3 sm:grid-cols-2"
+                    className="grid min-w-0 gap-2 min-[375px]:grid-cols-2"
                   >
                     <legend id="solar-building-type-label" className="sr-only">
                       {copy('instruction')}
                     </legend>
-                    <p aria-hidden="true" className="break-words font-semibold sm:col-span-2">
+                    <p aria-hidden="true" className="col-span-full text-sm font-semibold">
                       {copy('instruction')}
                     </p>
                     {(['building_apartment', 'non_household'] as const).map((type) => (
-                      <label
-                        key={type}
-                        className={`cursor-pointer rounded-xl border p-4 ${buildingType === type ? 'border-primary bg-primary/5' : ''}`}
-                      >
+                      <label key={type} className={solarChoice}>
                         <input
                           type="radio"
                           {...fields.bind('buildingType')}
                           value={type}
                           checked={buildingType === type}
                           onChange={() => setBuildingType(type)}
-                          className="me-2"
+                          className="mt-0.5 size-4 shrink-0 accent-primary"
                         />
-                        <span className="font-medium">
-                          {copy(type === 'building_apartment' ? 'building' : 'nonHousehold')}
-                        </span>
-                        <span className="mt-1 block text-sm text-muted-foreground">
-                          {copy(
-                            type === 'building_apartment' ? 'buildingHelp' : 'nonHouseholdHelp'
-                          )}
+                        <span className="min-w-0 space-y-1">
+                          <span className="block text-sm font-medium">
+                            {copy(type === 'building_apartment' ? 'building' : 'nonHousehold')}
+                          </span>
+                          <span className="block text-xs text-muted-foreground">
+                            {copy(
+                              type === 'building_apartment' ? 'buildingHelp' : 'nonHouseholdHelp'
+                            )}
+                          </span>
                         </span>
                       </label>
                     ))}
                   </fieldset>
-                  <Card>
-                    <CardContent className="space-y-4 pt-6">
+                  <Card size="sm">
+                    <CardContent className="grid min-w-0 items-start gap-3 min-[375px]:grid-cols-2">
                       {buildingType === 'building_apartment' ? (
                         <>
                           <div className="space-y-1">
@@ -798,38 +876,110 @@ export function SolarRequestPage() {
                               ))}
                             </NativeSelect>
                           </div>
-                          <div>
+                          <div className="min-w-0 space-y-1">
                             <Label htmlFor="solar-completion">{copy('completionDate')}</Label>
-                            <Input
-                              id="solar-completion"
-                              type="date"
-                              {...fields.bind('buildingCompletionDate')}
-                              value={buildingCompletionDate}
-                              max={new Date().toISOString().slice(0, 10)}
-                              onChange={(e) => setBuildingCompletionDate(e.target.value)}
-                              required
-                              aria-required="true"
-                            />
-                          </div>
-                          {age !== null && (
-                            <p className="text-sm text-muted-foreground">
-                              {copy('buildingAge').replace('{years}', String(age))}
+                            {manualCompletionDate ? (
+                              <Input
+                                id="solar-completion"
+                                type="date"
+                                dir="ltr"
+                                lang="en"
+                                className="w-full min-w-0"
+                                {...completionDateAttributes}
+                                onBlur={blurCompletionDate}
+                                value={buildingCompletionDate}
+                                max={new Date().toISOString().slice(0, 10)}
+                                onChange={(event) => setBuildingCompletionDate(event.target.value)}
+                                required
+                              />
+                            ) : (
+                              <DatePicker
+                                id="solar-completion"
+                                label={copy('completionDate')}
+                                locale={locale}
+                                timezone="UTC"
+                                showYearSelect
+                                maxDate={new Date()}
+                                value={datePickerCalendarDate(buildingCompletionDate, 'UTC')}
+                                onChange={(date) =>
+                                  setBuildingCompletionDate(date?.toISOString().slice(0, 10) ?? '')
+                                }
+                                triggerProps={completionDateAttributes}
+                                onBlur={blurCompletionDate}
+                                className="min-h-11 border-border"
+                              />
+                            )}
+                            <p
+                              id="solar-completion-hint"
+                              className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-xs text-muted-foreground"
+                            >
+                              {localizedCompletion && (!manualCompletionDate || locale === 'fa') ? (
+                                <time
+                                  dateTime={buildingCompletionDate}
+                                  className={
+                                    manualCompletionDate ? 'font-medium text-foreground' : 'sr-only'
+                                  }
+                                >
+                                  {localizedCompletion}
+                                </time>
+                              ) : (
+                                age === null &&
+                                solarIntakeText(
+                                  manualCompletionDate
+                                    ? 'completionDateFormat'
+                                    : 'completionDateCalendar',
+                                  locale
+                                )
+                              )}
+                              {age !== null && (
+                                <span>
+                                  {copy('buildingAge').replace(
+                                    '{years}',
+                                    locale === 'fa' ? persianAge.format(age) : String(age)
+                                  )}
+                                </span>
+                              )}
                             </p>
-                          )}
+                            <button
+                              type="button"
+                              className="min-h-8 rounded-sm text-xs font-medium text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-ring pointer-coarse:min-h-11"
+                              onClick={() => {
+                                focusCompletionDate.current = true;
+                                setManualCompletionDate((manual) => !manual);
+                              }}
+                            >
+                              {solarIntakeText(
+                                manualCompletionDate
+                                  ? 'completionDatePicker'
+                                  : 'completionDateManual',
+                                locale
+                              )}
+                            </button>
+                          </div>
                           {propertyForm === 'apartment' && (
-                            <div>
+                            <div className="min-w-0 space-y-1">
                               <Label htmlFor="solar-units">{copy('totalUnits')}</Label>
                               <Input
                                 id="solar-units"
-                                type="number"
-                                min={1}
-                                max={100000}
+                                inputMode="numeric"
+                                dir="ltr"
+                                maxLength={6}
                                 {...fields.bind('totalUnits')}
+                                aria-describedby={
+                                  fields.form.getFieldState('totalUnits').invalid
+                                    ? fields.errorId('totalUnits')
+                                    : 'solar-units-hint'
+                                }
                                 value={totalUnits}
-                                onChange={(e) => setTotalUnits(e.target.value)}
+                                onChange={(e) =>
+                                  setTotalUnits(normalizeProfileDigits(e.target.value))
+                                }
                                 required
                                 aria-required="true"
                               />
+                              <p id="solar-units-hint" className="text-xs text-muted-foreground">
+                                {solarIntakeText('unitsFormat', locale)}
+                              </p>
                             </div>
                           )}
                         </>
@@ -875,20 +1025,29 @@ export function SolarRequestPage() {
                               ))}
                             </NativeSelect>
                           </div>
-                          <div>
-                            <Label htmlFor="solar-area">{copy('usableArea')}</Label>
+                          <div className="min-w-0 space-y-1">
+                            <Label htmlFor="solar-area" className="min-[375px]:max-sm:text-xs">
+                              {copy('usableArea')}
+                            </Label>
                             <Input
                               id="solar-area"
-                              type="number"
-                              min="0.01"
-                              step="0.01"
-                              max={1000000}
+                              inputMode="decimal"
+                              dir="ltr"
+                              maxLength={20}
                               {...fields.bind('usableAreaSqm')}
+                              aria-describedby={
+                                fields.form.getFieldState('usableAreaSqm').invalid
+                                  ? fields.errorId('usableAreaSqm')
+                                  : 'solar-area-hint'
+                              }
                               value={usableAreaSqm}
-                              onChange={(e) => setUsableAreaSqm(e.target.value)}
+                              onChange={(e) => setUsableAreaSqm(normalizeQuantity(e.target.value))}
                               required
                               aria-required="true"
                             />
+                            <p id="solar-area-hint" className="text-xs text-muted-foreground">
+                              {solarIntakeText('areaExample', locale)}
+                            </p>
                           </div>
                           <div className="space-y-1">
                             <Label htmlFor="solar-site-relationship">{copy('relationship')}</Label>
@@ -911,263 +1070,224 @@ export function SolarRequestPage() {
                               ))}
                             </NativeSelect>
                           </div>
-                          <label className="block space-y-1">
-                            <span>{copy('description')}</span>
-                            <textarea
-                              className="min-h-24 w-full rounded-md border bg-background p-2"
+                          <details
+                            open={siteDescription !== '' || undefined}
+                            className="group col-span-full border-t pt-1"
+                          >
+                            <summary className="flex min-h-11 w-fit cursor-pointer items-center gap-1.5 rounded-sm text-sm font-medium text-primary">
+                              {copy('description')}
+                              <ChevronDownIcon
+                                aria-hidden="true"
+                                className="size-4 motion-safe:transition-transform group-open:rotate-180"
+                              />
+                            </summary>
+                            <Textarea
+                              id="solar-site-description"
+                              aria-label={copy('description')}
+                              rows={2}
+                              className="min-h-14"
                               maxLength={2000}
+                              placeholder={solarIntakeText('descriptionExample', locale)}
                               {...fields.bind('siteDescription')}
                               value={siteDescription}
                               onChange={(e) => setSiteDescription(e.target.value)}
                             />
-                          </label>
+                          </details>
                         </>
                       )}
-                      <div className="space-y-1">
-                        <Label htmlFor="solar-site-address-id">{copy('address')}</Label>
+                      <div className="col-span-full min-w-0 space-y-1 border-t pt-2">
+                        <div className="flex flex-wrap items-center justify-between gap-x-2">
+                          <Label htmlFor="solar-site-address-id">{copy('address')}</Label>
+                          <Link
+                            className="inline-flex min-h-11 w-fit items-center gap-1.5 rounded-sm text-sm font-medium text-primary hover:underline"
+                            to="/settings/addresses/new"
+                            search={{ returnTo: '/solar/requests/new' }}
+                            aria-disabled={protection.busy}
+                            onClick={(event) => {
+                              event.preventDefault();
+                              if (!protection.busy) void leaveForAddress();
+                            }}
+                          >
+                            <PlusIcon className="size-4 shrink-0" aria-hidden="true" />
+                            {copy(addresses.length ? 'addAddress' : 'noAddresses')}
+                          </Link>
+                        </div>
                         <NativeSelect
                           id="solar-site-address-id"
                           className="w-full"
-                          {...fields.bind('siteAddressId')}
+                          {...siteAddressField}
                           value={siteAddressId}
                           onChange={(e) => setSiteAddressId(e.target.value)}
                           required
                           aria-required="true"
+                          aria-describedby={
+                            [
+                              siteAddressField['aria-describedby'],
+                              selectedSiteAddress && 'solar-site-address-postal',
+                            ]
+                              .filter(Boolean)
+                              .join(' ') || undefined
+                          }
                         >
-                          <option value="">—</option>
+                          <option value="">{solarIntakeText('chooseSavedAddress', locale)}</option>
                           {addresses.map((address) => (
                             <option key={address.id} value={address.id}>
-                              {address.fullAddress}
+                              {`${address.fullAddress} · \u2066${address.postalCode}\u2069`}
                             </option>
                           ))}
                         </NativeSelect>
+                        {selectedSiteAddress && (
+                          <p
+                            id="solar-site-address-postal"
+                            className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground"
+                          >
+                            <span>
+                              {t('electricity.order.postalCode', locale)}{' '}
+                              <bdi dir="ltr" className="font-medium text-foreground">
+                                {selectedSiteAddress.postalCode}
+                              </bdi>
+                            </span>
+                            {selectedSiteAddress.mainAddress && (
+                              <span className="rounded-md bg-primary/10 px-1.5 py-0.5 font-medium text-primary">
+                                {t('electricity.order.mainAddress', locale)}
+                              </span>
+                            )}
+                          </p>
+                        )}
                       </div>
-                      <Link
-                        className="inline-flex min-h-11 items-center text-sm underline"
-                        to="/settings/addresses"
-                        aria-disabled={protection.busy}
-                        onClick={(event) => {
-                          event.preventDefault();
-                          if (!protection.busy) void leaveForAddress();
-                        }}
-                      >
-                        {copy(addresses.length ? 'addAddress' : 'noAddresses')}
-                      </Link>
                     </CardContent>
                   </Card>
                 </>
               )}
               {step === 2 && (
-                <>
-                  <fieldset
-                    role="radiogroup"
-                    aria-labelledby="solar-grid-type-label"
-                    aria-required="true"
-                    className="space-y-3"
-                  >
-                    <legend id="solar-grid-type-label" className="font-semibold">
-                      {copy('gridType')}
-                    </legend>
-                    {(['on_grid', 'off_grid'] as const).map((type) => (
-                      <label key={type} className="block rounded-xl border p-4">
-                        <input
-                          type="radio"
-                          {...fields.bind('gridType')}
-                          value={type}
-                          checked={gridType === type}
-                          onChange={() => setGridType(type)}
-                          className="me-2"
+                <Card size="sm">
+                  <CardContent className="space-y-3">
+                    <fieldset
+                      role="radiogroup"
+                      aria-labelledby="solar-grid-type-label"
+                      aria-required="true"
+                      className="grid min-w-0 gap-2 sm:grid-cols-2"
+                    >
+                      <legend id="solar-grid-type-label" className="sr-only">
+                        {copy('gridType')}
+                      </legend>
+                      <p
+                        aria-hidden="true"
+                        className="col-span-full hidden text-sm font-semibold sm:block"
+                      >
+                        {copy('gridType')}
+                      </p>
+                      {(['on_grid', 'off_grid'] as const).map((type) => (
+                        <label key={type} className={solarChoice}>
+                          <input
+                            type="radio"
+                            {...fields.bind('gridType')}
+                            value={type}
+                            checked={gridType === type}
+                            onChange={() => setGridType(type)}
+                            className="mt-0.5 size-4 shrink-0 accent-primary"
+                          />
+                          <span className="min-w-0 space-y-1">
+                            <span className="block text-sm font-medium">
+                              {copy(type === 'on_grid' ? 'onGrid' : 'offGrid')}
+                            </span>
+                            <span className="block text-xs text-muted-foreground">
+                              {copy(type === 'on_grid' ? 'onGridHelp' : 'offGridHelp')}
+                            </span>
+                          </span>
+                        </label>
+                      ))}
+                    </fieldset>
+                    {gridType === 'on_grid' && (
+                      <div className="max-w-sm space-y-1">
+                        <Label htmlFor="solar-bill">{copy('billIdentifier')}</Label>
+                        <Input
+                          id="solar-bill"
+                          inputMode="numeric"
+                          pattern="[0-9۰-۹٠-٩]{6,13}"
+                          minLength={6}
+                          maxLength={13}
+                          dir="ltr"
+                          {...fields.bind('billIdentifier')}
+                          aria-describedby={
+                            fields.form.getFieldState('billIdentifier').invalid
+                              ? fields.errorId('billIdentifier')
+                              : 'solar-bill-hint'
+                          }
+                          value={billIdentifier}
+                          onChange={(e) =>
+                            setBillIdentifier(normalizeProfileDigits(e.target.value))
+                          }
+                          required
+                          aria-required="true"
                         />
-                        <span className="font-medium">
-                          {copy(type === 'on_grid' ? 'onGrid' : 'offGrid')}
-                        </span>
-                        <span className="mt-1 block text-sm text-muted-foreground">
-                          {copy(type === 'on_grid' ? 'onGridHelp' : 'offGridHelp')}
-                        </span>
+                        <p id="solar-bill-hint" className="text-xs text-muted-foreground">
+                          {solarIntakeText('billFormat', locale)}
+                        </p>
+                      </div>
+                    )}
+                    <div className="space-y-2 border-t pt-2">
+                      <details className="group">
+                        <summary className="flex min-h-11 w-fit cursor-pointer items-center gap-1.5 rounded-sm text-sm font-medium text-primary">
+                          {copy('stages')}
+                          <ChevronDownIcon
+                            aria-hidden="true"
+                            className="size-4 motion-safe:transition-transform group-open:rotate-180"
+                          />
+                        </summary>
+                        <ol className="list-inside list-decimal space-y-2 pb-2 text-sm">
+                          {stages.map((stage) => (
+                            <li key={stage}>{copy(stage)}</li>
+                          ))}
+                        </ol>
+                      </details>
+                      <label className="flex min-h-11 cursor-pointer items-center gap-2 rounded-lg bg-muted/45 px-3 py-1.5 text-sm">
+                        <input
+                          type="checkbox"
+                          className="size-4 shrink-0 accent-primary"
+                          {...fields.bind('agreementAccepted')}
+                          checked={agreementAccepted}
+                          onChange={(e) => setAgreementAccepted(e.target.checked)}
+                          required
+                          aria-required="true"
+                        />
+                        {copy('agreement')}
                       </label>
-                    ))}
-                  </fieldset>
-                  {gridType === 'on_grid' && (
-                    <div>
-                      <Label htmlFor="solar-bill">{copy('billIdentifier')}</Label>
-                      <Input
-                        id="solar-bill"
-                        inputMode="numeric"
-                        pattern="[0-9۰-۹٠-٩]{6,13}"
-                        minLength={6}
-                        maxLength={13}
-                        {...fields.bind('billIdentifier')}
-                        value={billIdentifier}
-                        onChange={(e) => setBillIdentifier(e.target.value)}
-                        required
-                        aria-required="true"
-                      />
                     </div>
-                  )}
-                </>
+                  </CardContent>
+                </Card>
               )}
               {step === 3 && (
-                <>
-                  <section aria-label={copy('stages')} className="rounded-xl border p-5">
-                    <h2 className="mb-3 font-semibold">{copy('stages')}</h2>
-                    <ol className="list-inside list-decimal space-y-2">
-                      {stages.map((stage) => (
-                        <li key={stage}>{copy(stage)}</li>
-                      ))}
-                    </ol>
-                  </section>
-                  <label className="flex items-start gap-2">
-                    <input
-                      type="checkbox"
-                      className="mt-1"
-                      {...fields.bind('agreementAccepted')}
-                      checked={agreementAccepted}
-                      onChange={(e) => setAgreementAccepted(e.target.checked)}
-                      required
-                      aria-required="true"
-                    />
-                    {copy('agreement')}
-                  </label>
-                </>
-              )}
-              {step === 4 && (
-                <Card>
-                  <CardContent className="space-y-4 pt-6">
+                <Card size="sm">
+                  <CardContent className="space-y-3">
                     {review && (
-                      <StepReviewPage
-                        title={copy('reviewTitle')}
-                        description={copy('reviewDescription')}
-                        editLabel={t('electricity.order.edit', locale)}
-                        disabled={pending || protection.busy || protection.completed.current}
+                      <SolarRequestReview
+                        data={review.data}
+                        completionDate={
+                          typeof reviewedCompletion === 'string' && reviewedCompletion ? (
+                            <time dateTime={reviewedCompletion}>
+                              {locale === 'fa' && completionDateValid(reviewedCompletion)
+                                ? persianCompletionDate.format(new Date(reviewedCompletion))
+                                : reviewedCompletion}
+                            </time>
+                          ) : null
+                        }
+                        editDisabled={pending || protection.busy || protection.completed.current}
                         onEdit={(target) => void protection.save(target)}
-                        sections={[
-                          {
-                            id: 'property',
-                            title: copy('wizardProperty'),
-                            step: 1,
-                            rows: [
-                              {
-                                label: copy('building'),
-                                value: copy(
-                                  review.data.submission.buildingType === 'non_household'
-                                    ? 'nonHousehold'
-                                    : 'building'
-                                ),
-                              },
-                              ...[
-                                ['propertyForm', 'propertyForm'],
-                                ['structuralFrame', 'structuralFrame'],
-                                ['siteCategory', 'siteCategory'],
-                                ['installationSurface', 'installationSurface'],
-                              ].flatMap(([field, label]) =>
-                                review.data.submission[field!]
-                                  ? [
-                                      {
-                                        label: copy(label!),
-                                        value: copy(String(review.data.submission[field!])),
-                                      },
-                                    ]
-                                  : []
-                              ),
-                              ...[
-                                ['buildingCompletionDate', 'completionDate'],
-                                ['totalUnits', 'totalUnits'],
-                                ['usableAreaSqm', 'usableArea'],
-                                ['siteDescription', 'description'],
-                              ].flatMap(([field, label]) =>
-                                review.data.submission[field!]
-                                  ? [
-                                      {
-                                        label: copy(label!),
-                                        value: String(review.data.submission[field!]),
-                                      },
-                                    ]
-                                  : []
-                              ),
-                              ...(review.data.siteAddress
-                                ? [{ label: copy('address'), value: review.data.siteAddress }]
-                                : []),
-                              ...(review.data.siteAddressSnapshot?.postal_code
-                                ? [
-                                    {
-                                      label: t('electricity.order.postalCode', locale),
-                                      value: review.data.siteAddressSnapshot.postal_code,
-                                    },
-                                  ]
-                                : []),
-                              ...(review.data.submission.siteRelationship
-                                ? [
-                                    {
-                                      label: copy('relationship'),
-                                      value: copy(
-                                        review.data.submission.siteRelationship ===
-                                          'authorized_operator'
-                                          ? 'authorizedOperator'
-                                          : String(review.data.submission.siteRelationship)
-                                      ),
-                                    },
-                                  ]
-                                : []),
-                            ],
-                          },
-                          {
-                            id: 'grid',
-                            title: copy('gridType'),
-                            step: 2,
-                            rows: [
-                              {
-                                label: copy('gridType'),
-                                value: copy(
-                                  review.data.submission.gridType === 'off_grid'
-                                    ? 'offGrid'
-                                    : 'onGrid'
-                                ),
-                              },
-                              ...(review.data.submission.billIdentifier
-                                ? [
-                                    {
-                                      label: copy('billIdentifier'),
-                                      value: String(review.data.submission.billIdentifier),
-                                    },
-                                  ]
-                                : []),
-                            ],
-                          },
-                          {
-                            id: 'agreement',
-                            title: copy('stages'),
-                            step: 3,
-                            rows: [
-                              {
-                                label: copy('reviewTermsVersion'),
-                                value: review.data.agreementVersion,
-                              },
-                            ],
-                            content: (
-                              <div className="space-y-2 text-sm">
-                                <p>{copy('agreement')}</p>
-                                <p lang="fa" dir="rtl" className="whitespace-pre-wrap break-words">
-                                  {review.data.agreementText}
-                                </p>
-                              </div>
-                            ),
-                          },
-                        ]}
                       />
                     )}
-                    <OrderWalletBalance
-                      profileId={profileId}
-                      scopeKey={review?.hash ?? fingerprint}
-                    />
-                    <p className="rounded-md bg-muted p-3 text-sm">
-                      {copy('reviewNoContractInvoice')}
-                    </p>
+                    <div className="rounded-lg border p-3 [&_button]:self-start">
+                      <OrderWalletBalance
+                        profileId={profileId}
+                        scopeKey={review?.hash ?? fingerprint}
+                      />
+                    </div>
                     {submitError && <p role="alert">{copy('submitError')}</p>}
                   </CardContent>
                 </Card>
               )}
-              {submitError && step !== 4 && <p role="alert">{copy('submitError')}</p>}
-              {step === 4 && <ConfirmationFields gate={financialGate} disabled={submitting} />}
+              {submitError && step !== 3 && <p role="alert">{copy('submitError')}</p>}
+              {step === 3 && <ConfirmationFields gate={financialGate} disabled={submitting} />}
             </fieldset>
           )}
         </ValidatedFormWizard>

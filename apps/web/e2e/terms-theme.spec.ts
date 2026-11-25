@@ -7,7 +7,7 @@ for (const locale of ['fa', 'en'] as const) {
     test(`terms status and review remain readable (${locale}, dark=${darkMode})`, async ({
       page,
     }) => {
-      await page.setViewportSize({ width: 390, height: 844 });
+      await page.setViewportSize({ width: 320, height: 520 });
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.addInitScript((value) => {
         localStorage.setItem('barghsa.locale', value);
@@ -20,6 +20,7 @@ for (const locale of ['fa', 'en'] as const) {
       let sessionReads = 0;
       let statusReady = false,
         contentReady = false;
+      const term = locale === 'fa' ? 'متن شرایط قابل مطالعه' : 'Readable terms content';
       await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
       await page.route('**/api/public/branding/config', (route) =>
         route.fulfill({
@@ -61,7 +62,9 @@ for (const locale of ['fa', 'en'] as const) {
                 json: {
                   id: 'terms-v1',
                   versionId: 'v1',
-                  content: locale === 'fa' ? 'متن شرایط قابل مطالعه' : 'Readable terms content',
+                  content: Array.from({ length: 20 }, (_, index) => `${index + 1}. ${term}`).join(
+                    '\n\n'
+                  ),
                   updatedAt: '2026-09-01T00:00:00Z',
                   publishedAt: '2026-09-01T00:00:00Z',
                 },
@@ -87,20 +90,26 @@ for (const locale of ['fa', 'en'] as const) {
       await expect(
         dialog.getByRole('button', { name: t('tos.modal.accept', locale), exact: true })
       ).toBeDisabled();
-      await page.keyboard.press('Escape');
       contentReady = true;
-      await page.getByRole('button', { name: t('tos.banner.review', locale), exact: true }).click();
-      await expect(dialog).toContainText(
-        locale === 'fa' ? 'متن شرایط قابل مطالعه' : 'Readable terms content'
-      );
+      await dialog.getByRole('button', { name: t('tos.page.retry', locale), exact: true }).click();
+      const reader = dialog.getByRole('region', { name: t('tos.modal.document', locale) });
+      await expect(reader).toContainText(term);
+      await expect(dialog).toContainText('v1');
       const close = dialog.getByRole('button', { name: t('tos.modal.close', locale), exact: true });
       const closeBox = (await close.boundingBox())!;
       const titleBox = (await dialog.getByRole('heading').boundingBox())!;
       if (locale === 'fa') expect(closeBox.x + closeBox.width).toBeLessThanOrEqual(titleBox.x);
       else expect(titleBox.x + titleBox.width).toBeLessThanOrEqual(closeBox.x);
-      await expect(
-        dialog.getByRole('button', { name: t('tos.modal.accept', locale), exact: true })
-      ).toBeEnabled();
+      const accept = dialog.getByRole('button', {
+        name: t('tos.modal.accept', locale),
+        exact: true,
+      });
+      await expect(accept).toBeEnabled();
+      await expect(accept).toBeInViewport({ ratio: 1 });
+      await reader.focus();
+      await page.keyboard.press('End');
+      await expect.poll(() => reader.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
+      await expect(accept).toBeInViewport({ ratio: 1 });
       expect(
         (await new AxeBuilder({ page }).withRules(['color-contrast']).analyze()).violations
       ).toEqual([]);

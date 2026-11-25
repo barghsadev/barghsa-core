@@ -27,6 +27,14 @@ export interface PostalGuidance {
   contactDetails: string;
   originals: Array<{ fa: string; en: string }>;
 }
+const staffShipmentProjection = `SELECT r.id,r.profile_id,r.status AS request_status,p.status AS postal_status,
+  COALESCE(NULLIF(lp.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',profile.first_name,profile.last_name)),''),u.username) AS profile_name,
+  p.courier,p.tracking_number,p.send_date,p.receipt_image_id,p.staff_notes,r.created_at,
+  p.estimated_arrival_date::text,p.tracking_url,p.tracking_note,p.tracking_revision,p.tracking_recorded_at
+  FROM solar_construction_requests r JOIN solar_construction_postal p ON p.request_id=r.id
+  JOIN profiles profile ON profile.id=r.profile_id
+  JOIN users u ON u.user_id=profile.user_id
+  LEFT JOIN legal_profiles lp ON lp.id=profile.id`;
 const GUIDANCE_KEY = 'solar.postal_guidance';
 const defaultGuidance: PostalGuidance = {
   fa: 'برای نشانی و مدارک اصلی موردنیاز، با پشتیبانی هماهنگ کنید.',
@@ -282,14 +290,7 @@ export class SolarPostalService {
       if (before && !cursor) throw new NotFoundException('Solar postal cursor not found');
       const rows = (
         await client.query(
-          `SELECT r.id,r.profile_id,r.status AS request_status,p.status AS postal_status,
-          COALESCE(NULLIF(lp.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',profile.first_name,profile.last_name)),''),u.username) AS profile_name,
-            p.courier,p.tracking_number,p.send_date,p.receipt_image_id,p.staff_notes,r.created_at,
-            p.estimated_arrival_date::text,p.tracking_url,p.tracking_note,p.tracking_revision,p.tracking_recorded_at
-         FROM solar_construction_requests r JOIN solar_construction_postal p ON p.request_id=r.id
-         JOIN profiles profile ON profile.id=r.profile_id
-         JOIN users u ON u.user_id=profile.user_id
-         LEFT JOIN legal_profiles lp ON lp.id=profile.id
+          `${staffShipmentProjection}
          WHERE r.status IN ('waiting_for_postal_submission','postal_documents_received','final_review','approved')
            AND ($1::timestamptz IS NULL OR (r.created_at,r.id) < ($1::timestamptz,$2::uuid))
            AND ($3::text='all'
@@ -308,6 +309,14 @@ export class SolarPostalService {
     } finally {
       client.release();
     }
+  }
+
+  staffShipment(actor: Actor, id: string) {
+    return withStaffReadAuthority(actor, 'orders:read', async (client) => {
+      const row = (await client.query(`${staffShipmentProjection} WHERE r.id=$1`, [id])).rows[0];
+      if (!row) throw new NotFoundException('Solar postal request not found');
+      return row;
+    });
   }
 
   private async postalDecisionSnapshot(

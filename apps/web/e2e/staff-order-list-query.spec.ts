@@ -4,6 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { tSaving } from '@barghsa/i18n/saving';
+import { tSavingStaffReview } from '@barghsa/i18n/saving-staff-review';
 import {
   firstWork,
   olderWork,
@@ -135,21 +136,40 @@ for (const locale of ['en', 'fa'] as const)
           exact: true,
         });
         const input = page.locator(item.draft);
-        await expect(content.getByRole('button', { name: /Older buyer/ })).toBeVisible();
-        await expect(content.getByRole('button', { name: /First buyer/ })).toHaveCount(0);
-        await expect(input).toBeVisible();
+        const electricity = item.name === 'electricity';
+        const operation = electricity ? '/decisions/request-changes' : '/reject';
+        const decision = page.locator(`a[href*="${operation}"]`);
+        const laneAndPage = `?${item.key}=${item.other}&cursor=${firstWork}`;
+        const canonical = `${item.path}/${olderWork}${laneAndPage}`;
+        await expect(page).toHaveURL(canonical);
+        await expect(decision).toBeVisible();
+        expect(reads).toHaveLength(0);
+        await page.reload();
+        await expect(page).toHaveURL(canonical);
+        await expect(decision).toBeVisible();
+        expect(reads).toHaveLength(0);
+        const back = page.getByRole('link', {
+          name:
+            item.name === 'electricity'
+              ? adminText('admin.electricityOrders.backToQueue', locale)
+              : tSavingStaffReview('staffBackToQueue', locale),
+          exact: true,
+        });
+        await back.click();
+        await expect(page).toHaveURL(item.path + laneAndPage);
+        await expect(content.getByRole('link', { name: /Older buyer/ })).toBeVisible();
         await expect(previous).toBeDisabled();
         expect(reads.at(-1)?.searchParams.get('after')).toBe(firstWork);
         if (item.name === 'electricity')
           expect(reads.at(-1)?.pathname).toBe(item.base + '/conversations');
         else expect(reads.at(-1)?.searchParams.get('lane')).toBe('fulfillment');
         await more.click();
-        await expect(content.getByRole('button', { name: /Last buyer/ })).toBeVisible();
+        await expect(content.getByRole('link', { name: /Last buyer/ })).toBeVisible();
         await expect(previous).toBeEnabled();
         await expect.poll(() => params().get('cursor')).toBe(olderWork);
         await page.reload();
-        await expect(content.getByRole('button', { name: /Last buyer/ })).toBeVisible();
-        await expect(content.getByRole('button', { name: /Older buyer/ })).toHaveCount(0);
+        await expect(content.getByRole('link', { name: /Last buyer/ })).toBeVisible();
+        await expect(content.getByRole('link', { name: /Older buyer/ })).toHaveCount(0);
         await expect(
           list.getByRole('navigation', {
             name: appText('historyPagination.label', locale),
@@ -157,38 +177,37 @@ for (const locale of ['en', 'fa'] as const)
           })
         ).toHaveCount(0);
         await list.getByRole('button', { name: words('review'), exact: true }).click();
-        await expect(content.getByRole('button', { name: /First buyer/ })).toBeVisible();
+        await expect(content.getByRole('link', { name: /First buyer/ })).toBeVisible();
         await expect.poll(() => params().get('cursor')).toBeNull();
-        await expect.poll(() => params().get('orderId')).toBeNull();
-        await expect(input).toHaveCount(0);
         await page.goBack();
-        await expect(content.getByRole('button', { name: /Last buyer/ })).toBeVisible();
-        await expect(input).toBeVisible();
+        await expect(content.getByRole('link', { name: /Last buyer/ })).toBeVisible();
         expect(params().get(item.key)).toBe(item.other);
-        expect(params().get('orderId')).toBe(olderWork);
         await page.goForward();
-        await expect(content.getByRole('button', { name: /First buyer/ })).toBeVisible();
+        const first = content.getByRole('link', { name: /First buyer/ });
+        await expect(first).toBeVisible();
         const count = reads.length;
-        await content.getByRole('button', { name: /First buyer/ }).click();
+        await first.click();
+        await expect(page).toHaveURL(`${item.path}/${firstWork}?${item.key}=review`);
+        await decision.click();
+        await expect(page).toHaveURL(`${item.path}/${firstWork}${operation}?${item.key}=review`);
         await expect(input).toBeVisible();
         expect(reads).toHaveLength(count);
-        expect(params().get('orderId')).toBe(firstWork);
         await input.fill('Private staff draft');
-        await more.click();
-        await expect(content.getByRole('button', { name: /Older buyer/ })).toBeVisible();
-        await expect(input).toHaveValue('Private staff draft');
-        await content.getByRole('button', { name: /Older buyer/ }).click();
-        await expect.poll(() => params().get('orderId')).toBe(olderWork);
-        await expect(input).toHaveValue('');
         await page.goBack();
-        await expect.poll(() => params().get('orderId')).toBe(firstWork);
+        await expect(input).toHaveCount(0);
+        await expect(decision).toBeVisible();
+        await page.goBack();
+        await expect(first).toBeVisible();
+        await page.goForward();
+        await expect(decision).toBeVisible();
+        await page.goForward();
         await expect(input).toHaveValue('');
-        await previous.click();
-        await expect(content.getByRole('button', { name: /Older buyer/ })).toHaveCount(0);
-        await expect(content.getByRole('button', { name: /First buyer/ })).toHaveCount(1);
-        await expect(input).toBeVisible();
         expect(
-          (await new AxeBuilder({ page }).include('[data-slot="list-page"]').analyze()).violations
+          (
+            await new AxeBuilder({ page })
+              .include(`[data-slot="${item.name}-staff-order"]`)
+              .analyze()
+          ).violations
         ).toEqual([]);
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
           true
@@ -196,7 +215,7 @@ for (const locale of ['en', 'fa'] as const)
         if (locale === 'fa' && info.project.name === 'mobile-safari') {
           await input.scrollIntoViewIfNeeded();
           await page.screenshot({
-            path: `/tmp/barghsa-finance-query-${item.name}-${dark ? 'dark' : 'light'}.png`,
+            path: info.outputPath(`${item.name}-record-${dark ? 'dark' : 'light'}.png`),
           });
         }
       });

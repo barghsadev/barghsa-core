@@ -157,10 +157,13 @@ for (const locale of ['en', 'fa'] as const)
         });
       });
 
-    await page.goto(`/admin/invoices?invoiceId=${invoiceId}`);
+    await page.goto(`/admin/invoices/${invoiceId}/refunds#external-refunds-panel`);
+    await expect(page).toHaveURL(new RegExp(`/admin/invoices/${invoiceId}/refunds/bank$`));
+    await page.getByTestId('invoice-refund-new').click();
+    await expect(page).toHaveURL(new RegExp(`/admin/invoices/${invoiceId}/refunds/bank/new$`));
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     const panel = page.getByRole('region', { name: word('title'), exact: true });
-    await expect(panel.getByText(`${shared('available')}:`)).toBeVisible();
+    await expect(panel.getByText(shared('available'), { exact: true })).toBeVisible();
     expect(
       (await new AxeBuilder({ page }).include('#external-refunds-panel').analyze()).violations
     ).toEqual([]);
@@ -175,21 +178,50 @@ for (const locale of ['en', 'fa'] as const)
         .click();
     };
     await confirm();
+    await page.getByTestId('invoice-refund-view-requests').click();
     await expect(panel.getByText(refundId)).toBeVisible();
+    await page.getByTestId(`invoice-refund-approve-${refundId}`).click();
     await panel.getByRole('button', { name: shared('approve') }).click();
     await confirm();
+    await page.getByTestId(`invoice-refund-record-transfer-${refundId}`).click();
     await panel.getByLabel(word('bankReference')).fill(bankReference);
     await panel.getByRole('button', { name: word('record-transfer') }).click();
     await confirm();
+    const exactRead = page.waitForRequest((request) => {
+      const url = new URL(request.url());
+      return (
+        request.method() === 'GET' &&
+        url.pathname === '/api/admin/external-refunds' &&
+        url.searchParams.get('invoiceId') === invoiceId &&
+        url.searchParams.get('refundId') === refundId &&
+        !url.searchParams.has('before')
+      );
+    });
+    await page.getByTestId(`invoice-refund-reconcile-${refundId}`).click();
+    await expect(page).toHaveURL(new RegExp(`/refunds/bank/${refundId}/reconcile$`));
+    await page.reload();
+    await exactRead;
     await expect(panel.getByText(word('secondReviewer'))).toBeVisible();
+    await expect(panel.getByLabel(word('bankReference'))).toHaveValue('');
     await panel.getByLabel(word('bankReference')).fill(bankReference);
     await panel.getByRole('button', { name: word('reconcile') }).click();
     await confirm();
     await expect(panel.getByText(shared('state.Completed'))).toBeVisible();
     expect(actions).toEqual(['request', 'approve', 'record-transfer', 'reconcile']);
     await page.reload();
+    await expect(panel.getByRole('button', { name: word('reconcile'), exact: true })).toHaveCount(
+      0
+    );
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(
       page.getByRole('region', { name: word('title') }).getByText(bankReference)
     ).toBeVisible();
+    // A mismatched response must not display the reference or make another refund actionable.
+    const otherRefundId = '91000000-0000-4000-8000-000000000009';
+    await page.goto(`/admin/invoices/${invoiceId}/refunds/bank/${otherRefundId}/reconcile`);
+    await expect(panel.getByText(shared('error'), { exact: true })).toBeVisible();
+    await expect(panel.getByText(bankReference)).toHaveCount(0);
+    await expect(panel.getByRole('button', { name: word('reconcile'), exact: true })).toHaveCount(
+      0
+    );
   });

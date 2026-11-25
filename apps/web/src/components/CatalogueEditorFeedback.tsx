@@ -1,5 +1,5 @@
 import { LoadingStatus, Alert, Button } from '@barghsa/ui';
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { DANGER_TEXT_COLORS } from '../lib/brand-config.js';
 import { getBrandTextColor, useBrandConfig } from '../providers/BrandThemeProvider.js';
 import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
@@ -9,10 +9,14 @@ export function CatalogueFieldFeedback({
   id,
   error,
   message,
+  hint,
+  compact = false,
 }: {
   id: string;
   error?: { message?: string | undefined } | undefined;
   message: string;
+  hint?: ReactNode;
+  compact?: boolean;
 }) {
   const { brandConfig, resolvedTheme } = useBrandConfig();
   const dark = resolvedTheme === 'dark';
@@ -26,10 +30,10 @@ export function CatalogueFieldFeedback({
         } as CSSProperties
       }
       role={error ? 'alert' : undefined}
-      aria-hidden={!error || undefined}
-      className={`text-sm text-[var(--field-error)] ${error ? '' : 'invisible'}`}
+      aria-hidden={!error && !hint ? true : undefined}
+      className={`${error ? 'text-[var(--field-error)]' : 'text-muted-foreground'} ${compact ? 'text-xs' : 'text-sm'} ${error || hint ? '' : compact ? 'invisible line-clamp-1' : 'invisible'}`}
     >
-      {error?.message ?? message}
+      {error ? (error.message ?? message) : (hint ?? message)}
     </p>
   );
 }

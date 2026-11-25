@@ -76,7 +76,7 @@ for (const locale of ['en', 'fa'] as const)
     await page.route('**/api/consultations/requests?*', (r) =>
       r.fulfill({ json: { requests: [], nextBefore: null } })
     );
-    await page.goto('/consultations');
+    await page.goto('/consultations/new');
     const advice = page.getByRole('radio', { name: new RegExp(general.title[locale]) });
     const certificateChoice = page.getByRole('radio', {
       name: new RegExp(certificate.title[locale]),

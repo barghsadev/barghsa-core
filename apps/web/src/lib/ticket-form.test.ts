@@ -288,6 +288,18 @@ describe('ticket forms bind the existing request and receipt contracts', () => {
       hasMoreRecords: false,
     };
     expect(ticketOptions(options)).not.toBeNull();
+    const contract = {
+      ...options.records[0]!,
+      type: 'contract',
+      contractNumber: '9007199254740993',
+    };
+    expect(ticketOptions({ ...options, records: [contract] })?.records[0]?.contractNumber).toBe(
+      '9007199254740993'
+    );
+    expect(
+      ticketOptions({ ...options, records: [{ ...contract, contractNumber: 10482 }] })
+    ).toBeNull();
+    expect(ticketOptions({ ...options, records: [{ ...contract, type: 'invoice' }] })).toBeNull();
     expect(
       ticketOptions({ ...options, profiles: [...options.profiles, ...options.profiles] })
     ).toBeNull();

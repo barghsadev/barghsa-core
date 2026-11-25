@@ -28,9 +28,11 @@ export function ContractDetailLoader(props: ComponentProps<DetailComponent>) {
   return (
     <Alert variant="destructive">
       <AlertDescription>{feedbackText('chunkTitle', locale)}</AlertDescription>
-      <Button variant="outline" onClick={props.onClose}>
-        {contractText('close', locale)}
-      </Button>
+      {props.onClose && (
+        <Button variant="outline" onClick={props.onClose}>
+          {contractText('close', locale)}
+        </Button>
+      )}
     </Alert>
   );
 }

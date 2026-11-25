@@ -33,11 +33,17 @@ function ElectricityOrdersRoute() {
       onRemoveFilter={(key, value) =>
         void navigate({ search: (current) => removeHistoryFilter(current, key, value) })
       }
+      onShowAllStatuses={() =>
+        void navigate({
+          search: (current) => ({ ...current, status: undefined, statuses: undefined }),
+        })
+      }
       onClearFilters={() =>
         void navigate({
           search: (current) => ({
             ...current,
             q: undefined,
+            status: undefined,
             statuses: undefined,
             from: undefined,
             to: undefined,

@@ -1,8 +1,12 @@
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { createFileRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
 import { RouteSkeleton } from '../../components/RouteSkeleton.js';
 import { RouteErrorBoundary } from '../../components/RouteErrorBoundary.js';
 import { useListQuery } from '../../hooks/useListQuery.js';
-import { giftQueryOptions, giftListSearch } from '../../lib/gift-list-query.js';
+import {
+  giftQueryOptions,
+  giftListSearch,
+  legacyGiftListSearch,
+} from '../../lib/gift-list-query.js';
 const Page = lazyRouteComponent(() => import('../../pages/AdminGiftCodesPage.js'));
 function GiftCodesRoute() {
   const search = Route.useSearch();
@@ -14,29 +18,19 @@ function GiftCodesRoute() {
       resetScroll: false,
     });
   });
-  return (
-    <Page
-      queries={queries}
-      selection={{
-        id: String(search.selected || ''),
-        apply: (filters) => {
-          void navigate({
-            search: (raw) => giftListSearch({ ...raw, ...filters, selected: '', cursor: '' }),
-            resetScroll: false,
-          });
-        },
-        set: (id) => {
-          void navigate({
-            search: (raw) => giftListSearch({ ...raw, selected: id }),
-            resetScroll: false,
-          });
-        },
-      }}
-    />
-  );
+  return <Page queries={queries} workspace={{ view: 'list', search: giftListSearch(search) }} />;
 }
 export const Route = createFileRoute('/admin/gift-codes')({
-  validateSearch: giftListSearch,
+  validateSearch: legacyGiftListSearch,
+  beforeLoad: ({ search }) => {
+    if (search.selected)
+      throw redirect({
+        to: '/admin/gift-codes/$codeId/{-$action}',
+        params: { codeId: search.selected, action: search.selected === 'new' ? undefined : 'edit' },
+        search: giftListSearch(search),
+        replace: true,
+      });
+  },
   component: GiftCodesRoute,
   pendingComponent: () => <RouteSkeleton layout="admin" />,
   errorComponent: RouteErrorBoundary,

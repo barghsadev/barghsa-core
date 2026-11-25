@@ -4,6 +4,7 @@ import {
   Get,
   Patch,
   Param,
+  Header,
   HttpCode,
   BadRequestException,
   Query,
@@ -14,6 +15,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiResponse,
   ApiTags,
@@ -122,6 +124,20 @@ export class NotificationCenterController {
     return withInboxSession(actor, async (center, profileId) => ({
       unread_count: await center.countUnread(profileId, actor.userId, actor.operatingContext),
     }));
+  }
+
+  @Get(':id')
+  @Header('Cache-Control', 'private, no-store')
+  @ApiOperation({ summary: 'Get one private notification without changing its read state' })
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiResponse({ status: 200, description: 'Notification and its current read state.' })
+  @ApiResponse({ status: 400, description: 'Invalid notification identifier.' })
+  @ApiResponse({ status: 404, description: 'Notification not found.' })
+  findOne(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    const actor = req.session;
+    return withInboxSession(actor, (center, profileId) =>
+      center.findOne(profileId, id, actor.userId, actor.operatingContext)
+    );
   }
 
   /**

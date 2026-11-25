@@ -83,7 +83,7 @@ it.each(['en', 'fa'] as const)(
 it.each([null, undefined, '', '2026-02-30', '2026-13-01', '2026-09-01T23:00:00Z', ' 2026-09-01'])(
   'does not turn invalid deposit metadata into an invented calendar day (%s)',
   async (value) => {
-    await act(async () => root.render(<ReceiptDepositDate value={value} />));
+    await act(async () => root.render(<ReceiptDepositDate value={value} locale="en" />));
     expect(host.textContent).toBe('—');
     expect(host.querySelector('time')).toBeNull();
   }

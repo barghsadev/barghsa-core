@@ -1,9 +1,10 @@
 import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
-import { test, expect, type Page } from './coverage-fixture';
-import type { Route } from '@playwright/test';
+import { expandListFilters, test, expect, type Page } from './coverage-fixture';
+import type { Locator, Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { documentText } from '@barghsa/i18n/documents';
 import { documentTemplateText } from '@barghsa/i18n/document-templates';
+import { approveRiskConfirmation } from './confirmation-fixture';
 import {
   documentProfileId,
   documentRow,
@@ -14,6 +15,30 @@ import {
   templateDetail,
   destructionQueue,
 } from '../src/test/document-list-fixtures.js';
+
+async function selectHoldExpiryDay(
+  page: Page,
+  date: Locator,
+  instant: string,
+  locale: 'en' | 'fa'
+) {
+  await date.press('ArrowDown');
+  const calendar = page.getByRole('dialog', {
+    name: documentText('holdExpiryDate', locale),
+    exact: true,
+  });
+  const calendarDay = await page.evaluate(
+    ({ instant, locale }) =>
+      new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : undefined, {
+        timeZone: 'Asia/Tehran',
+      }).format(new Date(instant)),
+    { instant, locale }
+  );
+  const day = calendar.locator(`button[data-day="${calendarDay}"]`);
+  await expect(calendar).toBeVisible();
+  if (!(await day.count())) await calendar.locator('button.rdp-button_next').click();
+  await day.click();
+}
 
 async function shell(page: Page, locale: 'en' | 'fa', staff: boolean) {
   await page.setViewportSize({ width: 390, height: 844 });
@@ -115,6 +140,7 @@ for (const staff of [false, true])
       });
       await page.goto(staff ? '/admin/documents' : '/documents');
       if (staff) {
+        await expandListFilters(page, locale);
         await page.locator('#documents-profile').fill(documentProfileId);
         await page.locator('#documents-category').selectOption('document');
         await page.locator('#documents-search').fill('Review');
@@ -123,6 +149,7 @@ for (const staff of [false, true])
       const main = page.getByRole('main');
       const list = main.getByRole('region', { name: word('listTitle'), exact: true });
       const content = list.locator('[data-slot="list-content"]');
+      const rowRole = 'link';
       if (staff) {
         await expect
           .poll(() => new URL(queries.at(-1)!, 'https://local').searchParams.get('q'))
@@ -132,19 +159,31 @@ for (const staff of [false, true])
       await expect(content.getByRole('alert')).toBeVisible();
       status = 200;
       await content.getByRole('button', { name: word('retry'), exact: true }).click();
-      await content.getByRole('button', { name: documentRow.originalName, exact: true }).click();
-      const detail = list.getByRole('region', { name: word('details'), exact: true });
-      await expect(detail).toBeVisible();
-      if (staff) await detail.locator('#document-review-reason').fill('Review draft');
+      await content.getByRole(rowRole, { name: documentRow.originalName, exact: true }).click();
+      const detail = main.getByRole('region', { name: word('details'), exact: true });
+      await expect(detail.getByRole('heading', { name: documentRow.originalName })).toBeVisible();
+      if (staff) {
+        await expect(detail.locator('#document-review-reason')).toHaveCount(0);
+        await detail.getByRole('link', { name: word('request-changes'), exact: true }).click();
+        await expect(page).toHaveURL(
+          new RegExp(`/admin/documents/${documentRow.id}/decisions/request-changes`)
+        );
+        await detail.locator('#document-review-reason').fill('Review draft');
+        await expect(detail.locator('#document-review-reason')).toHaveValue('Review draft');
+        await main.getByRole('link', { name: word('backToDocument'), exact: true }).click();
+      }
+      await main.getByRole('link', { name: word('backToDocuments'), exact: true }).click();
+      await expect(
+        content.getByRole(rowRole, { name: documentRow.originalName, exact: true })
+      ).toBeVisible();
       const reads = detailReads;
       hold = true;
       await list.getByRole('button', { name: word('next'), exact: true }).click();
       await expect.poll(() => !!held).toBe(true);
       await expect(content).toHaveAttribute('aria-busy', 'true');
       await expect(
-        content.getByRole('button', { name: documentRow.originalName, exact: true })
+        content.getByRole(rowRole, { name: documentRow.originalName, exact: true })
       ).toBeVisible();
-      await expect(detail).toBeVisible();
       await held!.fulfill({ status: 503, json: {} });
       hold = false;
       await expect(content.getByRole('alert')).toBeVisible();
@@ -160,29 +199,31 @@ for (const staff of [false, true])
       invalidPage = true;
       await content.getByRole('button', { name: word('retry'), exact: true }).click();
       await expect(content.getByRole('alert')).toBeVisible();
-      await expect(detail).toBeVisible();
-      await expect(content.getByRole('button', { name: documentMore.originalName })).toHaveCount(0);
+      await expect(content.getByRole(rowRole, { name: documentMore.originalName })).toHaveCount(0);
       expect(queries.at(-1)).toBe(failed);
       invalidPage = false;
       const count = queries.length;
       await content.getByRole('button', { name: word('retry'), exact: true }).click();
       await expect(
-        content.getByRole('button', { name: documentMore.originalName, exact: true })
+        content.getByRole(rowRole, { name: documentMore.originalName, exact: true })
       ).toBeVisible();
       expect(queries.slice(count)).toEqual([failed]);
       expect(detailReads).toBe(reads);
       expect(
-        await content.getByRole('button', { name: documentRow.originalName, exact: true }).count()
+        await content.getByRole(rowRole, { name: documentRow.originalName, exact: true }).count()
       ).toBe(1);
-      if (staff)
-        await expect(detail.locator('#document-review-reason')).toHaveValue('Review draft');
-      await list.getByRole('button', { name: word('upload'), exact: true }).click();
-      await page.locator('[data-slot="file-upload"] input[type="file"]').setInputFiles({
-        name: 'Draft.pdf',
-        mimeType: 'application/pdf',
-        buffer: Buffer.from('%PDF-draft'),
-      });
       const uploadFile = page.locator('[data-slot="file-upload"] input[type="file"]');
+      const openDraft = async () => {
+        await list.getByRole('link', { name: word('upload'), exact: true }).click();
+        await expect
+          .poll(() => new URL(page.url()).pathname)
+          .toBe(staff ? '/admin/documents/new' : '/documents/new');
+        await uploadFile.setInputFiles({
+          name: 'Draft.pdf',
+          mimeType: 'application/pdf',
+          buffer: Buffer.from('%PDF-draft'),
+        });
+      };
       const refreshStart = queries.length;
       status = 503;
       await list.getByRole('button', { name: word('refresh'), exact: true }).click();
@@ -194,9 +235,13 @@ for (const staff of [false, true])
       status = 200;
       await refreshError.getByRole('button', { name: word('retry'), exact: true }).click();
       await expect(content.getByRole('alert')).toHaveCount(0);
+      const refreshedReads = queries.length;
+      status = 503;
+      await openDraft();
       expect(await uploadFile.evaluate((input: HTMLInputElement) => input.files?.[0]?.name)).toBe(
         'Draft.pdf'
       );
+      expect(queries).toHaveLength(refreshedReads);
       expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
@@ -208,11 +253,16 @@ for (const staff of [false, true])
           ),
           fullPage: true,
         });
+      status = 200;
+      await main.getByRole('button', { name: word('cancel'), exact: true }).click();
+      await expect(
+        content.getByRole(rowRole, { name: documentRow.originalName, exact: true })
+      ).toBeVisible();
       status = 403;
       await list.getByRole('button', { name: word('refresh'), exact: true }).click();
       await expect(content.getByRole('alert')).toContainText(word('denied'));
       await expect(uploadFile).toHaveCount(0);
-      await expect(content.getByRole('button', { name: documentRow.originalName })).toHaveCount(0);
+      await expect(content.getByRole(rowRole, { name: documentRow.originalName })).toHaveCount(0);
       await expect(content.getByRole('button', { name: word('retry'), exact: true })).toHaveCount(
         0
       );
@@ -266,9 +316,14 @@ for (const staff of [false, true])
       });
       await page.goto(staff ? '/admin/documents' : '/documents');
       const list = page.getByRole('region', { name: word('listTitle'), exact: true });
-      const row = list.getByRole('button', { name: documentRow.originalName, exact: true });
+      const row = list.getByRole('link', {
+        name: documentRow.originalName,
+        exact: true,
+      });
       await row.press('Enter');
-      const detail = list.getByRole('region', { name: word('details'), exact: true });
+      const detail = page
+        .getByRole('main')
+        .getByRole('region', { name: word('details'), exact: true });
       try {
         await expect(detail.getByRole('status', { name: word('loading') })).toBeVisible();
       } finally {
@@ -278,7 +333,9 @@ for (const staff of [false, true])
       for (const attempt of [1, 2]) {
         await expect.poll(() => detailReads).toBe(attempt);
         await expect(detail.getByRole('alert')).toContainText(word('error'));
-        await expect(row).toBeVisible();
+        expect(new URL(page.url()).pathname).toBe(
+          `${staff ? '/admin/documents' : '/documents'}/${documentRow.id}`
+        );
         await expect(detail.getByText(diagnostic)).toHaveCount(0);
         await retry.press('Enter');
       }
@@ -295,7 +352,9 @@ for (const staff of [false, true])
       );
       await expect(detail.getByRole('heading', { name: documentRow.originalName })).toHaveCount(0);
       await expect(retry).toHaveCount(0);
-      await expect(row).toBeVisible();
+      await expect(
+        page.getByRole('link', { name: word('backToDocuments'), exact: true })
+      ).toBeVisible();
       expect(reads).toEqual(['list', 'detail', 'detail', 'detail', 'download', 'download']);
       expect(errors).toEqual([]);
     });
@@ -312,19 +371,13 @@ for (const locale of ['en', 'fa'] as const) {
       detailStatus = 503,
       malformedList = false,
       malformedDetail = false,
-      detailReads = 0,
-      hold = false,
-      held: Route | undefined;
+      detailReads = 0;
     const queries: string[] = [];
     await page.route(
       (url) => url.pathname === '/api/admin/document-templates',
       (route) => {
         const url = new URL(route.request().url());
         queries.push(url.pathname + url.search);
-        if (hold) {
-          held = route;
-          return;
-        }
         return listStatus === 200
           ? route.fulfill({ json: malformedList ? [null] : [templateRow] })
           : route.fulfill({ status: listStatus, json: {} });
@@ -350,49 +403,58 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#document-template-category').selectOption('contract');
     await page.locator('#document-template-search').fill('Customer');
     await main.getByRole('button', { name: word('search'), exact: true }).click();
-    await content.getByRole('button', { name: new RegExp(templateRow.title) }).click();
+    await content.getByRole('link', { name: templateRow.title, exact: true }).click();
     const error = main.getByRole('alert').filter({ hasText: word('detailError') });
     await expect(error).toBeVisible();
     const count = queries.length;
     detailStatus = 200;
     await error.getByRole('button', { name: word('retry'), exact: true }).click();
     await expect(
-      main.getByRole('heading', { level: 2, name: templateRow.title, exact: true })
+      main.getByRole('heading', { level: 1, name: templateRow.title, exact: true })
     ).toBeVisible();
     expect(queries.length).toBe(count);
-    await main.getByRole('button', { name: word('edit'), exact: true }).click();
+    const refresh = main.getByRole('button', { name: word('refresh'), exact: true });
+    const query = queries.at(-1)!;
+    expect(new URL(query, 'https://local').searchParams.get('search')).toBe('Customer');
+    expect(new URL(query, 'https://local').searchParams.get('category')).toBe('contract');
+    await main.getByRole('link', { name: word('edit'), exact: true }).click();
     await page.locator('#document-template-title').fill('Metadata draft');
-    await page.locator('#document-template-summary').fill('Version draft');
-    await page.locator('#document-template-files').setInputFiles({
+    malformedDetail = true;
+    await refresh.click();
+    await expect(error).toBeVisible();
+    await expect(page.locator('#document-template-title')).toHaveValue('Metadata draft');
+    malformedDetail = false;
+    await error.getByRole('button', { name: word('retry'), exact: true }).click();
+    await expect(error).toHaveCount(0);
+    await expect(page.locator('#document-template-title')).toHaveValue('Metadata draft');
+    expect(queries.length).toBe(count);
+
+    const details = `/admin/document-templates/${templateRow.id}`;
+    await page.goto(details + '/versions/new?category=contract&q=Customer');
+    const summary = page.locator('#document-template-summary');
+    const file = page.locator('#document-template-files');
+    await summary.fill('Version draft');
+    await file.setInputFiles({
       name: 'Draft.pdf',
       mimeType: 'application/pdf',
       buffer: Buffer.from('%PDF-draft'),
     });
     await main.getByRole('checkbox').uncheck();
-    hold = true;
-    await main.getByRole('button', { name: word('refresh'), exact: true }).click();
-    await expect.poll(() => !!held).toBe(true);
-    await expect(content).toHaveAttribute('aria-busy', 'true');
-    await expect(page.locator('#document-template-title')).toHaveValue('Metadata draft');
-    await held!.fulfill({ status: 503, json: {} });
-    hold = false;
-    await expect(content.getByRole('alert')).toBeVisible();
-    const reads = detailReads,
-      query = queries.at(-1)!;
-    expect(new URL(query, 'https://local').searchParams.get('search')).toBe('Customer');
-    expect(new URL(query, 'https://local').searchParams.get('category')).toBe('contract');
-    await content.getByRole('button', { name: word('retry'), exact: true }).click();
-    await expect(content.getByRole('alert')).toHaveCount(0);
-    expect(detailReads).toBe(reads);
-    expect(queries.at(-1)).toBe(query);
-    await expect(page.locator('#document-template-title')).toHaveValue('Metadata draft');
-    await expect(page.locator('#document-template-summary')).toHaveValue('Version draft');
+    detailStatus = 503;
+    await refresh.click();
+    await expect(error).toBeVisible();
+    await expect(summary).toHaveValue('Version draft');
+    detailStatus = 200;
+    const reads = detailReads;
+    await error.getByRole('button', { name: word('retry'), exact: true }).click();
+    await expect(error).toHaveCount(0);
+    await expect(summary).toHaveValue('Version draft');
     await expect(main.getByRole('checkbox')).not.toBeChecked();
-    expect(
-      await page
-        .locator('#document-template-files')
-        .evaluate((input: HTMLInputElement) => input.files?.[0]?.name)
-    ).toBe('Draft.pdf');
+    expect(await file.evaluate((input: HTMLInputElement) => input.files?.[0]?.name)).toBe(
+      'Draft.pdf'
+    );
+    expect(detailReads).toBe(reads + 1);
+    expect(queries.at(-1)).toBe(query);
     expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true
@@ -402,36 +464,23 @@ for (const locale of ['en', 'fa'] as const) {
         path: '/tmp/barghsa-document-template-fa-mobile-safari.png',
         fullPage: true,
       });
-    const refresh = main.getByRole('button', { name: word('refresh'), exact: true });
-    const listError = content.getByRole('alert').filter({ hasText: word('error') });
+    detailStatus = 403;
+    await refresh.click();
+    await expect(main.getByRole('alert')).toContainText(word('denied'));
+    await expect(file).toHaveCount(0);
+    await expect(summary).toHaveCount(0);
+
+    await page.goto('/admin/document-templates?category=contract&q=Customer');
+    await expect(content.getByRole('link', { name: templateRow.title, exact: true })).toBeVisible();
     malformedList = true;
-    malformedDetail = true;
     await refresh.click();
-    await expect(listError).toBeVisible();
-    await expect(error).toBeVisible();
-    await expect(
-      content.getByRole('button', { name: new RegExp(templateRow.title) })
-    ).toBeVisible();
-    await expect(page.locator('#document-template-title')).toHaveValue('Metadata draft');
-    await expect(page.locator('#document-template-summary')).toHaveValue('Version draft');
-    expect(queries.at(-1)).toBe(query);
+    await expect(content.getByRole('alert')).toContainText(word('error'));
+    await expect(content.getByRole('link', { name: templateRow.title, exact: true })).toBeVisible();
     malformedList = false;
-    malformedDetail = false;
-    await listError.getByRole('button', { name: word('retry'), exact: true }).click();
-    await error.getByRole('button', { name: word('retry'), exact: true }).click();
-    await expect(listError).toHaveCount(0);
-    await expect(error).toHaveCount(0);
-    await expect(page.locator('#document-template-title')).toHaveValue('Metadata draft');
-    expect(
-      await page
-        .locator('#document-template-files')
-        .evaluate((input: HTMLInputElement) => input.files?.[0]?.name)
-    ).toBe('Draft.pdf');
-    listStatus = 403;
-    await refresh.click();
-    await expect(content.getByRole('alert')).toContainText(word('denied'));
-    await expect(page.locator('#document-template-title')).toHaveCount(0);
-    await expect(page.locator('#document-template-files')).toHaveCount(0);
+    const detailBeforeListRetry = detailReads;
+    await content.getByRole('button', { name: word('retry'), exact: true }).click();
+    await expect(content.getByRole('alert')).toHaveCount(0);
+    expect(detailReads).toBe(detailBeforeListRetry);
   });
   for (const source of ['detail', 'download'] as const) {
     test(`template ${source} denial withdraws the list and aborts stale reads (${locale})`, async ({
@@ -473,27 +522,29 @@ for (const locale of ['en', 'fa'] as const) {
       await page.goto('/admin/document-templates');
       const main = page.getByRole('main');
       const list = main.getByRole('region', { name: word('listTitle'), exact: true });
-      const row = list.getByRole('button', { name: new RegExp(templateRow.title) });
+      const row = list.getByRole('link', { name: templateRow.title, exact: true });
       const download = main.getByRole('button', { name: word('download'), exact: true });
       const signedLink = main.getByRole('link', { name: word('openFile'), exact: true });
       await expect(row).toBeVisible();
-      if (source === 'download') {
-        await row.click();
-        await download.click();
-        await expect(signedLink).toBeVisible();
-      }
       try {
         hold = true;
         await main.getByRole('button', { name: word('refresh'), exact: true }).click();
         await expect.poll(() => !!heldList).toBe(true);
-        await (source === 'detail' ? row : download).click();
-        await expect(list.getByRole('alert')).toContainText(word('denied'));
+        await row.click();
+        await expect.poll(() => aborted).toBe(true);
+        if (source === 'download') {
+          await main.locator(`a[href$="/versions/${version.id}"]`).click();
+          hold = false;
+          await download.click();
+          await expect(signedLink).toBeVisible();
+          hold = true;
+          await download.click();
+        }
+        await expect(main.getByRole('alert')).toContainText(word('denied'));
         await expect(row).toHaveCount(0);
         await expect(download).toHaveCount(0);
         await expect(signedLink).toHaveCount(0);
-        await expect.poll(() => aborted).toBe(true);
         await heldList!.fulfill({ json: [templateRow] }).catch(() => {});
-        await expect(row).toHaveCount(0);
         await expect(main).not.toContainText('Private template data');
       } finally {
         await heldList?.abort().catch(() => {});
@@ -541,16 +592,21 @@ for (const locale of ['en', 'fa'] as const) {
       route.fulfill({ json: documentDetail })
     );
     await page.goto('/admin/documents');
-    const retention = page.locator('details').filter({
-      has: page.locator('summary').filter({ hasText: word('retentionPolicies') }),
-    });
-    await retention.locator('summary').click();
+    await page.getByRole('link', { name: word('retentionPolicies'), exact: true }).click();
+    const retention = page.getByRole('region', { name: word('retentionPolicies'), exact: true });
+    await expect(retention.locator('form')).toHaveCount(0);
+    await retention
+      .getByRole('link', {
+        name: word('editRetentionFor').replace('{kind}', word('contract')),
+        exact: true,
+      })
+      .click();
     const years = retention.getByRole('spinbutton', { name: word('retentionYears'), exact: true });
     const note = retention.getByRole('textbox', { name: word('approvalNote'), exact: true });
-    const save = retention.getByRole('button', { name: word('savePolicy'), exact: true });
+    const save = retention.getByRole('button', { name: word('reviewRetention'), exact: true });
     await expect(
-      retention.getByRole('combobox', { name: word('kind'), exact: true })
-    ).toHaveAttribute('aria-required', 'true');
+      retention.getByRole('heading', { name: word('contract'), exact: true })
+    ).toBeVisible();
     await expect(years).toHaveAttribute('aria-required', 'true');
     await expect(note).toHaveAttribute('aria-required', 'true');
     await years.fill('101');
@@ -567,46 +623,215 @@ for (const locale of ['en', 'fa'] as const) {
     await page.keyboard.press('Escape');
     await expect(page.getByRole('dialog')).toHaveCount(0);
 
-    await page.getByRole('button', { name: documentRow.originalName, exact: true }).click();
+    await page.getByRole('link', { name: word('backToRetention'), exact: true }).click();
+    await page.getByRole('link', { name: word('backToDocuments'), exact: true }).click();
+    await page.getByRole('link', { name: documentRow.originalName, exact: true }).click();
     const detail = page.getByRole('region', { name: word('details'), exact: true });
-    const review = detail.getByRole('textbox', { name: word('reason'), exact: true });
-    await expect(review).toHaveAccessibleDescription(word('reviewReasonHelp'));
-    await expect(review).not.toHaveAttribute('aria-required', 'true');
-    await detail.getByRole('button', { name: word('quarantine'), exact: true }).click();
-    await expect(review).toHaveAttribute('aria-required', 'true');
-    await expect(review).toHaveAccessibleDescription(
-      `${word('reviewReasonHelp')} ${word('reasonRequired')}`
-    );
-    await review.fill('Quarantine reason');
-    await expect(review).not.toHaveAttribute('aria-invalid', 'true');
+    await expect(detail.locator('#document-review-reason')).toHaveCount(0);
+    await detail.getByRole('link', { name: word('quarantine'), exact: true }).click();
+    const quarantineReason = detail.getByRole('textbox', {
+      name: word('decisionLabel.quarantine'),
+      exact: true,
+    });
+    const reviewDecision = detail.getByRole('button', {
+      name: word('reviewDecisionAction'),
+      exact: true,
+    });
+    await expect(quarantineReason).toHaveAttribute('aria-required', 'true');
+    await reviewDecision.click();
+    await expect(quarantineReason).toHaveAccessibleDescription(word('reasonRequired'));
+    await quarantineReason.fill('Quarantine reason');
+    await expect(quarantineReason).not.toHaveAttribute('aria-invalid', 'true');
+    await reviewDecision.click();
+    await expect(page.getByRole('dialog')).toContainText('Quarantine reason');
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page.getByRole('link', { name: word('backToDocument'), exact: true }).click();
 
-    const holds = detail.getByRole('region', { name: word('legalHolds'), exact: true });
+    const holds = page.getByRole('region', { name: word('legalHolds'), exact: true });
+    await expect(holds.getByRole('link', { name: word('newHold'), exact: true })).toHaveAttribute(
+      'href',
+      `/admin/documents/${documentRow.id}/holds/new`
+    );
+    await holds.getByRole('link', { name: word('openHolds'), exact: true }).click();
+    await expect(holds.locator('form')).toHaveCount(0);
+    await holds.getByRole('link', { name: word('newHold'), exact: true }).click();
+    expect(new URL(page.url()).pathname).toBe(`/admin/documents/${documentRow.id}/holds/new`);
     const reason = holds.getByRole('textbox', { name: word('holdReason'), exact: true });
-    const expiry = holds.getByLabel(word('holdExpiry'), { exact: true });
+    const expiry = holds.getByRole('checkbox', { name: word('setHoldExpiry'), exact: true });
+    const date = holds.getByRole('combobox', { name: word('holdExpiryDate'), exact: true });
+    const time = holds.getByLabel(word('holdExpiryTime'), { exact: true });
     const release = holds.getByRole('textbox', { name: word('releaseNote'), exact: true });
     await expect(
       holds.getByRole('combobox', { name: word('holdScope'), exact: true })
     ).toHaveAttribute('aria-required', 'true');
     await expect(reason).toHaveAttribute('aria-required', 'true');
     await expect(expiry).not.toHaveAttribute('aria-required', 'true');
-    await expect(release).toHaveAttribute('aria-required', 'true');
-    await expiry.fill('2000-01-01T10:30');
+    await expect(release).toHaveCount(0);
+    await expiry.check();
+    await selectHoldExpiryDay(page, date, new Date().toISOString(), locale);
+    await time.fill('00:00');
     await reason.fill('  ');
-    await holds.getByRole('button', { name: word('createHold'), exact: true }).click();
+    await holds.getByRole('button', { name: word('reviewHold'), exact: true }).click();
     await expect(reason).toHaveAccessibleDescription(word('legalReasonLength'));
-    await expect(expiry).toHaveAccessibleDescription(word('holdExpiryError'));
-    await expect(release).not.toHaveAttribute('aria-invalid', 'true');
-    await holds.getByRole('button', { name: word('releaseHold'), exact: true }).click();
-    await expect(release).toHaveAccessibleDescription(word('legalReasonLength'));
+    await expect(time).toHaveAccessibleDescription(word('holdExpiryError'));
     await reason.fill('Preserve the sealed original');
-    await expiry.fill('');
+    await expiry.uncheck();
     await expect(reason).not.toHaveAttribute('aria-invalid', 'true');
-    await expect(expiry).not.toHaveAttribute('aria-invalid', 'true');
+    await expect(date).toHaveCount(0);
+    await expect(time).toHaveCount(0);
+    await expect(expiry).toHaveAccessibleDescription(word('holdUntilReleased'));
+    await holds.getByRole('button', { name: word('reviewHold'), exact: true }).click();
+    await expect(page.getByRole('dialog')).toContainText('Preserve the sealed original');
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page.getByRole('link', { name: word('backToHolds'), exact: true }).click();
+    await holds.getByRole('link', { name: word('releaseHold'), exact: true }).click();
+    expect(new URL(page.url()).pathname).toBe(
+      `/admin/documents/${documentRow.id}/holds/release/${documentCursor}`
+    );
+    await expect(reason).toHaveCount(0);
+    await expect(release).toHaveAttribute('aria-required', 'true');
+    await expect(release).not.toHaveAttribute('aria-invalid', 'true');
+    await holds.getByRole('button', { name: word('reviewRelease'), exact: true }).click();
+    await expect(release).toHaveAccessibleDescription(word('legalReasonLength'));
     await expect(release).toHaveAttribute('aria-invalid', 'true');
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(writes).toEqual([]);
     expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
   });
+  test(`legal hold routes bind scope, expiry, and release to verified receipts (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale, true);
+    const word = (key: string) => documentText(key, locale);
+    const root = `/admin/documents/${documentRow.id}/holds`;
+    const createdId = '70000000-0000-4000-8000-000000000001';
+    const unrelatedId = '70000000-0000-4000-8000-000000000002';
+    const otherDocument = '70000000-0000-4000-8000-000000000003';
+    const reason = 'Preserve the signed original for review';
+    const note = 'The preservation review is complete';
+    const tomorrow = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Tehran' }).format(
+      new Date(Date.now() + 86_400_000)
+    );
+    const expiresAt = `${tomorrow}T04:15:00.000Z`;
+    const history: {
+      id: string;
+      reason: string;
+      documentId: string | null;
+      profileId: string | null;
+      initiatedAt: string;
+      expiresAt: string | null;
+      releasedAt: string | null;
+      active: boolean;
+    }[] = [
+      {
+        id: unrelatedId,
+        reason: 'UNRELATED-HOLD',
+        documentId: otherDocument,
+        profileId: null,
+        initiatedAt: documentRow.createdAt,
+        expiresAt: null,
+        releasedAt: null,
+        active: true,
+      },
+    ];
+    const writes: unknown[] = [];
+    await page.route(`**/api/admin/documents/${documentRow.id}`, (route) =>
+      route.fulfill({ json: documentDetail })
+    );
+    await page.route('**/api/admin/document-retention/holds?*', (route) =>
+      route.fulfill({
+        json: {
+          held: history.some((hold) => hold.id === createdId && hold.active),
+          canManage: true,
+          holds: history,
+        },
+      })
+    );
+    await page.route('**/api/admin/document-retention/holds', (route) => {
+      const body = route.request().postDataJSON();
+      writes.push(body);
+      if (writes.length > 1) return route.fulfill({ status: 201, json: {} });
+      const receipt = {
+        id: createdId,
+        reason,
+        documentId: null,
+        profileId: documentRow.profileId,
+        initiatedAt: documentRow.createdAt,
+        expiresAt,
+        releasedAt: null,
+        active: true,
+      };
+      history.push(receipt);
+      return route.fulfill({ status: 201, json: receipt });
+    });
+    await page.route(`**/api/admin/document-retention/holds/${createdId}/release`, (route) => {
+      writes.push(route.request().postDataJSON());
+      const hold = history.find((row) => row.id === createdId)!;
+      hold.active = false;
+      hold.releasedAt = documentRow.updatedAt;
+      return route.fulfill({ status: 200, json: hold });
+    });
+    await page.goto(`${root}/release/${unrelatedId}`);
+    const holds = page.getByRole('region', { name: word('legalHolds'), exact: true });
+    await expect(holds).toContainText(word('holdUnavailable'));
+    await expect(holds).not.toContainText('UNRELATED-HOLD');
+    await expect(holds.locator('form')).toHaveCount(0);
+    const back = page.getByRole('link', { name: word('backToHolds'), exact: true });
+    await back.click();
+    const start = holds.getByRole('link', { name: word('newHold'), exact: true });
+    await start.click();
+    const scope = holds.getByRole('combobox', { name: word('holdScope'), exact: true });
+    await scope.selectOption('profile');
+    await expect(scope).toHaveAccessibleDescription(word('holdProfileHelp'));
+    const expiry = holds.getByRole('checkbox', { name: word('setHoldExpiry'), exact: true });
+    const date = holds.getByRole('combobox', { name: word('holdExpiryDate'), exact: true });
+    const time = holds.getByLabel(word('holdExpiryTime'), { exact: true });
+    await expect(date).toHaveCount(0);
+    await expect(expiry).toHaveAccessibleDescription(word('holdUntilReleased'));
+    await expiry.check();
+    await expect(date).toBeEnabled();
+    const reasonField = holds.getByRole('textbox', { name: word('holdReason'), exact: true });
+    await reasonField.fill(reason);
+    const review = holds.getByRole('button', { name: word('reviewHold'), exact: true });
+    await review.click();
+    await expect(date).toBeFocused();
+    await expect(date).toHaveAttribute('aria-invalid', 'true');
+    expect(writes).toEqual([]);
+    await selectHoldExpiryDay(page, date, expiresAt, locale);
+    await review.click();
+    await expect(time).toBeFocused();
+    await time.fill('07:45');
+    await review.click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText(reason);
+    await expect(dialog).toContainText(word('holdProfile'));
+    await dialog.locator('button[type=submit]').click();
+    await expect(holds.getByRole('status').filter({ hasText: word('holdRecorded') })).toBeVisible();
+    expect(writes).toEqual([{ profileId: documentRow.profileId, reason, expiresAt }]);
+    await back.click();
+    await holds.getByRole('link', { name: word('releaseHold'), exact: true }).click();
+    await expect(holds).toContainText(reason);
+    await holds.getByRole('textbox', { name: word('releaseNote'), exact: true }).fill(note);
+    await holds.getByRole('button', { name: word('reviewRelease'), exact: true }).click();
+    await expect(dialog).toContainText(note);
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await dialog.locator('button[type=submit]').click();
+    await expect(
+      holds.getByRole('status').filter({ hasText: word('releaseRecorded') })
+    ).toBeVisible();
+    expect(writes[1]).toEqual({ note });
+    await back.click();
+    await start.click();
+    await reasonField.fill('Second hold with an unconfirmed response');
+    await review.click();
+    await dialog.locator('button[type=submit]').click();
+    await expect(holds).toContainText(word('checkHoldHistory'));
+    await expect(holds.locator('form')).toHaveCount(0);
+    expect(writes).toHaveLength(3);
+  });
+
   test(`destruction queue recovery keeps approval reasons and clears newly ineligible work (${locale})`, async ({
     page,
   }) => {
@@ -631,22 +856,19 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.goto('/admin/documents');
     const main = page.getByRole('main');
-    await main
-      .locator('summary')
-      .filter({ hasText: word('destructionQueue') })
-      .click();
+    await main.getByRole('link', { name: word('destructionQueue'), exact: true }).click();
     const list = main.getByRole('region', { name: word('destructionQueue'), exact: true });
     const content = list.locator('[data-slot="list-content"]');
     await expect(content.getByRole('alert')).toBeVisible();
     status = 200;
     await content.getByRole('button', { name: word('retry'), exact: true }).click();
-    await content.getByRole('button', { name: word('destructionApprove'), exact: true }).click();
+    await content.getByRole('link', { name: word('destructionApprove'), exact: true }).click();
     const note = list.getByRole('textbox', { name: word('destructionApprovalNote'), exact: true });
     await expect(note).toHaveAttribute('aria-required', 'true');
     await note.fill('  ');
     await list
       .locator('form')
-      .getByRole('button', { name: word('destructionApprove'), exact: true })
+      .getByRole('button', { name: word('destructionReview'), exact: true })
       .click();
     await expect(note).toHaveAccessibleDescription(word('legalReasonLength'));
     await expect(page.getByRole('dialog')).toHaveCount(0);
@@ -669,5 +891,34 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(content.getByRole('alert')).toContainText(word('denied'));
     await expect(content.getByText(documentRow.id, { exact: true })).toHaveCount(0);
     expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+
+    status = 200;
+    pending = true;
+    const item = destructionQueue.items[0]!;
+    const approval = 'Retention expired and the review is complete';
+    await page.route(`**/api/admin/document-retention/destruction/${item.id}/approve`, (route) => {
+      expect(route.request().postDataJSON()).toEqual({ note: approval });
+      pending = false;
+      return route.fulfill({
+        json: { id: item.id, document_id: item.documentId, status: 'approved' },
+      });
+    });
+    await page.goto(
+      `/admin/documents/governance/destruction/${item.id}?profileId=${documentCursor}`
+    );
+    await expect(
+      list.getByRole('link', { name: word('reviewDestructionDocument'), exact: true })
+    ).toHaveAttribute('href', `/admin/documents/${item.documentId}`);
+    await note.fill(approval);
+    await list.getByRole('button', { name: word('destructionReview'), exact: true }).click();
+    const review = page.getByRole('dialog');
+    await expect(review).toContainText(approval);
+    await expect(review).toContainText(item.documentId);
+    await approveRiskConfirmation(page, locale, 'destructive');
+    await review.locator('button[type=submit]').click();
+    await expect(
+      list.getByText(word('destructionApprovalRecorded'), { exact: true })
+    ).toBeVisible();
+    await expect(note).toHaveCount(0);
   });
 }

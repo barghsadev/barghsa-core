@@ -9,14 +9,17 @@ import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState } fr
 import { ArrowDown, ArrowUp, Building2, UserRound } from 'lucide-react';
 import { useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/crm';
+import { t as workspaceText } from '@barghsa/i18n/workspace';
 import {
   LoadingStatus,
   Button,
   CardListView,
-  Input,
   Label,
   DatePicker,
   ListPage,
+  ListRefreshButton,
+  ListSearchInput,
+  NativeSelect,
   ScrollArea,
   datePickerCalendarDate,
   datePickerDayBounds,
@@ -94,6 +97,12 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
   );
   const text = query?.searchInput ?? localText;
   const term = query?.query.search ?? localTerm;
+  const filterCount = [
+    filters.type,
+    filters.verification,
+    filters.dateFrom || filters.dateTo,
+    filters.staffOnly,
+  ].filter(Boolean).length;
   const queryRef = useRef(query);
   queryRef.current = query;
   const setFilters = setLocalFilters;
@@ -391,6 +400,7 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
     return (
       <Button
         variant="outline"
+        data-table-action-tooltip={label('profiles')}
         disabled={user.profileCount === 0}
         aria-expanded={!!expanded[user.userId]}
         aria-controls={expanded[user.userId] ? id : undefined}
@@ -398,7 +408,9 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
           setExpanded((previous) => ({ ...previous, [user.userId]: !previous[user.userId] }))
         }
       >
-        {label('profiles')}: {numbers.number(user.profileCount)}
+        <TableActionIcon icon={UsersRound}>
+          {label('profiles')}: {numbers.number(user.profileCount)}
+        </TableActionIcon>
       </Button>
     );
   }
@@ -422,120 +434,143 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
   return (
     <section className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-2xl font-semibold">{t('crm.list.title', locale)}</h1>
-      <div className="grid gap-4 rounded-lg border bg-card text-card-foreground p-4 sm:grid-cols-2 xl:grid-cols-3">
-        <div>
-          <Label htmlFor="crm-search">{t('crm.list.search', locale)}</Label>
-          <Input
+      <ListPage.Toolbar
+        search={
+          <ListSearchInput
             id="crm-search"
+            label={t('crm.list.search', locale)}
             maxLength={256}
             value={text}
             onChange={(event) => setText(event.target.value)}
           />
-        </div>
-        {(
-          [
-            { key: 'type', options: ['', 'INDIVIDUAL', 'LEGAL'] },
-            { key: 'verification', options: ['', 'VERIFIED', 'UNVERIFIED', 'PENDING', 'DISABLED'] },
-            { key: 'order', options: ['desc', 'asc'] },
-          ] as const
-        ).map(({ key, options }) => (
-          <div key={key}>
-            <Label htmlFor={`crm-${key}`}>{t(`crm.list.${key}`, locale)}</Label>
-            <select
-              id={`crm-${key}`}
-              className="block w-full rounded border border-input bg-background text-foreground p-2"
-              value={filters[key]}
-              onChange={(event) => update(key, event.target.value)}
-            >
-              {options.map((value) => (
-                <option key={value} value={value}>
-                  {t(
-                    `crm.list.${key === 'order' ? (value === 'asc' ? 'sortAscending' : 'sortDescending') : value || 'all'}`,
-                    locale
-                  )}
-                </option>
+        }
+        sort={
+          <NativeSelect
+            id="crm-order"
+            aria-label={t('crm.list.order', locale)}
+            value={filters.order}
+            onChange={(event) => update('order', event.target.value)}
+          >
+            <option value="desc">{t('crm.list.sortDescending', locale)}</option>
+            <option value="asc">{t('crm.list.sortAscending', locale)}</option>
+          </NativeSelect>
+        }
+        moreFilters={{
+          label: workspaceText('historyFilters.label', locale),
+          count: filterCount ? numbers.number(filterCount) : undefined,
+          children: (
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {(
+                [
+                  { key: 'type', options: ['', 'INDIVIDUAL', 'LEGAL'] },
+                  {
+                    key: 'verification',
+                    options: ['', 'VERIFIED', 'UNVERIFIED', 'PENDING', 'DISABLED'],
+                  },
+                ] as const
+              ).map(({ key, options }) => (
+                <div key={key} className="flex min-w-0 flex-col gap-2">
+                  <Label htmlFor={`crm-${key}`}>{t(`crm.list.${key}`, locale)}</Label>
+                  <NativeSelect
+                    id={`crm-${key}`}
+                    className="w-full"
+                    value={filters[key]}
+                    onChange={(event) => update(key, event.target.value)}
+                  >
+                    {options.map((value) => (
+                      <option key={value} value={value}>
+                        {t(`crm.list.${value || 'all'}`, locale)}
+                      </option>
+                    ))}
+                  </NativeSelect>
+                </div>
               ))}
-            </select>
-          </div>
-        ))}
-        {(['dateFrom', 'dateTo'] as const).map((key) => (
-          <div key={key}>
-            <Label htmlFor={`crm-${key}`}>
-              {t(`crm.list.${key === 'dateFrom' ? 'from' : 'to'}`, locale)}
-            </Label>
-            <DatePicker
-              id={`crm-${key}`}
-              label={t(`crm.list.${key === 'dateFrom' ? 'from' : 'to'}`, locale)}
-              placeholder={t(`crm.list.${key === 'dateFrom' ? 'from' : 'to'}`, locale)}
-              locale={locale}
-              timezone={preference.timezone}
-              disabled={preference.status !== 'ready'}
-              {...(filters[key]
-                ? { value: datePickerCalendarDate(filters[key], preference.timezone) }
-                : {})}
-              {...(key === 'dateTo' && filters.dateFrom
-                ? { minDate: datePickerCalendarDate(filters.dateFrom, preference.timezone) }
-                : {})}
-              {...(key === 'dateFrom' && filters.dateTo
-                ? { maxDate: datePickerCalendarDate(filters.dateTo, preference.timezone) }
-                : {})}
-              onChange={(value) =>
-                update(
-                  key,
-                  value
-                    ? `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`
-                    : ''
-                )
+              {(['dateFrom', 'dateTo'] as const).map((key) => (
+                <div key={key} className="flex min-w-0 flex-col gap-2">
+                  <Label htmlFor={`crm-${key}`}>
+                    {t(`crm.list.${key === 'dateFrom' ? 'from' : 'to'}`, locale)}
+                  </Label>
+                  <DatePicker
+                    id={`crm-${key}`}
+                    label={t(`crm.list.${key === 'dateFrom' ? 'from' : 'to'}`, locale)}
+                    placeholder={t(`crm.list.${key === 'dateFrom' ? 'from' : 'to'}`, locale)}
+                    locale={locale}
+                    timezone={preference.timezone}
+                    disabled={preference.status !== 'ready'}
+                    {...(filters[key]
+                      ? { value: datePickerCalendarDate(filters[key], preference.timezone) }
+                      : {})}
+                    {...(key === 'dateTo' && filters.dateFrom
+                      ? { minDate: datePickerCalendarDate(filters.dateFrom, preference.timezone) }
+                      : {})}
+                    {...(key === 'dateFrom' && filters.dateTo
+                      ? { maxDate: datePickerCalendarDate(filters.dateTo, preference.timezone) }
+                      : {})}
+                    onChange={(value) =>
+                      update(
+                        key,
+                        value
+                          ? `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`
+                          : ''
+                      )
+                    }
+                  />
+                </div>
+              ))}
+              <Label className="touch-label flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={filters.staffOnly}
+                  onChange={(event) => update('staffOnly', event.target.checked)}
+                />
+                {t('crm.list.staffOnly', locale)}
+              </Label>
+              {preference.status === 'ready' && (
+                <p className="text-sm text-muted-foreground sm:col-span-2 xl:col-span-3">
+                  {t('crm.list.timezone', locale).replace('{timezone}', preference.timezone)}
+                </p>
+              )}
+            </div>
+          ),
+        }}
+        actions={
+          <>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                if (query) query.clear();
+                else {
+                  setFilters(emptyFilters);
+                  setText('');
+                  setTerm('');
+                }
+                setCursors(['']);
+              }}
+            >
+              {t('crm.list.clear', locale)}
+            </Button>
+            {Object.values(expanded).some(Boolean) && (
+              <Button variant="ghost" onClick={() => setExpanded({})}>
+                {t('crm.list.collapse', locale)}
+              </Button>
+            )}
+          </>
+        }
+        refresh={
+          <ListRefreshButton
+            label={t('crm.list.refresh', locale)}
+            refreshing={loading}
+            disabled={preference.status === 'loading'}
+            onClick={() => {
+              if (preference.status === 'error') preference.retry();
+              else {
+                setDenied(false);
+                setRevision((v) => v + 1);
               }
-            />
-          </div>
-        ))}
-        <Label className="touch-label flex items-center gap-2">
-          <input
-            type="checkbox"
-            checked={filters.staffOnly}
-            onChange={(event) => update('staffOnly', event.target.checked)}
+            }}
           />
-          {t('crm.list.staffOnly', locale)}
-        </Label>
-      </div>
-      {preference.status === 'ready' && (
-        <p className="text-sm text-muted-foreground">
-          {t('crm.list.timezone', locale).replace('{timezone}', preference.timezone)}
-        </p>
-      )}
-      <div className="flex flex-wrap gap-2">
-        <Button
-          variant="outline"
-          onClick={() => {
-            if (query) query.clear();
-            else {
-              setFilters(emptyFilters);
-              setText('');
-              setTerm('');
-            }
-            setCursors(['']);
-          }}
-        >
-          {t('crm.list.clear', locale)}
-        </Button>
-        <Button variant="outline" onClick={() => setExpanded({})}>
-          {t('crm.list.collapse', locale)}
-        </Button>
-        <Button
-          variant="outline"
-          disabled={loading || preference.status === 'loading'}
-          onClick={() => {
-            if (preference.status === 'error') preference.retry();
-            else {
-              setDenied(false);
-              setRevision((v) => v + 1);
-            }
-          }}
-        >
-          {t('crm.list.refresh', locale)}
-        </Button>
-      </div>
+        }
+      />
       <div className="flex flex-wrap gap-2">
         {term && (
           <Button
@@ -656,6 +691,7 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
                           <th
                             key={name}
                             scope="col"
+                            data-table-actions={name === 'profiles' ? '' : undefined}
                             className="p-3 text-start font-semibold"
                             aria-sort={
                               sort
@@ -687,7 +723,14 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
                               <td className="p-3">{date(user.registrationDate)}</td>
                               <td className="p-3">{date(user.lastLogin)}</td>
                               <td className="p-3">{verification(user)}</td>
-                              <td className="p-3">{toggleProfiles(user, id)}</td>
+                              <td data-table-actions="" className="p-3">
+                                <div className="flex items-center justify-end gap-2">
+                                  <span aria-hidden="true" className="tabular-nums">
+                                    {numbers.number(user.profileCount)}
+                                  </span>
+                                  {toggleProfiles(user, id)}
+                                </div>
+                              </td>
                             </tr>
                             {expanded[user.userId] && (
                               <tr className="border-b">
@@ -747,3 +790,5 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
     </section>
   );
 }
+import { UsersRound } from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';

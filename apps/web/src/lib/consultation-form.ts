@@ -1,5 +1,6 @@
 export interface ConsultationIntakeDraft {
   productId: string;
+  brief: string;
   confirm: boolean;
 }
 export interface ConsultationReasonDraft {
@@ -17,7 +18,11 @@ export interface ConsultationInformationCommand {
   reason: string;
   history: ConsultationInformationEvent[];
 }
-export const emptyConsultationIntake: ConsultationIntakeDraft = { productId: '', confirm: false };
+export const emptyConsultationIntake: ConsultationIntakeDraft = {
+  productId: '',
+  brief: '',
+  confirm: false,
+};
 export const consultationUuid = (value: string) =>
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 const record = (value: unknown): value is Record<string, unknown> =>

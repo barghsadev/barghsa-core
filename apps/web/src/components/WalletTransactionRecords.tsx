@@ -32,6 +32,8 @@ import { WalletReceiptHistoryDetails } from './WalletReceiptHistoryDetails.js';
 
 export interface WalletTransaction {
   bankReceipt?: WalletBankReceiptHistory;
+  staffSource?: 'ledger' | 'bank_receipt' | 'online' | 'invoice';
+  receiptId?: string;
   id: string;
   type: string;
   amount: string;
@@ -97,26 +99,33 @@ export function WalletTransactionRecords({
   const amount = (item: WalletTransaction) => {
     const value = BigInt(item.amount);
     return (
-      <bdi
-        dir="ltr"
-        className={cn(
-          'font-semibold tabular-nums',
-          item.state === 'Completed' && value > 0n
-            ? 'text-success'
-            : item.state === 'Completed' && value < 0n
-              ? 'text-destructive'
-              : 'text-foreground'
+      <span className="grid gap-0.5">
+        <bdi
+          dir="ltr"
+          className={cn(
+            'font-semibold tabular-nums',
+            item.state === 'Completed' && value > 0n
+              ? 'text-success'
+              : item.state === 'Completed' && value < 0n
+                ? 'text-destructive'
+                : 'text-foreground'
+          )}
+        >
+          {value > 0n ? '+' : ''}
+          <Currency
+            amount={item.amount}
+            showCurrencyCode={false}
+            variant="small"
+            locale={locale}
+          />{' '}
+          {word('irr')}
+        </bdi>
+        {staff && item.state === 'Completed' && value !== 0n && (
+          <span className="text-xs text-muted-foreground">
+            {word(value > 0n ? 'credit' : 'debit')}
+          </span>
         )}
-      >
-        {value > 0n ? '+' : ''}
-        <Currency
-          amount={item.amount}
-          showCurrencyCode={false}
-          variant="small"
-          locale={locale}
-        />{' '}
-        {word('irr')}
-      </bdi>
+      </span>
     );
   };
   const state = (item: WalletTransaction) => (
@@ -145,7 +154,7 @@ export function WalletTransactionRecords({
         className="touch-action text-primary underline underline-offset-2"
         href={
           staff
-            ? `/admin/invoices?invoiceId=${encodeURIComponent(item.refId)}`
+            ? `/admin/invoices/${encodeURIComponent(item.refId)}`
             : `/invoices/${encodeURIComponent(item.refId)}`
         }
       >
@@ -172,12 +181,23 @@ export function WalletTransactionRecords({
       )}
     </div>
   );
+  const source = (item: WalletTransaction) => {
+    const origin =
+      item.staffSource ?? (item.type === 'payment' && item.refId ? 'invoice' : 'ledger');
+    if (origin === 'bank_receipt' && item.receiptId && isInvoiceUuid(item.receiptId)) {
+      return (
+        <a
+          className="touch-action text-primary underline underline-offset-2"
+          href={`/admin/wallet-receipts/${encodeURIComponent(item.receiptId)}`}
+        >
+          {word('source.bank_receipt')}
+        </a>
+      );
+    }
+    return word(`source.${origin}`);
+  };
   const deposit = (item: WalletTransaction) => (
-    <ReceiptDepositDate
-      value={item.bankReceipt?.paymentDate}
-      locale={locale}
-      calendar={locale === 'fa' ? 'persian' : 'gregory'}
-    />
+    <ReceiptDepositDate value={item.bankReceipt?.paymentDate} locale={locale} />
   );
   const details = (item: WalletTransaction) =>
     item.bankReceipt ? (
@@ -213,22 +233,26 @@ export function WalletTransactionRecords({
           { id: 'id', label: word('transactionId'), render: (item) => identity(item.id) },
           { id: 'reference', label: word('reference'), render: reference },
           { id: 'description', label: word('description'), render: description },
-          {
-            id: 'bank',
-            label: receiptLabel('bankName'),
-            render: (item) => (
-              <span className="break-words [overflow-wrap:anywhere]" dir="auto">
-                {item.bankReceipt?.bankName ?? '—'}
-              </span>
-            ),
-          },
-          { id: 'deposit', label: receiptLabel('paymentDate'), render: deposit },
-          {
-            id: 'transfer',
-            label: receiptLabel('payerReference'),
-            render: (item) => identity(item.bankReceipt?.payerReference),
-          },
-          { id: 'details', label: receiptLabel('details'), render: details },
+          ...(staff
+            ? [{ id: 'source', label: word('source'), render: source }]
+            : [
+                {
+                  id: 'bank',
+                  label: receiptLabel('bankName'),
+                  render: (item: WalletTransaction) => (
+                    <span className="break-words [overflow-wrap:anywhere]" dir="auto">
+                      {item.bankReceipt?.bankName ?? '—'}
+                    </span>
+                  ),
+                },
+                { id: 'deposit', label: receiptLabel('paymentDate'), render: deposit },
+                {
+                  id: 'transfer',
+                  label: receiptLabel('payerReference'),
+                  render: (item: WalletTransaction) => identity(item.bankReceipt?.payerReference),
+                },
+                { id: 'details', label: receiptLabel('details'), render: details, actions: true },
+              ]),
         ]}
       />
     );
@@ -261,7 +285,13 @@ export function WalletTransactionRecords({
                     <dd className="break-all">{reference(item)}</dd>
                   </div>
                 )}
-                {item.bankReceipt && (
+                {staff && (
+                  <div>
+                    <dt className="text-muted-foreground">{word('source')}</dt>
+                    <dd>{source(item)}</dd>
+                  </div>
+                )}
+                {!staff && item.bankReceipt && (
                   <>
                     <div>
                       <dt className="text-muted-foreground">{receiptLabel('bankName')}</dt>
@@ -281,7 +311,9 @@ export function WalletTransactionRecords({
                 )}
               </dl>
             </CardContent>
-            {item.bankReceipt && <CardFooter className="block">{details(item)}</CardFooter>}
+            {!staff && item.bankReceipt && (
+              <CardFooter className="block">{details(item)}</CardFooter>
+            )}
           </Card>
         </li>
       ))}

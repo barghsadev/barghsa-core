@@ -10,10 +10,11 @@ import {
   type OnboardingJourneyProfile,
 } from '../../lib/onboarding-journey.js';
 import { refreshProfileContext } from '../../lib/profile-context.js';
+import { onboardingReturn } from '../../lib/auth-return.js';
 import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { Button } from '@barghsa/ui';
+import { Badge, Button } from '@barghsa/ui';
 import './complete.css';
 
 export const Route = createFileRoute('/onboarding/complete')({
@@ -79,6 +80,10 @@ function OnboardingCompletePage() {
 function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: string }) {
   const locale = useLocale();
   const router = useRouter();
+  const { onboardingUserId } = Route.useRouteContext();
+  const task = onboardingReturn(onboardingUserId);
+  const continueToWorkspace = () =>
+    router.navigate({ to: onboardingReturn(onboardingUserId, true) ?? '/app', replace: true });
   const missingTarget = Boolean(profileId) === Boolean(journeyId);
   const [status, setStatus] = useState<'loading' | 'complete' | 'error'>('loading');
   const [profile, setProfile] = useState<OnboardingProfile | null>(null);
@@ -151,7 +156,7 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
     if (!journey || !selected || busy.current) return;
     if (journey.completed) {
       refreshProfileContext();
-      await router.navigate({ to: '/app', replace: true });
+      await continueToWorkspace();
       return;
     }
     busy.current = true;
@@ -190,7 +195,7 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
         throw new Error('Unexpected selection receipt');
       if (controller.signal.aborted) return;
       refreshProfileContext();
-      await router.navigate({ to: '/app', replace: true });
+      await continueToWorkspace();
     } catch {
       if (!controller.signal.aborted) setFinishError('unconfirmed');
     } finally {
@@ -201,14 +206,62 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
     }
   }
   const profiles: OnboardingJourneyProfile[] = journey?.profiles ?? (profile ? [profile] : []);
+  const reviewedProfiles = (
+    <ul className="space-y-2">
+      {profiles.map((p) => (
+        <li key={p.id}>
+          <dl
+            className={`grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-2 gap-y-1 rounded-lg border p-3 text-start ${journey && selected === p.id ? 'border-primary bg-primary/5' : 'bg-card'}`}
+            aria-label={t('onboarding.wizard.review', locale)}
+          >
+            <div className="col-span-full">
+              <dt className="sr-only">{t('onboarding.wizard.profileName', locale)}</dt>
+              <dd className="min-w-0 font-medium">
+                {journey ? (
+                  <label className="flex min-h-11 cursor-pointer items-center gap-2.5 rounded-md focus-within:ring-2 focus-within:ring-ring">
+                    <input
+                      type="radio"
+                      name="dashboard-profile"
+                      checked={selected === p.id}
+                      onChange={() => {
+                        setSelected(p.id);
+                        setFinishError(null);
+                      }}
+                      className="size-4 shrink-0 accent-primary"
+                    />
+                    <bdi className="wrap-anywhere">{p.name}</bdi>
+                  </label>
+                ) : (
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <bdi className="wrap-anywhere">{p.name}</bdi>
+                    {p.isDefault && <Badge>{t('onboarding.wizard.default', locale)}</Badge>}
+                  </div>
+                )}
+              </dd>
+            </div>
+            <div className={`text-sm text-muted-foreground ${journey ? 'ps-6' : ''}`}>
+              <dt className="sr-only">{t('onboarding.wizard.profileType', locale)}</dt>
+              <dd>{t(`settings.profile.profileType.${p.profileType}`, locale)}</dd>
+            </div>
+            <div>
+              <dt className="sr-only">{t('onboarding.wizard.status', locale)}</dt>
+              <dd>
+                <Badge>{t(`onboarding.wizard.${p.status}`, locale)}</Badge>
+              </dd>
+            </div>
+          </dl>
+        </li>
+      ))}
+    </ul>
+  );
   return (
     <div
       className="container relative isolate mx-auto flex min-h-screen items-center justify-center p-4"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {status === 'complete' && <Confetti />}
-      <div className="relative z-10 w-full max-w-lg space-y-5 bg-background text-center">
-        <h1 className="text-2xl font-bold" data-toast-anchor>
+      <div className="relative z-10 w-full min-w-0 max-w-lg space-y-4 bg-background">
+        <h1 className="text-2xl font-semibold" data-toast-anchor>
           {t(
             status === 'complete'
               ? 'onboarding.complete.title'
@@ -220,73 +273,22 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
         </h1>
         {status === 'complete' ? (
           <>
-            <p>
+            <p className="text-sm text-muted-foreground">
               {t(
                 journey ? 'onboarding.journey.summaryHelp' : 'onboarding.complete.subtitle',
                 locale
               )}
             </p>
-            <ul className="space-y-3">
-              {profiles.map((p) => (
-                <li key={p.id}>
-                  <dl
-                    className="rounded-xl border bg-card p-5 text-start space-y-4"
-                    aria-label={t('onboarding.wizard.review', locale)}
-                  >
-                    {[
-                      { label: t('onboarding.wizard.profileName', locale), value: p.name },
-                      {
-                        label: t('onboarding.wizard.profileType', locale),
-                        value: t(`settings.profile.profileType.${p.profileType}`, locale),
-                      },
-                      {
-                        label: t('onboarding.wizard.status', locale),
-                        value: t(`onboarding.wizard.${p.status}`, locale),
-                      },
-                    ].map(({ label, value }) => (
-                      <div key={label}>
-                        <dt className="text-sm text-muted-foreground">{label}</dt>
-                        <dd className="font-medium">
-                          <bdi>{value}</bdi>
-                        </dd>
-                      </div>
-                    ))}
-                    {!journey && p.isDefault && (
-                      <div className="text-sm text-primary">
-                        {t('onboarding.wizard.default', locale)}
-                      </div>
-                    )}
-                  </dl>
-                </li>
-              ))}
-            </ul>
             {journey ? (
               <>
                 <fieldset
                   disabled={submitting || journey.completed || finishError === 'unconfirmed'}
-                  className="space-y-3 text-start"
+                  className="min-w-0 text-start"
                 >
-                  <legend className="font-medium mb-3">
+                  <legend className="mb-2 text-sm font-semibold">
                     {t('onboarding.journey.defaultHelp', locale)}
                   </legend>
-                  {profiles.map((p) => (
-                    <label
-                      key={p.id}
-                      className="flex items-center gap-3 rounded-lg border p-4 cursor-pointer focus-within:ring-2 focus-within:ring-ring"
-                    >
-                      <input
-                        type="radio"
-                        name="dashboard-profile"
-                        checked={selected === p.id}
-                        onChange={() => {
-                          setSelected(p.id);
-                          setFinishError(null);
-                        }}
-                        className="h-4 w-4 accent-primary"
-                      />
-                      <bdi>{p.name}</bdi>
-                    </label>
-                  ))}
+                  {reviewedProfiles}
                 </fieldset>
                 {finishError && (
                   <p role="alert" className="text-sm text-destructive">
@@ -302,7 +304,11 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
                   onClick={finish}
                 >
                   {t(
-                    submitting ? 'onboarding.journey.finishing' : 'onboarding.journey.done',
+                    submitting
+                      ? 'onboarding.journey.finishing'
+                      : task
+                        ? 'onboarding.complete.continueTask'
+                        : 'onboarding.journey.done',
                     locale
                   )}
                 </Button>
@@ -333,21 +339,26 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
                 )}
               </>
             ) : (
-              <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => router.navigate({ to: '/onboarding', replace: true })}
-                >
-                  {t('onboarding.complete.addAnother', locale)}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => router.navigate({ to: '/app', replace: true })}
-                >
-                  {t('onboarding.complete.goToDashboard', locale)}
-                </Button>
-              </div>
+              <>
+                {reviewedProfiles}
+                <div className="flex flex-wrap justify-end gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.navigate({ to: '/onboarding', replace: true })}
+                  >
+                    {t('onboarding.complete.addAnother', locale)}
+                  </Button>
+                  <Button type="button" onClick={() => void continueToWorkspace()}>
+                    {t(
+                      task
+                        ? 'onboarding.complete.continueTask'
+                        : 'onboarding.complete.goToDashboard',
+                      locale
+                    )}
+                  </Button>
+                </div>
+              </>
             )}
           </>
         ) : status === 'loading' ? (

@@ -5,7 +5,7 @@ import { queryKeys } from '../lib/query-keys.js';
 import { useServerDetailQuery } from './useServerQuery.js';
 
 /** Load the account preference. A failed read is never treated as a saved default. */
-export function useTimezone() {
+export function useTimezone(enabled = true) {
   const reader = useId();
   const accountId = useAccountUser();
   const profileRevision = useProfileContextRevision();
@@ -15,10 +15,12 @@ export function useTimezone() {
   const [revision, setRevision] = useState(0);
   const retry = useCallback(() => setRevision((value) => value + 1), []);
   const query = useServerDetailQuery<string>({
-    queryKey: queryKeys.preferences.detail(
-      { context: 'account', ownerId, accountId, revision: profileRevision },
-      JSON.stringify(['timezone', revision === 0 ? 0 : [reader, revision]])
-    ),
+    queryKey: enabled
+      ? queryKeys.preferences.detail(
+          { context: 'account', ownerId, accountId, revision: profileRevision },
+          JSON.stringify(['timezone', revision === 0 ? 0 : [reader, revision]])
+        )
+      : null,
     manual: true,
     read: async (signal) => {
       const response = await fetch('/api/user/settings/timezone', { signal });
@@ -48,8 +50,9 @@ export function useTimezone() {
     if (!loading && query.isSuccess) setAccepted({ scope, timezone: query.data });
   }, [scope, loading, query.isSuccess, query.data]);
   useEffect(() => {
+    if (!enabled) return;
     window.addEventListener('barghsa:timezone-changed', retry);
     return () => window.removeEventListener('barghsa:timezone-changed', retry);
-  }, [retry]);
+  }, [enabled, retry]);
   return { timezone, status, retry };
 }

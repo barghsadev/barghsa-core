@@ -19,6 +19,7 @@ export interface TicketComment {
   visibility: string;
   createdAt: string;
   bodyFormat?: 'plain' | 'markdown';
+  unreadReply?: boolean;
   authorContext?: 'customer' | 'staff' | 'unknown';
   author?: { displayName: string | null; avatarUrl: string | null } | null;
   attachmentCount?: number;
@@ -41,6 +42,7 @@ export function TicketCommentThread({
   customerName,
   assignees,
   formatDate,
+  headingLevel = 3,
 }: {
   comments: readonly TicketComment[];
   ticketId?: string;
@@ -50,15 +52,17 @@ export function TicketCommentThread({
   customerName?: string | null | undefined;
   assignees: readonly { id: string; name: string }[];
   formatDate: (value: string) => string;
+  headingLevel?: 2 | 3;
 }) {
+  const Heading = headingLevel === 2 ? 'h2' : 'h3';
   const visible = comments.filter(
     (item) => item.visibility === 'public' || (staff && item.visibility === 'internal')
   );
   return (
     <section aria-labelledby="ticket-conversation-heading" className="min-w-0">
-      <h3 id="ticket-conversation-heading" className="font-semibold">
+      <Heading id="ticket-conversation-heading" className="font-semibold">
         {t('tickets.conversation', locale)}
-      </h3>
+      </Heading>
       {visible.length ? (
         <ol className="mt-3 flex flex-col gap-3" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
           {visible.map((item) => {

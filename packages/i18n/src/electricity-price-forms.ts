@@ -12,15 +12,13 @@ export const fa: I18nDictionary = {
   'electricity.priceForm.dateInvalid': 'تاریخ و زمان معتبر را انتخاب کنید.',
   'electricity.priceForm.dateHelp': 'تاریخ برای دوره آینده تحویل بررسی می‌شود.',
   'electricity.priceForm.reasonInvalid': 'دلیل باید بین ۱ تا ۱٬۰۰۰ نویسه باشد.',
-  'electricity.priceForm.reasonHelp': 'این دلیل به مشتری نمایش داده می‌شود.',
+  'electricity.priceForm.reasonHelp': 'بنویسید چه چیزی تغییر کرده و چرا.',
   'electricity.priceForm.basisInvalid': 'مبنای قراردادی باید بین ۱ تا ۲٬۰۰۰ نویسه باشد.',
   'electricity.priceForm.basisHelp': 'بند یا مبنای قراردادی این تغییر را بنویسید.',
   'electricity.priceForm.validationUnavailable': 'اعتبارسنجی در دسترس نیست. دوباره تلاش کنید.',
   'electricity.priceForm.uncertain':
     'نتیجه تأیید نشد. پیش از تغییر، همان اقدام قیمت ثبت‌شده را دوباره ارسال کنید.',
   'electricity.priceForm.retryCaptured': 'ارسال دوباره اقدام قیمت ثبت‌شده',
-  'electricity.priceForm.preserved':
-    'اگر فیلدی نیاز به اصلاح داشته باشد، سایر داده‌های شما حفظ می‌شود.',
 };
 export const englishMessages = {
   'electricity.priceForm.contractInvalid': 'Enter a valid contract ID.',
@@ -32,14 +30,13 @@ export const englishMessages = {
   'electricity.priceForm.dateHelp':
     'The effective date is checked against the future delivery period.',
   'electricity.priceForm.reasonInvalid': 'Enter a reason of 1 to 1,000 characters.',
-  'electricity.priceForm.reasonHelp': 'This reason is disclosed to the customer.',
+  'electricity.priceForm.reasonHelp': 'Explain what changed and why.',
   'electricity.priceForm.basisInvalid': 'Enter a contractual basis of 1 to 2,000 characters.',
   'electricity.priceForm.basisHelp': 'State the contract clause or basis for this change.',
   'electricity.priceForm.validationUnavailable': 'Validation is unavailable. Try again.',
   'electricity.priceForm.uncertain':
     'The result could not be confirmed. Retry the captured price action before changing it.',
   'electricity.priceForm.retryCaptured': 'Retry captured price action',
-  'electricity.priceForm.preserved': 'Your other entries are kept if a field needs correction.',
 } satisfies I18nDictionary;
 export const en: I18nDictionary = englishMessages;
 export function t(key: string, locale: Locale = 'fa'): string {
@@ -72,6 +69,13 @@ export const adminFA: I18nDictionary = {
     'پیشنهاد قیمت آینده را برای مشتری منتشر کنید، سپس فاکتور افزایش یا بستانکاری را صادر کنید.',
   'admin.electricityPrice.contractId': 'شناسه قرارداد برق',
   'admin.electricityPrice.open': 'باز کردن قرارداد',
+  'admin.electricityPrice.contractHistory': 'تعدیل‌های قیمت قرارداد',
+  'admin.electricityPrice.backToLookup': 'بازگشت به جستجوی قرارداد',
+  'admin.electricityPrice.backToHistory': 'بازگشت به تعدیل‌های قرارداد',
+  'admin.electricityPrice.backToAdjustment': 'بازگشت به تعدیل',
+  'admin.electricityPrice.decisionUnavailable':
+    'این اقدام برای وضعیت فعلی تعدیل یا مجوزهای شما در دسترس نیست.',
+  'admin.electricityPrice.recordUnavailable': 'این تعدیل قیمت در دسترس نیست.',
   'admin.electricityPrice.refresh': 'تازه‌سازی',
   'admin.electricityPrice.retry': 'تلاش دوباره',
   'admin.electricityPrice.listTitle': 'فهرست تعدیل قیمت برق',
@@ -148,6 +152,13 @@ export const adminEN: I18nDictionary = {
     'Publish a future price proposal for the customer, then issue the charge or credit.',
   'admin.electricityPrice.contractId': 'Electricity contract ID',
   'admin.electricityPrice.open': 'Open contract',
+  'admin.electricityPrice.contractHistory': 'Contract price adjustments',
+  'admin.electricityPrice.backToLookup': 'Back to contract lookup',
+  'admin.electricityPrice.backToHistory': 'Back to contract adjustments',
+  'admin.electricityPrice.backToAdjustment': 'Back to price adjustment',
+  'admin.electricityPrice.decisionUnavailable':
+    'This action is unavailable for the current adjustment status or your permissions.',
+  'admin.electricityPrice.recordUnavailable': 'This price adjustment is unavailable.',
   'admin.electricityPrice.refresh': 'Refresh',
   'admin.electricityPrice.retry': 'Try again',
   'admin.electricityPrice.listTitle': 'Electricity price adjustment list',
@@ -208,4 +219,25 @@ export function adminText(key: string, locale: Locale = 'fa'): string {
     lookup(adminEN, key) ??
     adminWorkspaceText(key, locale)
   );
+}
+
+const editorMessages = {
+  fa: {
+    changeDetails: 'مقدار و زمان تغییر قیمت',
+    percentageExample: '-2.5',
+    customerDisclosure: 'پس از انتشار، مشتری هر دو مورد را می‌بیند.',
+    reasonExample: 'مثلاً تغییر تعرفه تأمین برق طبق ابلاغیه جدید.',
+    basisExample: 'مثلاً بند تعدیل قیمت در ماده ۴ قرارداد.',
+  },
+  en: {
+    changeDetails: 'Price change and timing',
+    percentageExample: '-2.5',
+    customerDisclosure: 'The customer can see both fields after you publish.',
+    reasonExample: 'For example, the electricity supply tariff changed.',
+    basisExample: 'For example, the price adjustment clause in section 4.',
+  },
+} as const;
+
+export function editorText(key: keyof typeof editorMessages.en, locale: Locale) {
+  return editorMessages[locale][key];
 }

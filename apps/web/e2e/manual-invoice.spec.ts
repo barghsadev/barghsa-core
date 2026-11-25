@@ -178,14 +178,16 @@ for (const locale of ['fa', 'en'] as const)
           { name: 'barghsa_csrf', value: 'manual-csrf', url: new URL(page.url()).origin },
         ]);
       const panel = page.locator('#manual-invoice-panel');
-      await panel
-        .getByRole('button', { name: fa ? 'فاکتور دستی جدید' : 'New manual invoice', exact: true })
+      await page
+        .getByRole('link', { name: fa ? 'فاکتور دستی جدید' : 'New manual invoice', exact: true })
         .click();
+      await expect(page).toHaveURL(/\/admin\/invoices\/new$/);
       const issue = panel.getByRole('button', {
-        name: fa ? 'صدور فاکتور' : 'Issue invoice',
+        name: tManualInvoice('admin.manualInvoice.issue', locale),
         exact: true,
       });
       await expect(issue).toBeEnabled();
+      await expect(issue).toBeInViewport({ ratio: 0.99 });
       await issue.click();
       await expect(panel.getByRole('combobox')).toHaveAttribute('aria-invalid', 'true');
       expect(previews).toHaveLength(0);
@@ -204,7 +206,7 @@ for (const locale of ['fa', 'en'] as const)
         exact: true,
       });
       const vat = panel.getByRole('textbox', {
-        name: fa ? 'مالیات بر ارزش افزوده (%)' : 'VAT (%)',
+        name: tManualInvoice('admin.manualInvoice.vat', locale),
         exact: true,
       });
       for (const field of [description, quantity, price, vat])
@@ -269,6 +271,18 @@ for (const locale of ['fa', 'en'] as const)
       await expect(reviewDialog).toBeVisible();
       await expect(reviewDialog).toContainText(fa ? 'شرکت نمونه' : 'Example company');
       await expect(reviewDialog).toContainText(total);
+      await expect(
+        reviewDialog.getByText(tManualInvoice('admin.manualInvoice.total', locale), { exact: true })
+      ).toBeInViewport();
+      const reviewedLine = reviewDialog.getByText(secondDescription, { exact: false });
+      await expect(reviewedLine).toBeHidden();
+      const lineDetails = reviewDialog.getByText(
+        tManualInvoice('admin.manualInvoice.manualReviewDetails', locale),
+        { exact: true }
+      );
+      await lineDetails.press('Enter');
+      await expect(reviewedLine).toBeVisible();
+      await lineDetails.press('Enter');
       await expect(panel.locator('[data-array-action=up]').last()).toBeDisabled();
       await expect(panel.locator('[data-array-action=remove]').first()).toBeDisabled();
       await approveRiskConfirmation(page, locale, 'financial');

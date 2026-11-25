@@ -10,11 +10,14 @@ import {
   ListPage,
   NativeSelect,
   ScrollArea,
+  StatusBadge,
 } from '@barghsa/ui';
-import type { FormEvent } from 'react';
+import type { FormEvent, ReactNode } from 'react';
+import { Link } from '@tanstack/react-router';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
+import { remainingForBankReceiptSettlement } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -165,17 +168,24 @@ function ledgerAccessDenied(error: unknown) {
 }
 
 type InvoiceLedgerProps = {
-  onSelectForDueAt: (invoiceId: string) => void;
+  onSelectForDueAt?: (invoiceId: string) => void;
   onSelectForRefund?: (invoiceId: string) => void;
-  onOpenReceipt: (receiptId: string, state: string) => void;
+  onOpenReceipt?: (receiptId: string, state: string) => void;
   initialInvoiceId?: string;
   query?: ListQueryBinding;
+  recordId?: string;
+  recordSearch?: Record<string, unknown>;
+  onLookupInvoice?: (invoiceId: string) => void;
+  renderActions?: (invoiceId: string) => ReactNode;
+  renderReceiptAction?: (receiptId: string, state: string) => ReactNode;
 };
 
 export function InvoiceLedger(props: InvoiceLedgerProps) {
   const accountId = useAccountUser();
   const revision = useProfileContextRevision();
-  return <OwnedInvoiceLedger key={JSON.stringify([accountId, revision])} {...props} />;
+  return (
+    <OwnedInvoiceLedger key={JSON.stringify([accountId, revision, props.recordId])} {...props} />
+  );
 }
 
 function OwnedInvoiceLedger({
@@ -184,6 +194,11 @@ function OwnedInvoiceLedger({
   onOpenReceipt,
   initialInvoiceId = '',
   query,
+  recordId,
+  recordSearch,
+  onLookupInvoice,
+  renderActions,
+  renderReceiptAction,
 }: InvoiceLedgerProps) {
   const accountId = useAccountUser();
   const authority = {
@@ -229,15 +244,20 @@ function OwnedInvoiceLedger({
   const [inputError, setInputError] = useState<
     'invalidId' | 'invalidProfileId' | 'invalidOrderId' | null
   >(null);
-  const [selectedId, setSelectedId] = useState<string | null>(deepLinkId || null);
+  const [selectedId, setSelectedId] = useState<string | null>(recordId || deepLinkId || null);
   const [detail, setDetail] = useState<InvoiceDetail | null>(null);
-  const [detailStatus, setDetailStatus] = useState<'loading' | 'ready' | 'unavailable' | 'error'>(
-    'loading'
-  );
+  const [detailStatus, setDetailStatus] = useState<
+    'loading' | 'ready' | 'unavailable' | 'forbidden' | 'error'
+  >('loading');
   const [revision, setRevision] = useState(0);
   const [detailRevision, setDetailRevision] = useState(0);
   const listRead = useRef<AbortController | null>(null);
   const detailRead = useRef<AbortController | null>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (recordId) heading.current?.focus({ preventScroll: true });
+  }, [recordId]);
 
   function withdrawLedger() {
     listRead.current?.abort();
@@ -269,6 +289,7 @@ function OwnedInvoiceLedger({
     setDetail(null);
   }, [criteria]);
   useEffect(() => {
+    if (recordId) return;
     const controller = new AbortController();
     listRead.current = controller;
     const params = new URLSearchParams();
@@ -314,7 +335,7 @@ function OwnedInvoiceLedger({
         else setStatus('error');
       });
     return () => controller.abort();
-  }, [state, invoiceId, profileId, orderId, cursorKey, criteria, revision, read]);
+  }, [state, invoiceId, profileId, orderId, cursorKey, criteria, revision, recordId, read]);
 
   useEffect(() => {
     if (!selectedId) return;
@@ -334,19 +355,25 @@ function OwnedInvoiceLedger({
       })
       .catch((error: unknown) => {
         if (controller.signal.aborted) return;
-        if (ledgerAccessDenied(error)) withdrawLedger();
-        else if (error instanceof ServerQueryError && error.status === 404)
+        if (ledgerAccessDenied(error)) {
+          if (recordId) setDetailStatus('forbidden');
+          else withdrawLedger();
+        } else if (error instanceof ServerQueryError && error.status === 404)
           setDetailStatus('unavailable');
         else setDetailStatus('error');
       });
     return () => controller.abort();
-  }, [selectedId, detailRevision, read]);
+  }, [selectedId, detailRevision, recordId, read]);
 
   function lookup(event: FormEvent) {
     event.preventDefault();
     const id = idInput.trim();
     const profile = profileInput.trim();
     const order = orderInput.trim();
+    if (id && onLookupInvoice) {
+      if (!isInvoiceUuid(id)) return setInputError('invalidId');
+      return onLookupInvoice(id.toLowerCase());
+    }
     const invalid = (
       [
         [id, 'invalidId'],
@@ -377,23 +404,36 @@ function OwnedInvoiceLedger({
   const current = pages.at(-1);
   const items = pages.flatMap((page) => page.items);
   const vat = detail?.lines.reduce((sum, line) => sum + BigInt(line.vatAmount), 0n) ?? 0n;
-  const openInvoice = (item: InvoiceRow) => (
-    <button
-      type="button"
-      className="inline-flex min-h-11 min-w-11 items-center font-mono text-primary underline underline-offset-2 pointer-coarse:min-h-[45px]!"
-      dir="ltr"
-      aria-label={`${word('detail')}: ${item.invoiceId}`}
-      onClick={() => selectDetail(item.invoiceId)}
-    >
-      {item.invoiceId.slice(0, 8)}…
-    </button>
-  );
+  const openInvoice = (item: InvoiceRow) => {
+    const label = {
+      className:
+        'inline-flex min-h-11 min-w-11 items-center font-mono text-primary underline underline-offset-2 pointer-coarse:min-h-[45px]!',
+      dir: 'ltr',
+      'aria-label': `${word('detail')}: ${item.invoiceId}`,
+    };
+    return recordSearch ? (
+      <Link
+        to="/admin/invoices/$invoiceId"
+        params={{ invoiceId: item.invoiceId }}
+        search={recordSearch}
+        {...label}
+      >
+        {item.invoiceId.slice(0, 8)}…
+      </Link>
+    ) : (
+      <button type="button" onClick={() => selectDetail(item.invoiceId)} {...label}>
+        {item.invoiceId.slice(0, 8)}…
+      </button>
+    );
+  };
   const columns: HistoryColumn<InvoiceRow>[] = [
     { id: 'type', label: word('type'), render: (item) => invoiceType(item.type) },
     {
       id: 'state',
       label: word('state'),
-      render: (item) => appText(`invoices.state.${item.state}`, locale),
+      render: (item) => (
+        <StatusBadge state={item.state} label={appText(`invoices.state.${item.state}`, locale)} />
+      ),
     },
     { id: 'amount', label: word('amount'), render: (item) => numbers.money(item.totalAmount) },
     { id: 'paid', label: word('paid'), render: (item) => numbers.money(item.paidAmount) },
@@ -408,6 +448,232 @@ function OwnedInvoiceLedger({
     },
   ];
 
+  const DetailHeading = recordId ? 'h1' : 'h3';
+  const SectionHeading = recordId ? 'h2' : 'h4';
+  const record = selectedId ? (
+    <section
+      className="space-y-5 rounded-xl border border-border bg-card p-4 sm:p-6"
+      aria-labelledby="invoice-ledger-detail-title"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <DetailHeading
+          id="invoice-ledger-detail-title"
+          className={recordId ? 'text-2xl font-semibold outline-none' : 'text-lg font-semibold'}
+          ref={recordId ? heading : undefined}
+          tabIndex={recordId ? -1 : undefined}
+        >
+          {word('detail')}
+        </DetailHeading>
+        {detail && (
+          <StatusBadge
+            state={detail.state}
+            label={appText(`invoices.state.${detail.state}`, locale)}
+          />
+        )}
+        {!recordId && (
+          <button
+            type="button"
+            className="text-sm text-primary underline"
+            onClick={() => selectDetail(null)}
+          >
+            {word('close')}
+          </button>
+        )}
+      </div>
+      {detailStatus === 'loading' ? <LoadingStatus>{word('loadingDetail')}</LoadingStatus> : null}
+      {detailStatus === 'unavailable' ? (
+        <p role="alert">{loadingText('recordUnavailable', locale)}</p>
+      ) : null}
+      {detailStatus === 'forbidden' ? <p role="alert">{word('forbidden')}</p> : null}
+      {detailStatus === 'error' ? (
+        <p role="alert">
+          {word('detailError')}{' '}
+          <button
+            type="button"
+            className="underline"
+            onClick={() => setDetailRevision((value) => value + 1)}
+          >
+            {word('retry')}
+          </button>
+        </p>
+      ) : null}
+      {detail ? (
+        <>
+          <dl className="grid gap-x-4 gap-y-3 rounded-lg bg-muted/60 p-4 text-sm [overflow-wrap:anywhere] sm:grid-cols-2 xl:grid-cols-4">
+            <div>
+              <dt className="text-muted-foreground">{word('amount')}</dt>
+              <dd className="mt-1 font-semibold tabular-nums">
+                {numbers.money(detail.totalAmount)}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">{word('paid')}</dt>
+              <dd className="mt-1 tabular-nums">{numbers.money(detail.paidAmount)}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">{word('balanceDue')}</dt>
+              <dd className="mt-1 font-semibold tabular-nums">
+                {numbers.money(
+                  remainingForBankReceiptSettlement({
+                    state: detail.state,
+                    totalAmount: BigInt(detail.totalAmount),
+                    paidAmount: BigInt(detail.paidAmount),
+                  })
+                )}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">{word('due')}</dt>
+              <dd className="mt-1">{time.format(detail.dueAt)}</dd>
+            </div>
+          </dl>
+          <div className="flex flex-wrap gap-2">
+            {renderActions?.(detail.invoiceId)}
+            {onSelectForDueAt && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onSelectForDueAt(detail.invoiceId)}
+              >
+                {word('useDueAt')}
+              </Button>
+            )}
+            {onSelectForRefund && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onSelectForRefund(detail.invoiceId)}
+              >
+                {word('useRefund')}
+              </Button>
+            )}
+          </div>
+          <div className="space-y-2">
+            <SectionHeading className="mb-2 font-semibold">{word('lines')}</SectionHeading>
+            <ScrollArea
+              scrollbarOrientation="horizontal"
+              role="region"
+              aria-label={word('lines')}
+              className="min-w-0 max-w-full"
+            >
+              <table className="w-full min-w-[520px] text-sm">
+                <thead>
+                  <tr className="border-b text-muted-foreground">
+                    <th className="p-2 text-start">{word('descriptionColumn')}</th>
+                    <th className="p-2 text-start">{word('quantity')}</th>
+                    <th className="p-2 text-start">{word('unitPrice')}</th>
+                    <th className="p-2 text-start">{word('lineTotal')}</th>
+                    <th className="p-2 text-start">{word('vat')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {detail.lines.map((line, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="p-2">{line.description}</td>
+                      <td className="p-2">{numbers.number(line.quantity)}</td>
+                      <td className="p-2">{numbers.money(line.unitPrice)}</td>
+                      <td className="p-2">{numbers.money(line.lineTotal)}</td>
+                      <td className="p-2">{numbers.money(line.vatAmount)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </ScrollArea>
+            <p className="mt-2 text-sm font-medium">
+              {word('vatTotal')}: {numbers.money(vat)}
+            </p>
+          </div>
+          <div className="space-y-3 text-sm">
+            <SectionHeading className="font-semibold">{word('activity')}</SectionHeading>
+            {detail.activity.payments.map((payment) => (
+              <p key={payment.id} className="rounded-md border p-3">
+                {word('payment')} · {appText(`invoices.activity.${payment.source}`, locale)} ·{' '}
+                {numbers.money(payment.amount)} · {activityState(payment.state)} ·{' '}
+                {time.format(payment.createdAt)}
+              </p>
+            ))}
+            {detail.activity.bankReceipts.map((receipt) => (
+              <p key={receipt.id} className="rounded-md border p-3">
+                {word('receipt')} · {receipt.bankName ?? word('unknown')} ·{' '}
+                {numbers.money(receipt.amount)} · {activityState(receipt.state)} ·{' '}
+                <bdi>{receipt.paymentDate}</bdi>
+                <br />
+                <bdi className="font-mono">{receipt.payerReference}</bdi>
+                <br />
+                {renderReceiptAction?.(receipt.id, receipt.state)}
+                {onOpenReceipt && (
+                  <button
+                    type="button"
+                    className="text-primary underline underline-offset-2"
+                    onClick={() => onOpenReceipt(receipt.id, receipt.state)}
+                  >
+                    {word('openReceipt')}
+                  </button>
+                )}
+              </p>
+            ))}
+            {detail.activity.refunds.map((refund) => (
+              <p key={refund.id} className="rounded-md border p-3">
+                {word('refund')} · {numbers.money(refund.amount)} · {activityState(refund.state)} ·{' '}
+                {time.format(refund.createdAt)}
+              </p>
+            ))}
+            {!detail.activity.payments.length &&
+            !detail.activity.bankReceipts.length &&
+            !detail.activity.refunds.length ? (
+              <p className="text-muted-foreground">{word('noActivity')}</p>
+            ) : null}
+          </div>
+          <dl className="grid gap-3 border-t pt-4 text-sm sm:grid-cols-2">
+            <div>
+              <dt className="text-muted-foreground">{word('invoice')}</dt>
+              <dd className="break-all">
+                <bdi className="font-mono">{detail.invoiceId}</bdi>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">{word('profile')}</dt>
+              <dd className="break-all">
+                <bdi className="font-mono">{detail.profileId}</bdi>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">{word('type')}</dt>
+              <dd>{invoiceType(detail.type)}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">{word('issued')}</dt>
+              <dd>{time.format(detail.issuedAt)}</dd>
+            </div>
+            {BigInt(detail.refundedAmount) > 0n && (
+              <div>
+                <dt className="text-muted-foreground">{word('refunded')}</dt>
+                <dd>{numbers.money(detail.refundedAmount)}</dd>
+              </div>
+            )}
+            {detail.periodStart && detail.periodEnd && (
+              <div>
+                <dt className="text-muted-foreground">{word('period')}</dt>
+                <dd>
+                  {formatInvoiceServicePeriod(detail.periodStart, detail.periodEnd, time.format)}
+                </dd>
+              </div>
+            )}
+            {detail.orderId && (
+              <div>
+                <dt className="text-muted-foreground">{word('order')}</dt>
+                <dd className="break-all">
+                  <bdi className="font-mono">{detail.orderId}</bdi>
+                </dd>
+              </div>
+            )}
+          </dl>
+        </>
+      ) : null}
+    </section>
+  ) : null;
+  if (recordId) return record;
+
   return (
     <section
       className="space-y-5 rounded-xl border border-border bg-card p-5"
@@ -417,7 +683,9 @@ function OwnedInvoiceLedger({
         <h2 id="invoice-ledger-title" className="text-xl font-semibold text-foreground">
           {word('title')}
         </h2>
-        <p className="mt-1 text-sm text-muted-foreground">{word('description')}</p>
+        {!recordSearch && (
+          <p className="mt-1 text-sm text-muted-foreground">{word('description')}</p>
+        )}
       </div>
       <ListPage>
         <ListPage.Toolbar
@@ -611,198 +879,7 @@ function OwnedInvoiceLedger({
         />
       </ListPage>
 
-      {selectedId ? (
-        <section
-          className="space-y-4 rounded-lg border border-border bg-background p-5"
-          aria-labelledby="invoice-ledger-detail-title"
-        >
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <h3 id="invoice-ledger-detail-title" className="text-lg font-semibold">
-              {word('detail')}
-            </h3>
-            <button
-              type="button"
-              className="text-sm text-primary underline"
-              onClick={() => selectDetail(null)}
-            >
-              {word('close')}
-            </button>
-          </div>
-          {detailStatus === 'loading' ? (
-            <LoadingStatus>{word('loadingDetail')}</LoadingStatus>
-          ) : null}
-          {detailStatus === 'unavailable' ? (
-            <p role="alert">{loadingText('recordUnavailable', locale)}</p>
-          ) : null}
-          {detailStatus === 'error' ? (
-            <p role="alert">
-              {word('detailError')}{' '}
-              <button
-                type="button"
-                className="underline"
-                onClick={() => setDetailRevision((value) => value + 1)}
-              >
-                {word('retry')}
-              </button>
-            </p>
-          ) : null}
-          {detail ? (
-            <>
-              <dl className="grid gap-3 text-sm sm:grid-cols-2">
-                <div>
-                  <dt className="text-muted-foreground">{word('invoice')}</dt>
-                  <dd className="break-all font-mono" dir="ltr">
-                    {detail.invoiceId}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('profile')}</dt>
-                  <dd className="break-all font-mono" dir="ltr">
-                    {detail.profileId}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('state')}</dt>
-                  <dd>{appText(`invoices.state.${detail.state}`, locale)}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('type')}</dt>
-                  <dd>{invoiceType(detail.type)}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('amount')}</dt>
-                  <dd className="font-semibold">{numbers.money(detail.totalAmount)}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('paid')}</dt>
-                  <dd>{numbers.money(detail.paidAmount)}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('refunded')}</dt>
-                  <dd>{numbers.money(detail.refundedAmount)}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('issued')}</dt>
-                  <dd>{time.format(detail.issuedAt)}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('due')}</dt>
-                  <dd>{time.format(detail.dueAt)}</dd>
-                </div>
-                {detail.periodStart && detail.periodEnd ? (
-                  <div>
-                    <dt className="text-muted-foreground">{word('period')}</dt>
-                    <dd>
-                      {formatInvoiceServicePeriod(
-                        detail.periodStart,
-                        detail.periodEnd,
-                        time.format
-                      )}
-                    </dd>
-                  </div>
-                ) : null}
-                {detail.orderId ? (
-                  <div>
-                    <dt className="text-muted-foreground">{word('order')}</dt>
-                    <dd className="break-all font-mono" dir="ltr">
-                      {detail.orderId}
-                    </dd>
-                  </div>
-                ) : null}
-              </dl>
-              <button
-                type="button"
-                className="rounded-md border border-primary px-3 py-2 text-sm text-primary"
-                onClick={() => onSelectForDueAt(detail.invoiceId)}
-              >
-                {word('useDueAt')}
-              </button>
-              {onSelectForRefund && (
-                <button
-                  type="button"
-                  className="ms-2 rounded-md border border-primary px-3 py-2 text-sm text-primary"
-                  onClick={() => onSelectForRefund(detail.invoiceId)}
-                >
-                  {word('useRefund')}
-                </button>
-              )}
-              <div className="space-y-2">
-                <h4 className="mb-2 font-semibold">{word('lines')}</h4>
-                <ScrollArea
-                  scrollbarOrientation="horizontal"
-                  role="region"
-                  aria-label={word('lines')}
-                  className="min-w-0 max-w-full"
-                >
-                  <table className="w-full min-w-[520px] text-sm">
-                    <thead>
-                      <tr className="border-b text-muted-foreground">
-                        <th className="p-2 text-start">{word('descriptionColumn')}</th>
-                        <th className="p-2 text-start">{word('quantity')}</th>
-                        <th className="p-2 text-start">{word('unitPrice')}</th>
-                        <th className="p-2 text-start">{word('lineTotal')}</th>
-                        <th className="p-2 text-start">{word('vat')}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {detail.lines.map((line, index) => (
-                        <tr key={index} className="border-b">
-                          <td className="p-2">{line.description}</td>
-                          <td className="p-2">{numbers.number(line.quantity)}</td>
-                          <td className="p-2">{numbers.money(line.unitPrice)}</td>
-                          <td className="p-2">{numbers.money(line.lineTotal)}</td>
-                          <td className="p-2">{numbers.money(line.vatAmount)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </ScrollArea>
-                <p className="mt-2 text-sm font-medium">
-                  {word('vatTotal')}: {numbers.money(vat)}
-                </p>
-              </div>
-              <div className="space-y-3 text-sm">
-                <h4 className="font-semibold">{word('activity')}</h4>
-                {detail.activity.payments.map((payment) => (
-                  <p key={payment.id} className="rounded-md border p-3">
-                    {word('payment')} · {appText(`invoices.activity.${payment.source}`, locale)} ·{' '}
-                    {numbers.money(payment.amount)} · {activityState(payment.state)} ·{' '}
-                    {time.format(payment.createdAt)}
-                  </p>
-                ))}
-                {detail.activity.bankReceipts.map((receipt) => (
-                  <p key={receipt.id} className="rounded-md border p-3">
-                    {word('receipt')} · {receipt.bankName ?? word('unknown')} ·{' '}
-                    {numbers.money(receipt.amount)} · {activityState(receipt.state)} ·{' '}
-                    <bdi>{receipt.paymentDate}</bdi>
-                    <br />
-                    <bdi className="font-mono">{receipt.payerReference}</bdi>
-                    <br />
-                    <button
-                      type="button"
-                      className="text-primary underline underline-offset-2"
-                      onClick={() => onOpenReceipt(receipt.id, receipt.state)}
-                    >
-                      {word('openReceipt')}
-                    </button>
-                  </p>
-                ))}
-                {detail.activity.refunds.map((refund) => (
-                  <p key={refund.id} className="rounded-md border p-3">
-                    {word('refund')} · {numbers.money(refund.amount)} ·{' '}
-                    {activityState(refund.state)} · {time.format(refund.createdAt)}
-                  </p>
-                ))}
-                {!detail.activity.payments.length &&
-                !detail.activity.bankReceipts.length &&
-                !detail.activity.refunds.length ? (
-                  <p className="text-muted-foreground">{word('noActivity')}</p>
-                ) : null}
-              </div>
-            </>
-          ) : null}
-        </section>
-      ) : null}
+      {record}
     </section>
   );
 }

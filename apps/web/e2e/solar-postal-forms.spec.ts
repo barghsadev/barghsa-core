@@ -1,7 +1,9 @@
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import type { Locator, Page, Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
+import { documentText } from '@barghsa/i18n/documents';
 import { tSolar } from '@barghsa/i18n/solar';
 import { postalReceipt, setupSolarPostalForms } from './solar-postal-form-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
@@ -48,7 +50,7 @@ for (const [locale, theme] of settings) {
         else await route.fulfill({ json: { documents: [], nextBefore: null } });
       }
     );
-    await page.goto(`/solar/requests/${firstSolar}`);
+    await page.goto(`/solar/requests/${firstSolar}/shipment`);
     const form = page.getByRole('group', { name: copy('postalShipment'), exact: true });
     const loading = form.getByText(copy('postalReceiptLoading'), { exact: true });
     const empty = form.getByText(copy('postalReceiptEmpty'), { exact: true });
@@ -82,7 +84,7 @@ for (const [locale, theme] of settings) {
   }, info) => {
     const { state, persistShipment, customerState, firstSolar, olderSolar } =
       await setupSolarPostalForms(page, locale, theme === 'dark', true);
-    await page.goto(`/solar/requests/${firstSolar}`);
+    await page.goto(`/solar/requests/${firstSolar}/shipment`);
     const postal = page.getByRole('region', { name: copy('postalStage'), exact: true });
     const form = postal.getByRole('group', { name: copy('postalShipment'), exact: true });
     const courier = form.getByLabel(copy('postalCourier'), { exact: true });
@@ -91,6 +93,7 @@ for (const [locale, theme] of settings) {
     const receipt = form.getByLabel(copy('postalReceipt'), { exact: true });
     const submit = form.getByRole('button', { name: copy('postalSubmit'), exact: true });
     const reload = postal.getByRole('button', { name: copy('postalTrackingReload'), exact: true });
+    const back = page.getByRole('link', { name: copy('backToSolarRequest'), exact: true });
     for (const field of [courier, tracking, date]) {
       await expect(field).toHaveAttribute('aria-required', 'true');
     }
@@ -116,7 +119,32 @@ for (const [locale, theme] of settings) {
     await courier.fill('  Captured courier  ');
     await tracking.fill('  CAPTURED-TRACKING  ');
     await receipt.selectOption(postalReceipt);
+    const upload = form.getByRole('link', { name: copy('postalUploadReceipt'), exact: true });
+    await upload.click();
+    await expect(page).toHaveURL(`/solar/requests/${firstSolar}/shipment/upload-receipt`);
+    const uploadEditor = page.locator('[data-slot="shipment-receipt"]');
+    await expect(uploadEditor.locator('form')).toBeVisible();
+    await expect(form).toHaveCount(0);
+    await uploadEditor
+      .getByRole('button', { name: documentText('cancel', locale), exact: true })
+      .click();
+    await expect(uploadEditor).toHaveCount(0);
+    await expect(page).toHaveURL(`/solar/requests/${firstSolar}/shipment`);
+    await expect(receipt).toBeFocused();
+    await expect(receipt).toHaveValue(postalReceipt);
+    await expect(courier).toHaveValue('  Captured courier  ');
+    await expect(tracking).toHaveValue('  CAPTURED-TRACKING  ');
+    await expect(date).toHaveValue('2026-09-23');
+    expect(state.shipmentWrites).toHaveLength(1);
     await inspectForm(page, form, '[aria-label="' + copy('postalStage') + '"]');
+    const viewport = page.viewportSize()!;
+    await page.setViewportSize({ ...viewport, width: 320 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true
+    );
+    await expect(receipt).toBeVisible();
+    await expect(upload).toBeVisible();
+    await page.setViewportSize(viewport);
     await checkRoutePresentation(page, info, locale);
     await expect(tracking).toHaveValue('  CAPTURED-TRACKING  ');
     if (locale === 'en' && info.project.name === 'chromium')
@@ -131,6 +159,7 @@ for (const [locale, theme] of settings) {
     await submit.click();
     await expect.poll(() => !!state.shipment).toBe(true);
     await expect(submit).toBeDisabled();
+    await expect(back).toHaveAttribute('aria-disabled', 'true');
     await expect(courier).toBeDisabled();
     await expect(tracking).toBeDisabled();
     await form.locator('form').dispatchEvent('submit');
@@ -141,6 +170,7 @@ for (const [locale, theme] of settings) {
     await state.shipment!.fulfill({ status: 503, json: {} });
     await expect(postal.getByRole('alert').first()).toBeVisible();
     await expect(reload).toBeEnabled();
+    await expect(back).toBeEnabled();
     await expect(submit).toBeDisabled();
     await expect(courier).toHaveValue('  Captured courier  ');
     await expect(tracking).toHaveValue('  CAPTURED-TRACKING  ');
@@ -164,7 +194,7 @@ for (const [locale, theme] of settings) {
     await reload.click();
     await expect.poll(() => !!state.customerRead).toBe(true);
     state.customerReadMode = 'success';
-    await page.goto(`/solar/requests/${olderSolar}`);
+    await page.goto(`/solar/requests/${olderSolar}/shipment`);
     await expect(courier).toBeVisible();
     await expect(courier).toHaveValue('');
     await courier.fill('PRIVATE_NEW_SCOPE_DRAFT');
@@ -192,9 +222,11 @@ for (const [locale, theme] of settings) {
   }, info) => {
     const { state, finalReview } = await setupSolarPostalForms(page, locale, theme === 'dark');
     await page.goto('/admin/solar-postal');
-    await page.getByRole('button', { name: /First solar buyer/ }).click();
-    const reason = page.locator('#solar-postal-reason');
-    await expect(reason).not.toHaveAttribute('aria-required', 'true');
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('editPostalGuidance', locale), exact: true })
+      .click();
+    await expect(page).toHaveURL('/admin/solar-requests/guidance/postal');
+
     const guidance = page.getByRole('group', {
       name: copy('postalGuidance'),
       exact: true,
@@ -202,35 +234,43 @@ for (const [locale, theme] of settings) {
     });
     const en = guidance.getByLabel(copy('postalGuidance_en'), { exact: true });
     const fa = guidance.getByLabel(copy('postalGuidance_fa'), { exact: true });
-    const originalsFa = guidance.getByLabel(copy('postalOriginalsFa'), { exact: true });
-    const originalsEn = guidance.getByLabel(copy('postalOriginalsEn'), { exact: true });
+    const add = guidance.getByRole('button', {
+      name: tSolarStaffRecord('guidanceAddDocument', locale),
+      exact: true,
+    });
+    await add.click();
+    const originalsFa = page.locator('#solar-postal-guidance-item-0-fa');
+    const originalsEn = page.locator('#solar-postal-guidance-item-0-en');
+    const secondFa = page.locator('#solar-postal-guidance-item-1-fa');
+    const secondEn = page.locator('#solar-postal-guidance-item-1-en');
     const address = guidance.getByLabel(copy('postalGuidance_destinationAddress'), { exact: true });
     const contact = guidance.getByLabel(copy('postalGuidance_contactDetails'), { exact: true });
     const save = guidance.getByRole('button', { name: copy('postalSaveGuidance'), exact: true });
     for (const field of [fa, en]) await expect(field).toHaveAttribute('aria-required', 'true');
-    for (const field of [originalsFa, originalsEn, address, contact])
+    for (const field of [originalsFa, originalsEn])
+      await expect(field).toHaveAttribute('aria-required', 'true');
+    for (const field of [address, contact])
       await expect(field).not.toHaveAttribute('aria-required', 'true');
     const reload = page.locator('#solar-postal-guidance-reload');
-    await reason.fill('Independent postal issue draft');
     await en.fill('  Captured postal guidance  ');
     await fa.fill('  راهنمای جدید ارسال مدارک  ');
     await address.fill('  Destination draft  ');
     await contact.fill('  Contact draft  ');
-    await originalsFa.fill('اصل اول\nاصل دوم');
+    await originalsFa.fill('اصل اول');
+    await add.click();
+    await secondFa.fill('اصل دوم');
     await originalsEn.fill('First original');
     await save.click();
     await expect
       .poll(() => page.evaluate(() => document.activeElement?.id))
-      .toMatch(/^solar-postal-guidance-originals-(fa|en)$/);
+      .toBe('solar-postal-guidance-item-1-en');
     expect(state.guidanceWrites).toEqual([]);
-    await expect(reason).toHaveValue('Independent postal issue draft');
-    await originalsEn.fill('First original\nSecond original');
+    await secondEn.fill('Second original');
     await save.click();
     let dialog = page.getByRole('dialog', { name: copy('postalSaveGuidance'), exact: true });
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await focusedError(originalsEn);
-    await expect(reason).toHaveValue('Independent postal issue draft');
     await expect(en).toHaveValue('  Captured postal guidance  ');
     const capturedGuidance = {
       fa: 'راهنمای جدید ارسال مدارک',
@@ -268,7 +308,6 @@ for (const [locale, theme] of settings) {
     await expect(dialog).toHaveCount(0);
     await expect(save).toBeDisabled();
     await expect(en).toHaveValue('  Captured postal guidance  ');
-    await expect(reason).toHaveValue('Independent postal issue draft');
     state.guidanceReadMode = 'unavailable';
     const beforeReload = state.guidanceReads;
     await reload.click();
@@ -279,7 +318,6 @@ for (const [locale, theme] of settings) {
     await reload.click();
     await expect(save).toBeEnabled();
     expect(state.guidanceWrites).toHaveLength(uncertainWrites);
-    await expect(reason).toHaveValue('Independent postal issue draft');
     state.guidanceMode = 'success';
     const beforeGuidanceSave = state.queueReads;
     await save.click();
@@ -289,32 +327,44 @@ for (const [locale, theme] of settings) {
     await expect(en).toHaveValue(capturedGuidance.en);
     expect(state.guidanceWrites.at(-1)).toEqual(capturedGuidance);
     expect(state.queueReads).toBe(beforeGuidanceSave);
-    await expect(reason).toHaveValue('Independent postal issue draft');
     const shipment = page.getByRole('group', { name: copy('postalShipment'), exact: true });
     await inspectForm(
       page,
-      guidance.or(shipment),
+      guidance,
       `[aria-label="${copy('postalGuidance')}"], [aria-label="${copy('postalShipment')}"]`
     );
     if (locale === 'fa' && info.project.name === 'mobile-safari')
       await guidance.screenshot({ path: info.outputPath('solar-postal-staff-fa-dark.png') });
 
-    const incomplete = page.getByRole('button', {
-      name: copy('postal_mark-incomplete'),
+    const back = page.getByRole('link', {
+      name: tSolarStaffRecord('backToPostal', locale),
       exact: true,
     });
+    await back.click();
+    await page.getByRole('link', { name: /First solar buyer/ }).click();
+    const reason = page.locator('#solar-postal-reason');
+    await expect(reason).toHaveCount(0);
+    await inspectForm(page, shipment, `[aria-label="${copy('postalShipment')}"]`);
+    const backToShipment = page.getByRole('link', {
+      name: tSolarStaffRecord('backToShipmentReview', locale),
+      exact: true,
+    });
+    await page.getByRole('link', { name: copy('postal_mark-incomplete'), exact: true }).click();
+    await expect(page).toHaveURL(/\/postal\/mark-incomplete$/);
+    await expect(reason).toHaveAttribute('aria-required', 'true');
+    const submitDecision = page.locator('main form button[type=submit]');
     await reason.fill('ر'.repeat(1001));
-    await incomplete.click();
+    await submitDecision.click();
     await focusedError(reason);
     expect(state.postalPreviews).toEqual([]);
     await reason.fill('ر'.repeat(1000));
-    await incomplete.click();
+    await submitDecision.click();
     await focusedError(reason);
     await expect(reason).toHaveValue('ر'.repeat(1000));
     expect(state.postalPreviews).toEqual([{ decision: 'incomplete', reason: 'ر'.repeat(1000) }]);
     expect(state.postalWrites).toEqual([]);
     state.postalPreviewMode = 'success';
-    await incomplete.click();
+    await submitDecision.click();
     dialog = page.getByRole('dialog', { name: copy('postal_mark-incomplete'), exact: true });
     const capturedIssue = { reason: 'ر'.repeat(1000), expectedReviewHash: 'a'.repeat(64) };
     await dialog.locator('button[type=submit]').click();
@@ -331,30 +381,37 @@ for (const [locale, theme] of settings) {
     await expect(dialog).toHaveCount(0);
     expect(state.postalWrites).toEqual([capturedIssue, capturedIssue]);
     await expect.poll(() => state.queueReads).toBeGreaterThan(beforeIssue);
-    await expect(en).toHaveValue(capturedGuidance.en);
 
-    await page.getByRole('button', { name: /Older solar buyer/ }).click();
-    const close = page.getByRole('button', { name: copy('solarCloseNoContract'), exact: true });
-    await expect(reason).not.toHaveAttribute('aria-required', 'true');
+    await expect(submitDecision).toHaveCount(0);
+    await backToShipment.click();
+    await back.click();
+    await page.getByRole('link', { name: /Older solar buyer/ }).click();
+    const close = page.getByRole('link', { name: copy('solarCloseNoContract'), exact: true });
     await close.click();
+    await expect(reason).toHaveAttribute('aria-required', 'true');
+    await submitDecision.click();
     await focusedError(reason);
     expect(state.finalPreviews).toEqual([]);
     await reason.fill('ف'.repeat(1001));
-    await close.click();
+    await submitDecision.click();
     await focusedError(reason);
     expect(state.finalPreviews).toEqual([]);
     await reason.fill('ف'.repeat(1000));
-    await close.click();
+    await submitDecision.click();
     await expect.poll(() => !!state.finalPreview).toBe(true);
-    await page.getByRole('button', { name: /First solar buyer/ }).click();
+    await backToShipment.click();
+    await back.click();
+    await page.getByRole('link', { name: /First solar buyer/ }).click();
     await expect(close).toHaveCount(0);
     await state.finalPreview!.fulfill({ json: finalReview(state.finalPreviews.at(-1)!) });
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(state.finalWrites).toEqual([]);
-    await page.getByRole('button', { name: /Older solar buyer/ }).click();
+    await back.click();
+    await page.getByRole('link', { name: /Older solar buyer/ }).click();
+    await close.click();
     await reason.fill('ف'.repeat(1000));
     state.finalPreviewMode = 'success';
-    await close.click();
+    await submitDecision.click();
     dialog = page.getByRole('dialog', { name: copy('solarCloseNoContract'), exact: true });
     await approveRiskConfirmation(page, locale, 'destructive');
     await dialog.locator('button[type=submit]').click();
@@ -366,9 +423,17 @@ for (const [locale, theme] of settings) {
     expect(state.finalWrites).toEqual([
       { reason: 'ف'.repeat(1000), expectedReviewHash: 'b'.repeat(64) },
     ]);
-    await expect(page.getByRole('button', { name: /Older solar buyer/ })).toHaveCount(0);
-    expect(state.finalClosed).toBe(true);
+    await expect(submitDecision).toHaveCount(0);
+    await back.click();
+    await expect(page.getByRole('link', { name: /Older solar buyer/ })).toHaveCount(0);
+    await page
+      .getByRole('link', {
+        name: tSolarStaffRecord('editPostalGuidance', locale),
+        exact: true,
+      })
+      .click();
     await expect(en).toHaveValue(capturedGuidance.en);
+    expect(state.finalClosed).toBe(true);
   });
 
   test(`solar postal closing reason is required when it is the only decision (${locale}, ${theme})`, async ({
@@ -377,13 +442,14 @@ for (const [locale, theme] of settings) {
     const { state } = await setupSolarPostalForms(page, locale, theme === 'dark');
     state.finalStatus = 'approved';
     await page.goto('/admin/solar-postal');
-    await page.getByRole('button', { name: /Older solar buyer/ }).click();
+    await page.getByRole('link', { name: /Older solar buyer/ }).click();
     const reason = page.locator('#solar-postal-reason');
-    await expect(reason).toHaveAttribute('aria-required', 'true');
     await expect(
-      page.getByRole('button', { name: copy('solarFinalApprove'), exact: true })
+      page.getByRole('link', { name: copy('solarFinalApprove'), exact: true })
     ).toHaveCount(0);
-    await page.getByRole('button', { name: copy('solarCloseNoContract'), exact: true }).click();
+    await page.getByRole('link', { name: copy('solarCloseNoContract'), exact: true }).click();
+    await expect(reason).toHaveAttribute('aria-required', 'true');
+    await page.locator('main form button[type=submit]').click();
     await focusedError(reason);
     expect(state.finalPreviews).toEqual([]);
     expect(state.finalWrites).toEqual([]);

@@ -9,6 +9,7 @@ import { ContractDetail } from './ContractDetail.js';
 import { ContractTerms } from './ContractTerms.js';
 import ContractsPage from '../pages/ContractsPage.js';
 import AdminContractsPage from '../pages/AdminContractsPage.js';
+import ContractAttachmentPage from '../pages/ContractAttachmentPage.js';
 import { refreshProfileContext } from '../lib/profile-context.js';
 import type { TeamAction } from './TeamActionDialog.js';
 import { documentUploadPolicy } from '../test/document-list-fixtures.js';
@@ -16,6 +17,8 @@ import type { ContractDetailData, ContractVersion } from '../lib/contracts.js';
 import { en, fa } from '@barghsa/i18n/contracts';
 import { t } from '@barghsa/i18n/app';
 vi.mock('@tanstack/react-router', () => ({
+  useBlocker: vi.fn(),
+  useNavigate: () => async () => {},
   Link: ({
     children,
     to,
@@ -41,24 +44,6 @@ const harness = vi.hoisted(() => ({
   result: null as unknown,
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => harness.locale }));
-vi.mock('../pages/ElectricityIncreasePanel.js', () => ({
-  ElectricityIncreasePanel: ({
-    contractId,
-    versionId,
-    profileId,
-  }: {
-    contractId: string;
-    versionId: string;
-    profileId: string;
-  }) => (
-    <section
-      aria-label="Quantity increase"
-      data-contract={contractId}
-      data-version={versionId}
-      data-profile={profileId}
-    />
-  ),
-}));
 vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ notice: null, format: (value: string) => value }),
 }));
@@ -234,7 +219,7 @@ function api(current = detail()) {
   });
 }
 it.each(['en', 'fa'] as const)(
-  'opens the existing increase flow on the active current customer contract in %s',
+  'links the active current customer contract to the shared increase page in %s',
   async (locale) => {
     harness.locale = locale;
     const current = detail({
@@ -243,17 +228,17 @@ it.each(['en', 'fa'] as const)(
       version: version({ acceptedAt: '2026-09-22T00:00:00Z' }),
     });
     const base = api(current);
-    vi.stubGlobal('fetch', async (raw: string) =>
+    const fetcher = vi.fn(async (raw: string) =>
       raw.endsWith('/increase') ? response({ canRequest: true, request: null }) : base(raw)
     );
+    vi.stubGlobal('fetch', fetcher);
     await render(<ContractDetail id={ID} staff={false} onClose={() => {}} onChanged={() => {}} />);
-    await click(t('electricity.increase.submit', locale));
-    await act(async () => vi.dynamicImportSettled());
-    const panel = container.querySelector('[aria-label="Quantity increase"]');
-    expect(panel).not.toBeNull();
-    expect(panel?.getAttribute('data-contract')).toBe(ID);
-    expect(panel?.getAttribute('data-version')).toBe(VERSION);
-    expect(panel?.getAttribute('data-profile')).toBe(PROFILE);
+    const link = container.querySelector(`a[href="/electricity/orders/${OLD}/increases/new"]`);
+    expect(link?.textContent).toBe(t('electricity.increaseForm.openRequest', locale));
+    expect(
+      fetcher.mock.calls.some(([path]) => path === `/api/electricity/contracts/${ID}/increase`)
+    ).toBe(true);
+    expect(container.querySelector('[data-testid="electricity-increase-form"]')).toBeNull();
   }
 );
 it.each([false, true])(
@@ -267,34 +252,29 @@ it.each([false, true])(
         : base(raw)
     );
     await render(<ContractDetail id={ID} staff={false} onClose={() => {}} onChanged={() => {}} />);
-    expect(
-      [...container.querySelectorAll('button')].some(
-        (node) => node.textContent === t('electricity.increase.submit', 'en')
-      )
-    ).toBe(false);
-    expect(container.querySelector('[aria-label="Quantity increase"]')).toBeNull();
+    expect(container.querySelector('a[href$="/increases/new"]')).toBeNull();
+    expect(container.querySelector('[data-testid="electricity-increase-form"]')).toBeNull();
   }
 );
 it.each(['staff', 'inactive', 'saving', 'unlinked'] as const)(
   'does not expose customer increase controls for a %s contract',
   async (kind) => {
-    vi.stubGlobal(
-      'fetch',
-      api(
-        detail({
-          state: kind === 'inactive' ? 'Accepted' : 'Active',
-          orderId: kind === 'unlinked' ? null : OLD,
-          serviceType: kind === 'saving' ? 'savings' : 'electricity',
-          version: version(),
-          currentVersion: version(),
-          currentVersionId: VERSION,
-        })
-      )
+    const fetcher = api(
+      detail({
+        state: kind === 'inactive' ? 'Accepted' : 'Active',
+        orderId: kind === 'unlinked' ? null : OLD,
+        serviceType: kind === 'saving' ? 'savings' : 'electricity',
+        version: version(),
+        currentVersion: version(),
+        currentVersionId: VERSION,
+      })
     );
+    vi.stubGlobal('fetch', fetcher);
     await render(
       <ContractDetail id={ID} staff={kind === 'staff'} onClose={() => {}} onChanged={() => {}} />
     );
-    expect(container.querySelector('[aria-label="Quantity increase"]')).toBeNull();
+    expect(container.querySelector('a[href$="/increases/new"]')).toBeNull();
+    expect(fetcher.mock.calls.some(([path]) => path.endsWith('/increase'))).toBe(false);
   }
 );
 it('submits the saved electricity snapshot as a PDF for staff document review', async () => {
@@ -622,7 +602,7 @@ it.each(['en', 'fa'] as const)(
       })
     );
     await render(<AdminContractsPage />);
-    const href = `/admin/electricity-orders?orderId=${orderId}`;
+    const href = `/admin/electricity-orders/${orderId}`;
     expect(container.querySelector(`a[href="${href}"]`)?.textContent).toBe(words.openLinkedOrder);
     await click(`${words.electricity} · ${words.version} ${(2).toLocaleString(locale)}`);
     expect(container.querySelectorAll(`a[href="${href}"]`)).toHaveLength(2);
@@ -743,10 +723,10 @@ it.each(['en', 'fa'] as const)(
     expect(container.textContent).toContain(words.amendmentAwaitingSignature);
     expect(container.textContent).toContain(words.amendmentSignatureNotice);
     expect(
-      [...container.querySelectorAll('button')].some(
-        (item) => item.textContent === words.uploadSigned
-      )
-    ).toBe(true);
+      [...container.querySelectorAll('a')]
+        .find((item) => item.textContent === words.uploadSigned)
+        ?.getAttribute('href')
+    ).toBe(`/contracts/${ID}/upload-signed/${VERSION}`);
     expect(container.textContent).not.toContain(words.uploadAmendment);
     expect(
       [...container.querySelectorAll('button')].some((item) => item.textContent === words.accept)
@@ -754,9 +734,7 @@ it.each(['en', 'fa'] as const)(
     await click(words.amendmentViewEffective);
     expect(container.textContent).toContain('Earlier terms');
     expect(
-      [...container.querySelectorAll('button')].some(
-        (item) => item.textContent === words.uploadSigned
-      )
+      [...container.querySelectorAll('a')].some((item) => item.textContent === words.uploadSigned)
     ).toBe(false);
   }
 );
@@ -869,9 +847,8 @@ it('validates staff filters, deduplicates pagination, and recovers list errors',
   expect(container.textContent).toContain(`${en.initialInvoiceAmount}: 125000 IRR`);
   expect(container.querySelector('a[href^="/invoices/"]')).toBeNull();
   expect(
-    container.querySelector(
-      'a[href="/admin/invoices?invoiceId=55555555-5555-4555-8555-555555555555"]'
-    )?.textContent
+    container.querySelector('a[href="/admin/invoices/55555555-5555-4555-8555-555555555555"]')
+      ?.textContent
   ).toBe(en.openInitialInvoice);
   await value('#contracts-profile', 'bad');
   await click(en.apply);
@@ -908,7 +885,9 @@ it('requires a changes reason and captures the current staff version for review'
   await render(<ContractDetail id={ID} staff onClose={() => {}} onChanged={changed} />);
   await click(en['request-changes']);
   await vi.waitFor(() =>
-    expect(container.textContent).toContain(tContractReviewSignature('reasonInvalid', 'en'))
+    expect(container.querySelector('#contract-change-reason-message')?.textContent).toBe(
+      tContractReviewSignature('reasonInvalid', 'en')
+    )
   );
   expect(harness.action).toBeNull();
   await value('#contract-change-reason', 'Explain the revised price');
@@ -974,7 +953,19 @@ it('derives signed upload context from the accepted customer contract', async ()
   );
   vi.stubGlobal('fetch', fetcher);
   await render(<ContractDetail id={ID} staff={false} onClose={() => {}} onChanged={() => {}} />);
-  await click(en.uploadSigned);
+  expect(
+    container.querySelector(`a[href="/contracts/${ID}/upload-signed/${VERSION}"]`)
+  ).not.toBeNull();
+  expect(container.querySelector('input[type=file]')).toBeNull();
+  await render(
+    <ContractAttachmentPage
+      contractId={ID}
+      versionId={VERSION}
+      attachmentRole="signed"
+      staff={false}
+      search={{}}
+    />
+  );
   const input = container.querySelector<HTMLInputElement>('input[type=file]')!;
   Object.defineProperty(input, 'files', {
     value: [new File(['signed'], 'signed.pdf', { type: 'application/pdf' })],
@@ -990,8 +981,7 @@ it('derives signed upload context from the accepted customer contract', async ()
     category: 'contract',
   });
   await click('Close confirmation');
-  await click('Cancel');
-  expect(container.querySelector('input[type=file]')).toBeNull();
+  expect(container.querySelector('input[type=file]')).not.toBeNull();
 });
 it('handles missing detail and history pagination failure without using stale versions', async () => {
   let fail = true;

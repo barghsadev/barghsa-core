@@ -85,7 +85,7 @@ async function render(present = true, actor = 'staff-one') {
             kind === 'deadline' ? (
               <InvoiceDueAtPanel selection={null} />
             ) : (
-              <ServiceDuePeriodPanel />
+              <ServiceDuePeriodPanel service="electricity" />
             )
           ) : null}
         </AccountUserProvider>

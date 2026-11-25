@@ -59,6 +59,11 @@ for (const [locale, theme] of [
       );
       state.quoteMode = 'success';
       await page.goto(`/electricity/orders/${correctionOrder}`);
+      const edit = page.locator(`a[href="/electricity/orders/${correctionOrder}/edit"]`);
+      await expect(edit).toBeVisible();
+      await expect(page.getByTestId('electricity-address-correction-form')).toHaveCount(0);
+      await edit.click();
+      await expect(page).toHaveURL(`/electricity/orders/${correctionOrder}/edit`);
       const address = page.getByTestId('electricity-address-correction-form');
       const revision = page.getByTestId('electricity-revision-form');
       const addressSubmit = address.locator('button[type=submit]');
@@ -90,6 +95,9 @@ for (const [locale, theme] of [
       await expect(retry).toBeEnabled({ timeout: 2_000 });
       await expect(addressSubmit).toBeDisabled();
       await expect(preview).toBeDisabled();
+      await expect(
+        page.getByRole('link', { name: copy('electricity.order.detail.title'), exact: true })
+      ).toHaveAttribute('aria-disabled', 'true');
       await expect(note).toHaveValue('  Correction acknowledged after replay  ');
       expect(writes).toHaveLength(1);
       await stale.fulfill({ status: 403, json: { error: 'AUTHZ:FORBIDDEN' } }).catch(() => {});
@@ -103,6 +111,7 @@ for (const [locale, theme] of [
       expect((await replay).postData()).toBe(originalBody);
       await expect(retry).toHaveCount(0);
       expect(writes).toEqual([writes[0], writes[0]]);
+      await expect(page).toHaveURL(`/electricity/orders/${correctionOrder}`);
       await expect(page.locator('[data-slot=status-timeline]')).toContainText(
         'Correction acknowledged after replay'
       );
@@ -132,9 +141,14 @@ for (const [locale, theme] of [
       }
     );
     await page.goto(`/admin/electricity-orders?orderId=${correctionOrder}`);
+    const openDecision = (decision: string) =>
+      page.locator(`a[href*="/decisions/${decision}"]`).click();
+    const back = page.getByRole('link', { name: staffText('backToOrder'), exact: true });
+    const queue = page.getByRole('link', { name: staffText('backToQueue'), exact: true });
+    await openDecision('request-changes');
     const staffForm = page.getByTestId('electricity-staff-reason-form');
     const reason = page.locator('#electricity-review-reason');
-    await expect(reason).not.toHaveAttribute('aria-required', 'true');
+    await expect(reason).toHaveAttribute('aria-required', 'true');
     const changes = page.getByRole('button', { name: staffText('request-changes'), exact: true });
     await expect(reason).toBeVisible();
     await expect(reason).not.toHaveAttribute('aria-invalid', 'true');
@@ -163,6 +177,14 @@ for (const [locale, theme] of [
       path: info.outputPath(`electricity-staff-reason-${locale}-${theme}.png`),
     });
 
+    await back.click();
+    await openDecision('reject');
+    await expect(reason).toHaveValue('');
+    await reason.fill('An independent rejection draft');
+    await back.click();
+    await openDecision('request-changes');
+    await expect(reason).toHaveValue('  Captured <script> delivery correction  ');
+
     // A late preview for another selection cannot publish its private draft.
     state.staffReviewMode = 'held';
     await changes.click();
@@ -170,22 +192,27 @@ for (const [locale, theme] of [
     const stalePreview = state.staffPreview!;
     const staleCommand = state.staffPreviews.at(-1)!;
     const staleOrder = structuredClone(state.staff);
-    await page.getByRole('button', { name: /Other Correction Buyer/ }).click();
-    await expect(
-      page.locator('main[data-area=admin] dd').filter({ hasText: /^Other Correction Buyer$/ })
-    ).toBeVisible();
+    const recordHeader = page.locator('[data-slot="electricity-staff-order"] header').first();
+    await back.click();
+    await queue.click();
+    await page.getByRole('link', { name: /Other Correction Buyer/ }).click();
+    await expect(recordHeader.getByText('Other Correction Buyer', { exact: true })).toBeVisible();
+    await openDecision('request-changes');
     await expect(reason).toHaveValue('');
     await reason.fill('PRIVATE_NEW_SELECTION_REASON');
-    await stalePreview.fulfill({ json: correctionStaffReview(staleOrder, staleCommand) });
+    await stalePreview
+      .fulfill({ json: correctionStaffReview(staleOrder, staleCommand) })
+      .catch(() => {});
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(reason).toHaveValue('PRIVATE_NEW_SELECTION_REASON');
     await expect(page.locator('main[data-area=admin]')).not.toContainText(
       'Captured <script> delivery correction'
     );
-    await page.getByRole('button', { name: new RegExp(correctionOrder) }).click();
-    await expect(
-      page.locator('main[data-area=admin] dd').filter({ hasText: /^Correction Buyer$/ })
-    ).toBeVisible();
+    await back.click();
+    await queue.click();
+    await page.getByRole('link', { name: new RegExp(correctionOrder) }).click();
+    await expect(recordHeader.getByText('Correction Buyer', { exact: true })).toBeVisible();
+    await openDecision('request-changes');
     await expect(reason).toHaveValue('');
     await reason.fill('  Captured <script> delivery correction  ');
     state.staffPreview = undefined;
@@ -226,9 +253,8 @@ for (const [locale, theme] of [
     await expect(dialog).toHaveCount(0);
     await expect(reason).toHaveValue('  Captured <script> delivery correction  ');
     await expect(changes).toBeDisabled();
-    const lane = page.getByRole('button', { name: staffText('conversationView'), exact: true });
-    await expect(lane).toBeDisabled();
-    await lane.dispatchEvent('click');
+    await expect(back).toHaveAttribute('aria-disabled', 'true');
+    await back.dispatchEvent('click');
     await expect(reason).toHaveValue('  Captured <script> delivery correction  ');
     const staffPreviewCount = state.staffPreviews.length;
     await page
@@ -245,7 +271,7 @@ for (const [locale, theme] of [
     state.detail.timeline[0]!.reason = String(staffCommand.reason);
 
     state.context = 'customer';
-    await page.goto(`/electricity/orders/${correctionOrder}`);
+    await page.goto(`/electricity/orders/${correctionOrder}/edit`);
     const addressForm = page.getByTestId('electricity-address-correction-form');
     const revisionForm = page.getByTestId('electricity-revision-form');
     const address = page.locator('#correction-address');
@@ -324,6 +350,7 @@ for (const [locale, theme] of [
     };
     state.staffReviewMode = 'success';
     await page.goto(`/admin/electricity-orders?orderId=${correctionOrder}`);
+    await openDecision('reject');
     await reason.fill('  Final rejection reason  ');
     await page.getByRole('button', { name: staffText('reject'), exact: true }).click();
     dialog = page.getByRole('dialog');
@@ -359,7 +386,7 @@ for (const [locale, theme] of [
       await page.route(`**/${file}`, (route) => {
         moduleRequest = route;
       });
-      await page.goto(`/electricity/orders/${correctionOrder}`);
+      await page.goto(`/electricity/orders/${correctionOrder}/edit`);
       const form = page.getByTestId('electricity-revision-form');
       const loading = page
         .getByRole('status')
@@ -413,7 +440,7 @@ for (const [locale, theme] of [
         theme === 'dark',
         advanced
       );
-      await page.goto(`/electricity/orders/${correctionOrder}`);
+      await page.goto(`/electricity/orders/${correctionOrder}/edit`);
       const form = page.getByTestId('electricity-revision-form');
       const region = form.locator('..');
       const addressForm = page.getByTestId('electricity-address-correction-form');
@@ -587,6 +614,7 @@ for (const [locale, theme] of [
         state.quoteMode = 'success';
         state.revisionWriteMode = 'denied';
         await page.reload();
+        await page.locator(`a[href="/electricity/orders/${correctionOrder}/edit"]`).click();
         await note.fill('PRIVATE_WITHDRAWN_REVISION_DRAFT');
         await page.locator('#correction-note').fill('PRIVATE_WITHDRAWN_ADDRESS_DRAFT');
         await preview.click();
@@ -642,7 +670,7 @@ for (const locale of ['en', 'fa'] as const)
           });
         }
       );
-      await page.goto(`/electricity/orders/${correctionOrder}`);
+      await page.goto(`/electricity/orders/${correctionOrder}/edit`);
       const form = page.getByTestId('electricity-revision-form');
       const retry = page.getByTestId('electricity-revision-options-retry');
       const loading = form.getByRole('status').filter({

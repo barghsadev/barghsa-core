@@ -2281,6 +2281,41 @@
         "operationId": "ConfigAuditController_list",
         "parameters": [
           {
+            "description": "Authorization denials only. Read one event without filters or pagination.",
+            "in": "query",
+            "name": "eventId",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "description": "Authorization denials only. Last UTC date (YYYY-MM-DD).",
+            "in": "query",
+            "name": "through",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "description": "Authorization denials only. First UTC date (YYYY-MM-DD).",
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "description": "Authorization denials only. Exact action.",
+            "in": "query",
+            "name": "action",
+            "required": false,
+            "schema": {}
+          },
+          {
+            "description": "Authorization denials only. Exact actor ID.",
+            "in": "query",
+            "name": "actor",
+            "required": false,
+            "schema": {}
+          },
+          {
             "in": "query",
             "name": "cursor",
             "required": false,
@@ -20732,6 +20767,49 @@
         ]
       }
     },
+    "/api/admin/contract-templates/{id}/versions/{version}/preview": {
+      "get": {
+        "operationId": "ContractTemplateController_previewVersion",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "version",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The selected template version and its text preview."
+          },
+          "404": {
+            "description": "Template or version not found."
+          },
+          "503": {
+            "description": "Stored version could not be read."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read a bounded plain-text preview of a saved contract template version",
+        "tags": [
+          "Admin · Contract Templates"
+        ]
+      }
+    },
     "/api/admin/contracts": {
       "get": {
         "operationId": "ContractController_list",
@@ -21105,6 +21183,107 @@
           }
         ],
         "summary": "Read exact-version activation prerequisites without changing contract state",
+        "tags": [
+          "Admin · Contracts"
+        ]
+      }
+    },
+    "/api/admin/contracts/{id}/activation/invoice-options": {
+      "get": {
+        "operationId": "ContractController_invoiceOptions",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "contractId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "invoices": {
+                      "items": {
+                        "properties": {
+                          "createdAt": {
+                            "format": "date-time",
+                            "type": "string"
+                          },
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "createdAt"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "nextBefore": {
+                      "format": "uuid",
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "profileId": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "versionId": {
+                      "format": "uuid",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "contractId",
+                    "versionId",
+                    "profileId",
+                    "invoices",
+                    "nextBefore"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List eligible invoice references for the current contract draft",
         "tags": [
           "Admin · Contracts"
         ]
@@ -22186,6 +22365,26 @@
         ]
       }
     },
+    "/api/admin/dashboard/work-queue": {
+      "get": {
+        "operationId": "BusinessWorkCountsController_workQueue",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview assigned, unassigned urgent and overdue support work",
+        "tags": [
+          "Admin · Dashboard"
+        ]
+      }
+    },
     "/api/admin/document-retention/destruction": {
       "get": {
         "operationId": "DocumentRetentionController_destruction",
@@ -22843,6 +23042,16 @@
           {
             "in": "query",
             "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filter to a single refund on this invoice, without a cursor.",
+            "in": "query",
+            "name": "refundId",
             "required": false,
             "schema": {
               "format": "uuid",
@@ -26245,6 +26454,33 @@
       }
     },
     "/api/admin/maintenance/{capability}": {
+      "get": {
+        "operationId": "AdminMaintenanceController_setting",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "capability",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Maintenance setting and version"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read maintenance for one service",
+        "tags": [
+          "Admin · Maintenance"
+        ]
+      },
       "put": {
         "description": "A reviewed recovery may include rollbackDraftId for the current capability and version.",
         "operationId": "AdminMaintenanceController_update",
@@ -26479,6 +26715,40 @@
           }
         },
         "summary": "List email complaint correction tasks",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/notifications/customer-corrections/{id}": {
+      "get": {
+        "operationId": "CustomerCorrectionsController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Correction task"
+          },
+          "404": {
+            "description": "Correction task not found"
+          }
+        },
+        "summary": "Read an email complaint correction task",
         "tags": [
           "Admin"
         ]
@@ -27473,7 +27743,7 @@
             "description": "Template published."
           },
           "400": {
-            "description": "Unexpected request body or template is not a draft"
+            "description": "Invalid publish request, draft content, or missing email subject"
           },
           "404": {
             "description": "Template not found"
@@ -28521,6 +28791,34 @@
               "application/json": {
                 "schema": {
                   "properties": {
+                    "balance": {
+                      "nullable": true,
+                      "properties": {
+                        "available": {
+                          "pattern": "^-?[0-9]+$",
+                          "type": "string"
+                        },
+                        "posted": {
+                          "pattern": "^-?[0-9]+$",
+                          "type": "string"
+                        },
+                        "reserved": {
+                          "pattern": "^-?[0-9]+$",
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "format": "date-time",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "posted",
+                        "reserved",
+                        "available",
+                        "updatedAt"
+                      ],
+                      "type": "object"
+                    },
                     "nextCursor": {
                       "nullable": true,
                       "type": "string"
@@ -28548,8 +28846,21 @@
                             "format": "uuid",
                             "type": "string"
                           },
+                          "receiptId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
                           "refId": {
                             "nullable": true,
+                            "type": "string"
+                          },
+                          "staffSource": {
+                            "enum": [
+                              "bank_receipt",
+                              "online",
+                              "invoice",
+                              "ledger"
+                            ],
                             "type": "string"
                           },
                           "state": {
@@ -28575,6 +28886,7 @@
                   },
                   "required": [
                     "profileId",
+                    "balance",
                     "transactions",
                     "nextCursor"
                   ],
@@ -30454,6 +30766,35 @@
         ]
       }
     },
+    "/api/admin/solar/requests/{id}/postal": {
+      "get": {
+        "operationId": "StaffSolarPostalController_shipmentState",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read the shipment and postal review status for one solar request",
+        "tags": [
+          "Admin · Solar postal documents"
+        ]
+      }
+    },
     "/api/admin/solar/requests/{id}/postal/confirm-received": {
       "post": {
         "operationId": "StaffSolarPostalController_received",
@@ -31315,6 +31656,42 @@
           "Admin"
         ]
       },
+      "get": {
+        "operationId": "AdminController_getStaffTeam",
+        "parameters": [
+          {
+            "description": "Staff team UUID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Staff team with members"
+          },
+          "403": {
+            "description": "Staff team access is required"
+          },
+          "404": {
+            "description": "Staff team not found"
+          }
+        },
+        "summary": "Get one staff team",
+        "tags": [
+          "Admin"
+        ]
+      },
       "put": {
         "operationId": "AdminController_updateStaffTeam",
         "parameters": [
@@ -31437,6 +31814,44 @@
         ]
       }
     },
+    "/api/admin/staff/accounts/{userId}": {
+      "get": {
+        "operationId": "AdminController_getStaffAccount",
+        "parameters": [
+          {
+            "description": "Staff account ID",
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Staff account summary"
+          },
+          "403": {
+            "description": "Staff directory access is required"
+          },
+          "404": {
+            "description": "Staff account not found"
+          }
+        },
+        "summary": "Get one staff account",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/staff/audit": {
       "get": {
         "operationId": "AdminController_listStaffAudit",
@@ -31513,6 +31928,31 @@
           }
         },
         "summary": "Staff permission audit timeline (role changes)",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/staff/search": {
+      "get": {
+        "operationId": "AdminController_searchStaffAccounts",
+        "parameters": [
+          {
+            "description": "Staff name or username, 2–100 characters",
+            "in": "query",
+            "name": "q",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Find staff accounts by name or username",
         "tags": [
           "Admin"
         ]
@@ -32313,6 +32753,52 @@
         ]
       }
     },
+    "/api/admin/upload-policies/{category}/versions/{id}": {
+      "get": {
+        "operationId": "UploadPolicyController_getVersion",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "category",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested upload policy version."
+          },
+          "400": {
+            "description": "Invalid category or policy ID."
+          },
+          "403": {
+            "description": "Upload policy permission required."
+          },
+          "404": {
+            "description": "No matching policy version in this category."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read one version of an upload policy in its category",
+        "tags": [
+          "Admin · Upload Policies"
+        ]
+      }
+    },
     "/api/admin/upload-policies/{id}/end": {
       "post": {
         "description": "Soft-closes a policy window (effectiveUntil, exclusive). Policies are never hard-deleted — ending is the archival path, and ending an already-ended policy is a no-op.",
@@ -32885,6 +33371,16 @@
           {
             "in": "query",
             "name": "before",
+            "required": false,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filter to a single refund on this invoice, without a cursor.",
+            "in": "query",
+            "name": "refundId",
             "required": false,
             "schema": {
               "format": "uuid",
@@ -35480,6 +35976,10 @@
               "schema": {
                 "additionalProperties": false,
                 "properties": {
+                  "brief": {
+                    "maxLength": 2000,
+                    "type": "string"
+                  },
                   "productId": {
                     "format": "uuid",
                     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
@@ -35518,6 +36018,83 @@
           }
         ],
         "summary": "Submit a consultation request without creating an invoice",
+        "tags": [
+          "Consultation requests"
+        ]
+      }
+    },
+    "/api/consultations/requests/submissions/{submissionKey}": {
+      "get": {
+        "operationId": "ConsultationRequestController_receipt",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "submissionKey",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "productId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "receipt": {
+                      "nullable": true,
+                      "properties": {
+                        "requestId": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "status": {
+                          "enum": [
+                            "submitted"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "requestId",
+                        "status"
+                      ],
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "receipt"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read a consultation submission receipt for the current submitter",
         "tags": [
           "Consultation requests"
         ]
@@ -41135,6 +41712,51 @@
         ]
       }
     },
+    "/api/invoices/{invoiceId}/bank-receipts/{receiptId}": {
+      "get": {
+        "operationId": "CustomerInvoiceController_receipt",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "invoiceId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "receiptId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Receipt details and customer-visible review history."
+          },
+          "400": {
+            "description": "Invalid invoice or receipt ID."
+          },
+          "404": {
+            "description": "Receipt unavailable on this invoice for the active profile."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get one bank receipt and its review history for the active profile",
+        "tags": [
+          "Invoices"
+        ]
+      }
+    },
     "/api/invoices/{invoiceId}/bank-receipts/{receiptId}/attachment": {
       "get": {
         "operationId": "CustomerInvoiceController_receiptAttachment",
@@ -43710,6 +44332,33 @@
         ]
       }
     },
+    "/api/profiles/{profileId}/addresses/access": {
+      "get": {
+        "operationId": "ProfilesController_addressAccess",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address management access for this profile."
+          },
+          "404": {
+            "description": "Profile unavailable for address management."
+          }
+        },
+        "summary": "Check access to manage saved addresses on a profile",
+        "tags": [
+          "Profiles"
+        ]
+      }
+    },
     "/api/profiles/{profileId}/addresses/{addressId}": {
       "delete": {
         "operationId": "ProfilesController_deleteAddress",
@@ -43746,6 +44395,39 @@
           }
         },
         "summary": "Delete an address",
+        "tags": [
+          "Profiles"
+        ]
+      },
+      "get": {
+        "operationId": "ProfilesController_addressDetail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "profileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "addressId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address details."
+          },
+          "404": {
+            "description": "Profile or address unavailable."
+          }
+        },
+        "summary": "Get one saved address for a profile",
         "tags": [
           "Profiles"
         ]
@@ -47349,6 +48031,45 @@
         ]
       }
     },
+    "/api/staff/electricity/contracts/{id}/price-adjustments/{adjustmentId}": {
+      "get": {
+        "operationId": "StaffElectricityPriceAdjustmentController_record",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "adjustmentId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read one price adjustment and invoice evidence for its contract",
+        "tags": [
+          "Staff · Electricity contract changes"
+        ]
+      }
+    },
     "/api/staff/electricity/increase-requests": {
       "get": {
         "operationId": "StaffElectricityIncreaseController_queue",
@@ -47386,6 +48107,36 @@
           }
         ],
         "summary": "List pending or expired electricity quantity increase requests",
+        "tags": [
+          "Staff · Electricity contract changes"
+        ]
+      }
+    },
+    "/api/staff/electricity/increase-requests/{requestId}": {
+      "get": {
+        "operationId": "StaffElectricityIncreaseController_staffRecord",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "requestId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read one electricity quantity increase request and its billing state",
         "tags": [
           "Staff · Electricity contract changes"
         ]
@@ -50845,6 +51596,39 @@
         ]
       }
     },
+    "/api/staff/solar/requests/{id}/postal": {
+      "get": {
+        "operationId": "SolarStaffPostalController_shipmentState",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Read the shipment and postal review status for one solar request",
+        "tags": [
+          "Admin · Solar postal documents",
+          "Staff · Solar postal documents"
+        ]
+      }
+    },
     "/api/staff/solar/requests/{id}/postal/confirm-received": {
       "post": {
         "operationId": "SolarStaffPostalController_received",
@@ -52313,6 +53097,22 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "query",
+            "name": "relatedType",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "relatedId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -52545,6 +53345,30 @@
           }
         },
         "summary": "Preview a visible verified ticket reply attachment",
+        "tags": [
+          "Tickets"
+        ]
+      }
+    },
+    "/api/tickets/{id}/replies/seen": {
+      "patch": {
+        "operationId": "TicketsController_markRepliesSeen",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Matching unread replies marked as read."
+          }
+        },
+        "summary": "Mark a customer’s displayed public ticket replies as read",
         "tags": [
           "Tickets"
         ]
@@ -53921,6 +54745,42 @@
           }
         ],
         "summary": "Fetch the current unread notification count",
+        "tags": [
+          "Notification Center"
+        ]
+      }
+    },
+    "/api/v1/notifications/{id}": {
+      "get": {
+        "operationId": "NotificationCenterController_findOne",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification and its current read state."
+          },
+          "400": {
+            "description": "Invalid notification identifier."
+          },
+          "404": {
+            "description": "Notification not found."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get one private notification without changing its read state",
         "tags": [
           "Notification Center"
         ]

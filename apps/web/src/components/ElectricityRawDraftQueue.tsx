@@ -1,8 +1,21 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { Ban as TableBanIcon, X as TableXIcon } from 'lucide-react';
+import { TableActionIcon } from './TableActionIcon.js';
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { confirmationText } from '@barghsa/i18n/confirmation';
+import { electricityDraftDecisionText } from '@barghsa/i18n/electricity-draft-decision';
 import { staffQueryJson, useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
 import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.js';
-import { Button, Label, Textarea, TextCell, DateCell } from '@barghsa/ui';
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  DateCell,
+  FinancialReviewSummary,
+  Label,
+  ListRefreshButton,
+  Textarea,
+  TextCell,
+} from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -13,6 +26,7 @@ import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
 import { existingDraftReturns } from '../lib/electricity-existing-returns.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
 interface Draft {
   id: string;
   profileId: string;
@@ -166,12 +180,99 @@ function queue(value: unknown) {
   });
   return { drafts, nextAfter: value.nextAfter };
 }
+function DraftReferences({ draft, copy }: { draft: Draft; copy: (key: string) => string }) {
+  return (
+    <dl className="grid min-w-0 gap-2.5 rounded-lg border bg-muted/25 px-3 py-2.5 text-sm sm:grid-cols-2">
+      <div className="min-w-0">
+        <dt className="text-muted-foreground">{copy('order')}</dt>
+        <dd className="wrap-anywhere">
+          <bdi dir="ltr">{draft.id}</bdi>
+        </dd>
+      </div>
+      <div className="min-w-0">
+        <dt className="text-muted-foreground">{copy('profile')}</dt>
+        <dd className="wrap-anywhere">
+          <bdi dir="ltr">{draft.profileId}</bdi>
+        </dd>
+      </div>
+    </dl>
+  );
+}
+
+function DraftDecisionReview({ action, recovery }: { action: DraftAction; recovery: ReactNode }) {
+  const locale = useLocale();
+  const copy = (key: string) => t('electricity.rawDraft.' + key, locale);
+  const numbers = useNumberFormatting(locale);
+  const { financial, gift } = action;
+  const approval = action.body.approvalRequestId
+    ? electricityDraftDecisionText('approvalRecorded', locale)
+    : copy(financial.required ? 'approvalRequired' : 'approvalNotRequired');
+  return (
+    <div className="min-w-0 space-y-3">
+      {recovery}
+      {financial.invoices.length ? (
+        <FinancialReviewSummary
+          compact
+          title={electricityDraftDecisionText('financialReview', locale)}
+          rows={financial.invoices.map((invoice) => ({
+            id: invoice.id,
+            label: copy('invoice'),
+            value: (
+              <span className="inline-flex flex-wrap justify-end gap-x-2 gap-y-1">
+                <span className="min-w-0 wrap-anywhere" dir="ltr">
+                  {invoice.id}
+                </span>
+                <span>{numbers.money(invoice.amount)}</span>
+              </span>
+            ),
+          }))}
+          total={{ label: copy('walletReturn'), value: numbers.money(financial.amount) }}
+          notice={approval}
+        />
+      ) : (
+        <p className="rounded-lg border bg-muted/25 px-3 py-2.5 text-sm font-medium">
+          {electricityDraftDecisionText('noWalletReturn', locale)}
+        </p>
+      )}
+      {financial.existing.map((refund) => (
+        <section key={refund.id} className="space-y-1.5 rounded-lg border px-3 py-2.5 text-sm">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h3 className="font-medium">{copy('existingReturn')}</h3>
+            <span className="rounded-md bg-muted px-2 py-1 text-xs">
+              {t('invoices.activity.state.' + refund.state, locale)}
+            </span>
+          </div>
+          <p className="wrap-anywhere text-muted-foreground">
+            <bdi dir="ltr">{refund.id}</bdi>
+          </p>
+          <p>{copy(refund.exhausted ? 'manualRetryRequired' : 'retryPreserved')}</p>
+        </section>
+      ))}
+      <DraftReferences draft={action.draft} copy={copy} />
+      <dl className="grid gap-3 text-sm">
+        <div className="rounded-lg border px-3 py-2.5">
+          <dt className="text-muted-foreground">{copy('reason')}</dt>
+          <dd className="whitespace-pre-wrap wrap-anywhere">{action.reason}</dd>
+        </div>
+        {gift && (
+          <div className="rounded-lg border px-3 py-2.5">
+            <dt className="text-muted-foreground">{copy('gift')}</dt>
+            <dd>{copy('gift.' + gift.outcome)}</dd>
+            <dd className="wrap-anywhere text-muted-foreground">
+              <bdi dir="ltr">{gift.id}</bdi>
+            </dd>
+          </div>
+        )}
+      </dl>
+    </div>
+  );
+}
+
 function Queue() {
   const read = useStaffQueryRead('orders');
   const locale = useLocale(),
     copy = (key: string) => t('electricity.rawDraft.' + key, locale);
   const time = useAccountTime(locale);
-  const numbers = useNumberFormatting(locale);
   const [open, setOpen] = useState(false),
     [rows, setRows] = useState<Draft[]>([]),
     [after, setAfter] = useState<string | null>(null),
@@ -188,10 +289,16 @@ function Queue() {
     [invalid, setInvalid] = useState(false);
   const live = useRef(true),
     previewRequest = useRef<AbortController | null>(null),
-    reviewNumber = useRef(0);
+    reviewNumber = useRef(0),
+    reasonInput = useRef<HTMLTextAreaElement>(null),
+    rowAction = useRef<HTMLButtonElement | null>(null),
+    reviewButton = useRef<HTMLButtonElement>(null);
   const scope = JSON.stringify([after, revision, locale]);
   const [accepted, setAccepted] = useState<string | null>(null);
   const canUseRows = accepted === scope && !loading && !listFailed;
+  useEffect(() => {
+    if (selected) reasonInput.current?.focus();
+  }, [selected]);
   useEffect(() => {
     live.current = true;
     return () => {
@@ -252,6 +359,7 @@ function Queue() {
     const explanation = reason.trim();
     if (!explanation || explanation.length > 1000) {
       setInvalid(true);
+      reasonInput.current?.focus();
       return;
     }
     void reviewDraft(selected, explanation);
@@ -404,9 +512,20 @@ function Queue() {
       {copy('retry')}
     </Button>
   );
+  const recoveryHelp = recovery && (
+    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-lg border bg-muted/25 px-3 py-2.5">
+      <p className="text-sm">{electricityDraftDecisionText('recoveryHelp', locale)}</p>
+      {recoveryButton}
+      {error && action && (
+        <p role="alert" className="w-full text-sm text-destructive">
+          {error}
+        </p>
+      )}
+    </div>
+  );
   return (
     <details
-      className="rounded-md border p-4"
+      className="rounded-xl border bg-card px-4 py-2.5 sm:px-5"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
       onToggle={(event) => {
         const nextOpen = event.currentTarget.open;
@@ -420,19 +539,23 @@ function Queue() {
         {copy('title')}
       </summary>
       {open ? (
-        <div className="mt-4 space-y-4">
-          <p className="text-sm text-muted-foreground">{copy('description')}</p>
-          {error ? <p role="alert">{error}</p> : null}
+        <div className="space-y-3 pb-2">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm text-muted-foreground">{copy('description')}</p>
+            {!recovery && (
+              <ListRefreshButton
+                label={copy('retry')}
+                disabled={loading || busy || !!action}
+                onClick={reload}
+              />
+            )}
+          </div>
+          {error && (!selected || (recovery && !action)) ? <p role="alert">{error}</p> : null}
           {recovery && !action && (
             <div className="space-y-2">
               <p role="alert">{confirmationText('unconfirmed', locale)}</p>
-              {recoveryButton}
+              {recoveryHelp}
             </div>
-          )}
-          {!recovery && (
-            <Button variant="outline" disabled={busy || !!action} onClick={reload}>
-              {copy('retry')}
-            </Button>
           )}
           <OperationalQueueTable
             locale={locale}
@@ -469,14 +592,19 @@ function Queue() {
                     size="sm"
                     variant="outline"
                     disabled={busy || !!action || !!recovery || !canUseRows}
-                    onClick={() => {
+                    onClick={(event) => {
+                      rowAction.current = event.currentTarget;
                       setSelected({ row, action: choice });
                       setReason('');
                       setInvalid(false);
                       setError('');
                     }}
+                    aria-expanded={selected?.row.id === row.id && selected.action === choice}
+                    data-table-action-tooltip={copy(choice)}
                   >
-                    {copy(choice)}
+                    <TableActionIcon icon={choice === 'reject' ? TableBanIcon : TableXIcon}>
+                      {copy(choice)}
+                    </TableActionIcon>
                   </Button>
                 ))}
               </div>
@@ -500,34 +628,85 @@ function Queue() {
             </Button>
           ) : null}
           {selected ? (
-            <form onSubmit={review} className="space-y-3 rounded-md border p-4">
-              <h3 className="font-medium">{copy(selected.action)}</h3>
-              <p className="break-all text-sm" dir="ltr">
-                {selected.row.id}
-              </p>
-              <Label htmlFor="raw-electricity-draft-reason">{copy('reason')}</Label>
-              <Textarea
-                id="raw-electricity-draft-reason"
-                value={reason}
-                maxLength={1000}
-                required
-                aria-required="true"
-                aria-invalid={invalid}
-                aria-describedby={invalid ? 'raw-draft-reason-error' : undefined}
-                disabled={busy || !!action || !!recovery}
-                onChange={(event) => {
-                  setReason(event.target.value);
-                  setInvalid(false);
-                }}
-              />
-              {invalid ? (
-                <p id="raw-draft-reason-error" role="alert">
-                  {copy('reasonInvalid')}
-                </p>
-              ) : null}
-              <Button type="submit" disabled={busy || !!action || !!recovery || !canUseRows}>
-                {copy('review')}
-              </Button>
+            <form
+              onSubmit={review}
+              noValidate
+              className={recordEditorSurface}
+              aria-labelledby="raw-draft-decision-heading"
+            >
+              <div className="flex items-center justify-between gap-2 border-b bg-muted/25 px-4 py-2 sm:px-6">
+                <h3 id="raw-draft-decision-heading" className="text-base font-semibold">
+                  {copy(selected.action)}
+                </h3>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  aria-label={electricityDraftDecisionText('dismissDecision', locale)}
+                  disabled={busy || !!action || !!recovery}
+                  onClick={() => {
+                    setSelected(null);
+                    setReason('');
+                    setInvalid(false);
+                    if (!listFailed) setError('');
+                    rowAction.current?.focus();
+                  }}
+                >
+                  <TableXIcon aria-hidden="true" />
+                </Button>
+              </div>
+              <div className="space-y-3 px-4 py-3.5 sm:px-6">
+                <DraftReferences draft={selected.row} copy={copy} />
+                {error && !action && !recovery && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+                <div className="space-y-1">
+                  <Label htmlFor="raw-electricity-draft-reason">{copy('reason')}</Label>
+                  <Textarea
+                    id="raw-electricity-draft-reason"
+                    ref={reasonInput}
+                    rows={2}
+                    className="min-h-16 scroll-mt-32"
+                    placeholder={electricityDraftDecisionText('reasonExample', locale)}
+                    value={reason}
+                    maxLength={1000}
+                    required
+                    aria-required="true"
+                    aria-invalid={invalid || undefined}
+                    aria-describedby={invalid ? 'raw-draft-reason-error' : 'raw-draft-reason-help'}
+                    disabled={busy || !!action || !!recovery}
+                    onChange={(event) => {
+                      setReason(event.target.value);
+                      setInvalid(false);
+                    }}
+                  />
+                  {invalid ? (
+                    <p
+                      id="raw-draft-reason-error"
+                      role="alert"
+                      className="text-sm text-destructive"
+                    >
+                      {copy('reasonInvalid')}
+                    </p>
+                  ) : (
+                    <p id="raw-draft-reason-help" className="text-sm text-muted-foreground">
+                      {electricityDraftDecisionText('reasonHelp', locale)}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <RecordEditorActions>
+                <Button
+                  ref={reviewButton}
+                  type="submit"
+                  loading={busy && !action}
+                  disabled={busy || !!action || !!recovery || !canUseRows}
+                >
+                  {copy('review')}
+                </Button>
+              </RecordEditorActions>
             </form>
           ) : null}
           {action ? (
@@ -535,80 +714,9 @@ function Queue() {
               key={action.reviewNumber}
               action={action}
               confirmationDisabled={busy || !!recovery}
-              summary={
-                <>
-                  <dl className="space-y-2 text-sm">
-                    <div>
-                      <dt>{copy('order')}</dt>
-                      <dd className="break-all" dir="ltr">
-                        {action.draft.id}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt>{copy('profile')}</dt>
-                      <dd className="break-all" dir="ltr">
-                        {action.draft.profileId}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt>{copy('reason')}</dt>
-                      <dd className="whitespace-pre-wrap break-words">{action.reason}</dd>
-                    </div>
-                    {action.gift ? (
-                      <div>
-                        <dt>{copy('gift')}</dt>
-                        <dd className="break-all" dir="ltr">
-                          {action.gift.id}
-                        </dd>
-                        <dd>{copy('gift.' + action.gift.outcome)}</dd>
-                      </div>
-                    ) : null}
-                    {action.financial.invoices.length ? (
-                      <>
-                        <div>
-                          <dt>{copy('walletReturn')}</dt>
-                          <dd>{numbers.money(action.financial.amount)}</dd>
-                        </div>
-                        {action.financial.invoices.map((line) => (
-                          <div key={line.id}>
-                            <dt>{copy('invoice')}</dt>
-                            <dd className="break-all" dir="ltr">
-                              {line.id}
-                            </dd>
-                            <dd>{numbers.money(line.amount)}</dd>
-                          </div>
-                        ))}
-                        {action.financial.existing.map((refund) => (
-                          <div key={refund.id}>
-                            <dt>{copy('existingReturn')}</dt>
-                            <dd className="break-all" dir="ltr">
-                              {refund.id}
-                            </dd>
-                            <dd>{t('invoices.activity.state.' + refund.state, locale)}</dd>
-                            <dd>
-                              {copy(refund.exhausted ? 'manualRetryRequired' : 'retryPreserved')}
-                            </dd>
-                          </div>
-                        ))}
-                        <div>
-                          <dt>{copy('approval')}</dt>
-                          <dd>
-                            {copy(
-                              action.financial.required ? 'approvalRequired' : 'approvalNotRequired'
-                            )}
-                          </dd>
-                        </div>
-                      </>
-                    ) : null}
-                  </dl>
-                  {recovery && (
-                    <div className="space-y-2">
-                      {recoveryButton}
-                      {error && <p role="alert">{error}</p>}
-                    </div>
-                  )}
-                </>
-              }
+              focusSummary
+              finalFocus={reviewButton}
+              summary={<DraftDecisionReview action={action} recovery={recoveryHelp} />}
               onClose={() => setAction(null)}
               onUnconfirmed={() => {
                 setError('');

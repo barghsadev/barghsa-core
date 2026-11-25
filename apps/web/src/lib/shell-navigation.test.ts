@@ -67,3 +67,14 @@ it('matches the longest actual page prefix and respects route boundaries', () =>
   expect(currentNavigation(groups, '/app/unlisted-page')).toBeUndefined();
   expect(currentNavigation(groups, '/app')?.to).toBe('/app');
 });
+
+it('keeps nested staff records in the queue they came from', () => {
+  const groups = group('/admin/solar-requests', '/admin/solar-construction');
+  groups[0]!.items[1]!.activePath = /^\/admin\/solar-requests\/[^/]+\/construction(?:\/|$)/;
+  expect(currentNavigation(groups, '/admin/solar-requests/id/construction/installation')?.to).toBe(
+    '/admin/solar-construction'
+  );
+  expect(currentNavigation(groups, '/admin/solar-requests/id/construction-other')?.to).toBe(
+    '/admin/solar-requests'
+  );
+});

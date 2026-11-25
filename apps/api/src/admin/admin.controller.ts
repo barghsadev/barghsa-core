@@ -16,6 +16,7 @@ import {
   stageRecoveryDraft,
 } from './config-activation-history.js';
 import type { ServiceSetting } from './service-settings-recovery.js';
+import { searchStaffAccounts } from './staff-account-search.js';
 import {
   Body,
   BadRequestException,
@@ -26,6 +27,7 @@ import {
   HttpCode,
   HttpException,
   Logger,
+  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
@@ -43,6 +45,7 @@ import {
   type StaffRoleDto,
   type EffectivePermissionsResult,
   type StaffListResult,
+  type StaffUserSummary,
   type DisableStaffResult,
   type StaffListQuery,
   type StaffAuditResult,
@@ -808,6 +811,51 @@ export class AdminController {
     return recheckStaffAuthorityAfter(req.session, 'admin:staff:view', () =>
       this.adminService.listStaff(listQuery)
     );
+  }
+
+  @Get('staff/search')
+  @Header('Cache-Control', 'private, no-store')
+  @ApiOperation({ summary: 'Find staff accounts by name or username' })
+  @ApiQuery({
+    name: 'q',
+    type: String,
+    required: true,
+    description: 'Staff name or username, 2–100 characters',
+  })
+  searchStaffAccounts(@Req() req: AuthenticatedRequest, @Query('q') q: unknown) {
+    if (!hasStaffPermission(req, 'admin:staff:view')) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403
+      );
+    }
+    const search = typeof q === 'string' ? q.trim() : '';
+    if (search.length < 2 || search.length > 100) {
+      throw new BadRequestException('Invalid staff search');
+    }
+    return searchStaffAccounts(search, req.session);
+  }
+
+  @Get('staff/accounts/:userId')
+  @Header('Cache-Control', 'private, no-store')
+  @ApiOperation({ summary: 'Get one staff account' })
+  @ApiParam({ name: 'userId', description: 'Staff account ID' })
+  @ApiResponse({ status: 200, description: 'Staff account summary', schema: { type: 'object' } })
+  @ApiResponse({ status: 403, description: 'Staff directory access is required' })
+  @ApiResponse({ status: 404, description: 'Staff account not found' })
+  getStaffAccount(
+    @Param('userId') userId: string,
+    @Req() req: AuthenticatedRequest
+  ): Promise<StaffUserSummary> {
+    if (!hasStaffPermission(req, 'admin:staff:view')) {
+      throw new HttpException(
+        { statusCode: 403, error: ErrorCodes.AUTHZ_FORBIDDEN.code, message: 'Admin role required' },
+        403
+      );
+    }
+    if (!/^[a-zA-Z0-9_-]{1,128}$/.test(userId))
+      throw new NotFoundException('Staff account not found');
+    return this.adminService.getStaffAccount(userId, req.session);
   }
 
   /**
@@ -1914,7 +1962,10 @@ export class AdminController {
   @ApiParam({ name: 'id', description: 'Notification template UUID' })
   @ApiBody({ required: false, schema: { type: 'object', additionalProperties: false } })
   @ApiResponse({ status: 200, description: 'Template published.' })
-  @ApiResponse({ status: 400, description: 'Unexpected request body or template is not a draft' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid publish request, draft content, or missing email subject',
+  })
   @ApiResponse({ status: 404, description: 'Template not found' })
   async publishNotificationTemplate(
     @Param('id') id: string,
@@ -3402,6 +3453,18 @@ export class AdminController {
   async listStaffTeams(@Req() req: AuthenticatedRequest) {
     this.assertStaffTeamsEditPermission(req);
     return this.adminService.listStaffTeams();
+  }
+
+  @Get('staff-teams/:id')
+  @Header('Cache-Control', 'private, no-store')
+  @ApiOperation({ summary: 'Get one staff team' })
+  @ApiParam({ name: 'id', description: 'Staff team UUID' })
+  @ApiResponse({ status: 200, description: 'Staff team with members', schema: { type: 'object' } })
+  @ApiResponse({ status: 403, description: 'Staff team access is required' })
+  @ApiResponse({ status: 404, description: 'Staff team not found' })
+  getStaffTeam(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
+    this.assertStaffTeamsEditPermission(req);
+    return this.adminService.getStaffTeam(id, req.session);
   }
 
   /**

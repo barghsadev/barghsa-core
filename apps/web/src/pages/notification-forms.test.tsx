@@ -91,12 +91,26 @@ async function submit() {
 }
 const writes = () => vi.mocked(fetch).mock.calls.filter(([, init]) => init?.method);
 it('rejects undeclared placeholders with linked body focus and retains declared metadata', async () => {
+  items = [
+    {
+      ...notificationTemplate(),
+      variables: [{ name: 'user.name', description: 'Recipient, as printed.\nKeep spelling.' }],
+    },
+  ];
   await mount();
-  const variables = field('variablesLabel').value;
+  const variableValues = () =>
+    Array.from(
+      host.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+        '[data-variable-name], [data-variable-description]'
+      ),
+      (field) => field.value
+    );
+  const variables = variableValues();
+  expect(variables).toEqual(['user.name', 'Recipient, as printed.\nKeep spelling.']);
   await fill('bodyTemplate', 'Hello {{unknown}}');
   await submit();
   await vi.waitFor(() => expect(field('bodyTemplate').getAttribute('aria-invalid')).toBe('true'));
-  expect(field('variablesLabel').value).toBe(variables);
+  expect(variableValues()).toEqual(variables);
   await vi.waitFor(async () => {
     await act(async () => {});
     expect(document.activeElement).toBe(field('bodyTemplate'));

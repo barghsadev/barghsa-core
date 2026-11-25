@@ -3,6 +3,8 @@ const RecoveryContactForm = lazy(() => import('../components/RecoveryContactForm
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/auth';
 import { useLocale } from '../hooks/useLocale.js';
+import { BrandMark } from '../components/BrandMark.js';
+import { LanguageSwitcher } from '../components/LanguageSwitcher.js';
 import { brandName, useBrandConfig } from '../providers/BrandThemeProvider.js';
 import { Card, CardContent } from '@barghsa/ui';
 import { MailIcon, PhoneIcon, ClockIcon, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
@@ -35,59 +37,22 @@ function SupportPage() {
 
   return (
     <div className="flex min-h-dvh flex-col" dir={isRtl ? 'rtl' : 'ltr'}>
-      {/* Mobile header with brand */}
-      <div className="flex md:hidden flex-col items-center py-8 px-4 border-b border-border bg-gradient-to-b from-primary/5 to-background">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-xl font-bold text-primary no-underline"
-          aria-label={name}
-        >
-          <svg
-            width="28"
-            height="28"
-            viewBox="0 0 32 32"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-            className="shrink-0"
-          >
-            <rect width="32" height="32" rx="8" fill="var(--primary)" />
-            <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--primary-foreground)" />
-          </svg>
-          <span>{name}</span>
+      <header
+        className="flex items-center justify-between gap-3 border-b px-5 py-3 sm:px-9"
+        data-toast-anchor
+      >
+        <Link to="/" className="inline-flex min-h-11 items-center rounded-md" aria-label={name}>
+          <BrandMark />
         </Link>
-      </div>
-
-      {/* Desktop sidebar with brand */}
-      <aside className="hidden md:flex flex-col items-center justify-center py-16 px-8 border-b border-border bg-gradient-to-b from-primary/5 to-background">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-2xl font-bold text-primary no-underline"
-          aria-label={name}
-        >
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 32 32"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-            className="shrink-0"
-          >
-            <rect width="32" height="32" rx="8" fill="var(--primary)" />
-            <path d="M18 6L9 18h5l-1 8 9-12h-5l1-8z" fill="var(--primary-foreground)" />
-          </svg>
-          <span>{name}</span>
-        </Link>
-      </aside>
-
+        <LanguageSwitcher />
+      </header>
       <main
         id="main-content"
         tabIndex={-1}
-        className="flex flex-1 items-center justify-center p-2 sm:p-4 md:p-8 lg:p-12"
+        className="flex flex-1 items-start justify-center px-4 py-6 md:px-8 md:py-10"
       >
-        <Card className="w-full max-w-lg">
-          <CardContent className="px-2 pt-6 sm:px-(--card-spacing)">
+        <Card className="w-full max-w-xl">
+          <CardContent className="p-4 sm:p-6">
             <div className="space-y-6">
               {/* Title */}
               <div className="space-y-1.5">
@@ -97,6 +62,12 @@ function SupportPage() {
                 <p className="text-sm text-muted-foreground">
                   {t('auth.support.subtitle', locale)}
                 </p>
+                <a
+                  href="#recovery-support-contact"
+                  className="touch-action inline-flex min-h-11 items-center text-sm font-medium text-primary underline underline-offset-4"
+                >
+                  {t('auth.support.contactLink', locale)}
+                </a>
               </div>
 
               {reference && (
@@ -105,13 +76,20 @@ function SupportPage() {
                 </p>
               )}
 
+              <Suspense fallback={<p role="status">{loadingText('loading', locale)}</p>}>
+                <RecoveryContactForm />
+              </Suspense>
               {/* Recovery process */}
               <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
                 <p className="text-sm leading-relaxed">{t('auth.support.steps', locale)}</p>
               </div>
 
               {/* Contact methods */}
-              <div className="space-y-4">
+              <div
+                id="recovery-support-contact"
+                tabIndex={-1}
+                className="space-y-4 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+              >
                 {brandConfig.supportEmail && (
                   <div className="flex items-start gap-3">
                     <MailIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
@@ -180,9 +158,6 @@ function SupportPage() {
                   </div>
                 </div>
               </div>
-              <Suspense fallback={<p role="status">{loadingText('loading', locale)}</p>}>
-                <RecoveryContactForm />
-              </Suspense>
               <PublicKnowledgeAssistant locale={locale} />
             </div>
           </CardContent>

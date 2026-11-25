@@ -83,6 +83,67 @@ for (const locale of ['en', 'fa'])
         'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
       )
     ).toHaveCount(25);
+    const entry = rows[0]!;
+    const collectionReads = queries.length;
+    let deliveryReads = 0;
+    await page.route('**/api/admin/notifications/delivery-logs?*', (route) => {
+      const search = new URL(route.request().url()).searchParams;
+      expect(search.get('notificationId')).toBe(entry.outboxId);
+      expect(search.get('channel')).toBe(entry.channel);
+      deliveryReads++;
+      return route.fulfill({
+        json: [
+          {
+            id: '40000000-0000-4000-8000-000000000001',
+            notificationId: entry.outboxId,
+            channel: entry.channel,
+            status: 'unknown',
+            attemptNumber: 5,
+            providerRef: null,
+            latencyMs: null,
+            errorCategory: 'transient',
+            errorDetail: 'Provider acknowledgement timed out',
+            createdAt: entry.createdAt,
+          },
+        ],
+      });
+    });
+    const main = page.getByRole('main');
+    const recordPath = `/admin/failed-notifications/${entry.id}`;
+    await main.getByRole('link', { name: entry.eventKey, exact: true }).click();
+    await expect(page).toHaveURL((url) => url.pathname === recordPath);
+    await expect(main.getByText(entry.recipientKey, { exact: true })).toBeVisible();
+    expect(queries).toHaveLength(collectionReads);
+    await main
+      .getByRole('link', {
+        name: tWorkspace('admin.notifications.history.title', locale),
+        exact: true,
+      })
+      .click();
+    await expect(page).toHaveURL((url) => url.pathname === recordPath + '/history');
+    await expect(
+      main.getByText(tWorkspace('admin.notifications.history.unknown', locale), { exact: true })
+    ).toBeVisible();
+    expect(deliveryReads).toBe(1);
+    expect(queries).toHaveLength(collectionReads);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page.reload();
+    await expect(
+      main.getByText('Provider acknowledgement timed out', { exact: true })
+    ).toBeVisible();
+    await main
+      .getByRole('link', {
+        name: tWorkspace('admin.notifications.deadLetter.recordTitle', locale),
+        exact: true,
+      })
+      .click();
+    await main
+      .getByRole('link', {
+        name: tWorkspace('admin.notifications.deadLetter.title', locale),
+        exact: true,
+      })
+      .click();
+    await expect(page).toHaveURL((url) => url.pathname === '/admin/failed-notifications');
     await checkRoutePresentation(page, test.info(), locale);
     const currentPage = page
       .getByRole('navigation', {
@@ -146,7 +207,12 @@ for (const locale of ['en', 'fa'])
       contentType: 'application/json',
     });
     if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
-      const controls = page.locator('main').locator('select, summary').filter({ visible: true });
+      const controls = page
+        .locator('main')
+        .locator(
+          'select, summary, a[href^="/admin/failed-notifications/history"], a[href="/admin/failed-notifications/corrections"]'
+        )
+        .filter({ visible: true });
       const sizes = await controls.evaluateAll((elements) =>
         elements.map((element) => {
           const { width, height } = element.getBoundingClientRect();
@@ -206,9 +272,16 @@ for (const locale of ['en', 'fa'])
       .click();
     const dialog = page.getByRole('dialog'),
       confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
-    await expect(dialog).toContainText('ab...yz');
+    const selection = dialog.getByRole('list', {
+      name: t('admin.operationalReview.selected', locale),
+    });
+    await expect(selection.getByRole('listitem')).toHaveCount(1);
+    await expect(selection).toContainText('ab...yz');
+    await expect(confirm).toBeInViewport({ ratio: 0.99 });
     await confirm.click();
     const password = dialog.locator('input[type="password"]');
+    await expect(password).toBeFocused();
+    await expect(confirm).toBeInViewport({ ratio: 0.99 });
     await password.fill('wrong');
     await confirm.click();
     await expect(dialog.getByRole('alert')).toBeVisible();

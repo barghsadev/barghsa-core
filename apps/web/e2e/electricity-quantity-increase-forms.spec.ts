@@ -1,9 +1,10 @@
+import { manualRecordDateTime } from './record-date-time-fixture';
 import { productionManifest } from './production-manifest';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
-import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { adminText } from '@barghsa/i18n/electricity-increase-decision-forms';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { test, expect } from './coverage-fixture';
 import {
@@ -45,6 +46,24 @@ for (const [locale, theme] of [
 ] as const) {
   const copy = (key: string) => t(key, locale);
   const staffText = (key: string) => adminText(`admin.electricityIncreases.${key}`, locale);
+  test(`an existing increase request cannot reopen the editor (${locale})`, async ({ page }) => {
+    const state = await setupElectricityQuantityIncreaseForms(page, locale, theme === 'dark');
+    state.request = increaseRequest();
+    await page.goto(`/electricity/orders/${orderId}/increases/new`);
+    await expect(page.getByText(copy('electricity.increaseForm.requestUnavailable'))).toBeVisible();
+    await expect(page.getByTestId('electricity-increase-form')).toHaveCount(0);
+    await page
+      .getByRole('link', { name: copy('electricity.increaseForm.backToOrder'), exact: true })
+      .click();
+    await expect(page).toHaveURL(`/electricity/orders/${orderId}`);
+    await expect(
+      page.getByText(copy('electricity.increase.requested'), { exact: false }).first()
+    ).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: copy('electricity.increaseForm.openRequest'), exact: true })
+    ).toHaveCount(0);
+    expect(state.requestWrites).toEqual([]);
+  });
   test(`quantity request and adjacent signing retain exact attempts (${locale}, ${theme})`, async ({
     page,
   }, info) => {
@@ -63,6 +82,14 @@ for (const [locale, theme] of [
     );
     await page.goto(`/electricity/orders/${orderId}`);
     const form = page.getByTestId('electricity-increase-form');
+    const requestLink = page.getByRole('link', {
+      name: copy('electricity.increaseForm.openRequest'),
+      exact: true,
+    });
+    await expect(requestLink).toBeVisible();
+    await expect(form).toHaveCount(0);
+    await requestLink.click();
+    await expect(page).toHaveURL(`/electricity/orders/${orderId}/increases/new`);
     const quantity = page.locator('#electricity-increase-kwh');
     const submit = form.getByRole('button', {
       name: copy('electricity.increase.submit'),
@@ -117,6 +144,9 @@ for (const [locale, theme] of [
     const retry = page.getByTestId('electricity-increase-retry');
     await expect(retry).toBeEnabled();
     await expect(submit).toBeDisabled();
+    await expect(
+      page.getByRole('link', { name: copy('electricity.increaseForm.backToOrder'), exact: true })
+    ).toHaveAttribute('aria-disabled', 'true');
     await expect(quantity).toHaveValue(' 12 ');
     const readsBefore = state.customerReads;
     const refresh = page.getByTestId('electricity-increase-refresh');
@@ -137,6 +167,7 @@ for (const [locale, theme] of [
     state.requestMode = 'success';
     await retry.click();
     await expect(form).toHaveCount(0);
+    await expect(page).toHaveURL(`/electricity/orders/${orderId}`);
     expect(state.requestWrites.slice(1)).toEqual([command, command, command]);
     const sign = page.getByRole('button', { name: copy('electricity.increase.sign'), exact: true });
     await expect(sign).toBeDisabled();
@@ -242,7 +273,7 @@ for (const [locale, theme] of [
     ).toBeVisible();
     await expect(
       page.getByRole('link', { name: copy('invoices.details.openContract') })
-    ).toHaveAttribute('href', `/contracts?contractId=${contractId}`);
+    ).toHaveAttribute('href', `/contracts/${contractId}`);
   });
 
   test(`staff electricity increase approval recovers from a stalled acknowledgement (${locale}, ${theme})`, async ({
@@ -253,12 +284,15 @@ for (const [locale, theme] of [
     state.auth.context = 'staff';
     state.auth.actor = increaseStaffId;
     state.decisionMode = 'success';
-    await page.goto('/admin/electricity-increases');
+    await page.goto(`/admin/electricity-increases/${increaseRequestId}/approve`);
     const approveForm = page.getByTestId('electricity-increase-approve-form').first();
-    const date = page.locator(`#increase-effective-${increaseRequestId}`);
+    const date = await manualRecordDateTime(page, `increase-effective-${increaseRequestId}`);
     await date.fill('2026-10-13T12:00');
     await page.locator(`#increase-approval-reason-${increaseRequestId}`).fill('Capacity reviewed');
-    const approve = approveForm.getByRole('button', { name: staffText('approve'), exact: true });
+    const approve = approveForm.getByRole('button', {
+      name: staffText('previewApproval'),
+      exact: true,
+    });
     await approve.click();
     const dialog = page.getByRole('dialog');
     await approveRiskConfirmation(page, locale, 'financial');
@@ -291,6 +325,7 @@ for (const [locale, theme] of [
     expect((await replay).postData()).toBe(original);
     await expect(dialog).toHaveCount(0);
     await expect(date).toHaveCount(0);
+    await expect(page.getByText(staffText('approvalRecorded'), { exact: true })).toBeVisible();
     expect(state.decisionWrites).toEqual([captured, captured]);
     expect(state.decisionPreviews).toHaveLength(1);
   });
@@ -302,17 +337,19 @@ for (const [locale, theme] of [
     state.auth.context = 'staff';
     state.auth.actor = increaseStaffId;
     state.decisionMode = 'conflict';
-    await page.goto('/admin/electricity-increases');
-    let approveForm = page.getByTestId('electricity-increase-approve-form').first();
-    let rejectForm = page.getByTestId('electricity-increase-reject-form').first();
-    const date = page.locator(`#increase-effective-${increaseRequestId}`);
+    await page.goto(`/admin/electricity-increases/${increaseRequestId}/approve`);
+    const approveForm = page.getByTestId('electricity-increase-approve-form');
+    const rejectForm = page.getByTestId('electricity-increase-reject-form');
+    const date = await manualRecordDateTime(page, `increase-effective-${increaseRequestId}`);
     const approvalReason = page.locator(`#increase-approval-reason-${increaseRequestId}`);
     await expect(date).not.toHaveAttribute('aria-required', 'true');
-    for (const field of [approvalReason, rejectForm.locator('input,textarea')])
-      await expect(field).toHaveAttribute('aria-required', 'true');
+    await expect(approvalReason).toHaveAttribute('aria-required', 'true');
     await approvalReason.fill('  Capacity reviewed  ');
     await date.fill('2026-10-13T12:00');
-    const approve = approveForm.getByRole('button', { name: staffText('approve'), exact: true });
+    const approve = approveForm.getByRole('button', {
+      name: staffText('previewApproval'),
+      exact: true,
+    });
     await approve.click();
     await expect(page.getByRole('alert')).toContainText(staffText('reviewError'));
     await expect(page.getByRole('dialog')).toHaveCount(0);
@@ -323,7 +360,7 @@ for (const [locale, theme] of [
       effectiveFrom: '2026-10-13T08:30:00.000Z',
       reason: 'Capacity reviewed',
     });
-    await expect(rejectForm.locator('input,textarea')).toHaveValue('');
+    await expect(rejectForm).toHaveCount(0);
     await expect(approveForm).not.toContainText('PRIVATE_SERVER_VALIDATION_TEXT');
     await inspectForm(page, approveForm, 'electricity-increase-approve-form');
     await date
@@ -383,9 +420,9 @@ for (const [locale, theme] of [
     await expect(date).toHaveValue('2026-10-10T12:00');
     const refresh = page.getByRole('button', { name: staffText('refresh'), exact: true });
     await expect(refresh).toBeDisabled();
-    const expired = page.getByRole('button', { name: staffText('expiredTab'), exact: true });
-    await expect(expired).toBeDisabled();
-    await expired.dispatchEvent('click');
+    const back = page.getByRole('link', { name: staffText('backToRequest'), exact: true });
+    await expect(back).toHaveAttribute('aria-disabled', 'true');
+    await back.dispatchEvent('click');
     await expect(date).toHaveValue('2026-10-10T12:00');
     state.decisionWriteMode = 'success';
     await retry.click();
@@ -397,10 +434,19 @@ for (const [locale, theme] of [
     expect(state.decisionPreviews).toHaveLength(previewCount);
     expect(state.decisionWrites).toEqual([approvalCommand, approvalCommand]);
 
-    approveForm = page.getByTestId('electricity-increase-approve-form').first();
-    rejectForm = page.getByTestId('electricity-increase-reject-form').first();
+    const queue = page.getByRole('link', { name: staffText('backToQueue'), exact: true });
+    const rejectLink = page.getByRole('link', { name: staffText('reject'), exact: true });
+    await back.click();
+    await queue.click();
+    await page.getByRole('link', { name: new RegExp(otherIncreaseRequestId) }).click();
+    await rejectLink.click();
     const reason = page.locator(`#increase-reason-${otherIncreaseRequestId}`);
-    const reject = rejectForm.getByRole('button', { name: staffText('reject'), exact: true });
+    await expect(reason).toHaveAttribute('aria-required', 'true');
+    await expect(reason).toHaveValue('');
+    const reject = rejectForm.getByRole('button', {
+      name: staffText('previewRejection'),
+      exact: true,
+    });
     await reject.click();
     await focusedError(reason);
     expect(state.decisionPreviews).toHaveLength(previewCount);
@@ -423,6 +469,7 @@ for (const [locale, theme] of [
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await expect(reason).toHaveCount(0);
+    await expect(page.getByText(staffText('rejectionRecorded'), { exact: true })).toBeVisible();
     expect(state.decisionWrites.at(-1)).toMatchObject({
       id: otherIncreaseRequestId,
       action: 'reject',
@@ -433,7 +480,10 @@ for (const [locale, theme] of [
     });
     // A fresh denied queue read withdraws every retained private row/draft.
     state.rows = [increaseRequest()];
-    await refresh.click();
+    await back.click();
+    await queue.click();
+    await page.getByRole('link', { name: new RegExp(increaseRequestId) }).click();
+    await rejectLink.click();
     await page.locator(`#increase-reason-${increaseRequestId}`).fill('PRIVATE_WITHDRAWN_REASON');
     state.queueDenied = true;
     await refresh.click();

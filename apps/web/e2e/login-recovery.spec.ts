@@ -43,7 +43,7 @@ async function mockApp(page: Page, hasProfile = true) {
   };
 }
 async function openLogin(page: Page, locale: 'fa' | 'en', darkMode = false) {
-  await page.addInitScript((lang) => localStorage.setItem('barghsa-locale', lang), locale);
+  await page.addInitScript((lang) => localStorage.setItem('barghsa.locale', lang), locale);
   await mockOppositeNumerals(page, locale);
   if (darkMode)
     await page.route('**/api/public/branding/config', (route) =>
@@ -320,13 +320,13 @@ for (const locale of ['en', 'fa'] as const) {
     await openLogin(page, locale);
     await page.locator('button[type="submit"]').click();
     await expect(page).toHaveURL(/\/app$/);
-    await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toContainText(
-      'Profile'
+    await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toHaveText(
+      locale === 'fa' ? 'خانه' : 'Home'
     );
     await expect(page.locator('[data-sonner-toast]')).toHaveCount(1);
     await page.reload();
-    await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toContainText(
-      'Profile'
+    await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toHaveText(
+      locale === 'fa' ? 'خانه' : 'Home'
     );
   });
   test(`login sends an account without profiles to onboarding (${locale})`, async ({ page }) => {
@@ -338,6 +338,40 @@ for (const locale of ['en', 'fa'] as const) {
     await openLogin(page, locale);
     await page.locator('button[type="submit"]').click();
     await expect(page).toHaveURL(/\/onboarding$/);
+  });
+  test(`sign-in resumes an electricity task and carries it through recovery (${locale})`, async ({
+    page,
+  }) => {
+    const task = '/electricity/orders/new';
+    const loginUrl = (url: URL) =>
+      url.pathname === '/login' && url.searchParams.get('returnTo') === task;
+    const signIn = await mockApp(page);
+    await page.addInitScript((lang) => localStorage.setItem('barghsa.locale', lang), locale);
+    await page.route('**/api/auth/login', (route) => {
+      signIn();
+      return route.fulfill({ json: sessionAcknowledgement });
+    });
+    await page.goto(task);
+    await expect(page).toHaveURL(loginUrl);
+    await page.locator('a[href^="/forgot-password"]').click();
+    await expect(page).toHaveURL(
+      (url) => url.pathname === '/forgot-password' && url.searchParams.get('returnTo') === task
+    );
+    await page.locator('a[href^="/login"]').click();
+    await expect(page).toHaveURL(loginUrl);
+    await page.reload();
+    await expect(page).toHaveURL(loginUrl);
+    const username = page.locator('#username');
+    await username.pressSequentially('user@example.test');
+    await expect(username).toHaveValue('user@example.test');
+    await username.press('Tab');
+    await page.locator('#password').fill('Browser-password-123!');
+    await page.locator('button[type="submit"]').click();
+    await expect(page).toHaveURL((url) => url.pathname === task);
+    await page.goto('/login?returnTo=' + encodeURIComponent('https://example.test/outside'));
+    await expect(page).toHaveURL((url) => url.pathname === '/app');
+    await page.goto('/login?returnTo=' + encodeURIComponent(task));
+    await expect(page).toHaveURL((url) => url.pathname === task);
   });
   for (const response of [
     { name: 'null', body: null },
@@ -397,8 +431,8 @@ for (const locale of ['en', 'fa'] as const) {
     for (let i = 0; i < 6; i++) await digits.nth(i).fill(String(i + 1));
     await page.locator('button[type="submit"]').click();
     await expect(page).toHaveURL(/\/app$/);
-    await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toContainText(
-      'Profile'
+    await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toHaveText(
+      locale === 'fa' ? 'خانه' : 'Home'
     );
     expect(attempts).toEqual(
       [challengeId, freshChallengeId].map((challengeId) => ({

@@ -4,12 +4,34 @@ import { solarNextAction } from './solar-next-action.js';
 const contractId = '11111111-1111-4111-8111-111111111111';
 const invoiceId = '22222222-2222-4222-8222-222222222222';
 const request = {
+  id: 'solar-request-1',
   status: 'contract_created',
   contract_id: contractId,
   contract_published: false,
   initial_invoice_id: invoiceId,
   initial_invoice_state: 'Unpaid',
 };
+
+it.each([
+  ['submitted', 'customer'],
+  ['uploading_documents', 'customer'],
+  ['changes_requested', 'customer'],
+  ['documents_under_review', 'staff'],
+])('links %s to the shared documents page', (status, owner) => {
+  expect(solarNextAction({ ...request, status }, 'en')).toMatchObject({
+    owner,
+    href: '/solar/requests/solar-request-1/documents',
+  });
+});
+
+it('opens the shipment editor from the postal step', () => {
+  expect(
+    solarNextAction({ ...request, status: 'waiting_for_postal_submission' }, 'en')
+  ).toMatchObject({
+    owner: 'customer',
+    href: '/solar/requests/solar-request-1/shipment',
+  });
+});
 
 describe('solar contract and invoice next actions', () => {
   it.each(['Unpaid', 'PartiallyFunded', 'Overdue'])(
@@ -40,6 +62,6 @@ describe('solar contract and invoice next actions', () => {
     });
     expect(
       solarNextAction({ ...request, initial_invoice_state: 'Paid', contract_published: true }, 'en')
-    ).toMatchObject({ owner: 'customer', href: `/contracts?contractId=${contractId}` });
+    ).toMatchObject({ owner: 'customer', href: `/contracts/${contractId}` });
   });
 });

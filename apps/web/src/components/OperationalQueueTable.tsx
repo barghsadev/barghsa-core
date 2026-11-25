@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import type { Locale } from '@barghsa/i18n/app';
 import { DataTable } from '@barghsa/ui';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { TableCellDetails } from './HistoryTable.js';
 
 export function OperationalQueueTable<T extends { id: string }>({
   locale,
@@ -11,6 +13,7 @@ export function OperationalQueueTable<T extends { id: string }>({
   nameHeader,
   renderName,
   fields,
+  fieldGroups = [],
   actionHeader,
   renderActions,
   selectionHeader,
@@ -27,6 +30,7 @@ export function OperationalQueueTable<T extends { id: string }>({
   nameHeader: string;
   renderName: (row: T) => ReactNode;
   fields: { id: string; label: string; render: (row: T) => ReactNode }[];
+  fieldGroups?: readonly { label: string; fields: readonly string[]; icon?: LucideIcon }[];
   actionHeader?: string;
   renderActions?: (row: T) => ReactNode;
   cardHeading?: 'h2' | 'h3';
@@ -37,6 +41,24 @@ export function OperationalQueueTable<T extends { id: string }>({
   tableClassName?: string;
 }) {
   const { numberStyle } = useNumberFormatting(locale);
+  const tableFields = fields.flatMap((field) => {
+    const group = fieldGroups.find((candidate) => candidate.fields.includes(field.id));
+    if (!group) return [field];
+    const members = fields.filter((candidate) => group.fields.includes(candidate.id));
+    if (members[0] !== field) return [];
+    return [
+      {
+        id: field.id,
+        label: group.label,
+        render: (row: T) => (
+          <TableCellDetails
+            icon={group.icon}
+            fields={members.map(({ id, label, render }) => ({ id, label, value: render(row) }))}
+          />
+        ),
+      },
+    ];
+  });
   return (
     <div aria-busy={loading || undefined}>
       <DataTable
@@ -57,6 +79,7 @@ export function OperationalQueueTable<T extends { id: string }>({
         sortable={false}
         emptyMessage={emptyMessage}
         className="max-h-[36rem] bg-card text-card-foreground"
+        headerClassName="bg-[color-mix(in_srgb,var(--card),var(--muted)_45%)] shadow-[inset_0_-1px_0_var(--border)]"
         tableClassName={tableClassName}
         columns={[
           ...(renderSelection
@@ -74,9 +97,9 @@ export function OperationalQueueTable<T extends { id: string }>({
             header: nameHeader,
             cell: renderName,
             rowHeader: true,
-            cellClassName: 'p-3 align-top font-medium',
+            cellClassName: 'p-3 align-top font-semibold',
           },
-          ...fields.map((field) => ({
+          ...tableFields.map((field) => ({
             id: field.id,
             header: field.label,
             cell: field.render,
@@ -99,7 +122,7 @@ export function OperationalQueueTable<T extends { id: string }>({
               <CardHeading className="min-w-0 font-semibold">{renderName(row)}</CardHeading>
               {renderSelection?.(row)}
             </div>
-            <dl className="space-y-3 text-sm">
+            <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
               {fields.map((field) => (
                 <div key={field.id}>
                   <dt className="font-medium text-muted-foreground">{field.label}</dt>

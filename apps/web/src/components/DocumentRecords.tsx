@@ -1,9 +1,35 @@
+import {
+  Download as TableDownloadIcon,
+  ExternalLink as TableExternalLinkIcon,
+  Eye as TableEyeIcon,
+  EyeOff as TableEyeOffIcon,
+  FileUp as TableFileUpIcon,
+  RotateCw as TableRotateCwIcon,
+  Trash2 as TableTrash2Icon,
+} from 'lucide-react';
+import { TableActionIcon } from './TableActionIcon.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState } from 'react';
-import { Button, Card, CardContent, CardHeader, CardTitle, type ListView } from '@barghsa/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  buttonVariants,
+  type ListView,
+} from '@barghsa/ui';
+import { Link } from '@tanstack/react-router';
+import { staffOrderId } from '../lib/staff-order-list-query.js';
+import { canReplaceDocument } from '../lib/document-records.js';
+import { isContractAttachmentRole } from '../lib/contract-attachments.js';
+import {
+  relatedDocumentLocation,
+  type RelatedDocumentLinks,
+} from '../lib/related-document-route.js';
 import { FileImage, FileText, FileVideo } from 'lucide-react';
 import { documentText } from '@barghsa/i18n/documents';
 import type { Locale } from '@barghsa/i18n/app';
@@ -22,6 +48,12 @@ import { HistoryTable, type HistoryColumn } from './HistoryTable.js';
 
 const readable = new Set(['Available', 'SubmittedForReview', 'Approved', 'Rejected', 'Superseded']);
 const previewMime = new Set(['application/pdf', 'image/jpeg', 'image/png', 'image/webp']);
+const documentGroups = ['actionGroup', 'reviewGroup', 'Approved', 'otherGroup'] as const;
+function documentGroup({ state }: BusinessDocument): (typeof documentGroups)[number] {
+  if (state === 'Available' || state === 'Rejected') return 'actionGroup';
+  if (state === 'PendingScan' || state === 'SubmittedForReview') return 'reviewGroup';
+  return state === 'Approved' ? 'Approved' : 'otherGroup';
+}
 type FileAccess = 'preview' | 'download';
 type Receipt = {
   url?: string;
@@ -70,6 +102,8 @@ function OwnedDocumentList({
   onReplace,
   onChanged,
   onDenied,
+  recordSearch,
+  relatedLinks,
 }: {
   items: readonly BusinessDocument[];
   staff: boolean;
@@ -81,6 +115,8 @@ function OwnedDocumentList({
   onReplace?: (document: BusinessDocument) => void;
   onChanged?: (documentId: string) => void;
   onDenied?: () => void;
+  recordSearch?: Record<string, unknown> | undefined;
+  relatedLinks?: RelatedDocumentLinks | undefined;
 }) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
@@ -94,6 +130,13 @@ function OwnedDocumentList({
   const word = (key: string) => documentText(key, locale),
     numbers = useNumberFormatting(locale);
   const rows = items.filter((item) => staff || item.state !== 'Removed');
+  const groups =
+    recordSearch && !recordSearch.q && !recordSearch.state
+      ? documentGroups.map((label) => ({
+          label,
+          rows: rows.filter((item) => documentGroup(item) === label),
+        }))
+      : [{ label: null, rows }];
   const [removal, setRemoval] = useState<Removal | null>(null);
   const [recovery, setRecovery] = useState<RemovalRecovery | null>(null);
   const [checkingKey, setCheckingKey] = useState<string | null>(null);
@@ -281,14 +324,39 @@ function OwnedDocumentList({
     return (
       <div className="flex min-w-0 items-start gap-2">
         <Icon aria-hidden="true" className="mt-3 size-4 shrink-0 text-muted-foreground" />
-        <Button
-          variant="link"
-          className="min-w-0 justify-start whitespace-normal break-all text-start"
-          aria-pressed={selectedId === item.id}
-          onClick={() => onSelect(item.id)}
-        >
-          <bdi>{item.originalName}</bdi>
-        </Button>
+        {relatedLinks || recordSearch ? (
+          staffOrderId(item.id) ? (
+            <Link
+              {...(relatedLinks
+                ? relatedDocumentLocation(relatedLinks.context, item.id)
+                : {
+                    to: staff
+                      ? '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+                      : '/documents/$documentId/{-$operation}',
+                    params: { documentId: item.id, operation: undefined },
+                    search: recordSearch,
+                  })}
+              disabled={relatedLinks?.disabled}
+              onClick={(event) => {
+                if (relatedLinks?.blocked?.()) event.preventDefault();
+              }}
+              className="touch-action inline-flex min-w-0 items-center font-medium text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
+            >
+              <bdi>{item.originalName}</bdi>
+            </Link>
+          ) : (
+            <bdi>{item.originalName}</bdi>
+          )
+        ) : (
+          <Button
+            variant="link"
+            className="min-w-0 justify-start whitespace-normal break-all text-start"
+            aria-pressed={selectedId === item.id}
+            onClick={() => onSelect(item.id)}
+          >
+            <bdi>{item.originalName}</bdi>
+          </Button>
+        )}
       </div>
     );
   }
@@ -306,8 +374,24 @@ function OwnedDocumentList({
       item.permissions?.download !== false &&
       previewMime.has(item.detectedMime ?? '');
     const canDownload = canRead && item.permissions?.download !== false;
-    const canRemove = item.permissions?.remove === true && !!onChanged;
-    const canReplace = !pending && item.permissions?.replace === true && !!onReplace;
+    const canRemove =
+      item.permissions?.remove === true &&
+      (relatedLinks?.context.kind !== 'contract' || relatedLinks.allowChanges !== false) &&
+      (recordSearch || relatedLinks ? !!staffOrderId(item.id) : !!onChanged);
+    const canReplace =
+      !pending &&
+      item.permissions?.replace === true &&
+      relatedLinks?.allowChanges !== false &&
+      (relatedLinks?.context.kind !== 'contract' || isContractAttachmentRole(item.contractRole)) &&
+      (relatedLinks || recordSearch
+        ? !!staffOrderId(item.id) &&
+          canReplaceDocument(
+            item,
+            staff,
+            relatedLinks?.context.kind === 'solar_request',
+            relatedLinks?.context.kind === 'order' && !staff
+          )
+        : !!onReplace);
     if (!canDownload && !canRemove && !canReplace && !pending) return null;
     const entry = receipts[key] ?? {};
     return (
@@ -318,14 +402,23 @@ function OwnedDocumentList({
               variant="outline"
               disabled={entry.preview?.pending}
               onClick={() => void access(item, 'preview')}
-            >
-              {word(
+              data-table-action-tooltip={word(
                 entry.preview?.pending
                   ? 'previewLoading'
                   : entry.preview?.visible
                     ? 'hidePreview'
                     : 'preview'
               )}
+            >
+              <TableActionIcon icon={entry.preview?.visible ? TableEyeOffIcon : TableEyeIcon}>
+                {word(
+                  entry.preview?.pending
+                    ? 'previewLoading'
+                    : entry.preview?.visible
+                      ? 'hidePreview'
+                      : 'preview'
+                )}
+              </TableActionIcon>
             </Button>
           )}
           {canDownload && (
@@ -333,16 +426,76 @@ function OwnedDocumentList({
               variant="outline"
               disabled={entry.download?.pending}
               onClick={() => void access(item, 'download')}
+              data-table-action-tooltip={word(
+                entry.download?.pending ? 'downloadLoading' : 'download'
+              )}
             >
-              {word(entry.download?.pending ? 'downloadLoading' : 'download')}
+              <TableActionIcon icon={TableDownloadIcon}>
+                {word(entry.download?.pending ? 'downloadLoading' : 'download')}
+              </TableActionIcon>
             </Button>
           )}
-          {canReplace && (
-            <Button variant="outline" onClick={() => onReplace?.(item)}>
-              {word('replace')}
-            </Button>
-          )}
-          {canRemove && (
+          {canReplace &&
+            (relatedLinks || recordSearch ? (
+              <Link
+                {...(relatedLinks
+                  ? relatedDocumentLocation(relatedLinks.context, item.id, 'replace')
+                  : {
+                      to: staff
+                        ? '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+                        : '/documents/$documentId/{-$operation}',
+                      params: {
+                        documentId: item.id,
+                        section: staff ? 'replace' : undefined,
+                        operation: staff ? undefined : 'replace',
+                      },
+                      search: recordSearch,
+                    })}
+                disabled={relatedLinks?.disabled}
+                onClick={(event) => {
+                  if (relatedLinks?.blocked?.()) event.preventDefault();
+                }}
+                className={buttonVariants({ variant: 'outline' })}
+                data-table-action-tooltip={word('replace')}
+              >
+                <TableActionIcon icon={TableFileUpIcon}>{word('replace')}</TableActionIcon>
+              </Link>
+            ) : (
+              <Button
+                variant="outline"
+                onClick={() => onReplace?.(item)}
+                data-table-action-tooltip={word('replace')}
+              >
+                <TableActionIcon icon={TableFileUpIcon}>{word('replace')}</TableActionIcon>
+              </Button>
+            ))}
+          {canRemove && (recordSearch || relatedLinks) ? (
+            <Link
+              {...(relatedLinks
+                ? relatedDocumentLocation(relatedLinks.context, item.id, 'remove')
+                : {
+                    to: staff
+                      ? '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+                      : '/documents/$documentId/{-$operation}',
+                    params: {
+                      documentId: item.id,
+                      section: staff ? 'decisions' : undefined,
+                      action: staff ? 'remove' : undefined,
+                      holdId: undefined,
+                      operation: staff ? undefined : 'remove',
+                    },
+                    search: recordSearch,
+                  })}
+              disabled={relatedLinks?.disabled}
+              onClick={(event) => {
+                if (relatedLinks?.blocked?.()) event.preventDefault();
+              }}
+              className={buttonVariants({ variant: 'outline' })}
+              data-table-action-tooltip={word('remove')}
+            >
+              <TableActionIcon icon={TableTrash2Icon}>{word('remove')}</TableActionIcon>
+            </Link>
+          ) : canRemove ? (
             <Button
               variant="outline"
               disabled={!!recovery && !pending?.checked}
@@ -370,10 +523,11 @@ function OwnedDocumentList({
                   }
                 )
               }
+              data-table-action-tooltip={word('remove')}
             >
-              {word('remove')}
+              <TableActionIcon icon={TableTrash2Icon}>{word('remove')}</TableActionIcon>
             </Button>
-          )}
+          ) : null}
         </div>
         {pending && (
           <div className="space-y-2">
@@ -385,8 +539,11 @@ function OwnedDocumentList({
                 variant="outline"
                 disabled={checkingKey === key}
                 onClick={() => void checkRemoval(pending.removal)}
+                data-table-action-tooltip={confirmationText('checkStatus', locale)}
               >
-                {confirmationText('checkStatus', locale)}
+                <TableActionIcon icon={TableRotateCwIcon}>
+                  {confirmationText('checkStatus', locale)}
+                </TableActionIcon>
               </Button>
             )}
           </div>
@@ -421,8 +578,9 @@ function OwnedDocumentList({
             rel="noopener noreferrer"
             referrerPolicy="no-referrer"
             className="w-fit text-primary underline"
+            data-table-action-tooltip={word('openFile')}
           >
-            {word('openFile')}
+            <TableActionIcon icon={TableExternalLinkIcon}>{word('openFile')}</TableActionIcon>
           </a>
         )}
       </div>
@@ -455,61 +613,73 @@ function OwnedDocumentList({
         </>
       ),
     },
-    { id: 'actions', label: word('fileActions'), render: files },
+    { id: 'actions', label: word('fileActions'), render: files, actions: true },
   ];
   return (
     <div data-slot="document-records" data-view={view} className="min-w-0">
       {view === 'table' ? (
         <HistoryTable
           caption={word('listTitle')}
-          items={rows}
+          items={groups.flatMap((group) => group.rows)}
           columns={columns}
           rowKey={(item) => item.id}
         />
       ) : (
-        <ul className="flex flex-col gap-3">
-          {rows.map((item) => (
-            <li key={item.id}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>{name(item)}</CardTitle>
-                  {status(item)}
-                </CardHeader>
-                <CardContent className="flex flex-col gap-3">
-                  <dl className="grid gap-3 text-sm sm:grid-cols-2">
-                    <div>
-                      <dt className="text-muted-foreground">{word('size')}</dt>
-                      <dd>{size(item)}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-muted-foreground">{word('created')}</dt>
-                      <dd>
-                        <time
-                          dateTime={
-                            Number.isFinite(Date.parse(item.createdAt)) ? item.createdAt : undefined
-                          }
+        groups
+          .filter((group) => group.rows.length)
+          .map(({ label, rows }) => (
+            <section key={label ?? 'all'} className="space-y-3 [&+section]:mt-6">
+              {label && <h2 className="text-lg font-semibold">{word(label)}</h2>}
+              <ul className="flex flex-col gap-3">
+                {rows.map((item) => (
+                  <li key={item.id}>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>{name(item)}</CardTitle>
+                        {status(item)}
+                      </CardHeader>
+                      <CardContent className="flex flex-col gap-3">
+                        {recordSearch && files(item)}
+                        <dl
+                          className={`grid gap-3 text-sm ${recordSearch ? 'grid-cols-2' : 'sm:grid-cols-2'}`}
                         >
-                          {formatDate(item.createdAt)}
-                        </time>
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-muted-foreground">{word('uploadedBy')}</dt>
-                      <dd>{word(item.uploadedByType)}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-muted-foreground">{word('kind')}</dt>
-                      <dd>
-                        {word(item.businessRecordType)} · {word(item.category)}
-                      </dd>
-                    </div>
-                  </dl>
-                  {files(item)}
-                </CardContent>
-              </Card>
-            </li>
-          ))}
-        </ul>
+                          <div>
+                            <dt className="text-muted-foreground">{word('size')}</dt>
+                            <dd>{size(item)}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-muted-foreground">{word('created')}</dt>
+                            <dd>
+                              <time
+                                dateTime={
+                                  Number.isFinite(Date.parse(item.createdAt))
+                                    ? item.createdAt
+                                    : undefined
+                                }
+                              >
+                                {formatDate(item.createdAt)}
+                              </time>
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-muted-foreground">{word('uploadedBy')}</dt>
+                            <dd>{word(item.uploadedByType)}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-muted-foreground">{word('kind')}</dt>
+                            <dd>
+                              {word(item.businessRecordType)} · {word(item.category)}
+                            </dd>
+                          </div>
+                        </dl>
+                        {!recordSearch && files(item)}
+                      </CardContent>
+                    </Card>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
       )}
       {activeRemoval && (
         <TeamActionDialog

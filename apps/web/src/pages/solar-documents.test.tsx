@@ -8,7 +8,7 @@ import { toast } from '../lib/toast-api.js';
 import { tSolar } from '@barghsa/i18n/solar';
 
 vi.mock('@tanstack/react-router', () => ({
-  useParams: () => ({ requestId: 'request-1' }),
+  useBlocker: () => {},
   Link: ({ children, to, className }: { children: ReactNode; to: string; className?: string }) => (
     <a href={to} className={className}>
       {children}
@@ -58,7 +58,7 @@ it.each(['en', 'fa'] as const)(
       await act(async () =>
         root.render(
           <QueryProvider>
-            <SolarRequestDetailPage />
+            <SolarRequestDetailPage requestId="request-1" />
           </QueryProvider>
         )
       );
@@ -121,7 +121,7 @@ it('allows an empty solar document set to be sent for review', async () => {
     await act(async () =>
       root.render(
         <QueryProvider>
-          <SolarRequestDetailPage />
+          <SolarRequestDetailPage requestId="request-1" view="documents" reviewDocuments />
         </QueryProvider>
       )
     );
@@ -148,9 +148,7 @@ it('allows an empty solar document set to be sent for review', async () => {
     });
     expect(container.textContent).toContain('Document set sent for review.');
     expect(container.textContent).toContain(tSolar('status_changes_requested', 'en'));
-    expect(container.querySelector<HTMLInputElement>('input[type="checkbox"]')?.checked).toBe(
-      false
-    );
+    expect(container.querySelector('input[type="checkbox"]')).toBeNull();
   } finally {
     await act(async () => root.unmount());
     container.remove();
@@ -175,7 +173,10 @@ const guidance = (text = 'Upload evidence') => ({
   guidance: { fa: text, en: text, suggestions: [] },
   requestedDocuments: [],
 });
-async function scopedSolar(fetcher: (url: string, init?: RequestInit) => Promise<Response>) {
+async function scopedSolar(
+  fetcher: (url: string, init?: RequestInit) => Promise<Response>,
+  reviewDocuments = false
+) {
   document.documentElement.lang = 'en';
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   vi.stubGlobal('fetch', (url: string, init?: RequestInit) =>
@@ -191,7 +192,11 @@ async function scopedSolar(fetcher: (url: string, init?: RequestInit) => Promise
       root.render(
         <QueryComponentProvider>
           <AccountUserProvider value={id}>
-            <SolarRequestDetailPage />
+            <SolarRequestDetailPage
+              requestId="request-1"
+              view="documents"
+              reviewDocuments={reviewDocuments}
+            />
           </AccountUserProvider>
         </QueryComponentProvider>
       )
@@ -269,7 +274,7 @@ it('recovers malformed document guidance locally without losing the upload confi
         : solarDetail()
     );
   });
-  const view = await scopedSolar(fetcher);
+  const view = await scopedSolar(fetcher, true);
   try {
     const checkbox = view.host.querySelector<HTMLInputElement>('input[type=checkbox]')!;
     await act(async () => checkbox.click());
@@ -358,7 +363,7 @@ it('does not publish an old document submission into a replacement account view'
         : solarDetail(next ? 'New site' : 'Old site')
     );
   });
-  const view = await scopedSolar(fetcher);
+  const view = await scopedSolar(fetcher, true);
   try {
     await act(async () =>
       view.host.querySelector<HTMLInputElement>('input[type=checkbox]')!.click()

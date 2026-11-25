@@ -1,4 +1,17 @@
 export type SolarMilestone = 'in_progress' | 'delivered' | 'installed';
+
+export const solarMilestonePaths = {
+  in_progress: 'start-work',
+  delivered: 'equipment-delivery',
+  installed: 'installation',
+} as const satisfies Record<SolarMilestone, string>;
+
+export function solarMilestoneFromPath(operation: string | undefined) {
+  return (Object.keys(solarMilestonePaths) as SolarMilestone[]).find(
+    (stage) => solarMilestonePaths[stage] === operation
+  );
+}
+
 export interface SolarProgress {
   requestId: string;
   profileId: string;

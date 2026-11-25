@@ -1,6 +1,8 @@
 import { lookup } from './lookup.js';
 const fa: Record<string, string> = {
   'admin.gifts.tableTitle': 'جدول کدهای تخفیف',
+  'admin.gifts.usageLimits': 'محدودیت‌های مصرف',
+  'admin.gifts.applicability': 'شرایط استفاده',
   'admin.gifts.discount': 'تخفیف',
   'admin.gifts.window': 'بازه اعتبار',
   'admin.gifts.actions': 'عملیات',
@@ -16,6 +18,9 @@ const fa: Record<string, string> = {
   'admin.gifts.all': 'همه',
   'admin.gifts.active': 'فعال',
   'admin.gifts.inactive': 'غیرفعال',
+  'admin.gifts.scheduled': 'زمان‌بندی‌شده',
+  'admin.gifts.exhausted': 'ظرفیت تکمیل شده',
+  'admin.gifts.missing': 'کد تخفیف یافت نشد.',
   'admin.gifts.fixed': 'مبلغ ثابت',
   'admin.gifts.percentage': 'درصدی',
   'admin.gifts.saved': 'تغییرات ذخیره شد.',
@@ -41,6 +46,7 @@ const fa: Record<string, string> = {
   'admin.gifts.cap': 'سقف تخفیف (ریال)',
   'admin.gifts.percentageWarning':
     'پیش از فعال‌سازی کد درصدی، سقف مبلغ و محدودیت‌های مصرف را بررسی کنید.',
+  'admin.gifts.capSubtotal': 'جمع اقلام مجاز برای رسیدن به سقف تخفیف',
   'admin.gifts.eligibility': 'افراد مجاز',
   'admin.gifts.public': 'عمومی',
   'admin.gifts.restricted': 'پروفایل‌های منتخب',
@@ -55,6 +61,9 @@ const fa: Record<string, string> = {
   'admin.gifts.individual': 'حقیقی',
   'admin.gifts.archived': 'بایگانی‌شده',
   'admin.gifts.noProfiles': 'پروفایلی یافت نشد.',
+  'admin.gifts.chosenProfiles': 'پروفایل‌های انتخاب‌شده',
+  'admin.gifts.profileMatches': 'نتایج جست‌وجو',
+  'admin.gifts.allMatchesSelected': 'همه نتیجه‌های جست‌وجو انتخاب شده‌اند.',
   'admin.gifts.totalLimit': 'حداکثر مصرف کل',
   'admin.gifts.perProfileLimit': 'حداکثر مصرف هر پروفایل',
   'admin.gifts.unlimited': 'نامحدود',
@@ -124,6 +133,8 @@ const fa: Record<string, string> = {
   'admin.gifts.duplicate': 'این کد قبلاً ثبت شده است.',
 };
 const en: Record<string, string> = {
+  'admin.gifts.usageLimits': 'Usage limits',
+  'admin.gifts.applicability': 'Where the code applies',
   'admin.gifts.tableTitle': 'Gift-code table',
   'admin.gifts.discount': 'Discount',
   'admin.gifts.window': 'Validity window',
@@ -140,6 +151,9 @@ const en: Record<string, string> = {
   'admin.gifts.all': 'All',
   'admin.gifts.active': 'Active',
   'admin.gifts.inactive': 'Inactive',
+  'admin.gifts.scheduled': 'Scheduled',
+  'admin.gifts.exhausted': 'Usage limit reached',
+  'admin.gifts.missing': 'This gift code could not be found.',
   'admin.gifts.fixed': 'Fixed amount',
   'admin.gifts.percentage': 'Percentage',
   'admin.gifts.saved': 'Changes saved.',
@@ -168,6 +182,7 @@ const en: Record<string, string> = {
   'admin.gifts.cap': 'Discount cap (IRR)',
   'admin.gifts.percentageWarning':
     'Before activating a percentage code, check its amount cap and usage limits.',
+  'admin.gifts.capSubtotal': 'Eligible subtotal needed to reach the cap',
   'admin.gifts.eligibility': 'Eligibility',
   'admin.gifts.public': 'Public',
   'admin.gifts.restricted': 'Selected profiles',
@@ -181,6 +196,9 @@ const en: Record<string, string> = {
   'admin.gifts.individual': 'Individual',
   'admin.gifts.archived': 'Archived',
   'admin.gifts.noProfiles': 'No profiles found.',
+  'admin.gifts.chosenProfiles': 'Selected profiles',
+  'admin.gifts.profileMatches': 'Search results',
+  'admin.gifts.allMatchesSelected': 'All matching profiles are already selected.',
   'admin.gifts.totalLimit': 'Total usage limit',
   'admin.gifts.perProfileLimit': 'Per-profile usage limit',
   'admin.gifts.unlimited': 'Unlimited',

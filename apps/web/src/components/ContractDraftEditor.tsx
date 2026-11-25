@@ -13,6 +13,7 @@ type ExistingDraft = { contract: ContractDetailData; version: ContractVersion };
 type Props = {
   existing?: ExistingDraft | undefined;
   amendment?: boolean;
+  recordPage?: boolean;
   onSaved: (id: string) => void;
   coordination?: ContractFormCoordination | undefined;
   onDenied?: (() => void) | undefined;
@@ -32,10 +33,17 @@ export function ContractDraftEditor(props: Props) {
     />
   );
 }
-function DraftEditor({ existing, amendment = false, onSaved, coordination, onDenied }: Props) {
+function DraftEditor({
+  existing,
+  amendment = false,
+  recordPage = false,
+  onSaved,
+  coordination,
+  onDenied,
+}: Props) {
   const locale = useLocale(),
     word = (key: string) => contractText(key, locale);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(recordPage);
   const owner = useRef(false),
     [locked, setLocked] = useState(false);
   const [Form, setForm] = useState<typeof DraftForm | null>(null);
@@ -59,22 +67,25 @@ function DraftEditor({ existing, amendment = false, onSaved, coordination, onDen
   }, [open, Form, retry]);
   return (
     <div className="flex flex-col gap-4">
-      <Button
-        variant="outline"
-        className="self-start"
-        aria-expanded={open}
-        disabled={locked || !!coordination?.blocked()}
-        onClick={() => {
-          if (!owner.current && !coordination?.blocked()) setOpen(!open);
-        }}
-      >
-        {word(amendment ? 'amendmentCreate' : existing ? 'draftEdit' : 'draftCreate')}
-      </Button>
+      {!recordPage && (
+        <Button
+          variant="outline"
+          className="self-start"
+          aria-expanded={open}
+          disabled={locked || !!coordination?.blocked()}
+          onClick={() => {
+            if (!owner.current && !coordination?.blocked()) setOpen(!open);
+          }}
+        >
+          {word(amendment ? 'amendmentCreate' : existing ? 'draftEdit' : 'draftCreate')}
+        </Button>
+      )}
       {open ? (
         Form ? (
           <Form
             existing={existing}
             amendment={amendment}
+            recordPage={recordPage}
             coordination={coordination}
             onDenied={onDenied}
             onLocked={(value) => {

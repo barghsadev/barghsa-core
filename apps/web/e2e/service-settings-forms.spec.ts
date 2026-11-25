@@ -59,7 +59,7 @@ for (const locale of ['en', 'fa'] as const)
         verified = true;
         return route.fulfill({ json: { verified: true } });
       });
-      await page.goto('/admin/service-targets');
+      await page.goto('/admin/service-targets/escalation');
       const form = page
         .locator('form')
         .filter({ has: page.locator('#escalation-consultationLevel2') });
@@ -178,13 +178,15 @@ for (const locale of ['en', 'fa'] as const)
     });
   }
 
-test('only one service-settings confirmation owns the page', async ({ page }) => {
+test('service settings routes isolate reads and own one confirmation', async ({ page }) => {
   await setupCatalogueForms(page, 'en', false);
   await page.route('**/api/admin/config/service-response-targets', (route) =>
     route.fulfill({ json: { ticket: 24, verification_case: null, consultation: null } })
   );
-  await page.route('**/api/admin/config/escalation-policy', (route) =>
-    route.fulfill({
+  let escalationReads = 0;
+  await page.route('**/api/admin/config/escalation-policy', (route) => {
+    escalationReads++;
+    return route.fulfill({
       json: {
         ticket: {
           level2: { delayHours: 24, channels: ['in_app'] },
@@ -193,29 +195,33 @@ test('only one service-settings confirmation owns the page', async ({ page }) =>
         verification_case: null,
         consultation: null,
       },
-    })
-  );
+    });
+  });
   await page.route('**/api/admin/config/audit*', (route) =>
     route.fulfill({ json: { entries: [], nextCursor: null } })
   );
   await page.goto('/admin/service-targets');
+  const main = page.getByRole('main');
+  await main.locator('a[href="/admin/service-targets/response-times"]').click();
+  await expect(page).toHaveURL('/admin/service-targets/response-times');
   const target = page.locator('#target-ticket'),
     escalation = page.locator('#escalation-ticketLevel2');
   await target.fill('72');
   const form = page.locator('form').filter({ has: target });
   await form.getByRole('button', { name: 'Save response targets', exact: true }).click();
   await expect(page.getByRole('dialog')).toHaveCount(1);
-  await expect(escalation).toBeDisabled();
-  await page
-    .locator('#escalation-ticketLevel2')
-    .evaluate((node) =>
-      node.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
-    );
+  await expect(escalation).toHaveCount(0);
+  expect(escalationReads).toBe(0);
+  await form.evaluate((node: HTMLFormElement) => node.requestSubmit());
   await expect(page.getByRole('dialog')).toHaveCount(1);
   await expect(page.getByRole('dialog')).toContainText('Save response targets');
   await page.getByRole('dialog').getByRole('button', { name: 'Cancel', exact: true }).click();
-  await expect(escalation).toBeEnabled();
   await expect(target).toHaveValue('72');
+  await main.getByRole('link', { name: 'Response targets and escalation', exact: true }).click();
+  await main.locator('a[href="/admin/service-targets/escalation"]').click();
+  await expect(escalation).toBeEnabled();
+  await expect(target).toHaveCount(0);
+  expect(escalationReads).toBe(1);
 });
 
 test('a recovery draft stays separate from the live service target', async ({ page }) => {
@@ -257,7 +263,7 @@ test('a recovery draft stays separate from the live service target', async ({ pa
     active = draft.config;
     return route.fulfill({ json: { version: 3, draftId, config: active } });
   });
-  await page.goto('/admin/service-targets');
+  await page.goto('/admin/service-targets/response-times');
   const target = page.locator('#target-ticket');
   await expect(target).toHaveValue('48');
   const section = page.getByRole('group', { name: t('admin.targets.formTitle', 'en') });
@@ -300,18 +306,20 @@ for (const locale of ['en', 'fa'] as const) {
     let active = { version: 2, policy: defaultOperationalRetention, canEdit: true };
     let staged = false;
     let verified = false;
+    let historyReads = 0;
     const stepUpRequired = { error: { code: 'AUTHZ:STEP_UP_REQUIRED' } };
     await page.route(path, (route) => route.fulfill({ json: active }));
-    await page.route(`${path}/rollback-history`, (route) =>
-      route.fulfill({
+    await page.route(`${path}/rollback-history`, (route) => {
+      historyReads++;
+      return route.fulfill({
         json: {
           baseVersion: active.version,
           items: [revision],
           nextBeforeVersion: null,
           draft: staged && active.version === 2 ? draft : null,
         },
-      })
-    );
+      });
+    });
     await page.route(`${path}/rollback-draft`, (route) => {
       expect(route.request().postDataJSON()).toEqual({ sourceId, expectedVersion: 2 });
       staged = true;
@@ -329,14 +337,21 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.goto('/admin/operational-retention');
     const input = page.getByLabel(retentionText('searchableLogsDays', locale), { exact: true });
-    const toggle = page.getByRole('button', {
+    const toggle = page.getByRole('link', {
       name: retentionText('recoveryTitle', locale),
       exact: true,
     });
-    await expect(input).toHaveValue('30');
+    const saved = page.getByRole('region', { name: retentionText('logsAndMetrics', locale) });
+    const period = (days: number) =>
+      retentionText('days', locale).replace('{days}', days.toLocaleString(locale));
+    await expect(saved).toContainText(period(30));
+    await expect(input).toHaveCount(0);
+    expect(historyReads).toBe(0);
     await toggle.focus();
     await toggle.press('Enter');
-    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page).toHaveURL('/admin/operational-retention/history');
+    await expect(input).toHaveCount(0);
+    await page.reload();
     const region = page.getByRole('region', { name: retentionText('recoveryTitle', locale) });
     await region
       .getByRole('button', {
@@ -351,7 +366,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toContainText(locale === 'fa' ? '۴۵' : '45');
     await confirm.click();
     await expect(dialog).toHaveCount(0);
-    await expect(input).toHaveValue('30');
+    expect(active.policy.searchableLogsDays).toBe(30);
     const activate = region.getByRole('button', {
       name: retentionText('recoveryActivate', locale),
     });
@@ -362,12 +377,14 @@ for (const locale of ['en', 'fa'] as const) {
     await activate.click();
     await expect(dialog).toContainText(retentionText('recoveryActivateConfirm', locale));
     await confirm.click();
-    await expect(input).toHaveValue('30');
+    expect(active.policy.searchableLogsDays).toBe(30);
     await dialog.locator('input[type=password]').fill('synthetic-password');
     await confirm.click();
     await expect(dialog).toHaveCount(0);
-    await expect(input).toHaveValue('45');
     await expect(activate).toHaveCount(0);
+    await page.getByRole('link', { name: retentionText('title', locale), exact: true }).click();
+    await expect(saved).toContainText(period(45));
+    await expect(input).toHaveCount(0);
     await expect(page.getByRole('link', { name: retentionText('export', locale) })).toHaveAttribute(
       'href',
       '/api/admin/config/operational-retention/export'

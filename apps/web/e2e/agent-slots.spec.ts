@@ -54,17 +54,27 @@ for (const locale of ['en', 'fa'])
     failed = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
     const table = page.getByRole('table');
-    await expect(table.getByRole('columnheader')).toHaveCount(4);
+    await expect(table.getByRole('columnheader')).toHaveCount(5);
+    await expect(table.getByRole('columnheader').last()).toHaveCSS('position', 'sticky');
     await expect(table.getByRole('rowheader')).toHaveCount(5);
     await expect(table.locator('time')).toHaveCount(5);
     await expect(table.locator('time').first()).toHaveAttribute(
       'datetime',
       assignmentSlots()[0]!.updatedAt
     );
-
+    await table.getByRole('rowheader').first().getByRole('link').click();
+    await expect(page).toHaveURL('/admin/agent-slots/individual_chatbot');
     await page
-      .getByLabel(fa ? 'عامل · گفت‌وگوی شخص حقیقی' : 'Agent · Individual chatbot', { exact: true })
-      .selectOption(agent.id);
+      .getByRole('main')
+      .getByRole('link', { name: fa ? 'تغییر تخصیص' : 'Change assignment', exact: true })
+      .click();
+    await expect(page).toHaveURL('/admin/agent-slots/individual_chatbot/edit');
+
+    const summary = page.locator('[data-slot=slot-assignment-summary]');
+    await expect(summary.locator('dt')).toHaveCount(1);
+    await page.getByLabel(fa ? 'عامل' : 'Agent', { exact: true }).selectOption(agent.id);
+    await expect(summary.locator('dt')).toHaveCount(2);
+    await expect(summary).toContainText(agent.title);
     await expect(
       page
         .getByText(

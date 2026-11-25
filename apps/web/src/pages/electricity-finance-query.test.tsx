@@ -113,7 +113,15 @@ for (const name of ['increase', 'price'])
         )
       );
       expect(host.textContent).not.toContain('Private obsolete');
-      expect(fetch).toHaveBeenCalledTimes(change === 'unmount' ? 1 : 2);
+      if (name === 'increase') {
+        const pending = '/api/staff/electricity/increase-requests?status=pending';
+        const expired = '/api/staff/electricity/increase-requests?status=expired';
+        expect(vi.mocked(fetch).mock.calls.map(([path]) => String(path))).toEqual(
+          change === 'unmount' ? [pending] : [pending, pending, expired]
+        );
+      } else {
+        expect(fetch).toHaveBeenCalledTimes(change === 'unmount' ? 1 : 2);
+      }
       expect(vi.mocked(fetch).mock.calls.every(([, init]) => !init?.method && !init?.body)).toBe(
         true
       );

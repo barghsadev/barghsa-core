@@ -1,3 +1,4 @@
+import { contractText } from '@barghsa/i18n/contracts';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { cookieResponse } from './cookie-response';
@@ -237,8 +238,13 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.goto('/admin/contracts');
-    await page.getByRole('button', { name: words.draftCreate, exact: true }).click();
+    await page.getByRole('link', { name: words.draftCreate, exact: true }).click();
     const form = page.getByRole('form', { name: words.draftCreate });
+    await expect(form.getByRole('button', { name: words.draftReview, exact: true })).toBeInViewport(
+      {
+        ratio: 0.99,
+      }
+    );
     await form.getByLabel(words.draftProfile, { exact: true }).selectOption(PROFILE);
     await form.getByLabel(words.draftOrder, { exact: true }).selectOption(ORDER);
     await form.getByLabel(words.titleField, { exact: true }).fill('Supply contract');
@@ -283,14 +289,17 @@ for (const locale of ['en', 'fa'] as const) {
     });
     // Revise the separately imported full snapshot, retaining its opaque fields.
     await page
-      .getByRole('button', {
+      .getByRole('link', { name: contractText('backToContracts', locale), exact: true })
+      .click();
+    await page
+      .getByRole('link', {
         name: `${words.electricity} · ${words.version} ${(1).toLocaleString(locale)}`,
         exact: true,
       })
       .click();
     const detail = page.getByRole('region', { name: words.terms, exact: true });
-    await detail.getByRole('button', { name: words.draftEdit, exact: true }).click();
-    const edit = detail.getByRole('form', { name: words.draftEdit });
+    await detail.getByRole('link', { name: words.draftEdit, exact: true }).click();
+    const edit = page.getByRole('form', { name: words.draftEdit });
     await edit.getByLabel(words.draftTerms, { exact: true }).fill('Revised terms');
     await edit.getByLabel(words.contextReason, { exact: true }).fill('Reviewed revision');
     await edit.getByRole('button', { name: words.draftReview, exact: true }).click();
@@ -307,6 +316,6 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('button', { name: `${words.version} ${(1).toLocaleString(locale)}`, exact: true })
       .click();
     await expect(detail.getByText('Initial terms', { exact: true })).toBeVisible();
-    await expect(detail.getByRole('button', { name: words.draftEdit, exact: true })).toHaveCount(0);
+    await expect(detail.getByRole('link', { name: words.draftEdit, exact: true })).toHaveCount(0);
   });
 }

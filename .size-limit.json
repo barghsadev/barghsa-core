@@ -1,5 +1,17 @@
 [
   {
+    "name": "Home recent orders when records arrive",
+    "phase": "interaction",
+    "entries": ["src/components/LatestOrdersWidget.tsx"],
+    "limitKB": 12
+  },
+  {
+    "name": "Home active contracts when records arrive",
+    "phase": "interaction",
+    "entries": ["src/components/ActiveContractsWidget.tsx"],
+    "limitKB": 18
+  },
+  {
     "name": "Catalogue form validation on interaction",
     "phase": "interaction",
     "entries": ["src/lib/catalogue-form-schemas.ts"],
@@ -173,6 +185,24 @@
     "limitKB": 15
   },
   {
+    "name": "Order discussion on demand",
+    "phase": "interaction",
+    "entries": ["src/components/SavingOrderComments.tsx"],
+    "limitKB": 140
+  },
+  {
+    "name": "Staff saving hardware editor on demand",
+    "phase": "interaction",
+    "entries": ["src/components/SavingHardwareCommandForm.tsx"],
+    "limitKB": 255
+  },
+  {
+    "name": "Protected verification code on demand",
+    "phase": "interaction",
+    "entries": ["src/components/StepUpAuthGate.tsx"],
+    "limitKB": 38
+  },
+  {
     "name": "Refund workspace on demand",
     "phase": "interaction",
     "entries": ["src/components/RefundPanel.tsx"],
@@ -258,6 +288,18 @@
     "limitKB": 250
   },
   {
+    "name": "Document detail on demand",
+    "phase": "interaction",
+    "entries": ["src/components/DocumentDetail.tsx"],
+    "limitKB": 45
+  },
+  {
+    "name": "Legal hold expiry calendar on demand",
+    "phase": "interaction",
+    "entries": ["chunk:LegalHoldExpiryDatePicker"],
+    "limitKB": 60
+  },
+  {
     "name": "Company invitation cards when present",
     "phase": "interaction",
     "entries": ["src/components/InvitationCards.tsx"],
@@ -268,6 +310,18 @@
     "phase": "interaction",
     "entries": ["src/lib/invitation-action.ts"],
     "limitKB": 15
+  },
+  {
+    "name": "Company invitation notice after shell mount",
+    "phase": "interaction",
+    "entries": ["chunk:InvitationBanner"],
+    "limitKB": 12
+  },
+  {
+    "name": "Ownership transfer notice after shell mount",
+    "phase": "interaction",
+    "entries": ["src/components/OwnershipBanner.tsx"],
+    "limitKB": 8
   },
   {
     "name": "Wizard leave confirmation on demand",
@@ -307,7 +361,7 @@
   {
     "name": "Wallet",
     "entries": [
-      "src/routes/_app/wallet.tsx?tsr-split=component",
+      "src/routes/_app/wallet.index.tsx?tsr-split=component",
       "chunk:CustomerProfileWorkspace",
       "src/components/BottomTabBar.tsx"
     ],
@@ -326,7 +380,7 @@
   {
     "name": "Electricity increase form on demand",
     "phase": "interaction",
-    "entries": ["src/components/ContractQuantityIncreasePanel.tsx"],
+    "entries": ["chunk:ContractQuantityIncreasePanel"],
     "limitKB": 80
   },
   {
@@ -342,16 +396,34 @@
     "limitKB": 5
   },
   {
+    "name": "Profile choice when required",
+    "entries": ["src/components/DefaultProfileChoiceDialog.tsx"],
+    "phase": "interaction",
+    "limitKB": 15
+  },
+  {
     "name": "Workspace mode switch on account menu open",
     "phase": "interaction",
     "entries": ["src/components/OperatingContextSwitch.tsx"],
     "limitKB": 15
   },
   {
+    "name": "Account actions on menu open",
+    "phase": "interaction",
+    "entries": ["src/components/ProfileMenuActions.tsx"],
+    "limitKB": 5
+  },
+  {
     "name": "Reviewed terms acceptance on demand",
     "phase": "interaction",
     "entries": ["src/lib/terms-acceptance.ts"],
     "limitKB": 5
+  },
+  {
+    "name": "Terms review when required",
+    "phase": "interaction",
+    "entries": ["src/components/TosReviewDialog.tsx"],
+    "limitKB": 8
   },
   {
     "name": "More navigation sheet on demand",

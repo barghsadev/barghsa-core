@@ -84,7 +84,7 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.clock.install();
-    await page.goto('/settings/privacy');
+    await page.goto('/settings/privacy/requests');
     const owner = page.locator('[data-slot=profile-lifecycle]');
     await expect.poll(() => previews).toBe(1);
     await page.clock.fastForward(15_001);
@@ -137,7 +137,7 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await expect(resume).toBeFocused();
     await resume.press('Enter');
-    await expect(owner.locator(`a[href="/tickets?ticketId=${ticketId}"]`)).toBeVisible();
+    await expect(owner.locator(`a[href="/tickets/${ticketId}"]`)).toBeVisible();
     await expect(
       owner.getByText(lifecycleFormText('noRequests', locale), { exact: true })
     ).toHaveCount(0);
@@ -191,7 +191,7 @@ for (const locale of ['en', 'fa'] as const) {
         },
       })
     );
-    await page.goto('/settings/privacy');
+    await page.goto('/settings/privacy/requests');
     const owner = page.locator('[data-slot=profile-lifecycle]');
     await owner
       .getByRole('button', { name: t('settings.privacy.export.action', locale), exact: true })
@@ -212,7 +212,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(success(page)).toHaveCount(0);
     await capture(page, owner, info.outputPath('export-unconfirmed.png'));
     await retry.click();
-    await expect(owner.locator(`a[href="/tickets?ticketId=${ticketId}"]`)).toBeVisible();
+    await expect(owner.locator(`a[href="/tickets/${ticketId}"]`)).toBeVisible();
     await expect(owner.getByRole('progressbar')).toBeVisible();
     expect(creates).toBe(1);
     expect(exports).toBe(3);
@@ -279,7 +279,7 @@ for (const locale of ['en', 'fa'] as const) {
       jobRetries++;
       return route.fulfill({ status: 500, json: {} });
     });
-    await page.goto('/settings/privacy');
+    await page.goto('/settings/privacy/requests');
     const owner = page.locator('[data-slot=profile-lifecycle]');
     const start = owner.getByRole('button', {
       name: t('settings.privacy.export.action', locale),
@@ -338,9 +338,22 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.clock.install();
-    await page.goto('/admin/tickets?ticketId=' + ticketId);
+    await page.goto('/admin/tickets?status=active&ticketId=' + ticketId);
+    const openReview = page.getByRole('link', {
+      name: lifecycleFormText('openClosureReview', locale),
+      exact: true,
+    });
+    await expect(openReview).toHaveAttribute(
+      'href',
+      new RegExp(`/admin/tickets/${ticketId}/closure\\?status=active`)
+    );
+    expect(reads).toBe(0);
+    await openReview.click();
     const owner = page.locator('[data-slot=profile-closure-review]'),
       form = owner.locator('form');
+    await expect(
+      page.getByRole('heading', { name: t('tickets.closure.review', locale), exact: true })
+    ).toBeFocused();
     await expect.poll(() => reads).toBe(1);
     await page.clock.fastForward(15_001);
     await expect(owner.getByRole('alert')).toContainText(t('settings.privacy.error', locale));
@@ -394,6 +407,13 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(owner.getByRole('checkbox')).toBeFocused();
     expect(f.state.closureWrites).toBe(1);
     await capture(page, owner, info.outputPath('closure-renewed-consent.png'));
+    await page.goto(`/admin/tickets/${otherTicketId}/closure`);
+    await expect(page.getByRole('alert')).toContainText(
+      lifecycleFormText('closureUnavailable', locale)
+    );
+    await expect(owner).toHaveCount(0);
+    expect(f.state.closureReads).toBe(0);
+    expect(reads).toBe(3);
   });
   test(`lifecycle ${locale}: closure ownership and exact committed replay`, async ({
     page,
@@ -430,7 +450,7 @@ for (const locale of ['en', 'fa'] as const) {
         },
       });
     });
-    await page.goto('/admin/tickets?ticketId=' + ticketId);
+    await page.goto(`/admin/tickets/${ticketId}/closure`);
     const owner = page.locator('[data-slot=profile-closure-review]');
     await owner.getByRole('checkbox').check();
     await owner.locator('input[type=password]').fill(rawPassword);
@@ -440,9 +460,14 @@ for (const locale of ['en', 'fa'] as const) {
     ).toBeVisible();
     await expect(warning(page)).toHaveText(lifecycleFormText('uncertain', locale));
     await expect(success(page)).toHaveCount(0);
-    const status = page.locator('[data-slot=ticket-status-form]');
-    await expect(status.locator('button[type=submit]')).toBeDisabled();
-    await status.dispatchEvent('submit');
+    const back = page.getByRole('link', {
+      name: lifecycleFormText('backToTicket', locale),
+      exact: true,
+    });
+    await expect(back).toHaveAttribute('aria-disabled', 'true');
+    await back.dispatchEvent('click');
+    await expect(page).toHaveURL(`/admin/tickets/${ticketId}/closure`);
+    await expect(page.locator('[data-slot=ticket-status-form]')).toHaveCount(0);
     expect(f.state.writes).toHaveLength(0);
     expect(writes).toHaveLength(1);
     await quality(page, 'profile-closure-review');
@@ -458,17 +483,17 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     await expect.poll(() => writes.length).toBe(2);
     await expect(
+      owner.getByRole('status').filter({ hasText: lifecycleFormText('completedReview', locale) })
+    ).toBeVisible();
+    await expect(owner.locator('input[type=password]')).toHaveCount(0);
+    await capture(page, owner, info.outputPath('closure-confirmed.png'));
+    await back.click();
+    await expect(
       page.locator('article').getByText(t('tickets.closed', locale), { exact: true })
     ).toBeVisible();
-    await expect(success(page)).toHaveText(confirmationText('recorded', locale));
     expect(writes).toHaveLength(2);
     expect(writes[1]).toEqual(writes[0]);
     expect(writes[0]).toEqual({ previewVersion: 'a'.repeat(64), confirmation: 'CLOSE_PROFILE' });
-    await capture(
-      page,
-      page.locator('[data-slot=ticket-status-form]'),
-      info.outputPath('closure-confirmed.png')
-    );
   });
 }
 
@@ -487,7 +512,7 @@ for (const locale of ['en', 'fa'] as const) {
       await page.route(`**/api/staff/tickets/${ticketId}/closure-preview`, (r) =>
         r.fulfill({ json: value })
       );
-      await page.goto('/admin/tickets?ticketId=' + ticketId);
+      await page.goto(`/admin/tickets/${ticketId}/closure`);
       const owner = page.locator('[data-slot=profile-closure-review]');
       await expect(owner).toContainText(t(`settings.privacy.blocker.${code}`, locale));
       await expect(owner).toContainText(
@@ -554,9 +579,9 @@ for (const locale of ['en', 'fa'] as const) {
       name: t('tickets.closure.export', locale) + ' · ' + otherTicketId,
       exact: true,
     });
-    await expect(reference).toHaveAttribute('href', '/tickets?ticketId=' + otherTicketId);
+    await expect(reference).toHaveAttribute('href', '/tickets/' + otherTicketId);
     await reference.click();
-    await expect(page).toHaveURL('/tickets?ticketId=' + otherTicketId);
+    await expect(page).toHaveURL('/tickets/' + otherTicketId);
     await expect(page.locator('article')).toContainText('Other ticket source');
     expect(f.state.closureWrites).toBe(0);
   });

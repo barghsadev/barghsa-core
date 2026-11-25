@@ -164,7 +164,10 @@ for (const scenario of scenarios) {
     failed = false;
     await click(scenario.retry);
     expect(host.querySelector<HTMLButtonElement>('form button[type=submit]')!.disabled).toBe(false);
-    expect(host.querySelectorAll('tbody tr')).toHaveLength(scenario.name === 'sms' ? 2 : 1);
+    expect(host.querySelectorAll('tbody tr')).toHaveLength(1);
+    if (scenario.name === 'sms') {
+      expect(host.querySelectorAll('form input[list="sms-events"]')).toHaveLength(1);
+    }
   });
   it(`${scenario.name}: changed saved version retains draft but blocks saving`, async () => {
     let changed = false;

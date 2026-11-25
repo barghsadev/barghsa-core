@@ -1,6 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
+import type { BusinessWorkCountsController } from './business-work-counts.controller.js';
+
+type WorkQueue = Awaited<ReturnType<BusinessWorkCountsController['workQueue']>>;
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
@@ -371,6 +374,65 @@ it('keeps business queues usable when the background-job read fails', async () =
   });
 });
 
+it('previews owned work, urgent unassigned cases and current response breaches within staff scope', async () => {
+  const assigned = randomUUID();
+  const urgent = randomUUID();
+  const waiting = randomUUID();
+  const stale = randomUUID();
+  await http.pool.query(
+    `INSERT INTO tickets(id,user_id,subject,body,assigned_to,priority,status,created_at,updated_at)
+     VALUES
+       ($1,'work-customer','Assigned overdue','Private description','work-tickets','high','waiting_staff',NOW()-INTERVAL '4 days',NOW()-INTERVAL '3 days'),
+       ($2,'work-customer','Urgent unassigned','Private description',NULL,'urgent','open',NOW()-INTERVAL '2 days',NOW()-INTERVAL '2 days'),
+       ($3,'work-customer','Waiting for the customer','Private description','work-tickets','high','waiting_customer',NOW()-INTERVAL '4 days',NOW()-INTERVAL '3 days'),
+       ($4,'work-customer','Already answered','Private description','work-admin','normal','in_progress',NOW()-INTERVAL '4 days',NOW()-INTERVAL '2 hours')`,
+    [assigned, urgent, waiting, stale]
+  );
+  await http.pool.query(
+    `INSERT INTO service_breach_alerts(service_type,item_id,target_hours,source_activity_at)
+     SELECT 'ticket',id::text,24,CASE WHEN id=$3 THEN updated_at-INTERVAL '2 days' ELSE updated_at END
+     FROM tickets WHERE id IN ($1,$2,$3)`,
+    [assigned, waiting, stale]
+  );
+  const path = `${http.base}/api/admin/dashboard/work-queue`;
+  const full = await fetch(path, { headers: headers['work-admin']! });
+  expect(full.status, http.logs()).toBe(200);
+  expect(full.headers.get('cache-control')).toContain('no-store');
+  const preview = (await full.json()) as WorkQueue;
+  expect(preview).toMatchObject({
+    canOpenTickets: true,
+    canOpenConsultations: true,
+    tasks: expect.arrayContaining([
+      expect.objectContaining({ kind: 'consultation', lane: 'mine', assigned: true }),
+      expect.objectContaining({ id: urgent, kind: 'ticket', lane: 'urgent', assigned: false }),
+      expect.objectContaining({ id: assigned, kind: 'ticket', lane: 'overdue', overdueHours: 24 }),
+    ]),
+  });
+  expect(preview.tasks).not.toEqual(
+    expect.arrayContaining([expect.objectContaining({ id: stale, lane: 'overdue' })])
+  );
+  expect(JSON.stringify(preview)).not.toContain(waiting);
+  expect(JSON.stringify(preview)).not.toContain('Private description');
+  const scoped = await fetch(path, { headers: headers['work-tickets']! });
+  expect(scoped.status, http.logs()).toBe(200);
+  const limited = (await scoped.json()) as WorkQueue;
+  expect(limited).toMatchObject({ canOpenTickets: true, canOpenConsultations: false });
+  expect(limited.tasks).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ id: assigned, lane: 'mine', mine: true }),
+      expect.objectContaining({ id: assigned, lane: 'overdue', mine: true }),
+    ])
+  );
+  expect(
+    limited.tasks.every(
+      (item: { kind: string; mine: boolean }) => item.kind === 'ticket' && item.mine
+    )
+  ).toBe(true);
+  expect((await fetch(path, { headers: headers['work-customer']! })).status).toBe(403);
+  expect((await fetch(path, { headers: headers['work-finance']! })).status).toBe(403);
+  expect((await fetch(path)).status).toBe(401);
+});
+
 it('rejects permissions removed after an earlier successful widget read', async () => {
   const path = `${http.base}/api/admin/dashboard/widgets/queue`;
   expect((await fetch(path, { headers: headers['work-tickets']! })).status).toBe(200);
@@ -378,38 +440,46 @@ it('rejects permissions removed after an earlier successful widget read', async 
   expect((await fetch(path, { headers: headers['work-tickets']! })).status).toBe(403);
 });
 
-it('withdraws counts if staff grants are revoked while their database read is waiting', async () => {
-  const locker = await http.pool.connect();
-  let pending: Promise<Response> | undefined;
-  try {
-    await locker.query('BEGIN');
-    await locker.query('LOCK TABLE consultation_requests IN ACCESS EXCLUSIVE MODE');
-    pending = fetch(`${http.base}/api/admin/dashboard/widgets/work`, {
-      headers: headers['work-admin']!,
-    });
-    await expect
-      .poll(async () => {
-        const waiting = await http.pool.query<{ count: number }>(
-          `SELECT count(*)::int AS count FROM pg_stat_activity
+it.each([
+  ['widgets/work', 'WITH access AS (SELECT'],
+  ['work-queue', 'WITH candidates AS ('],
+])(
+  'withdraws %s if staff grants are revoked while the database read is waiting',
+  async (endpoint, queryMarker) => {
+    const locker = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await locker.query('BEGIN');
+      await locker.query('LOCK TABLE consultation_requests IN ACCESS EXCLUSIVE MODE');
+      pending = fetch(`${http.base}/api/admin/dashboard/${endpoint}`, {
+        headers: headers['work-admin']!,
+      });
+      await expect
+        .poll(async () => {
+          const waiting = await http.pool.query<{ count: number }>(
+            `SELECT count(*)::int AS count FROM pg_stat_activity
            WHERE datname=current_database() AND state='active' AND wait_event_type='Lock'
-             AND query LIKE '%WITH access AS (SELECT%'`
-        );
-        return waiting.rows[0]!.count;
-      })
-      .toBe(1);
-    await http.pool.query("DELETE FROM user_roles WHERE user_id='work-admin'");
-    await locker.query('COMMIT');
-    const response = await pending;
-    expect(response.status, http.logs()).toBe(403);
-    const body = await response.json();
-    expect(body).not.toHaveProperty('consultations');
-    expect(body).not.toHaveProperty('refundObligations');
-  } finally {
-    await locker.query('ROLLBACK');
-    await pending;
-    await http.pool.query(
-      "INSERT INTO user_roles(user_id,role_id) VALUES('work-admin','business-work-all') ON CONFLICT DO NOTHING"
-    );
-    locker.release();
+             AND query LIKE $1`,
+            [`%${queryMarker}%`]
+          );
+          return waiting.rows[0]!.count;
+        })
+        .toBe(1);
+      await http.pool.query("DELETE FROM user_roles WHERE user_id='work-admin'");
+      await locker.query('COMMIT');
+      const response = await pending;
+      expect(response.status, http.logs()).toBe(403);
+      const body = await response.json();
+      expect(body).not.toHaveProperty('consultations');
+      expect(body).not.toHaveProperty('refundObligations');
+      expect(body).not.toHaveProperty('tasks');
+    } finally {
+      await locker.query('ROLLBACK');
+      await pending;
+      await http.pool.query(
+        "INSERT INTO user_roles(user_id,role_id) VALUES('work-admin','business-work-all') ON CONFLICT DO NOTHING"
+      );
+      locker.release();
+    }
   }
-});
+);

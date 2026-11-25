@@ -235,3 +235,7 @@ export function validateTemplate(
   }
   return problems;
 }
+
+export function notificationSubjectRequiredForPublish(channel: unknown, subject: unknown): boolean {
+  return channel === 'email' && (typeof subject !== 'string' || !subject.trim());
+}

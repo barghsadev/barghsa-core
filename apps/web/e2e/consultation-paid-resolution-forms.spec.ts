@@ -5,7 +5,7 @@ import type { Locator, Page } from '@playwright/test';
 import type { ConsultationPaidResolutionReview } from '@barghsa/shared/finance';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { t } from '@barghsa/i18n/app';
-import { tConsultation } from '@barghsa/i18n/consultation';
+import { tStaffConsultation } from '@barghsa/i18n/consultation-staff';
 import { tConsultationResolution } from '@barghsa/i18n/consultation-resolution';
 import { test, expect } from './coverage-fixture';
 import {
@@ -73,23 +73,32 @@ async function holdSchema(page: Page) {
   });
   return release;
 }
-async function chooseExternally(page: Page, id: string) {
-  await page.evaluate((id) => {
-    const url = new URL(location.href);
-    url.searchParams.set('requestId', id);
-    window.history.pushState({}, '', url);
-    window.dispatchEvent(new PopStateEvent('popstate'));
-  }, id);
+async function chooseExternally(page: Page, id: string, decision: string) {
+  await page.evaluate(
+    ({ id, decision }) => {
+      const url = new URL(location.href);
+      url.pathname = '/admin/consultations/' + id + '/decisions/' + decision;
+      url.searchParams.delete('requestId');
+      window.history.pushState({}, '', url);
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    },
+    { id, decision }
+  );
 }
 for (const [locale, theme] of [
   ['en', 'light'],
   ['fa', 'dark'],
 ] as const) {
-  const copy = (key: string) => tConsultation(key, locale);
+  const copy = (key: string) => tStaffConsultation(key, locale);
   const resolutionCopy = (key: string) => tConsultationResolution(key, locale);
   const reason = (page: Page) => page.locator('#consultation-reason');
   const reasonForm = (page: Page) => reason(page).locator('xpath=ancestor::form');
   const feeForm = (page: Page) => page.getByTestId('consultation-fee-form');
+  const backToRequest = (page: Page) =>
+    page.getByRole('link', { name: copy('backToFeeRequest'), exact: true });
+  const decisionLink = (page: Page, decision: string) =>
+    page.locator(`a[href*="/decisions/${decision}"]`);
+  const openDecision = (page: Page, decision: string) => decisionLink(page, decision).click();
   const dialog = (page: Page) => page.getByRole('dialog');
   const confirm = (page: Page) => dialog(page).locator('button[type=submit]');
   const cancel = (page: Page) =>
@@ -99,23 +108,39 @@ for (const [locale, theme] of [
     reasonForm(page).getByRole('button', { name: copy(key), exact: true });
   const refresh = (page: Page) =>
     page.getByRole('button', { name: copy('refresh'), exact: true }).first();
+  async function withFeeEditor(page: Page, check: () => Promise<void>) {
+    const path = new URL(page.url()).pathname.replace(/\/$/, '') + '/fee';
+    const link = page.locator(`a[href="${path}"], a[href^="${path}?"]`);
+    if (await link.count()) {
+      await link.click();
+      await expect(feeForm(page)).toBeVisible();
+      await check();
+      await backToRequest(page).click();
+    }
+  }
   async function companions(page: Page) {
     await page.locator('#consultation-team').selectOption('Operations');
-    if (await feeForm(page).count()) {
+    await withFeeEditor(page, async () => {
       await expect(page.locator('#consultation-valid-until')).toBeEnabled();
       await page.locator('#consultation-fee').fill('680000');
       await page.locator('#consultation-offer-reason').fill('  Independent fee adjustment draft  ');
       await page.locator('#consultation-valid-until').fill('2030-02-01T12:00');
-    }
+    });
   }
-  async function preservedCompanions(page: Page) {
+  async function preservedCompanions(page: Page, reopen?: string) {
+    await page.clock.fastForward(6_000);
+    await backToRequest(page).click();
     await expect(page.locator('#consultation-team')).toHaveValue('Operations');
-    if (await feeForm(page).count()) {
+    await withFeeEditor(page, async () => {
       await expect(page.locator('#consultation-fee')).toHaveValue('680000');
       await expect(page.locator('#consultation-offer-reason')).toHaveValue(
         '  Independent fee adjustment draft  '
       );
       await expect(page.locator('#consultation-valid-until')).toHaveValue('2030-02-01T12:00');
+    });
+    if (reopen) {
+      await openDecision(page, reopen);
+      await expect(reason(page)).toBeVisible();
     }
   }
   async function password(page: Page) {
@@ -162,18 +187,18 @@ for (const [locale, theme] of [
     const release = await holdSchema(page);
     const action: ResolutionAction = locale === 'en' ? 'cancel' : 'reject';
     await page.goto(`/admin/consultations?requestId=${closureRequest}`);
-    await expect(reason(page)).toBeVisible();
-    // Native focus/blur + companion edits precede duplicate held validation.
+    await companions(page);
+    await openDecision(page, action);
     await reason(page).focus();
     await reason(page).fill('x'.repeat(1001));
-    await companions(page);
     await button(page, action).click();
     await expect(button(page, action)).toBeDisabled();
     await button(page, action).dispatchEvent('click');
     expect(state.previews).toEqual([]);
     release();
     await focusedError(reason(page));
-    await preservedCompanions(page);
+    await preservedCompanions(page, action);
+    await expect(reason(page)).toHaveValue('x'.repeat(1001));
     await reason(page).fill('  Close the paid service; return available payments  ');
     state.previewMode = 'owned';
     await button(page, action).click();
@@ -207,6 +232,10 @@ for (const [locale, theme] of [
     state.previewMode = 'success';
     await button(page, action).click();
     await expect(dialog(page)).toContainText(copy('paidResolutionCloseOutcome'));
+    await expect(
+      dialog(page).getByRole('heading', { name: copy(action), exact: true })
+    ).toBeFocused();
+    expect(await dialog(page).evaluate((element) => element.scrollTop)).toBe(0);
     const quoted = review(
       closureRequest,
       action,
@@ -256,23 +285,17 @@ for (const [locale, theme] of [
     await expect(retry(page)).toHaveText(resolutionCopy('retryCaptured'));
     await expect(dialog(page)).toHaveCount(0);
     await expect(reason(page)).toBeDisabled();
-    await expect(
-      page.getByRole('button', { name: copy('assignSelf'), exact: true })
-    ).toBeDisabled();
-    await expect(button(page, action === 'cancel' ? 'reject' : 'cancel')).toBeDisabled();
-    if (await feeForm(page).count())
-      await expect(feeForm(page).locator('button[type=submit]')).toBeDisabled();
+    await expect(button(page, action)).toBeDisabled();
+    await expect(reasonForm(page).getByRole('button')).toHaveCount(1);
     const reads = state.reads.length,
       previews = state.previews.length;
-    const otherRow = page.getByRole('button', { name: /Refund recovery buyer/ });
-    await expect(otherRow).toBeDisabled();
-    await expect(
-      page.getByText(copy('filterStatus'), { exact: true }).locator('..').locator('select')
-    ).toBeDisabled();
-    await otherRow.dispatchEvent('click');
+    const back = backToRequest(page);
+    await expect(back).toHaveAttribute('aria-disabled', 'true');
+    await expect(page.getByText(copy('filterStatus'), { exact: true })).toHaveCount(0);
+    await back.dispatchEvent('click');
+    await expect(page).toHaveURL(`/admin/consultations/${closureRequest}/decisions/${action}`);
     await refresh(page).dispatchEvent('click');
     await button(page, action).dispatchEvent('click');
-    if (await feeForm(page).count()) await feeForm(page).dispatchEvent('submit');
     expect(state.reads).toHaveLength(reads);
     expect(state.previews).toHaveLength(previews);
     expect(state.shell.previews).toEqual([]);
@@ -315,7 +338,7 @@ for (const [locale, theme] of [
     await approveRiskConfirmation(page, locale, 'both');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
-    await expect(reason(page)).toHaveValue('');
+    await expect(reasonForm(page)).toHaveCount(0);
     await preservedCompanions(page);
     expect(state.writes.every((call) => call.raw === command.raw)).toBe(true);
     expect(state.writes.slice(1).every((call) => call.csrf === 'consultation-fee-rotated')).toBe(
@@ -331,7 +354,7 @@ for (const [locale, theme] of [
     await expect.poll(() => !!state.heldDetail).toBe(true);
     const oldRead = state.heldDetail!;
     state.holdDetail = false;
-    await chooseExternally(page, recoveryRequest);
+    await chooseExternally(page, recoveryRequest, 'recover-refund');
     await expect(reason(page)).toBeVisible();
     await reason(page).fill('Fresh authorized recovery draft');
     await oldRead
@@ -364,8 +387,8 @@ for (const [locale, theme] of [
       locale
     );
     await page.goto(`/admin/consultations?requestId=${recoveryRequest}`);
-    await expect(reason(page)).toBeVisible();
     await companions(page);
+    await openDecision(page, 'recover-refund');
     await reason(page).fill('x'.repeat(1001));
     await button(page, 'recoverRefund').click();
     await focusedError(reason(page));
@@ -373,7 +396,10 @@ for (const [locale, theme] of [
     state.previewMode = 'owned';
     await button(page, 'recoverRefund').click();
     await focusedError(reason(page));
-    await preservedCompanions(page);
+    await preservedCompanions(page, 'recover-refund');
+    await expect(reason(page)).toHaveValue(
+      '  Recover the uncovered credit without closing service  '
+    );
     await inspect(
       page,
       reasonForm(page),
@@ -441,17 +467,17 @@ for (const [locale, theme] of [
     await expect(retry(page)).toBeEnabled();
     await held.fulfill({ status: 503, json: {} }).catch(() => {});
     await expect(reason(page)).toBeDisabled();
-    await expect(feeForm(page).locator('button[type=submit]')).toBeDisabled();
-    await expect(button(page, 'complete')).toBeDisabled();
-    await expect(button(page, 'cancel')).toBeDisabled();
-    await expect(
-      page.getByRole('button', { name: copy('assignSelf'), exact: true })
-    ).toBeDisabled();
+    await expect(backToRequest(page)).toHaveAttribute('aria-disabled', 'true');
+    await expect(button(page, 'recoverRefund')).toBeDisabled();
+    await expect(reasonForm(page).getByRole('button')).toHaveCount(1);
     const reads = state.reads.length,
       previews = state.previews.length;
     await refresh(page).dispatchEvent('click');
-    await feeForm(page).dispatchEvent('submit');
-    await button(page, 'complete').dispatchEvent('click');
+    await backToRequest(page).dispatchEvent('click');
+    await expect(page).toHaveURL(
+      `/admin/consultations/${recoveryRequest}/decisions/recover-refund`
+    );
+    await reasonForm(page).dispatchEvent('submit');
     expect(state.reads).toHaveLength(reads);
     expect(state.previews).toHaveLength(previews);
     expect(state.shell.previews).toEqual([]);
@@ -488,10 +514,10 @@ for (const [locale, theme] of [
     await approveRiskConfirmation(page, locale, 'both');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
-    await expect(reason(page)).toHaveValue('');
+    await expect(reasonForm(page)).toHaveCount(0);
     await preservedCompanions(page);
-    await expect(button(page, 'recoverRefund')).toHaveCount(0);
-    await expect(button(page, 'complete')).toBeEnabled();
+    await expect(decisionLink(page, 'recover-refund')).toHaveCount(0);
+    await expect(decisionLink(page, 'complete')).toBeVisible();
     expect(state.rows[recoveryRequest]!.status).toBe('offer_accepted');
     expect(state.effects).toBe(1);
     expect(state.writes.every((call) => call.raw === command.raw)).toBe(true);
@@ -502,12 +528,13 @@ for (const [locale, theme] of [
     expect(state.shell.previews).toEqual([]);
     expect(state.shell.writes).toEqual([]);
     state.previewMode = 'held';
+    await openDecision(page, 'cancel');
     await reason(page).fill('Old selected paid cancellation draft');
     await button(page, 'cancel').click();
     await expect.poll(() => !!state.heldPreview).toBe(true);
     const oldPreview = state.heldPreview!;
     state.previewMode = 'success';
-    await chooseExternally(page, closureRequest);
+    await chooseExternally(page, closureRequest, locale === 'en' ? 'cancel' : 'reject');
     await expect(reason(page)).toBeVisible();
     await reason(page).fill('Current private closure draft');
     await oldPreview

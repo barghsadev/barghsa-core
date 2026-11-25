@@ -3,7 +3,8 @@ import { test, expect } from './coverage-fixture';
 import { skipToMain } from './critical-accessibility';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-for (const locale of ['en', 'fa'])
+import { shellText } from '@barghsa/i18n/shell';
+for (const locale of ['en', 'fa'] as const)
   for (const area of ['admin', 'customer']) {
     test(`shell navigation works on mobile and desktop (${area}, ${locale})`, async ({ page }) => {
       const fa = locale === 'fa';
@@ -63,6 +64,13 @@ for (const locale of ['en', 'fa'])
       await expect(nav).toBeVisible();
       await expect(menu).toHaveAttribute('aria-expanded', 'true');
       if (area === 'admin') {
+        const operations = nav.getByRole('button', { name: shellText('operations', locale) });
+        const customers = nav.getByRole('button', { name: shellText('customers', locale) });
+        await expect(operations).toHaveAttribute('aria-expanded', 'true');
+        await expect(customers).toHaveAttribute('aria-expanded', 'false');
+        await expect(nav.locator('a[href="/admin/crm"]')).toBeHidden();
+        await customers.press('Space');
+        await expect(customers).toHaveAttribute('aria-expanded', 'true');
         await expect(
           nav.getByRole('link', {
             name: fa ? 'نقش‌ها و مجوزها' : 'Roles & Permissions',
@@ -72,6 +80,13 @@ for (const locale of ['en', 'fa'])
         await expect(
           nav.getByRole('link', { name: fa ? 'پروفایل‌های مشتریان' : 'CRM Profiles', exact: true })
         ).toBeVisible();
+        await operations.press('Enter');
+        await expect(operations).toHaveAttribute('aria-expanded', 'false');
+        await expect(nav.locator('a[href="/admin/failed-notifications"]')).toBeHidden();
+        await page.goto('/admin/failed-notifications');
+        await menu.click();
+        await expect(operations).toHaveAttribute('aria-expanded', 'true');
+        await customers.click();
       }
       await menu.click();
       await expect(nav).toBeHidden();
@@ -104,6 +119,29 @@ for (const locale of ['en', 'fa'])
           .getByRole('link', { name: fa ? 'پروفایل‌های مشتریان' : 'CRM Profiles', exact: true })
           .boundingBox();
         expect(box!.y + box!.height).toBeLessThanOrEqual(720);
+
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+        for (const group of await nav.locator('.shell-sidebar-group-toggle').all()) {
+          if ((await group.getAttribute('aria-expanded')) === 'true') await group.click();
+        }
+        const operations = nav.getByRole('button', { name: shellText('operations', locale) });
+        const panel = nav.locator('#admin-navigation-operations');
+        const overflowing = () =>
+          nav.evaluate((element) => element.scrollHeight > element.clientHeight);
+        await expect.poll(overflowing).toBe(false);
+        await expect(nav).toHaveCSS('scrollbar-gutter', 'stable');
+        const before = (await operations.boundingBox())!;
+        await operations.click();
+        await expect(panel).toHaveCSS('transition-property', 'grid-template-rows, visibility');
+        await expect.poll(overflowing).toBe(true);
+        const after = (await operations.boundingBox())!;
+        expect(after.x).toBe(before.x);
+        expect(after.width).toBe(before.width);
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await expect(panel).toHaveCSS('transition-duration', '0s');
+        await operations.click();
+        await expect(panel).toHaveAttribute('inert', '');
+        await expect.poll(overflowing).toBe(false);
       }
     });
   }

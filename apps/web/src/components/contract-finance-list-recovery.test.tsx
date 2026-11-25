@@ -7,7 +7,6 @@ import { ContractRefundQueue } from './ContractRefundQueue.js';
 import { AdminApprovalRequestsView } from '../pages/AdminApprovalRequestsPage.js';
 import type { TeamAction } from './TeamActionDialog.js';
 import { en } from '@barghsa/i18n/contracts';
-import { refundDecisionReviewFixture } from '../test/refund-review-fixtures.js';
 import {
   cancellationRow,
   obligationRow,
@@ -20,9 +19,12 @@ vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: String, number: String }),
 }));
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ children }: { children: ReactNode }) => (
-    <a href="/admin/approval-requests">{children}</a>
-  ),
+  Link: ({ children, disabled }: { children: ReactNode; disabled?: boolean }) =>
+    disabled ? (
+      <span aria-disabled="true">{children}</span>
+    ) : (
+      <a href="/admin/approval-requests">{children}</a>
+    ),
 }));
 vi.mock('./DualApprovalThresholdPanel.js', () => ({ default: () => null }));
 const captured = vi.hoisted(() => ({
@@ -81,8 +83,6 @@ async function click(label: string) {
   );
   expect(button, label).toBeDefined();
   await act(async () => button!.click());
-  if (label === en['cancellation.queue.record-transfer'])
-    await vi.waitFor(() => expect(container.querySelector('[role=dialog]')).not.toBeNull());
 }
 async function set(id: string, value: string) {
   const input = container.querySelector<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>(
@@ -204,9 +204,14 @@ it('selecting the same cancellation contract keeps its active detail callback us
   await act(async () => captured.changed!());
   expect(fetcher.mock.calls.length).toBe(count + 1);
 });
-it('refund cursor retry and first-page refresh preserve bank references and confirmation until fresh state changes', async () => {
-  let status = 200,
-    changed = false;
+function refundQueueLink(operation: 'record-transfer' | 'reconcile') {
+  return Array.from(container.querySelectorAll('a, span[aria-disabled="true"]')).find(
+    (link) => link.textContent === en[`cancellation.queue.${operation}`]
+  );
+}
+it('refund cursor retry keeps accepted rows and first-page refresh updates the action', async () => {
+  let status = 200;
+  let changed = false;
   const fetcher = vi.fn(async (_url: string) =>
     status === 200
       ? Response.json({
@@ -222,89 +227,47 @@ it('refund cursor retry and first-page refresh preserve bank references and conf
       : Response.json({}, { status })
   );
   vi.stubGlobal('fetch', fetcher);
-  const reads = globalThis.fetch;
-  vi.stubGlobal('fetch', (url: string, options?: RequestInit) => {
-    if (url.endsWith('/record-transfer/review')) {
-      const body = JSON.parse(options?.body as string);
-      return Promise.resolve(
-        Response.json(
-          refundDecisionReviewFixture(
-            obligationRow.invoiceId,
-            obligationRow.id,
-            'external_bank',
-            'Approved',
-            'record-transfer',
-            body.bankReference,
-            null,
-            obligationRow.amount
-          )
-        )
-      );
-    }
-    return reads(url, options);
-  });
   await act(async () => root.render(<QueryProvider>{<ContractRefundQueue />}</QueryProvider>));
-  await set('bank-return-' + obligationRow.id, 'BANK-DRAFT');
-  await click(en['cancellation.queue.record-transfer']);
-  const action = captured.action;
-  const input = container.querySelector('input');
+  expect(refundQueueLink('record-transfer')?.getAttribute('href')).toBeTruthy();
   status = 503;
   await click(en.next);
   const failed = fetcher.mock.calls.at(-1)![0];
-  expect(container.querySelector('input')).toBe(input);
-  expect(container.querySelector('[role="dialog"]')).not.toBeNull();
+  expect(failed).toContain(encodeURIComponent(financeCursor));
+  expect(container.querySelectorAll('li')).toHaveLength(1);
+  expect(refundQueueLink('record-transfer')?.getAttribute('aria-disabled')).toBe('true');
   status = 200;
   await click(en.retry);
   expect(fetcher.mock.calls.at(-1)![0]).toBe(failed);
-  expect(captured.action).toBe(action);
-  expect((input as HTMLInputElement).value).toBe('BANK-DRAFT');
+  expect(refundQueueLink('record-transfer')?.getAttribute('href')).toBeTruthy();
   changed = true;
   await click(en.refresh);
   expect(fetcher.mock.calls.at(-1)![0]).not.toContain('?');
-  expect(container.querySelector('[role="dialog"]')).toBeNull();
+  expect(refundQueueLink('record-transfer')).toBeUndefined();
+  expect(refundQueueLink('reconcile')?.getAttribute('href')).toBeTruthy();
   expect(container.textContent).toContain('BANK-FINAL');
 });
-it('refund denial clears references and invalidates a late successful write', async () => {
+it('refund denial clears finance references and available actions', async () => {
   let status = 200;
-  const fetcher = vi.fn(async () =>
-    status === 200
-      ? Response.json({ obligations: [obligationRow], nextBefore: null })
-      : Response.json({}, { status })
-  );
-  vi.stubGlobal('fetch', fetcher);
-  const reads = globalThis.fetch;
-  vi.stubGlobal('fetch', (url: string, options?: RequestInit) => {
-    if (url.endsWith('/record-transfer/review')) {
-      const body = JSON.parse(options?.body as string);
-      return Promise.resolve(
-        Response.json(
-          refundDecisionReviewFixture(
-            obligationRow.invoiceId,
-            obligationRow.id,
-            'external_bank',
-            'Approved',
-            'record-transfer',
-            body.bankReference,
-            null,
-            obligationRow.amount
-          )
-        )
-      );
-    }
-    return reads(url, options);
+  const fetcher = vi.fn(async (_url: string, init?: RequestInit) => {
+    expect(init?.method).toBeUndefined();
+    return status === 200
+      ? Response.json({
+          obligations: [{ ...obligationRow, bankReference: 'BANK-PRIVATE', state: 'Processing' }],
+          nextBefore: null,
+        })
+      : Response.json({}, { status });
   });
+  vi.stubGlobal('fetch', fetcher);
   await act(async () => root.render(<QueryProvider>{<ContractRefundQueue />}</QueryProvider>));
-  await set('bank-return-' + obligationRow.id, 'BANK-DRAFT');
-  await click(en['cancellation.queue.record-transfer']);
-  const success = captured.success!;
+  expect(container.textContent).toContain('BANK-PRIVATE');
+  expect(refundQueueLink('reconcile')).toBeDefined();
   status = 403;
   await click(en.refresh);
-  const count = fetcher.mock.calls.length;
-  await act(async () => success());
-  expect(container.textContent).toBe('');
-  expect(fetcher.mock.calls.length).toBe(count);
+  expect(container.textContent).toContain(en.denied);
+  expect(container.textContent).not.toContain('BANK-PRIVATE');
+  expect(refundQueueLink('reconcile')).toBeUndefined();
 });
-it('duplicate refund pages update fresh eligibility once and clear stale confirmation', async () => {
+it('duplicate refund pages update fresh eligibility without repeating the row', async () => {
   let changed = false;
   vi.stubGlobal(
     'fetch',
@@ -315,37 +278,14 @@ it('duplicate refund pages update fresh eligibility once and clear stale confirm
       })
     )
   );
-  const reads = globalThis.fetch;
-  vi.stubGlobal('fetch', (url: string, options?: RequestInit) => {
-    if (url.endsWith('/record-transfer/review')) {
-      const body = JSON.parse(options?.body as string);
-      return Promise.resolve(
-        Response.json(
-          refundDecisionReviewFixture(
-            obligationRow.invoiceId,
-            obligationRow.id,
-            'external_bank',
-            'Approved',
-            'record-transfer',
-            body.bankReference,
-            null,
-            obligationRow.amount
-          )
-        )
-      );
-    }
-    return reads(url, options);
-  });
   await act(async () => root.render(<QueryProvider>{<ContractRefundQueue />}</QueryProvider>));
-  await set('bank-return-' + obligationRow.id, 'BANK-DRAFT');
-  await click(en['cancellation.queue.record-transfer']);
+  expect(refundQueueLink('record-transfer')).toBeDefined();
   changed = true;
   await click(en.next);
   expect(container.querySelectorAll('li')).toHaveLength(1);
-  expect(container.querySelector('[role="dialog"]')).toBeNull();
-  expect(container.querySelector('input')).toBeNull();
+  expect(refundQueueLink('record-transfer')).toBeUndefined();
 });
-it('malformed refund pages recover locally while accepted rows and references remain', async () => {
+it('malformed refund pages keep accepted rows inactive until recovery', async () => {
   let malformed = false;
   vi.stubGlobal(
     'fetch',
@@ -357,35 +297,15 @@ it('malformed refund pages recover locally while accepted rows and references re
       )
     )
   );
-  const reads = globalThis.fetch;
-  vi.stubGlobal('fetch', (url: string, options?: RequestInit) => {
-    if (url.endsWith('/record-transfer/review')) {
-      const body = JSON.parse(options?.body as string);
-      return Promise.resolve(
-        Response.json(
-          refundDecisionReviewFixture(
-            obligationRow.invoiceId,
-            obligationRow.id,
-            'external_bank',
-            'Approved',
-            'record-transfer',
-            body.bankReference,
-            null,
-            obligationRow.amount
-          )
-        )
-      );
-    }
-    return reads(url, options);
-  });
   await act(async () => root.render(<QueryProvider>{<ContractRefundQueue />}</QueryProvider>));
-  await set('bank-return-' + obligationRow.id, 'BANK-DRAFT');
   malformed = true;
   await click(en.refresh);
-  expect((container.querySelector('input') as HTMLInputElement).value).toBe('BANK-DRAFT');
+  expect(container.querySelectorAll('li')).toHaveLength(1);
+  expect(refundQueueLink('record-transfer')?.getAttribute('aria-disabled')).toBe('true');
   malformed = false;
   await click(en.retry);
   expect(container.querySelector('[role="alert"]')).toBeNull();
+  expect(refundQueueLink('record-transfer')?.getAttribute('href')).toBeTruthy();
 });
 it('approval pagination retries the failed offset with rejection drafts and accepted rows kept', async () => {
   let status = 200;
@@ -403,6 +323,7 @@ it('approval pagination retries the failed offset with rejection drafts and acce
   await act(async () =>
     root.render(<QueryProvider>{<AdminApprovalRequestsView />}</QueryProvider>)
   );
+  await click('Reject');
   await set('reason-' + approvalRow.id, 'Reject draft');
   const input = container.querySelector('#reason-' + approvalRow.id);
   status = 503;
@@ -479,6 +400,7 @@ it('approval denial clears drafts and old callbacks cannot overwrite recovered w
   expect(container.querySelector('[role="dialog"]')).toBeNull();
   status = 200;
   await click('Refresh');
+  await click('Reject');
   await set('reason-' + approvalRow.id, 'New draft');
   const count = fetcher.mock.calls.length;
   await act(async () => success());
@@ -504,6 +426,7 @@ it('changing a linked approval clears its drafts and ignores the old request res
       <QueryProvider>{<AdminApprovalRequestsView requestId={approvalRow.id} />}</QueryProvider>
     )
   );
+  await click('Reject');
   await set('reason-' + approvalRow.id, 'Old draft');
   hold = true;
   await click('Refresh');
@@ -512,5 +435,6 @@ it('changing a linked approval clears its drafts and ignores the old request res
   );
   await act(async () => pending.resolve(Response.json(approvalRow)));
   expect(container.querySelector('#reason-' + approvalRow.id)).toBeNull();
-  expect((container.querySelector('textarea') as HTMLTextAreaElement).value).toBe('');
+  await click('Reject');
+  expect(container.querySelector<HTMLTextAreaElement>('#reason-' + other)?.value).toBe('');
 });

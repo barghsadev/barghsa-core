@@ -1,4 +1,4 @@
-import { t, type Locale } from '@barghsa/i18n/app';
+import { t, type Locale } from '@barghsa/i18n/workspace';
 import { formatNumber } from '@barghsa/i18n/numbers';
 
 const productKeys = new Set(['thermal', 'green', 'free_market', 'energy_saving']);

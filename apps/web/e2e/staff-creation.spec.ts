@@ -82,9 +82,8 @@ for (const locale of ['en', 'fa'] as const) {
         json: {},
       });
     });
-    await page.goto('/admin/users');
+    await page.goto('/admin/users/new');
     const createLabel = fa ? 'ایجاد حساب کارمند' : 'Create staff user';
-    await page.getByRole('button', { name: createLabel, exact: true }).click();
     const form = page.locator('form');
     await form
       .getByLabel(fa ? 'ایمیل یا شماره موبایل' : 'Email or mobile number', { exact: true })
@@ -146,11 +145,11 @@ for (const locale of ['en', 'fa'] as const) {
       page.getByLabel(fa ? 'رمز عبور موقت' : 'Temporary password', { exact: true })
     ).toHaveValue('One-time-fixture-password!');
     await page
-      .getByRole('button', { name: fa ? 'بستن نتیجه' : 'Dismiss result', exact: true })
+      .getByRole('link', { name: fa ? 'بستن نتیجه' : 'Dismiss result', exact: true })
       .click();
     await expect(page.locator('#staff-created-password')).toHaveCount(0);
     await page.reload();
-    await expect(page.getByRole('button', { name: createLabel, exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: createLabel, exact: true })).toBeVisible();
     await expect(page.locator('#staff-created-password')).toHaveCount(0);
   });
 }

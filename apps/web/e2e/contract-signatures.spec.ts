@@ -169,7 +169,7 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.goto(staff ? '/admin/contracts' : '/contracts');
       await page
-        .getByRole('button', {
+        .getByRole('link', {
           name: `${words.electricity} \u00b7 ${words.version} ${(2).toLocaleString(locale)}`,
           exact: true,
         })
@@ -178,6 +178,8 @@ for (const locale of ['en', 'fa'] as const)
       const dialog = page.getByRole('dialog');
       const confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
       if (staff) {
+        await panel.getByRole('link', { name: words.prepareSignature, exact: true }).click();
+        await expect(page).toHaveURL(`/admin/contracts/${ID}/signature-request/${VERSION}`);
         const original = panel.getByLabel(words.approvedOriginal, { exact: true });
         await expect(original).toHaveAttribute('aria-required', 'true');
         await original.selectOption(ORIGINAL);
@@ -187,6 +189,10 @@ for (const locale of ['en', 'fa'] as const)
         await confirm.click();
         await expect(dialog).toHaveCount(0);
       }
+      await page.getByRole('link', { name: words.recordSignature, exact: true }).click();
+      await expect(page).toHaveURL(
+        `${staff ? '/admin' : ''}/contracts/${ID}/record-signature/${VERSION}`
+      );
       await expect(panel.getByText('original.pdf', { exact: false }).first()).toBeVisible();
       const signed = panel.getByLabel(words.approvedSigned, { exact: true });
       await expect(signed).toHaveAttribute('aria-required', 'true');
@@ -230,6 +236,9 @@ for (const locale of ['en', 'fa'] as const)
       );
       await expect(panel.getByRole('combobox')).toHaveCount(0);
       await expect(page.getByRole('button', { name: words.uploadSigned, exact: true })).toHaveCount(
+        0
+      );
+      await expect(page.getByRole('link', { name: words.uploadSigned, exact: true })).toHaveCount(
         0
       );
     });

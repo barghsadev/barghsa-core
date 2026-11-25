@@ -171,13 +171,10 @@ async function render(
   await act(async () => row.click());
 }
 async function fill(id: string, value: string) {
+  await settled(() => expect(document.getElementById(id), id).not.toBeNull());
   const field = document.getElementById(id) as HTMLInputElement | HTMLSelectElement;
-  expect(field, id).not.toBeNull();
   await act(async () => {
-    Object.getOwnPropertyDescriptor(
-      field.tagName === 'SELECT' ? HTMLSelectElement.prototype : HTMLInputElement.prototype,
-      'value'
-    )!.set!.call(field, value);
+    Object.getOwnPropertyDescriptor(Object.getPrototypeOf(field), 'value')!.set!.call(field, value);
     field.dispatchEvent(
       new Event(field.tagName === 'SELECT' ? 'change' : 'input', { bubbles: true })
     );

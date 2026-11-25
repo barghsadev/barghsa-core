@@ -19,7 +19,7 @@ it('shows the next customer step and links the matching record', () => {
   });
   expect(savingNextAction(order)).toEqual({
     kind: 'acceptContract',
-    href: '/contracts?contractId=contract-id',
+    href: '/contracts/contract-id',
   });
   expect(
     savingNextAction({

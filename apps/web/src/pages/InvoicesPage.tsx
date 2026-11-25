@@ -1,3 +1,4 @@
+import { HistoryStatusEmpty } from '../components/QueueEmptyState.js';
 import { LoadingStatus, ListPage, ListToolbar } from '@barghsa/ui';
 import {
   useHistoryFilterDraft,
@@ -5,7 +6,7 @@ import {
 } from '../hooks/useHistoryFilterDraft.js';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { useListView } from '../hooks/useListView.js';
-import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js';
+import { HistoryTable, TableCellDetails, type HistoryColumn } from '../components/HistoryTable.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -50,6 +51,7 @@ export function InvoicesPage({
   query = { q: '', sort: DEFAULT_INVOICE_LIST_SORT },
   onQueryChange,
   onClearFilters,
+  onShowAllStatuses,
   onApplyFilters,
   onRemoveFilter,
   amountRange = {},
@@ -63,6 +65,7 @@ export function InvoicesPage({
   query?: InvoiceListQuery;
   onQueryChange?: (value: InvoiceListQuery) => void;
   onClearFilters?: () => void;
+  onShowAllStatuses?: () => void;
   onApplyFilters?: (selection: HistoryFilterSelection<InvoiceListQuery>) => void;
   onRemoveFilter?: (key: HistoryFilterKey, value?: string) => void;
   amountRange?: NumberRangeValue;
@@ -169,24 +172,48 @@ export function InvoicesPage({
     {
       id: 'amount',
       label: t('historyView.amount', locale),
-      render: (item) => <bdi className="whitespace-nowrap">{numbers.money(item.totalAmount)}</bdi>,
-    },
-    {
-      id: 'paid',
-      label: t('invoices.list.paid', locale),
-      render: (item) =>
-        item.paidAmount !== undefined ? (
-          <bdi className="whitespace-nowrap">{numbers.money(item.paidAmount)}</bdi>
-        ) : (
-          '—'
-        ),
+      render: (item) => (
+        <TableCellDetails
+          fields={[
+            {
+              id: 'amount',
+              label: t('historyView.amount', locale),
+              value: (
+                <bdi className="font-semibold whitespace-nowrap">
+                  {numbers.money(item.totalAmount)}
+                </bdi>
+              ),
+            },
+            {
+              id: 'paid',
+              label: t('invoices.list.paid', locale),
+              value:
+                item.paidAmount === undefined ? (
+                  '—'
+                ) : (
+                  <bdi className="whitespace-nowrap">{numbers.money(item.paidAmount)}</bdi>
+                ),
+            },
+          ]}
+        />
+      ),
     },
     {
       id: 'issued',
-      label: t('invoices.list.issued', locale),
-      render: (item) => time.format(item.issuedAt),
+      label: t('recordTable.activity', locale),
+      render: (item) => (
+        <TableCellDetails
+          fields={[
+            {
+              id: 'issued',
+              label: t('invoices.list.issued', locale),
+              value: time.format(item.issuedAt),
+            },
+            { id: 'due', label: t('invoices.list.due', locale), value: time.format(item.dueAt) },
+          ]}
+        />
+      ),
     },
-    { id: 'due', label: t('invoices.list.due', locale), render: (item) => time.format(item.dueAt) },
   ];
   return (
     <div className="mx-auto max-w-4xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -354,29 +381,38 @@ export function InvoicesPage({
             </div>
           }
           emptyView={
-            <div className="space-y-3 rounded-lg border border-dashed border-input bg-card p-8 text-center">
-              <p className="text-sm text-muted-foreground">
-                {t(
-                  filtered
-                    ? 'historyDates.empty'
-                    : unpaidOnly
-                      ? 'invoices.filter.unpaidEmpty'
-                      : 'invoices.empty',
-                  locale
-                )}
-              </p>
-              {filtered && onClearFilters ? (
-                <Button
-                  variant="outline"
-                  onClick={(event) => {
-                    event.currentTarget.closest('main')?.focus();
-                    onClearFilters();
-                  }}
-                >
-                  {t('historyFilters.clearAll', locale)}
-                </Button>
-              ) : null}
-            </div>
+            history.statusProbe && onShowAllStatuses ? (
+              <HistoryStatusEmpty
+                locale={locale}
+                probe={history.statusProbe}
+                showAll={onShowAllStatuses}
+                message={t(filtered ? 'historyDates.empty' : 'invoices.filter.unpaidEmpty', locale)}
+              />
+            ) : (
+              <div className="space-y-3 rounded-lg border border-dashed border-input bg-card p-8 text-center">
+                <p className="text-sm text-muted-foreground">
+                  {t(
+                    filtered
+                      ? 'historyDates.empty'
+                      : unpaidOnly
+                        ? 'invoices.filter.unpaidEmpty'
+                        : 'invoices.empty',
+                    locale
+                  )}
+                </p>
+                {filtered && onClearFilters ? (
+                  <Button
+                    variant="outline"
+                    onClick={(event) => {
+                      event.currentTarget.closest('main')?.focus();
+                      onClearFilters();
+                    }}
+                  >
+                    {t('historyFilters.clearAll', locale)}
+                  </Button>
+                ) : null}
+              </div>
+            )
           }
         >
           {view === 'table' ? (

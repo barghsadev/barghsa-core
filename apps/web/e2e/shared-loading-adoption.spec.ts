@@ -98,7 +98,8 @@ for (const locale of ['en', 'fa'] as const) {
       ).toBeVisible();
       await expect(skeleton).toHaveCount(0);
       await expect(main).not.toContainText(formatCurrencyIrr(amount, locale));
-      await expect(main.getByTestId('wallet-submit')).toBeDisabled();
+      await expect(main.getByTestId('wallet-submit')).toHaveCount(0);
+      await expect(main.locator('a[href^="/wallet/top-up/"]')).toHaveCount(0);
       expect(writes).toEqual([]);
       expect(balanceReads).toBe(1);
       await main.getByRole('button', { name: t('wallet.page.retry', locale), exact: true }).click();

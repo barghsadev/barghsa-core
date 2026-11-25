@@ -332,6 +332,20 @@ for (const key of SERVICE_WORKFLOW_KEYS)
     expect(notices[0].profile_id).toBeNull();
     expect(JSON.stringify(notices.map((n) => n.payload))).not.toContain('Private');
     expect(notices[0].payload.service_type_name_fa).not.toBe(key);
+    const recordRoute = key.startsWith('ticket_')
+      ? '/admin/tickets'
+      : key === 'consultation'
+        ? '/admin/consultations'
+        : key === 'electricity_order'
+          ? '/admin/electricity-orders'
+          : key === 'saving_order'
+            ? '/admin/saving-orders'
+            : null;
+    if (recordRoute)
+      expect(notices.map((notice) => notice.payload.link_route)).toEqual([
+        `${recordRoute}/${item.id}`,
+        `${recordRoute}/${item.id}`,
+      ]);
     expect(
       (await pool.query(`SELECT to_jsonb(r) AS value FROM ${item.table} r WHERE id=$1`, [item.id]))
         .rows

@@ -1,3 +1,10 @@
+import {
+  Eye as TableEyeIcon,
+  Pencil as TablePencilIcon,
+  Trash2 as TableTrash2Icon,
+  Upload as TableUploadIcon,
+} from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
 import { toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useDestructiveConfirm } from '../hooks/useDestructiveConfirm.js';
@@ -11,11 +18,21 @@ import {
 } from '../components/CatalogueEditorFeedback.js';
 import { LoadingStatus, Alert } from '@barghsa/ui';
 import { adminTosText } from './admin-tos-text.js';
+import {
+  RecordEditorActions,
+  recordEditorField,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { adminControlsText } from '@barghsa/i18n/admin-controls';
 import { useLocale } from '../hooks/useLocale.js';
+import { Link } from '@tanstack/react-router';
 import {
   Button,
+  Input,
+  Label,
+  ListRefreshButton,
+  buttonVariants,
   ListPage,
   Dialog,
   DialogContent,
@@ -73,7 +90,7 @@ import { isVersion, type TosVersion } from '../lib/content-catalogues.js';
  * Lists all TOS versions with create, edit, publish, view, and discard actions.
  * Read-only version detail view shows full Persian and English content.
  */
-type TosAddress = { editing: string | null; viewing: string | null };
+type TosAddress = { editing: string | null; viewing: string | null; publishing: string | null };
 export type TosWorkspace = TosAddress & {
   set: (patch: Partial<TosAddress>, replace?: boolean) => void;
 };
@@ -127,6 +144,13 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
   const requested = useRef<{ id: string | null; restore: boolean }>({ id: null, restore: false });
   const requestedEdit = workspace?.editing;
   const changeAddress = workspace?.set;
+  const requestedPublish = workspace?.publishing;
+  const exactId = workspace?.viewing ?? (requestedEdit !== 'new' ? requestedEdit : null);
+  const recordRoute = !!(workspace?.viewing || requestedEdit || requestedPublish);
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (recordRoute) heading.current?.focus({ preventScroll: true });
+  }, [recordRoute]);
   const [editRevision, setEditRevision] = useState<string | null>(null);
   const [editConflict, setEditConflict] = useState(false);
   const [discarding, setDiscarding] = useState(false);
@@ -155,6 +179,7 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
     ? (versions.find((version) => version.id === workspace.viewing) ?? null)
     : localView;
   const [detailLocale, setDetailLocale] = useState<'fa' | 'en'>(locale);
+  const openedPublication = useRef(false);
 
   const resetEditorBusy = useCallback(() => {
     busyTokens.current.save++;
@@ -163,7 +188,7 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
     editor.setValidationPending(false);
   }, [editor.setValidationPending]);
   const clearPrivate = useCallback(() => {
-    const hadEditor = address.current !== null;
+    openedPublication.current = false;
     address.current = null;
     requested.current = { id: null, restore: false };
     resetEditorBusy();
@@ -193,8 +218,7 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
     setPreviewReady(false);
     setViewVersion(null);
     setError({ key: 'denied' });
-    if (hadEditor || viewTrigger.current) changeAddress?.({ editing: null, viewing: null }, true);
-  }, [resetEditorBusy, resetTerms, changeAddress]);
+  }, [resetEditorBusy, resetTerms]);
   const scope = useCatalogueScope(clearPrivate);
   const confirmDestruction = useDestructiveConfirm(locale, scope.version);
   useEffect(() => {
@@ -232,21 +256,30 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
       setLoading(true);
       setHistoryReady(false);
       setError(null);
-      const path = '/api/admin/tos/versions';
-      const key = queryKeys.catalogue.list(
-        {
-          context: 'staff',
-          ownerId: accountId ?? scope.identity,
-          accountId,
-          revision: profileRevision,
-        },
-        new URLSearchParams({ endpoint: path, permission: String(epoch) })
-      );
+      const collection = '/api/admin/tos/versions';
+      const path = exactId ? `${collection}/${encodeURIComponent(exactId)}` : collection;
+      const owner = {
+        context: 'staff' as const,
+        ownerId: accountId ?? scope.identity,
+        accountId,
+        revision: profileRevision,
+      };
+      const key = exactId
+        ? queryKeys.catalogue.detail(owner, JSON.stringify([path, epoch]))
+        : queryKeys.catalogue.list(
+            owner,
+            new URLSearchParams({ endpoint: path, permission: String(epoch) })
+          );
       const data = await read(key, controller.signal, async (signal) => {
         const res = await fetch(path, { signal });
         if (res.status === 401 || res.status === 403) return null;
+        if (exactId && res.status === 404) throw new TosUiError('versionMissing');
         if (!res.ok) throw new TosUiError('historyFailed', res.status);
         const value: unknown = await res.json();
+        if (exactId) {
+          if (!isVersion(value) || value.id !== exactId) throw new TosUiError('invalidHistory');
+          return [value];
+        }
         if (
           !Array.isArray(value) ||
           !value.every(isVersion) ||
@@ -289,13 +322,21 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
         setPublishing(false);
         setPublishVersion(null);
         setPreviewReady(false);
+        if (requestedPublish) setError({ key: 'previewChanged' });
         refreshButton.current?.focus();
       }
       setVersions(data);
       setHistoryAccepted(true);
       setHistoryReady(true);
     } catch (err) {
-      if (current()) setError(displayError(err, 'historyFailed'));
+      if (current()) {
+        if (err instanceof TosUiError && err.key === 'versionMissing') {
+          setVersions([]);
+          setHistoryAccepted(false);
+          setShowEditor(false);
+        }
+        setError(displayError(err, 'historyFailed'));
+      }
     } finally {
       if (current()) setLoading(false);
       if (historyController.current === controller) historyController.current = null;
@@ -311,6 +352,8 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
     read,
     accountId,
     profileRevision,
+    exactId,
+    requestedPublish,
   ]);
 
   useEffect(() => {
@@ -399,8 +442,27 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
     address.current = requestedEdit;
     if (requestedEdit === 'new' && !savedDraft) openCreate(false);
     else if (savedDraft && savedDraft.id === requestedEdit) openEdit(savedDraft, false);
-    else if (requestedEdit !== null) setError({ key: 'draftChanged' });
+    else if (requestedEdit !== null)
+      setError({ key: requestedEdit === 'new' ? 'createConflict' : 'draftChanged' });
   }, [requestedEdit, historyReady, loading, savedDraft, scope.denied]);
+
+  function openPublication(version: TosVersion) {
+    publishBaseline.current = versions.find((v) => v.isActive)?.revision ?? null;
+    publishGeneration.current++;
+    setPublishVersion(version);
+    setPreviewLocale(locale);
+    setChangeType('minor');
+    setPreviewReady(false);
+    if (!version.revision) setError({ key: 'previewRequired' });
+  }
+
+  useLayoutEffect(() => {
+    if (!requestedPublish || openedPublication.current || !historyReady || loading || scope.denied)
+      return;
+    openedPublication.current = true;
+    if (savedDraft?.id === requestedPublish) openPublication(savedDraft);
+    else setError({ key: 'publishUnavailable' });
+  }, [requestedPublish, historyReady, loading, savedDraft, scope.denied]);
 
   async function writeVersion(path: string, init: RequestInit) {
     const controller = new AbortController();
@@ -523,9 +585,12 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
 
       if (!current()) return;
       setShowEditor(false);
-      navigateEditor(null, true);
       toast.success(confirmationText('recorded', locale));
-      await fetchVersions();
+      if (changeAddress) changeAddress({ viewing: body.id }, true);
+      else {
+        navigateEditor(null, true);
+        await fetchVersions();
+      }
     } catch (err) {
       if (current()) {
         if (requestSent) {
@@ -584,11 +649,14 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
       }
       if (result.status !== 'draft') {
         setShowEditor(false);
-        navigateEditor(null, true);
-        await fetchVersions();
+        if (changeAddress) changeAddress({ viewing: result.id }, true);
+        else {
+          navigateEditor(null, true);
+          await fetchVersions();
+        }
         return;
       }
-      openEdit(result);
+      openEdit(result, false);
       setError(null);
     } catch (error) {
       if (current()) setError(displayError(error, 'historyFailed'));
@@ -655,7 +723,8 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
       ]);
       setPublishVersion(null);
       toast.success(confirmationText('recorded', locale));
-      await fetchVersions();
+      if (changeAddress) changeAddress({ viewing: result.id }, true);
+      else await fetchVersions();
     } catch (err) {
       if (current()) {
         if (!(err instanceof TosUiError) || err.key === 'unconfirmedWrite') {
@@ -717,7 +786,8 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
       historyRequest.current++;
       setVersions((previous) => previous.filter((v) => v.id !== version.id));
       toast.success(confirmationText('recorded', locale));
-      await fetchVersions();
+      if (workspace?.viewing) changeAddress?.({}, true);
+      else await fetchVersions();
     } catch (err) {
       if (current()) {
         const unconfirmed =
@@ -733,21 +803,155 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
     }
   }
 
+  const recordTitle = requestedPublish
+    ? text.publishTitle
+    : requestedEdit === 'new'
+      ? text.createNewDraft
+      : requestedEdit
+        ? text.editDraft
+        : workspace?.viewing
+          ? text.versionTitle
+          : text.title;
+  const openRecord = (id: string, action?: 'edit' | 'publish') => ({
+    to: '/admin/tos/versions/$versionId/{-$action}' as const,
+    params: { versionId: id, action },
+  });
+  const activeVersion = versions.find((version) => version.isActive);
+  const versionDetails = viewVersion && (
+    <div className="space-y-5">
+      <dl className="grid gap-4 rounded-xl border bg-muted/30 p-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <dt className="text-muted-foreground">{text.status}</dt>
+          <dd className="font-medium">
+            {text[viewVersion.status]}
+            {viewVersion.isActive && (
+              <span className="ms-2 rounded-full bg-success-soft px-2 py-0.5 text-xs text-success">
+                {text.active}
+              </span>
+            )}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-muted-foreground">{text.change}</dt>
+          <dd className="font-medium">
+            {viewVersion.changeType ? text[viewVersion.changeType] : '—'}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-muted-foreground">{text.author}</dt>
+          <dd className="font-medium [overflow-wrap:anywhere]">
+            <bdi>{viewVersion.createdBy ?? '—'}</bdi>
+          </dd>
+        </div>
+        <div>
+          <dt className="text-muted-foreground">
+            {viewVersion.publishedAt ? text.published : text.created}
+          </dt>
+          <dd className="font-medium">
+            {time.format(viewVersion.publishedAt ?? viewVersion.createdAt)}
+          </dd>
+        </div>
+      </dl>
+      <section className="space-y-4 rounded-xl border bg-card p-4 sm:p-6">
+        <div className="flex flex-wrap gap-2">
+          {(['fa', 'en'] as const).map((language) => (
+            <Button
+              key={language}
+              type="button"
+              variant={detailLocale === language ? 'secondary' : 'outline'}
+              aria-pressed={detailLocale === language}
+              lang={language}
+              onClick={() => setDetailLocale(language)}
+            >
+              {language === 'fa' ? 'فارسی' : 'English'}
+            </Button>
+          ))}
+        </div>
+        <Suspense fallback={<p role="status">{text.previewLoading}</p>}>
+          <TosContent
+            content={detailLocale === 'fa' ? viewVersion.contentFa : viewVersion.contentEn}
+            language={detailLocale}
+          />
+        </Suspense>
+      </section>
+    </div>
+  );
+
   return (
-    <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div
+      className={recordRoute ? 'mx-auto w-full max-w-4xl space-y-4' : 'space-y-6'}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
       {time.notice}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold">{text.title}</h1>
-        {!hasDraft && !showEditor && (
-          <Button
-            onClick={() => openCreate()}
-            disabled={!historyReady || loading}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded"
+        <div className="min-w-0 space-y-2">
+          {recordRoute && (
+            <Link
+              to="/admin/tos"
+              className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+            >
+              {text.history}
+            </Link>
+          )}
+          <h1
+            ref={heading}
+            tabIndex={recordRoute ? -1 : undefined}
+            className="text-2xl font-semibold tracking-tight [overflow-wrap:anywhere] focus-visible:shadow-none! focus-visible:outline-hidden!"
           >
-            {text.newDraft}
-          </Button>
+            {recordTitle}
+            {workspace?.viewing && viewVersion && (
+              <>
+                {' '}
+                <bdi>{viewVersion.versionId}</bdi>
+              </>
+            )}
+          </h1>
+        </div>
+        {recordRoute && (
+          <ListRefreshButton
+            ref={refreshButton}
+            label={text.refresh}
+            onClick={() => (scope.denied ? scope.recover() : void fetchVersions())}
+          />
         )}
+        {!recordRoute &&
+          !hasDraft &&
+          !showEditor &&
+          (workspace && historyReady && !loading ? (
+            <Link {...openRecord('new')} className={buttonVariants({ className: 'min-h-11' })}>
+              {text.newDraft}
+            </Link>
+          ) : (
+            <Button
+              onClick={() => openCreate()}
+              disabled={!historyReady || loading}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded"
+            >
+              {text.newDraft}
+            </Button>
+          ))}
       </div>
+      {!recordRoute && workspace && activeVersion && !scope.denied && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-card p-4">
+          <div className="min-w-0 space-y-1">
+            <p className="text-sm text-muted-foreground">{text.currentVersion}</p>
+            <p className="font-medium">
+              <bdi>{activeVersion.versionId}</bdi>
+            </p>
+            {activeVersion.publishedAt && (
+              <p className="text-sm text-muted-foreground">
+                {time.format(activeVersion.publishedAt)}
+              </p>
+            )}
+          </div>
+          <Link
+            {...openRecord(activeVersion.id)}
+            className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+          >
+            {text.view}
+          </Link>
+        </div>
+      )}
 
       {!scope.denied && error && (
         <div
@@ -774,16 +978,15 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
       )}
 
       <ListPage>
-        <ListPage.Toolbar>
-          <Button
-            ref={refreshButton}
-            type="button"
-            variant="outline"
-            onClick={() => (scope.denied ? scope.recover() : void fetchVersions())}
-          >
-            {text.refresh}
-          </Button>
-        </ListPage.Toolbar>
+        {!recordRoute && (
+          <ListPage.Toolbar>
+            <ListRefreshButton
+              ref={refreshButton}
+              label={text.refresh}
+              onClick={() => (scope.denied ? scope.recover() : void fetchVersions())}
+            />
+          </ListPage.Toolbar>
+        )}
         <ListPage.Content
           loading={loading}
           error={!historyReady && !!error}
@@ -797,147 +1000,158 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
             <>
               {/* Draft editor */}
               {showEditor && (
-                <form
-                  noValidate
-                  onSubmit={handleSave}
-                  className="min-w-0 space-y-4 rounded-lg border border-border bg-card p-4 text-card-foreground sm:p-6"
-                >
-                  <h2 className="text-lg font-semibold">
-                    {editId ? text.editDraft : text.createNewDraft}
-                  </h2>
+                <form noValidate onSubmit={handleSave} className={recordEditorSurface}>
+                  <div className="space-y-2 px-4 py-4 sm:px-6">
+                    {!recordRoute && (
+                      <h2 className="text-lg font-semibold">
+                        {editId ? text.editDraft : text.createNewDraft}
+                      </h2>
+                    )}
 
-                  {catalogueRootMessage(editor.errors) && (
-                    <Alert variant="destructive">{catalogueRootMessage(editor.errors)}</Alert>
-                  )}
-                  {uncertainSave && <Alert variant="destructive">{formText('unverified')}</Alert>}
-                  {uncertainSave && historyReady && !loading && !hasDraft && !editId && (
-                    <Button type="button" variant="outline" onClick={() => openCreate()}>
-                      {formText('reset')}
-                    </Button>
-                  )}
-                  <fieldset
-                    disabled={saving || !historyReady || loading || editConflict || uncertainSave}
-                    className="min-w-0 space-y-4"
-                  >
-                    <div>
-                      <label
-                        htmlFor="admintospage-field-1"
-                        className="block text-sm font-medium text-foreground mb-1"
-                      >
-                        {text.versionId}{' '}
-                        <span aria-hidden="true" className="text-destructive">
-                          *
-                        </span>
-                      </label>
-                      <input
-                        {...editor.bind('versionId')}
-                        id="admintospage-field-1"
-                        type="text"
-                        value={versionId}
-                        onChange={(e) => editor.field('versionId')[1](e.target.value)}
-                        className="w-full border border-input rounded px-3 py-2"
-                        placeholder={text.versionExample}
-                        maxLength={50}
-                        required
-                        aria-required="true"
-                        disabled={!!editId || saving}
-                      />
-                      {editor.errors.versionId && (
-                        <p
-                          id={editor.errorId('versionId')}
-                          role="alert"
-                          className="text-sm text-destructive"
-                        >
-                          {editor.errors.versionId.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <Suspense fallback={<p role="status">{text.editorLoading}</p>}>
-                      <div className="grid min-w-0 items-start gap-5 xl:grid-cols-2">
-                        <div className="min-w-0 space-y-2">
-                          <p className="font-medium">
-                            {text.persian} <span aria-hidden="true">*</span>
+                    {catalogueRootMessage(editor.errors) && (
+                      <Alert variant="destructive">{catalogueRootMessage(editor.errors)}</Alert>
+                    )}
+                    {uncertainSave && <Alert variant="destructive">{formText('unverified')}</Alert>}
+                    {uncertainSave && historyReady && !loading && !hasDraft && !editId && (
+                      <Button type="button" variant="outline" onClick={() => openCreate()}>
+                        {formText('reset')}
+                      </Button>
+                    )}
+                    <fieldset
+                      disabled={saving || !historyReady || loading || editConflict || uncertainSave}
+                      className="m-0 min-w-0 space-y-3 border-0 p-0"
+                    >
+                      <div className={recordEditorField}>
+                        <Label htmlFor="admintospage-field-1">
+                          {text.versionId}{' '}
+                          <span aria-hidden="true" className="text-destructive">
+                            *
+                          </span>
+                        </Label>
+                        <Input
+                          {...editor.bind('versionId')}
+                          dir="ltr"
+                          autoComplete="off"
+                          id="admintospage-field-1"
+                          type="text"
+                          value={versionId}
+                          onChange={(e) => editor.field('versionId')[1](e.target.value)}
+                          className="max-w-40"
+                          placeholder={text.versionExample}
+                          maxLength={50}
+                          required
+                          aria-required="true"
+                          disabled={!!editId || saving}
+                        />
+                        {editor.errors.versionId && (
+                          <p
+                            id={editor.errorId('versionId')}
+                            role="alert"
+                            className="text-sm text-destructive"
+                          >
+                            {editor.errors.versionId.message}
                           </p>
-                          <TosRichText
-                            text={text}
-                            key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-fa`}
-                            binding={editor.bind('contentFa')}
-                            value={contentFa}
-                            onChange={setContentFa}
-                            label={text.persian}
-                            language="fa"
-                            disabled={
-                              saving || !historyReady || loading || editConflict || uncertainSave
-                            }
-                          />
-                          {editor.errors.contentFa && (
-                            <p
-                              id={editor.errorId('contentFa')}
-                              role="alert"
-                              className="text-sm text-destructive"
-                            >
-                              {editor.errors.contentFa.message}
-                            </p>
-                          )}
-                        </div>
-                        <div className="min-w-0 space-y-2">
-                          <p className="font-medium">
-                            {text.english} <span aria-hidden="true">*</span>
-                          </p>
-                          <TosRichText
-                            text={text}
-                            key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-en`}
-                            binding={editor.bind('contentEn')}
-                            value={contentEn}
-                            onChange={setContentEn}
-                            label={text.english}
-                            language="en"
-                            disabled={
-                              saving || !historyReady || loading || editConflict || uncertainSave
-                            }
-                          />
-                          {editor.errors.contentEn && (
-                            <p
-                              id={editor.errorId('contentEn')}
-                              role="alert"
-                              className="text-sm text-destructive"
-                            >
-                              {editor.errors.contentEn.message}
-                            </p>
-                          )}
-                        </div>
+                        )}
                       </div>
-                    </Suspense>
-                  </fieldset>
 
-                  {!editId && savedDraft && historyReady && (
-                    <div className="space-y-2">
-                      <p role="status">{text.createConflict}</p>
+                      <Suspense fallback={<p role="status">{text.editorLoading}</p>}>
+                        <div className="grid min-w-0 items-start gap-4 border-t pt-3 lg:grid-cols-2">
+                          <div className="min-w-0 space-y-2">
+                            <p className="text-sm font-semibold">
+                              {text.persian} <span aria-hidden="true">*</span>
+                            </p>
+                            <TosRichText
+                              text={text}
+                              key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-fa`}
+                              binding={editor.bind('contentFa')}
+                              value={contentFa}
+                              onChange={setContentFa}
+                              label={text.persian}
+                              language="fa"
+                              disabled={
+                                saving || !historyReady || loading || editConflict || uncertainSave
+                              }
+                            />
+                            {editor.errors.contentFa && (
+                              <p
+                                id={editor.errorId('contentFa')}
+                                role="alert"
+                                className="text-sm text-destructive"
+                              >
+                                {editor.errors.contentFa.message}
+                              </p>
+                            )}
+                          </div>
+                          <div className="min-w-0 space-y-2">
+                            <p className="text-sm font-semibold">
+                              {text.english} <span aria-hidden="true">*</span>
+                            </p>
+                            <TosRichText
+                              text={text}
+                              key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-en`}
+                              binding={editor.bind('contentEn')}
+                              value={contentEn}
+                              onChange={setContentEn}
+                              label={text.english}
+                              language="en"
+                              disabled={
+                                saving || !historyReady || loading || editConflict || uncertainSave
+                              }
+                            />
+                            {editor.errors.contentEn && (
+                              <p
+                                id={editor.errorId('contentEn')}
+                                role="alert"
+                                className="text-sm text-destructive"
+                              >
+                                {editor.errors.contentEn.message}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </Suspense>
+                    </fieldset>
+
+                    {!editId && savedDraft && historyReady && (
+                      <div className="space-y-2">
+                        <p role="status">{text.createConflict}</p>
+                        <Button
+                          type="button"
+                          disabled={saving}
+                          onClick={() => {
+                            openEdit(savedDraft);
+                            setError(null);
+                          }}
+                          className="rounded border px-4 py-2"
+                        >
+                          {text.openSavedDraft}
+                        </Button>
+                      </div>
+                    )}
+                    {(editConflict || uncertainSave) && editId && (
                       <Button
                         type="button"
-                        disabled={saving}
-                        onClick={() => {
-                          openEdit(savedDraft);
-                          setError(null);
-                        }}
+                        onClick={reloadDraft}
+                        disabled={saving || !historyReady || loading}
                         className="rounded border px-4 py-2"
                       >
-                        {text.openSavedDraft}
+                        {text.reloadDraft}
                       </Button>
-                    </div>
-                  )}
-                  {(editConflict || uncertainSave) && editId && (
+                    )}
+                  </div>
+                  <RecordEditorActions>
                     <Button
                       type="button"
-                      onClick={reloadDraft}
-                      disabled={saving || !historyReady || loading}
-                      className="rounded border px-4 py-2"
+                      onClick={() => {
+                        resetEditor();
+                        if (changeAddress && editId) changeAddress({ viewing: editId });
+                        else navigateEditor(null);
+                      }}
+                      disabled={saving}
+                      variant="outline"
                     >
-                      {text.reloadDraft}
+                      {text.cancel}
                     </Button>
-                  )}
-                  <div className="flex flex-wrap gap-3">
                     <CatalogueSaveButton
                       pending={saving}
                       label={saving ? text.saving : editId ? text.updateDraft : text.createDraft}
@@ -950,93 +1164,138 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
                         (!editId && hasDraft)
                       }
                     />
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        resetEditor();
-                        navigateEditor(null);
-                      }}
-                      disabled={saving}
-                      className="px-4 py-2 border border-input rounded hover:bg-muted"
-                    >
-                      {text.cancel}
-                    </Button>
-                  </div>
+                  </RecordEditorActions>
                 </form>
               )}
 
               {/* Publish dialog */}
               {publishVersion && (
-                <div
-                  role="region"
-                  aria-label={text.publishTitle}
-                  className="bg-warning-soft border border-warning/20 rounded-lg p-4 space-y-3"
-                >
-                  <h3 className="font-semibold">{text.publishTitle}</h3>
-                  <p className="text-sm text-muted-foreground">{text.materialHelp}</p>
-                  <div className="flex gap-2">
-                    {(['fa', 'en'] as const).map((language) => (
-                      <Button
-                        type="button"
-                        key={language}
-                        aria-pressed={previewLocale === language}
+                <div role="region" aria-label={text.publishTitle} className={recordEditorSurface}>
+                  <div className="space-y-3 px-4 py-4 sm:px-6">
+                    {!recordRoute && <h3 className="font-semibold">{text.publishTitle}</h3>}
+                    <dl className="grid grid-cols-2 gap-3 rounded-lg border bg-muted/30 p-3 text-sm">
+                      <div>
+                        <dt className="text-muted-foreground">{text.currentVersion}</dt>
+                        <dd>
+                          {activeVersion ? <bdi>{activeVersion.versionId}</bdi> : text.noCurrent}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">{text.proposedVersion}</dt>
+                        <dd>
+                          <bdi>{publishVersion.versionId}</bdi>
+                        </dd>
+                      </div>
+                    </dl>
+                    <p className="text-sm text-muted-foreground">{text.effectiveOnPublish}</p>
+                    <p className="text-sm text-muted-foreground">{text.materialHelp}</p>
+                    <div className="flex gap-2">
+                      {(['fa', 'en'] as const).map((language) => (
+                        <Button
+                          type="button"
+                          key={language}
+                          aria-pressed={previewLocale === language}
+                          disabled={publishing}
+                          onClick={() => setPreviewLocale(language)}
+                          variant="outline"
+                          className="aria-pressed:bg-muted"
+                        >
+                          {language === 'fa' ? text.persian : text.english}
+                        </Button>
+                      ))}
+                    </div>
+                    <Suspense fallback={<p role="status">{text.previewLoading}</p>}>
+                      <TosPreview
+                        text={text}
+                        current={
+                          (previewLocale === 'fa'
+                            ? versions.find((v) => v.isActive)?.contentFa
+                            : versions.find((v) => v.isActive)?.contentEn) ?? ''
+                        }
+                        proposed={
+                          previewLocale === 'fa'
+                            ? publishVersion.contentFa
+                            : publishVersion.contentEn
+                        }
+                        language={previewLocale}
+                        onReady={markPreviewReady}
+                      />
+                    </Suspense>
+                    <label className="touch-label flex cursor-pointer items-center gap-2 rounded-lg bg-muted/40 px-3 py-2 text-sm font-medium">
+                      <input
+                        type="checkbox"
+                        checked={changeType === 'major'}
                         disabled={publishing}
-                        onClick={() => setPreviewLocale(language)}
-                        variant="outline"
-                        className="rounded border px-3 py-1 aria-pressed:bg-muted"
-                      >
-                        {language === 'fa' ? text.persian : text.english}
-                      </Button>
-                    ))}
+                        onChange={(event) =>
+                          setChangeType(event.target.checked ? 'major' : 'minor')
+                        }
+                      />
+                      {text.materialChange}
+                    </label>
                   </div>
-                  <Suspense fallback={<p role="status">{text.previewLoading}</p>}>
-                    <TosPreview
-                      text={text}
-                      current={
-                        (previewLocale === 'fa'
-                          ? versions.find((v) => v.isActive)?.contentFa
-                          : versions.find((v) => v.isActive)?.contentEn) ?? ''
-                      }
-                      proposed={
-                        previewLocale === 'fa' ? publishVersion.contentFa : publishVersion.contentEn
-                      }
-                      language={previewLocale}
-                      onReady={markPreviewReady}
-                    />
-                  </Suspense>
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={changeType === 'major'}
-                      disabled={publishing}
-                      onChange={(event) => setChangeType(event.target.checked ? 'major' : 'minor')}
-                    />
-                    {text.materialChange}
-                  </label>
-                  <div className="flex flex-wrap gap-3">
-                    <Button
-                      onClick={handlePublish}
-                      disabled={publishing || !historyReady || loading || !previewReady}
-                      className="px-4 py-2 bg-primary text-primary-foreground rounded disabled:opacity-50"
-                    >
-                      {publishing ? text.publishing : text.publish}
-                    </Button>
+                  <RecordEditorActions>
                     <Button
                       disabled={publishing}
                       onClick={() => {
                         setPublishVersion(null);
-                        void fetchVersions();
+                        if (changeAddress) changeAddress({ viewing: publishVersion.id });
+                        else void fetchVersions();
                       }}
-                      className="px-4 py-2 border border-input rounded hover:bg-muted"
+                      type="button"
+                      variant="outline"
                     >
                       {text.cancel}
                     </Button>
-                  </div>
+                    <Button
+                      onClick={handlePublish}
+                      disabled={publishing || !historyReady || loading || !previewReady}
+                      type="button"
+                    >
+                      {publishing ? text.publishing : text.publish}
+                    </Button>
+                  </RecordEditorActions>
                 </div>
               )}
 
-              {/* Version detail modal (T-09.03.02) */}
-              {viewVersion && (
+              {workspace?.viewing && viewVersion && (
+                <div className="space-y-4">
+                  {viewVersion.status === 'published' && (
+                    <Link
+                      to="/terms/$version"
+                      params={{ version: viewVersion.id }}
+                      search={{ lang: detailLocale }}
+                      className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                    >
+                      {text.publicVersion}
+                    </Link>
+                  )}
+                  {viewVersion.status === 'draft' && historyReady && !loading && (
+                    <div className="flex flex-wrap gap-2">
+                      <Link
+                        {...openRecord(viewVersion.id, 'edit')}
+                        className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                      >
+                        {text.editDraft}
+                      </Link>
+                      <Link
+                        {...openRecord(viewVersion.id, 'publish')}
+                        className={buttonVariants({ className: 'min-h-11' })}
+                      >
+                        {text.publish}
+                      </Link>
+                      <Button
+                        variant="outline"
+                        disabled={discarding}
+                        onClick={() => handleDiscard(viewVersion)}
+                      >
+                        {text.discard}
+                      </Button>
+                    </div>
+                  )}
+                  {versionDetails}
+                </div>
+              )}
+              {!workspace && viewVersion && (
                 <Dialog
                   open
                   onOpenChange={(open) => {
@@ -1053,238 +1312,241 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
                         : refreshButton.current
                     }
                     dir={locale === 'fa' ? 'rtl' : 'ltr'}
-                    className="bg-card text-card-foreground rounded-lg shadow-xl sm:max-w-3xl w-full max-h-[85vh] flex flex-col p-0 gap-0"
+                    className="max-h-[85dvh] overflow-y-auto sm:max-w-3xl"
                   >
-                    {time.notice}
-                    {/* Header */}
-                    <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-                      <div>
-                        <DialogTitle className="text-lg font-semibold">
-                          {text.versionTitle} {viewVersion.versionId}
-                        </DialogTitle>
-                        <p className="text-sm text-muted-foreground">
-                          {text[viewVersion.status]} ·
-                          {viewVersion.changeType && (
-                            <span
-                              className={`ms-1 inline-block px-2 py-0.5 text-xs rounded ${
-                                viewVersion.changeType === 'major'
-                                  ? 'bg-danger-soft text-destructive'
-                                  : 'bg-muted text-foreground'
-                              }`}
-                            >
-                              {text[viewVersion.changeType]}
-                            </span>
-                          )}
-                          {viewVersion.isActive && (
-                            <span className="ms-2 text-success text-sm font-medium">
-                              ✓ {text.active}
-                            </span>
-                          )}
-                        </p>
-                      </div>
+                    <div className="flex items-center justify-between gap-2">
+                      <DialogTitle>
+                        {text.versionTitle} <bdi>{viewVersion.versionId}</bdi>
+                      </DialogTitle>
                       <Button
+                        type="button"
                         onClick={closeView}
                         aria-label={text.close}
                         variant="ghost"
-                        className="text-muted-foreground text-xl leading-none"
                       >
                         ✕
                       </Button>
                     </div>
-
-                    {/* Metadata */}
-                    <div className="px-6 py-3 bg-muted/40 border-b border-border grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">{text.versionId}:</span>{' '}
-                        <span className="font-medium">{viewVersion.versionId}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">{text.author}:</span>{' '}
-                        <span className="font-medium">{viewVersion.createdBy ?? '—'}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">{text.published}:</span>{' '}
-                        <span className="font-medium">{time.format(viewVersion.publishedAt)}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">{text.created}:</span>{' '}
-                        <span className="font-medium">{time.format(viewVersion.createdAt)}</span>
-                      </div>
-                    </div>
-
-                    {/* Locale toggle */}
-                    <div className="px-6 py-3 border-b border-border flex gap-2">
-                      <Button
-                        onClick={() => setDetailLocale('fa')}
-                        className={`px-3 py-1 text-sm rounded ${
-                          detailLocale === 'fa'
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-muted text-foreground hover:bg-accent'
-                        }`}
-                      >
-                        فارسی
-                      </Button>
-                      <Button
-                        onClick={() => setDetailLocale('en')}
-                        className={`px-3 py-1 text-sm rounded ${
-                          detailLocale === 'en'
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-muted text-foreground hover:bg-accent'
-                        }`}
-                      >
-                        English
-                      </Button>
-                    </div>
-
-                    {/* Content */}
-                    <div className="px-6 py-4 overflow-y-auto flex-1">
-                      <Suspense fallback={<p role="status">{text.previewLoading}</p>}>
-                        <TosContent
-                          content={
-                            detailLocale === 'fa' ? viewVersion.contentFa : viewVersion.contentEn
-                          }
-                          language={detailLocale}
-                        />
-                      </Suspense>
-                    </div>
+                    {versionDetails}
                   </DialogContent>
                 </Dialog>
               )}
+              {requestedEdit === 'new' && savedDraft && !showEditor && historyReady && (
+                <Link
+                  {...openRecord(savedDraft.id, 'edit')}
+                  className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                >
+                  {text.editDraft}
+                </Link>
+              )}
+              {requestedPublish && !publishVersion && historyReady && (
+                <Link
+                  {...openRecord(requestedPublish)}
+                  className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                >
+                  {text.view}
+                </Link>
+              )}
 
-              <OperationalQueueTable
-                locale={locale}
-                rows={versions}
-                caption={text.history}
-                scrollLabel={text.history}
-                nameHeader={text.version}
-                renderName={(v) => <TextCell value={v.versionId} />}
-                fields={[
-                  {
-                    id: 'status',
-                    label: text.status,
-                    render: (v) => (
-                      <span
-                        className={`inline-block px-2 py-0.5 text-xs rounded ${
-                          v.status === 'draft'
-                            ? 'bg-warning-soft text-warning'
-                            : 'bg-success-soft text-success'
-                        }`}
+              {!recordRoute && (
+                <OperationalQueueTable
+                  locale={locale}
+                  rows={versions}
+                  caption={text.history}
+                  scrollLabel={text.history}
+                  nameHeader={text.version}
+                  renderName={(v) =>
+                    workspace && historyReady && !loading ? (
+                      <Link
+                        {...openRecord(v.id)}
+                        className="font-semibold text-primary underline-offset-4 hover:underline"
                       >
-                        {text[v.status]}
-                      </span>
-                    ),
-                  },
-                  {
-                    id: 'change',
-                    label: text.change,
-                    render: (v) => (
-                      <>
-                        {v.status === 'published' ? (
-                          <span
-                            className={`inline-block px-2 py-0.5 text-xs rounded ${
-                              v.changeType === 'major'
-                                ? 'bg-danger-soft text-destructive'
-                                : 'bg-muted text-foreground'
-                            }`}
+                        <bdi>{v.versionId}</bdi>
+                      </Link>
+                    ) : (
+                      <TextCell value={v.versionId} />
+                    )
+                  }
+                  fields={[
+                    {
+                      id: 'status',
+                      label: text.status,
+                      render: (v) => (
+                        <span
+                          className={`inline-block px-2 py-0.5 text-xs rounded ${
+                            v.status === 'draft'
+                              ? 'bg-warning-soft text-warning'
+                              : 'bg-success-soft text-success'
+                          }`}
+                        >
+                          {text[v.status]}
+                        </span>
+                      ),
+                    },
+                    {
+                      id: 'change',
+                      label: text.change,
+                      render: (v) => (
+                        <>
+                          {v.status === 'published' ? (
+                            <span
+                              className={`inline-block px-2 py-0.5 text-xs rounded ${
+                                v.changeType === 'major'
+                                  ? 'bg-danger-soft text-destructive'
+                                  : 'bg-muted text-foreground'
+                              }`}
+                            >
+                              {v.changeType ? text[v.changeType] : text.notRecorded}
+                            </span>
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
+                          )}
+                        </>
+                      ),
+                    },
+                    {
+                      id: 'active',
+                      label: text.active,
+                      render: (v) => (
+                        <>
+                          {v.isActive ? (
+                            <span className="text-success text-sm font-medium">
+                              ✓ {text.active}
+                            </span>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">—</span>
+                          )}
+                        </>
+                      ),
+                    },
+                    {
+                      id: 'published',
+                      label: text.published,
+                      render: (v) => (
+                        <DateCell value={v.publishedAt} format={() => time.format(v.publishedAt)} />
+                      ),
+                    },
+                    {
+                      id: 'author',
+                      label: text.author,
+                      render: (v) => (
+                        <span dir="ltr" className="font-mono text-xs">
+                          <TextCell value={v.createdBy} />
+                        </span>
+                      ),
+                    },
+                  ]}
+                  actionHeader={text.actions}
+                  renderActions={(v) => (
+                    <div className="flex flex-wrap gap-2">
+                      {workspace && historyReady && !loading ? (
+                        <Link
+                          {...openRecord(v.id)}
+                          className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                          data-table-action-tooltip={text.view}
+                        >
+                          <TableActionIcon icon={TableEyeIcon}>{text.view}</TableActionIcon>
+                        </Link>
+                      ) : (
+                        <Button
+                          onClick={(event) => openView(v, event.currentTarget)}
+                          variant="outline"
+                          disabled={!historyReady || loading}
+                          data-table-action-tooltip={text.view}
+                        >
+                          <TableActionIcon icon={TableEyeIcon}>{text.view}</TableActionIcon>
+                        </Button>
+                      )}
+                      {v.status === 'draft' && (
+                        <>
+                          {workspace && historyReady && !loading ? (
+                            <>
+                              <Link
+                                {...openRecord(v.id, 'edit')}
+                                className={buttonVariants({
+                                  variant: 'outline',
+                                  className: 'min-h-11',
+                                })}
+                                data-table-action-tooltip={text.edit}
+                              >
+                                <TableActionIcon icon={TablePencilIcon}>
+                                  {text.edit}
+                                </TableActionIcon>
+                              </Link>
+                              <Link
+                                {...openRecord(v.id, 'publish')}
+                                className={buttonVariants({
+                                  variant: 'outline',
+                                  className: 'min-h-11',
+                                })}
+                                data-table-action-tooltip={text.publish}
+                              >
+                                <TableActionIcon icon={TableUploadIcon}>
+                                  {text.publish}
+                                </TableActionIcon>
+                              </Link>
+                            </>
+                          ) : (
+                            <>
+                              <Button
+                                onClick={() => openEdit(v)}
+                                disabled={
+                                  !historyReady ||
+                                  loading ||
+                                  showEditor ||
+                                  !!publishVersion ||
+                                  discarding
+                                }
+                                variant="outline"
+                                data-table-action-tooltip={text.edit}
+                              >
+                                <TableActionIcon icon={TablePencilIcon}>
+                                  {text.edit}
+                                </TableActionIcon>
+                              </Button>
+                              <Button
+                                onClick={() => openPublication(v)}
+                                disabled={
+                                  !historyReady ||
+                                  loading ||
+                                  showEditor ||
+                                  !!publishVersion ||
+                                  discarding
+                                }
+                                variant="outline"
+                                data-table-action-tooltip={text.publish}
+                              >
+                                <TableActionIcon icon={TableUploadIcon}>
+                                  {text.publish}
+                                </TableActionIcon>
+                              </Button>
+                            </>
+                          )}
+                          <Button
+                            onClick={() => handleDiscard(v)}
+                            disabled={
+                              !historyReady ||
+                              loading ||
+                              showEditor ||
+                              !!publishVersion ||
+                              discarding
+                            }
+                            variant="outline"
+                            className="text-destructive hover:underline disabled:opacity-40"
+                            data-table-action-tooltip={text.discard}
                           >
-                            {v.changeType ? text[v.changeType] : text.notRecorded}
-                          </span>
-                        ) : (
-                          <span className="text-muted-foreground">—</span>
-                        )}
-                      </>
-                    ),
-                  },
-                  {
-                    id: 'active',
-                    label: text.active,
-                    render: (v) => (
-                      <>
-                        {v.isActive ? (
-                          <span className="text-success text-sm font-medium">✓ {text.active}</span>
-                        ) : (
-                          <span className="text-muted-foreground text-sm">—</span>
-                        )}
-                      </>
-                    ),
-                  },
-                  {
-                    id: 'published',
-                    label: text.published,
-                    render: (v) => (
-                      <DateCell value={v.publishedAt} format={() => time.format(v.publishedAt)} />
-                    ),
-                  },
-                  {
-                    id: 'author',
-                    label: text.author,
-                    render: (v) => (
-                      <span dir="ltr" className="font-mono text-xs">
-                        <TextCell value={v.createdBy} />
-                      </span>
-                    ),
-                  },
-                ]}
-                actionHeader={text.actions}
-                renderActions={(v) => (
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      onClick={(event) => openView(v, event.currentTarget)}
-                      variant="outline"
-                      className="text-foreground hover:underline"
-                    >
-                      {text.view}
-                    </Button>
-                    {v.status === 'draft' && (
-                      <>
-                        <Button
-                          onClick={() => openEdit(v)}
-                          disabled={
-                            !historyReady || loading || showEditor || !!publishVersion || discarding
-                          }
-                          variant="outline"
-                          className="text-foreground hover:underline disabled:opacity-40"
-                        >
-                          {text.edit}
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            publishBaseline.current =
-                              versions.find((v) => v.isActive)?.revision ?? null;
-                            publishGeneration.current++;
-                            setPublishVersion(v);
-                            setPreviewLocale(locale);
-                            setChangeType('minor');
-                            setPreviewReady(false);
-                            if (!v.revision) setError({ key: 'previewRequired' });
-                          }}
-                          disabled={
-                            !historyReady || loading || showEditor || !!publishVersion || discarding
-                          }
-                          variant="outline"
-                          className="text-foreground hover:underline disabled:opacity-40"
-                        >
-                          {text.publish}
-                        </Button>
-                        <Button
-                          onClick={() => handleDiscard(v)}
-                          disabled={
-                            !historyReady || loading || showEditor || !!publishVersion || discarding
-                          }
-                          variant="outline"
-                          className="text-destructive hover:underline disabled:opacity-40"
-                        >
-                          {text.discard}
-                        </Button>
-                      </>
-                    )}
-                  </div>
-                )}
-                cardHeading="h2"
-                loading={loading}
-                emptyMessage={text.empty}
-                tableClassName="min-w-[64rem]"
-              />
+                            <TableActionIcon icon={TableTrash2Icon}>{text.discard}</TableActionIcon>
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  )}
+                  cardHeading="h2"
+                  loading={loading}
+                  emptyMessage={text.empty}
+                  tableClassName="min-w-[64rem]"
+                />
+              )}
             </>
           )}
         </ListPage.Content>

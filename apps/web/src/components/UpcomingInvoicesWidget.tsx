@@ -71,93 +71,87 @@ export function UpcomingInvoicesWidget({
       {invoices.length === 0 ? (
         <p className="text-sm text-muted-foreground">{dashboardText('invoice.empty', locale)}</p>
       ) : (
-        <div className="@container">
-          <div
-            className={
-              payableAmount > 0n
-                ? 'grid gap-3 @min-[30rem]:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]'
-                : undefined
-            }
-          >
-            {payableAmount > 0n && (
-              <dl className="self-start rounded-lg bg-muted px-3 py-2">
-                <dt className="text-sm text-muted-foreground">
-                  {dashboardText('invoice.payableInList', locale)}
-                </dt>
-                <dd className="mt-1 text-lg font-semibold wrap-anywhere tabular-nums">
-                  {formatCurrencyIrr(payableAmount, locale)}
-                </dd>
-              </dl>
-            )}
-            <ul className="divide-y">
-              {invoices.map((invoice) => {
-                const days =
-                  invoice.dueAt && time.status === 'ready'
-                    ? daysUntil(invoice.dueAt, time.timezone)
-                    : null;
-                const urgency =
-                  days === null
-                    ? null
-                    : days < 0
-                      ? dashboardText('invoice.overdue', locale)
-                      : days === 0
-                        ? dashboardText('invoice.dueToday', locale)
-                        : dashboardText('invoice.daysRemaining', locale).replace(
-                            '{count}',
-                            new Intl.NumberFormat(locale).format(days)
-                          );
-                const canPay = payable(invoice);
-                const action = dashboardText(canPay ? 'invoice.payNow' : 'invoice.view', locale);
-                return (
-                  <li
-                    key={invoice.invoiceId}
-                    className="flex flex-wrap items-center justify-between gap-4 py-4 first:pt-0 last:pb-0"
+        <div className="@container space-y-3">
+          {payableAmount > 0n && (
+            <dl className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 rounded-lg bg-muted px-3 py-2">
+              <dt className="text-sm text-muted-foreground">
+                {dashboardText('invoice.payableInList', locale)}
+              </dt>
+              <dd className="text-base font-semibold wrap-anywhere tabular-nums">
+                {formatCurrencyIrr(payableAmount, locale)}
+              </dd>
+            </dl>
+          )}
+          <ul className="divide-y">
+            {invoices.map((invoice) => {
+              const days =
+                invoice.dueAt && time.status === 'ready'
+                  ? daysUntil(invoice.dueAt, time.timezone)
+                  : null;
+              const urgency =
+                days === null
+                  ? null
+                  : days < 0
+                    ? dashboardText('invoice.overdue', locale)
+                    : days === 0
+                      ? dashboardText('invoice.dueToday', locale)
+                      : dashboardText('invoice.daysRemaining', locale).replace(
+                          '{count}',
+                          new Intl.NumberFormat(locale).format(days)
+                        );
+              const canPay = payable(invoice);
+              const action = dashboardText(canPay ? 'invoice.payNow' : 'invoice.view', locale);
+              return (
+                <li
+                  key={invoice.invoiceId}
+                  className="grid grid-cols-2 items-center gap-x-4 gap-y-2 py-3 first:pt-1 last:pb-1 @min-[38rem]:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1.3fr)_auto] @min-[38rem]:gap-x-6"
+                >
+                  <p className="min-w-0 text-sm font-medium wrap-anywhere">
+                    {dashboardText('invoice.label', locale).replace(
+                      '{id}',
+                      invoice.invoiceId.slice(0, 8).toUpperCase()
+                    )}
+                  </p>
+                  <p className="min-w-0 text-base font-semibold tabular-nums">
+                    <bdi className="wrap-anywhere">
+                      {formatCurrencyIrr(invoice.remainingAmount, locale)}
+                    </bdi>
+                  </p>
+                  <div className="min-w-0 space-y-1.5">
+                    <p className="text-sm text-muted-foreground">
+                      {dashboardText('invoice.dueDate', locale)}:{' '}
+                      {time.format(invoice.dueAt, {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </p>
+                    {urgency && (
+                      <p
+                        className={
+                          days !== null && days <= 0
+                            ? 'text-sm font-medium text-destructive'
+                            : days !== null && days <= 3
+                              ? 'text-sm font-medium text-amber-700 dark:text-amber-300'
+                              : 'text-sm text-muted-foreground'
+                        }
+                      >
+                        {urgency}
+                      </p>
+                    )}
+                  </div>
+                  <Link
+                    to="/invoices/$invoiceId"
+                    params={{ invoiceId: invoice.invoiceId }}
+                    className="inline-flex min-h-11 items-center justify-center justify-self-end rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    aria-label={`${action} · ${invoice.invoiceId}`}
                   >
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium">
-                        {dashboardText('invoice.label', locale).replace(
-                          '{id}',
-                          invoice.invoiceId.slice(0, 8).toUpperCase()
-                        )}
-                      </p>
-                      <p className="text-base font-semibold tabular-nums">
-                        {formatCurrencyIrr(invoice.remainingAmount, locale)}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {dashboardText('invoice.dueDate', locale)}:{' '}
-                        {time.format(invoice.dueAt, {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                        })}
-                      </p>
-                      {urgency && (
-                        <p
-                          className={
-                            days !== null && days <= 0
-                              ? 'text-sm font-medium text-destructive'
-                              : days !== null && days <= 3
-                                ? 'text-sm font-medium text-amber-700 dark:text-amber-300'
-                                : 'text-sm text-muted-foreground'
-                          }
-                        >
-                          {urgency}
-                        </p>
-                      )}
-                    </div>
-                    <Link
-                      to="/invoices/$invoiceId"
-                      params={{ invoiceId: invoice.invoiceId }}
-                      className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                      aria-label={`${action} · ${invoice.invoiceId}`}
-                    >
-                      {action}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+                    {action}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       )}
     </Frame>

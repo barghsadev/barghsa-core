@@ -119,6 +119,7 @@ for (const locale of ['en', 'fa'] as const) {
           const reads = statusReads;
           await page.clock.fastForward(15_001);
           await expect(dialog.getByRole('alert')).toHaveText(t('tos.modal.unconfirmed', locale));
+          await expect(dialog).toContainText('Displayed terms');
           await expect(accept).toBeDisabled();
           await expect(success).toHaveCount(0);
           await dialog.getByRole('button', { name: t('tos.banner.retry', locale) }).click();
@@ -153,6 +154,7 @@ for (const locale of ['en', 'fa'] as const) {
         await expect(page.getByText(t('tos.modal.error', locale), { exact: true })).toHaveCount(0);
       } else {
         await expect(dialog).toContainText(t('tos.modal.error', locale));
+        await expect(dialog).toContainText('Displayed terms');
         await expect(accept).toBeDisabled();
         await dialog
           .getByRole('button', { name: t('tos.modal.close', locale), exact: true })

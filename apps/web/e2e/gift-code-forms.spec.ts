@@ -58,7 +58,7 @@ async function setup(page: Page, locale: 'en' | 'fa') {
     page.getByRole('dialog').getByRole('button', { name: t('team.confirm', locale), exact: true });
   await page.goto('/admin/gift-codes');
   await expect(
-    page.getByRole('button', { name: `${word('edit')} CODE00`, exact: true })
+    page.getByRole('link', { name: `${word('edit')} CODE00`, exact: true })
   ).toBeVisible();
   return {
     word,
@@ -76,9 +76,7 @@ async function inspect(page: Page, locale: string, info: TestInfo, name: string)
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   if (locale === 'fa' && info.project.name === 'chromium') {
     await page.setViewportSize({ width: 1600, height: 1000 });
-    await page
-      .getByRole('heading', { name: tGift('admin.gifts.title', 'fa'), exact: true })
-      .scrollIntoViewIfNeeded();
+    await page.getByRole('main').getByRole('heading', { level: 1 }).scrollIntoViewIfNeeded();
     await page.screenshot({
       path: info.outputPath(`${name}-fa.png`),
       fullPage: true,
@@ -138,7 +136,7 @@ for (const locale of ['en', 'fa'] as const) {
       }
     );
     await page.goto('/admin/gift-codes');
-    await page.getByRole('button', { name: word('add'), exact: true }).click();
+    await page.getByRole('link', { name: word('add'), exact: true }).click();
     await page.locator('#gift-eligibility').selectOption('profile');
     const picker = page.getByRole('group', { name: word('profiles'), exact: true });
     const empty = picker.getByText(word('noProfiles'), { exact: true });
@@ -166,9 +164,12 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(choice).toBeChecked();
     expect(selectedReads).toEqual([profile.id, profile.id]);
     expect(searches).toEqual(['']);
+    await page.locator('#gift-code').fill('PROFILE-25');
+    await page.locator('#gift-value').fill('10000');
     await search.fill('failed term');
-    await picker.getByRole('button', { name: word('search'), exact: true }).press('Enter');
+    await search.press('Enter');
     await expect.poll(() => failed !== undefined).toBe(true);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(picker.getByRole('status')).toHaveText(word('loading'));
     await failed!.fulfill({ status: 503, json: { message: 'Private lookup error' } });
     await expect(alert).toContainText(word('profileError'));
@@ -180,12 +181,15 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(alert).toHaveCount(0);
     await expect(picker.getByRole('status')).toHaveCount(0);
     await expect(choice).toBeChecked();
+    await expect(picker.getByRole('heading', { name: word('chosenProfiles') })).toBeVisible();
+    await expect(empty).toBeVisible();
     await expect(search).toHaveValue('unapplied search');
     expect(searches).toEqual(['', 'failed term', 'failed term']);
     expect(selectedReads).toEqual([profile.id, profile.id]);
     await choice.press('Space');
     await expect(choice).toHaveCount(0);
     await expect(empty).toBeVisible();
+    await expect(search).toBeFocused();
     await expect(picker.getByText(/Private .*lookup error/)).toHaveCount(0);
     expect(writes).toEqual([]);
   });
@@ -211,7 +215,7 @@ for (const locale of ['en', 'fa'] as const) {
         await route.fulfill({ status: 201, json: result });
       }
     );
-    await page.getByRole('button', { name: word('add'), exact: true }).click();
+    await page.getByRole('link', { name: word('add'), exact: true }).click();
     const form = page.getByRole('form', { name: word('editor'), exact: true });
     const code = page.locator('#gift-code'),
       value = page.locator('#gift-value');
@@ -281,16 +285,14 @@ for (const locale of ['en', 'fa'] as const) {
     release();
     await expect(page.getByText(word('saved'), { exact: true })).toBeVisible();
     await expect(form).toHaveCount(0);
-    await expect(
-      page.getByRole('button', { name: `${word('edit')} EXACT`, exact: true })
-    ).toBeEnabled();
+    await expect(page.getByRole('link', { name: word('edit'), exact: true })).toBeEnabled();
     await inspect(page, locale, info, 'creation');
   });
   test(`gift editing rejects percentage rounding and preserves an unconfirmed draft (${locale})`, async ({
     page,
   }, info) => {
     const { word, confirm, save, fail } = await setup(page, locale);
-    await page.getByRole('button', { name: `${word('edit')} CODE00`, exact: true }).click();
+    await page.getByRole('link', { name: `${word('edit')} CODE00`, exact: true }).click();
     const form = page.getByRole('form', { name: word('editor'), exact: true });
     await page.locator('#gift-type').selectOption('percentage');
     const value = page.locator('#gift-value'),
@@ -301,7 +303,9 @@ for (const locale of ['en', 'fa'] as const) {
     await form.getByRole('button', { name: word('save'), exact: true }).click();
     await expect(value).toHaveAttribute('aria-invalid', 'true');
     await expect(value).toBeFocused();
+    await expect(form.getByText(word('capSubtotal'))).toHaveCount(0);
     await value.fill('۱۲٫۳۴');
+    await expect(form.getByText(word('capSubtotal'))).toBeVisible();
     await cap.fill('۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳');
     await page.locator('#gift-eligibility').selectOption('profile');
     await form.getByRole('button', { name: word('save'), exact: true }).click();
@@ -350,19 +354,15 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(value).toBeDisabled();
     expect(writes).toHaveLength(2);
     fail(false);
-    await page.getByRole('button', { name: word('refresh'), exact: true }).click();
+    await page.getByRole('button', { name: word('refreshStats'), exact: true }).click();
     await expect(resume).toBeEnabled();
     expect(writes).toHaveLength(2);
     await resume.click();
     await expect(value).toBeEnabled();
     await form.getByRole('button', { name: word('save'), exact: true }).click();
     await confirm().click();
-    await expect(
-      page
-        .getByRole('main')
-        .getByRole('status')
-        .filter({ hasText: word('saved') })
-    ).toHaveText(word('saved'));
+    await expect(page.getByText(word('saved'), { exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'CODE00', exact: true })).toBeVisible();
     expect(writes).toHaveLength(3);
     expect(writes[2]).toMatchObject({
       discountType: 'percentage',

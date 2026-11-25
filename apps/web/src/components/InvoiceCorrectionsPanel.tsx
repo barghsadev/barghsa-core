@@ -1,8 +1,17 @@
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
-import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { Button, Field, FieldLabel, Input, PageLoading } from '@barghsa/ui';
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from 'react';
+import { Button, Field, FieldLabel, Input, ListRefreshButton, PageLoading } from '@barghsa/ui';
 import { tInvoiceCorrections as t } from '@barghsa/i18n/invoice-corrections';
 import { t as appText } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
@@ -14,6 +23,11 @@ import {
   RefundFormAlert as InvoiceFormAlert,
 } from './RefundFormFeedback.js';
 import type { InvoiceCorrectionSource } from './ManualInvoiceForm.js';
+import {
+  RecordEditorSection,
+  recordEditorGrid,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 const ManualInvoiceForm = lazy(() => import('./ManualInvoiceForm.js'));
 
 function isSource(value: unknown, id: string): value is InvoiceCorrectionSource {
@@ -46,21 +60,36 @@ function isSource(value: unknown, id: string): value is InvoiceCorrectionSource 
     )
   );
 }
-export default function InvoiceCorrectionsPanel() {
+export default function InvoiceCorrectionsPanel(
+  props: Parameters<typeof OwnedInvoiceCorrectionsPanel>[0] = {}
+) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  return <OwnedInvoiceCorrectionsPanel key={JSON.stringify([actor, revision])} />;
+  return (
+    <OwnedInvoiceCorrectionsPanel
+      key={JSON.stringify([actor, revision, props.recordId])}
+      {...props}
+    />
+  );
 }
-function OwnedInvoiceCorrectionsPanel() {
+function OwnedInvoiceCorrectionsPanel({
+  recordId,
+  onLocked,
+  renderInvoiceLink,
+}: {
+  recordId?: string;
+  onLocked?: (locked: boolean) => void;
+  renderInvoiceLink?: (invoiceId: string) => ReactNode;
+}) {
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
   const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
-  const lookup = useInvoiceLookupForm(t('invoiceIdInvalid', locale)!);
+  const lookup = useInvoiceLookupForm(t('invoiceIdInvalid', locale)!, recordId);
   const [invoiceId, setInvoiceId] = lookup.field('invoiceId');
   const [source, setSource] = useState<InvoiceCorrectionSource | null>(null);
-  const [loading, setLoading] = useState(false),
+  const [loading, setLoading] = useState(!!recordId),
     [locked, setLocked] = useState(false),
     [error, setError] = useState<'error' | 'denied' | null>(null);
   const lockedRef = useRef(false);
@@ -93,7 +122,7 @@ function OwnedInvoiceCorrectionsPanel() {
               abort.current?.abort();
               setSource(null);
               loadedId.current = '';
-              lookup.form.reset({ invoiceId: '' });
+              lookup.form.reset({ invoiceId: recordId ?? '' });
               lockedRef.current = false;
               setLocked(false);
               setLoading(false);
@@ -101,7 +130,7 @@ function OwnedInvoiceCorrectionsPanel() {
             },
           }
         : undefined,
-    [source, loading, error]
+    [source, loading, error, recordId]
   );
   const allowed =
     correction &&
@@ -109,8 +138,8 @@ function OwnedInvoiceCorrectionsPanel() {
       ? ['Draft', 'Unpaid', 'Overdue']
       : ['Paid', 'PartiallyFunded', 'Overdue', 'PartiallyRefunded', 'Refunded']
     ).includes(correction.state);
-  async function load(event: FormEvent) {
-    event.preventDefault();
+  async function load(event?: FormEvent) {
+    event?.preventDefault();
     if (lockedRef.current || loadPending.current !== null) return;
     abort.current?.abort();
     const request = new AbortController(),
@@ -152,84 +181,117 @@ function OwnedInvoiceCorrectionsPanel() {
       if (owner === generation.current) setLoading(false);
     }
   }
+  useEffect(() => {
+    if (!recordId) return;
+    const start = window.setTimeout(() => void load(), 0);
+    return () => window.clearTimeout(start);
+  }, [recordId]);
   return (
     <section
       id="invoice-corrections-panel"
-      className="rounded-lg border bg-card p-6 text-card-foreground space-y-5"
-      aria-labelledby="invoice-corrections-heading"
+      className={recordId ? 'space-y-4' : 'space-y-4 rounded-lg border bg-card p-6'}
+      aria-labelledby={recordId ? 'staff-invoice-heading' : 'invoice-corrections-heading'}
     >
-      <header className="space-y-2">
-        <h2 id="invoice-corrections-heading" className="text-xl font-semibold">
-          {t('title', locale)}
-        </h2>
-        <p className="text-sm text-muted-foreground">{t('description', locale)}</p>
-      </header>
-      <form
-        onSubmit={load}
-        noValidate
-        className="space-y-3"
-        aria-busy={loading || lookup.form.formState.isSubmitting || undefined}
-      >
-        <Field data-disabled={locked}>
-          <FieldLabel htmlFor="correction-invoice-id">{t('invoiceId', locale)}</FieldLabel>
-          <Input
-            id="correction-invoice-id"
-            {...lookup.bind('invoiceId')}
-            aria-required="true"
-            dir="ltr"
-            autoComplete="off"
-            value={invoiceId}
-            disabled={locked}
-            onChange={(event) => {
-              ++generation.current;
-              loadPending.current = null;
-              abort.current?.abort();
-              setLoading(false);
-              setSource(null);
-              loadedId.current = '';
-              setError(null);
-              setInvoiceId(event.target.value);
-            }}
-          />
-          <InvoiceFieldFeedback
-            id={lookup.errorId('invoiceId')}
-            error={lookup.errors.invoiceId}
-            message={t('invoiceIdInvalid', locale)!}
-          />
-        </Field>
-        <InvoiceFormAlert message={lookup.errors.root?.validation?.message} />
-        <Button type="submit" variant="outline" disabled={locked || loading}>
-          {loading && (
-            <span
-              aria-hidden="true"
-              className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-            />
+      <header className="flex items-start justify-between gap-3">
+        <div className="space-y-2">
+          {!recordId && (
+            <h2 id="invoice-corrections-heading" className="text-xl font-semibold">
+              {t('title', locale)}
+            </h2>
           )}
-          {t(loading ? 'loading' : 'load', locale)}
-        </Button>
-      </form>
+          <p className="text-sm text-muted-foreground">{t('description', locale)}</p>
+        </div>
+        {recordId && (
+          <ListRefreshButton
+            label={t('load', locale)!}
+            disabled={loading || locked}
+            onClick={() => void load()}
+          />
+        )}
+      </header>
+      {recordId ? (
+        loading ? (
+          <PageLoading label={t('loading', locale)!} />
+        ) : (
+          <InvoiceFormAlert message={lookup.errors.root?.validation?.message} />
+        )
+      ) : (
+        <form
+          onSubmit={load}
+          noValidate
+          className="space-y-3"
+          aria-busy={loading || lookup.form.formState.isSubmitting || undefined}
+        >
+          <Field data-disabled={locked}>
+            <FieldLabel htmlFor="correction-invoice-id">{t('invoiceId', locale)}</FieldLabel>
+            <Input
+              id="correction-invoice-id"
+              {...lookup.bind('invoiceId')}
+              aria-required="true"
+              dir="ltr"
+              autoComplete="off"
+              value={invoiceId}
+              disabled={locked}
+              onChange={(event) => {
+                ++generation.current;
+                loadPending.current = null;
+                abort.current?.abort();
+                setLoading(false);
+                setSource(null);
+                loadedId.current = '';
+                setError(null);
+                setInvoiceId(event.target.value);
+              }}
+            />
+            <InvoiceFieldFeedback
+              reserveSpace={false}
+              id={lookup.errorId('invoiceId')}
+              error={lookup.errors.invoiceId}
+              message={t('invoiceIdInvalid', locale)!}
+            />
+          </Field>
+          <InvoiceFormAlert message={lookup.errors.root?.validation?.message} />
+          <Button type="submit" variant="outline" disabled={locked || loading}>
+            {loading && (
+              <span
+                aria-hidden="true"
+                className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+              />
+            )}
+            {t(loading ? 'loading' : 'load', locale)}
+          </Button>
+        </form>
+      )}
       {error && (
         <p role="alert" className="text-destructive">
           {t(error === 'denied' ? 'denied' : 'loadError', locale)}
         </p>
       )}
       {source && (
-        <dl className="space-y-2 text-sm">
-          <div>
-            <dt className="text-muted-foreground">{t('source', locale)}</dt>
-            <dd>
-              <bdi>{source.invoiceId}</bdi>
-            </dd>
-          </div>
-          <div>
-            <dt className="text-muted-foreground">{t('state', locale)}</dt>
-            <dd>{appText(`invoices.state.${source.state}`, locale)}</dd>
-          </div>
-          <div>
-            <dt className="text-muted-foreground">{t('paid', locale)}</dt>
-            <dd>{numbers.money(source.paidAmount)}</dd>
-          </div>
-        </dl>
+        <div className={recordEditorSurface}>
+          <RecordEditorSection title={t('source', locale)!}>
+            <dl className={recordEditorGrid}>
+              <div>
+                <dt className="text-sm text-muted-foreground">{t('invoiceId', locale)}</dt>
+                <dd className="break-all">
+                  <bdi>{source.invoiceId}</bdi>
+                </dd>
+              </div>
+              <div>
+                <dt className="text-sm text-muted-foreground">{t('state', locale)}</dt>
+                <dd>{appText(`invoices.state.${source.state}`, locale)}</dd>
+              </div>
+              <div>
+                <dt className="text-sm text-muted-foreground">{t('originalTotal', locale)}</dt>
+                <dd>{numbers.money(source.totalAmount)}</dd>
+              </div>
+              <div>
+                <dt className="text-sm text-muted-foreground">{t('paid', locale)}</dt>
+                <dd>{numbers.money(source.paidAmount)}</dd>
+              </div>
+            </dl>
+          </RecordEditorSection>
+        </div>
       )}
       {correction &&
         (allowed ? (
@@ -237,6 +299,8 @@ function OwnedInvoiceCorrectionsPanel() {
             <ManualInvoiceForm
               key={correction.invoiceId + ':' + correction.kind + ':' + correction.profileId}
               correction={correction}
+              {...(onLocked ? { onLocked } : {})}
+              {...(renderInvoiceLink ? { renderInvoiceLink } : {})}
             />
           </Suspense>
         ) : (

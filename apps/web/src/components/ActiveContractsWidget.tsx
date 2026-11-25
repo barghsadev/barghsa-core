@@ -107,8 +107,9 @@ export function ActiveContractsWidget({
                   </div>
                 )}
                 <Link
-                  to="/contracts"
-                  search={{ state: 'Active', contractId: contract.contractId }}
+                  to="/contracts/$contractId/{-$action}"
+                  params={{ contractId: contract.contractId }}
+                  search={{ state: 'Active' }}
                   className="inline-block text-sm font-medium text-primary underline underline-offset-4"
                   aria-label={`${dashboardText('contracts.view', locale)} · ${contract.contractNumber}`}
                 >

@@ -1,3 +1,4 @@
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -117,7 +118,7 @@ const dialog = async () =>
   vi.waitFor(() => expect(document.querySelector('[role=dialog]')).not.toBeNull());
 
 it.each(['en', 'fa'] as const)(
-  'reports paired guidance errors with owned focus and stable accessible message space (%s)',
+  'reports paired guidance errors with owned focus and associated messages (%s)',
   async (locale) => {
     let writes = 0;
     const view = await mount(async (url, options) => {
@@ -125,14 +126,14 @@ it.each(['en', 'fa'] as const)(
       return Response.json(read(url));
     }, locale);
     try {
-      await view.change('solar-postal-guidance-originals-fa', 'One\nTwo');
-      await view.change('solar-postal-guidance-originals-en', 'One');
+      await view.click(tSolarStaffRecord('guidanceAddDocument', locale));
+      await view.change('solar-postal-guidance-item-0-fa', 'x'.repeat(201));
       await view.submit();
       await vi.waitFor(() =>
         expect(view.container.querySelectorAll('[aria-invalid=true]')).toHaveLength(2)
       );
       await vi.waitFor(() =>
-        expect(document.activeElement?.id).toBe('solar-postal-guidance-originals-fa')
+        expect(document.activeElement?.id).toBe('solar-postal-guidance-item-0-fa')
       );
       expect(writes).toBe(0);
       const form = view.container.querySelector('form')!;
@@ -140,19 +141,11 @@ it.each(['en', 'fa'] as const)(
       expect(form.parentElement?.tagName).toBe('DIV');
       expect(form.parentElement?.getAttribute('role')).toBe('group');
       expect(form.parentElement?.getAttribute('aria-label')).toBe(tSolar('postalGuidance', locale));
-      for (const id of [
-        'solar-postal-guidance-originals-fa',
-        'solar-postal-guidance-originals-en',
-      ]) {
+      for (const id of ['solar-postal-guidance-item-0-fa', 'solar-postal-guidance-item-0-en']) {
         const field = view.container.querySelector(`#${id}`)!;
         expect(view.container.querySelector(`label[for="${id}"]`)).not.toBeNull();
         expect(field.getAttribute('aria-describedby')).toContain(`${id}-message`);
-        const message = view.container.querySelector(`#${id}-message`)!;
-        const reserved = message.parentElement?.querySelector('[aria-hidden=true]');
-        expect(reserved?.textContent).toBe(message.textContent);
-        expect(reserved?.classList.contains('invisible')).toBe(true);
-        expect(reserved?.classList.contains('col-start-1')).toBe(true);
-        expect(message.classList.contains('col-start-1')).toBe(true);
+        expect(view.container.querySelector(`#${id}-message`)?.textContent).toBeTruthy();
       }
     } finally {
       await view.close();
@@ -180,8 +173,12 @@ it('verifies the normalized guidance receipt without clearing the selected reaso
     await view.change('solar-postal-guidance-en', ' Updated guidance ');
     await view.change('solar-postal-guidance-destination-address', ' New address ');
     await view.change('solar-postal-guidance-contact-details', ' New contact ');
-    await view.change('solar-postal-guidance-originals-fa', ' اصل اول \n اصل دوم ');
-    await view.change('solar-postal-guidance-originals-en', ' First original \n Second original ');
+    await view.click('Add document');
+    await view.change('solar-postal-guidance-item-0-fa', ' اصل اول ');
+    await view.change('solar-postal-guidance-item-0-en', ' First original ');
+    await view.click('Add document');
+    await view.change('solar-postal-guidance-item-1-fa', ' اصل دوم ');
+    await view.change('solar-postal-guidance-item-1-en', ' Second original ');
     await view.submit();
     await dialog();
     await view.click('Confirm', document);
@@ -216,21 +213,21 @@ it('focuses only safe server-owned guidance fields after closing confirmation an
     options?.method === 'PUT' ? invalid(fields) : Response.json(read(url))
   );
   try {
-    await view.change('solar-postal-guidance-originals-fa', 'اصل');
-    await view.change('solar-postal-guidance-originals-en', 'Original');
+    await view.click('Add document');
+    await view.change('solar-postal-guidance-item-0-fa', 'اصل');
+    await view.change('solar-postal-guidance-item-0-en', 'Original');
     await view.submit();
     await dialog();
     await view.click('Confirm', document);
     await vi.waitFor(() => expect(document.querySelector('[role=dialog]')).toBeNull());
     await vi.waitFor(() =>
-      expect(document.activeElement?.id).toBe('solar-postal-guidance-originals-en')
+      expect(document.activeElement?.id).toBe('solar-postal-guidance-item-0-en')
     );
     expect(
-      view.container.querySelector<HTMLTextAreaElement>('#solar-postal-guidance-originals-en')
-        ?.value
+      view.container.querySelector<HTMLTextAreaElement>('#solar-postal-guidance-item-0-en')?.value
     ).toBe('Original');
     fields = ['en', 'private_revision'];
-    await view.change('solar-postal-guidance-originals-en', 'Corrected original');
+    await view.change('solar-postal-guidance-item-0-en', 'Corrected original');
     await view.submit();
     await dialog();
     await view.click('Confirm', document);

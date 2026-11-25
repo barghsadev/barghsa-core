@@ -6,11 +6,12 @@ import type { SavingOrderChangePanel } from '../components/SavingOrderChangePane
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { refreshProfileContext } from '../lib/profile-context.js';
 import { ids, source, fullQuote } from '../lib/saving-change-form.fixtures.js';
-import { SavingOrderDetailPage } from './SavingOrderDetailPage.js';
+import { SavingOrderDetailPage, SavingOrderEditPage } from './SavingOrderDetailPage.js';
 const panel = vi.hoisted(() => ({
   props: null as ComponentProps<typeof SavingOrderChangePanel> | null,
 }));
 const sibling = vi.hoisted(() => ({ changed: null as (() => void) | null }));
+const navigation = vi.hoisted(() => ({ blocked: null as (() => boolean) | null }));
 vi.mock('@tanstack/react-router', () => ({
   useParams: () => ({ orderId: ids.orderId }),
   Link: ({ children }: { children: ReactNode }) => <a href="/savings/orders">{children}</a>,
@@ -23,6 +24,12 @@ vi.mock('../components/SavingOrderChangePanel.js', () => ({
   SavingOrderChangePanel: (props: ComponentProps<typeof SavingOrderChangePanel>) => {
     panel.props = props;
     return <p>Private change workspace</p>;
+  },
+}));
+vi.mock('../components/RecordCommandGuard.js', () => ({
+  RecordCommandGuard: ({ blocked }: { blocked: () => boolean }) => {
+    navigation.blocked = blocked;
+    return null;
   },
 }));
 vi.mock('../components/ContractCancellationPanel.js', () => ({
@@ -84,7 +91,7 @@ const detail = () => ({
 const walletReads: string[] = [];
 let root: Root | undefined;
 let host: HTMLDivElement;
-async function render(mock: (url: string, init?: RequestInit) => Promise<Response>) {
+async function render(mock: (url: string, init?: RequestInit) => Promise<Response>, edit = true) {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   walletReads.length = 0;
   vi.stubGlobal('fetch', (url: string, init?: RequestInit) => {
@@ -101,7 +108,7 @@ async function render(mock: (url: string, init?: RequestInit) => Promise<Respons
     root!.render(
       <QueryProvider>
         <AccountUserProvider value="buyer">
-          <SavingOrderDetailPage />
+          {edit ? <SavingOrderEditPage /> : <SavingOrderDetailPage />}
         </AccountUserProvider>
       </QueryProvider>
     )
@@ -113,9 +120,10 @@ afterEach(async () => {
   host?.remove();
   panel.props = null;
   sibling.changed = null;
+  navigation.blocked = null;
   vi.unstubAllGlobals();
 });
-it('binds source IDs and blocks sibling refresh/remount while captured command remains unresolved', async () => {
+it('binds source IDs and blocks refresh and navigation while a captured change remains unresolved', async () => {
   const mock = vi.fn(async () => Response.json(detail()));
   await render(mock);
   expect(panel.props).toMatchObject({
@@ -126,17 +134,20 @@ it('binds source IDs and blocks sibling refresh/remount while captured command r
   });
   await act(async () => {
     panel.props!.onCommandLock!(true);
-    sibling.changed!();
+    panel.props!.onChanged();
   });
+  expect(navigation.blocked?.()).toBe(true);
+  expect(sibling.changed).toBeNull();
   expect(mock).toHaveBeenCalledTimes(1);
-  expect(walletReads).toEqual([`/api/wallet/${ids.profileId}`]);
+  expect(walletReads).toEqual([]);
   expect(host.textContent).toContain('Private change workspace');
   await act(async () => {
     panel.props!.onCommandLock!(false);
     panel.props!.onChanged();
   });
   expect(mock).toHaveBeenCalledTimes(2);
-  expect(walletReads).toEqual(Array(2).fill(`/api/wallet/${ids.profileId}`));
+  expect(walletReads).toEqual([]);
+  expect(navigation.blocked?.()).toBe(false);
   expect(host.textContent).toContain('Private change workspace');
 });
 it('fences old refresh/lock callbacks after confirmed profile revision with unchanged detail source', async () => {
@@ -145,7 +156,7 @@ it('fences old refresh/lock callbacks after confirmed profile revision with unch
   const old = panel.props!;
   await act(async () => refreshProfileContext());
   expect(mock).toHaveBeenCalledTimes(2);
-  expect(walletReads).toEqual(Array(2).fill(`/api/wallet/${ids.profileId}`));
+  expect(walletReads).toEqual([]);
   const fresh = panel.props!;
   await act(async () => {
     old.onCommandLock!(true);
@@ -153,10 +164,10 @@ it('fences old refresh/lock callbacks after confirmed profile revision with unch
     old.onWithdrawal!();
   });
   expect(mock).toHaveBeenCalledTimes(2);
-  expect(walletReads).toEqual(Array(2).fill(`/api/wallet/${ids.profileId}`));
+  expect(walletReads).toEqual([]);
   await act(async () => fresh.onChanged());
   expect(mock).toHaveBeenCalledTimes(3);
-  expect(walletReads).toEqual(Array(3).fill(`/api/wallet/${ids.profileId}`));
+  expect(walletReads).toEqual([]);
 });
 
 it('withdraws current whole-resource detail and ignores an obsolete same-scope withdrawal after authorized retry', async () => {
@@ -168,14 +179,14 @@ it('withdraws current whole-resource detail and ignores an obsolete same-scope w
     old.onWithdrawal!();
   });
   expect(host.textContent).not.toContain('Private change workspace');
-  expect(host.textContent).not.toContain('Old street');
+  expect(host.textContent).not.toContain('Current order total');
   const retry = [...host.querySelectorAll('button')].find(
     (button) => button.textContent === 'Try again'
   )!;
   expect(retry).toBeDefined();
   await act(async () => retry.click());
   expect(mock).toHaveBeenCalledTimes(2);
-  expect(walletReads).toEqual(Array(2).fill(`/api/wallet/${ids.profileId}`));
+  expect(walletReads).toEqual([]);
   expect(host.textContent).toContain('Private change workspace');
   await act(async () => old.onWithdrawal!());
   expect(host.textContent).toContain('Private change workspace');
@@ -225,13 +236,13 @@ it('does not reuse an accepted saving detail after a failed fresh read', async (
     'Could not load this information. Try again.'
   );
   expect(host.textContent).not.toContain('Private change workspace');
-  expect(host.textContent).not.toContain('Old street');
+  expect(host.textContent).not.toContain('Current order total');
   fail = false;
   const retry = [...host.querySelectorAll('button')].find((b) => b.textContent === 'Try again')!;
   await act(async () => retry.click());
   expect(mock).toHaveBeenCalledTimes(3);
   expect(host.textContent).toContain('Private change workspace');
-  expect(host.textContent).toContain('Old street');
+  expect(host.textContent).toContain('Current order total');
 });
 
 it.each([401, 403, 404])(
@@ -262,7 +273,7 @@ it('shows an accepted order with unavailable financial records and no history ye
     hardwareAmendments: undefined,
     hardwareUpgrades: undefined,
   };
-  await render(async () => Response.json(accepted));
+  await render(async () => Response.json(accepted), false);
   expect(host.querySelector('h1')?.textContent).toBe('Saving order');
   expect(host.textContent).toContain('Old street');
   expect(
@@ -270,4 +281,12 @@ it('shows an accepted order with unavailable financial records and no history ye
   ).toHaveLength(2);
   expect(host.textContent).not.toContain('View invoice');
   expect(host.textContent).not.toContain('View contract');
+  expect(walletReads).toEqual([`/api/wallet/${ids.profileId}`]);
+});
+
+it('withholds the change form on a direct edit route once the order is ineligible', async () => {
+  await render(async () => Response.json({ ...detail(), can_edit: false }));
+  expect(host.textContent).toContain('This order is no longer available for changes.');
+  expect(host.textContent).not.toContain('Current order total');
+  expect(panel.props).toBeNull();
 });

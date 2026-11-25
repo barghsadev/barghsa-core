@@ -17,6 +17,17 @@ const en = {
   refresh: 'Refresh requests',
   clearChecks: 'Checks with no outstanding items ({count})',
   noRequests: 'Your export and closure requests will appear here.',
+  consequencesTitle: 'What closure changes',
+  closureReady: 'Send your request to support for final review.',
+  openClosureReview: 'Review profile closure',
+  backToTicket: 'Back to support ticket',
+  closureUnavailable: 'Profile closure review is unavailable for this ticket.',
+  confirmationTitle: 'Confirm profile closure',
+  confirmationHelp: 'Use your current password to authorize this change.',
+  readyForConfirmation: 'Ready for confirmation',
+  reviewChecks: 'Closure checks',
+  blockedClosure: 'Resolve the outstanding items before closing this profile.',
+  completedReview: 'Profile closed',
 };
 const fa: Record<keyof typeof en, string> = {
   roleChangedTitle: 'نقش‌های شما در تیم تغییر کرد',
@@ -36,6 +47,17 @@ const fa: Record<keyof typeof en, string> = {
   refresh: 'تازه‌سازی درخواست‌ها',
   clearChecks: 'بررسی‌های بدون مانع ({count})',
   noRequests: 'درخواست‌های دریافت داده و بستن پروفایل اینجا نمایش داده می‌شوند.',
+  consequencesTitle: 'پیامدهای بستن پروفایل',
+  closureReady: 'درخواست را برای بررسی نهایی به پشتیبانی بفرستید.',
+  openClosureReview: 'بررسی بستن پروفایل',
+  backToTicket: 'بازگشت به تیکت پشتیبانی',
+  closureUnavailable: 'بررسی بستن پروفایل برای این تیکت در دسترس نیست.',
+  confirmationTitle: 'تأیید بستن پروفایل',
+  confirmationHelp: 'برای تأیید این تغییر، رمز عبور فعلی خود را وارد کنید.',
+  readyForConfirmation: 'آماده تأیید نهایی',
+  reviewChecks: 'بررسی‌های بستن پروفایل',
+  blockedClosure: 'پیش از بستن پروفایل، موارد باز را برطرف کنید.',
+  completedReview: 'پروفایل بسته شد',
 };
 export function lifecycleFormText(key: keyof typeof en, locale: Locale): string {
   return (locale === 'fa' ? fa : en)[key];

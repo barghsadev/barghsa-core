@@ -1,0 +1,31 @@
+export const cancellationEditorMessages = {
+  en: {
+    refundPlan: 'Refund plan',
+    defaultWallet: 'The available balance will be returned to the wallet.',
+    customAmounts: 'Enter zero to leave an invoice out of the refund.',
+    decisionReason: 'Decision reason',
+    decisionExample: 'For example, the agreed start date can no longer be met.',
+    rejectionExample: 'For example, the meter ownership document is missing.',
+    requestExample:
+      'For example, our installation plans changed and we no longer need the service.',
+    requestHelp: 'Staff review your reason and refund preference before deciding on the request.',
+    declineDetails: 'Decline the request',
+    declineHelp: 'The customer will receive your explanation.',
+    requestUnavailable: 'This request is unavailable for the selected action.',
+    declineExample: 'For example, please resubmit this request on the current contract.',
+  },
+  fa: {
+    refundPlan: 'برنامه بازپرداخت',
+    defaultWallet: 'مانده قابل بازپرداخت به کیف پول برمی‌گردد.',
+    customAmounts: 'برای حذف یک صورتحساب از بازپرداخت، مبلغ آن را صفر وارد کنید.',
+    decisionReason: 'دلیل تصمیم',
+    decisionExample: 'مثلاً امکان شروع خدمت در تاریخ توافق‌شده وجود ندارد.',
+    rejectionExample: 'مثلاً مدرک مالکیت کنتور ارائه نشده است.',
+    requestExample: 'مثلاً برنامه نصب تغییر کرده و دیگر به این خدمت نیاز نداریم.',
+    requestHelp: 'کارکنان پیش از تصمیم‌گیری، دلیل و مقصد پیشنهادی بازپرداخت را بررسی می‌کنند.',
+    declineDetails: 'رد درخواست لغو',
+    declineHelp: 'توضیح شما برای مشتری ارسال می‌شود.',
+    requestUnavailable: 'این درخواست برای اقدام انتخاب‌شده در دسترس نیست.',
+    declineExample: 'مثلاً لطفاً درخواست را برای نسخه فعلی ثبت کنید.',
+  },
+};

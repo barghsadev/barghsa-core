@@ -164,27 +164,25 @@ for (const staff of [false, true])
             'contract',
             'contract',
             recordId,
-            `${staff ? '/admin/contracts' : '/contracts'}?contractId=${recordId}`,
+            staff ? `/admin/contracts/${recordId}` : `/contracts/${recordId}`,
           ],
           [
             'invoice',
             'invoice',
             recordId,
-            staff ? `/admin/invoices?invoiceId=${recordId}` : `/invoices/${recordId}`,
+            staff ? `/admin/invoices/${recordId}` : `/invoices/${recordId}`,
           ],
           [
             'order',
             'electricity_order',
             recordId,
-            staff
-              ? `/admin/electricity-orders?orderId=${recordId}`
-              : `/electricity/orders/${recordId}`,
+            staff ? `/admin/electricity-orders/${recordId}` : `/electricity/orders/${recordId}`,
           ],
           [
             'order',
             'saving_order',
             savingId,
-            staff ? `/admin/saving-orders?orderId=${savingId}` : `/savings/orders/${savingId}`,
+            staff ? `/admin/saving-orders/${savingId}` : `/savings/orders/${savingId}`,
           ],
         ] as const;
         for (const [relatedEntityType, destination, id, href] of destinations) {
@@ -246,6 +244,6 @@ it('preserves an uppercase source reference while linking to the canonical desti
       },
     ],
   });
-  expect(host.querySelector('a')?.getAttribute('href')).toBe(`/contracts?contractId=${canonical}`);
+  expect(host.querySelector('a')?.getAttribute('href')).toBe(`/contracts/${canonical}`);
   expect(host.querySelector('a bdi')?.textContent).toBe(canonical.toUpperCase());
 });

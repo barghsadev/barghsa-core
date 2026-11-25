@@ -2,24 +2,32 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
   Alert,
   AlertDescription,
   Button,
   Field,
   FieldLabel,
+  ListRefreshButton,
   NativeSelect,
   PageLoading,
   StatusBadge,
   Textarea,
 } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
+import { cancellationEditorMessages } from '@barghsa/i18n/cancellation-editor';
 import { useLocale } from '../hooks/useLocale.js';
 import { useCancellationRequestForm } from '../hooks/useCancellationForm.js';
 import { DocumentRequestError } from '../lib/documents.js';
 import { contractBase } from '../lib/contracts.js';
+import type { ContractCancellationView } from '../lib/contract-cancellation.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import {
+  RecordEditorActions,
+  recordEditorGrid,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 
 export interface CancellationRequest {
   id: string;
@@ -43,6 +51,11 @@ type RequestPanelProps = {
   unavailable?: boolean;
   onChanged: () => void;
   onReview: (request: CancellationRequest) => void;
+  view?: ContractCancellationView | undefined;
+  renderAction?:
+    ((view: ContractCancellationView, label: string, disabled: boolean) => ReactNode) | undefined;
+  renderReview?: ((request: CancellationRequest) => ReactNode) | undefined;
+  onLocked?: ((locked: boolean) => void) | undefined;
 };
 type RequestCommand = TeamAction & {
   priorRequest: string | null;
@@ -70,6 +83,10 @@ function RequestWorkspace({
   onChanged,
   onReview,
   unavailable = false,
+  view,
+  renderAction,
+  renderReview,
+  onLocked,
 }: RequestPanelProps) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
@@ -100,6 +117,13 @@ function RequestWorkspace({
   const dataRef = useRef(data);
   dataRef.current = data;
   const generation = useRef(0);
+  const target = view && 'requestId' in view ? view.requestId : undefined;
+  const submitting = !!action || draft.form.formState.isSubmitting;
+  useEffect(() => {
+    if (view?.action === 'review-cancellation' || !onLocked) return;
+    onLocked(submitting);
+    return () => onLocked(false);
+  }, [onLocked, submitting, view?.action]);
   useEffect(() => {
     live.current = true;
     return () => {
@@ -184,7 +208,11 @@ function RequestWorkspace({
         current.current
       )
         return;
-      if (!captured || (staff ? captured.request?.status !== 'Pending' : !captured.canRequest))
+      if (
+        !captured ||
+        (target && captured.request?.id !== target) ||
+        (staff ? captured.request?.status !== 'Pending' : !captured.canRequest)
+      )
         return;
       const note = values.reason.trim();
       const priorRequest = captured.request?.id ?? null;
@@ -224,19 +252,31 @@ function RequestWorkspace({
       setAction(command);
     })(event);
   }
-  const request = data?.request;
-  if (data && staff && !request) return null;
+  const request = data?.request && (!target || data.request.id === target) ? data.request : null;
+  const copy = cancellationEditorMessages[locale];
+  const refresh = () => setReload((n) => n + 1);
+  const inlineRefresh =
+    view?.action === 'request' && !request && data?.canRequest && !loading && !needsRead && !error;
+  if (data && staff && !request && !view) return null;
   return (
     <section
-      className="flex flex-col gap-3 rounded-lg border bg-muted/20 p-4"
+      className={`${recordEditorSurface} flex flex-col gap-3 p-3 sm:p-4`}
       aria-label={word('cancellationRequestTitle')}
     >
-      <div className="flex items-center justify-between gap-3">
-        <h4 className="font-medium">{word('cancellationRequestTitle')}</h4>
-        <Button variant="ghost" disabled={busy} onClick={() => setReload((n) => n + 1)}>
-          {needsRead ? confirmationText('checkStatus', locale) : word('refresh')}
-        </Button>
-      </div>
+      {!inlineRefresh && (!renderReview || needsRead || error) && (
+        <div className="flex items-center justify-between gap-3">
+          {(!view || !!request) && (
+            <h4 className="font-medium">{word('cancellationRequestTitle')}</h4>
+          )}
+          {needsRead ? (
+            <Button variant="outline" disabled={busy} onClick={refresh}>
+              {confirmationText('checkStatus', locale)}
+            </Button>
+          ) : (
+            <ListRefreshButton label={word('refresh')} disabled={busy} onClick={refresh} />
+          )}
+        </div>
+      )}
       {needsRead && (
         <Alert variant="destructive">
           <AlertDescription>{confirmationText('unconfirmed', locale)}</AlertDescription>
@@ -253,7 +293,7 @@ function RequestWorkspace({
       ) : (
         <>
           {request ? (
-            <>
+            <div className="min-w-0 space-y-2 rounded-lg bg-muted/40 px-3 py-2.5">
               <StatusBadge
                 label={word('cancellationRequest.' + request.status)}
                 className="max-w-full whitespace-normal [overflow-wrap:anywhere]"
@@ -281,103 +321,186 @@ function RequestWorkspace({
                   {word('cancellationRequestStale')}
                 </p>
               ) : null}
-            </>
+            </div>
           ) : null}
-          {staff && request?.status === 'Pending' ? (
+          {target && !request && (
+            <p role="status" className="text-sm text-muted-foreground">
+              {copy.requestUnavailable}
+            </p>
+          )}
+          {staff && request?.status === 'Pending' && !view ? (
             <>
               <p className="text-sm text-muted-foreground">
                 {word('cancellationRequestReviewNotice')}
               </p>
-              <Button
-                className="self-start"
-                variant="outline"
-                disabled={busy || needsRead || request.stale}
-                onClick={() => onReview(request)}
-              >
-                {word('cancellationRequestReview')}
-              </Button>
+              {renderAction ? (
+                <div className="flex flex-wrap gap-2">
+                  {renderAction(
+                    { action: 'review-cancellation', requestId: request.id },
+                    word('cancellationRequestReview'),
+                    busy || needsRead || request.stale
+                  )}
+                  {renderAction(
+                    { action: 'decline-cancellation', requestId: request.id },
+                    word('cancellationRequestReject'),
+                    busy || needsRead
+                  )}
+                </div>
+              ) : (
+                <Button
+                  className="self-start"
+                  variant="outline"
+                  disabled={busy || needsRead || request.stale}
+                  onClick={() => onReview(request)}
+                >
+                  {word('cancellationRequestReview')}
+                </Button>
+              )}
             </>
           ) : null}
-          {(!staff && data.canRequest) || (staff && request?.status === 'Pending') ? (
+          {renderReview &&
+          request?.status === 'Pending' &&
+          !request.stale &&
+          request.versionId === versionId
+            ? renderReview(request)
+            : renderReview &&
+              request && (
+                <p role="status" className="text-sm text-muted-foreground">
+                  {copy.requestUnavailable}
+                </p>
+              )}
+          {view?.action === 'review-cancellation' &&
+            request?.status === 'Pending' &&
+            renderAction &&
+            renderAction(
+              { action: 'decline-cancellation', requestId: request.id },
+              word('cancellationRequestReject'),
+              busy || needsRead
+            )}
+          {!staff &&
+            data.canRequest &&
+            renderAction &&
+            renderAction(
+              { action: 'request' },
+              word('cancellationRequestSubmit'),
+              busy || needsRead
+            )}
+          {!renderAction &&
+          !renderReview &&
+          ((!staff && data.canRequest) || (staff && request?.status === 'Pending')) ? (
             <form
               onSubmit={choose}
               noValidate
               aria-busy={!!action || draft.form.formState.isSubmitting || undefined}
-              className="flex flex-col gap-3"
+              className={inlineRefresh ? '-m-3 sm:-m-4' : '-mx-3 -mb-3 border-t sm:-mx-4 sm:-mb-4'}
             >
-              {!staff ? (
-                <p className="text-sm text-muted-foreground">{word('cancellationRequestNotice')}</p>
-              ) : null}
-              <Field>
-                <FieldLabel htmlFor={'request-reason-' + id}>
-                  {word(staff ? 'cancellationRequestRejectReason' : 'cancellationReason')}
-                </FieldLabel>
-                <Textarea
-                  {...draft.bind('reason')}
-                  disabled={busy || needsRead}
-                  required
-                  aria-required="true"
-                  id={'request-reason-' + id}
-                  value={reason}
-                  maxLength={1000}
-                  onChange={(e) => setReason(e.target.value)}
-                />
-                <p
-                  id={draft.errorId('reason')}
-                  role={draft.errors.reason ? 'alert' : undefined}
-                  aria-hidden={!draft.errors.reason || undefined}
-                  className={`text-sm text-destructive${draft.errors.reason ? '' : ' invisible'}`}
-                >
-                  {draft.errors.reason?.message ?? word('cancellationReasonInvalid')}
-                </p>
-              </Field>
-              {!staff ? (
-                <Field>
-                  <FieldLabel htmlFor={'request-destination-' + id}>
-                    {word('cancellationRequestPreference')}
-                  </FieldLabel>
-                  <NativeSelect
-                    {...draft.bind('preferredDestination')}
-                    disabled={busy || needsRead}
-                    id={'request-destination-' + id}
-                    value={destination}
-                    onChange={(e) => setDestination(e.target.value as 'wallet' | 'external_bank')}
-                  >
-                    <option value="wallet">{word('cancellation.wallet')}</option>
-                    <option value="external_bank">{word('cancellation.external_bank')}</option>
-                  </NativeSelect>
-                  <p
-                    id={draft.errorId('preferredDestination')}
-                    role={draft.errors.preferredDestination ? 'alert' : undefined}
-                    aria-hidden={!draft.errors.preferredDestination || undefined}
-                    className={`text-sm text-destructive${draft.errors.preferredDestination ? '' : ' invisible'}`}
-                  >
-                    {draft.errors.preferredDestination?.message ??
-                      word('cancellationDestinationInvalid')}
+              <div className={view ? 'space-y-3 px-4 py-4 sm:px-6' : 'space-y-3 p-3 sm:p-4'}>
+                {staff && !view && <h5 className="text-sm font-semibold">{copy.declineDetails}</h5>}
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm text-muted-foreground">
+                    {view
+                      ? staff
+                        ? copy.declineHelp
+                        : copy.requestHelp
+                      : word(
+                          staff ? 'cancellationRequestRejectNotice' : 'cancellationRequestNotice'
+                        )}
                   </p>
-                </Field>
-              ) : null}
-              {draft.errors.root?.validation ? (
-                <Alert variant="destructive">
-                  <AlertDescription>{draft.errors.root.validation.message}</AlertDescription>
-                </Alert>
-              ) : null}
-              <Button
-                disabled={busy || needsRead}
-                type="submit"
-                variant={staff ? 'outline' : 'default'}
-                className="self-start"
-              >
-                {draft.form.formState.isSubmitting && (
-                  <span
-                    aria-hidden="true"
-                    className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                  />
-                )}
-                {word(staff ? 'cancellationRequestReject' : 'cancellationRequestSubmit')}
-              </Button>
+                  {inlineRefresh && (
+                    <ListRefreshButton label={word('refresh')} disabled={busy} onClick={refresh} />
+                  )}
+                </div>
+                <div className={staff ? undefined : view ? 'space-y-3' : recordEditorGrid}>
+                  <Field className="min-w-0 gap-1">
+                    <FieldLabel htmlFor={'request-reason-' + id}>
+                      {word(staff ? 'cancellationRequestRejectReason' : 'cancellationReason')}
+                    </FieldLabel>
+                    <Textarea
+                      {...draft.bind('reason')}
+                      disabled={busy || needsRead}
+                      required
+                      aria-required="true"
+                      id={'request-reason-' + id}
+                      value={reason}
+                      maxLength={1000}
+                      dir="auto"
+                      rows={2}
+                      placeholder={staff ? copy.declineExample : copy.requestExample}
+                      className={`min-h-14 max-h-48 ${locale === 'fa' ? 'placeholder:text-right' : ''}`}
+                      onChange={(e) => setReason(e.target.value)}
+                    />
+                    <p
+                      id={draft.errorId('reason')}
+                      role={draft.errors.reason ? 'alert' : undefined}
+                      aria-hidden={!draft.errors.reason || undefined}
+                      hidden={!draft.errors.reason}
+                      className="text-sm text-destructive"
+                    >
+                      {draft.errors.reason?.message ?? word('cancellationReasonInvalid')}
+                    </p>
+                  </Field>
+                  {!staff ? (
+                    <Field className={view ? 'min-w-0 gap-1 sm:max-w-sm' : 'min-w-0 gap-1'}>
+                      <FieldLabel htmlFor={'request-destination-' + id}>
+                        {word('cancellationRequestPreference')}
+                      </FieldLabel>
+                      <NativeSelect
+                        {...draft.bind('preferredDestination')}
+                        disabled={busy || needsRead}
+                        id={'request-destination-' + id}
+                        value={destination}
+                        className="w-full min-w-0"
+                        onChange={(e) =>
+                          setDestination(e.target.value as 'wallet' | 'external_bank')
+                        }
+                      >
+                        <option value="wallet">{word('cancellation.wallet')}</option>
+                        <option value="external_bank">{word('cancellation.external_bank')}</option>
+                      </NativeSelect>
+                      <p
+                        id={draft.errorId('preferredDestination')}
+                        role={draft.errors.preferredDestination ? 'alert' : undefined}
+                        aria-hidden={!draft.errors.preferredDestination || undefined}
+                        hidden={!draft.errors.preferredDestination}
+                        className="text-sm text-destructive"
+                      >
+                        {draft.errors.preferredDestination?.message ??
+                          word('cancellationDestinationInvalid')}
+                      </p>
+                    </Field>
+                  ) : null}
+                </div>
+                {draft.errors.root?.validation ? (
+                  <Alert variant="destructive">
+                    <AlertDescription>{draft.errors.root.validation.message}</AlertDescription>
+                  </Alert>
+                ) : null}
+              </div>
+              <RecordEditorActions>
+                <Button
+                  disabled={busy || needsRead}
+                  type="submit"
+                  variant={staff ? 'outline' : 'default'}
+                  className={
+                    staff
+                      ? 'border-destructive/25 text-destructive hover:bg-destructive/10 hover:text-destructive'
+                      : undefined
+                  }
+                >
+                  {draft.form.formState.isSubmitting && (
+                    <span
+                      aria-hidden="true"
+                      className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                    />
+                  )}
+                  {word(staff ? 'cancellationRequestReject' : 'cancellationRequestSubmit')}
+                </Button>
+              </RecordEditorActions>
             </form>
           ) : null}
+          {!staff && !request && !data.canRequest && (
+            <p className="text-sm text-muted-foreground">{word('cancellationNoAction')}</p>
+          )}
         </>
       )}
       {action ? (

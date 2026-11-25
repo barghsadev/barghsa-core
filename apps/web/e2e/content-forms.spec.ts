@@ -52,8 +52,8 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.goto('/admin/tos');
       const history = page.getByRole('list', { name: text.history, exact: true });
-      const edit = history.getByRole('button', { name: text.edit, exact: true });
-      const publish = history.getByRole('button', { name: text.publish, exact: true });
+      const edit = history.getByRole('link', { name: text.edit, exact: true });
+      const publish = history.getByRole('link', { name: text.publish, exact: true });
       const discard = history.getByRole('button', { name: text.discard, exact: true });
       const preview = page.getByRole('region', { name: text.publishTitle, exact: true });
       const english = page.getByRole('textbox', { name: text.english, exact: true });
@@ -85,9 +85,19 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         page.getByRole('alert').filter({ hasText: text.unconfirmedWrite })
       ).toBeVisible();
-      await expect(edit).toBeDisabled();
-      await expect(publish).toBeDisabled();
-      await expect(discard).toBeDisabled();
+      if (operation === 'update') {
+        await expect(
+          page.getByRole('button', { name: text.updateDraft, exact: true })
+        ).toBeDisabled();
+      } else if (operation === 'publish') {
+        await expect(page.getByRole('button', { name: text.publish, exact: true })).toHaveCount(0);
+      } else {
+        await expect(history.getByRole('button', { name: text.edit, exact: true })).toBeDisabled();
+        await expect(
+          history.getByRole('button', { name: text.publish, exact: true })
+        ).toBeDisabled();
+        await expect(discard).toBeDisabled();
+      }
       await expect(preview).toHaveCount(0);
       const path = `${base}/${draft.id}`;
       expect(writes).toEqual([
@@ -121,10 +131,11 @@ for (const locale of ['en', 'fa'] as const)
           page.getByRole('button', { name: text.updateDraft, exact: true })
         ).toBeEnabled();
       } else if (operation === 'publish') {
-        await expect(history).toContainText(text.active);
-        await expect(publish).toHaveCount(0);
+        await page.getByRole('main').getByRole('link', { name: text.view, exact: true }).click();
+        await expect(page.getByRole('main')).toContainText(text.active);
+        await expect(page.getByRole('link', { name: text.publish, exact: true })).toHaveCount(0);
       } else {
-        await expect(page.getByRole('button', { name: text.newDraft, exact: true })).toBeEnabled();
+        await expect(page.getByRole('link', { name: text.newDraft, exact: true })).toBeEnabled();
         await expect(discard).toHaveCount(0);
       }
       expect(writes).toHaveLength(1);
@@ -138,14 +149,14 @@ for (const locale of ['en', 'fa'] as const)
     }, info) => {
       await setupCatalogueForms(page, locale, dark);
       const text = adminTosText(locale);
-      await page.route('**/api/admin/tos/versions', (route) =>
-        route.fulfill({
-          json: [{ ...termsVersion(), contentEn: '[Barghsa help](https://example.test/help)' }],
-        })
+      const draft = { ...termsVersion(), contentEn: '[Barghsa help](https://example.test/help)' };
+      await page.route('**/api/admin/tos/versions', (route) => route.fulfill({ json: [draft] }));
+      await page.route(`**/api/admin/tos/versions/${draft.id}`, (route) =>
+        route.fulfill({ json: draft })
       );
       await page.goto('/admin/tos');
       await expect(page.locator('html')).toHaveClass(dark ? /\bdark\b/ : /^(?!.*\bdark\b)/);
-      await page.getByRole('button', { name: text.edit, exact: true }).click();
+      await page.getByRole('link', { name: text.edit, exact: true }).click();
       const editor = page.getByRole('textbox', { name: text.english, exact: true });
       const link = editor.getByRole('link', { name: 'Barghsa help' });
       await expect(link).toHaveAttribute('href', 'https://example.test/help');
@@ -201,8 +212,11 @@ for (const locale of ['en', 'fa'] as const)
         terms = [{ ...termsVersion(), ...body }];
         return route.fulfill({ status: 201, json: terms[0] });
       });
+      await page.route(`**/api/admin/tos/versions/${termsVersion().id}`, (route) =>
+        route.fulfill({ json: terms[0] })
+      );
       await page.goto('/admin/tos');
-      await page.getByRole('button', { name: text.newDraft, exact: true }).click();
+      await page.getByRole('link', { name: text.newDraft, exact: true }).click();
       const form = page.locator('form'),
         id = page.locator('#admintospage-field-1'),
         fa = form.getByRole('textbox', { name: text.persian, exact: true }),
@@ -259,7 +273,7 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.goto('/admin/contract-templates');
       await page
-        .getByRole('button', { name: `${word('open')} ${template.name}`, exact: true })
+        .getByRole('link', { name: `${word('editor')} ${template.name}`, exact: true })
         .click();
       const name = page.locator('#template-name'),
         description = page.locator('#template-description');
@@ -292,7 +306,11 @@ for (const locale of ['en', 'fa'] as const)
       await page.locator('form button[type=submit]').click();
       await confirm();
       await expect(page.getByRole('dialog')).toHaveCount(0);
-      await expect(page.getByRole('status').filter({ hasText: word('saved') })).toBeVisible();
+      await expect(
+        page
+          .getByRole('main')
+          .getByRole('heading', { name: 'Local contract template', exact: true })
+      ).toBeVisible();
       expect(templateWrites).toHaveLength(2);
     });
   }
@@ -308,7 +326,7 @@ for (const locale of ['en', 'fa'] as const)
       return route.fulfill({ json: {} });
     });
     await page.goto('/admin/tos');
-    await page.getByRole('button', { name: text.newDraft, exact: true }).click();
+    await page.getByRole('link', { name: text.newDraft, exact: true }).click();
     await page.locator('#admintospage-field-1').fill('v2');
     await page.getByRole('textbox', { name: text.persian, exact: true }).fill('شرایط');
     await page.getByRole('textbox', { name: text.english, exact: true }).fill('Retained terms');
@@ -332,7 +350,7 @@ for (const locale of ['en', 'fa'] as const)
     });
     await page.goto('/admin/contract-templates');
     await page
-      .getByRole('button', { name: `${word('open')} ${contractTemplate.name}`, exact: true })
+      .getByRole('link', { name: `${word('editor')} ${contractTemplate.name}`, exact: true })
       .click();
     await page.locator('#template-name').fill('Retained name');
     await page.locator('form button[type=submit]').click();

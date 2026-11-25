@@ -20,28 +20,21 @@ for (const locale of ['en', 'fa'] as const) {
     await crmShell(page, locale);
     await page.route('**/api/user/settings/locale', (route) => route.fulfill({ json: { locale } }));
     let denied = false;
+    const account = {
+      ...staffUser,
+      activationPending: true,
+      activationExpiresAt: '2026-10-06T12:30:00Z',
+      lastLoginAt: '2026-10-05T08:15:00Z',
+    };
     await page.route('**/api/admin/staff-access', (route) => route.fulfill({ json: staffAccess }));
     await page.route('**/api/admin/staff-role-options', (route) =>
       route.fulfill({ json: staffRoles })
     );
     await page.route('**/api/admin/staff?*', (route) =>
-      route.fulfill(
-        denied
-          ? { status: 403, json: {} }
-          : {
-              json: {
-                items: [
-                  {
-                    ...staffUser,
-                    activationPending: true,
-                    activationExpiresAt: '2026-10-06T12:30:00Z',
-                    lastLoginAt: '2026-10-05T08:15:00Z',
-                  },
-                ],
-                total: 1,
-              },
-            }
-      )
+      route.fulfill({ json: { items: [account], total: 1 } })
+    );
+    await page.route(`**/api/admin/staff/accounts/${staffUser.userId}`, (route) =>
+      route.fulfill(denied ? { status: 403, json: {} } : { json: account })
     );
     let writes = 0;
     await page.route('**/api/admin/users/*/roles', (route) => {
@@ -56,14 +49,8 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(card).toContainText('Finance Alice');
     await expect(card).toContainText(staffUser.username);
     await expect(card).toContainText(label('activationPending'));
-    await expect(
-      card.getByRole('button', { name: label('resendActivation'), exact: true })
-    ).toBeEnabled();
+    await expect(card.getByRole('link', { name: 'Finance Alice', exact: true })).toBeVisible();
     await expect(card.locator('time')).toHaveAttribute('datetime', '2026-10-05T08:15:00.000Z');
-    await expect(card.getByRole('button', { name: label('disable'), exact: true })).toBeEnabled();
-    await expect(
-      card.getByRole('button', { name: t('admin.roles.effective.inspect', locale), exact: true })
-    ).toBeEnabled();
     await inspect(page);
     await checkRoutePresentation(page, info, locale);
     if (locale === 'fa' && info.project.name === 'mobile-safari')
@@ -71,20 +58,19 @@ for (const locale of ['en', 'fa'] as const) {
         path: test.info().outputPath('staff-card-fa.png'),
       });
 
-    await card.getByRole('button', { name: label('editRoles'), exact: true }).click();
+    await card.getByRole('link', { name: 'Finance Alice', exact: true }).click();
+    await expect(
+      page.getByRole('button', { name: label('resendActivation'), exact: true })
+    ).toBeEnabled();
+    await expect(page.getByRole('button', { name: label('disable'), exact: true })).toBeEnabled();
+    await expect(
+      page.getByRole('link', { name: t('admin.roles.effective.inspect', locale), exact: true })
+    ).toBeVisible();
+    await page.getByRole('link', { name: label('editRoles'), exact: true }).click();
     await page.locator('#staff-role-reason').fill('  Retained duties  ');
     await page.setViewportSize({ width: 1100, height: 900 });
-    const table = page.getByRole('table');
-    await expect(table).toBeVisible();
-    await expect(page.getByRole('list', { name: label('title'), exact: true })).toHaveCount(0);
-    await expect(table.getByRole('rowheader')).toContainText('Finance Alice');
+    await expect(page.getByRole('table')).toHaveCount(0);
     await expect(page.locator('#staff-role-reason')).toHaveValue('  Retained duties  ');
-    const viewport = page.getByRole('region', { name: label('table'), exact: true });
-    await viewport.focus();
-    await viewport.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
-    await expect
-      .poll(() => viewport.evaluate((node) => Math.abs(node.scrollLeft)))
-      .toBeGreaterThan(0);
     await inspect(page);
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(page.locator('#staff-role-reason')).toHaveValue('  Retained duties  ');

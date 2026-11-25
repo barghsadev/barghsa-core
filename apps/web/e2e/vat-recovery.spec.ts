@@ -62,34 +62,39 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/vat');
     const editor = page.getByRole('form', { name: label('editor'), exact: true });
     const hardware = label('category.hardware');
-    await page.getByRole('button', { name: `${label('end')} ${hardware}`, exact: true }).click();
-    await expect(page).toHaveURL(new RegExp(`mode=endRate&selected=${vatRate.id}$`));
-    await expect(editor.getByRole('heading', { name: hardware, exact: true })).toBeFocused();
+    await page.getByRole('link', { name: `${label('end')} ${hardware}`, exact: true }).click();
+    await expect(page).toHaveURL(new RegExp(`/admin/vat/rates/${vatRate.id}/end$`));
+    await expect(page.getByRole('heading', { name: label('end'), level: 1 })).toBeFocused();
+    await expect(editor.getByText(hardware, { exact: true })).toBeVisible();
     await editor.getByRole('button', { name: label('end'), exact: true }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
     await page.reload();
-    await expect(editor.getByRole('heading', { name: hardware, exact: true })).toBeVisible();
+    await expect(editor.getByText(hardware, { exact: true })).toBeVisible();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await page.goBack();
     await expect(editor).toHaveCount(0);
     await page.goForward();
-    await expect(editor.getByRole('heading', { name: hardware, exact: true })).toBeVisible();
+    await expect(editor.getByText(hardware, { exact: true })).toBeVisible();
     ended = true;
     await page.getByRole('button', { name: label('refresh'), exact: true }).click();
     await expect(editor).toHaveCount(0);
-    await expect(page).toHaveURL(/\/admin\/vat$/);
+    await expect(page.getByText(label('alreadyEnded'))).toBeVisible();
+    await page
+      .getByRole('main')
+      .getByRole('link', { name: label('title'), exact: true })
+      .click();
     const product = vatProduct.title[locale];
     await page
-      .getByRole('button', { name: `${label('endOverride')} ${product}`, exact: true })
+      .getByRole('link', { name: `${label('endOverride')} ${product}`, exact: true })
       .click();
-    await expect(page).toHaveURL(new RegExp(`mode=endOverride&selected=${vatOverride.id}$`));
+    await expect(page).toHaveURL(new RegExp(`/admin/vat/overrides/${vatOverride.id}/end$`));
     await page.reload();
-    await expect(editor.getByRole('heading', { name: product, exact: true })).toBeVisible();
+    await expect(editor.getByText(product, { exact: true })).toBeVisible();
     denied = true;
     await page.reload();
     await expect(page.getByRole('alert')).toHaveText(label('denied'));
     await expect(editor).toHaveCount(0);
-    await expect(page).toHaveURL(/\/admin\/vat$/);
+    await expect(page).toHaveURL(new RegExp(`/admin/vat/overrides/${vatOverride.id}/end$`));
     expect(writes).toEqual([]);
   });
   test(`VAT rate draft and frozen decision recover independently (${locale})`, async ({
@@ -128,14 +133,14 @@ for (const locale of ['en', 'fa'] as const) {
     await expect
       .poll(() => region.evaluate((node) => Math.abs(node.scrollLeft)))
       .toBeGreaterThan(0);
-    await page.getByRole('button', { name: label('addRate'), exact: true }).click();
+    const catalogueReads = [productReads, overrideReads];
+    await page.getByRole('link', { name: label('addRate'), exact: true }).click();
     await page.locator('#vat-percent').fill('7.25');
+    expect([productReads, overrideReads]).toEqual(catalogueReads);
     fail = true;
     await page.getByRole('button', { name: label('refresh'), exact: true }).click();
     await expect(page.getByRole('alert')).toContainText(label('ratesError'));
-    await expect(
-      page.getByRole('table', { name: label('rates'), exact: true }).locator('tbody tr')
-    ).toHaveCount(2);
+    await expect(page.getByRole('table', { name: label('rates'), exact: true })).toHaveCount(0);
     await page.locator('#vat-percent').fill('8.5');
     await expect(page.getByRole('button', { name: label('save'), exact: true })).toBeDisabled();
     const before = [productReads, overrideReads];
@@ -181,7 +186,7 @@ for (const locale of ['en', 'fa'] as const) {
       route.fulfill(fail ? { status: 503, json: {} } : { json: removed ? [] : [vatProduct] })
     );
     await page.goto('/admin/vat');
-    await page.getByRole('button', { name: label('addOverride'), exact: true }).click();
+    await page.getByRole('link', { name: label('addOverride'), exact: true }).click();
     await page.locator('#vat-product').selectOption(vatProduct.id);
     await page.locator('#vat-rate').selectOption(vatRate.id);
     fail = true;
@@ -232,7 +237,7 @@ for (const locale of ['en', 'fa'] as const) {
       route.fulfill({ json: [vatProduct] })
     );
     await page.goto('/admin/vat');
-    await page.getByRole('button', { name: label('addRate'), exact: true }).click();
+    await page.getByRole('link', { name: label('addRate'), exact: true }).click();
     await page.locator('#vat-percent').fill('7.25');
     await page.getByRole('checkbox').check();
     await page.locator('#vat-time').fill('10:15');

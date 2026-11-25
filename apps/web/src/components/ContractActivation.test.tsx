@@ -148,7 +148,7 @@ it('opens the linked invoice in the staff ledger from activation requirements', 
   );
   await render(<ContractActivationPanel id={CONTRACT} versionId={VERSION} staff />);
   expect(
-    container.querySelector(`a[href="/admin/invoices?invoiceId=${invoiceId}"]`)?.textContent
+    container.querySelector(`a[href="/admin/invoices/${invoiceId}"]`)?.textContent
   ).toBe(en.openInitialInvoice);
 });
 for (const locale of ['en', 'fa'] as const)

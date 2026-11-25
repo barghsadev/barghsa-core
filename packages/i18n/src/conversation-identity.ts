@@ -3,10 +3,15 @@ export type Locale = 'fa' | 'en';
 export const fa = {
   'conversationIdentity.paymentActivity': 'نمایش نام در سوابق رسید پرداخت',
   'conversationIdentity.paymentActivityHelp':
-    'مشتریان و کارکنانی که به فاکتور دسترسی دارند، این نام را در سوابق رسید می‌بینند. این انتخاب جدا از سوابق سفارش است؛ تصویر نمایش داده نمی‌شود. با غیرفعال کردن، نام از نمایش بعدی سوابق گذشته نیز حذف می‌شود.',
+    'افراد دارای دسترسی به فاکتور این نام را می‌بینند. با خاموش کردن این گزینه، نام از سوابق قبلی رسید هم پنهان می‌شود.',
   'conversationIdentity.activity': 'نمایش این نام در سوابق سفارش، قرارداد و مشاوره',
   'conversationIdentity.activityHelp':
-    'مشتریان و کارکنانی که به این پرونده‌ها دسترسی دارند، نام انتخابی شما را می‌بینند. تصویر فقط در گفتگوهای پشتیبانی نمایش داده می‌شود. با غیرفعال کردن این گزینه، نام از نمایش بعدی سوابق گذشته نیز حذف می‌شود.',
+    'افراد دارای دسترسی به این پرونده‌ها نام را می‌بینند. با خاموش کردن این گزینه، نام از سوابق قبلی هم پنهان می‌شود.',
+  'conversationIdentity.sharingTitle': 'نمایش نام در سوابق',
+  'conversationIdentity.sharingHelp':
+    'در سوابق فقط نام نمایش داده می‌شود. تصویر در گفتگوهای پشتیبانی می‌ماند.',
+  'conversationIdentity.sharingNameRequired':
+    'برای انتخاب محل نمایش نام در سوابق، ابتدا نام نمایشی وارد کنید.',
   'conversationIdentity.choosePhoto': 'انتخاب تصویر',
   'conversationIdentity.title': 'نام و تصویر گفتگو',
   'conversationIdentity.description':
@@ -16,6 +21,11 @@ export const fa = {
   'conversationIdentity.photo': 'تصویر گفتگو',
   'conversationIdentity.photoHelp': 'یک تصویر PNG، JPG یا WebP، حداکثر ۲ مگابایت.',
   'conversationIdentity.remove': 'حذف تصویر',
+  'conversationIdentity.discardPhoto': 'لغو انتخاب',
+  'conversationIdentity.undoPhotoRemoval': 'بازگرداندن تصویر',
+  'conversationIdentity.photoSaved': 'تصویر ذخیره‌شده',
+  'conversationIdentity.photoEmpty': 'بدون تصویر',
+  'conversationIdentity.photoRemovalPending': 'تصویر پس از ذخیره حذف می‌شود.',
   'conversationIdentity.fallback': 'کاربر',
   'conversationIdentity.saveAction': 'ذخیره',
   'conversationIdentity.saving': 'در حال ذخیره…',
@@ -40,10 +50,15 @@ export const fa = {
 export const en = {
   'conversationIdentity.paymentActivity': 'Show name in payment receipt history',
   'conversationIdentity.paymentActivityHelp':
-    'Customers and staff with access to the invoice can see this name in receipt history. This is separate from order history; photos are excluded. Turning this off also removes the name from later reads of past activity.',
+    'People with access to the invoice can see this name. Turn this off to hide your name in past receipts too.',
   'conversationIdentity.activity': 'Show this name in order, contract and consultation history',
   'conversationIdentity.activityHelp':
-    'Customers and staff with access to these records can see your chosen name. Photos stay in support conversations. Turning this off also removes the name from later reads of past activity.',
+    'People with access to these records can see your name. Turn this off to hide your name in past records too.',
+  'conversationIdentity.sharingTitle': 'Where your name appears',
+  'conversationIdentity.sharingHelp':
+    'Only your name appears in these histories. Your photo stays in support conversations.',
+  'conversationIdentity.sharingNameRequired':
+    'Enter a display name to choose where it appears in history.',
   'conversationIdentity.choosePhoto': 'Choose photo',
   'conversationIdentity.title': 'Conversation name and photo',
   'conversationIdentity.description':
@@ -53,6 +68,11 @@ export const en = {
   'conversationIdentity.photo': 'Conversation photo',
   'conversationIdentity.photoHelp': 'One PNG, JPG or WebP image, up to 2 MB.',
   'conversationIdentity.remove': 'Remove photo',
+  'conversationIdentity.discardPhoto': 'Discard selection',
+  'conversationIdentity.undoPhotoRemoval': 'Undo removal',
+  'conversationIdentity.photoSaved': 'Saved photo',
+  'conversationIdentity.photoEmpty': 'No photo',
+  'conversationIdentity.photoRemovalPending': 'The photo will be removed when you save.',
   'conversationIdentity.fallback': 'User',
   'conversationIdentity.saveAction': 'Save',
   'conversationIdentity.saving': 'Saving…',

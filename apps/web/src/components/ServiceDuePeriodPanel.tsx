@@ -1,8 +1,6 @@
-import { CommandFeedback } from './CommandFeedback.js';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
-import { sendToast } from '../lib/toast-api.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { SERVICE_DUE_PERIOD_TYPES } from '@barghsa/shared/finance/browser';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
@@ -14,24 +12,26 @@ import {
   FieldLabel,
   FieldSet,
   Input,
-  NativeSelect,
-  NativeSelectOption,
+  ListRefreshButton,
 } from '@barghsa/ui';
 import { tDuePeriods as t } from '@barghsa/i18n/invoice-due-periods';
 import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import { type ServiceDuePeriodSetting, type ServiceDuePeriodType } from '@barghsa/shared/finance';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { useLocale } from '../hooks/useLocale.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { withCsrf } from '../lib/csrf.js';
 import { authErrorCode } from '../lib/auth-errors.js';
 import { isInvoiceUuid } from '../lib/due-at-override.js';
 import { useDuePeriodForm } from '../hooks/useDeadlineForms.js';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
-import {
-  RefundFieldFeedback as FieldFeedback,
-  RefundFormAlert as FormAlert,
-} from './RefundFormFeedback.js';
+import { RefundFormAlert as FormAlert } from './RefundFormFeedback.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import {
+  InvoiceTimingServiceList,
+  type InvoiceTimingPanelProps,
+} from './InvoiceTimingServiceList.js';
+import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
 
 const path = '/api/admin/config/invoice-due-periods';
 const validDays = (value: unknown): value is number =>
@@ -59,20 +59,26 @@ function isSettings(value: unknown): value is ServiceDuePeriodSetting[] {
   });
 }
 
-export default function ServiceDuePeriodPanel() {
+export default function ServiceDuePeriodPanel(props: InvoiceTimingPanelProps) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  return <OwnedServiceDuePeriodPanel key={JSON.stringify([actor, revision])} />;
+  return (
+    <OwnedServiceDuePeriodPanel key={JSON.stringify([actor, revision, props.service])} {...props} />
+  );
 }
-function OwnedServiceDuePeriodPanel() {
+function OwnedServiceDuePeriodPanel({ onLocked, search, service }: InvoiceTimingPanelProps) {
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
   const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
   const locale = useLocale(),
-    draft = useDuePeriodForm();
+    draft = useDuePeriodForm(service ?? 'electricity');
+  const time = useAccountTime(locale);
+  const formatDays = (count: number) =>
+    count === 1
+      ? t('oneDayPeriod', locale)
+      : t('periodLength', locale).replace('{days}', count.toLocaleString(locale));
   const [settings, setSettings] = useState<ServiceDuePeriodSetting[] | null>(null);
-  const [serviceType] = draft.field('serviceType'),
-    [days, setDays] = draft.field('defaultDays');
+  const [days, setDays] = draft.field('defaultDays');
   const [loading, setLoading] = useState(true),
     [saving, setSaving] = useState(false),
     [saved, setSaved] = useState(false);
@@ -83,24 +89,29 @@ function OwnedServiceDuePeriodPanel() {
     action: TeamAction;
     change: Change;
     owner: number;
+    previousDays: number;
   } | null>(null);
   const inFlight = useRef(false),
     write = useRef<AbortController | null>(null),
     submitButton = useRef<HTMLButtonElement>(null),
     generation = useRef(0),
     live = useRef(false);
-  const invalidFocus = useRef<'serviceType' | 'defaultDays' | null>(null);
+  const invalidFocus = useRef<'defaultDays' | null>(null);
   useEffect(() => {
     if (!saving && invalidFocus.current) {
       draft.form.setFocus(invalidFocus.current);
       invalidFocus.current = null;
     }
   }, [saving, draft.form]);
-  const selected = useRef(serviceType),
-    settingsRef = useRef(settings);
-  selected.current = serviceType;
+  const settingsRef = useRef(settings);
   settingsRef.current = settings;
   const locked = loading || saving || Boolean(pending);
+  const writePending = saving || Boolean(pending);
+  useEffect(() => {
+    onLocked?.(writePending);
+    return () => onLocked?.(false);
+  }, [onLocked, writePending]);
+  const currentPeriod = settings?.find((row) => row.serviceType === service);
   useEffect(() => {
     live.current = true;
     return () => {
@@ -116,7 +127,7 @@ function OwnedServiceDuePeriodPanel() {
     setSettings(null);
     settingsRef.current = null;
     setPending(null);
-    draft.form.reset({ serviceType: 'electricity', defaultDays: '7' });
+    draft.form.reset({ serviceType: service ?? 'electricity', defaultDays: '7' });
     setUnavailable(true);
     setSaved(false);
     setError(t('denied', locale));
@@ -138,13 +149,13 @@ function OwnedServiceDuePeriodPanel() {
         const value: unknown = await response.json();
         if (!isSettings(value)) throw new Error('read');
         if (controller.signal.aborted) return;
-        const previous = settingsRef.current?.find((row) => row.serviceType === selected.current);
-        const next = value.find((row) => row.serviceType === selected.current)!;
-        if (JSON.stringify(previous) !== JSON.stringify(next)) {
+        const previous = settingsRef.current?.find((row) => row.serviceType === service);
+        const next = value.find((row) => row.serviceType === service);
+        if (service && next && JSON.stringify(previous) !== JSON.stringify(next)) {
           generation.current++;
           setPending(null);
           draft.form.reset({
-            serviceType: selected.current,
+            serviceType: service,
             defaultDays: String(next.defaultDays),
           });
         }
@@ -159,7 +170,7 @@ function OwnedServiceDuePeriodPanel() {
       });
     return () => controller.abort();
     // The resource owns reloads; form changes must not restart its request.
-  }, [reload, locale, readStaff]);
+  }, [reload, locale, readStaff, service]);
   const current = (owner: number) =>
     live.current && owner === generation.current && getProfileContextRevision() === profileRevision;
   function unconfirmed(owner: number) {
@@ -191,7 +202,7 @@ function OwnedServiceDuePeriodPanel() {
   }
   async function save(event: FormEvent) {
     event.preventDefault();
-    if (locked || unavailable || inFlight.current || !settings) return;
+    if (locked || unavailable || inFlight.current || !currentPeriod || !service) return;
     const owner = generation.current;
     inFlight.current = true;
     setSaving(true);
@@ -201,12 +212,12 @@ function OwnedServiceDuePeriodPanel() {
     try {
       await draft.form.handleSubmit(
         async (values) => {
-          if (!current(owner)) return;
+          if (!current(owner) || values.serviceType !== service) return;
+          const previous = currentPeriod;
           const change: Change = {
-            serviceType: values.serviceType as ServiceDuePeriodType,
+            serviceType: service,
             defaultDays: Number(normalizeProfileDigits(values.defaultDays).trim()),
-            expectedPeriodId: settings.find((row) => row.serviceType === values.serviceType)!
-              .periodId,
+            expectedPeriodId: previous.periodId,
           };
           const controller = new AbortController();
           write.current = controller;
@@ -230,6 +241,7 @@ function OwnedServiceDuePeriodPanel() {
             setPending({
               change,
               owner,
+              previousDays: previous.defaultDays,
               action: {
                 path,
                 method: 'PUT',
@@ -261,16 +273,13 @@ function OwnedServiceDuePeriodPanel() {
           } else accepted(value, change, owner);
         },
         (errors) => {
-          if (current(owner))
-            invalidFocus.current =
-              (['serviceType', 'defaultDays'] as const).find((name) => errors[name]) ?? null;
+          if (current(owner)) invalidFocus.current = errors.defaultDays ? 'defaultDays' : null;
         }
       )(event);
     } catch {
       if (current(owner)) {
         if (dispatched) {
           unconfirmed(owner);
-          sendToast('warning', t('error', locale));
         } else setError(t('error', locale));
       }
     } finally {
@@ -283,103 +292,160 @@ function OwnedServiceDuePeriodPanel() {
     <section
       id="invoice-due-periods"
       aria-labelledby="due-period-title"
-      className="space-y-4 rounded-lg border bg-card p-4 text-card-foreground"
+      className={`${recordEditorSurface} scroll-mt-28 text-card-foreground`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <h2 id="due-period-title" className="text-lg font-semibold">
-        {t('title', locale)}
-      </h2>
-      <p className="text-sm text-muted-foreground">{t('description', locale)}</p>
-      {loading && <LoadingStatus>{t('loading', locale)}</LoadingStatus>}
-      <FormAlert message={error ?? undefined} />
-      <Button
-        type="button"
-        variant="outline"
-        disabled={locked}
-        onClick={() => setReload((value) => value + 1)}
-      >
-        {t('load', locale)}
-      </Button>
-      {settings && (
-        <form onSubmit={save} noValidate>
-          <FieldSet disabled={locked || unavailable}>
-            <FieldGroup className="gap-4 sm:grid sm:grid-cols-2">
-              <Field>
-                <FieldLabel htmlFor="due-period-service">{t('service', locale)}</FieldLabel>
-                <NativeSelect
-                  id="due-period-service"
-                  {...draft.bind('serviceType')}
-                  value={serviceType}
-                  onChange={(event) => {
-                    if (inFlight.current || locked || unavailable) return;
-                    const next = event.target.value;
-                    if (!SERVICE_DUE_PERIOD_TYPES.some((type) => type === next)) return;
-                    generation.current++;
-                    draft.form.reset({
-                      serviceType: next,
-                      defaultDays: String(
-                        settings.find((row) => row.serviceType === next)!.defaultDays
-                      ),
-                    });
-                    setSaved(false);
-                    setError(null);
-                  }}
-                >
-                  {SERVICE_DUE_PERIOD_TYPES.map((type) => (
-                    <NativeSelectOption key={type} value={type}>
-                      {adminText(`admin.invoices.reminders.service.${type}`, locale)}
-                    </NativeSelectOption>
-                  ))}
-                </NativeSelect>
-                <FieldFeedback
-                  id={draft.errorId('serviceType')}
-                  error={draft.errors.serviceType}
-                  message={t('invalidService', locale)}
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="due-period-days">{t('days', locale)}</FieldLabel>
-                <Input
-                  id="due-period-days"
-                  {...draft.bind('defaultDays')}
-                  inputMode="numeric"
-                  value={days}
-                  maxLength={3}
-                  onChange={(event) => {
-                    setDays(event.target.value);
-                    setSaved(false);
-                  }}
-                />
-                <FieldFeedback
-                  id={draft.errorId('defaultDays')}
-                  error={draft.errors.defaultDays}
-                  message={t('invalid', locale)}
-                />
-              </Field>
-            </FieldGroup>
-            <FormAlert message={draft.errors.root?.validation?.message} />
+      <header className="flex items-start justify-between gap-3 border-b bg-muted/25 px-4 py-3.5 sm:px-6">
+        <div className="space-y-1">
+          <h2 id="due-period-title" className="text-base font-semibold">
+            {t('title', locale)}
+          </h2>
+          <p className="text-sm text-muted-foreground">{t('description', locale)}</p>
+        </div>
+        {!unavailable && (
+          <ListRefreshButton
+            label={t('load', locale)}
+            disabled={locked}
+            onClick={() => setReload((value) => value + 1)}
+          />
+        )}
+      </header>
+      {(loading || error) && (
+        <div className="space-y-2 px-4 py-3 sm:px-6">
+          {loading && <LoadingStatus>{t('loading', locale)}</LoadingStatus>}
+          <FormAlert message={error ?? undefined} />
+          {unavailable && error && (
             <Button
-              ref={submitButton}
-              type="submit"
-              disabled={locked || unavailable}
-              aria-busy={saving || undefined}
+              type="button"
+              variant="outline"
+              disabled={locked}
+              onClick={() => setReload((value) => value + 1)}
             >
-              {saving && (
-                <span
-                  aria-hidden="true"
-                  className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                />
-              )}
-              {t(saving ? 'saving' : 'save', locale)}
+              {t('load', locale)}
             </Button>
+          )}
+        </div>
+      )}
+      {settings && !service && (
+        <InvoiceTimingServiceList
+          section="due-periods"
+          search={search}
+          disabled={loading || unavailable}
+          summary={(id) =>
+            formatDays(settings.find((setting) => setting.serviceType === id)!.defaultDays)
+          }
+        />
+      )}
+      {currentPeriod && (
+        <form onSubmit={save} noValidate>
+          <FieldSet disabled={locked || unavailable} className="gap-0">
+            <div className="space-y-3 px-4 py-3.5 sm:px-6">
+              {currentPeriod && (
+                <dl className="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-lg border bg-muted/25 px-3 py-2 text-sm">
+                  <div className="flex flex-wrap items-baseline gap-x-2">
+                    <dt className="text-muted-foreground">{t('currentPeriod', locale)}</dt>
+                    <dd className="font-medium">{formatDays(currentPeriod.defaultDays)}</dd>
+                  </div>
+                  {currentPeriod.effectiveFrom && time.status === 'ready' && (
+                    <div className="flex flex-wrap items-baseline gap-x-2">
+                      <dt className="text-muted-foreground">{t('effectiveSince', locale)}</dt>
+                      <dd>
+                        <bdi>{time.format(currentPeriod.effectiveFrom)}</bdi>
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              )}
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="due-period-days">{t('days', locale)}</FieldLabel>
+                  <Input
+                    id="due-period-days"
+                    dir="ltr"
+                    className="max-w-28 tabular-nums"
+                    {...draft.bind('defaultDays')}
+                    aria-describedby={draft.errorId('defaultDays')}
+                    inputMode="numeric"
+                    value={days}
+                    maxLength={3}
+                    onChange={(event) => {
+                      setDays(event.target.value);
+                      setSaved(false);
+                    }}
+                  />
+                  <p
+                    id={draft.errorId('defaultDays')}
+                    role={draft.errors.defaultDays ? 'alert' : undefined}
+                    className={
+                      draft.errors.defaultDays
+                        ? 'text-sm text-destructive'
+                        : 'text-sm text-muted-foreground'
+                    }
+                  >
+                    {draft.errors.defaultDays?.message ?? t('invalid', locale)}
+                  </p>
+                </Field>
+              </FieldGroup>
+              <FormAlert message={draft.errors.root?.validation?.message} />
+            </div>
+            <RecordEditorActions
+              secondary={
+                saved ? (
+                  <p role="status" className="text-sm">
+                    {t('saved', locale)}
+                  </p>
+                ) : undefined
+              }
+            >
+              <Button
+                ref={submitButton}
+                type="submit"
+                disabled={locked || unavailable}
+                aria-busy={saving || undefined}
+              >
+                {saving && (
+                  <span
+                    aria-hidden="true"
+                    className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                  />
+                )}
+                {t(saving ? 'saving' : 'save', locale)}
+              </Button>
+            </RecordEditorActions>
           </FieldSet>
         </form>
       )}
-      <CommandFeedback className="text-sm" message={saved ? t('saved', locale) : null} />
       {pending && (
         <TeamActionDialog
           action={pending.action}
+          toastErrors={false}
           finalFocus={submitButton}
+          summary={
+            <dl className="space-y-2 rounded-lg border bg-muted/25 p-3 text-sm">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <dt className="text-muted-foreground">{t('service', locale)}</dt>
+                <dd>
+                  {adminText(
+                    `admin.invoices.reminders.service.${pending.change.serviceType}`,
+                    locale
+                  )}
+                </dd>
+              </div>
+              {(
+                [
+                  ['currentPeriod', pending.previousDays],
+                  ['reviewedPeriod', pending.change.defaultDays],
+                ] as const
+              ).map(([label, count]) => (
+                <div key={label} className="flex flex-wrap items-baseline justify-between gap-2">
+                  <dt className="text-muted-foreground">{t(label, locale)}</dt>
+                  <dd className={label === 'reviewedPeriod' ? 'font-semibold' : undefined}>
+                    {formatDays(count)}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          }
           onClose={() => setPending(null)}
           onDenied={denied}
           confirmationDisabled={unavailable || !current(pending.owner)}

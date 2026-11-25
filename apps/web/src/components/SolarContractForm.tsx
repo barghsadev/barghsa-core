@@ -11,6 +11,7 @@ import {
   Button,
   FinancialReviewSummary,
   Input,
+  NativeSelect,
   Textarea,
 } from '@barghsa/ui';
 import {
@@ -36,6 +37,7 @@ import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { withCsrf } from '../lib/csrf.js';
 import {
   emptySolarContract,
+  draftSolarInvoiceTotals,
   emptySolarInvoice,
   solarContractBody,
   solarContractOptions,
@@ -48,6 +50,13 @@ import {
   type SolarContractReview,
 } from '../lib/solar-contract-form.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 
 export interface SolarContractCoordination {
   blocked: () => boolean;
@@ -75,6 +84,7 @@ function OwnedSolarContractForm({
   coordination,
   onDenied,
   onCreated,
+  editorPage = false,
 }: {
   requestId: string;
   profileId: string;
@@ -82,6 +92,7 @@ function OwnedSolarContractForm({
   coordination?: SolarContractCoordination;
   onDenied?: () => void;
   onCreated: (contractId: string) => void;
+  editorPage?: boolean;
 }) {
   const client = useQueryClient();
   const reader = useId();
@@ -407,283 +418,362 @@ function OwnedSolarContractForm({
   const captured = command.current,
     review = captured?.review;
   const locked = !!captured;
+  const draftTotals = editorPage ? draftSolarInvoiceTotals(draft.invoiceLines) : undefined;
   const renderField = (
     name: FieldPath<SolarContractDraft>,
     id: string,
     label: string,
     help: string,
-    kind: 'input' | 'textarea' | 'checkbox' = 'input'
-  ) => (
-    <FormField
-      key={name}
-      control={form.control}
-      name={name}
-      render={({ field }) => (
-        <FormItem id={id}>
-          <FormLabel className={kind === 'checkbox' ? 'touch-label' : undefined}>{label}</FormLabel>
-          <FormControl>
+    kind: 'input' | 'textarea' | 'checkbox' = 'input',
+    example?: string
+  ) => {
+    const numeric =
+      name === 'fixedAmount' ||
+      name.endsWith('unitPrice') ||
+      name.endsWith('quantity') ||
+      name.endsWith('vatRate');
+    return (
+      <FormField
+        key={name}
+        control={form.control}
+        name={name}
+        render={({ field }) => (
+          <FormItem id={id} className={recordEditorField}>
             {kind === 'checkbox' ? (
-              <input
-                type="checkbox"
-                name={field.name}
-                ref={field.ref}
-                onBlur={field.onBlur}
-                checked={field.value === true}
-                disabled={locked}
-                onChange={(event) => field.onChange(event.target.checked)}
-              />
-            ) : kind === 'textarea' ? (
-              <Textarea
-                {...field}
-                aria-required="true"
-                value={String(field.value ?? '')}
-                disabled={locked}
-                rows={name === 'text' ? 8 : 3}
-              />
+              <div className="flex items-center gap-2">
+                <FormControl>
+                  <input
+                    type="checkbox"
+                    name={field.name}
+                    ref={field.ref}
+                    onBlur={field.onBlur}
+                    checked={field.value === true}
+                    disabled={locked}
+                    onChange={(event) => field.onChange(event.target.checked)}
+                  />
+                </FormControl>
+                <FormLabel className="touch-label">{label}</FormLabel>
+              </div>
             ) : (
-              <Input
-                {...field}
-                aria-required="true"
-                value={String(field.value ?? '')}
-                disabled={locked}
-                inputMode={
-                  name.includes('Price') ||
-                  name === 'fixedAmount' ||
-                  name.endsWith('quantity') ||
-                  name.endsWith('vatRate')
-                    ? 'numeric'
-                    : 'text'
-                }
-              />
+              <>
+                <FormLabel>{label}</FormLabel>
+                <FormControl>
+                  {kind === 'textarea' ? (
+                    <Textarea
+                      {...field}
+                      aria-required="true"
+                      value={String(field.value ?? '')}
+                      disabled={locked}
+                      placeholder={example}
+                      rows={name === 'text' ? (editorPage ? 3 : 5) : 2}
+                      className={
+                        name === 'text'
+                          ? 'min-h-24 max-h-72 resize-y'
+                          : 'min-h-14 max-h-32 resize-y'
+                      }
+                    />
+                  ) : (
+                    <Input
+                      {...field}
+                      aria-required="true"
+                      value={String(field.value ?? '')}
+                      disabled={locked}
+                      placeholder={example}
+                      dir={numeric ? 'ltr' : undefined}
+                      inputMode={numeric ? 'numeric' : undefined}
+                    />
+                  )}
+                </FormControl>
+              </>
             )}
-          </FormControl>
-          <FormDescription>{help}</FormDescription>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
+            <FormDescription>{help}</FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    );
+  };
   return (
     <Form {...form}>
       <form
         data-testid="solar-contract-form"
-        className="space-y-3 rounded-md border p-4"
+        aria-label={copy('solarCreateContract')}
+        className={recordEditorSurface}
         onSubmit={(event) => void submit(event)}
         noValidate
       >
-        <h3 className="font-semibold">{copy('solarCreateContract')}</h3>
-        {!shown && !error && <p role="status">{copy('loading')}</p>}
-        {error && (
-          <Alert variant="destructive">
-            <AlertDescription>{copy('solarContractError')}</AlertDescription>
-          </Alert>
-        )}
-        {error === 'options' && (
-          <Button
-            type="button"
-            data-testid="solar-contract-options-retry"
-            disabled={preparing || locked}
-            onClick={() => {
-              if (scope.current === scopeKey && !command.current && !preparingRef.current)
-                setRevision((value) => value + 1);
-            }}
-          >
-            {fieldCopy('reloadOptions')}
-          </Button>
-        )}
-        {shown && options && (
-          <>
-            <FormField
-              control={form.control}
-              name="source"
-              render={({ field }) => (
-                <FormItem id="solar-contract-source">
-                  <FormLabel>{copy('solarContractSource')}</FormLabel>
-                  <FormControl>
-                    <select
-                      {...field}
-                      aria-required="true"
-                      disabled={locked}
-                      className="w-full rounded-md border bg-background p-2"
-                    >
-                      <option value="">{copy('solarSelectSource')}</option>
-                      {options.templates.map((item) => (
-                        <option key={item.version_id} value={'template:' + item.version_id}>
-                          {item.name} · v{item.version_number}
-                        </option>
-                      ))}
-                      {options.documents.map((item) => (
-                        <option key={item.id} value={'document:' + item.id}>
-                          {item.original_name}
-                        </option>
-                      ))}
-                    </select>
-                  </FormControl>
-                  <FormDescription>{fieldCopy('sourceHelp')}</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {renderField(
-              'title',
-              'solar-contract-title',
-              copy('solarContractTitle'),
-              messages.title
-            )}
-            {renderField(
-              'text',
-              'solar-contract-text',
-              copy('solarContractText'),
-              messages.text,
-              'textarea'
-            )}
-            {renderField(
-              'changeDescription',
-              'solar-contract-reason',
-              copy('solarContractReason'),
-              messages.changeDescription
-            )}
-            <p className="text-sm text-muted-foreground">{contractCopy('commercialValueNotice')}</p>
-            <FormField
-              control={form.control}
-              name="valueKind"
-              render={({ field }) => (
-                <FormItem id="solar-contract-value-kind">
-                  <FormLabel>{contractCopy('statedContractValue')}</FormLabel>
-                  <FormControl>
-                    <select
-                      {...field}
-                      aria-required="true"
-                      disabled={locked}
-                      className="w-full rounded-md border bg-background p-2"
-                    >
-                      <option value="">{copy('solarSelectContractValue')}</option>
-                      <option value="fixed">{contractCopy('fixedContractValue')}</option>
-                      <option value="variable">{contractCopy('variableContractValue')}</option>
-                    </select>
-                  </FormControl>
-                  <FormDescription>{fieldCopy('valueHelp')}</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {draft.valueKind === 'fixed' &&
-              renderField(
-                'fixedAmount',
-                'solar-contract-fixed-amount',
-                contractCopy('fixedContractAmount'),
-                messages.fixedAmount
-              )}
-            {draft.valueKind === 'variable' &&
-              renderField(
-                'variableDescription',
-                'solar-contract-variable-description',
-                contractCopy('variableContractDescription'),
-                messages.variableDescription,
-                'textarea'
-              )}
-            <h4 className="font-medium">{copy('solarInvoiceLines')}</h4>
-            {draft.invoiceLines.map((line, index) => (
-              <div key={index} className="grid gap-2 rounded-md border p-3 sm:grid-cols-2">
-                {renderField(
-                  `invoiceLines.${index}.description`,
-                  `solar-contract-line-${index}-description`,
-                  copy('solarInvoiceDescription'),
-                  messages.description
-                )}
-                {renderField(
-                  `invoiceLines.${index}.quantity`,
-                  `solar-contract-line-${index}-quantity`,
-                  copy('solarInvoiceQuantity'),
-                  messages.quantity
-                )}
-                {renderField(
-                  `invoiceLines.${index}.unitPrice`,
-                  `solar-contract-line-${index}-unit-price`,
-                  copy('solarInvoicePrice'),
-                  messages.unitPrice
-                )}
-                {renderField(
-                  `invoiceLines.${index}.vatRate`,
-                  `solar-contract-line-${index}-vat-rate`,
-                  copy('solarInvoiceVat'),
-                  messages.vatRate
-                )}
-                {renderField(
-                  `invoiceLines.${index}.isTaxable`,
-                  `solar-contract-line-${index}-taxable`,
-                  copy('solarInvoiceTaxable'),
-                  messages.isTaxable,
-                  'checkbox'
-                )}
-                {draft.invoiceLines.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    data-testid={`solar-contract-remove-line-${index}`}
-                    disabled={locked}
-                    onClick={() => {
-                      if (!command.current) {
-                        form.setValue(
-                          'invoiceLines',
-                          form.getValues().invoiceLines.filter((_, position) => position !== index),
-                          { shouldDirty: true }
-                        );
-                        form.clearErrors('invoiceLines');
-                      }
-                    }}
-                  >
-                    {copy('solarRemoveLine')}
-                  </Button>
-                )}
-              </div>
-            ))}
+        <RecordEditorSection
+          title={editorPage ? fieldCopy('contractTerms') : copy('solarCreateContract')}
+          description={fieldCopy('issueSteps')}
+        >
+          {!shown && !error && <p role="status">{copy('loading')}</p>}
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{copy('solarContractError')}</AlertDescription>
+            </Alert>
+          )}
+          {error === 'options' && (
             <Button
               type="button"
-              variant="outline"
-              data-testid="solar-contract-add-line"
-              disabled={locked || draft.invoiceLines.length >= 100}
+              data-testid="solar-contract-options-retry"
+              disabled={preparing || locked}
               onClick={() => {
-                if (!command.current)
-                  form.setValue(
-                    'invoiceLines',
-                    [...form.getValues().invoiceLines, emptySolarInvoice()],
-                    { shouldDirty: true }
-                  );
+                if (scope.current === scopeKey && !command.current && !preparingRef.current)
+                  setRevision((value) => value + 1);
               }}
             >
-              {copy('solarAddLine')}
+              {fieldCopy('reloadOptions')}
             </Button>
-            <p className="text-sm text-muted-foreground">{fieldCopy('lineHelp')}</p>
-            {form.formState.errors.root && <p role="alert">{fieldCopy('validationUnavailable')}</p>}
-            {unconfirmed && (
-              <Alert variant="destructive">
-                <AlertDescription>{fieldCopy('uncertain')}</AlertDescription>
-              </Alert>
-            )}
-            {unconfirmed && (
+          )}
+          {shown && options && (
+            <>
+              <div className={recordEditorGrid}>
+                <FormField
+                  control={form.control}
+                  name="source"
+                  render={({ field }) => (
+                    <FormItem id="solar-contract-source" className={recordEditorField}>
+                      <FormLabel>{copy('solarContractSource')}</FormLabel>
+                      <FormControl>
+                        <NativeSelect
+                          {...field}
+                          aria-required="true"
+                          disabled={locked}
+                          className="w-full"
+                        >
+                          <option value="">{copy('solarSelectSource')}</option>
+                          {options.templates.map((item) => (
+                            <option key={item.version_id} value={'template:' + item.version_id}>
+                              {item.name} · v{item.version_number}
+                            </option>
+                          ))}
+                          {options.documents.map((item) => (
+                            <option key={item.id} value={'document:' + item.id}>
+                              {item.original_name}
+                            </option>
+                          ))}
+                        </NativeSelect>
+                      </FormControl>
+                      <FormDescription>{fieldCopy('sourceHelp')}</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {renderField(
+                  'title',
+                  'solar-contract-title',
+                  copy('solarContractTitle'),
+                  messages.title,
+                  'input',
+                  fieldCopy('titleExample')
+                )}
+              </div>
+              {renderField(
+                'text',
+                'solar-contract-text',
+                copy('solarContractText'),
+                messages.text,
+                'textarea',
+                fieldCopy('termsExample')
+              )}
+              {renderField(
+                'changeDescription',
+                'solar-contract-reason',
+                copy('solarContractReason'),
+                messages.changeDescription,
+                'input',
+                fieldCopy('reasonExample')
+              )}
+            </>
+          )}
+        </RecordEditorSection>
+        {shown && options && (
+          <>
+            <RecordEditorSection
+              title={fieldCopy('commercialValue')}
+              description={contractCopy('commercialValueNotice')}
+            >
+              <div className={draft.valueKind === 'fixed' ? recordEditorGrid : 'space-y-2.5'}>
+                <FormField
+                  control={form.control}
+                  name="valueKind"
+                  render={({ field }) => (
+                    <FormItem id="solar-contract-value-kind" className={recordEditorField}>
+                      <FormLabel>{contractCopy('statedContractValue')}</FormLabel>
+                      <FormControl>
+                        <NativeSelect
+                          {...field}
+                          aria-required="true"
+                          disabled={locked}
+                          className="w-full"
+                        >
+                          <option value="">{copy('solarSelectContractValue')}</option>
+                          <option value="fixed">{contractCopy('fixedContractValue')}</option>
+                          <option value="variable">{contractCopy('variableContractValue')}</option>
+                        </NativeSelect>
+                      </FormControl>
+                      <FormDescription>{fieldCopy('valueHelp')}</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {draft.valueKind === 'fixed' &&
+                  renderField(
+                    'fixedAmount',
+                    'solar-contract-fixed-amount',
+                    contractCopy('fixedContractAmount'),
+                    messages.fixedAmount
+                  )}
+                {draft.valueKind === 'variable' &&
+                  renderField(
+                    'variableDescription',
+                    'solar-contract-variable-description',
+                    contractCopy('variableContractDescription'),
+                    messages.variableDescription,
+                    'textarea',
+                    fieldCopy('variableExample')
+                  )}
+              </div>
+            </RecordEditorSection>
+            <RecordEditorSection
+              title={copy('solarInvoiceLines')}
+              description={fieldCopy('lineHelp')}
+            >
+              {draft.invoiceLines.map((line, index) => (
+                <fieldset key={index} className="min-w-0 space-y-2.5 rounded-lg border px-3 pb-3">
+                  <legend className="px-1 text-sm font-medium">
+                    {fieldCopy('invoiceLine')} {(index + 1).toLocaleString(locale)}
+                  </legend>
+                  {renderField(
+                    `invoiceLines.${index}.description`,
+                    `solar-contract-line-${index}-description`,
+                    copy('solarInvoiceDescription'),
+                    messages.description,
+                    'input',
+                    fieldCopy('lineExample')
+                  )}
+                  <div className="grid min-w-0 grid-cols-2 gap-3 sm:grid-cols-3">
+                    {renderField(
+                      `invoiceLines.${index}.quantity`,
+                      `solar-contract-line-${index}-quantity`,
+                      copy('solarInvoiceQuantity'),
+                      messages.quantity
+                    )}
+                    {renderField(
+                      `invoiceLines.${index}.unitPrice`,
+                      `solar-contract-line-${index}-unit-price`,
+                      copy('solarInvoicePrice'),
+                      messages.unitPrice
+                    )}
+                    {renderField(
+                      `invoiceLines.${index}.vatRate`,
+                      `solar-contract-line-${index}-vat-rate`,
+                      copy('solarInvoiceVat'),
+                      messages.vatRate
+                    )}
+                  </div>
+                  {renderField(
+                    `invoiceLines.${index}.isTaxable`,
+                    `solar-contract-line-${index}-taxable`,
+                    copy('solarInvoiceTaxable'),
+                    messages.isTaxable,
+                    'checkbox'
+                  )}
+                  {draft.invoiceLines.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      data-testid={`solar-contract-remove-line-${index}`}
+                      disabled={locked}
+                      onClick={() => {
+                        if (!command.current) {
+                          form.setValue(
+                            'invoiceLines',
+                            form
+                              .getValues()
+                              .invoiceLines.filter((_, position) => position !== index),
+                            { shouldDirty: true }
+                          );
+                          form.clearErrors('invoiceLines');
+                        }
+                      }}
+                    >
+                      {copy('solarRemoveLine')}
+                    </Button>
+                  )}
+                </fieldset>
+              ))}
               <Button
                 type="button"
                 variant="outline"
-                data-testid="solar-contract-retry"
-                disabled={pending || !!action}
+                data-testid="solar-contract-add-line"
+                disabled={locked || draft.invoiceLines.length >= 100}
                 onClick={() => {
-                  if (captured && current(captured) && !pendingRef.current)
-                    setAction(decorate(captured));
+                  if (!command.current)
+                    form.setValue(
+                      'invoiceLines',
+                      [...form.getValues().invoiceLines, emptySolarInvoice()],
+                      { shouldDirty: true }
+                    );
                 }}
               >
-                {fieldCopy('retryCaptured')}
+                {copy('solarAddLine')}
               </Button>
+              {draftTotals && (
+                <dl className="grid min-w-0 gap-2 rounded-lg bg-muted/45 p-3 text-sm sm:grid-cols-3">
+                  {(
+                    [
+                      [fieldCopy('invoiceSubtotal'), draftTotals.subtotal],
+                      [copy('solarReviewVat'), draftTotals.vat],
+                      [fieldCopy('draftInvoiceTotal'), draftTotals.total],
+                    ] as const
+                  ).map(([label, amount]) => (
+                    <div key={label} className="min-w-0">
+                      <dt className="text-muted-foreground">{label}</dt>
+                      <dd className="wrap-anywhere font-medium">
+                        {formatCurrencyIrr(amount, locale)}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+            </RecordEditorSection>
+            {(form.formState.errors.root || unconfirmed) && (
+              <div className="space-y-2 px-4 py-3 sm:px-6">
+                {form.formState.errors.root && (
+                  <p role="alert">{fieldCopy('validationUnavailable')}</p>
+                )}
+                {unconfirmed && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{fieldCopy('uncertain')}</AlertDescription>
+                  </Alert>
+                )}
+                {unconfirmed && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    data-testid="solar-contract-retry"
+                    disabled={pending || !!action}
+                    onClick={() => {
+                      if (captured && current(captured) && !pendingRef.current)
+                        setAction(decorate(captured));
+                    }}
+                  >
+                    {fieldCopy('retryCaptured')}
+                  </Button>
+                )}
+              </div>
             )}
-            <div>
+            <RecordEditorActions>
               <Button
                 type="submit"
                 loading={preparing}
                 disabled={preparing || locked || coordination?.blocked()}
               >
-                {copy('solarCreateContract')}
+                {editorPage ? fieldCopy('reviewIssuance') : copy('solarCreateContract')}
               </Button>
-            </div>
+            </RecordEditorActions>
           </>
         )}
         {action && captured && review && shown && current(captured) && (

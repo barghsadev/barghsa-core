@@ -189,6 +189,8 @@ it('shows a Persian legal hold and binds release to the selected hold', async ()
   );
   await render(<DocumentLegalHolds document={row()} />);
   expect(container.textContent).toContain('توقف حذف قانونی');
+  expect(container.querySelector('#hold-release-note')).toBeNull();
+  await click('رفع توقف');
   await value('#hold-release-note', 'Inquiry is complete');
   await click('رفع توقف');
   expect(harness.action).toMatchObject({

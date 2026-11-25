@@ -1,7 +1,8 @@
 import { sendToast, toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { LoadingStatus, Button, Input } from '@barghsa/ui';
+import { Badge, Button, Input, LoadingStatus } from '@barghsa/ui';
+import { Archive, CircleCheck, TriangleAlert } from 'lucide-react';
 import {
   Form,
   FormControl,
@@ -14,6 +15,7 @@ import {
 import { t } from '@barghsa/i18n/app';
 import { lifecycleFormText } from '@barghsa/i18n/profile-lifecycle-forms';
 import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useTicketFormFeedback } from '../hooks/useTicketFormFeedback.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -25,12 +27,19 @@ import {
   type ClosureValues,
 } from '../lib/profile-lifecycle-form.js';
 import type { TicketCoordination } from '../lib/ticket-form.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 interface Props {
   ticketId: string;
   locale: 'fa' | 'en';
   onCompleted: () => void;
   coordination?: TicketCoordination | undefined;
   disabled?: boolean;
+  dedicated?: boolean;
 }
 export function ProfileClosureReview(props: Props) {
   const actor = useAccountUser(),
@@ -51,6 +60,7 @@ function ClosureReview({
   onCompleted,
   coordination,
   disabled = false,
+  dedicated = false,
   authorized,
 }: Props & { authorized: () => boolean }) {
   const [preview, setPreview] = useState<ClosurePreview | null>(null);
@@ -219,7 +229,7 @@ function ClosureReview({
       if (!permitted()) return;
       if (!receipt) throw new Error('Invalid closure receipt');
       settled = true;
-      toast.success(confirmationText('recorded', locale));
+      if (!dedicated) toast.success(confirmationText('recorded', locale));
       complete(receipt);
     } catch {
       if (permitted()) {
@@ -288,158 +298,236 @@ function ClosureReview({
     await send(pending, password);
   }
   const label = (key: string) => t(`tickets.closure.${key}`, locale);
+  const numbers = useNumberFormatting(locale);
+  const blockers =
+    preview?.blockers.filter((item) => item.count > 0 && item.code !== 'securityReview') ?? [];
   return (
     <section
       data-slot="profile-closure-review"
-      className="space-y-3 rounded border p-4"
+      className={recordEditorSurface}
       aria-label={label('review')}
     >
       <fieldset disabled={locked} className="contents">
-        <h3 className="font-semibold">{label('review')}</h3>
-        {loading && <LoadingStatus>{t('settings.privacy.loading', locale)}</LoadingStatus>}
-        {error && (
-          <p role="alert">
-            {error === 'unknown'
-              ? copy('uncertain')
-              : error === 'changed'
-                ? copy('changed')
-                : error === 'read'
-                  ? t('settings.privacy.error', locale)
-                  : label('failure')}
-          </p>
-        )}
-        {pending && (
-          <Button
-            type="button"
-            data-ticket-command-retry
-            disabled={busy || !permitted()}
-            onClick={() => void retry()}
-          >
-            {copy('retry')}
-          </Button>
-        )}
-        {error === 'read' && !loading && (
-          <Button type="button" variant="outline" onClick={() => void reviewRefresh()}>
-            {label('refresh')}
-          </Button>
+        <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b px-4 py-3">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-muted text-primary">
+              <Archive aria-hidden="true" className="size-4" />
+            </span>
+            {dedicated ? (
+              <h2 className="text-base leading-snug font-semibold">{copy('reviewChecks')}</h2>
+            ) : (
+              <h3 className="text-base leading-snug font-semibold">{label('review')}</h3>
+            )}
+          </div>
+          {!loading && (error === 'read' || (preview && !preview.completedAt)) && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="max-w-full whitespace-normal"
+              disabled={busy || !!pending}
+              onClick={() => void reviewRefresh()}
+            >
+              {label('refresh')}
+            </Button>
+          )}
+        </header>
+        {(loading || error || pending) && (
+          <div className="space-y-2 px-4 pt-3 pb-2">
+            {loading && <LoadingStatus>{t('settings.privacy.loading', locale)}</LoadingStatus>}
+            {error && (
+              <p
+                role="alert"
+                className="rounded-md bg-danger-soft px-3 py-2 text-sm text-destructive"
+              >
+                {error === 'unknown'
+                  ? copy('uncertain')
+                  : error === 'changed'
+                    ? copy('changed')
+                    : error === 'read'
+                      ? t('settings.privacy.error', locale)
+                      : label('failure')}
+              </p>
+            )}
+            {pending && (
+              <Button
+                type="button"
+                data-ticket-command-retry
+                disabled={busy || !permitted()}
+                onClick={() => void retry()}
+              >
+                {copy('retry')}
+              </Button>
+            )}
+          </div>
         )}
         {preview && !loading && (
           <>
-            {preview.completedAt && <p role="status">{label('completed')}</p>}
-            <p>{label('consequences')}</p>
-            <p>{label(preview.anonymizeProfile ? 'redacted' : 'retainedIdentity')}</p>
-            <h4 className="font-medium">{label('retained')}</h4>
-            <ul className="list-disc ps-5">
-              <li>{label('supportHistory')}</li>
-              {Object.entries(preview.retained)
-                .filter(([, count]) => count > 0)
-                .map(([key, count]) => (
-                  <li key={key}>
-                    {label(`record.${key}`)}: {count}
-                  </li>
-                ))}
-            </ul>
-            {preview.exportTicketId ? (
-              <a
-                className="text-primary underline underline-offset-2"
-                href={`/admin/tickets?ticketId=${encodeURIComponent(preview.exportTicketId)}`}
-              >
-                {label('export')} · {preview.exportTicketId}
-              </a>
-            ) : (
-              <p>{label('noExport')}</p>
-            )}
-            {preview.blockers.filter((item) => item.count > 0 && item.code !== 'securityReview')
-              .length > 0 && (
-              <div role="alert" className="space-y-1">
-                <p>{label('blocked')}</p>
-                <ul className="list-disc ps-5">
-                  {preview.blockers
-                    .filter((item) => item.count > 0 && item.code !== 'securityReview')
-                    .map((item) => (
-                      <li key={item.code}>
-                        {t(`settings.privacy.blocker.${item.code}`, locale)}: {item.count}
-                        <p className="text-sm text-muted-foreground">
-                          {t(`settings.privacy.owner.${item.owner}`, locale)} ·{' '}
-                          {t(`settings.privacy.step.${item.nextStep}`, locale)}
+            <div className="space-y-3.5 px-4 py-4 text-sm sm:px-6">
+              {preview.completedAt && (
+                <p
+                  role="status"
+                  className="flex items-center gap-2 rounded-md bg-success-soft px-3 py-2 text-success"
+                >
+                  <CircleCheck aria-hidden="true" className="size-4 shrink-0" />
+                  {dedicated ? copy('completedReview') : label('completed')}
+                </p>
+              )}
+              {dedicated &&
+                preview.eligible &&
+                !pending &&
+                error !== 'changed' &&
+                !preview.completedAt && (
+                  <p className="flex items-center gap-2 rounded-lg bg-success-soft px-3 py-2 font-medium text-success">
+                    <CircleCheck aria-hidden="true" className="size-4 shrink-0" />
+                    {copy('readyForConfirmation')}
+                  </p>
+                )}
+              {dedicated && !preview.eligible && !preview.completedAt && blockers.length === 0 && (
+                <p
+                  role="alert"
+                  className="rounded-lg bg-warning-soft px-3 py-2 font-medium text-warning"
+                >
+                  {copy('blockedClosure')}
+                </p>
+              )}
+              {blockers.length > 0 && (
+                <div
+                  role="alert"
+                  className="rounded-lg border border-warning/25 bg-warning-soft px-3 py-2.5"
+                >
+                  <p className="flex items-center gap-2 font-medium text-warning">
+                    <TriangleAlert aria-hidden="true" className="size-4 shrink-0" />
+                    {label('blocked')}
+                  </p>
+                  <ul className="mt-2 divide-y divide-warning/20">
+                    {blockers.map((item) => (
+                      <li key={item.code} className="space-y-0.5 py-2 first:pt-0 last:pb-0">
+                        <div className="flex flex-wrap items-center justify-between gap-1">
+                          <strong className="font-medium">
+                            {t(`settings.privacy.blocker.${item.code}`, locale)}
+                          </strong>
+                          <Badge variant="warning">{numbers.number(item.count)}</Badge>
+                        </div>
+                        <p>{t(`settings.privacy.step.${item.nextStep}`, locale)}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {t(`settings.privacy.owner.${item.owner}`, locale)}
                         </p>
                       </li>
                     ))}
-                </ul>
+                  </ul>
+                </div>
+              )}
+              <div className={dedicated ? 'grid gap-4 sm:grid-cols-2 sm:items-start' : 'space-y-3'}>
+                <div className="space-y-1.5">
+                  <h3 className="font-semibold">{copy('consequencesTitle')}</h3>
+                  <p className="leading-relaxed text-muted-foreground">{label('consequences')}</p>
+                  <p className="leading-relaxed text-muted-foreground">
+                    {label(preview.anonymizeProfile ? 'redacted' : 'retainedIdentity')}
+                  </p>
+                </div>
+                <div className="space-y-1.5 rounded-lg bg-muted/45 px-3 py-2.5">
+                  <h3 className="font-semibold">{label('retained')}</h3>
+                  <p className="text-muted-foreground">{label('supportHistory')}</p>
+                  <dl className="empty:hidden">
+                    {Object.entries(preview.retained)
+                      .filter(([, count]) => count > 0)
+                      .map(([key, count]) => (
+                        <div
+                          key={key}
+                          className="flex items-center justify-between gap-2 border-t py-1.5 first:mt-1 last:pb-0"
+                        >
+                          <dt>{label(`record.${key}`)}</dt>
+                          <dd className="font-medium tabular-nums">{numbers.number(count)}</dd>
+                        </div>
+                      ))}
+                  </dl>
+                </div>
               </div>
-            )}
-            {!preview.completedAt && (
-              <>
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={busy || !!pending}
-                  onClick={() => void reviewRefresh()}
+              {preview.exportTicketId ? (
+                <a
+                  className="inline-flex min-h-9 flex-wrap items-center gap-x-2 text-primary underline underline-offset-2"
+                  href={`/admin/tickets/${encodeURIComponent(preview.exportTicketId)}`}
                 >
-                  {label('refresh')}
-                </Button>
-                {preview.eligible && error !== 'changed' && (
-                  <Form {...form}>
-                    <form
-                      key={preview.previewVersion}
-                      ref={feedback.element}
-                      onSubmit={execute}
-                      noValidate
-                      className="space-y-3"
-                      aria-busy={busy}
-                    >
-                      <FormField
-                        control={form.control}
-                        name="confirmed"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="touch-label flex items-center gap-2">
-                              <FormControl>
-                                <input
-                                  type="checkbox"
-                                  aria-required="true"
-                                  name={field.name}
-                                  ref={field.ref}
-                                  className="shrink-0"
-                                  checked={field.value}
-                                  disabled={!!pending}
-                                  onBlur={field.onBlur}
-                                  onChange={(event) => field.onChange(event.target.checked)}
-                                />
-                              </FormControl>
-                              {label('confirm')}
-                            </FormLabel>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel htmlFor="closure-password">{label('password')}</FormLabel>
+                  {label('export')}
+                  <bdi className="break-all text-xs">{preview.exportTicketId}</bdi>
+                </a>
+              ) : (
+                <p className="text-muted-foreground">{label('noExport')}</p>
+              )}
+            </div>
+            {!preview.completedAt && preview.eligible && error !== 'changed' && (
+              <Form {...form}>
+                <form
+                  key={preview.previewVersion}
+                  ref={feedback.element}
+                  onSubmit={execute}
+                  noValidate
+                  className="border-t"
+                  aria-busy={busy}
+                >
+                  <RecordEditorSection
+                    title={copy('confirmationTitle')}
+                    description={copy('confirmationHelp')}
+                  >
+                    <FormField
+                      control={form.control}
+                      name="confirmed"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="touch-label flex min-h-11 items-center gap-2 rounded-lg bg-muted/45 px-3 py-2 leading-relaxed">
                             <FormControl>
-                              <Input
-                                {...field}
-                                id="closure-password"
-                                type="password"
+                              <input
+                                type="checkbox"
                                 aria-required="true"
-                                autoComplete="current-password"
-                                data-ticket-command-retry={pending ? true : undefined}
+                                name={field.name}
+                                ref={field.ref}
+                                className="shrink-0"
+                                checked={field.value}
+                                disabled={!!pending}
+                                onBlur={field.onBlur}
+                                onChange={(event) => field.onChange(event.target.checked)}
                               />
                             </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <Button type="submit" disabled={busy || !!pending}>
-                        {label('execute')}
-                      </Button>
-                    </form>
-                  </Form>
-                )}
-              </>
+                            {label('confirm')}
+                          </FormLabel>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem id="closure-password" className={`${recordEditorField} max-w-xs`}>
+                          <FormLabel>{label('password')}</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="password"
+                              aria-required="true"
+                              autoComplete="current-password"
+                              data-ticket-command-retry={pending ? true : undefined}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </RecordEditorSection>
+                  <RecordEditorActions>
+                    <Button
+                      type="submit"
+                      variant="destructive"
+                      className="h-auto min-h-11 min-w-0 whitespace-normal"
+                      loading={busy && !pending}
+                      disabled={busy || !!pending}
+                    >
+                      {label('execute')}
+                    </Button>
+                  </RecordEditorActions>
+                </form>
+              </Form>
             )}
           </>
         )}

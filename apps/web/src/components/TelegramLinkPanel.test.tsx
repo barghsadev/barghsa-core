@@ -1,6 +1,6 @@
 import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { ConfirmationTestProvider as QueryProvider } from '../test/confirmation.js';
-import { act } from 'react';
+import { act, StrictMode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import TelegramLinkPanel from './TelegramLinkPanel.js';
@@ -38,13 +38,13 @@ function Panel() {
 async function mount(actor = 'test-user') {
   await act(async () =>
     root.render(
-      <QueryProvider>
-        {
+      <StrictMode>
+        <QueryProvider>
           <AccountUserProvider value={actor}>
             <Panel />
           </AccountUserProvider>
-        }
-      </QueryProvider>
+        </QueryProvider>
+      </StrictMode>
     )
   );
 }
@@ -149,6 +149,9 @@ it('displays only a freshly scoped link and confirms normalized digits with live
   await click('refresh');
   const field = await input('۱۲٣۴۵٦');
   expect(field.value).toBe('123456');
+  await click('refresh');
+  expect(field.value).toBe('123456');
+  expect(host.querySelector('a')?.getAttribute('href')).toBe(url);
   document.cookie = 'barghsa_csrf=latest';
   await submit();
   expect(f.requests.find((r) => r.path.endsWith('/confirm'))).toMatchObject({
@@ -166,6 +169,15 @@ it('displays only a freshly scoped link and confirms normalized digits with live
   );
   expect(host.textContent).not.toContain(copy('linked', 'en'));
   expect(sendToast).toHaveBeenLastCalledWith('success', copy('unlinked', 'en'));
+});
+it('keeps the unlink action when creating a new link is unavailable', async () => {
+  const f = fixture();
+  f.state.available = false;
+  f.state.link = { id: uuid, profile_id: uuid, telegram_user_id: '123' };
+  await mount();
+  expect(button('revoke').disabled).toBe(false);
+  expect(button('connect')).toBeUndefined();
+  expect(button('restartLink')).toBeUndefined();
 });
 it('focuses invalid code and sends no malformed confirmation', async () => {
   const f = fixture();

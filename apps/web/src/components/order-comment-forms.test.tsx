@@ -159,7 +159,7 @@ async function settled(check: () => void) {
 }
 async function click(label: string) {
   const button = [...host.querySelectorAll<HTMLButtonElement>('button')].find(
-    (item) => item.textContent?.trim() === label
+    (item) => (item.getAttribute('aria-label') ?? item.textContent?.trim()) === label
   );
   expect(button, label).toBeDefined();
   await act(async () => button!.click());

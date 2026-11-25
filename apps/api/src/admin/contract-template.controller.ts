@@ -27,6 +27,7 @@ import {
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { ContractTemplateService } from './contract-template.service.js';
+import { recheckStaffAuthorityAfter } from './staff-read-authority.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
@@ -147,6 +148,28 @@ export class ContractTemplateController {
     this.assertDocumentsPermission(req);
     assertUuid(id);
     return this.service.get(id);
+  }
+
+  @Get(':id/versions/:version/preview')
+  @ApiOperation({
+    summary: 'Read a bounded plain-text preview of a saved contract template version',
+  })
+  @ApiResponse({ status: 200, description: 'The selected template version and its text preview.' })
+  @ApiResponse({ status: 404, description: 'Template or version not found.' })
+  @ApiResponse({ status: 503, description: 'Stored version could not be read.' })
+  async previewVersion(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Param('version') version: string
+  ) {
+    this.assertDocumentsPermission(req);
+    assertUuid(id);
+    const versionNumber = Number(version);
+    if (!/^[1-9][0-9]*$/.test(version) || !Number.isSafeInteger(versionNumber))
+      httpError(ErrorCodes.VALIDATION_PARSE_ZOD.code, 'Invalid template version number', 400);
+    return recheckStaffAuthorityAfter(req.session, 'admin:documents:edit', () =>
+      this.service.previewVersion(id, versionNumber)
+    );
   }
 
   @Post()

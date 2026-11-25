@@ -23,6 +23,7 @@ async function mount() {
     root.render(
       <ProfileVerificationReview
         profileId="profile-one"
+        profileType="INDIVIDUAL"
         status="VERIFIED"
         title="Customer"
         current={false}
@@ -75,7 +76,8 @@ it('retains selected evidence after an upload failure and captures its type/prof
           action: 'verify',
           evidence: [{ type: 'national_id', key: 'uploads/document/verified.pdf' }],
         },
-      })
+      }),
+      expect.anything()
     );
   } finally {
     await view.close();
@@ -104,9 +106,15 @@ it('exposes renewal and requires an explicit reason for a permitted document ove
   const view = await mount();
   try {
     expect(view.host.querySelector('select')!.value).toBe('verify');
-    await act(async () =>
-      view.host.querySelector<HTMLInputElement>('input[type=checkbox]')!.click()
-    );
+    await selectFile(view.host);
+    const override = view.host.querySelector<HTMLInputElement>('input[type=checkbox]')!;
+    const evidence = view.host.querySelector<HTMLInputElement>('input[type=file]')!;
+    await act(async () => override.click());
+    expect(evidence.closest('[hidden]')).not.toBeNull();
+    await act(async () => override.click());
+    expect(evidence.closest('[hidden]')).toBeNull();
+    expect(evidence.files?.[0]?.name).toBe('identity.pdf');
+    await act(async () => override.click());
     await act(async () => button(view.host).click());
     expect(view.onReview).not.toHaveBeenCalled();
     const reason = view.host.querySelector<HTMLTextAreaElement>('#verification-override-reason')!;
@@ -124,8 +132,29 @@ it('exposes renewal and requires an explicit reason for a permitted document ove
     expect(view.onReview).toHaveBeenCalledWith(
       expect.objectContaining({
         body: { action: 'verify', overrideReason: 'Original checked in person' },
-      })
+      }),
+      expect.anything()
     );
+  } finally {
+    await view.close();
+  }
+});
+
+it('focuses the required reason for a decision that removes verification', async () => {
+  const view = await mount();
+  try {
+    const select = view.host.querySelector('select')!;
+    await act(async () => {
+      select.value = 'unverify';
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    await act(async () => button(view.host).click());
+    const reason = view.host.querySelector<HTMLTextAreaElement>('#crm-verify-reason')!;
+    expect(document.activeElement).toBe(reason);
+    expect(reason.getAttribute('aria-invalid')).toBe('true');
+    expect(reason.getAttribute('aria-describedby')).toBe('verification-decision-error');
+    expect(view.onReview).not.toHaveBeenCalled();
+    expect(uploadVerificationEvidence).not.toHaveBeenCalled();
   } finally {
     await view.close();
   }

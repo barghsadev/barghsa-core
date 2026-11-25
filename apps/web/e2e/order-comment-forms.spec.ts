@@ -2,6 +2,7 @@ import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
+import { t as staffText } from '@barghsa/i18n/admin-ui';
 import { tOrderComments } from '@barghsa/i18n/order-comments';
 import { tSaving } from '@barghsa/i18n/saving';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
@@ -64,12 +65,36 @@ for (const [locale, theme] of [
   }, info) => {
     const { state, persist } = await setupOrderCommentForms(page, locale, false);
     const release = await holdSchema(page);
+    const manifest = await productionManifest();
+    const discussionChunk = manifest['src/components/SavingOrderComments.tsx'].file;
+    const discussionLoads: string[] = [];
+    page.on('request', (request) => {
+      if (new URL(request.url()).pathname.endsWith(`/${discussionChunk}`))
+        discussionLoads.push(request.url());
+    });
     await page.goto(`/electricity/orders/${electricityOrder}`);
+    const discussion = page.getByTestId('order-discussion');
+    await expect(discussion).toBeAttached();
+    expect(discussionLoads).toHaveLength(0);
+    expect(state.reads).toHaveLength(0);
+    await discussion.scrollIntoViewIfNeeded();
     const section = page.getByTestId('order-comments');
     const form = section.getByTestId('order-comment-form');
     const body = page.locator('#electricity-comment-customer');
     const send = form.getByRole('button', { name: copy('sendComment'), exact: true });
+    const history = section.locator('ol');
     await expect(section.locator('ol>li')).toHaveCount(50);
+    expect(discussionLoads).toHaveLength(1);
+    expect(
+      await history.evaluate(
+        (list, composer) =>
+          list.getBoundingClientRect().top > composer.getBoundingClientRect().bottom,
+        await form.elementHandle()
+      )
+    ).toBe(true);
+    expect(
+      await history.evaluate((list) => list.scrollHeight - list.clientHeight - list.scrollTop)
+    ).toBeLessThan(2);
     await expect(section.locator('ol>li').first()).toContainText('Chronological comment 2');
     await expect(section.locator('ol>li').last()).toContainText('Chronological comment 51');
     await expect(section).not.toContainText('PRIVATE_INTERNAL_NOTE');
@@ -112,12 +137,16 @@ for (const [locale, theme] of [
     await expect(retryNotice).toBeVisible();
     await expectNoticeBelowPageHeader(retryNotice);
     await expect(section.locator('ol>li')).toHaveCount(52);
+    expect(await history.evaluate((list) => list.scrollTop)).toBe(0);
     await expect(section.locator('ol>li').first()).toContainText('Chronological comment 0');
     expect(state.reads.at(-1)).toEqual(failedPage);
     expect(state.reads.at(-1)!.before).toBe(state.threads.get(electricityOrder)![2]!.id);
     await expect(body).toHaveValue('  Existing <script> reply  ');
     await send.click();
     let dialog = page.getByRole('dialog');
+    await expect(dialog.getByRole('region', { name: copy('writeComment') })).toHaveText(
+      'Existing <script> reply'
+    );
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await focusedError(body);
@@ -183,6 +212,7 @@ for (const [locale, theme] of [
     const { state } = await setupOrderCommentForms(page, locale, false);
     state.writeMode = 'success';
     await page.goto(`/savings/orders/${savingOrder}`);
+    await page.getByTestId('order-discussion').scrollIntoViewIfNeeded();
     const section = page.getByTestId('order-comments');
     const form = section.getByTestId('order-comment-form');
     const body = page.locator('#saving-comment-customer');
@@ -214,6 +244,7 @@ for (const [locale, theme] of [
     const { state, persist } = await setupOrderCommentForms(page, locale, true);
     const release = await holdSchema(page);
     await page.goto(`/admin/electricity-orders?orderId=${electricityOrder}`);
+    await page.getByTestId('order-discussion').scrollIntoViewIfNeeded();
     let section = page.getByTestId('order-comments');
     let form = section.getByTestId('order-comment-form');
     let body = page.locator('#electricity-comment-staff');
@@ -237,6 +268,10 @@ for (const [locale, theme] of [
     state.writeMode = 'owned-visibility';
     await send.click();
     let dialog = page.getByRole('dialog');
+    await expect(dialog.getByText(copy('internal'), { exact: true })).toBeVisible();
+    await expect(dialog.getByRole('region', { name: copy('writeComment') })).toHaveText(
+      'Private <script> reply'
+    );
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await focusedError(visibility);
@@ -285,10 +320,16 @@ for (const [locale, theme] of [
     await expect.poll(() => !!state.readRoute).toBe(true);
     const stale = state.readRoute!;
     state.readMode = 'success';
-    await page.getByRole('button', { name: /Other Comment Buyer/ }).click();
-    await expect(
-      page.locator('main[data-area=admin] dd').filter({ hasText: /^Other Comment Buyer$/ })
-    ).toBeVisible();
+    await page
+      .getByRole('link', {
+        name: staffText('admin.electricityOrders.backToQueue', locale),
+        exact: true,
+      })
+      .click();
+    await page.getByRole('link', { name: /Other Comment Buyer/ }).click();
+    const recordHeader = page.locator('[data-slot="electricity-staff-order"] header').first();
+    await expect(recordHeader.getByText('Other Comment Buyer', { exact: true })).toBeVisible();
+    await page.getByTestId('order-discussion').scrollIntoViewIfNeeded();
     await expect(body).toHaveValue('');
     await stale
       .fulfill({
@@ -311,6 +352,7 @@ for (const [locale, theme] of [
     state.writeMode = 'owned-body';
     await checkpointBrowserCoverage(page);
     await page.goto(`/admin/saving-orders?orderId=${savingOrder}`);
+    await page.getByTestId('order-discussion').scrollIntoViewIfNeeded();
     section = page.getByTestId('order-comments');
     form = section.getByTestId('order-comment-form');
     body = page.locator('#saving-comment-staff');

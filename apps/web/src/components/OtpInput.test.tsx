@@ -111,9 +111,10 @@ it('keeps reset disabled and ends its error animation', async () => {
   vi.useFakeTimers();
   await render(true, 'Invalid code');
   expect(inputs().every((i) => i.disabled)).toBe(true);
-  expect(host.querySelector('.animate-shake')).not.toBeNull();
+  const group = host.querySelector('[role="group"]')!;
+  expect(group.classList.contains('motion-safe:animate-shake')).toBe(true);
   await act(async () => vi.advanceTimersByTime(500));
-  expect(host.querySelector('.animate-shake')).toBeNull();
+  expect(group.classList.contains('motion-safe:animate-shake')).toBe(false);
   await act(async () => ref.current!.reset());
   expect(host.contains(document.activeElement)).toBe(false);
 });

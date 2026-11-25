@@ -61,36 +61,45 @@ export default function RecoveryContactForm() {
   return (
     <form
       onSubmit={(e) => void submit(e)}
+      aria-labelledby="recovery-contact-heading"
       aria-busy={busy}
-      className="space-y-3 rounded border py-4 min-[375px]:px-4 [&_input]:min-w-0"
+      className="min-w-0 space-y-3 border-y py-4"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <h2 className="font-semibold">{t('auth.recovery.title', locale)}</h2>
-      <p className="text-sm">{t('auth.recovery.instructions', locale)}</p>
+      <div className="space-y-1">
+        <h2 id="recovery-contact-heading" className="font-semibold">
+          {t('auth.recovery.confirmContact', locale)}
+        </h2>
+        <p id="recovery-reference-hint" className="text-sm text-muted-foreground">
+          {t('auth.recovery.instructions', locale)}
+        </p>
+      </div>
       <fieldset disabled={busy || terminal} className="min-w-0 space-y-3">
         {[
           { value: caseId, set: setCaseId, key: 'caseId' },
           { value: challengeId, set: setChallengeId, key: 'challengeId' },
         ].map(({ value, set, key }) => (
-          <div key={key}>
+          <div key={key} className="min-w-0 space-y-1">
             <Label htmlFor={`recovery-${key}`}>{t(`auth.recovery.${key}`, locale)}</Label>
             <Input
               id={`recovery-${key}`}
               required
               aria-required="true"
+              aria-describedby="recovery-reference-hint"
               value={value}
               dir="ltr"
               autoComplete="off"
+              spellCheck={false}
+              className="min-w-0 font-mono"
               onChange={(e) => {
-                set(e.target.value);
+                set(e.target.value.trim());
                 setResult(null);
               }}
             />
           </div>
         ))}
         {!terminal && (
-          <>
-            <Label htmlFor="recovery-code">{t('auth.recovery.code', locale)}</Label>
+          <div className="space-y-3">
             <OtpInput
               id="recovery-code"
               autoFocus={false}
@@ -102,15 +111,18 @@ export default function RecoveryContactForm() {
               }}
               onClearError={() => setResult(null)}
             />
-            <Button type="submit" disabled={code.length !== 6}>
+            <Button type="submit" disabled={code.length !== 6} className="w-full sm:w-auto">
               {t('auth.recovery.verify', locale)}
             </Button>
-          </>
+          </div>
         )}
       </fieldset>
       {busy && <p role="status">{t('auth.recovery.loading', locale)}</p>}
       {result && (
-        <p role={result === 'verified' ? 'status' : 'alert'}>
+        <p
+          className="rounded-lg border bg-muted/35 px-3 py-2.5 text-sm"
+          role={result === 'verified' ? 'status' : 'alert'}
+        >
           {t(`auth.recovery.${result}`, locale)}
         </p>
       )}

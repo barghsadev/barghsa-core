@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { crmShell } from './crm-shell-fixture';
+import { t } from '@barghsa/i18n/admin-ui';
 
 const roles = [
   {
@@ -38,6 +39,9 @@ for (const locale of ['en', 'fa'] as const) {
     await page
       .getByRole('button', { name: locale === 'fa' ? 'تلاش مجدد' : 'Retry', exact: true })
       .click();
+    await page.locator(`main a[href="/admin/roles/${roles[0]!.roleId}"]:visible`).click();
+    await expect(page).toHaveURL(new RegExp(`/admin/roles/${roles[0]!.roleId}$`));
+    await page.reload();
     const checkbox = page.getByRole('checkbox', { name: 'tickets:read', exact: true });
     await expect(checkbox).toBeVisible();
     await expect(checkbox).toBeChecked();
@@ -78,7 +82,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/users/requested/effective-permissions', (route) =>
       route.fulfill({ json: result('requested') })
     );
-    await page.goto('/admin/roles');
+    await page.goto('/admin/roles/compare');
     await page.evaluate((lang) => {
       document.documentElement.lang = lang;
     }, locale);
@@ -103,6 +107,8 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       content.getByRole('checkbox', { name: fa ? 'همه دسترسی‌ها' : 'All permissions', exact: true })
     ).toBeChecked();
+    await page.goto('/admin/roles/effective');
+    await page.locator('[data-permission-id-toggle]').click();
     await page.locator('#staffUserId').fill('requested');
     await page.locator('button[type=submit]').click();
     await expect(content).toContainText(
@@ -134,7 +140,8 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/users/requested/effective-permissions', (route) =>
       route.fulfill({ json: result(valid ? 'requested' : 'other-user') })
     );
-    await page.goto('/admin/roles');
+    await page.goto('/admin/roles/effective');
+    await page.locator('[data-permission-id-toggle]').click();
     await page.evaluate((lang) => {
       document.documentElement.lang = lang;
     }, locale);
@@ -171,7 +178,8 @@ test('editing a lookup cancels its pending permissions result', async ({ page })
   await page.route('**/api/admin/users/second/effective-permissions', (route) =>
     route.fulfill({ json: result('second') })
   );
-  await page.goto('/admin/roles');
+  await page.goto('/admin/roles/effective');
+  await page.locator('[data-permission-id-toggle]').click();
   await page.locator('#staffUserId').fill('first');
   await page.locator('button[type=submit]').click();
   await requested;
@@ -184,4 +192,71 @@ test('editing a lookup cancels its pending permissions result', async ({ page })
     release();
   }
   await expect(page.getByText('first', { exact: true })).toHaveCount(0);
+});
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`chooses a named staff account and recovers its permission lookup (${locale})`, async ({
+    page,
+  }) => {
+    await crmShell(page, locale);
+    const label = (key: string) => t(`admin.roles.${key}`, locale);
+    const name = locale === 'fa' ? 'سارا احمدی' : 'Sara Ahmadi';
+    let permissionReads = 0;
+    const searches: string[] = [];
+    await page.route('**/api/admin/staff/search?*', (route) => {
+      searches.push(new URL(route.request().url()).searchParams.get('q')!);
+      return route.fulfill({
+        json: {
+          items: [{ userId: 'selected', username: 'sara@example.test', name }],
+          hasMore: false,
+        },
+      });
+    });
+    await page.route('**/api/admin/users/selected/effective-permissions', (route) => {
+      permissionReads++;
+      return permissionReads === 1
+        ? route.fulfill({ status: 503, json: {} })
+        : route.fulfill({ json: result('selected') });
+    });
+    await page.goto('/admin/roles/effective');
+    const field = page.getByRole('searchbox', { name: label('lookup.searchLabel'), exact: true });
+    await expect(page.locator('#staffUserId')).toBeHidden();
+    await expect(field).toBeVisible();
+    expect(searches).toEqual([]);
+    await field.fill(name.slice(0, 4));
+    const match = page.getByRole('button', { name: new RegExp(name) });
+    await expect(match).toContainText('sara@example.test');
+    expect(searches).toEqual([name.slice(0, 4)]);
+    expect(permissionReads).toBe(0);
+    await match.focus();
+    await page.keyboard.press('Enter');
+    const heading = page.getByRole('heading', { name, exact: true });
+    await expect(heading).toBeVisible();
+    await expect(
+      page.getByRole('alert').filter({ hasText: label('user.lookup.failed') })
+    ).toBeVisible();
+    await page.getByRole('button', { name: label('retry'), exact: true }).click();
+    await expect(heading).toBeFocused();
+    await expect(page.getByTestId('effective-permissions')).toContainText('tickets:read');
+    expect(permissionReads).toBe(2);
+  });
+}
+
+test('staff search denial leaves the authorized exact-ID form available', async ({ page }) => {
+  await crmShell(page, 'en');
+  await page.route('**/api/admin/staff/search?*', (route) =>
+    route.fulfill({ status: 403, json: {} })
+  );
+  await page.route('**/api/admin/users/known/effective-permissions', (route) =>
+    route.fulfill({ json: result('known') })
+  );
+  await page.goto('/admin/roles/effective');
+  await page.getByRole('searchbox', { name: 'Find a staff account' }).fill('staff');
+  await expect(
+    page.getByText(t('admin.roles.lookup.searchDenied', 'en'), { exact: true })
+  ).toBeVisible();
+  await page.locator('[data-permission-id-toggle]').click();
+  await page.getByLabel('User ID', { exact: true }).fill('known');
+  await page.getByRole('button', { name: 'View permissions', exact: true }).click();
+  await expect(page.getByTestId('effective-permissions')).toContainText('known');
 });

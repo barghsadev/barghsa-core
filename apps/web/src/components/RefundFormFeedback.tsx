@@ -3,11 +3,14 @@ export function RefundFieldFeedback({
   id,
   error,
   message,
+  reserveSpace = true,
 }: {
   id: string;
   error?: { message?: string | undefined } | undefined;
   message: string;
+  reserveSpace?: boolean;
 }) {
+  if (!error && !reserveSpace) return null;
   return (
     <p
       id={id}

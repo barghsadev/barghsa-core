@@ -1,6 +1,15 @@
 import type { Locale } from './app.js';
 
 const en = {
+  'home.start': 'Start an electricity order',
+  'home.resume': 'Continue electricity draft',
+  'home.services': 'Services',
+  'home.service.electricity': 'Compare tariffs and purchase electricity.',
+  'home.service.savings': 'Find a saving plan and compatible equipment.',
+  'home.service.solar': 'Request a solar installation for your site.',
+  'home.service.consultation': 'Ask an expert about your energy needs.',
+  'home.actions': 'Your orders and payments',
+  'home.overview': 'Account overview',
   'widget.error': 'This section could not be loaded. Other sections are still available.',
   'widget.profileChanged': 'Your active profile changed. Reload the dashboard to continue.',
   'widget.retry': 'Retry this section',
@@ -33,6 +42,15 @@ const en = {
 };
 
 const fa: Record<keyof typeof en, string> = {
+  'home.start': 'شروع سفارش برق',
+  'home.resume': 'ادامه پیش‌نویس سفارش برق',
+  'home.services': 'خدمات',
+  'home.service.electricity': 'تعرفه‌ها را مقایسه کنید و برق بخرید.',
+  'home.service.savings': 'طرح صرفه‌جویی و تجهیزات سازگار را پیدا کنید.',
+  'home.service.solar': 'برای محل خود درخواست نصب سامانه خورشیدی بدهید.',
+  'home.service.consultation': 'درباره نیازهای انرژی خود از کارشناس بپرسید.',
+  'home.actions': 'سفارش‌ها و پرداخت‌های شما',
+  'home.overview': 'نمای کلی حساب',
   'widget.error': 'این بخش بارگذاری نشد. بخش‌های دیگر همچنان در دسترس هستند.',
   'widget.profileChanged':
     'پروفایل فعال شما تغییر کرده است. برای ادامه، داشبورد را دوباره بارگذاری کنید.',

@@ -141,66 +141,41 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(row).toContainText(word('contract'));
     await expect(row.locator('bdi.tabular-nums')).toHaveText(digits(locale, 1));
     await date(page, row, locale, current.updatedAt);
-    await row
-      .getByRole('button', { name: `${word('open')} ${current.title}`, exact: true })
-      .focus();
-    await page.keyboard.press('Enter');
-    const workspace = page.getByRole('region', { name: word('workspaceTitle'), exact: true });
-    await expect(
-      workspace.getByRole('heading', { name: current.title, exact: true })
-    ).toBeVisible();
-    await workspace.getByRole('button', { name: word('edit'), exact: true }).click();
-    await page.locator('#document-template-title').fill('Raw private metadata');
-    await page.locator('#document-template-summary').fill('Raw version explanation');
-    await page.locator('#document-template-files').setInputFiles({
-      name: 'Draft.pdf',
-      mimeType: 'application/pdf',
-      buffer: Buffer.from('%PDF-synthetic-draft'),
-    });
     await page.setViewportSize({ width: 390, height: 844 });
     const cards = page.getByRole('list', { name: word('listTitle'), exact: true });
     const card = cards.locator(':scope > li').first();
-    await expect(
-      card.getByRole('button', { name: `${word('open')} ${current.title}`, exact: true })
-    ).toHaveAttribute('aria-current', 'page');
     await expect(card).toContainText(current.description);
     await expect(card.locator('bdi.tabular-nums')).toHaveText(digits(locale, 1));
     await date(page, card, locale, current.updatedAt);
-    await expect(page.locator('#document-template-title')).toHaveCount(1);
-    await expect(page.locator('#document-template-title')).toHaveValue('Raw private metadata');
-    await expect(page.locator('#document-template-summary')).toHaveValue('Raw version explanation');
-    expect(
-      await page
-        .locator('#document-template-files')
-        .evaluate((node: HTMLInputElement) => node.files?.[0]?.name)
-    ).toBe('Draft.pdf');
-    await expect(workspace.getByRole('checkbox')).toBeChecked();
-    expect([listReads, detailReads, writes]).toEqual([1, 1, 0]);
     await inspect(page);
     if (locale === 'fa' && info.project.name === 'mobile-safari')
       await card.screenshot({ path: test.info().outputPath('document-template-card-fa.png') });
-    status = 503;
-    await page.getByRole('button', { name: word('refresh'), exact: true }).click();
-    await expect(workspace.getByRole('alert')).toContainText(word('detailError'));
-    await expect(cards).toBeVisible();
+    await card.getByRole('link', { name: current.title, exact: true }).focus();
+    await page.keyboard.press('Enter');
+    const main = page.getByRole('main');
+    const workspace = page.getByRole('region', { name: word('workspaceTitle'), exact: true });
+    await expect(main.getByRole('heading', { name: current.title, exact: true })).toBeVisible();
+    await workspace.getByRole('link', { name: word('edit'), exact: true }).click();
+    await page.locator('#document-template-title').fill('Raw private metadata');
     await page.setViewportSize({ width: 900, height: 900 });
     await expect(page.locator('#document-template-title')).toHaveValue('Raw private metadata');
-    await expect(page.locator('#document-template-summary')).toHaveValue('Raw version explanation');
+    await expect(page.locator('#document-template-summary')).toHaveCount(0);
+    expect([listReads, detailReads, writes]).toEqual([1, 2, 0]);
+    const refresh = main.getByRole('button', { name: word('refresh'), exact: true });
+    status = 503;
+    await refresh.click();
+    await expect(workspace.getByRole('alert')).toContainText(word('detailError'));
+    await expect(page.locator('#document-template-title')).toHaveValue('Raw private metadata');
     await expect(workspace.getByRole('button', { name: word('save'), exact: true })).toBeDisabled();
     status = 200;
-    await page.getByRole('button', { name: word('refresh'), exact: true }).click();
+    await refresh.click();
     await expect(workspace.getByRole('alert')).toHaveCount(0);
     await expect(page.locator('#document-template-title')).toHaveValue('Raw private metadata');
-    expect(
-      await page
-        .locator('#document-template-files')
-        .evaluate((node: HTMLInputElement) => node.files?.[0]?.name)
-    ).toBe('Draft.pdf');
     status = 403;
-    await page.getByRole('button', { name: word('refresh'), exact: true }).click();
-    await expect(page.getByRole('table', { includeHidden: true })).toHaveCount(0);
-    await expect(cards).toHaveCount(0);
+    await refresh.click();
+    await expect(main.getByRole('alert')).toContainText(word('denied'));
     await expect(page.locator('#document-template-title, #document-template-files')).toHaveCount(0);
+    await expect(main).not.toContainText('Raw private metadata');
     expect(writes).toBe(0);
   });
 
@@ -252,16 +227,6 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       row.getByRole('button', { name: `${word('delete')} ${current.name}`, exact: true })
     ).toBeDisabled();
-    await row.getByRole('button', { name: `${word('open')} ${current.name}`, exact: true }).focus();
-    await page.keyboard.press('Enter');
-    await page.locator('#template-name').fill('Raw private contract metadata');
-    await page.locator('#template-description').fill('Raw contract explanation');
-    await page.locator('#template-file').setInputFiles({
-      name: 'Prepared.txt',
-      mimeType: 'text/plain',
-      buffer: Buffer.from('{{customer}} synthetic terms'),
-    });
-    await expect(page.getByText('Prepared.txt', { exact: true })).toBeVisible();
     await page.setViewportSize({ width: 390, height: 844 });
     const cards = page.getByRole('list', { name: word('title'), exact: true });
     const card = cards.locator(':scope > li').first();
@@ -273,41 +238,35 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       card.getByRole('button', { name: `${word('delete')} ${current.name}`, exact: true })
     ).toBeDisabled();
-    await expect(page.locator('#template-name')).toHaveCount(1);
-    await expect(page.locator('#template-name')).toHaveValue('Raw private contract metadata');
-    await expect(page.getByText('Prepared.txt', { exact: true })).toBeVisible();
-    expect([listReads, detailReads, writes]).toEqual([1, 1, 0]);
     await inspect(page);
     if (locale === 'fa' && info.project.name === 'mobile-safari')
       await card.screenshot({ path: test.info().outputPath('contract-template-card-fa.png') });
-    status = 503;
-    await page.getByRole('button', { name: word('refresh'), exact: true }).click();
-    await expect(page.getByRole('button', { name: word('listRetry'), exact: true })).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: word('detailRetry'), exact: true })
-    ).toBeVisible();
-    await expect(
-      card.getByRole('button', { name: `${word('open')} ${current.name}`, exact: true })
-    ).toBeDisabled();
+    expect([listReads, detailReads, writes]).toEqual([1, 0, 0]);
+    await card
+      .getByRole('link', { name: `${word('editor')} ${current.name}`, exact: true })
+      .focus();
+    await page.keyboard.press('Enter');
+    await page.locator('#template-name').fill('Raw private contract metadata');
+    await page.locator('#template-description').fill('Raw contract explanation');
     await page.setViewportSize({ width: 900, height: 900 });
     await expect(page.locator('#template-name')).toHaveValue('Raw private contract metadata');
     await expect(page.locator('#template-description')).toHaveValue('Raw contract explanation');
-    await expect(page.getByText('Prepared.txt', { exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: word('upload'), exact: true })).toBeDisabled();
-    status = 200;
+    expect([listReads, detailReads]).toEqual([1, 1]);
+    status = 503;
     await page.getByRole('button', { name: word('refresh'), exact: true }).click();
-    await expect(page.getByRole('button', { name: word('listRetry'), exact: true })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: word('detailRetry'), exact: true })).toHaveCount(
-      0
-    );
+    await expect(
+      page.getByRole('button', { name: word('detailRetry'), exact: true })
+    ).toBeVisible();
     await expect(page.locator('#template-name')).toHaveValue('Raw private contract metadata');
-    await expect(page.getByText('Prepared.txt', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: word('save'), exact: true })).toBeDisabled();
+    status = 200;
+    await page.getByRole('button', { name: word('detailRetry'), exact: true }).click();
+    await expect(page.getByRole('button', { name: word('save'), exact: true })).toBeEnabled();
+    await expect(page.locator('#template-name')).toHaveValue('Raw private contract metadata');
     status = 403;
     await page.getByRole('button', { name: word('refresh'), exact: true }).click();
-    await expect(page.getByRole('table', { includeHidden: true })).toHaveCount(0);
-    await expect(cards).toHaveCount(0);
     await expect(page.locator('#template-name, #template-file')).toHaveCount(0);
-    await expect(page.getByText('Prepared.txt', { exact: true })).toHaveCount(0);
+    await expect(page.getByRole('main')).not.toContainText('Raw private contract metadata');
     expect(writes).toBe(0);
   });
 }

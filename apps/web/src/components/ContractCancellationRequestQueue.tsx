@@ -2,14 +2,27 @@ import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, AlertDescription, Button, ListPage, PageLoading } from '@barghsa/ui';
+import { Link } from '@tanstack/react-router';
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  ListPage,
+  ListRefreshButton,
+  PageLoading,
+  buttonVariants,
+} from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { useLocale } from '../hooks/useLocale.js';
 import { DocumentRequestError } from '../lib/documents.js';
 import { ContractDetailLoader } from './ContractDetailLoader.js';
 import type { CancellationRequest } from './ContractCancellationRequestPanel.js';
 
-type QueueProps = { service?: 'savings'; onOpenSavingOrder?: (id: string) => void };
+type QueueProps = {
+  service?: 'savings';
+  onOpenSavingOrder?: (id: string) => void;
+  recordSearch?: Record<string, unknown> | undefined;
+};
 export function ContractCancellationRequestQueue(props: QueueProps = {}) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
@@ -17,7 +30,7 @@ export function ContractCancellationRequestQueue(props: QueueProps = {}) {
     <CancellationQueue key={JSON.stringify([actor, revision, props.service ?? 'all'])} {...props} />
   );
 }
-function CancellationQueue({ service, onOpenSavingOrder }: QueueProps) {
+function CancellationQueue({ service, onOpenSavingOrder, recordSearch }: QueueProps) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
   const readContract = useOwnedContractRead(actor, revision, undefined, JSON.stringify([service]));
@@ -102,9 +115,7 @@ function CancellationQueue({ service, onOpenSavingOrder }: QueueProps) {
         <ListPage.Toolbar>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-semibold">{word('cancellationRequestQueue')}</h2>
-            <Button variant="ghost" disabled={loading} onClick={refresh}>
-              {word('refresh')}
-            </Button>
+            <ListRefreshButton label={word('refresh')} disabled={loading} onClick={refresh} />
           </div>
         </ListPage.Toolbar>
         {selected ? (
@@ -156,20 +167,36 @@ function CancellationQueue({ service, onOpenSavingOrder }: QueueProps) {
                   {word('cancellation.' + row.preferredDestination)}
                 </p>
                 {row.stale ? <p className="text-sm">{word('cancellationRequestStale')}</p> : null}
-                <Button
-                  variant="outline"
-                  className="self-start"
-                  onClick={() => {
-                    if (accessDenied.current) return;
-                    if (selected !== row.contractId) {
-                      ++generation.current;
-                      setSelected(row.contractId);
-                    }
-                    if (row.savingOrderId) onOpenSavingOrder?.(row.savingOrderId);
-                  }}
-                >
-                  {word('cancellationRequestOpen')}
-                </Button>
+                {recordSearch ? (
+                  <Link
+                    to="/admin/contracts/$contractId/{-$action}/{-$item}"
+                    params={{
+                      contractId: row.contractId,
+                      action: 'review-cancellation',
+                      item: row.id,
+                    }}
+                    search={recordSearch}
+                    disabled={loading || error}
+                    className={buttonVariants({ variant: 'outline', className: 'self-start' })}
+                  >
+                    {word('cancellationRequestOpen')}
+                  </Link>
+                ) : (
+                  <Button
+                    variant="outline"
+                    className="self-start"
+                    onClick={() => {
+                      if (accessDenied.current) return;
+                      if (selected !== row.contractId) {
+                        ++generation.current;
+                        setSelected(row.contractId);
+                      }
+                      if (row.savingOrderId) onOpenSavingOrder?.(row.savingOrderId);
+                    }}
+                  >
+                    {word('cancellationRequestOpen')}
+                  </Button>
+                )}
               </li>
             ))}
           </ul>

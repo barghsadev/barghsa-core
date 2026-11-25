@@ -199,7 +199,9 @@ it('locks companion version commands and immutable metadata before asynchronous 
   expect(container.querySelector<HTMLInputElement>('#document-template-files')!.disabled).toBe(
     true
   );
-  expect(container.querySelector<HTMLButtonElement>('header button')!.disabled).toBe(true);
+  expect(container.querySelector<HTMLButtonElement>('button[data-list-refresh]')?.disabled).toBe(
+    true
+  );
   await act(async () => harness.dialog!.onClose());
   expect(container.querySelector<HTMLInputElement>('#document-template-title')!.value).toBe(
     ' Captured title '

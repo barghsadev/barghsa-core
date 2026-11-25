@@ -148,53 +148,57 @@ export function ChatInput({
   const input = useRef<HTMLTextAreaElement | null>(null);
   useLayoutEffect(() => {
     if (!active || !input.current) return;
+    if (!textareaProps.value) {
+      input.current.style.height = '';
+      return;
+    }
     input.current.style.height = 'auto';
-    input.current.style.height = `${Math.min(input.current.scrollHeight, 240)}px`;
+    input.current.style.height = `${Math.min(input.current.scrollHeight, 144)}px`;
   }, [textareaProps.value, active]);
   return (
-    <div className="space-y-3">
+    <div className="space-y-1.5">
       {children}
-      <label htmlFor={textareaProps.id} className="sr-only">
-        {label}
-      </label>
-      <textarea
-        {...textareaProps}
-        ref={(node) => {
-          input.current = node;
-          const ref = textareaProps.ref;
-          if (typeof ref === 'function') ref(node);
-          else if (ref) ref.current = node;
-        }}
-        rows={2}
-        disabled={busy || textareaProps.disabled}
-        className="min-h-20! max-h-60 w-full resize-none overflow-y-auto rounded-lg border bg-background px-3 py-2 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-primary"
-        onKeyDown={(event) => {
-          textareaProps.onKeyDown?.(event);
-          if (event.defaultPrevented) return;
-          if (
-            event.key === 'Enter' &&
-            !event.shiftKey &&
-            !event.nativeEvent.isComposing &&
-            event.nativeEvent.keyCode !== 229
-          ) {
-            event.preventDefault();
-            if (!disabled && !busy && !textareaProps.disabled)
-              event.currentTarget.form?.requestSubmit();
-          }
-        }}
-      />
-      {feedback}
-      <div className="flex items-center justify-between gap-3">
-        {footer ?? <span />}
+      <div className="flex items-end gap-2">
+        <label htmlFor={textareaProps.id} className="sr-only">
+          {label}
+        </label>
+        <textarea
+          {...textareaProps}
+          ref={(node) => {
+            input.current = node;
+            const ref = textareaProps.ref;
+            if (typeof ref === 'function') ref(node);
+            else if (ref) ref.current = node;
+          }}
+          rows={1}
+          disabled={busy || textareaProps.disabled}
+          className="h-11 min-h-11 w-full min-w-0 flex-1 resize-none overflow-y-auto rounded-lg border bg-background px-3 py-2 text-sm leading-6 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          onKeyDown={(event) => {
+            textareaProps.onKeyDown?.(event);
+            if (event.defaultPrevented) return;
+            if (
+              event.key === 'Enter' &&
+              !event.shiftKey &&
+              !event.nativeEvent.isComposing &&
+              event.nativeEvent.keyCode !== 229
+            ) {
+              event.preventDefault();
+              if (!disabled && !busy && !textareaProps.disabled)
+                event.currentTarget.form?.requestSubmit();
+            }
+          }}
+        />
         <button
           type="submit"
           disabled={disabled || busy}
           aria-busy={busy || undefined}
+          aria-label={sendLabel}
+          title={sendLabel}
           onMouseDown={(event) => {
             // WebKit restores scroll on textarea blur; keep the tap target stable until click.
             event.preventDefault();
           }}
-          className="inline-flex min-h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground disabled:opacity-50 pointer-coarse:min-h-[45px]!"
+          className="inline-flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 pointer-coarse:min-h-[45px]!"
         >
           {busy ? (
             <span
@@ -202,11 +206,12 @@ export function ChatInput({
               className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
             />
           ) : (
-            <ArrowUp className="size-4 rtl:-rotate-90" aria-hidden="true" />
+            <ArrowUp className="size-5" aria-hidden="true" />
           )}
-          {sendLabel}
         </button>
       </div>
+      {feedback}
+      {footer}
     </div>
   );
 }
@@ -223,10 +228,10 @@ export function ChatWelcome({
   children: ReactNode;
 }) {
   return (
-    <div className="space-y-5">
-      <div className="space-y-2">
+    <div className="space-y-3">
+      <div className="space-y-1.5">
         {greeting && <p className="font-semibold text-foreground">{greeting}</p>}
-        <p className="max-w-sm text-base leading-7 text-foreground">{description}</p>
+        <p className="max-w-prose text-sm leading-relaxed text-foreground">{description}</p>
         <p className="text-sm text-muted-foreground">{profileContext}</p>
       </div>
       {children}
@@ -249,7 +254,7 @@ export function ChatPromptSuggestions({
 }) {
   return (
     <details ref={disclosureRef}>
-      <summary className="min-h-9 cursor-pointer py-2 text-sm font-medium text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary pointer-coarse:min-h-[45px]!">
+      <summary className="min-h-9 cursor-pointer py-2 text-xs font-medium text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:text-sm pointer-coarse:min-h-[45px]!">
         {label}
       </summary>
       <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label={label}>

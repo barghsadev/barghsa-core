@@ -1,5 +1,4 @@
 import { ConfirmProvider } from '@barghsa/ui';
-import { contractText } from '@barghsa/i18n/contracts';
 import { Outlet, useRouteContext } from '@tanstack/react-router';
 import {
   Activity,
@@ -7,6 +6,7 @@ import {
   Bell,
   BellOff,
   Bot,
+  BriefcaseBusiness,
   ContactRound,
   Cpu,
   FileCheck,
@@ -39,12 +39,7 @@ import {
 } from 'lucide-react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
-import { documentText } from '@barghsa/i18n/documents';
-import { documentTemplateText } from '@barghsa/i18n/document-templates';
 import { shellText } from '@barghsa/i18n/shell';
-import { tSaving } from '@barghsa/i18n/saving';
-import { tSolar } from '@barghsa/i18n/solar';
-import { tConsultation } from '@barghsa/i18n/consultation';
 import { TosBanner } from '../components/TosBanner.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { AppShell, type NavigationGroup } from '../components/AppShell.js';
@@ -73,6 +68,7 @@ export default function AdminLayout() {
   const candidates: NavigationGroup[] = [
     {
       label: shellText('overview', locale),
+      disclosure: { id: 'overview', icon: LayoutDashboard },
       items: [
         { to: '/app', label: t('admin.nav.dashboard', locale), icon: LayoutDashboard },
         { to: '/admin/inbox', label: appText('notifications.nav', locale), icon: Bell },
@@ -80,9 +76,10 @@ export default function AdminLayout() {
     },
     {
       label: shellText('operations', locale),
+      disclosure: { id: 'operations', icon: BriefcaseBusiness },
       items: [
         { to: '/admin/tickets', label: t('tickets.staffTitle', locale), icon: LifeBuoy },
-        { to: '/admin/contracts', label: contractText('staffTitle', locale), icon: FileText },
+        { to: '/admin/contracts', label: t('admin.nav.contracts', locale), icon: FileText },
         {
           to: '/admin/electricity-orders',
           label: t('admin.electricityOrders.title', locale),
@@ -90,20 +87,26 @@ export default function AdminLayout() {
         },
         {
           to: '/admin/saving-orders',
-          label: tSaving('staffTitle', locale),
+          label: t('admin.nav.saving', locale),
           icon: Package,
         },
-        { to: '/admin/solar-requests', label: tSolar('staffTitle', locale), icon: Sun },
+        { to: '/admin/solar-requests', label: t('admin.nav.solarDocuments', locale), icon: Sun },
         {
           to: '/admin/consultations',
-          label: tConsultation('staffTitle', locale),
+          label: t('admin.nav.consultations', locale),
           icon: MessagesSquare,
         },
-        { to: '/admin/solar-postal', label: tSolar('postalStaffTitle', locale), icon: Package },
+        {
+          to: '/admin/solar-postal',
+          label: t('admin.nav.solarPostal', locale),
+          icon: Package,
+          activePath: /^\/admin\/solar-requests\/[^/]+\/postal(?:\/|$)/,
+        },
         {
           to: '/admin/solar-construction',
-          label: tSolar('constructionStaffTitle', locale),
+          label: t('admin.nav.solarConstruction', locale),
           icon: Sun,
+          activePath: /^\/admin\/solar-requests\/[^/]+\/construction(?:\/|$)/,
         },
         {
           to: '/admin/electricity-increases',
@@ -115,7 +118,7 @@ export default function AdminLayout() {
           label: t('admin.electricityPrice.title', locale),
           icon: Zap,
         },
-        { to: '/admin/documents', label: documentText('staffTitle', locale), icon: FileText },
+        { to: '/admin/documents', label: t('admin.nav.documents', locale), icon: FileText },
         {
           to: '/admin/reconciliation',
           label: t('admin.reconciliation.title', locale),
@@ -143,6 +146,7 @@ export default function AdminLayout() {
     },
     {
       label: shellText('finance', locale),
+      disclosure: { id: 'finance', icon: Wallet },
       items: [
         { to: '/admin/catalogue', label: t('admin.catalogue.title', locale), icon: Package },
         { to: '/admin/invoices', label: t('admin.nav.invoices', locale), icon: ReceiptText },
@@ -165,7 +169,7 @@ export default function AdminLayout() {
         },
         {
           to: '/admin/document-templates',
-          label: documentTemplateText('title', locale),
+          label: t('admin.nav.documentTemplates', locale),
           icon: FileText,
         },
         {
@@ -178,6 +182,7 @@ export default function AdminLayout() {
     },
     {
       label: shellText('intelligence', locale),
+      disclosure: { id: 'intelligence', icon: Bot },
       items: [
         { to: '/admin/agents', label: t('admin.agents.title', locale), icon: Bot },
         { to: '/admin/ai-models', label: t('admin.aiModels.title', locale), icon: Cpu },
@@ -188,6 +193,7 @@ export default function AdminLayout() {
     },
     {
       label: shellText('customers', locale),
+      disclosure: { id: 'customers', icon: ContactRound },
       items: [
         { to: '/admin/crm', label: t('admin.nav.crmProfiles', locale), icon: ContactRound },
         {
@@ -201,6 +207,7 @@ export default function AdminLayout() {
     },
     {
       label: shellText('configuration', locale),
+      disclosure: { id: 'configuration', icon: SlidersHorizontal },
       items: [
         { to: '/admin/branding', label: t('admin.nav.branding', locale), icon: Palette },
         { to: '/admin/geography', label: t('admin.nav.geography', locale), icon: MapPin },

@@ -215,7 +215,7 @@ for (const locale of ['en', 'fa'] as const)
       const unavailableCard = page.locator('[data-slot=card]').filter({
         has: page.getByRole('heading', { name: unavailable.title[locale], exact: true }),
       });
-      await expect(order).toHaveAttribute('href', '/savings/order');
+      await expect(order).toHaveAttribute('href', `/savings/orders/new?plan=${available.id}`);
       await expect(unavailableCard.getByRole('link')).toHaveCount(0);
       for (const high of [false, true]) {
         await setHighContrast(high);
@@ -228,7 +228,7 @@ for (const locale of ['en', 'fa'] as const)
       }
 
       await order.click();
-      await expect(page).toHaveURL(/\/savings\/order$/);
+      await expect(page).toHaveURL(/\/savings\/orders\/new(?:\?|$)/);
       const checkoutChoice = page.getByRole('radio', {
         name: new RegExp(unavailable.title[locale]),
       });
@@ -268,16 +268,36 @@ for (const locale of ['en', 'fa'] as const)
       staff = true;
       await page.goto('/admin/providers');
       await expectBrand();
+      const newProvider = page.getByRole('link', {
+        name: providerText('admin.providers.new', locale),
+        exact: true,
+      });
       for (const high of [false, true]) {
         await setHighContrast(high);
-        for (const name of ['new', 'activate', 'disable'])
+        await checkAction(newProvider);
+      }
+      for (const [id, name] of [
+        [provider.id, 'activate'],
+        [active.id, 'disable'],
+      ] as const) {
+        await page.locator(`a[href="/admin/providers/email/${id}"]:visible`).click();
+        for (const high of [false, true]) {
+          await setHighContrast(high);
           await checkAction(
             page.getByRole('button', {
               name: providerText(`admin.providers.${name}`, locale),
               exact: true,
             })
           );
+        }
+        await page
+          .getByRole('link', {
+            name: providerText('admin.providers.backToList', locale),
+            exact: true,
+          })
+          .click();
       }
+      await page.locator(`a[href="/admin/providers/email/${disabled.id}"]:visible`).click();
 
       const rollback = async () => {
         await page
@@ -323,6 +343,12 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         page.getByText(restored.label, { exact: true }).filter({ visible: true })
       ).toBeVisible();
+      await page
+        .getByRole('link', {
+          name: providerText('admin.providers.backToList', locale),
+          exact: true,
+        })
+        .click();
       await expect(
         page.getByText(active.label, { exact: true }).filter({ visible: true })
       ).toBeVisible();

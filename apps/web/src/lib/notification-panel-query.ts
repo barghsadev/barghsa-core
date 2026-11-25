@@ -56,3 +56,6 @@ export const failedNotificationPageSearch = (raw: Record<string, unknown>) => ({
   ...failedNotificationsSearch(raw),
   ...deliveryHistorySearch(raw),
 });
+
+export const deliveryHistoryWorkspaceSearch = (raw: Record<string, unknown>) =>
+  failedNotificationPageSearch({ ...raw, history_mode: undefined });

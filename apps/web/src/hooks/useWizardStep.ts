@@ -4,7 +4,11 @@ import { wizardStepSearch } from '../lib/wizard-step.js';
 
 /** Financial wizards can revisit completed stages, but cannot skip unsaved stages. */
 export function useWizardStep(
-  to: '/electricity/order' | '/electricity/advanced' | '/savings/order' | '/solar/requests/new',
+  to:
+    | '/electricity/orders/new'
+    | '/electricity/orders/new/advanced'
+    | '/savings/orders/new'
+    | '/solar/requests/new',
   maxStep = 5
 ) {
   const navigate = useNavigate();

@@ -1,3 +1,5 @@
+import { Eye as TableEyeIcon } from 'lucide-react';
+import { TableActionIcon } from './TableActionIcon.js';
 import { Button, StatusBadge, type ListView } from '@barghsa/ui';
 import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
@@ -35,8 +37,12 @@ export function StaffInvoiceReceiptList({
     <StatusBadge label={appText(`invoices.activity.state.${item.state}`, locale)} />
   );
   const open = (item: ReceiptSummary) => (
-    <Button variant="outline" onClick={() => onOpen(item.receiptId)}>
-      {word('open')}
+    <Button
+      variant="outline"
+      onClick={() => onOpen(item.receiptId)}
+      data-table-action-tooltip={word('open')}
+    >
+      <TableActionIcon icon={TableEyeIcon}>{word('open')}</TableActionIcon>
     </Button>
   );
   if (view === 'table')
@@ -73,7 +79,9 @@ export function StaffInvoiceReceiptList({
           {
             id: 'deposit',
             label: word('paymentDate'),
-            render: (item) => <ReceiptDepositDate value={item.paymentDate} />,
+            render: (item) => (
+              <ReceiptDepositDate value={item.paymentDate} locale={locale} calendar="gregory" />
+            ),
           },
           { id: 'state', label: word('historyState'), render: status },
           {
@@ -83,7 +91,7 @@ export function StaffInvoiceReceiptList({
               <time dateTime={item.submittedAt}>{time.format(item.submittedAt)}</time>
             ),
           },
-          { id: 'open', label: word('open'), render: open },
+          { id: 'open', label: word('open'), render: open, actions: true },
         ]}
       />
     );
@@ -122,7 +130,7 @@ export function StaffInvoiceReceiptList({
             <div>
               <dt className="text-muted-foreground">{word('paymentDate')}</dt>
               <dd>
-                <ReceiptDepositDate value={item.paymentDate} />
+                <ReceiptDepositDate value={item.paymentDate} locale={locale} calendar="gregory" />
               </dd>
             </div>
             <div>

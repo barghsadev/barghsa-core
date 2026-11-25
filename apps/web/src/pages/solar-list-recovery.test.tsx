@@ -123,7 +123,7 @@ for (const { name, Page, base, key, row, slot, more } of cases)
         );
         const input =
           name === 'postal'
-            ? container.querySelector<HTMLTextAreaElement>('section textarea')!
+            ? container.querySelector<HTMLTextAreaElement>('#solar-postal-reason')!
             : container.querySelector<HTMLInputElement>('#solar-review-reason')!;
         const guidance = container.querySelector<HTMLTextAreaElement>('form textarea')!;
         await act(async () => {
@@ -153,8 +153,7 @@ for (const { name, Page, base, key, row, slot, more } of cases)
         status = deniedStatus;
         await act(async () => button(container, more).click());
         expect(content.querySelector('button')).toBeNull();
-        expect(container.querySelector('#solar-review-reason')).toBeNull();
-        expect(container.querySelector('section textarea')).toBeNull();
+        expect(container.contains(input)).toBe(false);
         expect(container.querySelector('[data-testid="preview"]')).toBeNull();
         expect(guidance.value).toBe('Keep this guidance draft');
       } finally {

@@ -197,6 +197,7 @@ export function priceFormSchema(
 export function greenSettingsSchema(
   messages: Record<keyof GreenDraft, string>,
   integer: (raw: string, min: number, max: number) => number | null,
+  percentage: (raw: string) => number | null,
   safety: GreenSafety | null
 ) {
   return custom<GreenDraft>().check((ctx) => {
@@ -210,10 +211,15 @@ export function greenSettingsSchema(
     for (const prefix of ['simple', 'advanced'] as const) {
       if (integer(ctx.value[`${prefix}Threshold`], 0, Number.MAX_SAFE_INTEGER) === null)
         issue(`${prefix}Threshold`);
-      const share = ctx.value[`${prefix}Share`];
-      if (!Number.isFinite(share) || share < 0 || share > 100) issue(`${prefix}Share`);
+      const share = percentage(ctx.value[`${prefix}Share`]);
+      if (share === null) issue(`${prefix}Share`);
       const mode = prefix === 'simple' ? 'simpleOrder' : 'advancedOrder';
-      if (ctx.value[`${prefix}Enabled`] && share > 0 && safety?.[mode].reasons.length)
+      if (
+        ctx.value[`${prefix}Enabled`] &&
+        share !== null &&
+        share > 0 &&
+        safety?.[mode].reasons.length
+      )
         issue(`${prefix}Enabled`);
     }
   });

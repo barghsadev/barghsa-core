@@ -15,7 +15,7 @@ function FailedJobsRoute() {
       resetScroll: false,
     });
   });
-  return <Page queries={queries} />;
+  return <Page queries={queries} historySearch={search} />;
 }
 
 export const Route = createFileRoute('/admin/failed-jobs')({

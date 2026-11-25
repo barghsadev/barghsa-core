@@ -283,7 +283,8 @@ export class RefundService {
     invoiceId: string,
     actor: Actor,
     destination: 'wallet' | 'external_bank',
-    before?: string
+    before?: string,
+    refundId?: string
   ) {
     return this.financialRead(actor, async (client) => {
       const invoice = (
@@ -308,8 +309,9 @@ export class RefundService {
         BigInt(invoice.paid_amount) - BigInt(invoice.refunded_amount) - BigInt(reserved);
       const rows = await client.query<RefundRow>(
         `SELECT * FROM refunds WHERE invoice_id=$1 AND destination=$2
-         AND ($3::uuid IS NULL OR id<$3) AND profile_id=$4 ORDER BY id DESC LIMIT 51`,
-        [invoiceId, destination, before ?? null, invoice.profile_id]
+         AND ($3::uuid IS NULL OR id<$3) AND profile_id=$4
+         AND ($5::uuid IS NULL OR id=$5) ORDER BY id DESC LIMIT 51`,
+        [invoiceId, destination, before ?? null, invoice.profile_id, refundId ?? null]
       );
       const refunds: RefundDto[] = [];
       for (const row of rows.rows.slice(0, 50)) refunds.push(await this.dto(client, row));

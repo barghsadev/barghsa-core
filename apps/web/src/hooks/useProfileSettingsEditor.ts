@@ -29,7 +29,7 @@ import {
   type SettingsProfileSummary,
   type ProfileFormValues,
 } from '../lib/settings-form.js';
-export function useProfileSettingsEditor(locale: Locale) {
+export function useProfileSettingsEditor(locale: Locale, loadGeography = true) {
   const actor = useAccountUser(),
     revision = useProfileContextRevision(),
     copy = (key: string) => tSettingsForms(key, locale);
@@ -133,9 +133,9 @@ export function useProfileSettingsEditor(locale: Locale) {
     copy('error'),
     !!profile && acceptedIdentity === identity
   );
-  const provinceOptions = useGeographyOptions('/api/geography/provinces'),
+  const provinceOptions = useGeographyOptions(loadGeography ? '/api/geography/provinces' : null),
     cityOptions = useGeographyOptions(
-      values.provinceId
+      loadGeography && values.provinceId
         ? '/api/geography/provinces/' + encodeURIComponent(values.provinceId) + '/cities'
         : null,
       values.provinceId || undefined

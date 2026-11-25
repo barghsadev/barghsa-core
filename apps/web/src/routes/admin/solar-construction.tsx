@@ -1,7 +1,8 @@
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { createFileRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
 import { useListQuery } from '../../hooks/useListQuery.js';
 import {
   solarConstructionQueryOptions,
+  solarConstructionQueueSearch,
   solarConstructionSearch,
 } from '../../lib/solar-construction-query.js';
 import { RouteSkeleton } from '../../components/RouteSkeleton.js';
@@ -21,20 +22,20 @@ function ConstructionRoute() {
     });
   });
   return (
-    <Page
-      queries={queries}
-      selected={typeof search.requestId === 'string' ? search.requestId : null}
-      onSelect={(id) => {
-        void navigate({
-          search: (raw) => solarConstructionSearch({ ...raw, requestId: id }),
-          resetScroll: false,
-        });
-      }}
-    />
+    <Page queries={queries} selected={null} queueSearch={solarConstructionQueueSearch(search)} />
   );
 }
 export const Route = createFileRoute('/admin/solar-construction')({
   validateSearch: solarConstructionSearch,
+  beforeLoad: ({ search }) => {
+    if (typeof search.requestId === 'string')
+      throw redirect({
+        to: '/admin/solar-requests/$requestId/construction/{-$operation}',
+        params: { requestId: search.requestId },
+        search: solarConstructionQueueSearch(search),
+        replace: true,
+      });
+  },
   component: ConstructionRoute,
   pendingComponent: () => <RouteSkeleton layout="admin" />,
   errorComponent: RouteErrorBoundary,

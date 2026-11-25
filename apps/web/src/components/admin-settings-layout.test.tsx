@@ -73,12 +73,15 @@ it.each([
   expect(activeAdminSettingsPath(path)).toBeNull();
   expect(host.querySelector('nav')).toBeNull();
 });
-it('selects the matching configuration ancestor without accepting a partial segment', async () => {
-  router.path = '/admin/contract-limits/details';
+it('keeps the settings region on an edit page without the section chooser', async () => {
+  router.path = '/admin/contract-limits/edit';
   await render();
   expect(activeAdminSettingsPath(router.path)).toBe('/admin/contract-limits');
   expect(host.querySelector('nav')).toBeNull();
-  expect(host.querySelector<HTMLSelectElement>('select')!.value).toBe('/admin/contract-limits');
+  expect(host.querySelector('select')).toBeNull();
+  expect(host.querySelector('[role="region"][aria-label="Limits"]')?.textContent).toBe(
+    'Existing page'
+  );
 });
 it('waits for confirmation, rejects an injected destination and focuses the opened section', async () => {
   await render();

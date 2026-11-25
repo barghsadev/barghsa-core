@@ -17,7 +17,6 @@ export function WalletPaymentReviewSummary({
   const text = (key: Parameters<typeof t>[0]) => t(key, locale);
   const data = review.data;
   const rows = [
-    ...invoiceFinancialReviewRows(data, locale, numbers, formatDate),
     { id: 'source', label: text('source'), value: text('wallet') },
     {
       id: 'available',
@@ -25,10 +24,12 @@ export function WalletPaymentReviewSummary({
       value: numbers.reviewMoney(data.payment.availableBefore),
     },
     { id: 'after', label: text('after'), value: numbers.reviewMoney(data.payment.availableAfter) },
+    ...invoiceFinancialReviewRows(data, locale, numbers, formatDate),
   ];
   return (
     <FinancialReviewSummary
       title={text('reviewTitle')}
+      compact
       rows={rows}
       total={{
         label: text('paymentTotal'),

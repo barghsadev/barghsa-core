@@ -70,15 +70,32 @@ export class StaffElectricityPriceAdjustmentController {
   @Get('contracts/:id/price-adjustments')
   @ApiParam({ name: 'id', format: 'uuid' })
   @ApiOperation({ summary: 'Read electricity contract price adjustment history' })
-  async get(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+  get(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+    return this.read(req, id);
+  }
+
+  @Get('contracts/:id/price-adjustments/:adjustmentId')
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiParam({ name: 'adjustmentId', format: 'uuid' })
+  @ApiOperation({ summary: 'Read one price adjustment and invoice evidence for its contract' })
+  record(
+    @Param('id') id: string,
+    @Param('adjustmentId') adjustmentId: string,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.read(req, id, adjustmentId);
+  }
+
+  private async read(req: AuthenticatedRequest, id: string, adjustmentId?: string) {
     const canRead = hasStaffPermission(req, 'contracts:read');
     const canCancel = hasStaffPermission(req, 'contracts:write');
     if (!canRead && !canCancel) throw new HttpException({ error: 'AUTHZ:FORBIDDEN' }, 403);
     const contractId = parse(idSchema, id);
+    const recordId = adjustmentId ? parse(idSchema, adjustmentId) : undefined;
     const result = await withStaffReadAuthority(
       req.session,
       canRead ? 'contracts:read' : 'contracts:write',
-      (client) => this.service.staff(contractId, client)
+      (client) => this.service.staff(contractId, client, recordId)
     );
     return {
       ...result,

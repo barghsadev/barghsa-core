@@ -20,17 +20,27 @@ import { t, type Locale } from '@barghsa/i18n/workspace';
 import { shellText } from '@barghsa/i18n/shell';
 import { useLocale } from '../hooks/useLocale.js';
 import { TosBanner } from '../components/TosBanner.js';
-import { InvitationBanner } from '../components/InvitationBanner.js';
-import { OwnershipBanner } from '../components/OwnershipBanner.js';
 import { NotificationBell } from '../components/NotificationBell.js';
 import { AppShell, type NavigationGroup } from '../components/AppShell.js';
-import { KnowledgeAssistantLauncher } from '../components/KnowledgeAssistantLauncher.js';
 import { useNavigation } from '../hooks/useNavigation.js';
 import { permittedNavigation } from '../lib/navigation-config.js';
 
 const CustomerProfileWorkspace = lazy(() =>
   import('../components/CustomerProfileWorkspace.js').then((module) => ({
     default: module.CustomerProfileWorkspace,
+  }))
+);
+const KnowledgeAssistantLauncher = lazy(() =>
+  import('../components/KnowledgeAssistantLauncher.js').then((module) => ({
+    default: module.KnowledgeAssistantLauncher,
+  }))
+);
+const OwnershipBanner = lazy(() =>
+  import('../components/OwnershipBanner.js').then((module) => ({ default: module.OwnershipBanner }))
+);
+const InvitationBanner = lazy(() =>
+  import('../components/InvitationBanner.js').then((module) => ({
+    default: module.InvitationBanner,
   }))
 );
 
@@ -42,7 +52,7 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
   const candidates: NavigationGroup[] = [
     {
       label: shellText('overview', locale),
-      items: [{ to: '/app', label: t('dashboard.nav.overview', locale), icon: LayoutDashboard }],
+      items: [{ to: '/app', label: shellText('home', locale), icon: LayoutDashboard }],
     },
     {
       label: shellText('services', locale),
@@ -92,12 +102,20 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
     },
   ];
   const groups = permittedNavigation(candidates, navigation, 'customer');
+  const focused =
+    pathname === '/electricity/orders/new' || pathname === '/electricity/orders/new/advanced';
+  const showAssistant =
+    pathname !== '/ai' &&
+    pathname !== '/electricity' &&
+    !pathname.startsWith('/settings') &&
+    !/(?:^|\/)(?:new|edit|pay|payment|checkout|topup)(?:\/|$)/.test(pathname);
   return (
     <Suspense fallback={<RouteSkeleton />}>
       <CustomerProfileWorkspace locale={locale}>
         {(picker, badge) => (
           <AppShell
             area="dashboard"
+            focused={focused}
             profile={picker}
             profileBadge={badge}
             locale={locale}
@@ -106,18 +124,30 @@ export function DashboardLayout({ locale: localeOverride }: { locale?: Locale })
               !navigation || navigation.area !== 'customer' || !navigation.paths.length
             }
             actions={<NotificationBell />}
+            floating={
+              showAssistant && (
+                <Suspense fallback={null}>
+                  <KnowledgeAssistantLauncher locale={locale} pathname={pathname} />
+                </Suspense>
+              )
+            }
             banners={
               <>
                 <TosBanner locale={locale} />
-                <InvitationBanner locale={locale} />
-                <OwnershipBanner />
+                <Suspense fallback={null}>
+                  <InvitationBanner locale={locale} />
+                </Suspense>
+                {!pathname.startsWith('/settings/team') && (
+                  <Suspense fallback={null}>
+                    <OwnershipBanner />
+                  </Suspense>
+                )}
               </>
             }
           >
-            <Outlet />
-            {pathname !== '/ai' && (
-              <KnowledgeAssistantLauncher locale={locale} pathname={pathname} />
-            )}
+            <Suspense fallback={<RouteSkeleton />}>
+              <Outlet />
+            </Suspense>
           </AppShell>
         )}
       </CustomerProfileWorkspace>

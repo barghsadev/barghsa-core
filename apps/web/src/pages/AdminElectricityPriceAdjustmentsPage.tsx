@@ -1,21 +1,42 @@
+import {
+  Calculator as TableCalculatorIcon,
+  Check as TableCheckIcon,
+  X as TableXIcon,
+} from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
+import { Link } from '@tanstack/react-router';
+import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import {
+  RecordEditorDisclosure,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
+import {
+  StickyRecordEditorActions,
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+} from '../components/StickyRecordEditorActions.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { useEffect, useRef, useState, type RefObject } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { adminText as t } from '@barghsa/i18n/electricity-price-forms';
-import { t as appText } from '@barghsa/i18n/electricity-price-forms';
+import { editorText, t as appText } from '@barghsa/i18n/electricity-price-forms';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   LoadingStatus,
   Button,
-  Card,
-  CardContent,
+  buttonVariants,
   FinancialReviewSummary,
   Input,
+  Textarea,
   ListPage,
+  ListRefreshButton,
   TextCell,
   DateCell,
   CurrencyCell,
@@ -105,6 +126,11 @@ function bpsToPercent(value: string, format: ReturnType<typeof useFinancialForma
   return `${signed < 0n ? '-' : ''}${whole}${decimals}%`;
 }
 
+type PriceDecision = 'finalize' | 'cancel';
+type RecordView = 'history' | 'new' | 'adjustment' | PriceDecision;
+const adjustmentRoute =
+  '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}';
+
 export default function AdminElectricityPriceAdjustmentsPage(
   props: Parameters<typeof OwnedAdminElectricityPriceAdjustmentsPage>[0] = {}
 ) {
@@ -113,7 +139,21 @@ export default function AdminElectricityPriceAdjustmentsPage(
 }
 function OwnedAdminElectricityPriceAdjustmentsPage({
   queries,
-}: { queries?: ListQueryBinding } = {}) {
+  view,
+  routeContractId,
+  adjustmentId,
+  onOpenContract,
+  onPublished,
+  onDecisionRecorded,
+}: {
+  queries?: ListQueryBinding;
+  view?: RecordView;
+  routeContractId?: string;
+  adjustmentId?: string;
+  onOpenContract?: (id: string) => void;
+  onPublished?: (id: string) => void;
+  onDecisionRecorded?: () => void;
+} = {}) {
   const locale = useLocale();
   const actor = useAccountUser();
   const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
@@ -124,7 +164,7 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
       : staffOrderId(new URLSearchParams(window.location.search).get('contractId'));
   const [localContractId, setLocalContractId] = useState(initial);
   const contractId = staffOrderId(
-    queries ? (queries.query.filters.contractId ?? '') : localContractId
+    routeContractId ?? (queries ? (queries.query.filters.contractId ?? '') : localContractId)
   ).toLowerCase();
   const scope = JSON.stringify([actor, contractId]);
   const currentScope = useRef(scope);
@@ -157,96 +197,177 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
   const selectionLocked =
     owner.current?.stage === 'command' && (owner.current.attempted || owner.current.uncertain);
   const heldContract = selectionLocked ? owner.current!.contractId : contractId;
-  return (
-    <section className="min-w-0 space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold">{copy('title')}</h1>
-        <p className="text-muted-foreground">{copy('description')}</p>
-      </header>
-      <Form {...form}>
-        <form
-          noValidate
-          data-testid="electricity-price-contract-form"
-          className="flex flex-wrap items-end gap-3"
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (
-              currentScope.current !== scope ||
-              owner.current?.stage === 'picker' ||
-              (control.current?.actor === actor && control.current.blocked()) ||
-              selectionLocked
-            )
-              return;
-            if (control.current?.actor === actor) control.current.cancelRead();
-            const token: WorkspaceOwner = {
-              actor,
-              contractId,
-              stage: 'picker',
-              attempted: false,
-              uncertain: false,
-            };
-            owner.current = token;
-            notify();
-            const raw = form.getValues('contractId');
-            void form
-              .handleSubmit((draft) => {
-                if (
-                  currentScope.current !== scope ||
-                  owner.current !== token ||
-                  form.getValues('contractId') !== raw ||
-                  draft.contractId !== raw
-                )
-                  return;
-                const selected = staffOrderId(draft.contractId.trim()).toLowerCase();
-                if (queries) queries.setQuery({ filters: { contractId: selected } });
-                else setLocalContractId(selected);
-              })(event)
-              .finally(() => {
-                if (owner.current === token) {
-                  owner.current = null;
-                  notify();
-                }
-              });
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (view) heading.current?.focus({ preventScroll: true });
+  }, [view, routeContractId, adjustmentId]);
+  const decision = view === 'finalize' || view === 'cancel' ? view : undefined;
+  const navigationBlocked = () =>
+    !!(decision && control.current?.blocked()) ||
+    (owner.current?.stage === 'command' && (owner.current.attempted || owner.current.uncertain));
+  const pageHeading = (
+    <div className="min-w-0 space-y-1">
+      {view === 'history' ? (
+        <Link
+          className="touch-action text-sm text-primary underline underline-offset-4"
+          to="/admin/electricity-price-adjustments"
+        >
+          {copy('backToLookup')}
+        </Link>
+      ) : decision && routeContractId && adjustmentId ? (
+        <Link
+          className="touch-action text-sm text-primary underline underline-offset-4"
+          to={adjustmentRoute}
+          params={{ contractId: routeContractId, adjustmentId }}
+          aria-disabled={navigationBlocked() || undefined}
+          onClick={(event) => {
+            if (navigationBlocked()) event.preventDefault();
           }}
         >
-          <FormField
-            control={form.control}
-            name="contractId"
-            render={({ field }) => (
-              <FormItem id="electricity-price-contract" className="min-w-0 flex-1 basis-64">
-                <FormLabel>{copy('contractId')}</FormLabel>
-                <FormControl>
-                  <Input {...field} aria-required="true" dir="ltr" disabled={selectionLocked} />
-                </FormControl>
-                <FormDescription>{formCopy('contractHelp')}</FormDescription>
-                <FormMessage reserveSpace />
-              </FormItem>
-            )}
-          />
-          <Button
-            type="submit"
-            disabled={selectionLocked || form.formState.isSubmitting}
-            aria-busy={form.formState.isSubmitting || undefined}
+          {copy('backToAdjustment')}
+        </Link>
+      ) : view && routeContractId ? (
+        <Link
+          className="touch-action text-sm text-primary underline underline-offset-4"
+          to="/admin/electricity-price-adjustments/$contractId"
+          params={{ contractId: routeContractId }}
+          aria-disabled={navigationBlocked() || undefined}
+          onClick={(event) => {
+            if (navigationBlocked()) event.preventDefault();
+          }}
+        >
+          {copy('backToHistory')}
+        </Link>
+      ) : null}
+      <h1
+        ref={heading}
+        tabIndex={view ? -1 : undefined}
+        className={
+          view === 'new' ? 'w-fit text-xl font-semibold' : 'text-2xl font-semibold outline-none'
+        }
+      >
+        {copy(
+          decision ??
+            (view === 'new'
+              ? 'newProposal'
+              : view === 'adjustment'
+                ? 'adjustment'
+                : view === 'history'
+                  ? 'contractHistory'
+                  : 'title')
+        )}
+      </h1>
+      {routeContractId ? (
+        <p className="text-sm text-muted-foreground">
+          <bdi dir="ltr">{adjustmentId ?? routeContractId}</bdi>
+        </p>
+      ) : (
+        <p className="text-muted-foreground">{copy('description')}</p>
+      )}
+    </div>
+  );
+  return (
+    <section
+      className={
+        view === 'new' || decision ? 'mx-auto min-w-0 max-w-3xl space-y-3' : 'min-w-0 space-y-5'
+      }
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {view && <RecordCommandGuard blocked={navigationBlocked} />}
+      {view !== 'new' && !decision && <header>{pageHeading}</header>}
+      {!view && (
+        <Form {...form}>
+          <form
+            noValidate
+            data-testid="electricity-price-contract-form"
+            className="flex flex-wrap items-end gap-3"
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (
+                currentScope.current !== scope ||
+                owner.current?.stage === 'picker' ||
+                (control.current?.actor === actor && control.current.blocked()) ||
+                selectionLocked
+              )
+                return;
+              if (control.current?.actor === actor) control.current.cancelRead();
+              const token: WorkspaceOwner = {
+                actor,
+                contractId,
+                stage: 'picker',
+                attempted: false,
+                uncertain: false,
+              };
+              owner.current = token;
+              notify();
+              const raw = form.getValues('contractId');
+              void form
+                .handleSubmit((draft) => {
+                  if (
+                    currentScope.current !== scope ||
+                    owner.current !== token ||
+                    form.getValues('contractId') !== raw ||
+                    draft.contractId !== raw
+                  )
+                    return;
+                  const selected = staffOrderId(draft.contractId.trim()).toLowerCase();
+                  if (onOpenContract) onOpenContract(selected);
+                  else if (queries) queries.setQuery({ filters: { contractId: selected } });
+                  else setLocalContractId(selected);
+                })(event)
+                .finally(() => {
+                  if (owner.current === token) {
+                    owner.current = null;
+                    notify();
+                  }
+                });
+            }}
           >
-            {form.formState.isSubmitting ? (
-              <span
-                aria-hidden="true"
-                className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-              />
+            <FormField
+              control={form.control}
+              name="contractId"
+              render={({ field }) => (
+                <FormItem id="electricity-price-contract" className="min-w-0 flex-1 basis-64">
+                  <FormLabel>{copy('contractId')}</FormLabel>
+                  <FormControl>
+                    <Input {...field} aria-required="true" dir="ltr" disabled={selectionLocked} />
+                  </FormControl>
+                  <FormDescription>{formCopy('contractHelp')}</FormDescription>
+                  <FormMessage reserveSpace />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="submit"
+              disabled={selectionLocked || form.formState.isSubmitting}
+              aria-busy={form.formState.isSubmitting || undefined}
+            >
+              {form.formState.isSubmitting ? (
+                <span
+                  aria-hidden="true"
+                  className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                />
+              ) : null}
+              {copy('open')}
+            </Button>
+            {form.formState.errors.root?.validation ? (
+              <p role="alert" className="w-full">
+                {formCopy('validationUnavailable')}
+              </p>
             ) : null}
-            {copy('open')}
-          </Button>
-          {form.formState.errors.root?.validation ? (
-            <p role="alert" className="w-full">
-              {formCopy('validationUnavailable')}
-            </p>
-          ) : null}
-        </form>
-      </Form>
-      {heldContract ? (
+          </form>
+        </Form>
+      )}
+      {heldContract && (view || !onOpenContract) ? (
         <PriceWorkspace
-          key={`${actor}-${heldContract}`}
+          key={JSON.stringify([actor, heldContract, view, adjustmentId])}
           contractId={heldContract}
+          view={view}
+          proposalHeading={view === 'new' || decision ? pageHeading : undefined}
+          adjustmentId={adjustmentId}
+          onPublished={onPublished}
+          decision={decision}
+          onDecisionRecorded={onDecisionRecorded}
           owner={owner}
           control={control}
           notify={notify}
@@ -265,8 +386,20 @@ function PriceWorkspace({
   control,
   notify,
   onWithdraw,
+  view,
+  proposalHeading,
+  adjustmentId,
+  onPublished,
+  decision,
+  onDecisionRecorded,
 }: {
   contractId: string;
+  view?: RecordView | undefined;
+  proposalHeading?: ReactNode;
+  adjustmentId?: string | undefined;
+  onPublished?: ((id: string) => void) | undefined;
+  decision?: PriceDecision | undefined;
+  onDecisionRecorded?: (() => void) | undefined;
   owner: RefObject<WorkspaceOwner | null>;
   control: RefObject<WorkspaceControl | null>;
   notify: () => void;
@@ -297,7 +430,9 @@ function PriceWorkspace({
 
   const [revision, setRevision] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState<'load' | 'forbidden' | null>(null);
+  const [loadError, setLoadError] = useState<'load' | 'forbidden' | 'recordUnavailable' | null>(
+    null
+  );
   const accessDenied = useRef(false);
   const reviewGeneration = useRef(0);
   const previewAbort = useRef<AbortController | null>(null);
@@ -383,7 +518,7 @@ function PriceWorkspace({
   }
   const controller: WorkspaceControl = { actor, cancelRead, blocked: writeLocked };
   control.current = controller;
-  function withdraw(kind: 'load' | 'forbidden') {
+  function withdraw(kind: 'load' | 'forbidden' | 'recordUnavailable') {
     accessDenied.current = kind === 'forbidden';
     invalidate();
     acceptedData.current = null;
@@ -396,7 +531,7 @@ function PriceWorkspace({
   }
   function refresh() {
     if (writeLocked() || owner.current?.stage === 'picker') return;
-    if (preparing.current) invalidate();
+    if (preparing.current || decision) invalidate();
     setRevision((value) => value + 1);
   }
   useEffect(() => {
@@ -425,7 +560,8 @@ function PriceWorkspace({
     void readStaff(
       'contracts',
       'detail',
-      `/api/staff/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments`,
+      `/api/staff/electricity/contracts/${encodeURIComponent(contractId)}/price-adjustments` +
+        (adjustmentId ? `/${encodeURIComponent(adjustmentId)}` : ''),
       abort.signal
     )
       .then(async (response) => {
@@ -435,12 +571,17 @@ function PriceWorkspace({
           return null;
         }
         if (response.status === 404) {
-          withdraw('load');
+          withdraw(adjustmentId ? 'recordUnavailable' : 'load');
           return null;
         }
         if (!response.ok) throw new Error('load');
         const value = parseStaffPriceState(await response.json(), contractId);
-        if (!value) throw new Error('load');
+        if (
+          !value ||
+          (adjustmentId &&
+            (value.adjustments.length !== 1 || value.adjustments[0]?.adjustmentId !== adjustmentId))
+        )
+          throw new Error('load');
         return value;
       })
       .then((value) => {
@@ -508,6 +649,7 @@ function PriceWorkspace({
           }
           if (definitivePriceRejection(value)) {
             command.rejected = true;
+            if (decision && !command.owner.uncertain) command.owner.attempted = false;
             const fields = (value as { error: { fields?: unknown[] } }).error.fields;
             if (
               !command.owner.uncertain &&
@@ -691,7 +833,7 @@ function PriceWorkspace({
         }
       });
   }
-  function confirm(adjustment: ElectricityPriceAdjustmentRow, operation: 'finalize' | 'cancel') {
+  function confirm(adjustment: ElectricityPriceAdjustmentRow, operation: PriceDecision) {
     if (
       currentScope.current !== scope ||
       commandLocked() ||
@@ -749,22 +891,35 @@ function PriceWorkspace({
   const frozen = !!captured.current || pending.current || uncertain;
   const proposed =
     data?.adjustments.some((adjustment) => adjustment.status === 'proposed') ?? false;
+  const record = adjustmentId ? data?.adjustments[0] : null;
+  useEffect(() => {
+    if (decision && record && !loading && !loadError) confirm(record, decision);
+  }, [record, decision, loading, loadError]);
+
+  const decisionReady =
+    record?.status === 'proposed' &&
+    !!(decision === 'finalize' ? data?.canFinalize : data?.canCancel);
+  const refreshButton = (
+    <ListRefreshButton
+      label={copy('refresh')}
+      disabled={loading || writeLocked() || owner.current?.stage === 'picker'}
+      onClick={refresh}
+    />
+  );
   return (
     <ListPage role="region" aria-label={copy('listTitle')}>
+      {proposalHeading && (
+        <header className="flex flex-wrap items-end justify-between gap-3">
+          {proposalHeading}
+          {refreshButton}
+        </header>
+      )}
       {time.notice}
-      <ListPage.Toolbar>
-        <Button
-          variant="outline"
-          disabled={loading || writeLocked() || owner.current?.stage === 'picker'}
-          onClick={refresh}
-        >
-          {copy('refresh')}
-        </Button>
-      </ListPage.Toolbar>
+      {!proposalHeading && <ListPage.Toolbar>{refreshButton}</ListPage.Toolbar>}
       {loadError ? (
         <div role="alert" className="space-y-2">
           <p>{copy(loadError)}</p>
-          {loadError !== 'forbidden' && (
+          {loadError === 'load' && (
             <Button
               type="button"
               variant="outline"
@@ -791,372 +946,586 @@ function PriceWorkspace({
           </Button>
         </div>
       ) : null}
-      {data ? (
+      {data && !decision ? (
         <div className="space-y-5">
-          <div className="flex flex-wrap items-center justify-between gap-2">
+          {(view !== 'new' || !data.canPropose || proposed) && (
             <p className="text-sm text-muted-foreground">
-              {copy('termEnds')}: {time.format(data.periodEnd)}
+              {copy('termEnds')} · {time.format(data.periodEnd)}
             </p>
-          </div>
-          {!data.canPropose && !proposed ? (
+          )}
+          {view !== 'adjustment' && !data.canPropose && !proposed ? (
             <p role="status">{copy(data.blockedByIncrease ? 'waitForIncrease' : 'notEligible')}</p>
           ) : null}
-          {data.canPropose && !proposed ? (
-            <Card>
-              <CardContent className="space-y-4 pt-6">
-                <h2 className="font-semibold">{copy('newProposal')}</h2>
-                <Form {...form}>
-                  <form
-                    noValidate
-                    data-testid="electricity-price-proposal-form"
-                    className="grid gap-4 sm:grid-cols-2"
-                    onSubmit={(event) => {
-                      event.preventDefault();
-                      propose();
-                    }}
-                  >
+          {view === 'history' && data.canPropose && !proposed && (
+            <Link
+              to="/admin/electricity-price-adjustments/$contractId/new"
+              params={{ contractId }}
+              className="inline-flex min-h-11 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground"
+            >
+              {copy('newProposal')}
+            </Link>
+          )}
+          {(!view || view === 'new') && data.canPropose && !proposed ? (
+            <Form {...form}>
+              <form
+                noValidate
+                data-testid="electricity-price-proposal-form"
+                className={recordEditorFormSurface}
+                onFocus={keepRecordFieldVisible}
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  propose();
+                }}
+              >
+                <RecordEditorSection
+                  title={editorText('changeDetails', locale)}
+                  description={`${copy('termEnds')} · ${time.format(data.periodEnd)}`}
+                >
+                  <div className={recordEditorGrid}>
                     {(
                       [
-                        {
-                          name: 'percentage',
-                          id: 'price-percent',
-                          label: 'percentage',
-                          help: copy('percentageHelp'),
-                        },
-                        {
-                          name: 'effectiveFrom',
-                          id: 'price-effective',
-                          label: 'effective',
-                          help: (
-                            <>
-                              {formCopy('dateHelp')} {copy('dateZone')}:{' '}
-                              <bdi dir="ltr">{timezone ?? '—'}</bdi>
-                            </>
-                          ),
-                        },
-                        {
-                          name: 'reason',
-                          id: 'price-reason',
-                          label: 'reason',
-                          help: formCopy('reasonHelp'),
-                        },
-                        {
-                          name: 'basis',
-                          id: 'price-basis',
-                          label: 'basis',
-                          help: formCopy('basisHelp'),
-                        },
+                        [
+                          'percentage',
+                          'price-percent',
+                          'percentage',
+                          copy('percentageHelp'),
+                          'percentageExample',
+                        ],
+                        [
+                          'effectiveFrom',
+                          'price-effective',
+                          'effective',
+                          <>
+                            {formCopy('dateHelp')} {copy('dateZone')} ·{' '}
+                            <bdi dir="ltr">{timezone ?? '—'}</bdi>
+                          </>,
+                          undefined,
+                        ],
                       ] as const
-                    ).map(({ name, id, label, help }) => (
+                    ).map(([name, id, label, help, example]) => (
                       <FormField
                         key={name}
                         control={form.control}
                         name={name}
                         render={({ field }) => (
-                          <FormItem id={id}>
+                          <FormItem id={id} className={recordEditorField}>
                             <FormLabel>{copy(label)}</FormLabel>
                             <FormControl>
                               <Input
                                 {...field}
                                 aria-required="true"
+                                dir="ltr"
                                 type={name === 'effectiveFrom' ? 'datetime-local' : 'text'}
                                 inputMode={name === 'percentage' ? 'decimal' : undefined}
+                                placeholder={example ? editorText(example, locale) : undefined}
                                 disabled={frozen || (name === 'effectiveFrom' && !timezone)}
+                                className={name === 'percentage' ? 'max-w-44' : undefined}
                               />
                             </FormControl>
                             <FormDescription>{help}</FormDescription>
-                            <FormMessage reserveSpace />
+                            <FormMessage />
                           </FormItem>
                         )}
                       />
                     ))}
-                    <div className="space-y-2 sm:col-span-2">
-                      <p className="text-sm text-muted-foreground">{formCopy('preserved')}</p>
-                      <Button
-                        type="submit"
-                        disabled={
-                          !timezone ||
-                          saving ||
-                          loading ||
-                          !!loadError ||
-                          frozen ||
-                          owner.current?.stage === 'picker'
-                        }
-                        aria-busy={saving || undefined}
-                      >
-                        {saving ? (
-                          <span
-                            aria-hidden="true"
-                            className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                          />
-                        ) : null}
-                        {copy('reviewProposal')}
-                      </Button>
-                      {saving ? <p role="status">{copy('reviewLoading')}</p> : null}
-                      {form.formState.errors.root?.validation ? (
-                        <p role="alert">{formCopy('validationUnavailable')}</p>
-                      ) : null}
-                    </div>
-                  </form>
-                </Form>
-              </CardContent>
-            </Card>
-          ) : proposed ? (
+                  </div>
+                </RecordEditorSection>
+                <RecordEditorSection
+                  title={copy('terms')}
+                  description={editorText('customerDisclosure', locale)}
+                >
+                  <div className={recordEditorGrid}>
+                    {(
+                      [
+                        ['reason', 'price-reason', 'reasonHelp', 'reasonExample'],
+                        ['basis', 'price-basis', 'basisHelp', 'basisExample'],
+                      ] as const
+                    ).map(([name, id, help, example]) => (
+                      <FormField
+                        key={name}
+                        control={form.control}
+                        name={name}
+                        render={({ field }) => (
+                          <FormItem id={id} className={recordEditorField}>
+                            <FormLabel>{copy(name)}</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                {...field}
+                                aria-required="true"
+                                dir="auto"
+                                rows={2}
+                                className="max-h-48 min-h-16 resize-y placeholder-shown:[direction:inherit]"
+                                placeholder={editorText(example, locale)}
+                                disabled={frozen}
+                              />
+                            </FormControl>
+                            <FormDescription>{formCopy(help)}</FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                  </div>
+                  {form.formState.errors.root?.validation && (
+                    <p role="alert">{formCopy('validationUnavailable')}</p>
+                  )}
+                </RecordEditorSection>
+                <StickyRecordEditorActions
+                  secondary={
+                    saving ? (
+                      <p role="status" className="text-sm text-muted-foreground">
+                        {copy('reviewLoading')}
+                      </p>
+                    ) : undefined
+                  }
+                >
+                  <Button
+                    type="submit"
+                    disabled={
+                      !timezone ||
+                      saving ||
+                      loading ||
+                      !!loadError ||
+                      frozen ||
+                      owner.current?.stage === 'picker'
+                    }
+                    aria-busy={saving || undefined}
+                  >
+                    {saving ? (
+                      <span
+                        aria-hidden="true"
+                        className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                      />
+                    ) : null}
+                    {copy('reviewProposal')}
+                  </Button>
+                </StickyRecordEditorActions>
+              </form>
+            </Form>
+          ) : view !== 'adjustment' && proposed ? (
             <p className="text-sm">{copy('resolveProposal')}</p>
           ) : null}
-          <ListPage.Content
-            loading={loading}
-            error={!!loadError}
-            empty={!data.adjustments.length}
-            retainContent={!!data.adjustments.length}
-            emptyView={<p>{copy('empty')}</p>}
-            loadingView={null}
-            errorView={null}
-          >
-            {data.adjustments.length > 0 ? (
-              <OperationalQueueTable
-                locale={locale}
-                rows={data.adjustments.map((adjustment) => ({
-                  id: adjustment.adjustmentId,
-                  adjustment,
-                }))}
-                caption={copy('directory')}
-                scrollLabel={copy('directory')}
-                nameHeader={copy('adjustment')}
-                renderName={({ adjustment }) => (
-                  <>
-                    <TextCell value={copy('adjustment')} />
-                    <span className="block font-mono text-xs font-normal">
-                      <TextCell value={adjustment.adjustmentId} />
-                    </span>
-                  </>
-                )}
-                fields={[
-                  {
-                    id: 'status',
-                    label: copy('statusLabel'),
-                    render: ({ adjustment }) => (
-                      <StatusCell
-                        state={adjustment.status}
-                        label={copy(`status.${adjustment.status}`)}
-                      />
-                    ),
-                  },
-                  {
-                    id: 'percentage',
-                    label: copy('percentage'),
-                    render: ({ adjustment }) => (
-                      <div className="space-y-1">
-                        <TextCell value={bpsToPercent(adjustment.percentageBps, numbers.number)} />
-                        <p className="text-xs text-muted-foreground">
-                          {copy(adjustment.calculation.quote.kind)}
-                        </p>
-                      </div>
-                    ),
-                  },
-                  {
-                    id: 'effective',
-                    label: copy('effective'),
-                    render: ({ adjustment }) => (
-                      <DateCell
-                        value={adjustment.effectiveFrom}
-                        format={(value) => time.format(value)}
-                      />
-                    ),
-                  },
-                  {
-                    id: 'end',
-                    label: copy('termEnds'),
-                    render: ({ adjustment }) => (
-                      <DateCell
-                        value={adjustment.periodEnd}
-                        format={(value) => time.format(value)}
-                      />
-                    ),
-                  },
-                  {
-                    id: 'history',
-                    label: copy('history'),
-                    render: ({ adjustment }) => (
-                      <div className="space-y-2">
-                        <p>
-                          {copy('proposedAt')}:{' '}
-                          <DateCell
-                            value={adjustment.proposedAt}
-                            format={(value) => time.format(value)}
-                          />
-                        </p>
-                        {adjustment.finalizedAt ? (
-                          <p>
-                            {copy('finalizedAt')}:{' '}
-                            <DateCell
-                              value={adjustment.finalizedAt}
-                              format={(value) => time.format(value)}
-                            />
-                          </p>
-                        ) : null}
-                        {adjustment.cancelledAt ? (
-                          <p>
-                            {copy('cancelledAt')}:{' '}
-                            <DateCell
-                              value={adjustment.cancelledAt}
-                              format={(value) => time.format(value)}
-                            />
-                          </p>
-                        ) : null}
-                      </div>
-                    ),
-                  },
-                  {
-                    id: 'terms',
-                    label: copy('terms'),
-                    render: ({ adjustment }) => (
-                      <div className="max-w-sm space-y-2">
-                        <div>
-                          <p className="font-medium">{copy('reason')}</p>
-                          <TextCell value={adjustment.reason} />
-                        </div>
-                        <div>
-                          <p className="font-medium">{copy('basis')}</p>
-                          <TextCell value={adjustment.contractualBasis} />
-                        </div>
-                      </div>
-                    ),
-                  },
-                  {
-                    id: 'old',
-                    label: copy('oldFuture'),
-                    render: ({ adjustment }) => (
-                      <CurrencyCell
-                        amount={adjustment.calculation.quote.oldFutureIrR}
-                        format={numbers.money}
-                      />
-                    ),
-                  },
-                  {
-                    id: 'new',
-                    label: copy('newFuture'),
-                    render: ({ adjustment }) => (
-                      <CurrencyCell
-                        amount={adjustment.calculation.quote.newFutureIrR}
-                        format={numbers.money}
-                      />
-                    ),
-                  },
-                  {
-                    id: 'amount',
-                    label: copy('amount'),
-                    render: ({ adjustment }) => (
-                      <CurrencyCell
-                        amount={adjustment.adjustmentAmountIrR}
-                        format={numbers.money}
-                      />
-                    ),
-                  },
-                  {
-                    id: 'invoice',
-                    label: copy('invoice'),
-                    render: ({ adjustment }) =>
-                      adjustment.adjustmentInvoiceId ? (
+          {(!view || view === 'history') && (
+            <ListPage.Content
+              loading={loading}
+              error={!!loadError}
+              empty={!data.adjustments.length}
+              retainContent={!!data.adjustments.length}
+              emptyView={<p>{copy('empty')}</p>}
+              loadingView={null}
+              errorView={null}
+            >
+              {data.adjustments.length > 0 ? (
+                <OperationalQueueTable
+                  locale={locale}
+                  rows={data.adjustments.map((adjustment) => ({
+                    id: adjustment.adjustmentId,
+                    adjustment,
+                  }))}
+                  caption={copy('directory')}
+                  scrollLabel={copy('directory')}
+                  nameHeader={copy('adjustment')}
+                  renderName={({ adjustment }) => (
+                    <>
+                      <TextCell value={copy('adjustment')} />
+                      <span className="block font-mono text-xs font-normal">
+                        <TextCell value={adjustment.adjustmentId} />
+                      </span>
+                    </>
+                  )}
+                  fields={[
+                    {
+                      id: 'status',
+                      label: copy('statusLabel'),
+                      render: ({ adjustment }) => (
+                        <StatusCell
+                          state={adjustment.status}
+                          label={copy(`status.${adjustment.status}`)}
+                        />
+                      ),
+                    },
+                    {
+                      id: 'percentage',
+                      label: copy('percentage'),
+                      render: ({ adjustment }) => (
                         <div className="space-y-1">
-                          <div>
-                            <StatusCell
-                              state={adjustment.adjustmentInvoiceState ?? ''}
-                              label={
-                                appText(
-                                  `invoices.state.${adjustment.adjustmentInvoiceState}`,
-                                  locale
-                                ) === `invoices.state.${adjustment.adjustmentInvoiceState}`
-                                  ? (adjustment.adjustmentInvoiceState ?? '—')
-                                  : appText(
-                                      `invoices.state.${adjustment.adjustmentInvoiceState}`,
-                                      locale
-                                    )
-                              }
+                          <TextCell
+                            value={bpsToPercent(adjustment.percentageBps, numbers.number)}
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            {copy(adjustment.calculation.quote.kind)}
+                          </p>
+                        </div>
+                      ),
+                    },
+                    {
+                      id: 'effective',
+                      label: copy('effective'),
+                      render: ({ adjustment }) => (
+                        <DateCell
+                          value={adjustment.effectiveFrom}
+                          format={(value) => time.format(value)}
+                        />
+                      ),
+                    },
+                    {
+                      id: 'end',
+                      label: copy('termEnds'),
+                      render: ({ adjustment }) => (
+                        <DateCell
+                          value={adjustment.periodEnd}
+                          format={(value) => time.format(value)}
+                        />
+                      ),
+                    },
+                    {
+                      id: 'history',
+                      label: copy('history'),
+                      render: ({ adjustment }) => (
+                        <div className="space-y-2">
+                          <p>
+                            {copy('proposedAt')}:{' '}
+                            <DateCell
+                              value={adjustment.proposedAt}
+                              format={(value) => time.format(value)}
                             />
-                          </div>
-                          <LinkCell
-                            href={`/admin/invoices?invoiceId=${encodeURIComponent(adjustment.adjustmentInvoiceId)}`}
-                          >
-                            {adjustment.adjustmentInvoiceId}
-                          </LinkCell>
-                          {adjustment.status === 'finalized' &&
-                          BigInt(adjustment.adjustmentAmountIrR) < 0n ? (
-                            <div className="pt-1">
-                              <LinkCell
-                                href={`/admin/invoices?invoiceId=${encodeURIComponent(adjustment.calculation.originalInvoiceId)}`}
-                              >
-                                {copy('refundCredit')}
-                              </LinkCell>
-                            </div>
+                          </p>
+                          {adjustment.finalizedAt ? (
+                            <p>
+                              {copy('finalizedAt')}:{' '}
+                              <DateCell
+                                value={adjustment.finalizedAt}
+                                format={(value) => time.format(value)}
+                              />
+                            </p>
+                          ) : null}
+                          {adjustment.cancelledAt ? (
+                            <p>
+                              {copy('cancelledAt')}:{' '}
+                              <DateCell
+                                value={adjustment.cancelledAt}
+                                format={(value) => time.format(value)}
+                              />
+                            </p>
                           ) : null}
                         </div>
-                      ) : (
-                        <TextCell value={copy('noInvoice')} />
                       ),
-                  },
-                ]}
-                actionHeader={copy('actions')}
-                renderActions={({ adjustment }) => (
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      data-price-inspection={adjustment.adjustmentId}
-                      type="button"
-                      variant="outline"
-                      className="min-h-11"
-                      disabled={loading || !!loadError || commandLocked()}
-                      onClick={() => {
-                        if (
-                          currentScope.current !== scope ||
-                          loading ||
-                          loadError ||
-                          accessDenied.current ||
-                          commandLocked() ||
-                          !data.adjustments.some((row) => row === adjustment)
-                        )
-                          return;
-                        setInspectionId(adjustment.adjustmentId);
-                      }}
-                    >
-                      {copy('viewCalculation')}
-                      <span className="sr-only">: {adjustment.adjustmentId}</span>
-                    </Button>
-                    {adjustment.status === 'proposed' ? (
-                      <>
-                        {data.canFinalize ? (
-                          <Button
-                            className="min-h-11"
-                            disabled={loading || !!loadError || commandLocked()}
-                            onClick={() => confirm(adjustment, 'finalize')}
-                          >
-                            {copy('finalize')}
-                          </Button>
+                    },
+                    {
+                      id: 'terms',
+                      label: copy('terms'),
+                      render: ({ adjustment }) => (
+                        <div className="max-w-sm space-y-2">
+                          <div>
+                            <p className="font-medium">{copy('reason')}</p>
+                            <TextCell value={adjustment.reason} />
+                          </div>
+                          <div>
+                            <p className="font-medium">{copy('basis')}</p>
+                            <TextCell value={adjustment.contractualBasis} />
+                          </div>
+                        </div>
+                      ),
+                    },
+                    {
+                      id: 'old',
+                      label: copy('oldFuture'),
+                      render: ({ adjustment }) => (
+                        <CurrencyCell
+                          amount={adjustment.calculation.quote.oldFutureIrR}
+                          format={numbers.money}
+                        />
+                      ),
+                    },
+                    {
+                      id: 'new',
+                      label: copy('newFuture'),
+                      render: ({ adjustment }) => (
+                        <CurrencyCell
+                          amount={adjustment.calculation.quote.newFutureIrR}
+                          format={numbers.money}
+                        />
+                      ),
+                    },
+                    {
+                      id: 'amount',
+                      label: copy('amount'),
+                      render: ({ adjustment }) => (
+                        <CurrencyCell
+                          amount={adjustment.adjustmentAmountIrR}
+                          format={numbers.money}
+                        />
+                      ),
+                    },
+                    {
+                      id: 'invoice',
+                      label: copy('invoice'),
+                      render: ({ adjustment }) =>
+                        adjustment.adjustmentInvoiceId ? (
+                          <div className="space-y-1">
+                            <div>
+                              <StatusCell
+                                state={adjustment.adjustmentInvoiceState ?? ''}
+                                label={
+                                  appText(
+                                    `invoices.state.${adjustment.adjustmentInvoiceState}`,
+                                    locale
+                                  ) === `invoices.state.${adjustment.adjustmentInvoiceState}`
+                                    ? (adjustment.adjustmentInvoiceState ?? '—')
+                                    : appText(
+                                        `invoices.state.${adjustment.adjustmentInvoiceState}`,
+                                        locale
+                                      )
+                                }
+                              />
+                            </div>
+                            <LinkCell
+                              href={`/admin/invoices/${encodeURIComponent(adjustment.adjustmentInvoiceId)}`}
+                            >
+                              {adjustment.adjustmentInvoiceId}
+                            </LinkCell>
+                            {adjustment.status === 'finalized' &&
+                            BigInt(adjustment.adjustmentAmountIrR) < 0n ? (
+                              <div className="pt-1">
+                                <LinkCell
+                                  href={`/admin/invoices/${encodeURIComponent(adjustment.calculation.originalInvoiceId)}`}
+                                >
+                                  {copy('refundCredit')}
+                                </LinkCell>
+                              </div>
+                            ) : null}
+                          </div>
                         ) : (
-                          <p>{copy('finalizePermission')}</p>
-                        )}
-                        {data.canCancel ? (
-                          <Button
-                            variant="outline"
-                            className="min-h-11"
-                            disabled={loading || !!loadError || commandLocked()}
-                            onClick={() => confirm(adjustment, 'cancel')}
-                          >
-                            {copy('cancel')}
-                          </Button>
+                          <TextCell value={copy('noInvoice')} />
+                        ),
+                    },
+                  ]}
+                  actionHeader={copy('actions')}
+                  renderActions={({ adjustment }) =>
+                    view === 'history' ? (
+                      <Link
+                        to={adjustmentRoute}
+                        params={{ contractId, adjustmentId: adjustment.adjustmentId }}
+                        className="inline-flex min-h-11 items-center text-primary underline underline-offset-4"
+                        data-table-action-tooltip={copy('viewCalculation')}
+                      >
+                        <TableActionIcon icon={TableCalculatorIcon}>
+                          {copy('viewCalculation')}
+                        </TableActionIcon>
+                        <span className="sr-only"> {adjustment.adjustmentId}</span>
+                      </Link>
+                    ) : (
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          data-price-inspection={adjustment.adjustmentId}
+                          type="button"
+                          variant="outline"
+                          className="min-h-11"
+                          disabled={loading || !!loadError || commandLocked()}
+                          onClick={() => {
+                            if (
+                              currentScope.current !== scope ||
+                              loading ||
+                              loadError ||
+                              accessDenied.current ||
+                              commandLocked() ||
+                              !data.adjustments.some((row) => row === adjustment)
+                            )
+                              return;
+                            setInspectionId(adjustment.adjustmentId);
+                          }}
+                          data-table-action-tooltip={copy('viewCalculation')}
+                        >
+                          <TableActionIcon icon={TableCalculatorIcon}>
+                            {copy('viewCalculation')}
+                          </TableActionIcon>
+                          <span className="sr-only">: {adjustment.adjustmentId}</span>
+                        </Button>
+                        {adjustment.status === 'proposed' ? (
+                          <>
+                            {data.canFinalize ? (
+                              <Button
+                                className="min-h-11"
+                                disabled={loading || !!loadError || commandLocked()}
+                                onClick={() => confirm(adjustment, 'finalize')}
+                                data-table-action-tooltip={copy('finalize')}
+                              >
+                                <TableActionIcon icon={TableCheckIcon}>
+                                  {copy('finalize')}
+                                </TableActionIcon>
+                              </Button>
+                            ) : (
+                              <p>{copy('finalizePermission')}</p>
+                            )}
+                            {data.canCancel ? (
+                              <Button
+                                variant="outline"
+                                className="min-h-11"
+                                disabled={loading || !!loadError || commandLocked()}
+                                onClick={() => confirm(adjustment, 'cancel')}
+                                data-table-action-tooltip={copy('cancel')}
+                              >
+                                <TableActionIcon icon={TableXIcon}>
+                                  {copy('cancel')}
+                                </TableActionIcon>
+                              </Button>
+                            ) : null}
+                          </>
                         ) : null}
-                      </>
-                    ) : null}
-                  </div>
-                )}
-                cardHeading="h2"
-                loading={loading}
-                emptyMessage={copy('empty')}
-                tableClassName="min-w-[96rem]"
-              />
-            ) : null}
-          </ListPage.Content>
+                      </div>
+                    )
+                  }
+                  cardHeading="h2"
+                  loading={loading}
+                  emptyMessage={copy('empty')}
+                  tableClassName="min-w-[96rem]"
+                />
+              ) : null}
+            </ListPage.Content>
+          )}
         </div>
       ) : null}
+      {record && data && decision && (
+        <section data-slot="electricity-price-decision" className={recordEditorSurface}>
+          <RecordEditorSection
+            title={copy('reviewTitle')}
+            {...(decisionReady ? { description: copy(`${decision}Confirm`) } : {})}
+          >
+            {!decisionReady && (
+              <StatusCell state={record.status} label={copy(`status.${record.status}`)} />
+            )}
+            <dl className="grid gap-x-6 gap-y-3 rounded-lg bg-muted/35 p-3 text-sm sm:grid-cols-2">
+              <div>
+                <dt className="text-muted-foreground">{copy('amount')}</dt>
+                <dd className="text-lg font-semibold">
+                  <CurrencyCell amount={record.adjustmentAmountIrR} format={numbers.reviewMoney} />
+                </dd>
+              </div>
+              <div>
+                <dt className="text-muted-foreground">{copy('effective')}</dt>
+                <dd>
+                  <DateCell value={record.effectiveFrom} format={(value) => time.format(value)} />
+                </dd>
+              </div>
+              <div className="min-w-0">
+                <dt className="text-muted-foreground">{copy('reason')}</dt>
+                <dd dir="auto" className="wrap-anywhere whitespace-pre-wrap">
+                  {record.reason}
+                </dd>
+              </div>
+              <div className="min-w-0">
+                <dt className="text-muted-foreground">{copy('basis')}</dt>
+                <dd dir="auto" className="wrap-anywhere whitespace-pre-wrap">
+                  {record.contractualBasis}
+                </dd>
+              </div>
+            </dl>
+            {!decisionReady && <p role="status">{copy('decisionUnavailable')}</p>}
+          </RecordEditorSection>
+          <RecordEditorDisclosure label={copy('viewCalculation')}>
+            <PriceAdjustmentFinancialReview
+              calculation={record.calculation}
+              heading="h2"
+              profileId={data.profileId}
+              periodEnd={record.periodEnd}
+              locale={locale}
+              formatTime={(value) => time.format(value)}
+            />
+          </RecordEditorDisclosure>
+        </section>
+      )}
+      {record && data && !decision && (
+        <section data-slot="electricity-price-record" className="space-y-5">
+          <div className="space-y-3 rounded-lg border bg-card p-5">
+            <StatusCell state={record.status} label={copy(`status.${record.status}`)} />
+            <dl className="grid gap-3 text-sm sm:grid-cols-2">
+              <div>
+                <dt className="text-muted-foreground">{copy('proposedAt')}</dt>
+                <dd>
+                  <DateCell value={record.proposedAt} format={(value) => time.format(value)} />
+                </dd>
+              </div>
+              {record.finalizedAt && (
+                <div>
+                  <dt className="text-muted-foreground">{copy('finalizedAt')}</dt>
+                  <dd>
+                    <DateCell value={record.finalizedAt} format={(value) => time.format(value)} />
+                  </dd>
+                </div>
+              )}
+              {record.cancelledAt && (
+                <div>
+                  <dt className="text-muted-foreground">{copy('cancelledAt')}</dt>
+                  <dd>
+                    <DateCell value={record.cancelledAt} format={(value) => time.format(value)} />
+                  </dd>
+                </div>
+              )}
+              {record.adjustmentInvoiceId && (
+                <div>
+                  <dt className="text-muted-foreground">{copy('invoice')}</dt>
+                  <dd>
+                    <LinkCell
+                      href={`/admin/invoices/${encodeURIComponent(record.adjustmentInvoiceId)}`}
+                    >
+                      {record.adjustmentInvoiceId}
+                    </LinkCell>
+                  </dd>
+                </div>
+              )}
+              <div>
+                <dt className="text-muted-foreground">{copy('reason')}</dt>
+                <dd dir="auto" className="wrap-anywhere whitespace-pre-wrap">
+                  {record.reason}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-muted-foreground">{copy('basis')}</dt>
+                <dd dir="auto" className="wrap-anywhere whitespace-pre-wrap">
+                  {record.contractualBasis}
+                </dd>
+              </div>
+            </dl>
+          </div>
+          <PriceAdjustmentFinancialReview
+            calculation={record.calculation}
+            heading="h2"
+            profileId={data.profileId}
+            {...(record.calculation.quote.components[0]
+              ? { periodStart: record.calculation.quote.components[0].periodStart }
+              : {})}
+            periodEnd={record.periodEnd}
+            locale={locale}
+            formatTime={(value) => time.format(value)}
+          />
+          {record.status === 'proposed' && (
+            <div className="flex flex-wrap items-center gap-2">
+              {data.canFinalize ? (
+                <Link
+                  to={adjustmentRoute}
+                  params={{ contractId, adjustmentId: record.adjustmentId, decision: 'finalize' }}
+                  className={buttonVariants()}
+                  disabled={loading || !!loadError || commandLocked()}
+                >
+                  {copy('finalize')}
+                </Link>
+              ) : (
+                <p>{copy('finalizePermission')}</p>
+              )}
+              {data.canCancel && (
+                <Link
+                  to={adjustmentRoute}
+                  params={{ contractId, adjustmentId: record.adjustmentId, decision: 'cancel' }}
+                  className={buttonVariants({ variant: 'outline' })}
+                  disabled={loading || !!loadError || commandLocked()}
+                >
+                  {copy('cancel')}
+                </Link>
+              )}
+            </div>
+          )}
+        </section>
+      )}
       {inspected && !action ? (
         <Dialog
           open
@@ -1200,72 +1569,81 @@ function PriceWorkspace({
         </Dialog>
       ) : null}
       {action && command && live(command) ? (
-        <TeamActionDialog
-          action={action}
-          summary={
-            review ? (
-              <PriceAdjustmentFinancialReview
-                formatTime={(value) => time.format(value)}
-                calculation={review.data.calculation}
-                profileId={review.data.profileId}
-                periodStart={review.data.periodStart}
-                periodEnd={review.data.periodEnd}
-                locale={locale}
-              />
-            ) : selectedAdjustment && data ? (
-              <PriceAdjustmentFinancialReview
-                formatTime={(value) => time.format(value)}
-                calculation={selectedAdjustment.calculation}
-                profileId={data.profileId}
-                periodEnd={data.periodEnd}
-                locale={locale}
-              />
-            ) : null
-          }
-          onClose={() => close(command, action)}
-          onValidationError={() => false}
-          onDenied={() => {
-            if (live(command) && command.action === action) withdraw('forbidden');
-          }}
-          onUnconfirmed={() => {
-            if (live(command) && command.action === action) unconfirmed(command);
-          }}
-          onPendingChange={(value) => {
-            if (!live(command) || command.action !== action) return;
-            pending.current = value;
-            if (value) {
-              ++readGeneration.current;
-              readAbort.current?.abort();
-              setLoading(false);
+        <div className={decision ? 'rounded-xl border bg-card p-4 sm:px-6' : undefined}>
+          <TeamActionDialog
+            action={action}
+            {...(decision
+              ? {
+                  inlineConfirmLabel: copy(decision),
+                  confirmationDisabled: loading || !!loadError || !decisionReady,
+                }
+              : {})}
+            summary={
+              decision ? null : review ? (
+                <PriceAdjustmentFinancialReview
+                  formatTime={(value) => time.format(value)}
+                  calculation={review.data.calculation}
+                  profileId={review.data.profileId}
+                  periodStart={review.data.periodStart}
+                  periodEnd={review.data.periodEnd}
+                  locale={locale}
+                />
+              ) : selectedAdjustment && data ? (
+                <PriceAdjustmentFinancialReview
+                  formatTime={(value) => time.format(value)}
+                  calculation={selectedAdjustment.calculation}
+                  profileId={data.profileId}
+                  periodEnd={data.periodEnd}
+                  locale={locale}
+                />
+              ) : null
             }
-            notify();
-          }}
-          onCommandDispatch={(dispatched) => {
-            if (live(command) && command.action === action)
-              command.owner.attempted = dispatched || command.owner.uncertain;
-          }}
-          onSuccess={async (value) => {
-            if (!live(command) || command.action !== action) return;
-            if (
-              !matchedPriceReceipt(value, {
+            onClose={() => close(command, action)}
+            onValidationError={() => false}
+            onDenied={() => {
+              if (live(command) && command.action === action) withdraw('forbidden');
+            }}
+            onUnconfirmed={() => {
+              if (live(command) && command.action === action) unconfirmed(command);
+            }}
+            onPendingChange={(value) => {
+              if (!live(command) || command.action !== action) return;
+              pending.current = value;
+              if (value) {
+                ++readGeneration.current;
+                readAbort.current?.abort();
+                setLoading(false);
+              }
+              notify();
+            }}
+            onCommandDispatch={(dispatched) => {
+              if (live(command) && command.action === action)
+                command.owner.attempted = dispatched || command.owner.uncertain;
+            }}
+            onSuccess={async (value) => {
+              if (!live(command) || command.action !== action) return;
+              const receipt = matchedPriceReceipt(value, {
                 operation: command.operation,
                 contractId,
                 adjustmentId: command.adjustment?.adjustmentId,
                 periodEnd: command.periodEnd,
                 calculation: command.calculation,
                 calculationSha256: command.calculationSha256,
-              })
-            ) {
-              unconfirmed(command);
-              return;
-            }
-            const published = command.operation === 'publish';
-            invalidate();
-            if (published) form.reset(emptyDraft);
-            setRevision((value) => value + 1);
-            return confirmationText('recorded', locale);
-          }}
-        />
+              });
+              if (!receipt) {
+                unconfirmed(command);
+                return;
+              }
+              const published = command.operation === 'publish';
+              invalidate();
+              if (published) form.reset(emptyDraft);
+              if (published && onPublished) onPublished(receipt.adjustmentId);
+              else if (decision && onDecisionRecorded) onDecisionRecorded();
+              else setRevision((value) => value + 1);
+              return confirmationText('recorded', locale);
+            }}
+          />
+        </div>
       ) : null}
     </ListPage>
   );
@@ -1278,6 +1656,7 @@ function PriceAdjustmentFinancialReview({
   periodEnd,
   locale,
   formatTime,
+  heading,
 }: {
   formatTime: (value: string) => string;
   calculation: ElectricityPriceAdjustmentCalculation;
@@ -1285,6 +1664,7 @@ function PriceAdjustmentFinancialReview({
   periodStart?: string;
   periodEnd: string;
   locale: 'en' | 'fa';
+  heading?: 'h2';
 }) {
   const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
   const numbers = useFinancialFormatting(locale);
@@ -1294,6 +1674,7 @@ function PriceAdjustmentFinancialReview({
     <>
       <FinancialReviewSummary
         title={copy('reviewTitle')}
+        {...(heading ? { heading } : {})}
         rows={[
           { id: 'contract', label: copy('contractId'), value: calculation.contractId },
           { id: 'profile', label: copy('profileId'), value: profileId },
@@ -1370,7 +1751,24 @@ function PriceAdjustmentFinancialReview({
           })),
         ]}
         total={{ label: copy('amount'), value: money(quote.amountIrR) }}
-        notice={`${copy('reason')}: ${calculation.reason} · ${copy('basis')}: ${calculation.contractualBasis}`}
+        notice={
+          !heading && (
+            <dl className="grid gap-3 text-sm sm:grid-cols-2">
+              <div className="min-w-0 space-y-1">
+                <dt className="font-medium text-muted-foreground">{copy('reason')}</dt>
+                <dd dir="auto" className="wrap-anywhere whitespace-pre-wrap">
+                  {calculation.reason}
+                </dd>
+              </div>
+              <div className="min-w-0 space-y-1">
+                <dt className="font-medium text-muted-foreground">{copy('basis')}</dt>
+                <dd dir="auto" className="wrap-anywhere whitespace-pre-wrap">
+                  {calculation.contractualBasis}
+                </dd>
+              </div>
+            </dl>
+          )
+        }
       />
       <OrderWalletBalance
         profileId={profileId}

@@ -55,7 +55,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route(`**/api/onboarding/documents/${settingsProfileId}`, (route) =>
       route.fulfill({ json: { documents: [] } })
     );
-    await page.goto('/settings/profile');
+    await page.goto('/settings/profile/edit');
     const picker = page.locator('#settings-profile-switcher');
     await expect(picker).toBeEnabled();
     await expect(picker.locator(`option[value="${settingsProfileId}"]`)).toHaveText(name);

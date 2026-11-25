@@ -237,17 +237,11 @@ for (const locale of ['en', 'fa'] as const) {
       exact: true,
     });
     await expect.poll(() => reads).toBe(1);
-    await expect.poll(() => !!moduleRequest).toBe(true);
-    const panelLoading = page
-      .getByRole('status')
-      .filter({ hasText: copy('loadingTelegram', locale) });
-    const telegram = page.getByRole('region', { name: telegramText('title', locale), exact: true });
-    await expect(panelLoading).toBeVisible();
-    await expect(telegram).toHaveCount(0);
     await expect(companion).toBeVisible();
-    await moduleRequest!.continue();
-    await expect(telegram).toBeVisible();
-    await expect(panelLoading).toHaveCount(0);
+    await expect(
+      page.getByRole('link', { name: telegramText('title', locale), exact: true })
+    ).toHaveAttribute('href', '/settings/security/telegram');
+    expect(moduleRequest).toBeUndefined();
     await expect(pending.getByText(copy('loading', locale), { exact: true })).toBeVisible();
     await expect(retry).toBeDisabled();
     await page.clock.fastForward(15_200);

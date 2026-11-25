@@ -88,7 +88,11 @@ for (const locale of ['en', 'fa'] as const)
           targetVerified = true;
           return route.fulfill({ json: { verified: true } });
         });
-        await page.goto(domain === 'slots' ? '/admin/agent-slots' : '/admin/service-targets');
+        await page.goto(
+          domain === 'slots'
+            ? '/admin/agent-slots/individual_chatbot/edit'
+            : '/admin/service-targets/response-times'
+        );
         await expect(page.locator('html')).toHaveClass(
           theme === 'dark' ? /dark/ : /^(?!.*dark).*$/
         );

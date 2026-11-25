@@ -3,8 +3,20 @@ import { fullNavigation } from './navigation-fixture';
 import { checkRoutePresentation } from './route-presentation';
 
 const pages = [
-  ['/charts', 'Charts and analytics', 'نمودارها و تحلیل‌ها', 'نمودارهای داده‌های بازار برق.'],
-  ['/videos', 'Video uploads', 'بارگذاری ویدیو', 'ویدیوهای بازدید و مدیریت رسانه‌ها.'],
+  [
+    '/charts',
+    'Charts and analytics',
+    'نمودارها و تحلیل‌ها',
+    'نمودارهای بازار برق در این محیط در دسترس نیستند.',
+    '/electricity',
+  ],
+  [
+    '/videos',
+    'Video uploads',
+    'بارگذاری ویدیو',
+    'راهنمای بازدید و مدارک قابل ثبت را در درخواست خورشیدی خود ببینید.',
+    '/solar/requests',
+  ],
 ] as const;
 
 for (const locale of ['en', 'fa'] as const) {
@@ -27,7 +39,7 @@ for (const locale of ['en', 'fa'] as const) {
         },
       })
     );
-    for (const [path, en, fa, description] of pages) {
+    for (const [path, en, fa, description, destination] of pages) {
       await page.goto(path);
       await expect(page).toHaveURL(new RegExp(`${path}$`));
       await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toHaveText(
@@ -37,6 +49,7 @@ for (const locale of ['en', 'fa'] as const) {
         await expect(page.getByRole('main')).toContainText(description);
         await expect(page.getByRole('main')).not.toContainText(en);
       }
+      await expect(page.getByRole('main').locator(`a[href="${destination}"]`)).toBeVisible();
       await checkRoutePresentation(page, info, locale);
     }
   });

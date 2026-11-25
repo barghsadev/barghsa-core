@@ -6,7 +6,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/auth';
 import { passwordRecoveryText } from '@barghsa/i18n/password-recovery-forms';
-import { Alert, AlertDescription, Button, Input } from '@barghsa/ui';
+import { Alert, AlertDescription, Button, Input, buttonVariants } from '@barghsa/ui';
 import { AuthLayout } from '../components/AuthLayout.js';
 import { PasswordField } from '../components/PasswordField.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -126,15 +126,17 @@ function ActivatePage() {
     <AuthLayout
       locale={locale}
       footer={
-        <Link
-          to="/login"
-          className="touch-action justify-center self-center text-sm text-foreground underline underline-offset-4 pointer-coarse:min-h-[45px]!"
-        >
-          {t('auth.forgotPassword.backToLogin', locale)}
-        </Link>
+        outcome !== 'complete' && (
+          <Link
+            to="/login"
+            className="touch-action justify-center self-center text-sm text-foreground underline underline-offset-4 pointer-coarse:min-h-[45px]!"
+          >
+            {t('auth.forgotPassword.backToLogin', locale)}
+          </Link>
+        )
       }
     >
-      <div className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <div className="space-y-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
         <div className="space-y-2">
           <h1 className="tracking-tight">
             {t(outcome === 'complete' ? 'auth.activate.success' : 'auth.activate.title', locale)}
@@ -146,7 +148,14 @@ function ActivatePage() {
           )}
         </div>
         {outcome === 'complete' ? (
-          <p role="status">{t('auth.resetPassword.signIn', locale)}</p>
+          <div className="space-y-4">
+            <p role="status" className="text-sm text-muted-foreground">
+              {passwordRecoveryText('activationComplete', locale)}
+            </p>
+            <Link to="/login" className={buttonVariants({ className: 'min-h-11 w-full' })}>
+              {t('auth.resetPassword.signIn', locale)}
+            </Link>
+          </div>
         ) : outcome === 'unconfirmed' ? (
           <Alert variant="destructive" role="alert">
             <AlertDescription>
@@ -155,16 +164,19 @@ function ActivatePage() {
           </Alert>
         ) : outcome === 'invalid' || !validInvitation ? (
           <Alert variant="destructive" role="alert">
-            <AlertDescription>{t('auth.activate.invalid', locale)}</AlertDescription>
+            <AlertDescription className="space-y-2">
+              <p>{t('auth.activate.invalid', locale)}</p>
+              <p>{passwordRecoveryText('activationRecovery', locale)}</p>
+            </AlertDescription>
           </Alert>
         ) : (
-          <form onSubmit={activate} className="space-y-4" aria-busy={busy}>
+          <form onSubmit={activate} className="space-y-3.5" aria-busy={busy}>
             {error && (
               <Alert variant="destructive" role="alert">
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label htmlFor="activation-code" className="text-sm font-medium">
                 {passwordRecoveryText('activationCode', locale)}
               </label>
@@ -172,6 +184,8 @@ function ActivatePage() {
                 id="activation-code"
                 type="password"
                 autoComplete="one-time-code"
+                autoCapitalize="none"
+                spellCheck={false}
                 aria-required="true"
                 dir="ltr"
                 value={token}

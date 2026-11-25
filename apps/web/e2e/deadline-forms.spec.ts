@@ -1,3 +1,4 @@
+import { manualRecordDateTime } from './record-date-time-fixture';
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Page } from '@playwright/test';
@@ -111,18 +112,22 @@ for (const locale of ['fa', 'en'] as const)
           },
         });
       });
-      await page.goto('/admin/invoices');
+      await page.goto('/admin/invoices/tools');
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*dark)/);
-      const deadline = page.locator('#invoice-deadline-panel'),
-        lookup = deadline.locator('#invoice-id');
+      const locator = page.locator('form').filter({ has: page.locator('#tools-invoice-id') });
+      const lookup = locator.locator('#tools-invoice-id');
+      const open = locator.locator('button[type=submit]');
       await lookup.fill('invalid');
       await lookup.blur();
       await expect(lookup).toHaveAttribute('aria-invalid', 'true');
-      await deadline.getByRole('button', { name: text('load'), exact: true }).click();
+      await open.click();
       await expect(lookup).toBeFocused();
+      await locator.locator('select').selectOption('deadline');
       await lookup.fill(invoiceId);
-      await deadline.getByRole('button', { name: text('load'), exact: true }).click();
-      const due = deadline.locator('#due-at'),
+      await open.click();
+      await expect(page).toHaveURL(`/admin/invoices/${invoiceId}/deadline`);
+      const deadline = page.locator('#invoice-deadline-panel');
+      const due = await manualRecordDateTime(page, 'due-at'),
         reason = deadline.locator('#override-reason');
       await expect(due).toHaveValue('2026-09-12T13:30');
       await reason.fill(' raw reason ');
@@ -145,6 +150,16 @@ for (const locale of ['fa', 'en'] as const)
       await deadline.getByRole('button', { name: text('load'), exact: true }).click();
       await expect(submit).toBeEnabled();
       await expect(reason).toHaveValue(' raw reason ');
+      expect(
+        (await new AxeBuilder({ page }).include('#invoice-deadline-panel').analyze()).violations
+      ).toEqual([]);
+      readStatus = 403;
+      await deadline.getByRole('button', { name: text('load'), exact: true }).click();
+      await expect(reason).toHaveCount(0);
+      readStatus = 200;
+      await deadline.getByRole('button', { name: text('load'), exact: true }).click();
+      await expect(reason).toHaveValue('');
+      await page.goto('/admin/invoices/tools/due-periods/electricity');
       const panel = page.locator('#invoice-due-periods'),
         days = panel.locator('#due-period-days');
       await days.fill('0');
@@ -168,12 +183,7 @@ for (const locale of ['fa', 'en'] as const)
       await expect(save).toBeEnabled();
       await expect(days).toHaveValue(locale === 'fa' ? '۱۴' : '14');
       expect(
-        (
-          await new AxeBuilder({ page })
-            .include('#invoice-deadline-panel')
-            .include('#invoice-due-periods')
-            .analyze()
-        ).violations
+        (await new AxeBuilder({ page }).include('#invoice-due-periods').analyze()).violations
       ).toEqual([]);
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
@@ -185,13 +195,9 @@ for (const locale of ['fa', 'en'] as const)
       readStatus = 403;
       await panel.getByRole('button', { name: dueText('load'), exact: true }).click();
       await expect(days).toHaveCount(0);
-      await deadline.getByRole('button', { name: text('load'), exact: true }).click();
-      await expect(reason).toHaveCount(0);
       readStatus = 200;
       await panel.getByRole('button', { name: dueText('load'), exact: true }).click();
       await expect(days).toHaveValue('7');
-      await deadline.getByRole('button', { name: text('load'), exact: true }).click();
-      await expect(reason).toHaveValue('');
     });
   }
 for (const locale of ['fa', 'en'] as const)
@@ -226,14 +232,10 @@ for (const locale of ['fa', 'en'] as const)
       await page.route('**/api/auth/step-up', (route) =>
         route.fulfill({ json: { success: true } })
       );
-      await page.goto('/admin/invoices');
+      await page.goto(`/admin/invoices/${invoiceId}/deadline`);
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*dark)/);
       const deadline = page.locator('#invoice-deadline-panel');
-      await deadline.locator('#invoice-id').fill(invoiceId);
-      await deadline
-        .getByRole('button', { name: t('admin.invoices.load', locale), exact: true })
-        .click();
-      await deadline.locator('#due-at').fill('2026-09-20T13:30');
+      await (await manualRecordDateTime(page, 'due-at')).fill('2026-09-20T13:30');
       await deadline.locator('#override-reason').fill(' raw reason ');
       await deadline
         .getByRole('button', { name: t('admin.invoices.submit', locale), exact: true })
@@ -251,6 +253,7 @@ for (const locale of ['fa', 'en'] as const)
         { dueAt: '2026-09-20T10:00:00.000Z', reason: 'raw reason' },
         { dueAt: '2026-09-20T10:00:00.000Z', reason: 'raw reason' },
       ]);
+      await page.goto('/admin/invoices/tools/due-periods/electricity');
       const panel = page.locator('#invoice-due-periods');
       await panel.locator('#due-period-days').fill(locale === 'fa' ? '۱۴' : '14');
       await panel.getByRole('button', { name: tDuePeriods('save', locale), exact: true }).click();
@@ -301,7 +304,10 @@ for (const locale of ['fa', 'en'] as const)
       saved = true;
     });
     await page.route('**/api/auth/step-up', (route) => route.fulfill({ json: { success: true } }));
-    await page.goto('/admin/invoices');
+    await page.goto('/admin/invoices/tools/due-periods/electricity');
+    const back = page
+      .locator('#main-content')
+      .getByText(staffText('admin.invoices.tools.duePeriods', locale), { exact: true });
     const panel = page.locator('#invoice-due-periods');
     const days = panel.locator('#due-period-days');
     const raw = protectedSave ? '۱۴' : '14';
@@ -313,6 +319,7 @@ for (const locale of ['fa', 'en'] as const)
       await dialog.getByRole('button', { name: 'تأیید', exact: true }).click();
     }
     await expect.poll(() => saved).toBe(true);
+    await expect(back).toHaveAttribute('aria-disabled', 'true');
     await page.clock.fastForward(15_001);
     await expect(panel.getByText(tDuePeriods('error', locale), { exact: true })).toBeVisible();
     if (protectedSave) {
@@ -320,6 +327,7 @@ for (const locale of ['fa', 'en'] as const)
       await page.keyboard.press('Escape');
       await expect(dialog).toHaveCount(0);
     }
+    await expect(back).not.toHaveAttribute('aria-disabled', 'true');
     await expect(days).toBeDisabled();
     await expect(days).toHaveValue(raw);
     const reload = panel.getByRole('button', { name: tDuePeriods('load', locale), exact: true });
@@ -362,14 +370,12 @@ test('invoice deadline keeps the edit locked until the selected invoice is reloa
       });
     commands.push(route.request().postDataJSON());
   });
-  await page.goto('/admin/invoices');
+  await page.goto(`/admin/invoices/${invoiceId}/deadline`);
   const panel = page.locator('#invoice-deadline-panel');
   const load = panel.getByRole('button', { name: t('admin.invoices.load', locale), exact: true });
   const save = panel.getByRole('button', { name: t('admin.invoices.submit', locale), exact: true });
   const reason = panel.locator('#override-reason');
-  await panel.locator('#invoice-id').fill(invoiceId);
-  await load.click();
-  await panel.locator('#due-at').fill('2026-09-20T13:30');
+  await (await manualRecordDateTime(page, 'due-at')).fill('2026-09-20T13:30');
   await reason.fill(' New deadline ');
   await save.click();
   await expect.poll(() => commands.length).toBe(1);
@@ -406,8 +412,7 @@ test('reminder recovery waits for overlapping writes and rejects a partial matri
   });
   const initial = defaultReminderOffsetToggles();
   const matrix = initial.map((row) =>
-    (row.serviceType === 'electricity' && row.offset === -7) ||
-    (row.serviceType === 'manual' && row.offset === 0)
+    row.serviceType === 'electricity' && (row.offset === -7 || row.offset === 0)
       ? { ...row, enabled: false }
       : row
   );
@@ -422,9 +427,12 @@ test('reminder recovery waits for overlapping writes and rejects a partial matri
       return route.fulfill({ json: matrix });
     }
   });
-  await page.goto('/admin/invoices');
+  await page.goto('/admin/invoices/tools/reminders/electricity');
+  const back = page
+    .locator('#main-content')
+    .getByText(staffText('admin.invoices.tools.reminders', locale), { exact: true });
   const first = page.getByTestId('reminder-toggle-electricity--7');
-  const second = page.getByTestId('reminder-toggle-manual-0');
+  const second = page.getByTestId('reminder-toggle-electricity-0');
   await first.click();
   await expect.poll(() => commands.length).toBe(1);
   await page.clock.fastForward(5_000);
@@ -436,10 +444,12 @@ test('reminder recovery waits for overlapping writes and rejects a partial matri
     exact: true,
   });
   await expect(reload).toBeDisabled();
+  await expect(back).toHaveAttribute('aria-disabled', 'true');
   await expect(first).toBeChecked();
   await expect(second).not.toBeChecked();
   acknowledgeSibling();
   await expect(reload).toBeEnabled();
+  await expect(back).not.toHaveAttribute('aria-disabled', 'true');
   await expect(second).not.toBeChecked();
   readMode = 'partial';
   await reload.click();
@@ -454,7 +464,7 @@ test('reminder recovery waits for overlapping writes and rejects a partial matri
   await expect(second).not.toBeChecked();
   expect(commands).toEqual([
     { serviceType: 'electricity', offset: -7, enabled: false },
-    { serviceType: 'manual', offset: 0, enabled: false },
+    { serviceType: 'electricity', offset: 0, enabled: false },
   ]);
 });
 
@@ -465,15 +475,24 @@ for (const locale of ['fa', 'en'] as const) {
     await setup(page, locale, locale === 'fa');
     const word = (key: string) => staffText(`admin.invoices.reminders.stepUp.${key}`, locale);
     const commands: unknown[] = [];
+    const serviceType = locale === 'fa' ? 'electricity' : 'consultation';
     let verifications = 0;
+    let needsVerification = true;
+    let toggles = defaultReminderOffsetToggles();
     await page.route('**/api/admin/config/invoice-reminder-offsets', (route) => {
-      if (route.request().method() === 'GET')
-        return route.fulfill({ json: defaultReminderOffsetToggles() });
+      if (route.request().method() === 'GET') return route.fulfill({ json: toggles });
       commands.push(route.request().postDataJSON());
-      return route.fulfill({
-        status: 403,
-        json: { error: { code: 'AUTHZ:STEP_UP_REQUIRED' } },
-      });
+      if (needsVerification)
+        return route.fulfill({
+          status: 403,
+          json: { error: { code: 'AUTHZ:STEP_UP_REQUIRED' } },
+        });
+      toggles = toggles.map((entry) =>
+        entry.serviceType === serviceType && entry.offset === -7
+          ? { ...entry, enabled: false }
+          : entry
+      );
+      return route.fulfill({ json: toggles });
     });
     await page.route('**/api/auth/step-up', (route) => {
       verifications++;
@@ -482,9 +501,27 @@ for (const locale of ['fa', 'en'] as const) {
         json: { error: { code: 'AUTH:LOGIN_INVALID_CREDENTIALS' } },
       });
     });
-    await page.goto('/admin/invoices');
-    const toggle = page.getByTestId('reminder-toggle-electricity--7');
+    const index = '/admin/invoices/tools/reminders';
+    await page.goto(index);
+    const list = page.getByRole('region', {
+      name: staffText('admin.invoices.reminders.serviceCol', locale),
+    });
+    const service = list.locator(`a[href="${index}/${serviceType}"]`);
+    const count = (active: number) =>
+      staffText('admin.invoices.reminders.activeCount', locale)
+        .replace('{count}', active.toLocaleString(locale))
+        .replace('{total}', (6).toLocaleString(locale));
+    await expect(list.getByRole('link')).toHaveCount(4);
+    await expect(service).toContainText(count(6));
+    await service.click();
+    await expect(page).toHaveURL(new RegExp(`${index}/${serviceType}$`));
+    const toggle = page.getByTestId(`reminder-toggle-${serviceType}--7`);
     await expect(toggle).toBeChecked();
+    const schedule = page.getByRole('region', {
+      name: staffText('admin.invoices.reminders.schedule', locale),
+    });
+    await expect(schedule.getByRole('switch')).toHaveCount(6);
+    expect(await schedule.evaluate((node) => node.scrollWidth <= node.clientWidth)).toBe(true);
     await toggle.focus();
     await toggle.press('Space');
     const dialog = page.getByRole('dialog', { name: word('title'), exact: true });
@@ -495,10 +532,19 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(password).toHaveAttribute('aria-required', 'true');
     await expect(submit).toBeDisabled();
     await expect(dialog).toHaveAccessibleDescription(word('description'));
+    await expect(dialog.getByRole('list')).toContainText(
+      staffText('admin.invoices.reminders.offset.m7', locale)
+    );
+    await expect(dialog.getByRole('list')).toContainText(
+      staffText('admin.invoices.reminders.disabled', locale)
+    );
     for (const control of [password, cancel, submit]) {
-      const box = (await control.boundingBox())!;
-      expect(box.width).toBeGreaterThanOrEqual(44);
-      expect(box.height).toBeGreaterThanOrEqual(44);
+      const { width, height } = await control.evaluate((node: HTMLElement) => ({
+        width: node.offsetWidth,
+        height: node.offsetHeight,
+      }));
+      expect(width).toBeGreaterThanOrEqual(44);
+      expect(height).toBeGreaterThanOrEqual(44);
     }
     await password.press('Shift+Tab');
     await expect(cancel).toBeFocused();
@@ -521,7 +567,16 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(toggle).toBeChecked();
     await expect(toggle).toBeFocused();
     expect(verifications).toBe(1);
-    expect(commands).toEqual([{ serviceType: 'electricity', offset: -7, enabled: false }]);
+    expect(commands).toEqual([{ serviceType, offset: -7, enabled: false }]);
+    needsVerification = false;
+    await toggle.click();
+    await expect(toggle).not.toBeChecked();
+    await expect(schedule.getByRole('status')).not.toBeEmpty();
+    await page.locator(`main header a[href="${index}"]`).click();
+    await expect(service).toContainText(count(5));
+    await service.click();
+    await expect(toggle).not.toBeChecked();
+    expect(commands).toEqual(Array(2).fill({ serviceType, offset: -7, enabled: false }));
   });
 }
 
@@ -545,13 +600,9 @@ for (const locale of ['fa', 'en'] as const)
       writes++;
       return route.fulfill({ json: [] });
     });
-    await page.goto('/admin/invoices');
+    await page.goto(`/admin/invoices/${invoiceId}/deadline`);
     const deadline = page.locator('#invoice-deadline-panel');
-    await deadline.locator('#invoice-id').fill(invoiceId);
-    await deadline
-      .getByRole('button', { name: t('admin.invoices.load', locale), exact: true })
-      .click();
-    await deadline.locator('#due-at').fill('2026-09-20T13:30');
+    await (await manualRecordDateTime(page, 'due-at')).fill('2026-09-20T13:30');
     await deadline.locator('#override-reason').fill(' kept reason ');
     await deadline
       .getByRole('button', { name: t('admin.invoices.submit', locale), exact: true })
@@ -560,6 +611,7 @@ for (const locale of ['fa', 'en'] as const)
       deadline.getByText(t('admin.invoices.validationUnavailable', locale), { exact: true })
     ).toBeVisible();
     await expect(deadline.locator('#override-reason')).toHaveValue(' kept reason ');
+    await page.goto('/admin/invoices/tools/due-periods/electricity');
     const period = page.locator('#invoice-due-periods');
     await period.locator('#due-period-days').fill('14');
     await period.getByRole('button', { name: tDuePeriods('save', locale), exact: true }).click();

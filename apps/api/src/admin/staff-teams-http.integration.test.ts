@@ -57,6 +57,20 @@ async function team() {
   expect(response.status, http.logs()).toBe(201);
   return (await response.json()) as { id: string; name: string };
 }
+
+it('loads an exact staff team with its members for an authorized operator', async () => {
+  const created = await team();
+  const path = `staff-teams/${created.id}`;
+  const response = await call(path, 'GET', undefined, 'operator');
+  expect(response.status, http.logs()).toBe(200);
+  expect(response.headers.get('cache-control')).toContain('no-store');
+  expect(await response.json()).toMatchObject({ ...created, memberUserIds: ['member'] });
+  expect((await call(path, 'GET', undefined, 'customer')).status).toBe(403);
+  expect((await call(`staff-teams/${randomUUID()}`, 'GET', undefined, 'operator')).status).toBe(
+    404
+  );
+});
+
 it('withholds team candidates when staff authority expires during the read', async () => {
   const created = await team();
   const path = `staff-teams/members?q=member&teamId=${created.id}`;

@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { tConsultation as consultationCopy } from '@barghsa/i18n/consultation';
+import { tStaffConsultation } from '@barghsa/i18n/consultation-staff';
 import { t as appCopy } from '@barghsa/i18n/app';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tWalletInvoicePayment as walletCopy } from '@barghsa/i18n/wallet-invoice-payment';
@@ -458,7 +459,12 @@ for (const locale of ['en', 'fa'] as const)
     await expect(
       page.getByRole('heading', { name: consultationCopy('title', locale) })
     ).toBeVisible();
-    await page.getByRole('radio', { name: new RegExp(title[locale]) }).check();
+    await page.getByRole('link', { name: consultationCopy('newRequest', locale) }).click();
+    await expect(page).toHaveURL(/\/consultations\/new$/);
+    const offering = page.getByRole('radio', { name: new RegExp(title[locale]) });
+    await offering.check();
+    await page.reload();
+    await expect(offering).toBeChecked();
     await page.getByRole('checkbox', { name: consultationCopy('confirm', locale) }).check();
     await page.getByRole('button', { name: consultationCopy('request', locale) }).click();
     await expect(page).toHaveURL(new RegExp(`/consultations/${requestId}$`));
@@ -478,7 +484,7 @@ for (const locale of ['en', 'fa'] as const)
     await expect(
       page.getByRole('heading', { name: consultationCopy('staffTitle', locale) })
     ).toBeVisible();
-    await page.getByRole('button', { name: new RegExp(`${title[locale]}.*Buyer Example`) }).click();
+    await page.getByRole('link', { name: new RegExp(`${title[locale]}.*Buyer Example`) }).click();
     await page.getByRole('button', { name: consultationCopy('startReview', locale) }).click();
     const reviewDialog = page.getByRole('dialog', {
       name: consultationCopy('startReview', locale),
@@ -514,6 +520,8 @@ for (const locale of ['en', 'fa'] as const)
         .getByRole('region', { name: consultationCopy('details', locale), exact: true })
         .locator('[data-slot=consultation-assignment]')
     ).toContainText(consultationCopy('assignedStaff', locale));
+    await page.locator(`a[href="/admin/consultations/${requestId}/fee"]`).click();
+    await expect(page).toHaveURL(`/admin/consultations/${requestId}/fee`);
     await expect(
       page.getByRole('button', { name: consultationCopy('issueFee', locale) })
     ).toBeVisible();
@@ -533,6 +541,13 @@ for (const locale of ['en', 'fa'] as const)
     await approveRiskConfirmation(page, locale, 'financial');
     await confirmFee.click();
     await expect.poll(() => status).toBe('offer_pending');
+    await page
+      .getByRole('link', {
+        name: tStaffConsultation('backToFeeRequest', locale),
+        exact: true,
+      })
+      .click();
+    await expect(page).toHaveURL(`/admin/consultations/${requestId}`);
     const savedOffer = page.getByRole('region', { name: consultationCopy('savedOffer', locale) });
     await expect(savedOffer).toContainText(`${new Intl.NumberFormat(locale).format(500000)} IRR`);
     await expect(savedOffer).toContainText(scope.value);
@@ -542,7 +557,7 @@ for (const locale of ['en', 'fa'] as const)
     await expect(savedOffer).toContainText(consultationCopy('invoice_state_Unpaid', locale));
     await expect(
       savedOffer.getByRole('link', { name: consultationCopy('viewInvoice', locale) })
-    ).toHaveAttribute('href', `/admin/invoices?invoiceId=${invoiceId}`);
+    ).toHaveAttribute('href', `/admin/invoices/${invoiceId}`);
 
     operatingContext = 'customer';
     await page.goto(`/consultations/${requestId}`);
@@ -561,6 +576,19 @@ for (const locale of ['en', 'fa'] as const)
     await expect(page.getByText(scope.value)).toBeVisible();
     await expect(page.getByText(deliverables.value)).toBeVisible();
     await expectOfferTextFits(page, page.locator('main[data-area=dashboard]'), fields);
+    await expect(
+      page.getByRole('button', { name: consultationCopy('acceptOffer', locale), exact: true })
+    ).toHaveCount(0);
+    const openOffer = page.getByRole('link', {
+      name: consultationCopy('openOffer', locale),
+      exact: true,
+    });
+    await expect(openOffer).toHaveAttribute('href', `/consultations/${requestId}/offer`);
+    await openOffer.click();
+    await expect(page).toHaveURL(`/consultations/${requestId}/offer`);
+    const currentOffer = page.getByRole('region', { name: consultationCopy('savedOffer', locale) });
+    await expect(currentOffer).toContainText(consultationCopy('invoice_state_Unpaid', locale));
+    await expectOfferTextFits(page, currentOffer, fields);
     const alternate = locale === 'en' ? 'fa' : 'en';
     await switchLanguage(page, locale, touch);
     await page.clock.install();
@@ -583,9 +611,9 @@ for (const locale of ['en', 'fa'] as const)
       name: consultationCopy('decisionReviewTitle', alternate),
     });
     await expect(declineReview).toContainText(scope.value);
-    await expect(declineReview).toContainText(
-      consultationCopy('decisionReviewCancelOutcome', alternate)
-    );
+    await expect(
+      declineReview.getByText(consultationCopy('decisionReviewCancelOutcome', alternate))
+    ).toBeInViewport();
     // Contrast must be measured after the shared dialog's fade-in finishes.
     await expect(declineReview).toHaveCSS('opacity', '1');
     const scan = await new AxeBuilder({ page })
@@ -602,9 +630,14 @@ for (const locale of ['en', 'fa'] as const)
       name: consultationCopy('decisionReviewTitle', locale),
     });
     await expect(review).toContainText(new Intl.NumberFormat(locale).format(500000));
-    await expect(review).toContainText(scope.value);
-    await expect(review).toContainText(deliverables.value);
+    await expect(
+      review.getByText(consultationCopy('decisionReviewPaymentOutcome', locale))
+    ).toBeInViewport();
+    await expect(review.getByText(scope.value, { exact: true })).toBeHidden();
+    const details = review.getByText(consultationCopy('details', locale), { exact: true });
+    await details.press('Enter');
     await expectOfferTextFits(page, review, fields);
+    await details.press('Enter');
     const accept = review.getByRole('button', { name: consultationCopy('acceptOffer', locale) });
     await expect(accept).toBeDisabled();
     await approveRiskConfirmation(page, locale, 'financial');
@@ -618,7 +651,7 @@ for (const locale of ['en', 'fa'] as const)
     await expect(page.getByText(unconfirmed, { exact: true })).toBeVisible();
     await expect(page.getByRole('alert').filter({ hasText: unconfirmed })).toHaveText(unconfirmed);
     await expect.poll(() => offerReads).toBeGreaterThan(readsBeforeRecovery);
-    await expect(page).toHaveURL(new RegExp(`/consultations/${requestId}$`));
+    await expect(page).toHaveURL(`/consultations/${requestId}/offer`);
     await expect(
       page.getByRole('button', { name: consultationCopy('declineOffer', locale) })
     ).toBeDisabled();
@@ -680,8 +713,11 @@ for (const locale of ['en', 'fa'] as const)
     ).toHaveAttribute('aria-valuenow', '100');
     operatingContext = 'staff';
     await page.goto('/admin/consultations');
-    await page.getByRole('button', { name: new RegExp(`${title[locale]}.*Buyer Example`) }).click();
-    await page.getByLabel(consultationCopy('note', locale)).fill('Consultation delivered');
+    await page.getByRole('link', { name: new RegExp(`${title[locale]}.*Buyer Example`) }).click();
+    await page.locator(`a[href*="/${requestId}/decisions/complete"]`).click();
+    await page
+      .getByLabel(tStaffConsultation('completeField', locale), { exact: true })
+      .fill('Consultation delivered');
     await page.getByRole('button', { name: consultationCopy('complete', locale) }).click();
     await page
       .getByRole('dialog')
@@ -690,10 +726,14 @@ for (const locale of ['en', 'fa'] as const)
     await expect.poll(() => status).toBe('completed');
     // Wait for the committed detail and pending route update before switching fixture context.
     await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.locator('#consultation-reason')).toHaveCount(0);
+    await page
+      .getByRole('link', { name: tStaffConsultation('backToFeeRequest', locale), exact: true })
+      .click();
     await expect(
       page.locator('ol').getByText('Consultation delivered', { exact: true })
     ).toBeVisible();
-    await expect(page).toHaveURL(new RegExp(`/admin/consultations\\?requestId=${requestId}$`));
+    await expect(page).toHaveURL(new RegExp(`/admin/consultations/${requestId}$`));
 
     operatingContext = 'customer';
     await page.goto(`/consultations/${requestId}`);
@@ -704,4 +744,9 @@ for (const locale of ['en', 'fa'] as const)
     await expect(
       page.getByRole('region', { name: appCopy('workflow.summary', locale) })
     ).toContainText(consultationCopy('status_completed', locale));
+    await page.goto(`/consultations/${requestId}/offer`);
+    await expect(
+      page.getByText(consultationCopy('offerPageUnavailable', locale), { exact: true })
+    ).toBeVisible();
+    await expect(currentOffer).toHaveCount(0);
   });

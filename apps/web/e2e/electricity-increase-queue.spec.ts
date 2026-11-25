@@ -1,7 +1,8 @@
+import { manualRecordDateTime, selectRecordDateTime } from './record-date-time-fixture';
 import { test, expect } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { setupCatalogueForms } from './catalogue-form-fixture';
-import { t } from '@barghsa/i18n/admin-ui';
+import { adminText as t } from '@barghsa/i18n/electricity-increase-decision-forms';
 import { t as appText } from '@barghsa/i18n/app';
 import {
   increaseRequest,
@@ -67,6 +68,13 @@ for (const locale of ['en', 'fa'] as const)
               ? route.fulfill({ json: { requests: rows, nextBefore: null } })
               : route.fulfill({ status, json: {} });
           }
+          if (route.request().method() === 'GET') {
+            const id = new URL(route.request().url()).pathname.split('/').at(-1);
+            const record = rows.find((row) => row.requestId === id);
+            return record
+              ? route.fulfill({ json: { ...record, canReview: true } })
+              : route.fulfill({ status: 404, json: {} });
+          }
           const body = route.request().postDataJSON();
           if (route.request().url().endsWith('/approve/review')) {
             previews.push(body);
@@ -94,10 +102,10 @@ for (const locale of ['en', 'fa'] as const)
           const row = records.first();
           await expect(row).toContainText(increaseRequestId);
           await expect(
-            row.locator(`a[href="/admin/contracts?contractId=${rows[0]!.contractId}"]`)
+            row.locator(`a[href="/admin/contracts/${rows[0]!.contractId}"]`)
           ).toBeVisible();
           await expect(
-            row.locator(`a[href="/admin/electricity-orders?orderId=${rows[0]!.orderId}"]`)
+            row.locator(`a[href="/admin/electricity-orders/${rows[0]!.orderId}"]`)
           ).toBeVisible();
           const plain = digits(await row.innerText()).replace(/[,٬]/g, '');
           expect(plain).toContain(rows[0]!.originalKwh);
@@ -119,7 +127,7 @@ for (const locale of ['en', 'fa'] as const)
             expect(plain).toContain(rows[0]!.adjustmentPaidAmount);
             await expect(row).toContainText(copy('financeFollowUp'));
             await expect(
-              row.locator(`a[href="/admin/invoices?invoiceId=${rows[0]!.adjustmentInvoiceId}"]`)
+              row.locator(`a[href="/admin/invoices/${rows[0]!.adjustmentInvoiceId}"]`)
             ).toBeVisible();
             await expect(records.nth(1)).toContainText(copy('expiredClosed'));
             await expect(content.locator('form')).toHaveCount(0);
@@ -160,26 +168,51 @@ for (const locale of ['en', 'fa'] as const)
           await page.setViewportSize({ width: 390, height: 844 });
         }
         if (lane === 'pending') {
-          const open = records.first().getByRole('button');
+          const open = records
+            .first()
+            .getByRole('link', { name: new RegExp(copy('reviewRequest')) });
           expect(
             await open.evaluate((button) => button.getBoundingClientRect().height)
           ).toBeGreaterThanOrEqual(44);
           await open.click();
-          await expect(page.locator(`#increase-decision-${increaseRequestId}`)).toBeFocused();
-          const approveForm = page.getByTestId('electricity-increase-approve-form').first();
-          const date = page.locator(`#increase-effective-${increaseRequestId}`);
+          await expect(
+            page.getByRole('heading', { name: copy('recordTitle'), exact: true })
+          ).toBeFocused();
+          expect(new URL(page.url()).pathname).toBe(
+            `/admin/electricity-increases/${increaseRequestId}`
+          );
+          await expect(page.getByTestId('electricity-increase-approve-form')).toHaveCount(0);
+          await expect(page.getByTestId('electricity-increase-reject-form')).toHaveCount(0);
+          const backToRequest = page.getByRole('link', {
+            name: copy('backToRequest'),
+            exact: true,
+          });
+          const approveLink = page.getByRole('link', {
+            name: copy('prepareApproval'),
+            exact: true,
+          });
+          const rejectLink = page.getByRole('link', { name: copy('reject'), exact: true });
+          await rejectLink.click();
           const reason = page.locator(`#increase-reason-${increaseRequestId}`);
+          await reason.fill('  Retain the staff capacity draft  ');
+          await backToRequest.click();
+          await approveLink.click();
+          const approveForm = page.getByTestId('electricity-increase-approve-form').first();
+          const dateId = `increase-effective-${increaseRequestId}`;
           const approvalReason = page.locator(`#increase-approval-reason-${increaseRequestId}`);
           await expect(approveForm).toContainText('Asia/Tehran');
-          await date.fill('2026-10-10T12:00');
+          await selectRecordDateTime(page, dateId, '2026-10-10T12:00', locale);
+          const date = await manualRecordDateTime(page, dateId);
           await approvalReason.fill('  Capacity reviewed  ');
-          await reason.fill('  Retain the staff capacity draft  ');
           await page.setViewportSize({ width: 1280, height: 900 });
           await expect(date).toHaveValue('2026-10-10T12:00');
-          await expect(reason).toHaveValue('  Retain the staff capacity draft  ');
-          await expect(page.getByTestId('electricity-increase-approve-form')).toHaveCount(2);
+          await expect(approvalReason).toHaveValue('  Capacity reviewed  ');
+          await expect(reason).toHaveCount(0);
+          await expect(page.getByTestId('electricity-increase-approve-form')).toHaveCount(1);
           expect(reads).toBe(acceptedReads);
-          await approveForm.getByRole('button', { name: copy('approve'), exact: true }).click();
+          await approveForm
+            .getByRole('button', { name: copy('previewApproval'), exact: true })
+            .click();
           const dialog = page.getByRole('dialog');
           await expect(dialog).toBeVisible();
           expect(previews).toEqual([
@@ -195,7 +228,12 @@ for (const locale of ['en', 'fa'] as const)
             .getByRole('button', { name: appText('team.cancel', locale), exact: true })
             .click();
           await expect(dialog).toHaveCount(0);
+          await backToRequest.click();
+          await rejectLink.click();
           await expect(reason).toHaveValue('  Retain the staff capacity draft  ');
+          await backToRequest.click();
+          await page.getByRole('link', { name: copy('backToQueue'), exact: true }).click();
+          await expect(records).toHaveCount(2);
         }
         expect(writes).toEqual([]);
         status = 503;

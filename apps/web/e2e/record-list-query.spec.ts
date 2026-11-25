@@ -1,5 +1,5 @@
 import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
-import { test, expect, type Page } from './coverage-fixture';
+import { expandListFilters, test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { documentText } from '@barghsa/i18n/documents';
@@ -163,13 +163,26 @@ for (const locale of ['en', 'fa'] as const)
         await page.goto(
           `${staff ? '/admin/documents' : '/documents'}?q=Review&kind=standalone&state=SubmittedForReview&category=document&profileId=${documentProfileId}&cursor=${documentRow.id}&documentId=${documentRow.id}`
         );
+        const rowRole = 'link';
+        const route = staff ? '/admin/documents' : '/documents';
+        const detail = page
+          .getByRole('main')
+          .getByRole('region', { name: word('details'), exact: true });
+        const back = page
+          .getByRole('main')
+          .getByRole('link', { name: word('backToDocuments'), exact: true });
+        await expect(
+          detail.getByRole('heading', { name: documentRow.originalName, level: 1 })
+        ).toBeVisible();
+        expect(new URL(page.url()).pathname).toBe(`${route}/${documentRow.id}`);
+        expect(params(page).has('documentId')).toBe(false);
+        expect(reads).toHaveLength(0);
+        await back.click();
         const list = page.getByRole('region', { name: word('listTitle'), exact: true });
         const content = list.locator(':scope > [data-slot="list-content"]');
-        const detail = list.getByRole('region', { name: word('details'), exact: true });
         await expect(
-          content.getByRole('button', { name: 'Another.pdf', exact: true })
+          content.getByRole(rowRole, { name: 'Another.pdf', exact: true })
         ).toBeVisible();
-        await expect(detail).toBeVisible();
         await expect(page.locator('#documents-search')).toHaveValue('Review');
         expect(Object.fromEntries(reads.at(-1)!.searchParams)).toMatchObject({
           q: 'Review',
@@ -183,26 +196,27 @@ for (const locale of ['en', 'fa'] as const)
         await page.locator('#documents-search').fill('Unapplied');
         expect(reads).toHaveLength(count);
         expect(params(page).get('q')).toBe('Review');
-        if (staff) await page.locator('#document-review-reason').fill('Private review draft');
         await list.getByRole('button', { name: word('next'), exact: true }).click();
-        await expect(content.getByRole('button', { name: 'Last.pdf', exact: true })).toBeVisible();
+        await expect(content.getByRole(rowRole, { name: 'Last.pdf', exact: true })).toBeVisible();
         await expect(
-          content.getByRole('button', { name: 'Another.pdf', exact: true })
+          content.getByRole(rowRole, { name: 'Another.pdf', exact: true })
         ).toBeVisible();
         await expect(page.locator('#documents-search')).toHaveValue('Unapplied');
-        if (staff)
-          await expect(page.locator('#document-review-reason')).toHaveValue('Private review draft');
         const selectedReads = reads.length;
-        await content.getByRole('button', { name: 'Another.pdf', exact: true }).click();
-        await expect.poll(() => params(page).get('documentId')).toBe(documentMore.id);
+        await content.getByRole(rowRole, { name: 'Another.pdf', exact: true }).click();
+        await expect(
+          detail.getByRole('heading', { name: documentMore.originalName, level: 1 })
+        ).toBeVisible();
+        expect(new URL(page.url()).pathname).toBe(`${route}/${documentMore.id}`);
+        expect(params(page).get('cursor')).toBe(documentMore.id);
         expect(reads).toHaveLength(selectedReads);
-        if (staff) await expect(page.locator('#document-review-reason')).toHaveValue('');
         await page.reload();
-        await expect(content.getByRole('button', { name: 'Last.pdf', exact: true })).toBeVisible();
-        await expect(content.getByRole('button', { name: 'Another.pdf', exact: true })).toHaveCount(
+        await expect(detail).toBeVisible();
+        await back.click();
+        await expect(content.getByRole(rowRole, { name: 'Last.pdf', exact: true })).toBeVisible();
+        await expect(content.getByRole(rowRole, { name: 'Another.pdf', exact: true })).toHaveCount(
           0
         );
-        await expect(detail).toBeVisible();
         await expect(page.locator('#documents-search')).toHaveValue('Review');
         await expect(
           list.getByRole('button', {
@@ -210,11 +224,10 @@ for (const locale of ['en', 'fa'] as const)
             exact: true,
           })
         ).toHaveCount(0);
+        await expandListFilters(page, locale);
         await page.locator('#documents-state').selectOption('');
         await page.getByRole('button', { name: word('apply'), exact: true }).click();
-        await expect(
-          content.getByRole('button', { name: 'Review.pdf', exact: true })
-        ).toBeVisible();
+        await expect(content.getByRole(rowRole, { name: 'Review.pdf', exact: true })).toBeVisible();
         await expect.poll(() => params(page).get('cursor')).toBeNull();
         await expect.poll(() => params(page).get('documentId')).toBeNull();
         expect(reads.at(-1)!.searchParams.has('state')).toBe(false);
@@ -223,20 +236,17 @@ for (const locale of ['en', 'fa'] as const)
         await expect(page.locator('#documents-state')).toHaveValue('');
         if (staff) expect(params(page).get('state')).toBe('all');
         await page.goBack();
-        await expect(content.getByRole('button', { name: 'Last.pdf', exact: true })).toBeVisible();
-        await expect(detail).toBeVisible();
+        await expect(content.getByRole(rowRole, { name: 'Last.pdf', exact: true })).toBeVisible();
         await page.goForward();
-        await expect(
-          content.getByRole('button', { name: 'Review.pdf', exact: true })
-        ).toBeVisible();
+        await expect(content.getByRole(rowRole, { name: 'Review.pdf', exact: true })).toBeVisible();
         await expect(detail).toHaveCount(0);
         if (!staff) {
           await list.getByRole('button', { name: word('next'), exact: true }).click();
           await expect(
-            content.getByRole('button', { name: 'Another.pdf', exact: true })
+            content.getByRole(rowRole, { name: 'Another.pdf', exact: true })
           ).toBeVisible();
           await expect.poll(() => params(page).get('cursor')).toBe(documentRow.id);
-          await list.getByRole('button', { name: word('upload'), exact: true }).click();
+          await list.getByRole('link', { name: word('upload'), exact: true }).click();
           await page.locator('[data-slot="file-upload"] input[type="file"]').setInputFiles({
             name: 'Private.pdf',
             mimeType: 'application/pdf',
@@ -249,7 +259,7 @@ for (const locale of ['en', 'fa'] as const)
             channel.close();
           });
           await expect(
-            content.getByRole('button', { name: 'New profile.pdf', exact: true })
+            content.getByRole(rowRole, { name: 'New profile.pdf', exact: true })
           ).toBeVisible();
           await expect(page.locator('[data-slot="file-upload"] input[type="file"]')).toHaveCount(0);
           await expect.poll(() => reads.at(-1)?.searchParams.get('profileId')).toBe(newProfile);
@@ -257,8 +267,9 @@ for (const locale of ['en', 'fa'] as const)
           await expect.poll(() => params(page).has('cursor')).toBe(false);
           await expect.poll(() => params(page).has('documentId')).toBe(false);
           await expect.poll(() => reads.at(-1)?.searchParams.has('before')).toBe(false);
-          await content.getByRole('button', { name: 'New profile.pdf', exact: true }).click();
-          await expect.poll(() => params(page).get('documentId')).toBe(newDocument);
+          await content.getByRole(rowRole, { name: 'New profile.pdf', exact: true }).click();
+          await expect(detail.getByRole('heading', { level: 1 })).toBeVisible();
+          expect(new URL(page.url()).pathname).toBe(`/documents/${newDocument}`);
           activeProfile = documentProfileId;
           await page.evaluate(() => {
             const channel = new BroadcastChannel('barghsa-profile-context');
@@ -266,7 +277,7 @@ for (const locale of ['en', 'fa'] as const)
             channel.close();
           });
           await expect(
-            content.getByRole('button', { name: 'Review.pdf', exact: true })
+            content.getByRole(rowRole, { name: 'Review.pdf', exact: true })
           ).toBeVisible();
           await expect.poll(() => params(page).has('documentId')).toBe(false);
           await expect
@@ -366,13 +377,17 @@ for (const locale of ['en', 'fa'] as const)
       const list = page.getByRole('region', { name: word('staffTitle'), exact: true });
       const content = list.locator(':scope > [data-slot="list-content"]');
       const row = (version: number) =>
-        content.getByRole('button', {
+        content.getByRole('link', {
           name: `${word('electricity')} · ${word('version')} ${version.toLocaleString(locale)}`,
           exact: true,
         });
-      const detail = list.getByRole('region', { name: word('terms'), exact: true });
-      await expect(row(2)).toBeVisible();
+      const detail = page.getByRole('region', { name: word('terms'), exact: true });
+      const back = page.getByRole('link', { name: word('backToContracts'), exact: true });
       await expect(detail).toBeVisible();
+      expect(reads).toHaveLength(0);
+      expect(new URL(page.url()).pathname).toBe(`/admin/contracts/${financeContractId}`);
+      await back.click();
+      await expect(row(2)).toBeVisible();
       await expect(page.locator('#contracts-number')).toHaveValue('9223372036854775807');
       expect(Object.fromEntries(reads.at(-1)!.searchParams)).toMatchObject({
         contractNumber: '9223372036854775807',
@@ -387,7 +402,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.reload();
       await expect(row(3)).toBeVisible();
       await expect(row(2)).toHaveCount(0);
-      await expect(detail).toBeVisible();
+      await expect(detail).toHaveCount(0);
       const count = reads.length;
       await page.locator('#contracts-number').fill('9223372036854775808');
       await page.getByRole('button', { name: word('apply'), exact: true }).click();
@@ -401,7 +416,7 @@ for (const locale of ['en', 'fa'] as const)
       expect(params(page).has('contractId')).toBe(false);
       await page.goBack();
       await expect(row(3)).toBeVisible();
-      await expect(detail).toBeVisible();
+      await expect(detail).toHaveCount(0);
       await expect(page.locator('#contracts-number')).toHaveValue('9223372036854775807');
       await page.goForward();
       await expect(row(1)).toBeVisible();

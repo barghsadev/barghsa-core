@@ -1,9 +1,9 @@
 import { QueryProvider } from '../../../test/query-provider.js';
-import { act, type ComponentType, type ReactNode } from 'react';
+import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { Route as ProfileRoute } from './profile.js';
-import { Route as AddressesRoute } from './addresses.js';
+import { SettingsProfilePage } from '../../../pages/SettingsProfilePage.js';
+import { AddressWorkspace } from '../../../pages/AddressWorkspace.js';
 import { AccountUserProvider } from '../../../hooks/useAccountUser.js';
 import { useSavedAddressSettingsEditor } from '../../../hooks/useSavedAddressSettingsEditor.js';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
@@ -11,10 +11,13 @@ import { t as crmText } from '@barghsa/i18n/crm';
 import { t } from '@barghsa/i18n/app';
 import type { SavedAddress, SettingsProfile } from '../../../lib/settings-form.js';
 
+const navigate = vi.hoisted(() => vi.fn(async () => {}));
+
 vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => navigate,
   createFileRoute: () => (options: unknown) => ({
     options,
-    useSearch: () => ({ returnTo: '/electricity/advanced' }),
+    useSearch: () => ({ returnTo: '/electricity/orders/new/advanced' }),
   }),
   Link: ({ children, to, ...props }: { children: ReactNode; to: string }) => (
     <a href={to} {...props}>
@@ -66,6 +69,7 @@ beforeEach(() => {
   host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
+  navigate.mockClear();
 });
 afterEach(async () => {
   await act(async () => root.unmount());
@@ -74,14 +78,20 @@ afterEach(async () => {
   document.documentElement.lang = 'fa';
 });
 async function mount(surface: 'profile' | 'addresses', actor = 'owner') {
-  const Page = (surface === 'profile' ? ProfileRoute : AddressesRoute).options
-    .component as ComponentType;
+  const Profile = SettingsProfilePage;
   await act(async () =>
     root.render(
       <QueryProvider>
         {
           <AccountUserProvider value={actor}>
-            <Page />
+            {surface === 'profile' ? (
+              <Profile />
+            ) : (
+              <AddressWorkspace
+                view={{ kind: 'edit', addressId: address.id }}
+                returnTo="/electricity/orders/new/advanced"
+              />
+            )}
           </AccountUserProvider>
         }
       </QueryProvider>
@@ -125,6 +135,7 @@ function data(path: string, profile = legal) {
     return { profiles: [profile], activeProfileId: profileId, hasDefault: true };
   if (path === '/api/profiles/' + profileId) return profile;
   if (path.endsWith('/addresses')) return { addresses: profile.addresses };
+  if (path.endsWith('/addresses/' + address.id)) return address;
   if (path === '/api/geography/provinces')
     return [{ id: provinceId, nameFa: 'تهران', nameEn: 'Tehran' }];
   if (path.includes('/cities'))
@@ -261,7 +272,6 @@ it('claims an address native submission before the resolver and prevents sibling
     })
   );
   await mount('addresses', 'manager');
-  await act(async () => button(host, t('settings.addresses.edit', 'en')).click());
   await change('#addresses-field-3', '  Retained historical correction  ');
   await submit('settings-address-form');
   expect(writes).toHaveLength(1);
@@ -275,12 +285,7 @@ it('claims an address native submission before the resolver and prevents sibling
     document
       .querySelector<HTMLFormElement>('[data-slot=settings-address-form]')!
       .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-    button(host, t('settings.addresses.add', 'en')).dispatchEvent(
-      new MouseEvent('click', { bubbles: true, cancelable: true })
-    );
-    button(host, t('settings.addresses.delete', 'en')).dispatchEvent(
-      new MouseEvent('click', { bubbles: true, cancelable: true })
-    );
+    button(host, t('settings.addresses.form.cancel', 'en')).click();
   });
   expect(writes).toHaveLength(1);
   expect(document.querySelector<HTMLInputElement>('#addresses-field-4')?.matches(':disabled')).toBe(
@@ -291,62 +296,34 @@ it('claims an address native submission before the resolver and prevents sibling
     '  Retained historical correction  '
   );
   expect(document.body.textContent).toContain(tSettingsForms('retryOriginal', 'en'));
-  await act(async () =>
-    button(document.querySelector('[role=dialog]')!, tSettingsForms('retryOriginal', 'en')).click()
-  );
+  await act(async () => button(host, tSettingsForms('retryOriginal', 'en')).click());
   expect(writes).toHaveLength(2);
   expect(writes[1]).toEqual(writes[0]);
   await act(async () =>
     release(Response.json({ ...address, fullAddress: 'Retained historical correction' }))
   );
-  expect(document.querySelector('[data-slot=settings-address-form]')).toBeNull();
-});
-
-it('keeps a same-profile address draft through list reads and discards private editor state on current denial', async () => {
-  const other = {
-    ...address,
-    id: '55555555-5555-4555-8555-555555555555',
-    mainAddress: false,
-    fullAddress: 'Other address',
-  };
-  let rows = [address, other],
-    deny = false,
-    listReads = 0,
-    mainWrites = 0;
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(async (path: string, init?: RequestInit) => {
-      if (init?.method && path.endsWith('/set-main')) {
-        mainWrites++;
-        rows = rows.map((row) => ({ ...row, mainAddress: row.id === other.id }));
-        return Response.json(rows.find((row) => row.id === other.id));
-      }
-      if (init?.method) return Response.json({}, { status: deny ? 403 : 500 });
-      if (path.endsWith('/addresses')) {
-        listReads++;
-        return Response.json({ addresses: rows });
-      }
-      return Response.json(data(path));
+  expect(navigate).toHaveBeenCalledWith(
+    expect.objectContaining({
+      to: '/settings/addresses/$addressId',
+      params: { addressId: address.id },
+      replace: true,
     })
   );
-  await mount('addresses');
-  await act(async () => button(host, t('settings.addresses.edit', 'en')).click());
-  await change('#addresses-field-3', 'Private draft');
-  const before = listReads;
-  await act(async () => {
-    button(host, t('settings.addresses.setMain', 'en')).dispatchEvent(
-      new MouseEvent('click', { bubbles: true, cancelable: true })
-    );
-  });
-  expect(mainWrites).toBe(1);
-  expect(listReads).toBe(before + 1);
-  expect(document.querySelector<HTMLTextAreaElement>('#addresses-field-3')?.value).toBe(
-    'Private draft'
+});
+
+it('discards the exact address and private editor state when current authority is denied', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (path: string, init?: RequestInit) =>
+      init?.method ? Response.json({}, { status: 403 }) : Response.json(data(path))
+    )
   );
-  deny = true;
+  await mount('addresses');
+  await change('#addresses-field-3', 'Private draft');
   await submit('settings-address-form');
   expect(document.querySelector('[data-slot=settings-address-form]')).toBeNull();
   expect(host.textContent).not.toContain('Saved main address');
+  expect(host.textContent).not.toContain('Private draft');
   expect(host.textContent).toContain(tSettingsForms('forbidden', 'en'));
 });
 
@@ -366,7 +343,6 @@ it('focuses the native address error and unlocks the owning server field without
     })
   );
   await mount('addresses');
-  await act(async () => button(host, t('settings.addresses.edit', 'en')).click());
   await change('#addresses-field-3', '   ');
   await submit('settings-address-form');
   expect(writes).toHaveLength(0);
@@ -480,7 +456,12 @@ it.each(['none', 'different'] as const)(
       nextRead = false,
       release!: (response: Response) => void;
     function Probe() {
-      editor = useSavedAddressSettingsEditor('en');
+      editor = useSavedAddressSettingsEditor(
+        'en',
+        { kind: 'edit', addressId: address.id },
+        () => {},
+        () => {}
+      );
       return null;
     }
     vi.stubGlobal(
@@ -492,7 +473,7 @@ it.each(['none', 'different'] as const)(
             activeProfileId: target === 'none' ? null : otherId,
             hasDefault: target !== 'none',
           });
-        if (path === '/api/profiles/' + otherId + '/addresses') {
+        if (path === '/api/profiles/' + otherId + '/addresses/' + address.id) {
           nextRead = true;
           return new Promise<Response>((resolve) => {
             release = resolve;
@@ -513,7 +494,6 @@ it.each(['none', 'different'] as const)(
       )
     );
     await act(async () => {
-      editor.openEditForm(address);
       editor.form.setValue('fullAddress', 'Private prior-profile address');
       editor.confirmDelete(address.id);
     });
@@ -546,10 +526,6 @@ it.each(['none', 'different'] as const)(
       expect(editor.addresses).toEqual([]);
       expect(editor.profileId).toBeNull();
     } else await pending;
-    await act(async () => {
-      editor.openAddForm();
-      editor.openEditForm(address);
-    });
     expect(editor.showForm).toBe(false);
     expect(editor.command.coordination.isLocked()).toBe(false);
   }

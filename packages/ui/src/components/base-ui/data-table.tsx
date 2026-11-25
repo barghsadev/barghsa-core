@@ -6,6 +6,7 @@ import { ChevronUpIcon, ChevronDownIcon, ChevronsUpDownIcon } from 'lucide-react
 import { cn } from '../../lib/utils';
 import { scrollHorizontalViewport } from '../../lib/scroll-keyboard';
 import { Checkbox } from '../ui/checkbox';
+import { ResultGlyph } from '../ui/page-states';
 import { dataTableLabels } from './data-table.labels';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -97,7 +98,8 @@ function CardListView<T>({
       className={cn('space-y-3', className)}
     >
       {loading || !data.length ? (
-        <li className="rounded-lg border bg-card p-4 text-sm text-muted-foreground">
+        <li className="flex items-center gap-3 rounded-lg border bg-card p-4 text-sm text-muted-foreground">
+          {!loading && <ResultGlyph />}
           {loading ? labels.loading : (emptyMessage ?? labels.empty)}
         </li>
       ) : (
@@ -395,6 +397,7 @@ function DataTable<T extends object>({
                 <th
                   scope="col"
                   key={col.id}
+                  data-table-actions={col.id === 'actions' ? '' : undefined}
                   className={cn(
                     'h-10 px-3 text-start align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pe-0',
                     col.sortable !== false && enableSort && 'cursor-pointer select-none',
@@ -438,7 +441,10 @@ function DataTable<T extends object>({
             ) : sortedData.length === 0 ? (
               <tr>
                 <td colSpan={span} className="h-24 px-3 text-center text-muted-foreground">
-                  {emptyMessage ?? labels.empty}
+                  <div className="flex items-center justify-center gap-3 p-3">
+                    <ResultGlyph />
+                    <span>{emptyMessage ?? labels.empty}</span>
+                  </div>
                 </td>
               </tr>
             ) : (
@@ -448,7 +454,7 @@ function DataTable<T extends object>({
                   <React.Fragment key={key}>
                     <tr
                       className={cn(
-                        'border-b transition-colors hover:bg-muted/50 data-[state-selected]:bg-muted/50',
+                        'border-b border-border/70 transition-colors hover:bg-muted/50 focus-within:bg-muted/50 data-[state-selected]:bg-muted/50',
                         typeof rowClassName === 'function' ? rowClassName(row, index) : rowClassName
                       )}
                       data-state-selected={selected.has(key) ? 'selected' : undefined}
@@ -472,6 +478,7 @@ function DataTable<T extends object>({
                           <Cell
                             key={col.id}
                             scope={col.rowHeader ? 'row' : undefined}
+                            data-table-actions={col.id === 'actions' ? '' : undefined}
                             className={cn('px-3 py-2 align-middle', col.cellClassName)}
                           >
                             {col.cell

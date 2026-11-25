@@ -3,6 +3,8 @@ import { t as appCopy } from '@barghsa/i18n/app';
 import { t as adminCopy } from '@barghsa/i18n/admin-ui';
 import { tWalletInvoicePayment as walletCopy } from '@barghsa/i18n/wallet-invoice-payment';
 import { contractText as contractCopy } from '@barghsa/i18n/contracts';
+import { tContractReviewSignature } from '@barghsa/i18n/contract-review-signature';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tWalletPaymentReturn as returnCopy } from '@barghsa/i18n/wallet-payment-return';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { test, expect } from './coverage-fixture';
@@ -682,16 +684,19 @@ for (const locale of ['en', 'fa'] as const)
             month: 'long',
             year: 'numeric',
           }).format(new Date(submittedAt))
-        : 'Sep 23, 2026 – Oct 2, 2026'
+        : new Intl.DateTimeFormat('en-US-u-ca-gregory', {
+            timeZone: 'Asia/Tehran',
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          }).formatRange(new Date(submittedAt), new Date(new Date(periodEnd).getTime() - 1))
     );
     await checkRoutePresentation(page, test.info(), locale);
-    await page.locator('#electricity-period-type').selectOption('weekly');
     await page.locator('#electricity-period').selectOption('next_week');
     const next = page.getByRole('button', {
-      name: appCopy('electricity.order.next', locale),
+      name: appCopy('electricity.order.review', locale),
       exact: true,
     });
-    await next.click();
     await expect(page.getByText(appCopy('electricity.order.manualQuantity', locale))).toBeVisible();
     await page.locator('#electricity-kwh').fill('10');
     billAvailable = true;
@@ -714,7 +719,11 @@ for (const locale of ['en', 'fa'] as const)
       expectedTimestamp
     );
     await expect(page.locator('#electricity-kwh')).toHaveValue('10');
+    await expect(page.locator('main aside')).toContainText(
+      new Intl.NumberFormat(locale).format(1250000)
+    );
     await next.click();
+    await expect(page).toHaveURL(/orders\/new\?step=2$/);
     await expect(page.locator('main')).toContainText(
       appCopy('electricity.order.revision.green', locale)
     );
@@ -722,8 +731,6 @@ for (const locale of ['en', 'fa'] as const)
     await expect(page.locator('main')).toContainText(
       `${appCopy('electricity.order.lineTotal', locale)}: ${new Intl.NumberFormat(locale, { style: 'currency', currency: 'IRR', currencyDisplay: locale === 'fa' ? 'symbol' : 'code', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(1050000)}`
     );
-    await next.click();
-    await next.click();
     await expect(page.getByText('Buyer Legal Ltd', { exact: true })).toBeVisible();
     const submit = page.getByRole('button', {
       name: appCopy('electricity.order.submit', locale),
@@ -773,7 +780,7 @@ for (const locale of ['en', 'fa'] as const)
 
     operatingContext = 'staff';
     await page.goto('/admin/electricity-orders');
-    await page.getByRole('button', { name: new RegExp(`Buyer.*${orderId}`) }).click();
+    await page.getByRole('link', { name: new RegExp(`Buyer.*${orderId}`) }).click();
     const staffProducts = page
       .getByRole('heading', { name: adminCopy('admin.electricityOrders.products', locale) })
       .locator('..')
@@ -783,9 +790,9 @@ for (const locale of ['en', 'fa'] as const)
       adminCopy('admin.electricityOrders.quantity', locale),
       appCopy('electricity.order.detail.unitPrice', locale),
       adminCopy('admin.electricityOrders.subtotal', locale),
-      appCopy('electricity.order.detail.cancelReviewDiscount', locale),
+      adminCopy('admin.electricityOrders.discount', locale),
       adminCopy('admin.electricityOrders.lineTotal', locale),
-      appCopy('electricity.order.detail.cancelReviewVat', locale),
+      adminCopy('admin.electricityOrders.vat', locale),
     ]);
     const thermalCells = staffProducts
       .getByRole('row', { name: new RegExp(thermal.title[locale]) })
@@ -826,7 +833,7 @@ for (const locale of ['en', 'fa'] as const)
     await page.getByRole('link', { name: new RegExp(invoiceId) }).click();
     await expect(
       page.getByRole('link', { name: appCopy('invoices.details.openContract', locale) })
-    ).toHaveAttribute('href', `/contracts?contractId=${contractId}`);
+    ).toHaveAttribute('href', `/contracts/${contractId}`);
     await page
       .context()
       .addCookies([{ name: 'barghsa_csrf', value: csrf, url: new URL(page.url()).origin }]);
@@ -842,6 +849,15 @@ for (const locale of ['en', 'fa'] as const)
     await openWallet.click();
     const walletBalance = page.getByTestId('wallet-balance');
     await expect(walletBalance).toContainText(formatCurrencyIrr(openingBalance, locale));
+    const onlineTopUp = page.getByRole('link', {
+      name: appCopy('wallet.page.onlineTitle', locale),
+      exact: true,
+    });
+    await expect(onlineTopUp).toHaveAttribute(
+      'href',
+      `/wallet/top-up/online?returnInvoiceId=${invoiceId}`
+    );
+    await onlineTopUp.click();
     await page.getByTestId('wallet-amount').fill(String(topUpAmount));
     await page.getByTestId('wallet-submit').click();
     const topUpDialog = page.getByRole('dialog', {
@@ -902,25 +918,46 @@ for (const locale of ['en', 'fa'] as const)
     await page
       .getByRole('link', { name: appCopy('electricity.order.nextAction.accept_contract', locale) })
       .click();
-    await expect(page).toHaveURL(new RegExp(`/contracts\\?contractId=${contractId}$`));
-    await expect(page.getByRole('heading', { name: contractCopy('title', locale) })).toBeVisible();
-    await page
-      .getByRole('button', {
-        name: `${locale === 'fa' ? 'تأمین برق' : 'Electricity supply'} · ${contractCopy('version', locale)} ${new Intl.NumberFormat(locale).format(1)}`,
+    await expect(page).toHaveURL(new RegExp(`/contracts/${contractId}$`));
+    await expect(
+      page.getByRole('heading', {
+        level: 1,
+        name: contractCopy('recordTitle', locale).replace(
+          '{service}',
+          contractCopy('electricity', locale)
+        ),
       })
-      .click();
+    ).toBeVisible();
     const activation = page.getByRole('region', { name: contractCopy('activationTitle', locale) });
     await expect(activation).toContainText(contractCopy('prerequisite.customerAcceptance', locale));
     await expect(activation).toContainText(contractCopy('prerequisite.initialPayment', locale));
-    await expect(
-      page.getByRole('region', { name: appCopy('workflow.summary', locale) })
-    ).toContainText(contractCopy('accept', locale));
+    const acceptHeading = tContractReviewSignature('acceptHeading', locale);
+    const reviewLink = page
+      .getByRole('region', { name: appCopy('workflow.summary', locale) })
+      .getByRole('link', { name: acceptHeading, exact: true });
+    await expect(reviewLink).toBeVisible();
     await checkRoutePresentation(page, test.info(), locale);
-    await page.getByRole('checkbox').check();
-    await page.getByRole('button', { name: contractCopy('accept', locale) }).click();
-    await expect(confirm).toBeDisabled();
-    await approveRiskConfirmation(page, locale, 'financial');
-    await confirm.click();
+    await reviewLink.click();
+    await expect(page).toHaveURL(`/contracts/${contractId}/accept/${versionId}`);
+    const review = page.getByRole('region', { name: acceptHeading, exact: true });
+    const accept = review.getByRole('button', {
+      name: contractCopy('accept', locale),
+      exact: true,
+    });
+    await expect(accept).toBeDisabled();
+    await review
+      .getByRole('checkbox', {
+        name: `${contractCopy('acceptAcknowledgement', locale)} ${confirmationText('acknowledge', locale)}`,
+        exact: true,
+      })
+      .check();
+    await accept.click();
+    await expect(review.getByRole('status')).toContainText(
+      tContractReviewSignature('acceptanceRecorded', locale)
+    );
+    await review
+      .getByRole('link', { name: contractCopy('backToContract', locale), exact: true })
+      .click();
     await expect(activation).toContainText(contractCopy('prerequisitesReady', locale));
     expect(contractAcceptances).toHaveLength(1);
     expect(contractAcceptances[0]).toMatchObject({ expectedVersionId: versionId });

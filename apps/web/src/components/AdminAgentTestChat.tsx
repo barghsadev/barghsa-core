@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button } from '@barghsa/ui';
+import { RotateCcw } from 'lucide-react';
+import { Button, Label, NativeSelect } from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { assistantChatFormText } from '@barghsa/i18n/assistant-chat-forms';
 import { confirmationText } from '@barghsa/i18n/confirmation';
@@ -276,97 +277,123 @@ export function AdminAgentTestChat({
     }
   }
   const locked = disabled || denied || busy || form.pending;
+  const canRetry = pending !== null && !busy;
+  const messageError = feedback('message');
 
   return (
-    <section aria-label={label('title')} className="space-y-4 rounded-lg border p-4">
+    <section aria-label={label('title')} className="overflow-hidden rounded-xl border bg-card">
+      <header className="border-b bg-muted/25 px-4 py-3 sm:px-5">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+          <h2 className="font-semibold">{label('title')}</h2>
+          {!!(turns.length || pending) && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                clear();
+                requestAnimationFrame(() => form.form.setFocus('message'));
+              }}
+              disabled={locked}
+            >
+              <RotateCcw aria-hidden="true" />
+              {label('newConversation')}
+            </Button>
+          )}
+        </div>
+        <p className="mt-1 text-sm text-muted-foreground">{label('isolated')}</p>
+      </header>
       <form
         noValidate
         aria-busy={busy || form.pending}
         onSubmit={(event) => void submit(event)}
-        className="space-y-4"
+        className="space-y-3 px-4 py-3 sm:px-5"
       >
         {catalogueRootMessage(form.errors) && (
           <p role="alert">{catalogueRootMessage(form.errors)}</p>
         )}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold">{label('title')}</h2>
-          <Button type="button" variant="outline" onClick={() => clear()} disabled={locked}>
-            {label('newConversation')}
-          </Button>
-        </div>
-        <p className="text-sm text-muted-foreground">{label('isolated')}</p>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="test-chat-agent">{label('agent')}</label>
-          <select
-            id="test-chat-agent"
-            {...bind('agentId')}
-            aria-required="true"
-            onBlur={() => {
-              if (!form.isPending() && !controller.current) form.bind('agentId').onBlur();
-            }}
-            className="rounded-md border bg-background p-2"
-            value={agentId}
-            disabled={locked}
-            onChange={(event) => {
-              clear();
-              form.field('agentId')[1](event.target.value);
-            }}
+        <div className="grid gap-x-4 gap-y-2 sm:grid-cols-2">
+          <div className="min-w-0 space-y-1.5">
+            <Label htmlFor="test-chat-agent">{label('agent')}</Label>
+            <NativeSelect
+              id="test-chat-agent"
+              {...bind('agentId')}
+              aria-required="true"
+              onBlur={() => {
+                if (!form.isPending() && !controller.current) form.bind('agentId').onBlur();
+              }}
+              className="w-full"
+              value={agentId}
+              disabled={locked}
+              onChange={(event) => {
+                clear();
+                form.field('agentId')[1](event.target.value);
+              }}
+            >
+              <option value="">{label('chooseAgent')}</option>
+              {agents.map((agent) => (
+                <option key={agent.id} value={agent.id} disabled={!agent.enabled}>
+                  {agent.title}
+                </option>
+              ))}
+            </NativeSelect>
+            <CatalogueFieldFeedback
+              compact
+              id={form.errorId('agentId')}
+              error={feedback('agentId')}
+              message={messages.agentId}
+            />
+          </div>
+          <div className="min-w-0 space-y-1.5">
+            <Label htmlFor="test-chat-slot">{label('slot')}</Label>
+            <NativeSelect
+              id="test-chat-slot"
+              {...bind('slotKey')}
+              aria-describedby={`${bind('slotKey')['aria-describedby'] ?? ''} test-chat-scope-help`.trim()}
+              onBlur={() => {
+                if (!form.isPending() && !controller.current) form.bind('slotKey').onBlur();
+              }}
+              className="w-full"
+              value={slotKey}
+              disabled={locked}
+              onChange={(event) => {
+                clear();
+                form.field('slotKey')[1](event.target.value);
+              }}
+            >
+              <option value="">{label('adminScope')}</option>
+              {(
+                [
+                  'individual_chatbot',
+                  'legal_entity_chatbot',
+                  'staff_chatbot',
+                  'website_chatbot',
+                  'telegram_chatbot',
+                ] as const
+              ).map((key) => (
+                <option key={key} value={key}>
+                  {label(key)}
+                </option>
+              ))}
+            </NativeSelect>
+            <CatalogueFieldFeedback
+              compact
+              id={form.errorId('slotKey')}
+              error={feedback('slotKey')}
+              message={messages.slotKey}
+            />
+          </div>
+          <p
+            id="test-chat-scope-help"
+            className="text-xs leading-relaxed text-muted-foreground sm:col-span-2"
           >
-            <option value="">{label('chooseAgent')}</option>
-            {agents.map((agent) => (
-              <option key={agent.id} value={agent.id} disabled={!agent.enabled}>
-                {agent.title}
-              </option>
-            ))}
-          </select>
-          <CatalogueFieldFeedback
-            id={form.errorId('agentId')}
-            error={feedback('agentId')}
-            message={messages.agentId}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="test-chat-slot">{label('slot')}</label>
-          <select
-            id="test-chat-slot"
-            {...bind('slotKey')}
-            onBlur={() => {
-              if (!form.isPending() && !controller.current) form.bind('slotKey').onBlur();
-            }}
-            className="rounded-md border bg-background p-2"
-            value={slotKey}
-            disabled={locked}
-            onChange={(event) => {
-              clear();
-              form.field('slotKey')[1](event.target.value);
-            }}
-          >
-            <option value="">{label('adminScope')}</option>
-            {(
-              [
-                'individual_chatbot',
-                'legal_entity_chatbot',
-                'staff_chatbot',
-                'website_chatbot',
-                'telegram_chatbot',
-              ] as const
-            ).map((key) => (
-              <option key={key} value={key}>
-                {label(key)}
-              </option>
-            ))}
-          </select>
-          <CatalogueFieldFeedback
-            id={form.errorId('slotKey')}
-            error={feedback('slotKey')}
-            message={messages.slotKey}
-          />
-          <p className="text-xs text-muted-foreground">{label('scopeHelp')}</p>
+            {label('scopeHelp')}
+          </p>
         </div>
         <div
           role="log"
           aria-live="polite"
-          className="max-h-96 space-y-4 overflow-y-auto rounded-md bg-muted/30 p-3"
+          className="max-h-96 space-y-4 overflow-y-auto rounded-lg border border-border/60 bg-muted/25 p-3"
         >
           {!turns.length && <p className="text-sm text-muted-foreground">{label('empty')}</p>}
           {turns.map((turn) => (
@@ -398,25 +425,25 @@ export function AdminAgentTestChat({
             </div>
           ))}
         </div>
-        {quota !== null && (
-          <p role="status" className="text-sm">
-            {label('remaining')}: {numbers.number(quota)}/{numbers.number(10)}
-          </p>
-        )}
-        {error && (
-          <p role="alert" className="text-sm text-destructive">
-            {error}
-          </p>
-        )}
-        {pending && !busy && (
-          <Button
-            type="button"
-            variant="outline"
-            disabled={locked || cooldown.seconds > 0}
-            onClick={() => void send(pending)}
-          >
-            {label('retry')}
-          </Button>
+        {(error || canRetry) && (
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-lg border border-destructive/30 px-3 py-2">
+            {error && (
+              <p role="alert" className="text-sm text-destructive">
+                {error}
+              </p>
+            )}
+            {canRetry && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                disabled={locked || cooldown.seconds > 0}
+                onClick={() => void send(pending)}
+              >
+                {label('retry')}
+              </Button>
+            )}
+          </div>
         )}
         {cooldown.seconds > 0 && (
           <p role="status">{copy('wait').replace('{seconds}', numbers.number(cooldown.seconds))}</p>
@@ -433,7 +460,7 @@ export function AdminAgentTestChat({
             'aria-required': true,
             value: message,
             disabled: locked || !!pending,
-            placeholder: label('message'),
+            placeholder: copy('messageExample'),
             onBlur: () => {
               if (!form.isPending() && !controller.current) form.bind('message').onBlur();
             },
@@ -443,11 +470,21 @@ export function AdminAgentTestChat({
             },
           }}
           feedback={
-            <CatalogueFieldFeedback
-              id={form.errorId('message')}
-              error={feedback('message')}
-              message={messages.message}
-            />
+            messageError && (
+              <CatalogueFieldFeedback
+                compact
+                id={form.errorId('message')}
+                error={messageError}
+                message={messages.message}
+              />
+            )
+          }
+          footer={
+            quota !== null && (
+              <p role="status" className="text-xs text-muted-foreground">
+                {label('remaining')}: {numbers.number(quota)}/{numbers.number(10)}
+              </p>
+            )
           }
         />
       </form>

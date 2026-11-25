@@ -18,7 +18,7 @@ for (const locale of ['en', 'fa'] as const)
       const label = (key: string) => t(`admin.notifications.${key}`, locale);
       const draft = {
         ...notificationTemplate(),
-        id: 'draft',
+        id: '30000000-0000-4000-8000-000000000020',
         eventKey: 'profile_verified',
         createdAt: '2026-09-20T20:45:00.000Z',
         version: 3,
@@ -27,7 +27,7 @@ for (const locale of ['en', 'fa'] as const)
       };
       const published = {
         ...draft,
-        id: 'published',
+        id: '30000000-0000-4000-8000-000000000021',
         version: 2,
         status: 'active',
         isActive: true,
@@ -36,7 +36,7 @@ for (const locale of ['en', 'fa'] as const)
       };
       const archived = {
         ...published,
-        id: 'archived',
+        id: '30000000-0000-4000-8000-000000000022',
         version: 1,
         status: 'archived',
         isActive: false,
@@ -54,8 +54,15 @@ for (const locale of ['en', 'fa'] as const)
           return route.fulfill({ status, json: status === 200 ? rows : {} });
         }
       );
-      await page.route('**/api/admin/notifications/templates/draft', (route) => {
+      await page.route('**/api/admin/notifications/templates/*', (route) => {
+        const id = new URL(route.request().url()).pathname.split('/').at(-1);
+        if (route.request().method() === 'GET')
+          return route.fulfill({
+            status,
+            json: status === 200 ? rows.find((row) => row.id === id) : {},
+          });
         expect(route.request().method()).toBe('PUT');
+        expect(id).toBe(draft.id);
         const body = route.request().postDataJSON();
         writes.push(body);
         if (!verified)
@@ -98,21 +105,25 @@ for (const locale of ['en', 'fa'] as const)
           published.publishedAt
         )
       );
-      await expect(activeRow.getByRole('button', { name: label('edit'), exact: true })).toHaveCount(
+      await expect(activeRow.getByRole('link', { name: label('edit'), exact: true })).toHaveCount(
         0
       );
-      await activeRow.getByRole('button', { name: label('view'), exact: true }).click();
+      await activeRow.getByRole('link', { name: label('view'), exact: true }).click();
       const body = page.locator('#notification-template-bodyTemplate');
       const subject = page.locator('#notification-template-subject');
       const editor = page.locator('form').filter({ has: body });
-      await expect(body).toHaveAttribute('readonly', '');
-      await expect(editor.locator('button[type=submit]')).toBeDisabled();
+      const main = page.getByRole('main');
+      const toCatalogue = () =>
+        main.getByRole('link', { name: label('title'), exact: true }).click();
+      await expect(page).toHaveURL(`/admin/notifications/${published.id}`);
+      await expect(main.getByText(published.bodyTemplate, { exact: true })).toBeVisible();
+      await expect(main.getByRole('link', { name: label('edit'), exact: true })).toHaveCount(0);
       await page.setViewportSize({ width: 390, height: 844 });
-      await expect(editor).toHaveCount(1);
-      await expect(body).toHaveValue(published.bodyTemplate);
+      await expect(editor).toHaveCount(0);
+      await expect(main.getByText(published.bodyTemplate, { exact: true })).toBeVisible();
       expect(reads).toBe(1);
       expect(writes).toEqual([]);
-      await editor.getByRole('button', { name: label('cancel'), exact: true }).click();
+      await toCatalogue();
       const cards = page.getByRole('list', { name: label('catalogue'), exact: true });
       await expect(cards.locator(':scope > li')).toHaveCount(3);
       await expect(table).not.toBeVisible();
@@ -141,30 +152,33 @@ for (const locale of ['en', 'fa'] as const)
         await archivedCard.screenshot({
           path: `${screenshotRoot}/notification-${dark ? 'dark' : 'light'}-card-fa.png`,
         });
-      await archivedCard.getByRole('button', { name: label('newVersion'), exact: true }).click();
+      await archivedCard.getByRole('link', { name: label('newVersion'), exact: true }).click();
       await expect(body).not.toHaveAttribute('readonly', '');
       await expect(body).toHaveValue(archived.bodyTemplate);
       await expect(page.locator('#notification-template-eventKey')).toHaveCount(1);
       expect(writes).toEqual([]);
       await editor.getByRole('button', { name: label('cancel'), exact: true }).click();
+      await expect(page).toHaveURL(`/admin/notifications/${archived.id}`);
+      await toCatalogue();
       await cards
         .locator(':scope > li')
         .first()
-        .getByRole('button', { name: label('edit'), exact: true })
+        .getByRole('link', { name: label('edit'), exact: true })
         .click();
       await subject.fill('  Local saved subject  ');
       await body.fill('  Local saved body  ');
       await page.setViewportSize({ width: 900, height: 900 });
+      const catalogueReads = reads;
       await expect(subject).toHaveValue('  Local saved subject  ');
       await expect(body).toHaveValue('  Local saved body  ');
       await page.setViewportSize({ width: 390, height: 844 });
-      expect(reads).toBe(1);
+      expect(reads).toBe(catalogueReads);
       const refresh = page.getByRole('button', { name: label('refresh'), exact: true });
       status = 503;
       await refresh.click();
       await expect(editor.locator('button[type=submit]')).toBeDisabled();
       await expect(body).toHaveValue('  Local saved body  ');
-      await expect(cards.locator(':scope > li')).toHaveCount(3);
+      await expect(cards).toHaveCount(0);
       status = 200;
       await refresh.click();
       await expect(editor.locator('button[type=submit]')).toBeEnabled();
@@ -190,7 +204,8 @@ for (const locale of ['en', 'fa'] as const)
       expect(writes).toHaveLength(3);
       expect(writes[0]).toEqual(writes[1]);
       expect(writes[1]).toEqual(writes[2]);
-      await expect(cards.locator(':scope > li').first()).toContainText('Local saved subject');
+      await expect(page).toHaveURL(`/admin/notifications/${draft.id}`);
+      await expect(main.getByText('Local saved subject', { exact: true })).toBeVisible();
       expect(
         (await new AxeBuilder({ page }).include('[data-slot=list-page]').analyze()).violations
       ).toEqual([]);

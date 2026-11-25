@@ -74,11 +74,13 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 async function click(label: string) {
-  if (label === 'Approve and issue amendment') {
-    const input = document.querySelector<HTMLInputElement>('input[id^=increase-approval-reason-]')!;
+  if (label === 'Preview approval') {
+    const input = document.querySelector<HTMLTextAreaElement>(
+      'textarea[id^=increase-approval-reason-]'
+    )!;
     expect(input).not.toBeNull();
     await act(async () => {
-      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
         input,
         'Capacity reviewed'
       );
@@ -90,10 +92,14 @@ async function click(label: string) {
   await act(async () => button!.click());
 }
 async function fill(id: string, value: string) {
-  const input = host.querySelector<HTMLInputElement>('#' + id)!;
+  const input = host.querySelector<HTMLInputElement | HTMLTextAreaElement>('#' + id)!;
   expect(input).not.toBeNull();
   await act(async () => {
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, value);
+    const prototype =
+      input instanceof HTMLTextAreaElement
+        ? HTMLTextAreaElement.prototype
+        : HTMLInputElement.prototype;
+    Object.getOwnPropertyDescriptor(prototype, 'value')!.set!.call(input, value);
     input.dispatchEvent(new Event('input', { bubbles: true }));
   });
 }
@@ -112,7 +118,7 @@ it('increase history clears private work and old callbacks cannot dismiss a newe
     )
   );
   await fill('increase-reason-' + increaseRow.requestId, 'Private draft');
-  await click('Approve and issue amendment');
+  await click('Preview approval');
   await act(async () => vi.dynamicImportSettled());
   const old = confirmation!;
   await act(async () => navigate({ cursor: changeCursor }));
@@ -120,7 +126,7 @@ it('increase history clears private work and old callbacks cannot dismiss a newe
   expect(
     host.querySelector<HTMLInputElement>('#increase-reason-' + increaseRow.requestId)?.value
   ).toBe('');
-  await click('Approve and issue amendment');
+  await click('Preview approval');
   await act(async () => vi.dynamicImportSettled());
   const count = fetcher.mock.calls.length;
   await act(async () => {
@@ -184,7 +190,7 @@ it('late increase reviews are discarded after restored cursor navigation', async
       </QueryProvider>
     )
   );
-  await click('Approve and issue amendment');
+  await click('Preview approval');
   await act(async () => navigate({ cursor: changeCursor }));
   await act(async () => finish(Response.json(increaseReview('approve'))));
   expect(host.querySelector('[role="dialog"]')).toBeNull();

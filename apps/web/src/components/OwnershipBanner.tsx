@@ -62,10 +62,14 @@ function OwnedOwnershipBanner() {
       controller.signal.removeEventListener('abort', cancel);
     };
   }, [pathname, client, actor, revision, reader]);
-  if (!pending || pathname === '/settings/team') return null;
+  if (!pending) return null;
   return (
     <div className="border-b border-blue-200 bg-blue-50 px-4 py-3 text-sm" role="status">
-      <Link to="/settings/team" className="text-blue-900 underline">
+      <Link
+        to="/settings/team/$section"
+        params={{ section: 'transfers' }}
+        className="text-blue-900 underline"
+      >
         {t('team.banner', locale)}
       </Link>
     </div>

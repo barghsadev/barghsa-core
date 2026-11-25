@@ -257,7 +257,7 @@ it('consultation clocks exclude customer waits and terminal states and deliver p
     expect(row.recipient_user_id).toBe('support-active');
     expect(row.operating_context).toBe('staff');
     expect(row.profile_id).toBeNull();
-    expect(row.link_route).toMatch(/^\/admin\/consultations\?requestId=/);
+    expect(row.link_route).toMatch(/^\/admin\/consultations\//);
     expect(row.localized_content.fa.body).toBeTruthy();
     expect(row.localized_content.en.body).toBeTruthy();
   }
@@ -303,7 +303,7 @@ it('consultation episodes advance to the configured lead then admins once per ti
       user_id: 'support-admin',
       payload: expect.objectContaining({
         item_id: id,
-        link_route: `/admin/consultations?requestId=${id}`,
+        link_route: `/admin/consultations/${id}`,
       }),
     },
   ]);

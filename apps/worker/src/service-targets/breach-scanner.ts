@@ -410,7 +410,7 @@ export async function scanServiceBreaches(
                   service_type_name_en: SERVICE_TYPE_LABELS[domain.serviceType].en,
                   item_id: row.id,
                   ...(domain.serviceType === 'consultation'
-                    ? { link_route: `/admin/consultations?requestId=${row.id}` }
+                    ? { link_route: `/admin/consultations/${row.id}` }
                     : {}),
                   target_hours: targetHours,
                 },

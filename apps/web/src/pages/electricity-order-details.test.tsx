@@ -1,3 +1,4 @@
+import { electricityCancellationText } from '@barghsa/i18n/electricity-cancellation-customer';
 import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
 import { act, type ReactNode } from 'react';
@@ -170,9 +171,18 @@ async function exerciseCancellation(
     );
     expect(container.textContent).toContain('Thermal · 10 kWh');
     expect(container.textContent).not.toContain('1876');
-    const reason = [...container.querySelectorAll('textarea')].find((item) =>
-      item.closest('label')?.textContent?.includes('Cancellation reason')
-    )!;
+    expect(container.querySelector('a[href$="/cancel"]')).not.toBeNull();
+    await act(async () =>
+      root.render(
+        <QueryProvider>
+          <ElectricityOrderDetailsPage key="cancel" orderId={orderId} cancel />
+        </QueryProvider>
+      )
+    );
+    const label = [...container.querySelectorAll('label')].find(
+      (item) => item.textContent === 'Cancellation reason'
+    );
+    const reason = label?.control as HTMLTextAreaElement;
     expect(reason.getAttribute('aria-required')).toBe('true');
     await act(async () => {
       Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
@@ -196,7 +206,7 @@ async function exerciseCancellation(
     await act(async () => vi.advanceTimersByTimeAsync(15_001));
     vi.useRealTimers();
     expect(pendingReview[1]?.signal?.aborted).toBe(true);
-    expect(document.body.textContent).toContain(t('electricity.order.detail.cancelFailed', 'en'));
+    expect(document.body.textContent).toContain(electricityCancellationText('cancelFailed', 'en'));
     expect(reason.value).toBe('No longer needed');
     expect(fetchMock.mock.calls.some(([url]) => url.endsWith('/cancel'))).toBe(false);
     await prepare();
@@ -230,7 +240,7 @@ async function exerciseCancellation(
       expect(statusChecks).toBe(0);
       expect(document.body.querySelector('[role="dialog"]')).toBeNull();
       const alert = [...container.querySelectorAll('[role="alert"]')].find((item) =>
-        item.textContent?.includes(t('electricity.order.detail.cancelStepUp', 'en'))
+        item.textContent?.includes(electricityCancellationText('cancelStepUp', 'en'))
       );
       expect(alert?.querySelector('a')?.getAttribute('href')).toBe('/settings/security');
       expect(reason.value).toBe('No longer needed');
@@ -283,6 +293,7 @@ it.each(['confirmed', 'retry', 'already-cancelled', 'step-up required'] as const
 );
 
 vi.mock('@tanstack/react-router', () => ({
+  useBlocker: vi.fn(),
   Link: ({
     children,
     to,
@@ -620,7 +631,7 @@ it.each([
     status: 'approved',
     financialStatus: 'paid',
     contractState: 'AwaitingCustomerAcceptance',
-    href: '/contracts?contractId=33333333-3333-7333-8333-333333333333',
+    href: '/contracts/33333333-3333-7333-8333-333333333333',
     message: 'Review and accept',
   },
   {
@@ -644,7 +655,7 @@ it.each([
     status: 'changes_requested',
     financialStatus: 'unpaid',
     contractState: 'ChangesRequested',
-    href: '#electricity-order-correction',
+    href: '/electricity/orders/11111111-1111-7111-8111-111111111111/edit',
     message: 'resubmit your order',
   },
 ])(
@@ -697,12 +708,10 @@ it.each([
       );
       expect(actionLink?.getAttribute('href')).toBe(href);
       if (action === 'resubmit_changes')
-        expect(container.querySelector('#electricity-order-correction')).not.toBeNull();
+        expect(container.querySelector('#electricity-order-correction')).toBeNull();
       else if (status === 'approved')
         expect(
-          container.querySelector(
-            'a[href="/contracts?contractId=33333333-3333-7333-8333-333333333333"]'
-          )
+          container.querySelector('a[href="/contracts/33333333-3333-7333-8333-333333333333"]')
         ).not.toBeNull();
     } finally {
       await act(async () => root.unmount());
@@ -854,7 +863,7 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
     await act(async () =>
       root.render(
         <QueryProvider>
-          <ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" />
+          <ElectricityOrderDetailsPage orderId="11111111-1111-7111-8111-111111111111" edit />
         </QueryProvider>
       )
     );

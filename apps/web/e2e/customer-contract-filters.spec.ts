@@ -72,6 +72,53 @@ for (const locale of ['en', 'fa'] as const) {
       nextBefore,
     });
     const queries: URLSearchParams[] = [];
+    const version = {
+      id: first,
+      contractId: searched,
+      versionNumber: 1,
+      changeDescription: 'Published terms',
+      createdAt: '2026-09-30T09:00:00Z',
+      content: { summary: 'Effective electricity terms' },
+    };
+    await page.route(`**/api/contracts/${searched}`, (route) =>
+      route.fulfill({
+        json: {
+          ...body(searched).contracts[0],
+          profileId: first,
+          serviceStartsAt: '2026-10-01T00:00:00Z',
+          version,
+        },
+      })
+    );
+    await page.route(`**/api/contracts/${searched}/versions`, (route) =>
+      route.fulfill({ json: { versions: [version], nextBefore: null } })
+    );
+    await page.route(`**/api/contracts/${searched}/activation?*`, (route) =>
+      route.fulfill({
+        json: {
+          contractId: searched,
+          versionId: first,
+          checks: [],
+          isCurrent: true,
+          ready: true,
+          evaluatedAt: version.createdAt,
+        },
+      })
+    );
+    await page.route(`**/api/contracts/${searched}/signature?*`, (route) =>
+      route.fulfill({
+        json: {
+          contractId: searched,
+          versionId: first,
+          state: 'Active',
+          isCurrent: true,
+          request: null,
+          signature: null,
+          canRequest: false,
+          canRecord: false,
+        },
+      })
+    );
     let held: Route | undefined;
     let hold = true;
     let fail = false;
@@ -190,6 +237,22 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(reference(searched)).toBeVisible();
     await page.reload();
     await expect(reference(searched)).toBeVisible();
+    const filteredUrl = new URL(page.url());
+    const queueReads = queries.length;
+    await reference(searched).locator(`a[href^="/contracts/${searched}"]`).click();
+    const recordTitle = contractText('recordTitle', locale).replace(
+      '{service}',
+      contractText('electricity', locale)
+    );
+    await expect(page.getByRole('heading', { name: recordTitle, level: 1 })).toBeVisible();
+    expect(new URL(page.url()).pathname).toBe(`/contracts/${searched}`);
+    expect(new URL(page.url()).searchParams.get('q')).toBe(searched);
+    expect(queries.length).toBe(queueReads);
+    await expect(page.locator('time[datetime="2026-10-01T00:00:00Z"]')).toBeVisible();
+    await expect(page.getByText('Effective electricity terms', { exact: true })).toBeVisible();
+    await page.getByRole('link', { name: contractText('backToContracts', locale) }).click();
+    await expect(reference(searched)).toBeVisible();
+    expect(new URL(page.url()).searchParams.toString()).toBe(filteredUrl.searchParams.toString());
     await openHistoryFilters(page, locale);
     await expect(service).toHaveValue(contractText('solar', locale));
     expect(
@@ -292,5 +355,12 @@ for (const locale of ['en', 'fa'] as const) {
       exact: true,
     });
     await expect(views.locator('[aria-current="page"]')).toHaveText(contractText('Active', locale));
+    await views.getByRole('link', { name: contractText('needsAction', locale) }).click();
+    await expect
+      .poll(() => queries.at(-1)?.get('statuses'))
+      .toBe('AwaitingCustomerAcceptance,AwaitingSignature');
+    await expect(views.locator('[aria-current="page"]')).toHaveText(
+      contractText('needsAction', locale)
+    );
   });
 }

@@ -159,6 +159,21 @@ export async function fetchNotifications(
   return body;
 }
 
+export async function fetchNotification(
+  id: string,
+  signal: AbortSignal
+): Promise<NotificationItem> {
+  const body = await responseJson(
+    await fetch(`/api/v1/notifications/${encodeURIComponent(id)}`, {
+      credentials: 'include',
+      signal,
+    })
+  );
+  if (!isNotificationItem(body) || body.id !== id.toLowerCase())
+    throw new Error('Invalid notification');
+  return body;
+}
+
 /** Mark a single notification read. Returns the fresh unread count. */
 export async function markOneRead(id: string): Promise<number> {
   const res = await fetch(`/api/v1/notifications/${encodeURIComponent(id)}/read`, {
@@ -237,3 +252,4 @@ export function toNavigationTarget(
   }
   return target;
 }
+export const ticketRepliesSeen = 'barghsa-ticket-replies-seen';

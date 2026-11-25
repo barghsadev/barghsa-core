@@ -1,6 +1,12 @@
+import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
+import { CompactFieldFeedback } from '../components/CompactFieldFeedback.js';
+import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
+import { confirmationText } from '@barghsa/i18n/confirmation';
+import { formatToman } from '@barghsa/i18n/numbers';
+import { ChevronDownIcon } from 'lucide-react';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { historyContextText } from '../lib/history-context.js';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
@@ -8,7 +14,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
-import { Link, useNavigate, useParams } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import {
   LoadingStatus,
   Button,
@@ -20,19 +26,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  FinancialReviewSummary,
+  ListRefreshButton,
   StatusTimeline,
+  Textarea,
 } from '@barghsa/ui';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useZodForm,
-} from '@barghsa/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, useZodForm } from '@barghsa/ui/form';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
@@ -45,6 +43,7 @@ import {
   type ConsultationInformationCommand,
 } from '../lib/consultation-form.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
+import { tConsultationBrief } from '@barghsa/i18n/consultation-intake';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import {
   parseConsultationOfferReview,
@@ -124,8 +123,16 @@ async function postConsultationAction(
   });
 }
 
-export function ConsultationDetailPage() {
-  const { requestId } = useParams({ from: '/_app/consultations/$requestId' });
+export function ConsultationDetailPage({
+  requestId,
+  view = 'detail',
+}: {
+  requestId: string;
+  view?: 'detail' | 'reply' | 'offer';
+}) {
+  const reply = view === 'reply';
+  const offer = view === 'offer';
+  const editor = view !== 'detail';
   const navigate = useNavigate();
   const locale = useLocale();
   const time = useAccountTime(locale);
@@ -172,6 +179,7 @@ export function ConsultationDetailPage() {
   const [infoSent, setInfoSent] = useState(false);
   const [revision, setRevision] = useState(0);
   const [decisionReview, setDecisionReview] = useState<ConsultationOfferReview | null>(null);
+  const decisionTitle = useRef<HTMLHeadingElement>(null);
   const [offerRecovery, setOfferRecovery] = useState<{
     review: ConsultationOfferReview;
     checked: boolean;
@@ -508,6 +516,8 @@ export function ConsultationDetailPage() {
     }
   }
 
+  const reviewedOffer = decisionReview?.data;
+  const reviewedFee = reviewedOffer ? numbers.money(reviewedOffer.fee) : '—';
   const financialGate = useRiskConfirmation(
     decisionReview,
     locale,
@@ -567,6 +577,7 @@ export function ConsultationDetailPage() {
         throw new Error('Unverified offer decision');
       setOfferRecovery(null);
       if (paymentRequired) {
+        actionPending.current = false;
         void navigate({
           to: '/invoices/$invoiceId',
           params: { invoiceId: receipt.data.invoice.id },
@@ -590,6 +601,8 @@ export function ConsultationDetailPage() {
   }
 
   const request = detail?.request;
+  const invoiceStateKey = `invoice_state_${request?.invoice_state}`;
+  const invoiceState = copy(invoiceStateKey);
   const offerExpired =
     !!request?.offer_valid_until &&
     new Date(request.offer_valid_until) <= new Date() &&
@@ -601,25 +614,93 @@ export function ConsultationDetailPage() {
     ) ?? false;
   const action = request ? consultationNextAction(request, refundPending, locale) : null;
   const latestEvent = detail?.history.at(-1);
+  const submittedBrief = detail?.history.find(
+    (event) =>
+      event.status === 'submitted' && event.actor_type === 'customer' && event.reason?.trim()
+  );
+  const informationPrompt =
+    request?.status === 'awaiting_customer_info' && detail
+      ? [...detail.history]
+          .reverse()
+          .find(
+            (event) =>
+              event.status === 'awaiting_customer_info' &&
+              event.actor_type === 'staff' &&
+              event.reason?.trim()
+          )
+      : undefined;
+  const showReply =
+    request &&
+    !infoSent &&
+    (request.status === 'awaiting_customer_info' ||
+      (informationUnconfirmed && pendingInformation.current));
+  const busy = sending || informationForm.formState.isSubmitting;
+  const reload = () => {
+    if (!actionPending.current && !informationForm.isSubmissionPending())
+      setRevision((value) => value + 1);
+  };
   return (
     <section
-      className="mx-auto max-w-3xl space-y-6 px-4 py-8"
+      className={
+        editor
+          ? 'mx-auto max-w-2xl space-y-4 px-4 py-4 sm:py-5'
+          : 'mx-auto max-w-3xl space-y-4 px-4 py-4 sm:py-5'
+      }
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <Link to="/consultations" className="touch-action text-sm text-primary underline">
-        {copy('back')}
-      </Link>
-      <h1 className="text-3xl font-semibold">{copy('details')}</h1>
-      {error !== 'notFound' && (
-        <Button
-          type="button"
-          variant="outline"
-          disabled={sending || informationForm.formState.isSubmitting || loading}
-          onClick={() => setRevision((value) => value + 1)}
-        >
-          {copy('informationReload')}
-        </Button>
+      {editor && (
+        <RecordCommandGuard
+          blocked={() => actionPending.current || informationForm.isSubmissionPending()}
+        />
       )}
+      <header className="space-y-1" data-toast-anchor>
+        {editor ? (
+          <Link
+            to="/consultations/$requestId"
+            params={{ requestId }}
+            disabled={busy}
+            className="touch-action w-fit text-sm text-primary underline underline-offset-4 aria-disabled:opacity-60"
+          >
+            {copy(reply ? 'replyBack' : 'backToRequest')}
+          </Link>
+        ) : (
+          <Link
+            to="/consultations"
+            className="touch-action w-fit text-sm text-primary underline-offset-4 hover:underline"
+          >
+            {copy('back')}
+          </Link>
+        )}
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h1 className="text-2xl font-semibold sm:text-3xl">
+            {copy(reply ? 'replyTitle' : offer ? 'offerPageTitle' : 'details')}
+          </h1>
+          {error !== 'notFound' &&
+            (reply && informationUnconfirmed ? (
+              <Button
+                variant="outline"
+                size="sm"
+                loading={loading}
+                disabled={busy}
+                onClick={reload}
+              >
+                {copy('informationReload')}
+              </Button>
+            ) : (
+              <ListRefreshButton
+                label={copy('informationReload')}
+                refreshing={loading}
+                disabled={busy}
+                onClick={reload}
+              />
+            ))}
+        </div>
+        {editor && request && (
+          <p dir="auto" className="text-sm text-muted-foreground wrap-anywhere">
+            {request.product_snapshot.title[locale]}
+          </p>
+        )}
+      </header>
       {time.notice}
       {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
       {error && (
@@ -632,14 +713,217 @@ export function ConsultationDetailPage() {
           {copy('decisionUnconfirmed')}
         </p>
       )}
-      {request && (
+      {reply && <CommandFeedback message={infoSent ? copy('infoSent') : null} />}
+      {reply && request && !showReply && !infoSent && (
+        <p role="status" className="rounded-xl border bg-card px-4 py-3 text-sm">
+          {copy('replyUnavailable')}
+        </p>
+      )}
+      {reply && showReply && (
+        <Form {...informationForm}>
+          <div role="group" aria-label={copy('information')}>
+            <form
+              id="consultation-information-form"
+              onSubmit={provideInfo}
+              noValidate
+              className={recordEditorSurface}
+            >
+              {informationPrompt?.reason && (
+                <div className="space-y-1 border-b bg-muted/30 px-4 py-3 sm:px-6">
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                    <h2 className="text-sm font-semibold">{copy('informationRequested')}</h2>
+                    <time
+                      dateTime={informationPrompt.created_at}
+                      className="text-xs text-muted-foreground"
+                    >
+                      {time.format(informationPrompt.created_at, {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </time>
+                  </div>
+                  <p dir="auto" className="text-sm whitespace-pre-wrap wrap-anywhere">
+                    {informationPrompt.reason}
+                  </p>
+                </div>
+              )}
+              <div className="space-y-3 px-4 py-4 sm:px-6">
+                {informationForm.formState.errors.root && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{copy('validationUnavailable')}</AlertDescription>
+                  </Alert>
+                )}
+                <FormField
+                  control={informationForm.control}
+                  name="reason"
+                  render={({ field, fieldState }) => (
+                    <FormItem id="consultation-information">
+                      <FormLabel>{copy('information')}</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          aria-required="true"
+                          rows={2}
+                          dir="auto"
+                          disabled={busy || informationUnconfirmed}
+                          className="max-h-56 min-h-14"
+                        />
+                      </FormControl>
+                      <CompactFieldFeedback
+                        help={copy('informationHelp')}
+                        validationMessage={copy('informationInvalid')}
+                        invalid={!!fieldState.error?.message}
+                      />
+                    </FormItem>
+                  )}
+                />
+                {actionError && (
+                  <Alert variant="destructive">
+                    <AlertDescription>
+                      {copy(informationUnconfirmed ? 'informationUnconfirmed' : 'actionError')}
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </div>
+              <RecordEditorActions className="max-sm:justify-start">
+                <Button type="submit" loading={busy} disabled={busy || informationUnconfirmed}>
+                  {copy('provideInfo')}
+                </Button>
+              </RecordEditorActions>
+            </form>
+          </div>
+        </Form>
+      )}
+      {offer &&
+        request &&
+        (request.status === 'offer_pending' ? (
+          <section
+            id="consultation-offer"
+            aria-labelledby="consultation-offer-heading"
+            className={recordEditorSurface}
+          >
+            <div className="space-y-2.5 border-b bg-muted/25 px-4 py-3 sm:px-6">
+              <h2 id="consultation-offer-heading" className="text-base font-semibold">
+                {copy('savedOffer')}
+              </h2>
+              <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm sm:grid-cols-3">
+                <div className="col-span-2 min-w-0 sm:col-span-1">
+                  <dt className="text-muted-foreground">{copy('fee')}</dt>
+                  <dd className="text-lg font-semibold wrap-anywhere">
+                    {request.fee ? numbers.money(request.fee) : copy('noFee')}
+                  </dd>
+                </div>
+                {request.offer_valid_until && (
+                  <div className="min-w-0">
+                    <dt className="text-muted-foreground">{copy('offerValidUntil')}</dt>
+                    <dd>
+                      <time dateTime={request.offer_valid_until}>
+                        {time.format(request.offer_valid_until)}
+                      </time>
+                    </dd>
+                  </div>
+                )}
+                {request.invoice_state && (
+                  <div className="min-w-0">
+                    <dt className="text-muted-foreground">{copy('invoiceStatus')}</dt>
+                    <dd>
+                      {invoiceState === invoiceStateKey
+                        ? copy('unknownInvoiceStatus')
+                        : invoiceState}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            </div>
+            <div className="space-y-3 px-4 py-4 text-sm sm:px-6">
+              {(request.scope || request.deliverables) && (
+                <dl className="grid min-w-0 gap-3 sm:grid-cols-2">
+                  {request.scope && (
+                    <div className="min-w-0">
+                      <dt className="font-semibold">{copy('scope')}</dt>
+                      <dd dir="auto" className="mt-1 whitespace-pre-line wrap-anywhere">
+                        {request.scope}
+                      </dd>
+                    </div>
+                  )}
+                  {request.deliverables && (
+                    <div className="min-w-0">
+                      <dt className="font-semibold">{copy('deliverables')}</dt>
+                      <dd dir="auto" className="mt-1 whitespace-pre-line wrap-anywhere">
+                        {request.deliverables}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              )}
+              {offerExpired && <p role="status">{copy('offerExpired')}</p>}
+              {request.invoice_state === 'PaymentUnderReview' ? (
+                <p>{copy('paymentUnderReview')}</p>
+              ) : request.accepted_at && request.invoice_state !== 'Paid' ? (
+                <p>{copy('acceptedAwaitingPayment')}</p>
+              ) : (
+                <p>{copy('reviewOffer')}</p>
+              )}
+              {request.has_paid_invoice && <p>{copy('paidDeclineHelp')}</p>}
+              {actionError && (
+                <p role="alert" className="text-destructive">
+                  {copy('actionError')}
+                </p>
+              )}
+            </div>
+            <RecordEditorActions className="max-sm:justify-start">
+              {(!request.accepted_at || request.invoice_state === 'Paid') && (
+                <Button
+                  type="button"
+                  disabled={sending || offerExpired || !canReviewOffer('accept')}
+                  onClick={() => void beginDecision('accept')}
+                >
+                  {copy(request.invoice_state === 'Paid' ? 'confirmAcceptance' : 'acceptOffer')}
+                </Button>
+              )}
+              <Button
+                type="button"
+                variant="outline"
+                disabled={
+                  sending ||
+                  request.invoice_state === 'Paid' ||
+                  request.has_paid_invoice ||
+                  !canReviewOffer('decline')
+                }
+                onClick={() => void beginDecision('decline')}
+              >
+                {copy('declineOffer')}
+              </Button>
+              {request.invoice_id && request.accepted_at && request.invoice_state !== 'Paid' && (
+                <Link
+                  to="/invoices/$invoiceId"
+                  params={{ invoiceId: request.invoice_id }}
+                  className="touch-action text-sm text-primary underline underline-offset-4"
+                  disabled={busy}
+                >
+                  {copy('viewInvoice')}
+                </Link>
+              )}
+            </RecordEditorActions>
+          </section>
+        ) : (
+          <p role="status" className="rounded-xl border bg-card px-4 py-3 text-sm">
+            {['offer_accepted', 'offer_declined'].includes(request.status)
+              ? copy(`status_${request.status}`)
+              : copy('offerPageUnavailable')}
+          </p>
+        ))}
+      {!editor && request && (
         <>
           <WorkflowStatusBanner
             locale={locale}
             submittedAt={`${workflowFeedback('submitted', locale)}: ${time.format(request.submitted_at)}`}
             status={copy(`status_${request.status}`)}
             happened={
-              latestEvent?.reason ??
+              (latestEvent !== submittedBrief && latestEvent !== informationPrompt
+                ? latestEvent?.reason
+                : null) ??
               `${copy(`status_${latestEvent?.status ?? request.status}`)} · ${time.format(latestEvent?.created_at ?? request.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}`
             }
             nextAction={action!.text}
@@ -713,6 +997,19 @@ export function ConsultationDetailPage() {
               </p>
             )}
           </section>
+          {submittedBrief?.reason && (
+            <section
+              className="space-y-2 rounded-xl border bg-card p-5"
+              aria-labelledby="consultation-submitted-brief"
+            >
+              <h2 id="consultation-submitted-brief" className="font-semibold">
+                {tConsultationBrief('submittedBrief', locale)}
+              </h2>
+              <p dir="auto" className="whitespace-pre-wrap wrap-anywhere">
+                {submittedBrief.reason}
+              </p>
+            </section>
+          )}
           {(detail.adjustments.length > 0 || detail.refunds.length > 0) && (
             <section className="space-y-3 rounded-xl border bg-card p-5">
               <h2 className="text-xl font-semibold">{copy('financialActivity')}</h2>
@@ -738,125 +1035,16 @@ export function ConsultationDetailPage() {
               ))}
             </section>
           )}
-          {request.status === 'offer_pending' && (
-            <section id="consultation-offer" className="space-y-3 rounded-xl border bg-card p-5">
-              <OrderWalletBalance
-                profileId={request.profile_id}
-                scopeKey={JSON.stringify([
-                  scope,
-                  requestId,
-                  request.fee,
-                  request.invoice_id,
-                  request.invoice_state,
-                ])}
-              />
-              {offerExpired && <p role="status">{copy('offerExpired')}</p>}
-              {request.invoice_state === 'PaymentUnderReview' ? (
-                <p>{copy('paymentUnderReview')}</p>
-              ) : request.accepted_at && request.invoice_state !== 'Paid' ? (
-                <p>{copy('acceptedAwaitingPayment')}</p>
-              ) : (
-                <p>{copy('reviewOffer')}</p>
-              )}
-              <div className="flex flex-wrap gap-2">
-                {(!request.accepted_at || request.invoice_state === 'Paid') && (
-                  <Button
-                    type="button"
-                    disabled={sending || offerExpired || !canReviewOffer('accept')}
-                    onClick={() => void beginDecision('accept')}
-                  >
-                    {copy(request.invoice_state === 'Paid' ? 'confirmAcceptance' : 'acceptOffer')}
-                  </Button>
-                )}
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={
-                    sending ||
-                    request.invoice_state === 'Paid' ||
-                    request.has_paid_invoice ||
-                    !canReviewOffer('decline')
-                  }
-                  onClick={() => void beginDecision('decline')}
-                >
-                  {copy('declineOffer')}
-                </Button>
-              </div>
-              {request.has_paid_invoice && <p>{copy('paidDeclineHelp')}</p>}
-              {actionError && (
-                <p role="alert" className="text-destructive">
-                  {copy('actionError')}
-                </p>
-              )}
-            </section>
-          )}
-          {(request.status === 'awaiting_customer_info' ||
-            (informationUnconfirmed && pendingInformation.current)) && (
-            <Form {...informationForm}>
-              <div role="group" aria-label={copy('information')}>
-                <form
-                  id="consultation-information-form"
-                  onSubmit={provideInfo}
-                  noValidate
-                  className="space-y-3 rounded-xl border bg-card p-5"
-                >
-                  {informationForm.formState.errors.root && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{copy('validationUnavailable')}</AlertDescription>
-                    </Alert>
-                  )}
-                  <FormField
-                    control={informationForm.control}
-                    name="reason"
-                    render={({ field }) => (
-                      <FormItem id="consultation-information">
-                        <FormLabel>{copy('information')}</FormLabel>
-                        <FormControl>
-                          <textarea
-                            {...field}
-                            aria-required="true"
-                            disabled={
-                              sending ||
-                              informationForm.formState.isSubmitting ||
-                              informationUnconfirmed
-                            }
-                            className="min-h-28 w-full rounded-md border bg-background p-3"
-                          />
-                        </FormControl>
-                        <FormDescription>{copy('informationHelp')}</FormDescription>
-                        <div className="grid">
-                          <p
-                            aria-hidden="true"
-                            className="invisible col-start-1 row-start-1 text-sm"
-                          >
-                            {copy('informationInvalid')}
-                          </p>
-                          <FormMessage className="col-start-1 row-start-1" />
-                        </div>
-                      </FormItem>
-                    )}
-                  />
-                  {actionError && (
-                    <Alert variant="destructive">
-                      <AlertDescription>
-                        {copy(informationUnconfirmed ? 'informationUnconfirmed' : 'actionError')}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                  <Button
-                    type="submit"
-                    loading={informationForm.formState.isSubmitting || sending}
-                    disabled={
-                      sending || informationForm.formState.isSubmitting || informationUnconfirmed
-                    }
-                  >
-                    {copy('provideInfo')}
-                  </Button>
-                </form>
-              </div>
-            </Form>
-          )}
-          <CommandFeedback message={infoSent ? copy('infoSent') : null} />
+          {request.status === 'offer_pending' &&
+            action?.href !== `/consultations/${encodeURIComponent(requestId)}/offer` && (
+              <Link
+                to="/consultations/$requestId/offer"
+                params={{ requestId }}
+                className="touch-action w-fit text-sm text-primary underline underline-offset-4"
+              >
+                {copy('openOffer')}
+              </Link>
+            )}
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">{copy('history')}</h2>
             <StatusTimeline
@@ -871,121 +1059,182 @@ export function ConsultationDetailPage() {
                 dateTime: event.created_at,
                 dateLabel: time.format(event.created_at),
                 actorLabel: `${copy('actor')}: ${[['staff', 'customer', 'unknown'].includes(event.actor_type) ? event.actor_name : null, historyContextText(event.actor_type, locale)].filter(Boolean).join(' · ')}`,
-                description: event.reason ? `${copy('reason')}: ${event.reason}` : undefined,
+                description:
+                  event !== submittedBrief && event.reason
+                    ? `${copy('reason')}: ${event.reason}`
+                    : undefined,
               }))}
             />
           </section>
         </>
       )}
-      <Dialog
-        open={Boolean(decisionReview)}
-        onOpenChange={(open) => {
-          if (!open && !sending) setDecisionReview(null);
-        }}
-      >
-        <DialogContent
-          dir={locale === 'fa' ? 'rtl' : 'ltr'}
-          className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-lg"
+      {offer && (
+        <Dialog
+          open={Boolean(decisionReview)}
+          onOpenChange={(open) => {
+            if (!open && !sending) setDecisionReview(null);
+          }}
         >
-          <DialogHeader>
-            <DialogTitle>{copy('decisionReviewTitle')}</DialogTitle>
-            <DialogDescription>
-              {copy(
-                decisionReview?.data.decision === 'decline'
-                  ? 'decisionReviewDecline'
-                  : 'decisionReviewAccept'
-              )}
-            </DialogDescription>
-          </DialogHeader>
-          {decisionReview && (
-            <>
-              <FinancialReviewSummary
-                title={copy('decisionReviewTitle')}
-                rows={[
-                  {
-                    id: 'service',
-                    label: copy('details'),
-                    value: decisionReview.data.serviceTitle[locale],
-                  },
-                  { id: 'scope', label: copy('scope'), value: decisionReview.data.scope },
-                  {
-                    id: 'deliverables',
-                    label: copy('deliverables'),
-                    value: decisionReview.data.deliverables,
-                  },
-                  {
-                    id: 'validity',
-                    label: copy('offerValidUntil'),
-                    value: time.format(decisionReview.data.validUntil),
-                  },
-                  {
-                    id: 'invoice',
-                    label: copy('decisionReviewInvoice'),
-                    value: decisionReview.data.invoice.id,
-                  },
-                  ...(decisionReview.data.invoice.adjustmentKind === 'charge'
-                    ? [
-                        {
-                          id: 'previous-fee',
-                          label: copy('decisionReviewPreviousFee'),
-                          value: numbers.money(decisionReview.data.previousFee),
-                        },
-                      ]
-                    : []),
-                  {
-                    id: 'invoice-amount',
-                    label: copy('decisionReviewInvoiceAmount'),
-                    value: numbers.money(decisionReview.data.invoice.totalAmount),
-                  },
-                  {
-                    id: 'paid',
-                    label: copy('decisionReviewAlreadyPaid'),
-                    value: numbers.money(decisionReview.data.invoice.paidAmount),
-                  },
-                ]}
-                total={{ label: copy('fee'), value: numbers.money(decisionReview.data.fee) }}
-                notice={copy(
-                  decisionReview.data.outcome === 'cancel_unpaid_invoice'
+          <DialogContent
+            dir={locale === 'fa' ? 'rtl' : 'ltr'}
+            className="max-h-[calc(100dvh-2rem)] gap-3 overflow-y-auto p-4 sm:max-w-lg sm:p-6"
+            initialFocus={decisionTitle}
+          >
+            <DialogHeader>
+              <DialogTitle ref={decisionTitle} tabIndex={-1}>
+                {copy('decisionReviewTitle')}
+              </DialogTitle>
+              <DialogDescription className="rounded-lg bg-muted px-3 py-2 text-start text-foreground">
+                {copy(
+                  reviewedOffer?.outcome === 'cancel_unpaid_invoice'
                     ? 'decisionReviewCancelOutcome'
-                    : decisionReview.data.outcome === 'accepted_paid'
+                    : reviewedOffer?.outcome === 'accepted_paid'
                       ? 'decisionReviewPaidOutcome'
                       : 'decisionReviewPaymentOutcome'
                 )}
-              />
-              <OrderWalletBalance
-                profileId={decisionReview.scope.profileId}
-                total={
-                  decisionReview.data.decision === 'accept'
-                    ? decisionReview.data.invoice.totalAmount
-                    : '0'
-                }
-                paid={decisionReview.data.invoice.paidAmount}
-                invoiceId={decisionReview.data.invoice.id}
-                scopeKey={decisionReview.hash}
-              />
-            </>
-          )}
-          <ConfirmationFields gate={financialGate} disabled={sending} />
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={sending}
-              onClick={() => setDecisionReview(null)}
-            >
-              {copy('decisionReviewClose')}
-            </Button>
-            <Button
-              type="button"
-              variant={decisionReview?.data.decision === 'decline' ? 'destructive' : 'warning'}
-              disabled={sending || !financialGate.allowed}
-              onClick={() => void decide()}
-            >
-              {copy(decisionReview?.data.decision === 'decline' ? 'declineOffer' : 'acceptOffer')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+              </DialogDescription>
+            </DialogHeader>
+            {decisionReview && reviewedOffer && (
+              <>
+                <section
+                  aria-label={copy('savedOffer')}
+                  className="min-w-0 space-y-3 rounded-lg border p-3"
+                >
+                  <div className="space-y-2 rounded-md bg-primary/5 p-3">
+                    <p dir="auto" className="text-sm font-semibold wrap-anywhere">
+                      {reviewedOffer.serviceTitle[locale]}
+                    </p>
+                    <dl>
+                      <dt className="text-muted-foreground">{copy('fee')}</dt>
+                      <dd className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1 wrap-anywhere tabular-nums">
+                        <bdi className="min-w-0 text-xl font-semibold">{reviewedFee}</bdi>
+                        {reviewedFee !== '—' && (
+                          <bdi className="min-w-0 text-sm text-muted-foreground">
+                            {formatToman(reviewedOffer.fee, locale, {
+                              numberStyle: numbers.numberStyle,
+                            })}{' '}
+                            {confirmationText('toman', locale)}
+                          </bdi>
+                        )}
+                      </dd>
+                    </dl>
+                  </div>
+                  <dl className="grid grid-cols-2 gap-x-3 gap-y-2 px-1 text-sm">
+                    {[
+                      ...(reviewedOffer.invoice.adjustmentKind === 'charge'
+                        ? [
+                            {
+                              label: 'decisionReviewPreviousFee',
+                              amount: reviewedOffer.previousFee,
+                            },
+                          ]
+                        : []),
+                      {
+                        label: 'decisionReviewInvoiceAmount',
+                        amount: reviewedOffer.invoice.totalAmount,
+                      },
+                      {
+                        label: 'decisionReviewAlreadyPaid',
+                        amount: reviewedOffer.invoice.paidAmount,
+                      },
+                    ].map(({ label, amount }) => (
+                      <div key={label} className="min-w-0">
+                        <dt className="text-muted-foreground">{copy(label)}</dt>
+                        <dd className="mt-1 font-medium wrap-anywhere tabular-nums">
+                          <bdi>{numbers.money(amount)}</bdi>
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <details className="group border-t">
+                    <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 rounded-md px-1 text-sm font-medium text-primary hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
+                      {copy('details')}
+                      <ChevronDownIcon
+                        aria-hidden="true"
+                        className="size-4 shrink-0 group-open:rotate-180 motion-safe:transition-transform"
+                      />
+                    </summary>
+                    <dl className="grid min-w-0 grid-cols-1 gap-3 px-1 pb-2 text-sm">
+                      <div className="min-w-0">
+                        <dt className="font-medium">{copy('scope')}</dt>
+                        <dd className="mt-1 min-w-0 px-1">
+                          <bdi
+                            dir="auto"
+                            className="block text-start whitespace-pre-line wrap-anywhere"
+                          >
+                            {reviewedOffer.scope}
+                          </bdi>
+                        </dd>
+                      </div>
+                      <div className="min-w-0">
+                        <dt className="font-medium">{copy('deliverables')}</dt>
+                        <dd className="mt-1 min-w-0 px-1">
+                          <bdi
+                            dir="auto"
+                            className="block text-start whitespace-pre-line wrap-anywhere"
+                          >
+                            {reviewedOffer.deliverables}
+                          </bdi>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">{copy('offerValidUntil')}</dt>
+                        <dd>
+                          <time dateTime={reviewedOffer.validUntil}>
+                            {time.format(reviewedOffer.validUntil)}
+                          </time>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">{copy('decisionReviewInvoice')}</dt>
+                        <dd className="wrap-anywhere">
+                          <bdi dir="ltr">{reviewedOffer.invoice.id}</bdi>
+                        </dd>
+                      </div>
+                    </dl>
+                  </details>
+                </section>
+                <div className="rounded-md border px-3 py-2 [&_button]:self-start">
+                  <OrderWalletBalance
+                    profileId={decisionReview.scope.profileId}
+                    total={
+                      reviewedOffer.decision === 'accept' ? reviewedOffer.invoice.totalAmount : '0'
+                    }
+                    paid={reviewedOffer.invoice.paidAmount}
+                    invoiceId={reviewedOffer.invoice.id}
+                    scopeKey={decisionReview.hash}
+                  />
+                </div>
+              </>
+            )}
+            <ConfirmationFields gate={financialGate} disabled={sending} />
+            <DialogFooter className="grid grid-cols-2 gap-2 [&>button]:h-auto [&>button]:min-h-11 [&>button]:whitespace-normal sm:flex">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={sending}
+                onClick={() => setDecisionReview(null)}
+              >
+                {copy('decisionReviewClose')}
+              </Button>
+              <Button
+                type="button"
+                variant={decisionReview?.data.decision === 'decline' ? 'destructive' : 'warning'}
+                disabled={sending || !financialGate.allowed}
+                onClick={() => void decide()}
+              >
+                {copy(
+                  reviewedOffer?.decision === 'decline'
+                    ? 'declineOffer'
+                    : reviewedOffer?.outcome === 'accepted_paid'
+                      ? 'confirmAcceptance'
+                      : 'acceptOffer'
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </section>
   );
 }

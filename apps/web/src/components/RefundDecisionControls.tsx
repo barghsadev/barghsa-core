@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { contractText } from '@barghsa/i18n/contracts';
-import { Button, Field, FieldLabel, Input } from '@barghsa/ui';
+import { refundEditorMessages } from '@barghsa/i18n/refund-editor';
+import { Button, Field, FieldLabel, Input, Textarea } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import {
   useRefundDecisionForm,
@@ -8,6 +9,8 @@ import {
   type RefundOperation,
 } from '../hooks/useRefundForm.js';
 import { RefundFieldFeedback, RefundFormAlert } from './RefundFormFeedback.js';
+import { refundOperations } from '../lib/invoice-refund-route.js';
+import { RecordEditorActions, recordEditorGrid } from './RecordEditorLayout.js';
 
 export type RefundDecisionDraft = ReturnType<typeof useRefundDecisionForm>;
 export function RefundDecisionControls({
@@ -19,6 +22,7 @@ export function RefundDecisionControls({
   initial,
   saveDraft,
   referenceOnly = false,
+  operation,
 }: {
   row: {
     id: string;
@@ -33,108 +37,167 @@ export function RefundDecisionControls({
   initial: RefundDecisionValues;
   saveDraft: (values: RefundDecisionValues) => void;
   referenceOnly?: boolean;
+  operation?: RefundOperation;
 }) {
   const locale = useLocale();
+  const editorText = refundEditorMessages[locale];
   const draft = useRefundDecisionForm(row.bankReference, initial, referenceOnly);
   const [reason, setReason] = draft.field('reason');
   const [reference, setReference] = draft.field('bankReference');
   useEffect(() => saveDraft({ reason, bankReference: reference }), [reason, reference]);
-  const reasonVisible = !referenceOnly && ['Requested', 'Approved'].includes(row.state);
-  const referenceVisible =
-    row.destination === 'external_bank' &&
-    (row.state === 'Approved' || (!referenceOnly && row.state === 'Processing'));
-  const operations: RefundOperation[] = referenceOnly
-    ? row.destination === 'wallet'
-      ? ['process']
-      : row.state === 'Approved'
-        ? ['record-transfer']
-        : ['reconcile']
-    : row.state === 'Requested'
-      ? ['approve', 'reject', 'cancel']
-      : row.state === 'Approved'
-        ? ['cancel', row.destination === 'wallet' ? 'process' : 'record-transfer']
-        : row.state === 'Processing' && row.destination === 'external_bank'
-          ? ['reconcile']
-          : row.state === 'Failed' && row.destination === 'wallet'
-            ? ['process']
-            : [];
+  const reasonVisible = operation
+    ? operation === 'reject' || operation === 'cancel'
+    : !referenceOnly && ['Requested', 'Approved'].includes(row.state);
+  const referenceVisible = operation
+    ? operation === 'record-transfer' || operation === 'reconcile'
+    : row.destination === 'external_bank' &&
+      (row.state === 'Approved' || (!referenceOnly && row.state === 'Processing'));
+  const operations: RefundOperation[] = operation
+    ? [operation]
+    : referenceOnly
+      ? row.destination === 'wallet'
+        ? ['process']
+        : row.state === 'Approved'
+          ? ['record-transfer']
+          : ['reconcile']
+      : refundOperations(row);
   const choose = (operation: RefundOperation) => {
     if (!disabled && !draft.form.isSubmissionPending()) onChoose(operation, draft);
   };
   const bankId = referenceOnly ? 'bank-return-' + row.id : 'refund-bank-reference-' + row.id;
+  const reasonId = prefix + '-reason-' + row.id;
+  const reasonField = draft.bind('reason');
+  const bankField = draft.bind('bankReference');
+  const ReasonInput = operation ? Textarea : Input;
+  const buttons = operations.map((choice) => (
+    <Button
+      key={choice}
+      type={operation ? 'submit' : 'button'}
+      variant={
+        choice === 'reject' || choice === 'cancel'
+          ? 'destructive'
+          : operation
+            ? 'default'
+            : 'outline'
+      }
+      disabled={disabled}
+      onClick={operation ? undefined : () => choose(choice)}
+      data-refund-decision-submit={operation || undefined}
+    >
+      {draft.form.formState.isSubmitting && draft.operation.current === choice && (
+        <span
+          aria-hidden="true"
+          className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+        />
+      )}
+      {word(choice)}
+    </Button>
+  ));
+  if (!operations.length) return null;
   return (
     <form
       noValidate
-      className="space-y-3"
+      className={operation ? undefined : 'space-y-3'}
       aria-busy={draft.form.formState.isSubmitting || undefined}
       onSubmit={(event) => {
         event.preventDefault();
         if (operations[0]) choose(operations[0]);
       }}
     >
-      {reasonVisible && (
-        <Field>
-          <FieldLabel htmlFor={prefix + '-reason-' + row.id}>{word('decisionReason')}</FieldLabel>
-          <Input
-            id={prefix + '-reason-' + row.id}
-            maxLength={1000}
-            value={reason}
-            {...draft.bind('reason')}
-            disabled={disabled}
-            onChange={(event) => setReason(event.target.value)}
-          />
-          <RefundFieldFeedback
-            id={draft.errorId('reason')}
-            error={draft.errors.reason}
-            message={contractText('cancellationReasonInvalid', locale)}
-          />
-        </Field>
-      )}
-      {referenceVisible && (
-        <Field>
-          <FieldLabel htmlFor={bankId}>{word('bankReference')}</FieldLabel>
-          <Input
-            id={bankId}
-            dir="ltr"
-            maxLength={200}
-            value={reference}
-            {...draft.bind('bankReference')}
-            disabled={disabled}
-            onChange={(event) => setReference(event.target.value)}
-          />
-          <RefundFieldFeedback
-            id={draft.errorId('bankReference')}
-            error={draft.errors.bankReference}
-            message={contractText('refundBankReferenceInvalid', locale)}
-          />
-          {row.state === 'Processing' && (
-            <p className="text-sm text-muted-foreground">{word('secondReviewer')}</p>
-          )}
-        </Field>
-      )}
-      {!referenceVisible && draft.errors.bankReference && (
-        <RefundFormAlert message={draft.errors.bankReference.message} />
-      )}
-      <RefundFormAlert message={draft.errors.root?.validation?.message} />
-      <div className="flex flex-wrap gap-2">
-        {operations.map((operation) => (
-          <Button
-            key={operation}
-            type="button"
-            variant="outline"
-            disabled={disabled}
-            onClick={() => choose(operation)}
-          >
-            {draft.form.formState.isSubmitting && draft.operation.current === operation && (
-              <span
-                aria-hidden="true"
-                className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+      <div className={operation ? 'space-y-2.5 px-4 py-4 sm:px-6' : 'space-y-2'}>
+        <div className={reasonVisible && referenceVisible ? recordEditorGrid : 'space-y-2'}>
+          {reasonVisible && (
+            <Field className="min-w-0 gap-1">
+              <FieldLabel htmlFor={reasonId}>
+                {operation === 'reject'
+                  ? editorText.rejectionReason
+                  : operation === 'cancel'
+                    ? editorText.cancellationReason
+                    : word('decisionReason')}
+              </FieldLabel>
+              {operation && (
+                <p id={reasonId + '-help'} className="text-sm text-muted-foreground">
+                  {editorText.decisionReasonHelp}
+                </p>
+              )}
+              <ReasonInput
+                id={reasonId}
+                dir={operation ? 'auto' : undefined}
+                rows={operation ? 2 : undefined}
+                className={operation ? 'min-h-12' : undefined}
+                maxLength={1000}
+                value={reason}
+                {...reasonField}
+                aria-describedby={
+                  operation
+                    ? [reasonId + '-help', reasonField['aria-describedby']]
+                        .filter(Boolean)
+                        .join(' ')
+                    : reasonField['aria-describedby']
+                }
+                disabled={disabled}
+                onChange={(event) => setReason(event.target.value)}
               />
-            )}
-            {word(operation)}
-          </Button>
-        ))}
+              <RefundFieldFeedback
+                id={draft.errorId('reason')}
+                error={draft.errors.reason}
+                message={contractText('cancellationReasonInvalid', locale)}
+                reserveSpace={!operation}
+              />
+            </Field>
+          )}
+          {referenceVisible && (
+            <Field className="min-w-0 gap-1">
+              <FieldLabel htmlFor={bankId}>{word('bankReference')}</FieldLabel>
+              {operation === 'record-transfer' && (
+                <p id={bankId + '-help'} className="text-sm text-muted-foreground">
+                  {editorText.recordTransferHelp}
+                </p>
+              )}
+              {operation === 'reconcile' && (
+                <p id={bankId + '-help'} className="text-sm text-muted-foreground">
+                  {word('secondReviewer')}
+                </p>
+              )}
+              <Input
+                id={bankId}
+                dir="ltr"
+                maxLength={200}
+                value={reference}
+                {...bankField}
+                aria-describedby={
+                  operation
+                    ? [bankId + '-help', bankField['aria-describedby']].filter(Boolean).join(' ')
+                    : bankField['aria-describedby']
+                }
+                disabled={disabled}
+                onChange={(event) => setReference(event.target.value)}
+              />
+              <RefundFieldFeedback
+                id={draft.errorId('bankReference')}
+                error={draft.errors.bankReference}
+                message={contractText('refundBankReferenceInvalid', locale)}
+                reserveSpace={!operation}
+              />
+              {!operation && row.state === 'Processing' && (
+                <p className="text-sm text-muted-foreground">{word('secondReviewer')}</p>
+              )}
+            </Field>
+          )}
+          {operation && !reasonVisible && !referenceVisible && (
+            <p className="text-sm text-muted-foreground">{editorText.reviewDecisionHelp}</p>
+          )}
+        </div>
+        {!referenceVisible && draft.errors.bankReference && (
+          <RefundFormAlert message={draft.errors.bankReference.message} />
+        )}
+        <RefundFormAlert message={draft.errors.root?.validation?.message} />
       </div>
+      {operation ? (
+        <RecordEditorActions>{buttons}</RecordEditorActions>
+      ) : (
+        <div className="flex flex-wrap justify-end gap-2">{buttons}</div>
+      )}
     </form>
   );
 }

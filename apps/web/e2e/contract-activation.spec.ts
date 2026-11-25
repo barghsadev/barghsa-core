@@ -256,7 +256,7 @@ for (const locale of ['en', 'fa'] as const) {
       });
       await page.goto('/contracts');
       await page
-        .getByRole('button', {
+        .getByRole('link', {
           name: `${words.electricity} \u00b7 ${words.version} ${(1).toLocaleString(locale)}`,
           exact: true,
         })

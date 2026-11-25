@@ -459,9 +459,11 @@ it('old template test-send cannot unlock a replacement editor request', async ()
       : reply([notificationTemplate()])
   );
   await click('Edit');
+  await fill('#test-destination', 'staff@example.test');
   await click('Test Send');
   await click('Cancel');
   await click('Edit');
+  await fill('#test-destination', 'staff@example.test');
   await click('Test Send');
   expect(pending).toHaveLength(2);
   const receipt = () => reply({ ok: true, destination: 'email', lastTestStatus: 'delivered' });

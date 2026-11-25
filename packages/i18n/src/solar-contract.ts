@@ -1,6 +1,18 @@
 import type { Locale } from './app.js';
 
 export const en: Record<string, string> = {
+  issueSteps: 'Choose the terms source and prepare the initial invoice before reviewing issuance.',
+  contractTerms: 'Contract terms',
+  reviewIssuance: 'Review contract and invoice',
+  invoiceSubtotal: 'Subtotal',
+  draftInvoiceTotal: 'Draft invoice total',
+  titleExample: 'For example, workshop rooftop solar installation',
+  termsExample: 'Describe the work, equipment, delivery milestones, and payment schedule.',
+  reasonExample: 'For example, terms agreed after the final site review.',
+  commercialValue: 'Commercial value',
+  variableExample: 'For example, the final value is based on the installed capacity.',
+  invoiceLine: 'Line',
+  lineExample: 'For example, equipment deposit',
   sourceHelp: 'Select an available template version or a document for this request.',
   sourceInvalid: 'Select an available contract source.',
   titleInvalid: 'Enter a contract title of 1–200 characters.',
@@ -25,6 +37,18 @@ export const en: Record<string, string> = {
   validationUnavailable: 'Validation is unavailable. Please try again.',
 };
 export const fa: Record<string, string> = {
+  issueSteps: 'منبع متن و فاکتور اولیه را پیش از بررسی و صدور مشخص کنید.',
+  contractTerms: 'شرایط قرارداد',
+  reviewIssuance: 'بازبینی قرارداد و فاکتور',
+  invoiceSubtotal: 'جمع ردیف‌ها',
+  draftInvoiceTotal: 'مبلغ پیش‌نویس فاکتور',
+  titleExample: 'مثلاً نصب نیروگاه خورشیدی روی سقف کارگاه',
+  termsExample: 'شرح کار، تجهیزات، مراحل تحویل و برنامه پرداخت را بنویسید.',
+  reasonExample: 'مثلاً ثبت شرایط توافق‌شده پس از بازدید نهایی محل.',
+  commercialValue: 'ارزش قرارداد',
+  variableExample: 'مثلاً مبلغ نهایی بر اساس ظرفیت نصب‌شده تعیین می‌شود.',
+  invoiceLine: 'ردیف',
+  lineExample: 'مثلاً پیش‌پرداخت تجهیزات',
   sourceHelp: 'یک نسخه الگوی در دسترس یا سند مربوط به این درخواست را انتخاب کنید.',
   sourceInvalid: 'منبع در دسترس قرارداد را انتخاب کنید.',
   titleInvalid: 'عنوان قرارداد را با ۱ تا ۲۰۰ نویسه وارد کنید.',

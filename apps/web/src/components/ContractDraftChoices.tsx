@@ -1,7 +1,16 @@
 import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
-import { forwardRef, useEffect, useRef, useState, useId, type ComponentProps } from 'react';
-import { Button, Field, FieldGroup, FieldLabel, Input, NativeSelect } from '@barghsa/ui';
+import {
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+  useId,
+  type ComponentProps,
+  type ReactNode,
+} from 'react';
+import { Button, Field, FieldLabel, Input, NativeSelect } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
+import { tContractAuthoring } from '@barghsa/i18n/contract-authoring';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -11,6 +20,7 @@ import {
   type ContractAuthoringChoice,
 } from '../lib/contract-authoring-form.js';
 import type { ContractFormCoordination } from '../lib/contract-review-signature-form.js';
+import { recordEditorField, recordEditorGrid } from './RecordEditorLayout.js';
 type Props = {
   profileId?: string;
   serviceType?: string;
@@ -20,7 +30,7 @@ type Props = {
   blocked?: (() => boolean) | undefined;
   onDenied?: (() => void) | undefined;
   onOptions?: ((ids: string[]) => void) | undefined;
-  labelled?: boolean;
+  label?: ReactNode;
 } & Omit<ComponentProps<typeof NativeSelect>, 'value' | 'onChange'>;
 export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
   function ContractDraftChoices(
@@ -33,7 +43,7 @@ export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
       blocked,
       onDenied,
       onOptions,
-      labelled = false,
+      label,
       id,
       disabled,
       onBlur,
@@ -144,10 +154,21 @@ export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
     function locked() {
       return disabled || callbacks.current.blocked?.() || callbacks.current.coordination?.blocked();
     }
+    function submitSearch() {
+      if (locked()) return;
+      callbacks.current.onChange('');
+      callbacks.current.onOptions?.([]);
+      acceptedScope.current = null;
+      setRows([]);
+      setNext(null);
+      setCursor(null);
+      setQuery(search.trim());
+      setRevision((n) => n + 1);
+    }
     return (
-      <FieldGroup>
+      <div className={order ? 'min-w-0' : recordEditorGrid}>
         {!order && (
-          <Field>
+          <Field className="min-w-0 gap-1">
             <FieldLabel htmlFor={fieldId + '-search'}>{word('draftSearchProfiles')}</FieldLabel>
             <div className="flex gap-2">
               <Input
@@ -155,98 +176,105 @@ export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
                 value={search}
                 maxLength={100}
                 disabled={!!disabled}
+                placeholder={tContractAuthoring('profileExample', locale)}
                 onChange={(event) => {
                   if (!locked()) setSearch(event.target.value);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key !== 'Enter' || event.nativeEvent.isComposing) return;
+                  event.preventDefault();
+                  submitSearch();
                 }}
               />
               <Button
                 type="button"
                 variant="outline"
                 disabled={!!disabled || !!coordination?.blocked()}
-                onClick={() => {
-                  if (locked()) return;
-                  callbacks.current.onChange('');
-                  callbacks.current.onOptions?.([]);
-                  acceptedScope.current = null;
-                  setRows([]);
-                  setNext(null);
-                  setCursor(null);
-                  setQuery(search.trim());
-                  setRevision((n) => n + 1);
-                }}
+                onClick={submitSearch}
               >
                 {word('draftSearch')}
               </Button>
             </div>
           </Field>
         )}
-        {!labelled && (
-          <FieldLabel htmlFor={choiceId}>{word(order ? 'draftOrder' : 'draftProfile')}</FieldLabel>
-        )}
-        <NativeSelect
-          {...control}
-          id={choiceId}
-          ref={ref}
-          value={available ? value : ''}
-          onBlur={onBlur}
-          disabled={busy || failed || !!disabled}
-          onChange={(event) => {
-            if (
-              !locked() &&
-              available &&
-              (!event.target.value ||
-                rowsRef.current.some(
-                  (row) =>
-                    row.id === event.target.value && (!order || row.serviceType === serviceType)
-                ))
-            )
-              callbacks.current.onChange(event.target.value);
-          }}
-        >
-          <option value="">{word(order ? 'draftNoOrder' : 'draftChooseProfile')}</option>
-          {(available ? rows : [])
-            .filter((row) => !order || row.serviceType === serviceType)
-            .map((row) => (
-              <option key={row.id} value={row.id}>
-                {order
-                  ? `${word(row.serviceType!)} · ${row.id}`
-                  : `${row.title || word('draftUnnamedProfile')} · ${word(row.profileType === 'LEGAL' ? 'draftLegal' : 'draftIndividual')} · ${row.id.slice(-8)}`}
-              </option>
-            ))}
-        </NativeSelect>
-        {busy && <p role="status">{word('loading')}</p>}
-        {failed && (
-          <div className="flex flex-col items-start gap-2">
-            <p role="alert">{word('draftOptionsError')}</p>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={!!disabled || !!coordination?.blocked()}
-              onClick={() => {
-                if (!locked()) setRevision((n) => n + 1);
-              }}
-            >
-              {word('refresh')}
-            </Button>
-          </div>
-        )}
-        {!busy && !failed && (!available || !rows.length) && <p>{word('draftNoMatches')}</p>}
-        {next && !failed && (
-          <Button
-            className="self-start"
-            type="button"
-            variant="outline"
-            disabled={busy || !!disabled || !!coordination?.blocked()}
-            onClick={() => {
-              if (locked()) return;
-              if (cursor === next) setRevision((n) => n + 1);
-              else setCursor(next);
+        <div className={recordEditorField}>
+          {label ?? (
+            <FieldLabel htmlFor={choiceId}>
+              {word(order ? 'draftOrder' : 'draftProfile')}
+            </FieldLabel>
+          )}
+          <NativeSelect
+            {...control}
+            id={choiceId}
+            ref={ref}
+            value={available ? value : ''}
+            className="w-full"
+            onBlur={onBlur}
+            disabled={busy || failed || !!disabled}
+            onChange={(event) => {
+              if (
+                !locked() &&
+                available &&
+                (!event.target.value ||
+                  rowsRef.current.some(
+                    (row) =>
+                      row.id === event.target.value && (!order || row.serviceType === serviceType)
+                  ))
+              )
+                callbacks.current.onChange(event.target.value);
             }}
           >
-            {word('next')}
-          </Button>
-        )}
-      </FieldGroup>
+            <option value="">{word(order ? 'draftNoOrder' : 'draftChooseProfile')}</option>
+            {(available ? rows : [])
+              .filter((row) => !order || row.serviceType === serviceType)
+              .map((row) => (
+                <option key={row.id} value={row.id}>
+                  {order
+                    ? `${word(row.serviceType!)} · ${row.id}`
+                    : `${row.title || word('draftUnnamedProfile')} · ${word(row.profileType === 'LEGAL' ? 'draftLegal' : 'draftIndividual')} · ${row.id.slice(-8)}`}
+                </option>
+              ))}
+          </NativeSelect>
+          {busy && (
+            <p role="status" className="text-sm text-muted-foreground">
+              {word('loading')}
+            </p>
+          )}
+          {failed && (
+            <div className="flex flex-col items-start gap-2">
+              <p role="alert">{word('draftOptionsError')}</p>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={!!disabled || !!coordination?.blocked()}
+                onClick={() => {
+                  if (!locked()) setRevision((n) => n + 1);
+                }}
+              >
+                {word('refresh')}
+              </Button>
+            </div>
+          )}
+          {!busy && !failed && (!available || !rows.length) && (
+            <p className="text-sm text-muted-foreground">{word('draftNoMatches')}</p>
+          )}
+          {next && !failed && (
+            <Button
+              className="self-start"
+              type="button"
+              variant="outline"
+              disabled={busy || !!disabled || !!coordination?.blocked()}
+              onClick={() => {
+                if (locked()) return;
+                if (cursor === next) setRevision((n) => n + 1);
+                else setCursor(next);
+              }}
+            >
+              {word('next')}
+            </Button>
+          )}
+        </div>
+      </div>
     );
   }
 );

@@ -1,7 +1,22 @@
 import { validDocumentRow } from '../lib/document-records.js';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
-import { useEffect, useRef, useState, type ComponentProps, type FormEvent } from 'react';
+import {
+  documentIdPattern,
+  useCustomerDocumentProfile,
+} from '../hooks/useCustomerDocumentProfile.js';
+import { Link } from '@tanstack/react-router';
+import { FileText } from 'lucide-react';
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+  type ComponentProps,
+  type FormEvent,
+  type ReactNode,
+} from 'react';
 import {
   Alert,
   AlertDescription,
@@ -12,10 +27,13 @@ import {
   FieldLabel,
   Input,
   ListPage,
+  ListRefreshButton,
+  ListSearchInput,
   NativeSelect,
   PageHeader,
   PageLoading,
   ListViewToggle,
+  buttonVariants,
 } from '@barghsa/ui';
 import { documentText } from '@barghsa/i18n/documents';
 import { t as appText } from '@barghsa/i18n/workspace';
@@ -25,11 +43,15 @@ import type { RecordListQuery } from '../lib/record-list-query.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { DocumentList } from './DocumentRecords.js';
+import { DocumentStatusBadge } from './DocumentStatusBadge.js';
+import {
+  relatedDocumentLocation,
+  relatedDocumentMatches,
+  type RelatedDocumentLinks,
+} from '../lib/related-document-route.js';
 import { useListView } from '../hooks/useListView.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { DocumentDetail } from './DocumentDetail.js';
-import { DocumentRetentionPolicies } from './DocumentRetentionPolicies.js';
-import { DocumentDestructionQueue } from './DocumentDestructionQueue.js';
+import { QueueEmptyState } from './QueueEmptyState.js';
 import {
   DocumentUpload,
   type OrderDocumentAssociation,
@@ -45,6 +67,10 @@ import {
   type DocumentPage,
 } from '../lib/documents.js';
 
+const DocumentDetail = lazy(() =>
+  import('./DocumentDetail.js').then(({ DocumentDetail }) => ({ default: DocumentDetail }))
+);
+
 export interface DocumentFilters {
   contractVersionId?: string;
   kind: DocumentKind;
@@ -54,31 +80,42 @@ export interface DocumentFilters {
   profileId: string;
   businessRecordId: string;
 }
-const uuid = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 export function DocumentsWorkspace({
   staff = false,
   queries,
+  recordSearch,
 }: {
   staff?: boolean;
   queries?: RecordListQuery | undefined;
+  recordSearch?: Record<string, unknown> | undefined;
 }) {
   const revision = useProfileContextRevision();
   const actor = useAccountUser();
   return (
-    <Workspace key={JSON.stringify([staff, revision, actor])} staff={staff} queries={queries} />
+    <Workspace
+      key={JSON.stringify([staff, revision, actor])}
+      staff={staff}
+      queries={queries}
+      recordSearch={recordSearch}
+    />
   );
 }
-function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQuery | undefined }) {
-  const actor = useAccountUser();
-  const revision = useProfileContextRevision();
-  const readDocument = useOwnedDocumentRead(actor, revision, staff, undefined, 'document-profiles');
+function Workspace({
+  staff,
+  queries,
+  recordSearch,
+}: {
+  staff: boolean;
+  queries?: RecordListQuery | undefined;
+  recordSearch?: Record<string, unknown> | undefined;
+}) {
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
-  const [activeProfile, setActiveProfile] = useState<string | null>(null);
-  const [profileState, setProfileState] = useState<
-    'loading' | 'ready' | 'missing' | 'error' | 'denied'
-  >('loading');
-  const [profileRetry, setProfileRetry] = useState(0);
+  const {
+    id: activeProfile,
+    state: profileState,
+    retry: retryProfile,
+  } = useCustomerDocumentProfile(!staff);
   const routeFilters: DocumentFilters = {
     kind: (queries?.queue.query.filters.kind || 'standalone') as DocumentKind,
     state: queries
@@ -104,39 +141,11 @@ function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQue
   }, [basis]);
   const [invalid, setInvalid] = useState(false);
   const [generation, setGeneration] = useState(0);
-  useEffect(() => {
-    if (staff) return;
-    const controller = new AbortController();
-    setProfileState('loading');
-    void readDocument<{ activeProfileId: string | null }>('/api/profiles', {
-      signal: controller.signal,
-    })
-      .then((data) => {
-        if (!controller.signal.aborted) {
-          if (
-            data.activeProfileId !== null &&
-            (typeof data.activeProfileId !== 'string' || !uuid.test(data.activeProfileId))
-          )
-            throw new Error('Invalid active profile');
-          setActiveProfile(data.activeProfileId);
-          setProfileState(data.activeProfileId ? 'ready' : 'missing');
-        }
-      })
-      .catch((error: unknown) => {
-        if (!controller.signal.aborted)
-          setProfileState(
-            error instanceof DocumentRequestError && [401, 403].includes(error.status)
-              ? 'denied'
-              : 'error'
-          );
-      });
-    return () => controller.abort();
-  }, [staff, profileRetry, readDocument]);
   function apply(event: FormEvent) {
     event.preventDefault();
     if (
-      (filters.profileId && !uuid.test(filters.profileId)) ||
-      (filters.businessRecordId && !uuid.test(filters.businessRecordId))
+      (filters.profileId && !documentIdPattern.test(filters.profileId)) ||
+      (filters.businessRecordId && !documentIdPattern.test(filters.businessRecordId))
     ) {
       setInvalid(true);
       return;
@@ -159,6 +168,118 @@ function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQue
   function change(key: keyof DocumentFilters, value: string) {
     setFilters((previous) => ({ ...previous, [key]: value }));
   }
+  const appliedFilterCount = [
+    applied.kind !== 'standalone',
+    applied.state !== (staff ? 'SubmittedForReview' : ''),
+    applied.category,
+    applied.profileId,
+    applied.businessRecordId,
+  ].filter(Boolean).length;
+  const filterForm = (
+    <form onSubmit={apply} className="flex flex-col gap-2">
+      <ListPage.Toolbar
+        search={
+          <ListSearchInput
+            id="documents-search"
+            label={word('search')}
+            maxLength={128}
+            value={filters.query}
+            onChange={(event) => change('query', event.target.value)}
+          />
+        }
+        moreFilters={{
+          label: appText('historyFilters.label', locale),
+          count: appliedFilterCount
+            ? new Intl.NumberFormat(locale).format(appliedFilterCount)
+            : undefined,
+          children: (
+            <FieldGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <Field>
+                <FieldLabel htmlFor="documents-kind">{word('kind')}</FieldLabel>
+                <NativeSelect
+                  id="documents-kind"
+                  value={filters.kind}
+                  onChange={(event) => {
+                    setFilters((previous) => ({
+                      ...previous,
+                      kind: event.target.value as DocumentKind,
+                      businessRecordId: '',
+                    }));
+                  }}
+                >
+                  {documentKinds.map((kind) => (
+                    <option key={kind} value={kind}>
+                      {word(kind)}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="documents-state">{word('state')}</FieldLabel>
+                <NativeSelect
+                  id="documents-state"
+                  value={filters.state}
+                  onChange={(event) => change('state', event.target.value)}
+                >
+                  <option value="">{word('all')}</option>
+                  {documentStates
+                    .filter((state) => staff || state !== 'Removed')
+                    .map((state) => (
+                      <option key={state} value={state}>
+                        {word(state)}
+                      </option>
+                    ))}
+                </NativeSelect>
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="documents-category">{word('category')}</FieldLabel>
+                <NativeSelect
+                  id="documents-category"
+                  value={filters.category}
+                  onChange={(event) => change('category', event.target.value)}
+                >
+                  <option value="">{word('allCategories')}</option>
+                  {['document', 'image', 'video', 'contract'].map((category) => (
+                    <option key={category} value={category}>
+                      {word(category)}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </Field>
+              {staff ? (
+                <Field data-invalid={invalid || undefined}>
+                  <FieldLabel htmlFor="documents-profile">{word('profile')}</FieldLabel>
+                  <Input
+                    id="documents-profile"
+                    value={filters.profileId}
+                    onChange={(event) => change('profileId', event.target.value.trim())}
+                    dir="ltr"
+                  />
+                </Field>
+              ) : null}
+              {staff && filters.kind !== 'standalone' ? (
+                <Field data-invalid={invalid || undefined}>
+                  <FieldLabel htmlFor="documents-record">{word('record')}</FieldLabel>
+                  <Input
+                    id="documents-record"
+                    value={filters.businessRecordId}
+                    onChange={(event) => change('businessRecordId', event.target.value.trim())}
+                    dir="ltr"
+                  />
+                </Field>
+              ) : null}
+            </FieldGroup>
+          ),
+        }}
+        actions={
+          <Button type="submit" variant="secondary">
+            {word('apply')}
+          </Button>
+        }
+      />
+      {invalid ? <p role="alert">{word('invalidReference')}</p> : null}
+    </form>
+  );
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <PageHeader
@@ -167,106 +288,28 @@ function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQue
           staff ? word('staffDescription') : profileState !== 'missing' ? word('description') : ''
         }
       />
-      {staff ? <DocumentRetentionPolicies /> : null}
-      {staff ? <DocumentDestructionQueue /> : null}
-      <form onSubmit={apply} className="flex flex-col gap-4 rounded-xl border bg-card p-5">
-        <FieldGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Field>
-            <FieldLabel htmlFor="documents-kind">{word('kind')}</FieldLabel>
-            <NativeSelect
-              id="documents-kind"
-              value={filters.kind}
-              onChange={(event) => {
-                setFilters((previous) => ({
-                  ...previous,
-                  kind: event.target.value as DocumentKind,
-                  businessRecordId: '',
-                }));
-              }}
+      {staff && recordSearch && (
+        <nav className="flex flex-wrap gap-2" aria-label={word('documentGovernance')}>
+          {(['retention', 'destruction'] as const).map((operation) => (
+            <Link
+              key={operation}
+              to="/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}"
+              params={{ documentId: 'governance', section: operation, action: undefined }}
+              search={recordSearch}
+              className={buttonVariants({ variant: 'outline' })}
             >
-              {documentKinds.map((kind) => (
-                <option key={kind} value={kind}>
-                  {word(kind)}
-                </option>
-              ))}
-            </NativeSelect>
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="documents-state">{word('state')}</FieldLabel>
-            <NativeSelect
-              id="documents-state"
-              value={filters.state}
-              onChange={(event) => change('state', event.target.value)}
-            >
-              <option value="">{word('all')}</option>
-              {documentStates
-                .filter((state) => staff || state !== 'Removed')
-                .map((state) => (
-                  <option key={state} value={state}>
-                    {word(state)}
-                  </option>
-                ))}
-            </NativeSelect>
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="documents-category">{word('category')}</FieldLabel>
-            <NativeSelect
-              id="documents-category"
-              value={filters.category}
-              onChange={(event) => change('category', event.target.value)}
-            >
-              <option value="">{word('allCategories')}</option>
-              {['document', 'image', 'video', 'contract'].map((category) => (
-                <option key={category} value={category}>
-                  {word(category)}
-                </option>
-              ))}
-            </NativeSelect>
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="documents-search">{word('search')}</FieldLabel>
-            <Input
-              id="documents-search"
-              type="search"
-              maxLength={128}
-              value={filters.query}
-              onChange={(event) => change('query', event.target.value)}
-            />
-          </Field>
-          {staff ? (
-            <Field data-invalid={invalid || undefined}>
-              <FieldLabel htmlFor="documents-profile">{word('profile')}</FieldLabel>
-              <Input
-                id="documents-profile"
-                value={filters.profileId}
-                onChange={(event) => change('profileId', event.target.value.trim())}
-                dir="ltr"
-              />
-            </Field>
-          ) : null}
-          {staff && filters.kind !== 'standalone' ? (
-            <Field data-invalid={invalid || undefined}>
-              <FieldLabel htmlFor="documents-record">{word('record')}</FieldLabel>
-              <Input
-                id="documents-record"
-                value={filters.businessRecordId}
-                onChange={(event) => change('businessRecordId', event.target.value.trim())}
-                dir="ltr"
-              />
-            </Field>
-          ) : null}
-        </FieldGroup>
-        {invalid ? <p role="alert">{word('invalidReference')}</p> : null}
-        <Button type="submit" className="self-start">
-          {word('apply')}
-        </Button>
-      </form>
+              {word(operation === 'retention' ? 'retentionPolicies' : 'destructionQueue')}
+            </Link>
+          ))}
+        </nav>
+      )}
+      {(!recordSearch || staff) && filterForm}
       {!staff && (profileState === 'error' || profileState === 'denied') ? (
         <Alert variant="destructive">
           <AlertDescription>
             {word(profileState === 'denied' ? 'denied' : 'listError')}
           </AlertDescription>
-          <Button variant="outline" onClick={() => setProfileRetry((value) => value + 1)}>
+          <Button variant="outline" onClick={retryProfile}>
             {word('refresh')}
           </Button>
         </Alert>
@@ -289,6 +332,8 @@ function Workspace({ staff, queries }: { staff: boolean; queries?: RecordListQue
           showRetention={staff}
           filters={applied}
           queries={queries}
+          recordSearch={recordSearch}
+          filterDisclosure={recordSearch && !staff && filterForm}
           profileId={staff ? applied.profileId : activeProfile!}
         />
       )}
@@ -322,6 +367,11 @@ function Results({
   profileId,
   association,
   queries,
+  recordSearch,
+  filterDisclosure,
+  embedded = false,
+  relatedLinks,
+  summaryLabel,
 }: {
   staff: boolean;
   showRetention?: boolean;
@@ -329,6 +379,11 @@ function Results({
   profileId: string;
   association?: OrderDocumentAssociation | SolarDocumentAssociation;
   queries?: RecordListQuery | undefined;
+  recordSearch?: Record<string, unknown> | undefined;
+  filterDisclosure?: ReactNode;
+  embedded?: boolean;
+  relatedLinks?: RelatedDocumentLinks;
+  summaryLabel?: string;
 }) {
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
@@ -405,6 +460,9 @@ function Results({
   if (filters.businessRecordId) params.set('businessRecordId', filters.businessRecordId);
   if (cursor) params.set('before', cursor);
   const path = `${documentBase(staff)}?${params}`;
+  const allStatuses = new URLSearchParams(params);
+  allStatuses.delete('state');
+  allStatuses.delete('before');
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
   const readDocument = useOwnedDocumentRead(
@@ -434,7 +492,11 @@ function Results({
         if (!controller.signal.aborted) {
           if (
             !Array.isArray(page.documents) ||
-            !page.documents.every((item) => validDocumentRow(item, profileId)) ||
+            !page.documents.every(
+              (item) =>
+                validDocumentRow(item, profileId) &&
+                (!relatedLinks || relatedDocumentMatches(item, relatedLinks.context))
+            ) ||
             (page.nextBefore !== null && typeof page.nextBefore !== 'string')
           )
             throw new DocumentRequestError(502, null);
@@ -470,7 +532,14 @@ function Results({
       controller.abort();
       if (listRequest.current === controller) listRequest.current = null;
     };
-  }, [path, refresh, urlRows.acceptPage, readDocument]);
+  }, [
+    path,
+    refresh,
+    urlRows.acceptPage,
+    readDocument,
+    relatedLinks?.context.id,
+    relatedLinks?.context.kind,
+  ]);
   function reload() {
     if (queryRef.current && cursor) {
       queryRef.current.queue.setQuery({ cursor: '' });
@@ -482,36 +551,80 @@ function Results({
   }
   return (
     <ListPage role="region" aria-label={word('listTitle')}>
-      <ListPage.Toolbar
-        actions={
-          <ListViewToggle
-            value={view}
-            onChange={setView}
-            labels={{
-              group: appText('historyView.group', locale),
-              table: appText('historyView.table', locale),
-              card: appText('historyView.card', locale),
-            }}
-          />
-        }
-      >
-        <Button variant="outline" onClick={reload} disabled={loading}>
-          {word('refresh')}
-        </Button>
-        {!denied && (filters.kind === 'standalone' || association) && profileId ? (
-          <Button
-            onClick={() => {
-              if (accessDenied.current) return;
-              setUpload({ replacement: null, selection: null });
-              setSelected(null);
-              setUploaded(null);
-            }}
-          >
-            {word('upload')}
-          </Button>
-        ) : null}
-      </ListPage.Toolbar>
-      {time.notice}
+      {summaryLabel ? (
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-sm font-semibold">{summaryLabel}</h2>
+          <ListRefreshButton label={word('refresh')} onClick={reload} disabled={loading} />
+        </div>
+      ) : (
+        <ListPage.Toolbar
+          actions={
+            <>
+              {recordSearch && !denied && filters.kind === 'standalone' && profileId && (
+                <Link
+                  to={
+                    staff
+                      ? '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+                      : '/documents/$documentId/{-$operation}'
+                  }
+                  params={{ documentId: 'new', operation: undefined }}
+                  search={recordSearch}
+                  className={buttonVariants({ className: 'min-h-11' })}
+                >
+                  {word('upload')}
+                </Link>
+              )}
+              {!embedded && (
+                <ListViewToggle
+                  value={view}
+                  onChange={setView}
+                  labels={{
+                    group: appText('historyView.group', locale),
+                    table: appText('historyView.table', locale),
+                    card: appText('historyView.card', locale),
+                  }}
+                />
+              )}
+            </>
+          }
+        >
+          {relatedLinks &&
+            relatedLinks.allowUpload !== false &&
+            relatedLinks.allowChanges !== false &&
+            !denied &&
+            profileId && (
+              <Link
+                {...relatedDocumentLocation(relatedLinks.context, 'new')}
+                className={buttonVariants({ className: 'min-h-11' })}
+                disabled={relatedLinks.disabled}
+                onClick={(event) => {
+                  if (relatedLinks.blocked?.()) event.preventDefault();
+                }}
+              >
+                {word('upload')}
+              </Link>
+            )}
+          {!relatedLinks &&
+            !recordSearch &&
+            !denied &&
+            (filters.kind === 'standalone' || association) &&
+            !!profileId && (
+              <Button
+                onClick={() => {
+                  if (accessDenied.current) return;
+                  setUpload({ replacement: null, selection: null });
+                  setSelected(null);
+                  setUploaded(null);
+                }}
+              >
+                {word('upload')}
+              </Button>
+            )}
+          <ListRefreshButton label={word('refresh')} onClick={reload} disabled={loading} />
+        </ListPage.Toolbar>
+      )}
+      {filterDisclosure}
+      {!summaryLabel && time.notice}
       {uploaded && uploaded === selected ? <p role="status">{word('uploadComplete')}</p> : null}
       {staff && filters.kind === 'standalone' && !profileId ? (
         <p className="text-sm text-muted-foreground">{word('selectProfile')}</p>
@@ -543,27 +656,29 @@ function Results({
         />
       ) : null}
       {selected ? (
-        <DocumentDetail
-          key={selected}
-          id={selected}
-          profileId={profileId}
-          staff={staff}
-          showRetention={showRetention}
-          onClose={() => setSelected(null)}
-          onPrevious={(id) => {
-            if (!accessDenied.current) setSelected(id);
-          }}
-          onChanged={() => {
-            if (!accessDenied.current) reload();
-          }}
-          savingPreSubmissionOnly={association?.businessRecordType === 'order' && !staff}
-          solarCustomer={association?.businessRecordType === 'solar_request' && !staff}
-          onReplace={(document) => {
-            if (accessDenied.current) return;
-            setSelected(null);
-            setUpload({ replacement: document, selection: null });
-          }}
-        />
+        <Suspense fallback={<PageLoading label={word('loading')} />}>
+          <DocumentDetail
+            key={selected}
+            id={selected}
+            profileId={profileId}
+            staff={staff}
+            showRetention={showRetention}
+            onClose={() => setSelected(null)}
+            onPrevious={(id) => {
+              if (!accessDenied.current) setSelected(id);
+            }}
+            onChanged={() => {
+              if (!accessDenied.current) reload();
+            }}
+            savingPreSubmissionOnly={association?.businessRecordType === 'order' && !staff}
+            solarCustomer={association?.businessRecordType === 'solar_request' && !staff}
+            onReplace={(document) => {
+              if (accessDenied.current) return;
+              setSelected(null);
+              setUpload({ replacement: document, selection: null });
+            }}
+          />
+        </Suspense>
       ) : null}
       <ListPage.Content
         loading={loading}
@@ -581,35 +696,97 @@ function Results({
             )}
           </Alert>
         }
-        emptyView={<EmptyState title={word('empty')} description={word('emptyHint')} />}
+        emptyView={
+          queries && filters.state && !cursor ? (
+            <QueueEmptyState
+              locale={locale}
+              message={word('empty')}
+              status={word(filters.state)}
+              alternatives={[
+                { value: 'all', label: word('all'), path: `${documentBase(staff)}?${allStatuses}` },
+              ]}
+              hasResults={(body) => {
+                const documents = (body as Partial<DocumentPage> | null)?.documents;
+                return (
+                  Array.isArray(documents) &&
+                  documents.some(
+                    (item) => validDocumentRow(item, profileId) && item.state !== filters.state
+                  )
+                );
+              }}
+              all={() => {
+                if (!accessDenied.current)
+                  queries.queue.setQuery({ filters: { state: staff ? 'all' : '' } });
+              }}
+              disabled={denied}
+            />
+          ) : summaryLabel ? (
+            <p className="rounded-lg border bg-muted/25 px-3 py-2.5 text-sm text-muted-foreground">
+              {word('empty')}
+            </p>
+          ) : (
+            <EmptyState
+              icon={embedded ? null : undefined}
+              className={
+                embedded
+                  ? 'items-start border p-3 text-start [&_[data-slot=empty-header]]:items-start [&_[data-slot=empty-header]]:gap-1'
+                  : ''
+              }
+              title={word('empty')}
+              description={word(embedded ? 'requestEmptyHint' : 'emptyHint')}
+            />
+          )
+        }
       >
         {items?.length ? (
-          <DocumentList
-            items={items}
-            staff={staff}
-            locale={locale}
-            view={view}
-            selectedId={selected}
-            formatDate={time.format}
-            onChanged={(id) => {
-              if (accessDenied.current) return;
-              if (selected === id) setSelected(null);
-              if (upload?.replacement?.id === id) setUpload(null);
-              reload();
-            }}
-            onReplace={(document) => {
-              if (accessDenied.current) return;
-              setSelected(null);
-              setUpload({ replacement: document, selection: null });
-              setUploaded(null);
-            }}
-            onDenied={denyAccess}
-            onSelect={(id) => {
-              if (accessDenied.current) return;
-              setSelected(id);
-              setUpload(null);
-            }}
-          />
+          summaryLabel ? (
+            <ul className="divide-y rounded-lg border bg-muted/15">
+              {items.map((item) => (
+                <li
+                  key={item.id}
+                  className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 px-3 py-2.5"
+                >
+                  <span className="flex min-w-0 grow basis-36 items-center gap-2 text-sm font-medium">
+                    <FileText
+                      aria-hidden="true"
+                      className="size-4 shrink-0 text-muted-foreground"
+                    />
+                    <bdi className="min-w-0 wrap-anywhere">{item.originalName}</bdi>
+                  </span>
+                  <DocumentStatusBadge state={item.state} locale={locale} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <DocumentList
+              items={items}
+              staff={staff}
+              locale={locale}
+              view={embedded ? 'card' : view}
+              selectedId={selected}
+              recordSearch={recordSearch}
+              relatedLinks={relatedLinks}
+              formatDate={time.format}
+              onChanged={(id) => {
+                if (accessDenied.current) return;
+                if (selected === id) setSelected(null);
+                if (upload?.replacement?.id === id) setUpload(null);
+                reload();
+              }}
+              onReplace={(document) => {
+                if (accessDenied.current) return;
+                setSelected(null);
+                setUpload({ replacement: document, selection: null });
+                setUploaded(null);
+              }}
+              onDenied={denyAccess}
+              onSelect={(id) => {
+                if (accessDenied.current) return;
+                setSelected(id);
+                setUpload(null);
+              }}
+            />
+          )
         ) : null}
       </ListPage.Content>
       <ListPage.Pagination

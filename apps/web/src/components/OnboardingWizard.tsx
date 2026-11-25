@@ -7,7 +7,8 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { useBlocker } from '@tanstack/react-router';
+import { Link, useBlocker } from '@tanstack/react-router';
+import { ChevronLeft } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle, Button } from '@barghsa/ui';
 import { FormStep, type FieldErrors, type UseFormReturn } from '@barghsa/ui/form';
 import { t } from '@barghsa/i18n/app';
@@ -15,10 +16,33 @@ import { t as draftText } from '@barghsa/i18n/onboarding-drafts';
 import { useLocale } from '../hooks/useLocale.js';
 import type { useOnboardingDraft } from '../hooks/useOnboardingDraft.js';
 import type { useOnboardingSubmission } from '../hooks/useOnboardingSubmission.js';
-import { FormWizard } from './FormWizard.js';
+import { FormWizard, wizardActionSurface } from './FormWizard.js';
 import { StepReviewPage } from './StepReviewPage.js';
 
 const LeaveDialog = lazy(() => import('./WizardLeaveDialog.js'));
+
+export function OnboardingProfileHeader({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
+  const locale = useLocale();
+  return (
+    <header className="mb-3 space-y-1">
+      <Link
+        to="/onboarding"
+        className="touch-action inline-flex min-h-8 items-center gap-1 rounded text-sm text-muted-foreground hover:text-primary"
+      >
+        <ChevronLeft aria-hidden="true" className="size-4 rtl:rotate-180" />
+        {t('onboarding.individual.back', locale)}
+      </Link>
+      <h1 className="text-2xl leading-tight font-semibold">{title}</h1>
+      <p className="text-sm text-muted-foreground">{description}</p>
+    </header>
+  );
+}
 
 export function OnboardingSubmissionNotice({
   message,
@@ -173,7 +197,7 @@ export function OnboardingWizard({
     >
       {({ next, submit: submitForm, pending }) => (
         <form
-          className="space-y-6"
+          className="space-y-3.5"
           noValidate
           onSubmit={(event) => {
             event.preventDefault();
@@ -211,9 +235,11 @@ export function OnboardingWizard({
           )}
           <div
             role="status"
-            className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground"
+            className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground"
           >
-            <span>{t(`onboarding.draft.${draft.status}`, locale)}</span>
+            <span className="rounded-md bg-muted/55 px-2 py-1">
+              {t(`onboarding.draft.${draft.status}`, locale)}
+            </span>
             {(draft.status === 'error' || draft.status === 'conflict') && (
               <Button
                 type="button"
@@ -239,6 +265,8 @@ export function OnboardingWizard({
           <FormWizard
             steps={steps.map(({ label }) => label)}
             step={step}
+            compactProgress
+            actionsClassName={wizardActionSurface}
             ariaLabel={t('onboarding.wizard.progress', locale)}
             backLabel={t('onboarding.wizard.back', locale)}
             saveLabel={t('onboarding.wizard.save', locale)}
@@ -261,14 +289,14 @@ export function OnboardingWizard({
               ref={region}
               tabIndex={-1}
               aria-label={steps[step - 1]?.label}
-              className="rounded-xl border bg-card p-4 sm:p-6 focus-visible:outline-primary"
+              className="rounded-xl border bg-card p-4 sm:px-5 sm:py-4 focus-visible:outline-primary"
             >
               {steps.map((item, index) => (
                 <fieldset
                   key={item.label}
                   hidden={index + 1 !== step}
                   disabled={index + 1 !== step || pending || saving || submitting || unavailable}
-                  className="space-y-6"
+                  className="min-w-0 space-y-3"
                 >
                   <legend className="sr-only">{item.label}</legend>
                   {typeof item.content === 'function'
@@ -299,7 +327,7 @@ export function OnboardingReview({
   disabled,
   sectionTitles,
 }: {
-  rows: { label: string; value: string; step: number }[];
+  rows: { label: string; value: string; step: number; fullWidth?: boolean }[];
   sectionTitles: string[];
   onEdit: (step: number) => void;
   disabled: boolean;
@@ -307,6 +335,7 @@ export function OnboardingReview({
   const locale = useLocale();
   return (
     <StepReviewPage
+      compact
       title={t('onboarding.wizard.review', locale)}
       description={t('onboarding.wizard.reviewHelp', locale)}
       editLabel={t('electricity.order.edit', locale)}

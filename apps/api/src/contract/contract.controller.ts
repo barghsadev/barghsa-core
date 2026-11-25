@@ -25,7 +25,12 @@ import { withStaffReadAuthority } from '../admin/staff-read-authority.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { RequiresStepUp, StepUpGuard } from '../session/step-up.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
-import { authoringQuery, contractAuthoringOptions } from './contract-authoring.js';
+import {
+  authoringQuery,
+  contractAuthoringOptions,
+  contractInvoiceOptions,
+  contractInvoiceOptionsQuery,
+} from './contract-authoring.js';
 import { ContractService } from './contract.service.js';
 import { ContractPdfService } from './contract-pdf.service.js';
 import { staffDocumentRead } from '../documents/document-access.js';
@@ -105,6 +110,47 @@ export class ContractController {
     const input = parse(authoringQuery, query);
     return withStaffReadAuthority(req.session, 'contracts:write', (client) =>
       contractAuthoringOptions(input, client)
+    );
+  }
+  @Get(':id/activation/invoice-options')
+  @ApiOperation({ summary: 'List eligible invoice references for the current contract draft' })
+  @ApiParam({ name: 'id', format: 'uuid' })
+  @ApiQuery({ name: 'versionId', required: true, type: String, format: 'uuid' })
+  @ApiQuery({ name: 'before', required: false, type: String, format: 'uuid' })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'object',
+      required: ['contractId', 'versionId', 'profileId', 'invoices', 'nextBefore'],
+      properties: {
+        contractId: { type: 'string', format: 'uuid' },
+        versionId: { type: 'string', format: 'uuid' },
+        profileId: { type: 'string', format: 'uuid' },
+        invoices: {
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['id', 'createdAt'],
+            properties: {
+              id: { type: 'string', format: 'uuid' },
+              createdAt: { type: 'string', format: 'date-time' },
+            },
+          },
+        },
+        nextBefore: { type: 'string', format: 'uuid', nullable: true },
+      },
+    },
+  })
+  invoiceOptions(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Query() query: unknown
+  ) {
+    this.authorize(req, true);
+    const contractId = parse(contractUuid, id);
+    const input = parse(contractInvoiceOptionsQuery, query);
+    return withStaffReadAuthority(req.session, 'contracts:write', (client) =>
+      contractInvoiceOptions(contractId, input, client)
     );
   }
   @Post()

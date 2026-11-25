@@ -126,6 +126,9 @@ for (const [locale, funding] of [
       })
     );
     const savedAddresses = [address];
+    await page.route(`**/api/profiles/${profileId}/addresses/access`, (route) =>
+      route.fulfill({ json: { profileId, canEdit: true } })
+    );
     await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
       if (route.request().method() === 'POST') {
         savedAddresses.push(addedAddress);
@@ -518,7 +521,9 @@ for (const [locale, funding] of [
     await expect(page.locator('#advanced-green')).toHaveValue('1');
     await expect(next).toBeEnabled();
     await next.click();
-    await expect(wizard).toContainText('1405-07');
+    const deliveryStart = wizard.locator('time').first();
+    await expect(deliveryStart).toHaveAttribute('datetime', String(previews.at(-1)?.startAt));
+    await expect(deliveryStart).toContainText(locale === 'fa' ? 'مهر' : 'Mehr');
     await expect(wizard).toContainText(locale === 'fa' ? 'موجودی کیف پول' : 'Wallet balance');
     await next.click();
     await page
@@ -537,10 +542,7 @@ for (const [locale, funding] of [
         name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
       })
       .click();
-    await expect(page).toHaveURL(/\/settings\/addresses\?/);
-    await page
-      .getByRole('button', { name: locale === 'fa' ? 'افزودن آدرس' : 'Add Address' })
-      .click();
+    await expect(page).toHaveURL(/\/settings\/addresses\/new\?/);
     await page.locator('#addresses-field-1').selectOption(address.provinceId);
     await page.locator('#addresses-field-2').selectOption(address.cityId);
     await page.locator('#addresses-field-3').fill(addedAddress.fullAddress);
@@ -550,14 +552,7 @@ for (const [locale, funding] of [
     await page
       .getByRole('button', { name: locale === 'fa' ? 'ذخیره' : 'Save', exact: true })
       .click();
-    await expect(page.getByText(addedAddress.fullAddress)).toBeVisible();
-    await page
-      .getByRole('link', {
-        name:
-          locale === 'fa' ? 'بازگشت به سفارش پیشرفته برق' : 'Return to advanced electricity order',
-      })
-      .click();
-    await expect(page).toHaveURL(/\/electricity\/advanced\?step=4$/);
+    await expect(page).toHaveURL(/\/electricity\/orders\/new\/advanced\?step=4$/);
     await expect(wizard).toContainText(addedAddress.fullAddress);
     await expect(
       wizard.getByRole('radiogroup', {
@@ -568,9 +563,16 @@ for (const [locale, funding] of [
     await page.locator('input[name="addressId"]').nth(1).check();
     await next.click();
     await expect(wizard.getByText('Advanced Buyer Ltd', { exact: true })).toBeVisible();
+    const finalPrice = wizard.locator('[data-review-section=price]');
+    const lineTotal = finalPrice.getByText(locale === 'fa' ? /جمع قلم/ : /Line total/).first();
     await expect(
-      wizard.getByText(locale === 'fa' ? /جمع قلم/ : /Line total/).first()
+      finalPrice.getByText(t('electricity.order.total', locale), { exact: true })
     ).toBeVisible();
+    await expect(lineTotal).toBeHidden();
+    await finalPrice
+      .getByText(t('electricity.order.detail.lines', locale), { exact: true })
+      .press('Enter');
+    await expect(lineTotal).toBeVisible();
     const submit = page.getByRole('button', {
       name: locale === 'fa' ? 'ثبت سفارش' : 'Submit Order',
       exact: true,
@@ -666,7 +668,7 @@ for (const [locale, funding] of [
     await page
       .getByRole('link', { name: t('electricity.order.nextAction.accept_contract', locale) })
       .click();
-    await expect(page).toHaveURL(new RegExp(`/contracts\\?contractId=${contractId}$`));
+    await expect(page).toHaveURL(new RegExp(`/contracts/${contractId}$`));
     await expect(page.getByText('Published advanced electricity terms')).toBeVisible();
     await page.reload();
     await expect(page.getByText('Published advanced electricity terms')).toBeVisible();
@@ -675,7 +677,7 @@ for (const [locale, funding] of [
       await page.setViewportSize({ width: 1280, height: 1800 });
       const main = await page.locator('main').boundingBox();
       const acceptance = await page
-        .getByRole('button', { name: 'پذیرش این نسخه', exact: true })
+        .getByRole('link', { name: 'بررسی و پذیرش', exact: true })
         .boundingBox();
       expect(main).not.toBeNull();
       expect(acceptance).not.toBeNull();
@@ -691,15 +693,18 @@ for (const [locale, funding] of [
       await page.setViewportSize(previousViewport);
     }
     await page
-      .getByRole('button', { name: locale === 'fa' ? 'بستن جزئیات' : 'Close details', exact: true })
+      .getByRole('link', {
+        name: locale === 'fa' ? 'بازگشت به قراردادها' : 'Back to contracts',
+        exact: true,
+      })
       .click();
-    await expect(page).not.toHaveURL(/contractId=/);
+    await expect(page).toHaveURL('/contracts');
     await expect(page.getByText('Published advanced electricity terms')).toHaveCount(0);
     await page.goBack();
-    await expect(page).toHaveURL(new RegExp(`/contracts\\?contractId=${contractId}$`));
+    await expect(page).toHaveURL(new RegExp(`/contracts/${contractId}$`));
     await expect(page.getByText('Published advanced electricity terms')).toBeVisible();
     await page.goForward();
-    await expect(page).not.toHaveURL(/contractId=/);
+    await expect(page).toHaveURL('/contracts');
     await expect(page.getByText('Published advanced electricity terms')).toHaveCount(0);
   });
 }
@@ -841,8 +846,8 @@ test('electricity order, paid invoice and published contract keep the selected l
   );
   await expect(
     page.getByRole('link', { name: 'Review and accept the published contract.' })
-  ).toHaveAttribute('href', `/contracts?contractId=${contractId}`);
+  ).toHaveAttribute('href', `/contracts/${contractId}`);
   await page.getByRole('link', { name: 'Review and accept the published contract.' }).click();
-  await expect(page).toHaveURL(new RegExp(`/contracts\\?contractId=${contractId}$`));
+  await expect(page).toHaveURL(new RegExp(`/contracts/${contractId}$`));
   await expect(page.getByRole('heading', { name: 'Contracts' })).toBeVisible();
 });

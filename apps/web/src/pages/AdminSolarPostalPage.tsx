@@ -1,15 +1,21 @@
+import { guidanceErrorPaths } from '../lib/solar-document-form.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { Link } from '@tanstack/react-router';
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import { tSolar } from '@barghsa/i18n/solar';
 import {
   LoadingStatus,
   Alert,
   AlertDescription,
   Button,
+  buttonVariants,
   FinancialReviewSummary,
   ListPage,
+  ListRefreshButton,
+  Textarea,
   NativeSelect,
 } from '@barghsa/ui';
 import {
@@ -20,6 +26,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  useFieldArray,
   useZodForm,
 } from '@barghsa/ui/form';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -35,15 +42,30 @@ import {
 } from '../lib/solar-postal-form.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { QueueEmptyState } from '../components/QueueEmptyState.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { SolarPostalTrackingEditor } from '../components/SolarPostalTrackingEditor.js';
 import { postalCalendarDate } from '../lib/solar-postal-tracking.js';
 import { SolarContractForm } from '../components/SolarContractForm.js';
+import { SolarGuidanceField, SolarGuidanceItems } from '../components/SolarGuidanceFields.js';
+import { SolarStaffRecordHeader } from '../components/SolarStaffRecordHeader.js';
 import { withCsrf } from '../lib/csrf.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
+import {
+  availablePostalDecision,
+  solarPostalDecisions,
+  type SolarPostalOperation,
+} from '../lib/solar-postal-decisions.js';
 
 interface Guidance {
   fa: string;
@@ -96,17 +118,26 @@ interface PostalReview {
   };
 }
 
-export function AdminSolarPostalPage({ queries }: { queries?: ListQueryBinding } = {}) {
+export function AdminSolarPostalPage(props: Parameters<typeof AdminSolarPostalWorkspace>[0] = {}) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  return (
-    <AdminSolarPostalWorkspace
-      key={JSON.stringify([actor, revision])}
-      {...(queries ? { queries } : {})}
-    />
-  );
+  return <AdminSolarPostalWorkspace key={JSON.stringify([actor, revision])} {...props} />;
 }
-function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } = {}) {
+function AdminSolarPostalWorkspace({
+  queries,
+  recordId,
+  queueSearch,
+  guidanceEditor = false,
+  decisionEditor,
+  recordEditor,
+}: {
+  queries?: ListQueryBinding;
+  recordId?: string;
+  queueSearch?: Record<string, unknown>;
+  guidanceEditor?: boolean;
+  decisionEditor?: SolarPostalOperation | undefined;
+  recordEditor?: 'create-contract' | 'tracking' | undefined;
+} = {}) {
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
   const readStaff = useOwnedStaffServiceRead(actor, profileRevision);
@@ -116,6 +147,20 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
   const [rows, setRows] = useState<Row[]>([]);
   const [localLane, setLane] = useState<PostalLane>('needs_staff');
   const lane = (queries?.query.filters.lane || localLane) as PostalLane;
+  const otherLane = lane === 'needs_staff' ? 'waiting_customer' : 'needs_staff';
+  function changeLane(next: string) {
+    if (contractOwner.current || preparingRef.current || commandPendingRef.current) return;
+    if (queries) {
+      queries.setQuery({ filters: { lane: next } });
+      return;
+    }
+    invalidateReview();
+    setRows([]);
+    setBefore(null);
+    setNextBefore(null);
+    setSelected(null);
+    setLane(next as PostalLane);
+  }
   const [acceptedLane, setAcceptedLane] = useState(lane);
   const visibleRows = acceptedLane === lane ? rows : [];
   const [guidance, setGuidance] = useState<Guidance | null>(null);
@@ -139,8 +184,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
     en: copy('documentGuidanceInvalid'),
     destinationAddress: copy('postalAddressInvalid'),
     contactDetails: copy('postalContactInvalid'),
-    originalsFa: copy('postalOriginalsInvalid'),
-    originalsEn: copy('postalOriginalsInvalid'),
+    items: tSolarStaffRecord('guidancePairInvalid', locale),
   };
   const guidanceForm = useZodForm<PostalGuidanceDraft>(
     async () =>
@@ -150,12 +194,22 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
       validationUnavailableMessage: copy('documentValidationUnavailable'),
     }
   );
-  const guidanceFields = useActionFieldErrors(guidanceForm, guidanceMessages, copy('postalError'));
+  const guidanceItems = useFieldArray({ control: guidanceForm.control, name: 'items' });
+  const guidanceFields = useActionFieldErrors(
+    guidanceForm,
+    {
+      ...guidanceMessages,
+      'items.0.fa': guidanceMessages.items,
+      'items.0.en': guidanceMessages.items,
+    },
+    copy('postalError')
+  );
   const guidanceDirty = useRef(false);
   guidanceDirty.current = guidanceForm.formState.isDirty;
   const [guidanceUnconfirmed, setGuidanceUnconfirmed] = useState(false);
   const [guidanceDenied, setGuidanceDenied] = useState(false);
   const [decisionUnconfirmed, setDecisionUnconfirmed] = useState(false);
+  const [decisionRecorded, setDecisionRecorded] = useState(false);
   const [commandPending, setCommandPending] = useState(false);
   const commandPendingRef = useRef(false),
     preparingRef = useRef(false);
@@ -167,7 +221,10 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
   const [contractLocked, setContractLocked] = useState(false);
   const queueAbort = useRef<AbortController | null>(null);
   const currentQueryScope = useRef('');
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selection, setSelected] = useState<string | null>(null);
+  const selected = recordId ?? selection;
+  const showQueue = !recordId && !guidanceEditor;
+  const loadGuidance = guidanceEditor || (showQueue && queueSearch === undefined);
   const [preview, setPreview] = useState<string | null>(null);
 
   const [action, setAction] = useState<
@@ -248,7 +305,8 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
   const refresh = () => {
     if (contractOwner.current) return;
     invalidateReview();
-    if (queries) {
+    if (recordId) setQueueRevision((value) => value + 1);
+    else if (queries) {
       queries.setQuery({ cursor: '' });
       if (!before) setQueueRevision((value) => value + 1);
     } else {
@@ -257,6 +315,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
     }
   };
   useEffect(() => {
+    if (guidanceEditor) return;
     const controller = new AbortController();
     const read = ++queueRead.current;
     queueAbort.current = controller;
@@ -271,11 +330,19 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
     setQueueDenied(false);
     const query = new URLSearchParams({ lane });
     if (before) query.set('before', before);
-    void readStaff('solar', 'list', `/api/admin/solar/postal-queue?${query}`, controller.signal)
+    const path = recordId
+      ? `/api/admin/solar/requests/${encodeURIComponent(recordId)}/postal`
+      : `/api/admin/solar/postal-queue?${query}`;
+    void readStaff('solar', recordId ? 'detail' : 'list', path, controller.signal)
       .then(async (response) => {
         if (!fresh()) return null;
         if (!response.ok) throw new Error(String(response.status));
-        return response.json() as Promise<{ requests: Row[]; nextBefore: string | null }>;
+        if (!recordId)
+          return response.json() as Promise<{ requests: Row[]; nextBefore: string | null }>;
+        const record = (await response.json()) as Row | null;
+        if (record?.id !== recordId || typeof record.profile_id !== 'string')
+          throw new Error('Invalid postal record');
+        return { requests: [record], nextBefore: null };
       })
       .then((value) => {
         if (!fresh() || trackingAccessDenied.current || !value) return;
@@ -296,12 +363,16 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
       })
       .catch((cause: unknown) => {
         if (!fresh()) return;
-        if (cause instanceof Error && ['401', '403'].includes(cause.message)) {
+        if (
+          cause instanceof Error &&
+          ['401', '403', ...(recordId ? ['404'] : [])].includes(cause.message)
+        ) {
           invalidateReview();
           setRows([]);
           setNextBefore(null);
           setSelected(null);
           setPreview(null);
+          setDecisionUnconfirmed(false);
           setQueueDenied(true);
         } else setQueueError(true);
       })
@@ -309,8 +380,9 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
         if (fresh()) setQueueLoading(false);
       });
     return () => controller.abort();
-  }, [before, lane, revision, queueRevision, readStaff]);
+  }, [before, lane, revision, queueRevision, readStaff, recordId, guidanceEditor]);
   useEffect(() => {
+    if (!loadGuidance) return;
     const controller = new AbortController();
     const read = ++guidanceRead.current;
     setGuidanceError(false);
@@ -330,7 +402,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
         if (!controller.signal.aborted) setGuidanceError(true);
       });
     return () => controller.abort();
-  }, [guidanceRevision, readStaff]);
+  }, [guidanceRevision, readStaff, loadGuidance]);
   const row = visibleRows.find((item) => item.id === selected);
   function saveGuidance(event: FormEvent<HTMLFormElement>) {
     if (!guidance || busy() || guidanceUnconfirmed || guidanceDenied) {
@@ -342,7 +414,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
       if (generation !== reviewRequest.current) return;
       propose({
         title: copy('postalSaveGuidance'),
-        description: copy('postalSaveGuidance'),
+        description: tSolarStaffRecord('postalGuidanceAudience', locale),
         path: '/api/admin/solar/postal-guidance',
         method: 'PUT',
         body: postalGuidanceBody(draft),
@@ -406,6 +478,18 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
           value.data?.requestId !== options.requestId
         )
           throw new Error('review');
+        if (decisionEditor) {
+          const reviewed = value.data;
+          const outcome =
+            options.kind === 'postal'
+              ? { status: reviewed.postalOutcome, requestStatus: reviewed.requestOutcome }
+              : { status: reviewed.outcome };
+          if (
+            reviewed.reason !== (body.reason ?? null) ||
+            !confirmedPostalDecision(outcome, options.path)
+          )
+            throw new Error('review');
+        }
         propose({
           ...(['reject', 'close-no-contract'].includes(options.decision)
             ? { risk: 'destructive' as const }
@@ -472,6 +556,21 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
   }
   const actionGeneration = commandGeneration.current;
   const viewGeneration = reviewRequest.current;
+  const decision = decisionEditor && solarPostalDecisions[decisionEditor];
+  const reason = decision && 'reason' in decision ? decision : undefined;
+  const editorTitle =
+    recordEditor === 'create-contract'
+      ? copy('solarCreateContract')
+      : recordEditor === 'tracking'
+        ? tSolarStaffRecord('editTracking', locale)
+        : undefined;
+  const canDecide = !!(decisionEditor && row && availablePostalDecision(decisionEditor, row));
+  const requestStatusLabel = row && copy(`status_${row.request_status}`);
+  const shipmentStatusLabel = row && copy(`postal_${row.postal_status}`);
+  const backToQueue =
+    !!createdContractId ||
+    (decisionRecorded &&
+      (decisionEditor === 'final-reject' || decisionEditor === 'close-no-contract'));
   const guidanceAction = action?.path === '/api/admin/solar/postal-guidance';
   const editorLocked =
     contractLocked ||
@@ -480,10 +579,224 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
     preparingDecision ||
     reasonForm.formState.isSubmitting ||
     guidanceForm.formState.isSubmitting;
+  const navigationBlocked = () =>
+    commandPendingRef.current ||
+    !!actionRef.current ||
+    decisionUnconfirmed ||
+    !!contractOwner.current;
+
+  const reasonError = reasonForm.formState.errors.reason;
+  const focusReason = reasonForm.setFocus;
+  useEffect(() => {
+    if (!decisionEditor || editorLocked || !reasonError) return;
+    const frame = requestAnimationFrame(() => focusReason('reason'));
+    return () => cancelAnimationFrame(frame);
+  }, [decisionEditor, editorLocked, reasonError, focusReason]);
+
+  function startFinalReview() {
+    if (!row || busy() || decisionUnconfirmed) return;
+    propose({
+      title: copy('solarStartFinalReview'),
+      description: row.id,
+      path: `/api/admin/solar/requests/${row.id}/start-final-review`,
+      method: 'POST',
+    });
+  }
+
+  function submitPostalDecision(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!row || !canDecide || decisionRecorded || queueLoading || queueError) return;
+    switch (decisionEditor) {
+      case 'start-final-review':
+        startFinalReview();
+        break;
+      case 'final-approve':
+        prepareFinalDecision('approve', row.id);
+        break;
+      case 'final-reject':
+        prepareFinalDecision('reject', row.id);
+        break;
+      case 'close-no-contract':
+        prepareFinalDecision('close-no-contract', row.id);
+        break;
+      case 'confirm-received':
+      case 'mark-incomplete':
+      case 'mark-not-received':
+        decide(decisionEditor);
+        break;
+    }
+  }
+
+  function rowLabel(item: Row) {
+    return (
+      <>
+        <span className="block font-medium" dir="auto">
+          {item.profile_name}
+        </span>
+        <span className="block text-sm text-muted-foreground">
+          {copy(`postal_${item.postal_status}`)} ·{' '}
+          {time.format(item.created_at, { dateStyle: 'medium' })}
+        </span>
+        <span className="block text-xs text-muted-foreground">
+          {copy('staffRequest')}: <bdi>{item.id}</bdi>
+        </span>
+      </>
+    );
+  }
+
+  const trackingEditor = row?.tracking_revision !== undefined && (
+    <SolarPostalTrackingEditor
+      key={recordEditor ? row.id : `${row.id}:${row.tracking_revision}`}
+      requestId={row.id}
+      standalone={!!recordEditor}
+      editorPage={!!recordEditor}
+      onSaved={refresh}
+      onDenied={() => {
+        trackingAccessDenied.current = true;
+        invalidateReview();
+        setRows([]);
+        setNextBefore(null);
+        setSelected(null);
+        setPreview(null);
+        setQueueDenied(true);
+      }}
+    />
+  );
+  const contractEditor = row?.request_status === 'approved' && !createdContractId && (
+    <SolarContractForm
+      key={row.id}
+      requestId={row.id}
+      profileId={row.profile_id}
+      editorPage={!!recordEditor}
+      scopeKey={JSON.stringify([queryScope, row])}
+      coordination={{
+        blocked: () => busy() || decisionUnconfirmed || guidanceUnconfirmed || guidanceDenied,
+        acquire: (owner) => {
+          if (
+            viewGeneration !== reviewRequest.current ||
+            busy() ||
+            decisionUnconfirmed ||
+            guidanceUnconfirmed ||
+            guidanceDenied
+          )
+            return false;
+          contractOwner.current = owner;
+          setContractLocked(true);
+          ++queueRead.current;
+          queueAbort.current?.abort();
+          setQueueLoading(false);
+          return true;
+        },
+        release: (owner) => {
+          if (contractOwner.current !== owner) return;
+          contractOwner.current = null;
+          setContractLocked(false);
+        },
+      }}
+      onDenied={() => {
+        if (viewGeneration !== reviewRequest.current) return;
+        ++queueRead.current;
+        queueAbort.current?.abort();
+        invalidateReview();
+        setRows((current) => current.filter((item) => item.id !== row.id));
+        setSelected(null);
+        setPreview(null);
+        reasonForm.reset({ reason: '' });
+        setQueueError(true);
+        setQueueLoading(false);
+      }}
+      onCreated={(contractId) => {
+        if (viewGeneration !== reviewRequest.current) return;
+        setCreatedContractId(contractId);
+        setSelected(null);
+        refresh();
+      }}
+    />
+  );
   return (
-    <div className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <h1 className="text-3xl font-semibold">{copy('postalStaffTitle')}</h1>
+    <div
+      data-slot={
+        guidanceEditor ? 'solar-staff-guidance' : recordId ? 'solar-staff-postal' : undefined
+      }
+      className={recordId || guidanceEditor ? 'mx-auto max-w-3xl space-y-3' : 'space-y-6 px-4 py-8'}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {recordId || guidanceEditor ? (
+        <SolarStaffRecordHeader
+          stage="postal"
+          {...(guidanceEditor && { headingText: tSolarStaffRecord('editPostalGuidance', locale) })}
+          {...(decision && { headingText: copy(decision.title) })}
+          {...(editorTitle && { headingText: editorTitle })}
+          backLink={
+            !backToQueue && (decision || recordEditor) && recordId ? (
+              <Link
+                to="/admin/solar-requests/$requestId/postal/{-$operation}"
+                params={{ requestId: recordId, operation: undefined }}
+                search={queueSearch ?? {}}
+                className="touch-action text-sm text-primary underline underline-offset-4"
+                aria-disabled={navigationBlocked() || undefined}
+                onClick={(event) => {
+                  if (navigationBlocked()) event.preventDefault();
+                }}
+              >
+                {tSolarStaffRecord('backToShipmentReview', locale)}
+              </Link>
+            ) : undefined
+          }
+          search={queueSearch ?? {}}
+          blocked={navigationBlocked}
+          reference={
+            guidanceEditor
+              ? tSolarStaffRecord('postalGuidanceAudience', locale)
+              : !decision &&
+                row && (
+                  <>
+                    <bdi>{row.profile_name}</bdi>
+                    <bdi dir="ltr">{row.id}</bdi>
+                  </>
+                )
+          }
+          action={
+            !decision &&
+            !recordEditor &&
+            row && (
+              <ListRefreshButton
+                label={tSolarStaffRecord('refresh', locale)}
+                disabled={editorLocked || decisionUnconfirmed}
+                onClick={refresh}
+              />
+            )
+          }
+        />
+      ) : (
+        <header className="flex flex-wrap items-center justify-between gap-2">
+          <h1 className="text-3xl font-semibold">{copy('postalStaffTitle')}</h1>
+          {queueSearch !== undefined && (
+            <Link
+              to="/admin/solar-requests/$requestId/postal/{-$operation}"
+              params={{ requestId: 'guidance', operation: undefined }}
+              search={queueSearch}
+              className={buttonVariants({ variant: 'outline', size: 'sm' })}
+            >
+              {tSolarStaffRecord('editPostalGuidance', locale)}
+            </Link>
+          )}
+        </header>
+      )}
       {time.notice}
+      {recordId && row && !decision && !recordEditor && (
+        <Link
+          to="/admin/solar-requests/$requestId/{-$operation}/{-$documentId}"
+          params={{ requestId: recordId, operation: undefined, documentId: undefined }}
+          className="touch-action text-sm text-primary underline underline-offset-4"
+          aria-disabled={navigationBlocked() || undefined}
+          onClick={(event) => {
+            if (navigationBlocked()) event.preventDefault();
+          }}
+        >
+          {tSolarStaffRecord('openDocuments', locale)}
+        </Link>
+      )}
       {error && (
         <Alert variant="destructive">
           <AlertDescription>
@@ -508,414 +821,562 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
           {copy('solarContractCreated')}{' '}
           <a
             className="underline"
-            href={`/admin/contracts?contractId=${encodeURIComponent(createdContractId)}`}
+            href={`/admin/contracts/${encodeURIComponent(createdContractId)}`}
           >
             {copy('solarViewContract')}
           </a>
+          {recordId && (
+            <Link
+              to="/admin/solar-requests/$requestId/construction/{-$operation}"
+              params={{ requestId: recordId }}
+              className="touch-action ms-3 text-primary underline underline-offset-4"
+            >
+              {tSolarStaffRecord('openConstruction', locale)}
+            </Link>
+          )}
         </p>
       )}
-      <section className="space-y-3 rounded-xl border p-5">
-        <h2 className="text-xl font-semibold">{copy('postalStaffQueue')}</h2>
-        <ListPage>
-          <ListPage.Toolbar
-            filters={
-              <div className="max-w-xs space-y-1">
-                <label htmlFor="solar-postal-lane">{copy('postalLane')}</label>
-                <NativeSelect
-                  id="solar-postal-lane"
-                  className="w-full"
-                  value={lane}
-                  disabled={commandPending || contractLocked}
-                  onChange={(event) => {
-                    if (contractOwner.current || preparingRef.current || commandPendingRef.current)
-                      return;
-                    if (queries) {
-                      queries.setQuery({ filters: { lane: event.target.value } });
-                      return;
-                    }
-                    invalidateReview();
-                    setRows([]);
-                    setBefore(null);
-                    setNextBefore(null);
-                    setSelected(null);
-                    setLane(event.target.value as PostalLane);
-                  }}
-                >
-                  <option value="needs_staff">{copy('postalLaneAction')}</option>
-                  <option value="waiting_customer">{copy('postalLaneWaiting')}</option>
-                  <option value="all">{copy('postalLaneAll')}</option>
-                </NativeSelect>
-              </div>
-            }
-          />
-          <ListPage.Content
-            loading={queueLoading || contractLocked}
-            error={queueError || queueDenied}
-            empty={!visibleRows.length}
-            retainContent={!!visibleRows.length && !queueDenied}
-            loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
-            errorView={
-              queueDenied ? (
-                <p role="alert">{copy('staffQueueForbidden')}</p>
-              ) : (
-                <div className="space-y-2">
-                  <p role="alert">{copy('staffQueueLoadError')}</p>
-                  <Button
-                    variant="outline"
-                    disabled={contractLocked}
-                    onClick={() => {
-                      if (!contractOwner.current) setQueueRevision((v) => v + 1);
-                    }}
-                  >
-                    {copy('retry')}
-                  </Button>
-                </div>
-              )
-            }
-            emptyView={
-              <p>
-                {copy(
-                  lane === 'waiting_customer'
-                    ? 'postalStaffEmptyWaiting'
-                    : lane === 'all'
-                      ? 'postalStaffEmptyAll'
-                      : 'postalStaffEmpty'
-                )}
-              </p>
-            }
-          >
-            <ul className="space-y-2">
-              {visibleRows.map((item) => (
-                <li key={item.id}>
-                  <button
-                    type="button"
+      {showQueue && (
+        <section className="space-y-3 rounded-xl border p-5">
+          <h2 className="text-xl font-semibold">{copy('postalStaffQueue')}</h2>
+          <ListPage>
+            <ListPage.Toolbar
+              filters={
+                <div className="max-w-xs space-y-1">
+                  <label htmlFor="solar-postal-lane">{copy('postalLane')}</label>
+                  <NativeSelect
+                    id="solar-postal-lane"
+                    className="w-full"
+                    value={lane}
                     disabled={commandPending || contractLocked}
-                    className={`w-full rounded-md border p-3 text-start ${selected === item.id ? 'border-primary' : ''}`}
-                    onClick={() => {
-                      if (
-                        contractOwner.current ||
-                        (preparingRef.current && !reasonForm.isSubmissionPending()) ||
-                        commandPendingRef.current
-                      )
-                        return;
-                      invalidateReview();
-                      setSelected(item.id);
-                      setPreview(null);
-                      reasonForm.reset({ reason: '' });
-                    }}
+                    onChange={(event) => changeLane(event.target.value)}
                   >
-                    <span className="block font-medium">{item.profile_name}</span>
-                    <span className="block text-sm text-muted-foreground">
-                      {copy(`postal_${item.postal_status}`)} ·{' '}
-                      {time.format(item.created_at, { dateStyle: 'medium' })}
-                    </span>
-                    <span className="block text-xs text-muted-foreground">
-                      {copy('staffRequest')}: <bdi>{item.id}</bdi>
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </ListPage.Content>
-          <ListPage.Pagination
-            kind="cursor"
-            hasMore={
-              !!nextBefore &&
-              !queueError &&
-              !queueDenied &&
-              (acceptedCursor.current !== before ||
-                (nextBefore !== before && (!queries || queries.canAdvance(nextBefore))))
-            }
-            loading={queueLoading || contractLocked}
-            label={copy('postalStaffQueue')}
-            nextLabel={copy('moreRequests')}
-            onNext={() => {
-              if (contractOwner.current || commandPendingRef.current || preparingRef.current)
-                return;
-              if (nextBefore === before && acceptedCursor.current !== before) {
-                setQueueRevision((value) => value + 1);
-                return;
+                    <option value="needs_staff">{copy('postalLaneAction')}</option>
+                    <option value="waiting_customer">{copy('postalLaneWaiting')}</option>
+                    <option value="all">{copy('postalLaneAll')}</option>
+                  </NativeSelect>
+                </div>
               }
-              extendingCursor.current = nextBefore;
-              if (queries && nextBefore) queries.next(nextBefore);
-              else setBefore(nextBefore);
-            }}
-          />
-        </ListPage>
-      </section>
-      {row && (
-        <section
-          role="group"
-          aria-label={copy('postalShipment')}
-          className="space-y-3 rounded-xl border p-5"
-        >
-          <h2 className="text-xl font-semibold">{copy('postalShipment')}</h2>
-          <p>
-            {copy('postalStatus')}: {copy(`postal_${row.postal_status}`)}
-          </p>
-          {row.courier && (
-            <p>
-              {copy('postalCourier')}: {row.courier}
-            </p>
-          )}
-          {row.tracking_number && (
-            <p>
-              {copy('postalTracking')}: <span dir="ltr">{row.tracking_number}</span>
-            </p>
-          )}
-          {row.send_date && (
-            <p>
-              {copy('postalSendDate')}: {postalCalendarDate(row.send_date, locale)}
-            </p>
-          )}
-          {row.staff_notes && (
-            <p>
-              {copy('postalStaffNotes')}: {row.staff_notes}
-            </p>
-          )}
-          {row.receipt_image_id && (
-            <button
-              type="button"
-              className="underline"
-              onClick={() => setPreview(row.receipt_image_id)}
-            >
-              {copy('preview')}
-            </button>
-          )}
-          {preview && (
-            <DocumentDetail
-              id={preview}
-              staff
-              onClose={() => setPreview(null)}
-              onChanged={refresh}
-              onPrevious={setPreview}
-              onReplace={() => {}}
-              allowReplacement={false}
             />
-          )}
-          {row.tracking_revision !== undefined && (
-            <SolarPostalTrackingEditor
-              key={`${row.id}:${row.tracking_revision}`}
-              requestId={row.id}
-              onSaved={refresh}
-              onDenied={() => {
-                trackingAccessDenied.current = true;
-                invalidateReview();
-                setRows([]);
-                setNextBefore(null);
-                setSelected(null);
-                setPreview(null);
-                setQueueDenied(true);
+            <ListPage.Content
+              loading={queueLoading || contractLocked}
+              error={queueError || queueDenied}
+              empty={!visibleRows.length}
+              retainContent={!!visibleRows.length && !queueDenied}
+              loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+              errorView={
+                queueDenied ? (
+                  <p role="alert">{copy('staffQueueForbidden')}</p>
+                ) : (
+                  <div className="space-y-2">
+                    <p role="alert">{copy('staffQueueLoadError')}</p>
+                    <Button
+                      variant="outline"
+                      disabled={contractLocked}
+                      onClick={() => {
+                        if (!contractOwner.current) setQueueRevision((v) => v + 1);
+                      }}
+                    >
+                      {copy('retry')}
+                    </Button>
+                  </div>
+                )
+              }
+              emptyView={
+                lane === 'all' || before ? (
+                  <p>{copy('postalStaffEmptyAll')}</p>
+                ) : (
+                  <QueueEmptyState
+                    locale={locale}
+                    message={copy(
+                      lane === 'waiting_customer' ? 'postalStaffEmptyWaiting' : 'postalStaffEmpty'
+                    )}
+                    alternatives={[
+                      {
+                        value: otherLane,
+                        label: copy(
+                          otherLane === 'waiting_customer'
+                            ? 'postalLaneWaiting'
+                            : 'postalLaneAction'
+                        ),
+                        path: `/api/admin/solar/postal-queue?lane=${otherLane}`,
+                      },
+                    ]}
+                    hasResults={(body) => {
+                      const requests = (body as { requests?: unknown } | null)?.requests;
+                      return (
+                        Array.isArray(requests) &&
+                        requests.some(
+                          (row) => typeof row?.id === 'string' && typeof row.profile_id === 'string'
+                        )
+                      );
+                    }}
+                    select={changeLane}
+                    all={() => changeLane('all')}
+                    disabled={commandPending || contractLocked}
+                  />
+                )
+              }
+            >
+              <ul className="space-y-2">
+                {visibleRows.map((item) => (
+                  <li key={item.id}>
+                    {queueSearch ? (
+                      <Link
+                        to="/admin/solar-requests/$requestId/postal/{-$operation}"
+                        params={{ requestId: item.id, operation: undefined }}
+                        search={queueSearch}
+                        className="block w-full rounded-md border p-3 text-start hover:border-primary"
+                      >
+                        {rowLabel(item)}
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        disabled={commandPending || contractLocked}
+                        className={`w-full rounded-md border p-3 text-start ${selected === item.id ? 'border-primary' : ''}`}
+                        onClick={() => {
+                          if (
+                            contractOwner.current ||
+                            (preparingRef.current && !reasonForm.isSubmissionPending()) ||
+                            commandPendingRef.current
+                          )
+                            return;
+                          invalidateReview();
+                          setSelected(item.id);
+                          setPreview(null);
+                          reasonForm.reset({ reason: '' });
+                        }}
+                      >
+                        {rowLabel(item)}
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </ListPage.Content>
+            <ListPage.Pagination
+              kind="cursor"
+              hasMore={
+                !!nextBefore &&
+                !queueError &&
+                !queueDenied &&
+                (acceptedCursor.current !== before ||
+                  (nextBefore !== before && (!queries || queries.canAdvance(nextBefore))))
+              }
+              loading={queueLoading || contractLocked}
+              label={copy('postalStaffQueue')}
+              nextLabel={copy('moreRequests')}
+              onNext={() => {
+                if (contractOwner.current || commandPendingRef.current || preparingRef.current)
+                  return;
+                if (nextBefore === before && acceptedCursor.current !== before) {
+                  setQueueRevision((value) => value + 1);
+                  return;
+                }
+                extendingCursor.current = nextBefore;
+                if (queries && nextBefore) queries.next(nextBefore);
+                else setBefore(nextBefore);
               }}
             />
-          )}
-          {row.postal_status === 'shipped' && (
-            <>
-              <Form {...reasonForm}>
-                {reasonForm.formState.errors.root && (
-                  <Alert variant="destructive">
-                    <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
-                  </Alert>
+          </ListPage>
+        </section>
+      )}
+      {recordId &&
+        !decisionRecorded &&
+        !createdContractId &&
+        (!row && queueLoading ? (
+          <LoadingStatus>{copy('loading')}</LoadingStatus>
+        ) : queueDenied ? (
+          <p role="alert">{copy('staffQueueForbidden')}</p>
+        ) : queueError ? (
+          <div role="alert" className="space-y-2">
+            <p>{tSolarStaffRecord('postalLoadError', locale)}</p>
+            <Button variant="outline" onClick={() => setQueueRevision((v) => v + 1)}>
+              {copy('retry')}
+            </Button>
+          </div>
+        ) : null)}
+      {decisionRecorded && (
+        <p role="status" className="rounded-xl border bg-card px-4 py-3 text-sm font-medium">
+          {confirmationText('recorded', locale)}
+        </p>
+      )}
+      {row && decision && !decisionRecorded && (
+        <Form {...reasonForm}>
+          <form
+            aria-label={copy(decision.title)}
+            onSubmit={submitPostalDecision}
+            noValidate
+            className={recordEditorSurface}
+          >
+            <RecordEditorSection title={tSolarStaffRecord('shipmentContext', locale)}>
+              <div className="space-y-1 rounded-lg bg-muted/50 p-3">
+                <p className="wrap-anywhere font-medium" dir="auto">
+                  {row.profile_name}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {requestStatusLabel}
+                  {shipmentStatusLabel !== requestStatusLabel && <> · {shipmentStatusLabel}</>}
+                </p>
+                {row.tracking_number && (
+                  <p className="wrap-anywhere text-sm text-muted-foreground">
+                    {copy('postalTracking')} <bdi>{row.tracking_number}</bdi>
+                  </p>
                 )}
-                <FormField
-                  control={reasonForm.control}
-                  name="reason"
-                  render={({ field }) => (
-                    <FormItem id="solar-postal-reason">
-                      <FormLabel>{copy('reason')}</FormLabel>
-                      <FormControl>
-                        <textarea
-                          {...field}
-                          disabled={editorLocked || decisionUnconfirmed}
-                          className="w-full rounded-md border bg-background p-2"
-                        />
-                      </FormControl>
-                      <FormDescription>{copy('postalReasonHelp')}</FormDescription>
-                      <div className="grid">
-                        <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
-                          {copy('postalReasonInvalid')}
-                        </p>
-                        <FormMessage className="col-start-1 row-start-1" />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              </Form>
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
-                  loading={preparingDecision || reasonForm.formState.isSubmitting}
-                  disabled={editorLocked || decisionUnconfirmed}
-                  onClick={() => void decide('confirm-received')}
-                >
-                  {copy('postal_confirm-received')}
-                </Button>
-                <Button
-                  className="rounded-md border px-4 py-2"
-                  loading={preparingDecision || reasonForm.formState.isSubmitting}
-                  disabled={editorLocked || decisionUnconfirmed}
-                  onClick={() => void decide('mark-incomplete')}
-                >
-                  {copy('postal_mark-incomplete')}
-                </Button>
-                <Button
-                  className="rounded-md border px-4 py-2"
-                  loading={preparingDecision || reasonForm.formState.isSubmitting}
-                  disabled={editorLocked || decisionUnconfirmed}
-                  onClick={() => void decide('mark-not-received')}
-                >
-                  {copy('postal_mark-not-received')}
-                </Button>
               </div>
-            </>
-          )}
-          {['postal_documents_received', 'final_review', 'approved'].includes(
-            row.request_status
-          ) && (
-            <div className="space-y-3">
-              {row.request_status !== 'postal_documents_received' && (
-                <Form {...reasonForm}>
+              {canDecide ? (
+                <>
+                  <p className="text-sm text-muted-foreground">
+                    {tSolarStaffRecord(decision.help, locale)}
+                  </p>
                   {reasonForm.formState.errors.root && (
                     <Alert variant="destructive">
                       <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
                     </Alert>
                   )}
-                  <FormField
-                    control={reasonForm.control}
-                    name="reason"
-                    render={({ field }) => (
-                      <FormItem id="solar-postal-reason">
-                        <FormLabel>{copy('reason')}</FormLabel>
-                        <FormControl>
-                          <textarea
-                            {...field}
-                            aria-required={row.request_status === 'approved' || undefined}
-                            disabled={editorLocked || decisionUnconfirmed}
-                            className="w-full rounded-md border bg-background p-2"
-                          />
-                        </FormControl>
-                        <FormDescription>{copy('postalReasonHelp')}</FormDescription>
-                        <div className="grid">
-                          <p
-                            aria-hidden="true"
-                            className="invisible col-start-1 row-start-1 text-sm"
-                          >
-                            {copy('postalReasonInvalid')}
-                          </p>
-                          <FormMessage className="col-start-1 row-start-1" />
-                        </div>
-                      </FormItem>
-                    )}
-                  />
-                </Form>
+                  {reason && (
+                    <FormField
+                      control={reasonForm.control}
+                      name="reason"
+                      render={({ field }) => (
+                        <FormItem id="solar-postal-reason" className={recordEditorField}>
+                          <FormLabel>{tSolarStaffRecord(reason.reason, locale)}</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              {...field}
+                              dir="auto"
+                              rows={2}
+                              required
+                              aria-required="true"
+                              disabled={commandPending || decisionUnconfirmed}
+                              className="max-h-36 overflow-y-auto"
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            {tSolarStaffRecord(reason.example, locale)}
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </>
+              ) : (
+                <p role="alert" className="text-sm">
+                  {tSolarStaffRecord('decisionUnavailable', locale)}
+                </p>
               )}
+            </RecordEditorSection>
+            {canDecide && (
+              <RecordEditorActions>
+                <Button
+                  type="submit"
+                  disabled={editorLocked || decisionUnconfirmed || queueLoading || queueError}
+                  loading={preparingDecision || reasonForm.formState.isSubmitting}
+                >
+                  {tSolarStaffRecord('reviewDecision', locale)}
+                </Button>
+              </RecordEditorActions>
+            )}
+          </form>
+        </Form>
+      )}
+      {recordEditor === 'tracking' && trackingEditor}
+      {recordEditor === 'create-contract' && contractEditor}
+      {row &&
+        !queueError &&
+        !queueDenied &&
+        recordEditor &&
+        !createdContractId &&
+        !(recordEditor === 'tracking' ? trackingEditor : contractEditor) && (
+          <p role="alert" className="rounded-lg border bg-card px-4 py-3 text-sm">
+            {tSolarStaffRecord(
+              recordEditor === 'tracking' ? 'trackingUnavailable' : 'contractUnavailable',
+              locale
+            )}
+          </p>
+        )}
+      {row && !decision && !recordEditor && (
+        <section role="group" aria-label={copy('postalShipment')} className="space-y-3">
+          <div className={recordEditorSurface}>
+            <RecordEditorSection title={copy('postalShipment')}>
+              <dl className={recordEditorGrid}>
+                <div>
+                  <dt className="text-sm text-muted-foreground">{copy('postalStatus')}</dt>
+                  <dd>{copy(`postal_${row.postal_status}`)}</dd>
+                </div>
+                {recordId && (
+                  <div>
+                    <dt className="text-sm text-muted-foreground">
+                      {copy('solarFinalCurrentStatus')}
+                    </dt>
+                    <dd>{copy(`status_${row.request_status}`)}</dd>
+                  </div>
+                )}
+                {row.courier && (
+                  <div>
+                    <dt className="text-sm text-muted-foreground">{copy('postalCourier')}</dt>
+                    <dd>{row.courier}</dd>
+                  </div>
+                )}
+                {row.tracking_number && (
+                  <div>
+                    <dt className="text-sm text-muted-foreground">{copy('postalTracking')}</dt>
+                    <dd className="wrap-anywhere">
+                      <bdi dir="ltr">{row.tracking_number}</bdi>
+                    </dd>
+                  </div>
+                )}
+                {row.send_date && (
+                  <div>
+                    <dt className="text-sm text-muted-foreground">{copy('postalSendDate')}</dt>
+                    <dd>{postalCalendarDate(row.send_date, locale)}</dd>
+                  </div>
+                )}
+                {row.staff_notes && (
+                  <div className="sm:col-span-2">
+                    <dt className="text-sm text-muted-foreground">{copy('postalStaffNotes')}</dt>
+                    <dd className="wrap-anywhere">{row.staff_notes}</dd>
+                  </div>
+                )}
+              </dl>
+              {row.receipt_image_id && (
+                <button
+                  type="button"
+                  className="underline"
+                  onClick={() => setPreview(row.receipt_image_id)}
+                >
+                  {copy('preview')}
+                </button>
+              )}
+              {preview && (!recordId || row.receipt_image_id === preview) && (
+                <DocumentDetail
+                  id={preview}
+                  staff
+                  onClose={() => setPreview(null)}
+                  onChanged={refresh}
+                  onPrevious={setPreview}
+                  onReplace={() => {}}
+                  allowReplacement={false}
+                />
+              )}
+            </RecordEditorSection>
+          </div>
+          {!recordId && trackingEditor}
+          {recordId &&
+            (row.tracking_revision !== undefined || row.request_status === 'approved') && (
               <div className="flex flex-wrap gap-2">
-                {row.request_status === 'postal_documents_received' && (
-                  <button
-                    type="button"
-                    className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
-                    disabled={editorLocked || decisionUnconfirmed}
-                    onClick={() => {
-                      if (busy() || decisionUnconfirmed) return;
-                      propose({
-                        title: copy('solarStartFinalReview'),
-                        description: row.id,
-                        path: `/api/admin/solar/requests/${row.id}/start-final-review`,
-                        method: 'POST',
-                      });
+                {row.tracking_revision !== undefined && (
+                  <Link
+                    to="/admin/solar-requests/$requestId/postal/{-$operation}"
+                    params={{ requestId: recordId, operation: 'tracking' }}
+                    search={queueSearch ?? {}}
+                    className={buttonVariants({ variant: 'outline', size: 'sm' })}
+                    aria-disabled={navigationBlocked() || undefined}
+                    onClick={(event) => {
+                      if (navigationBlocked()) event.preventDefault();
                     }}
                   >
-                    {copy('solarStartFinalReview')}
-                  </button>
+                    {tSolarStaffRecord('editTracking', locale)}
+                  </Link>
                 )}
-                {row.request_status === 'final_review' && (
-                  <>
-                    <Button
-                      type="button"
-                      className="rounded-md bg-primary px-4 py-2 text-primary-foreground"
-                      loading={preparingDecision || reasonForm.formState.isSubmitting}
-                      disabled={editorLocked || decisionUnconfirmed}
-                      onClick={() => void prepareFinalDecision('approve', row.id)}
-                    >
-                      {copy('solarFinalApprove')}
-                    </Button>
-                    <Button
-                      type="button"
-                      className="rounded-md border border-destructive px-4 py-2 text-destructive"
-                      loading={preparingDecision || reasonForm.formState.isSubmitting}
-                      disabled={editorLocked || decisionUnconfirmed}
-                      onClick={() => void prepareFinalDecision('reject', row.id)}
-                    >
-                      {copy('solarFinalReject')}
-                    </Button>
-                  </>
-                )}
-                {row.request_status !== 'postal_documents_received' && (
-                  <Button
-                    type="button"
-                    className="rounded-md border px-4 py-2"
-                    loading={preparingDecision || reasonForm.formState.isSubmitting}
-                    disabled={editorLocked || decisionUnconfirmed}
-                    onClick={() => void prepareFinalDecision('close-no-contract', row.id)}
+                {row.request_status === 'approved' && (
+                  <Link
+                    to="/admin/solar-requests/$requestId/postal/{-$operation}"
+                    params={{ requestId: recordId, operation: 'create-contract' }}
+                    search={queueSearch ?? {}}
+                    className={buttonVariants({
+                      size: 'sm',
+                      className: 'h-auto min-h-9 whitespace-normal',
+                    })}
+                    aria-disabled={navigationBlocked() || undefined}
+                    onClick={(event) => {
+                      if (navigationBlocked()) event.preventDefault();
+                    }}
                   >
-                    {copy('solarCloseNoContract')}
-                  </Button>
+                    {copy('solarCreateContract')}
+                  </Link>
                 )}
               </div>
-            </div>
-          )}
-          {row.request_status === 'approved' && (
-            <SolarContractForm
-              key={row.id}
-              requestId={row.id}
-              profileId={row.profile_id}
-              scopeKey={JSON.stringify([queryScope, row])}
-              coordination={{
-                blocked: () =>
-                  busy() || decisionUnconfirmed || guidanceUnconfirmed || guidanceDenied,
-                acquire: (owner) => {
-                  if (
-                    viewGeneration !== reviewRequest.current ||
-                    busy() ||
-                    decisionUnconfirmed ||
-                    guidanceUnconfirmed ||
-                    guidanceDenied
-                  )
-                    return false;
-                  contractOwner.current = owner;
-                  setContractLocked(true);
-                  ++queueRead.current;
-                  queueAbort.current?.abort();
-                  setQueueLoading(false);
-                  return true;
-                },
-                release: (owner) => {
-                  if (contractOwner.current !== owner) return;
-                  contractOwner.current = null;
-                  setContractLocked(false);
-                },
-              }}
-              onDenied={() => {
-                if (viewGeneration !== reviewRequest.current) return;
-                ++queueRead.current;
-                queueAbort.current?.abort();
-                invalidateReview();
-                setRows((current) => current.filter((item) => item.id !== row.id));
-                setSelected(null);
-                setPreview(null);
-                reasonForm.reset({ reason: '' });
-                setQueueError(true);
-                setQueueLoading(false);
-              }}
-              onCreated={(contractId) => {
-                if (viewGeneration !== reviewRequest.current) return;
-                setCreatedContractId(contractId);
-                setSelected(null);
-                refresh();
-              }}
-            />
-          )}
+            )}
+          {recordId
+            ? Object.keys(solarPostalDecisions).some((key) =>
+                availablePostalDecision(key as SolarPostalOperation, row)
+              ) && (
+                <div className={recordEditorSurface}>
+                  <RecordEditorSection
+                    title={tSolarStaffRecord(
+                      row.postal_status === 'shipped' ? 'shipmentDecision' : 'finalDecision',
+                      locale
+                    )}
+                  >
+                    <div className="flex flex-wrap gap-2">
+                      {(Object.keys(solarPostalDecisions) as SolarPostalOperation[])
+                        .filter((operation) => availablePostalDecision(operation, row))
+                        .map((operation) => (
+                          <Link
+                            key={operation}
+                            to="/admin/solar-requests/$requestId/postal/{-$operation}"
+                            params={{ requestId: recordId, operation }}
+                            search={queueSearch ?? {}}
+                            className={buttonVariants({
+                              variant:
+                                operation === 'confirm-received' ||
+                                operation === 'start-final-review' ||
+                                operation === 'final-approve'
+                                  ? 'default'
+                                  : 'outline',
+                              size: 'sm',
+                              className: 'h-auto min-h-9 max-w-full whitespace-normal',
+                            })}
+                            aria-disabled={navigationBlocked() || undefined}
+                            onClick={(event) => {
+                              if (navigationBlocked()) event.preventDefault();
+                            }}
+                          >
+                            {copy(solarPostalDecisions[operation].title)}
+                          </Link>
+                        ))}
+                    </div>
+                  </RecordEditorSection>
+                </div>
+              )
+            : (row.postal_status === 'shipped' ||
+                ['postal_documents_received', 'final_review', 'approved'].includes(
+                  row.request_status
+                )) && (
+                <div className={recordEditorSurface}>
+                  <RecordEditorSection
+                    title={tSolarStaffRecord(
+                      row.postal_status === 'shipped' ? 'shipmentDecision' : 'finalDecision',
+                      locale
+                    )}
+                  >
+                    {(row.postal_status === 'shipped' ||
+                      row.request_status !== 'postal_documents_received') && (
+                      <Form {...reasonForm}>
+                        {reasonForm.formState.errors.root && (
+                          <Alert variant="destructive">
+                            <AlertDescription>
+                              {copy('documentValidationUnavailable')}
+                            </AlertDescription>
+                          </Alert>
+                        )}
+                        <FormField
+                          control={reasonForm.control}
+                          name="reason"
+                          render={({ field }) => (
+                            <FormItem id="solar-postal-reason" className={recordEditorField}>
+                              <FormLabel>{copy('reason')}</FormLabel>
+                              <FormControl>
+                                <Textarea
+                                  {...field}
+                                  aria-required={row.request_status === 'approved' || undefined}
+                                  disabled={editorLocked || decisionUnconfirmed}
+                                  rows={2}
+                                  className="min-h-14 resize-y"
+                                  placeholder={tSolarStaffRecord(
+                                    row.postal_status === 'shipped'
+                                      ? 'shipmentNoteExample'
+                                      : 'finalNoteExample',
+                                    locale
+                                  )}
+                                />
+                              </FormControl>
+                              <FormDescription>{copy('postalReasonHelp')}</FormDescription>
+                              <div className="grid">
+                                <p
+                                  aria-hidden="true"
+                                  className="invisible col-start-1 row-start-1 text-sm"
+                                >
+                                  {copy('postalReasonInvalid')}
+                                </p>
+                                <FormMessage className="col-start-1 row-start-1" />
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      </Form>
+                    )}
+                  </RecordEditorSection>
+                  <RecordEditorActions>
+                    {row.postal_status === 'shipped' && (
+                      <>
+                        <Button
+                          loading={preparingDecision || reasonForm.formState.isSubmitting}
+                          disabled={editorLocked || decisionUnconfirmed}
+                          onClick={() => void decide('confirm-received')}
+                        >
+                          {copy('postal_confirm-received')}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          loading={preparingDecision || reasonForm.formState.isSubmitting}
+                          disabled={editorLocked || decisionUnconfirmed}
+                          onClick={() => void decide('mark-incomplete')}
+                        >
+                          {copy('postal_mark-incomplete')}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          loading={preparingDecision || reasonForm.formState.isSubmitting}
+                          disabled={editorLocked || decisionUnconfirmed}
+                          onClick={() => void decide('mark-not-received')}
+                        >
+                          {copy('postal_mark-not-received')}
+                        </Button>
+                      </>
+                    )}
+                    {row.request_status === 'postal_documents_received' && (
+                      <Button
+                        type="button"
+                        disabled={editorLocked || decisionUnconfirmed}
+                        onClick={startFinalReview}
+                      >
+                        {copy('solarStartFinalReview')}
+                      </Button>
+                    )}
+                    {row.request_status === 'final_review' && (
+                      <>
+                        <Button
+                          type="button"
+                          loading={preparingDecision || reasonForm.formState.isSubmitting}
+                          disabled={editorLocked || decisionUnconfirmed}
+                          onClick={() => void prepareFinalDecision('approve', row.id)}
+                        >
+                          {copy('solarFinalApprove')}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          loading={preparingDecision || reasonForm.formState.isSubmitting}
+                          disabled={editorLocked || decisionUnconfirmed}
+                          onClick={() => void prepareFinalDecision('reject', row.id)}
+                        >
+                          {copy('solarFinalReject')}
+                        </Button>
+                      </>
+                    )}
+                    {['final_review', 'approved'].includes(row.request_status) && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        loading={preparingDecision || reasonForm.formState.isSubmitting}
+                        disabled={editorLocked || decisionUnconfirmed}
+                        onClick={() => void prepareFinalDecision('close-no-contract', row.id)}
+                      >
+                        {copy('solarCloseNoContract')}
+                      </Button>
+                    )}
+                  </RecordEditorActions>
+                </div>
+              )}
+          {!recordId && contractEditor}
         </section>
+      )}
+      {guidanceEditor && !guidance && !guidanceError && (
+        <LoadingStatus>{copy('loading')}</LoadingStatus>
       )}
       {guidanceError && (
         <div role="alert" className="space-y-2">
@@ -933,85 +1394,110 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
       )}
       {guidance && (
         <Form {...guidanceForm}>
-          <div role="group" aria-label={copy('postalGuidance')}>
-            <form className="space-y-3 rounded-xl border p-5" onSubmit={saveGuidance} noValidate>
-              <h2 className="text-xl font-semibold">{copy('postalGuidance')}</h2>
-              {guidanceForm.formState.errors.root && (
-                <Alert variant="destructive">
-                  <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
-                </Alert>
-              )}
-              {(guidanceUnconfirmed || guidanceDenied) && (
-                <Alert variant="destructive">
-                  <AlertDescription>
-                    {copy(guidanceDenied ? 'postalGuidanceForbidden' : 'postalGuidanceUnconfirmed')}
-                  </AlertDescription>
-                </Alert>
-              )}
-              {(
-                [
-                  ['fa', 'solar-postal-guidance-fa', 'postalGuidance_fa', 'documentGuidanceHelp'],
-                  ['en', 'solar-postal-guidance-en', 'postalGuidance_en', 'documentGuidanceHelp'],
-                  [
-                    'destinationAddress',
-                    'solar-postal-guidance-destination-address',
-                    'postalGuidance_destinationAddress',
-                    'postalAddressHelp',
-                  ],
-                  [
-                    'contactDetails',
-                    'solar-postal-guidance-contact-details',
-                    'postalGuidance_contactDetails',
-                    'postalContactHelp',
-                  ],
-                  [
-                    'originalsFa',
-                    'solar-postal-guidance-originals-fa',
-                    'postalOriginalsFa',
-                    'documentSuggestionsHelp',
-                  ],
-                  [
-                    'originalsEn',
-                    'solar-postal-guidance-originals-en',
-                    'postalOriginalsEn',
-                    'documentSuggestionsHelp',
-                  ],
-                ] as const
-              ).map(([name, id, label, help]) => (
-                <FormField
-                  key={name}
-                  control={guidanceForm.control}
-                  name={name}
-                  render={({ field }) => (
-                    <FormItem id={id}>
-                      <FormLabel>{copy(label)}</FormLabel>
-                      <FormControl>
-                        <textarea
-                          {...field}
-                          disabled={editorLocked || guidanceDenied}
-                          aria-required={name === 'fa' || name === 'en' || undefined}
-                          dir={
-                            name.endsWith('Fa') || name === 'fa'
-                              ? 'rtl'
-                              : name.endsWith('En') || name === 'en'
-                                ? 'ltr'
-                                : undefined
-                          }
-                          className="w-full rounded-md border bg-background p-2"
-                        />
-                      </FormControl>
-                      <FormDescription>{copy(help)}</FormDescription>
-                      <div className="grid">
-                        <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
-                          {guidanceMessages[name]}
-                        </p>
-                        <FormMessage className="col-start-1 row-start-1" />
-                      </div>
-                    </FormItem>
+          <div
+            role="group"
+            aria-label={copy('postalGuidance')}
+            className="mx-auto w-full max-w-3xl"
+          >
+            <form className={recordEditorSurface} onSubmit={saveGuidance} noValidate>
+              {(!guidanceEditor ||
+                guidanceForm.formState.errors.root ||
+                guidanceUnconfirmed ||
+                guidanceDenied) && (
+                <div className="space-y-2 border-b px-4 py-3 sm:px-6">
+                  {!guidanceEditor && (
+                    <h2 className="text-base font-semibold">{copy('postalGuidance')}</h2>
                   )}
-                />
-              ))}
-              <div className="flex flex-wrap gap-2">
+                  {guidanceForm.formState.errors.root && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
+                    </Alert>
+                  )}
+                  {(guidanceUnconfirmed || guidanceDenied) && (
+                    <Alert variant="destructive">
+                      <AlertDescription>
+                        {copy(
+                          guidanceDenied ? 'postalGuidanceForbidden' : 'postalGuidanceUnconfirmed'
+                        )}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+              )}
+              <RecordEditorSection title={tSolarStaffRecord('customerInstructions', locale)}>
+                <div className={recordEditorGrid}>
+                  <SolarGuidanceField
+                    form={guidanceForm}
+                    name="fa"
+                    id="solar-postal-guidance-fa"
+                    label={copy('postalGuidance_fa')}
+                    direction="rtl"
+                    help={copy('documentGuidanceHelp')}
+                    disabled={editorLocked || guidanceDenied}
+                    required
+                  />
+                  <SolarGuidanceField
+                    form={guidanceForm}
+                    name="en"
+                    id="solar-postal-guidance-en"
+                    label={copy('postalGuidance_en')}
+                    direction="ltr"
+                    help={copy('documentGuidanceHelp')}
+                    disabled={editorLocked || guidanceDenied}
+                    required
+                  />
+                </div>
+              </RecordEditorSection>
+              <RecordEditorSection title={tSolarStaffRecord('postalDestination', locale)}>
+                <div className={recordEditorGrid}>
+                  <SolarGuidanceField
+                    form={guidanceForm}
+                    name="destinationAddress"
+                    id="solar-postal-guidance-destination-address"
+                    label={copy('postalGuidance_destinationAddress')}
+                    direction="auto"
+                    help={copy('postalAddressHelp')}
+                    disabled={editorLocked || guidanceDenied}
+                  />
+                  <SolarGuidanceField
+                    form={guidanceForm}
+                    name="contactDetails"
+                    id="solar-postal-guidance-contact-details"
+                    label={copy('postalGuidance_contactDetails')}
+                    direction="auto"
+                    help={copy('postalContactHelp')}
+                    disabled={editorLocked || guidanceDenied}
+                  />
+                </div>
+              </RecordEditorSection>
+              <SolarGuidanceItems
+                title={tSolarStaffRecord('requiredOriginals', locale)}
+                rows={guidanceItems.fields}
+                disabled={editorLocked || guidanceDenied}
+                error={
+                  guidanceForm.formState.errors.items?.root?.message ??
+                  guidanceForm.formState.errors.items?.message
+                }
+                onAdd={() =>
+                  guidanceItems.append(
+                    { fa: '', en: '' },
+                    { focusName: `items.${guidanceItems.fields.length}.${locale}` }
+                  )
+                }
+                onRemove={guidanceItems.remove}
+                renderField={(index, language, label) => (
+                  <SolarGuidanceField
+                    form={guidanceForm}
+                    name={`items.${index}.${language}`}
+                    id={`solar-postal-guidance-item-${index}-${language}`}
+                    label={label}
+                    direction={language === 'fa' ? 'rtl' : 'ltr'}
+                    disabled={editorLocked || guidanceDenied}
+                    required
+                  />
+                )}
+              />
+              <RecordEditorActions>
                 <Button
                   type="submit"
                   loading={guidanceForm.formState.isSubmitting}
@@ -1032,7 +1518,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
                     {copy('postalGuidanceReload')}
                   </Button>
                 )}
-              </div>
+              </RecordEditorActions>
             </form>
           </div>
         </Form>
@@ -1040,6 +1526,16 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
       {action && (
         <TeamActionDialog
           action={action}
+          finalFocus={
+            decisionEditor || (guidanceEditor && guidanceAction)
+              ? () =>
+                  document.querySelector<HTMLElement>(
+                    decisionEditor
+                      ? '#solar-postal-reason[aria-invalid="true"]'
+                      : '[data-slot="solar-staff-guidance"] [aria-invalid="true"]'
+                  ) ?? true
+              : undefined
+          }
           confirmationDisabled={
             guidanceAction ? guidanceUnconfirmed || guidanceDenied : decisionUnconfirmed
           }
@@ -1052,7 +1548,9 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
           onValidationError={(fields) => {
             if (actionGeneration !== reviewRequest.current) return false;
             return guidanceAction
-              ? guidanceFields(fields)
+              ? guidanceFields(
+                  guidanceErrorPaths(fields, 'originals', !!guidanceItems.fields.length)
+                )
               : !!(action.body as { reason?: string } | undefined)?.reason &&
                   !!fields.length &&
                   fields.every((field) => field === 'reason') &&
@@ -1205,6 +1703,7 @@ function AdminSolarPostalWorkspace({ queries }: { queries?: ListQueryBinding } =
               invalidateReview();
             } else {
               if (!confirmedPostalDecision(receipt, action.path)) throw new Error('postal receipt');
+              if (decisionEditor) setDecisionRecorded(true);
               setError(false);
               refresh();
               reasonForm.reset({ reason: '' });

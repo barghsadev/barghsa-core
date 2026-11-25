@@ -98,10 +98,21 @@ for (const path of ['/api/admin/solar/postal-queue?', '/api/admin/solar/postal-g
       expect(host.querySelector<HTMLTextAreaElement>('#solar-postal-guidance-en')?.value).not.toBe(
         'Private obsolete'
       );
-      if (change !== 'unmount')
+      if (change !== 'unmount') {
+        const ownedPath = path.endsWith('?') ? path + 'lane=needs_staff' : path;
         expect(
-          vi.mocked(fetch).mock.calls.filter(([url]) => String(url).startsWith(path))
+          vi.mocked(fetch).mock.calls.filter(([url]) => String(url) === ownedPath)
         ).toHaveLength(2);
+        if (path.endsWith('?')) {
+          // The newly accepted empty queue checks the other lane once.
+          expect(
+            vi
+              .mocked(fetch)
+              .mock.calls.filter(([url]) => String(url).startsWith(path))
+              .map(([url]) => String(url))
+          ).toEqual([ownedPath, ownedPath, path + 'lane=waiting_customer']);
+        }
+      }
       expect(vi.mocked(fetch).mock.calls.every(([, init]) => !init?.method && !init?.body)).toBe(
         true
       );

@@ -46,7 +46,7 @@ async function inspect(page: Page, label: string, locale: string, project: strin
     });
 }
 for (const locale of ['en', 'fa'] as const) {
-  test(`cancellation queue retry preserves open detail and exact cursor (${locale})`, async ({
+  test(`cancellation queue retries the exact cursor and opens the request page (${locale})`, async ({
     page,
   }, info) => {
     await shell(page, locale);
@@ -131,27 +131,33 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(content.getByRole('alert')).toBeVisible();
     status = 200;
     await content.getByRole('button', { name: w.retry, exact: true }).click();
-    await queue.getByRole('button', { name: w.cancellationRequestOpen, exact: true }).click();
-    const draft = page.locator('#request-reason-' + financeContractId);
-    await draft.fill('Retained staff explanation');
+    const open = queue.getByText(w.cancellationRequestOpen, { exact: true });
+    await expect(open).toBeVisible();
     status = 503;
     await queue.getByRole('button', { name: w.next, exact: true }).click();
     await expect(content.getByRole('alert')).toBeVisible();
     const failed = queries.at(-1);
     expect(new URLSearchParams(failed).get('before')).toBe(financeCursor);
-    await expect(draft).toHaveValue('Retained staff explanation');
+    await expect(open).toHaveAttribute('aria-disabled', 'true');
     status = 200;
     await content.getByRole('button', { name: w.retry, exact: true }).click();
     await expect(content.getByRole('alert')).toHaveCount(0);
     expect(queries.at(-1)).toBe(failed);
-    await expect(draft).toHaveValue('Retained staff explanation');
     await inspect(page, 'cancellation', locale, info.project.name);
+    await open.click();
+    await expect(page).toHaveURL(
+      `/admin/contracts/${financeContractId}/review-cancellation/${cancellationRow.id}`
+    );
+    await expect(
+      page
+        .getByRole('region', { name: w.cancellationRequestTitle, exact: true })
+        .getByText(cancellationRow.reason, { exact: true })
+    ).toBeVisible();
     status = 401;
-    await queue.getByRole('button', { name: w.refresh, exact: true }).first().click();
+    await page.goto('/admin/contracts');
     await expect(queue).toHaveCount(0);
-    await expect(draft).toHaveCount(0);
   });
-  test(`refund recovery retains bank draft until fresh eligibility changes (${locale})`, async ({
+  test(`refund queue retains results while retrying and updates the available action (${locale})`, async ({
     page,
   }, info) => {
     await shell(page, locale);
@@ -178,39 +184,44 @@ for (const locale of ['en', 'fa'] as const) {
           : route.fulfill({ status, json: {} });
       }
     );
-    await page.goto('/admin/contracts');
+    await page.goto('/admin/contracts/refunds');
     const queue = page.getByRole('region', { name: w.cancellationQueue, exact: true });
     const content = queue.locator('[data-slot="list-content"]');
+    const recordTransfer = queue.getByText(w['cancellation.queue.record-transfer'], {
+      exact: true,
+    });
+    const refresh = page.getByRole('button', { name: w.refresh, exact: true });
     await expect(content.getByRole('alert')).toBeVisible();
     status = 200;
     await content.getByRole('button', { name: w.retry, exact: true }).click();
-    const draft = queue.getByLabel(w.cancellationBankReference, { exact: true });
-    await draft.fill('BANK-DRAFT');
+    await expect(recordTransfer).toBeVisible();
     status = 503;
     await queue.getByRole('button', { name: w.next, exact: true }).click();
     await expect(content.getByRole('alert')).toBeVisible();
-    await expect(
-      queue.getByRole('button', { name: w['cancellation.queue.record-transfer'], exact: true })
-    ).toBeDisabled();
+    await expect(recordTransfer).toHaveAttribute('aria-disabled', 'true');
     const failed = queries.at(-1);
     expect(new URLSearchParams(failed).get('before')).toBe(financeCursor);
-    await expect(draft).toHaveValue('BANK-DRAFT');
     status = 200;
     await content.getByRole('button', { name: w.retry, exact: true }).click();
     await expect(content.getByRole('alert')).toHaveCount(0);
     expect(queries.at(-1)).toBe(failed);
-    await queue.getByRole('button', { name: w.refresh, exact: true }).click();
-    await expect(draft).toHaveValue('BANK-DRAFT');
+    await expect(
+      queue.getByRole('link', { name: w['cancellation.queue.record-transfer'], exact: true })
+    ).toBeVisible();
     await inspect(page, 'refund', locale, info.project.name);
     processed = true;
-    await queue.getByRole('button', { name: w.refresh, exact: true }).click();
-    await expect(draft).toHaveCount(0);
+    await refresh.click();
+    await expect(recordTransfer).toHaveCount(0);
     await expect(queue.getByText('BANK-FINAL', { exact: true })).toBeVisible();
+    await expect(
+      queue.getByRole('link', { name: w['cancellation.queue.reconcile'], exact: true })
+    ).toBeVisible();
     status = 403;
-    await queue.getByRole('button', { name: w.refresh, exact: true }).click();
+    await refresh.click();
     await expect(queue).toHaveCount(0);
+    await expect(page.getByRole('alert')).toContainText(w.denied);
   });
-  test(`approval page retry retains rejection reasons and exact offset (${locale})`, async ({
+  test(`approval page retry retains queue rows and exact offset (${locale})`, async ({
     page,
   }, info) => {
     await shell(page, locale);
@@ -225,7 +236,7 @@ for (const locale of ['en', 'fa'] as const) {
           ? route.fulfill({
               json: Array.from({ length: 26 }, (_, n) => ({
                 ...approvalRow,
-                id: n ? approvalRow.id + '-' + n : approvalRow.id,
+                id: n ? `79ac0000-0000-4000-8000-${String(n).padStart(12, '0')}` : approvalRow.id,
               })),
             })
           : route.fulfill({ status, json: {} });
@@ -237,25 +248,27 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(content.getByRole('alert')).toBeVisible();
     status = 200;
     await content.getByRole('button', { name: copy('retry'), exact: true }).click();
-    const draft = page.locator('#reason-' + approvalRow.id);
-    await draft.fill('Retained evidence explanation');
+    const row = queue.getByRole('link', {
+      name: `${copy('openRequest')} · ${approvalRow.id}`,
+      exact: true,
+    });
+    await expect(row).toBeVisible();
     status = 503;
     await queue.getByRole('button', { name: copy('next'), exact: true }).click();
     await expect(content.getByRole('alert')).toBeVisible();
     const failed = queries.at(-1);
     expect(new URLSearchParams(failed).get('offset')).toBe('25');
-    await expect(draft).toHaveValue('Retained evidence explanation');
-    await draft.fill('Edited during recovery');
+    await expect(row).toBeVisible();
     status = 200;
     await content.getByRole('button', { name: copy('retry'), exact: true }).click();
     await expect(content.getByRole('alert')).toHaveCount(0);
     expect(queries.at(-1)).toBe(failed);
-    await expect(draft).toHaveValue('Edited during recovery');
+    await expect(row).toBeVisible();
     await inspect(page, 'approval', locale, info.project.name);
     status = 401;
     await queue.getByRole('button', { name: copy('refresh'), exact: true }).click();
     await expect(content.getByRole('alert')).toContainText(copy('loadForbidden'));
-    await expect(draft).toHaveCount(0);
+    await expect(row).toHaveCount(0);
     await expect(content.getByRole('button', { name: copy('retry'), exact: true })).toHaveCount(0);
   });
 }

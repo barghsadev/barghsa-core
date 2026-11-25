@@ -102,6 +102,7 @@ for (const width of [390, 1440]) {
             await expect(current).toBeInViewport({ ratio: 1 });
             await expect(current).not.toBeFocused();
             const verification = nav.locator('a[href="/admin/verification"]');
+            await nav.getByRole('button', { name: shellText('configuration', locale) }).click();
             await expect(
               page.getByRole('link').and(page.locator('a[href="/admin/verification"]'))
             ).toHaveCount(1);
@@ -123,8 +124,18 @@ for (const width of [390, 1440]) {
           if (width < 1024) {
             await select.selectOption('/admin/contract-limits');
             await openSection.click();
-          } else await nav.locator('a[href="/admin/contract-limits"]').click();
+          } else {
+            await nav.getByRole('button', { name: shellText('finance', locale) }).click();
+            await nav.locator('a[href="/admin/contract-limits"]').click();
+          }
           await expect(page).toHaveURL(/\/admin\/contract-limits$/);
+          await page
+            .getByRole('link', {
+              name: tWorkspace('admin.contractLimits.editTitle', locale),
+              exact: true,
+            })
+            .click();
+          await expect(page).toHaveURL('/admin/contract-limits/edit');
           const lead = page.locator('#contract-limit-leadTimeDays');
           await lead.fill('14');
           await page

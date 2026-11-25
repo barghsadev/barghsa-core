@@ -197,11 +197,15 @@ export function ElectricityPriceAdjustmentsPanel({
               <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
                 <div>
                   <dt className="text-muted-foreground">{copy('reason')}</dt>
-                  <dd>{adjustment.reason}</dd>
+                  <dd dir="auto" className="wrap-anywhere whitespace-pre-wrap">
+                    {adjustment.reason}
+                  </dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">{copy('basis')}</dt>
-                  <dd>{adjustment.contractualBasis}</dd>
+                  <dd dir="auto" className="wrap-anywhere whitespace-pre-wrap">
+                    {adjustment.contractualBasis}
+                  </dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">{copy('effective')}</dt>

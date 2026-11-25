@@ -1,5 +1,18 @@
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+} from '../components/RecordEditorLayout.js';
+import {
+  Ban as TableBanIcon,
+  CheckCircle as TableCheckCircleIcon,
+  Pencil as TablePencilIcon,
+} from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { Link } from '@tanstack/react-router';
 import {
   useCallback,
   useEffect,
@@ -11,13 +24,17 @@ import {
 } from 'react';
 import {
   LoadingStatus,
+  Badge,
   Button,
+  buttonVariants,
   DateCell,
   TextCell,
   DatePicker,
   Input,
   Label,
   ListPage,
+  ListRefreshButton,
+  ListSearchInput,
   NativeSelect,
 } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
@@ -31,10 +48,12 @@ import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueRe
 import { useGiftCodeCatalogue } from '../hooks/useGiftCodeCatalogue.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { giftFilter } from '../lib/gift-list-query.js';
+import { toast } from '../lib/toast-api.js';
 import {
   Form,
   FormInput,
   FormField,
+  FormLabel,
   FormItem,
   FormControl,
   FormMessage,
@@ -44,6 +63,7 @@ import {
 import {
   giftDraftFrom as draftFrom,
   giftDateField as dateField,
+  giftCapSubtotal,
   giftDraftErrors,
   giftDraftPayload,
   giftFieldNames,
@@ -61,17 +81,32 @@ type GiftReview = TeamAction & {
   basis: string;
   queryScope: string;
 };
+type GiftWorkspace =
+  | { view: 'list'; search: Record<string, string> }
+  | ({
+      search: Record<string, string>;
+      goToRecord: (id: string, replace?: boolean) => void;
+      goToList: () => void;
+    } & ({ view: 'create' } | { view: 'detail' | 'edit'; codeId: string }));
+
+function availability(row: GiftCodeDto, at: number) {
+  if (row.status === 'inactive') return 'inactive';
+  if (row.validUntil && Date.parse(row.validUntil) <= at) return 'expired';
+  if (Date.parse(row.validFrom) > at) return 'scheduled';
+  if (row.totalLimit !== null && row.usage.consumed >= row.totalLimit) return 'exhausted';
+  return 'active';
+}
+
 export default function AdminGiftCodesPage({
   queries,
-  selection,
+  workspace,
 }: {
   queries?: ListQueryBinding;
-  selection?: {
-    id: string;
-    set: (id: string) => void;
-    apply: (filters: Record<string, string>) => void;
-  };
+  workspace?: GiftWorkspace;
 } = {}) {
+  const record = workspace && workspace.view !== 'list' ? workspace : null;
+  const showDetail = record?.view === 'detail';
+  const loadList = !record || record.view === 'create';
   const preference = useTimezone();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -178,6 +213,9 @@ export default function AdminGiftCodesPage({
     [expiry, setExpiry] = useState(''),
     [localFilter, setFilter] = useState('');
   const filter = queries ? giftFilter(queries.query.filters) : localFilter;
+  const appliedFilterCount = [...new URLSearchParams(filter).keys()].filter(
+    (key) => key !== 'search'
+  ).length;
   const applied = queries?.query.filters;
   const appliedKey = JSON.stringify(applied);
   useEffect(() => {
@@ -201,8 +239,19 @@ export default function AdminGiftCodesPage({
     setUncertain(false);
   }, []);
   const scope = useCatalogueScope(clearPrivate);
-  const catalogue = useGiftCodeCatalogue(scope, filter, preference.status === 'ready', queries);
-  const editor = scope.denied ? null : selection ? selection.id || null : localEditor;
+  const catalogue = useGiftCodeCatalogue(
+    scope,
+    filter,
+    loadList && preference.status === 'ready',
+    queries
+  );
+  const editor = scope.denied
+    ? null
+    : record
+      ? record.view === 'create'
+        ? 'new'
+        : record.codeId
+      : localEditor;
   const [editorScope, setEditorScope] = useState(editor);
   if (editorScope !== editor) {
     setEditorScope(editor);
@@ -222,7 +271,8 @@ export default function AdminGiftCodesPage({
     preference.status === 'ready' && editor && editor !== 'new'
       ? `/api/admin/promotions/gift-codes/${editor}/stats`
       : null,
-    validateStats
+    validateStats,
+    { clearOnMissing: true }
   );
   const rows = catalogue.rows ?? [],
     stats = detail.data;
@@ -250,9 +300,9 @@ export default function AdminGiftCodesPage({
   const ready =
     !scope.denied &&
     preference.status === 'ready' &&
-    catalogue.rows !== null &&
-    !catalogue.loading &&
-    !catalogue.pending;
+    (loadList
+      ? catalogue.rows !== null && !catalogue.loading && !catalogue.pending
+      : !!stats && !detail.loading && !detail.error);
   const editorReady =
     ready &&
     (editor === 'new' ||
@@ -261,16 +311,20 @@ export default function AdminGiftCodesPage({
         !detail.error &&
         (!selected || Date.parse(selected.updatedAt) <= Date.parse(stats.code.updatedAt))));
   const currentBasis =
-    action?.id && action.path.endsWith('/toggle') ? rows.find((r) => r.id === action.id) : null;
+    action?.id && action.path.endsWith('/toggle')
+      ? stats?.code.id === action.id && showDetail
+        ? stats.code
+        : rows.find((r) => r.id === action.id)
+      : null;
   const reviewBasis = currentBasis ? giftCodeBasis(currentBasis) : editor ? editorBasis : null;
   const liveReview = useRef({ action, basis: reviewBasis, queryScope });
   liveReview.current = { action, basis: reviewBasis, queryScope };
   useEffect(() => {
-    if (editor && !draft && editorReady) {
+    if (editor && !showDetail && !draft && editorReady) {
       setDraft(draftFrom(stats?.code, zone));
       setDraftBasis(editorBasis);
     }
-  }, [editor, draft, editorReady, stats, zone, editorBasis]);
+  }, [editor, showDetail, draft, editorReady, stats, zone, editorBasis]);
   useEffect(() => {
     if (
       action &&
@@ -289,7 +343,7 @@ export default function AdminGiftCodesPage({
     if (preference.status === 'error') preference.retry();
     if (scope.denied) scope.recover();
     else {
-      catalogue.retry();
+      if (loadList) catalogue.retry();
       detail.retry();
     }
   };
@@ -305,7 +359,7 @@ export default function AdminGiftCodesPage({
         }
         onClick={refresh}
       >
-        {label('refresh')}
+        {label(record && record.view !== 'create' ? 'refreshStats' : 'refresh')}
       </Button>
       {dialog && (catalogue.error || detail.error) && <p role="alert">{label('error')}</p>}
     </div>
@@ -318,7 +372,8 @@ export default function AdminGiftCodesPage({
     setUncertain(false);
     setSaved(false);
     setAction(null);
-    if (selection) selection.set(value || '');
+    if (record?.view === 'edit') record.goToRecord(record.codeId);
+    else if (record?.view === 'create') record.goToList();
     else setEditor(value);
   }
   function propose(
@@ -391,18 +446,125 @@ export default function AdminGiftCodesPage({
     action && !action.path.endsWith('/toggle')
       ? (action.body as ReturnType<typeof giftDraftPayload>)
       : null;
+  const now = Date.now();
+  const restoration = (row: GiftCodeDto) =>
+    label(
+      !row.restoreOnCancel
+        ? 'noRestoration'
+        : row.restoreAfterPayment
+          ? 'restorePaid'
+          : 'restoreUnpaid'
+    );
+  const discount = (row: GiftCodeDto) =>
+    row.discountType === 'percentage'
+      ? numbers.percent(Number(row.discountValue) / 10000)
+      : money(row.discountValue);
+  const categories = (values: string[]) =>
+    values.length
+      ? values.map((category) => label(`category.${category}`)).join(locale === 'fa' ? '، ' : ', ')
+      : label('all');
+  const toggleCode = (row: GiftCodeDto) =>
+    propose(
+      `/api/admin/promotions/gift-codes/${row.id}/toggle`,
+      'POST',
+      label(row.status === 'active' ? 'deactivate' : 'activate'),
+      `${row.code}. ${label('confirmStatus')}`,
+      { status: row.status === 'active' ? 'inactive' : 'active' },
+      row
+    );
+  const canRender = !scope.denied && (loadList ? catalogue.rows !== null : !!editor);
+  const capSubtotal = draft?.discountType === 'percentage' ? giftCapSubtotal(draft) : null;
+  const isEditorRoute = !!record && record.view !== 'detail';
   return (
     <div
-      className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 md:p-8"
+      className={`mx-auto flex w-full min-w-0 flex-col ${isEditorRoute ? 'max-w-3xl gap-4 p-4 md:px-8' : record ? 'max-w-5xl gap-6 p-4 md:p-8' : 'max-w-7xl gap-6'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <h1 className="text-2xl font-semibold">{label('title')}</h1>
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          {record && (
+            <Link
+              to="/admin/gift-codes"
+              search={record.search}
+              className="w-fit text-sm font-medium text-primary hover:underline"
+            >
+              {label('title')}
+            </Link>
+          )}
+          <h1 className="break-words text-2xl font-semibold">
+            {!record ? (
+              label('title')
+            ) : record.view === 'create' ? (
+              label('add')
+            ) : showDetail ? (
+              stats ? (
+                <bdi>{stats.code.code}</bdi>
+              ) : (
+                label('code')
+              )
+            ) : (
+              <>
+                {label('edit')}
+                {stats && (
+                  <>
+                    {' '}
+                    <bdi>{stats.code.code}</bdi>
+                  </>
+                )}
+              </>
+            )}
+          </h1>
+          {showDetail && stats && (
+            <Badge variant="outline">{label(availability(stats.code, now))}</Badge>
+          )}
+        </div>
+        {isEditorRoute && (
+          <ListRefreshButton
+            ref={refreshButton}
+            label={label(record.view === 'create' ? 'refresh' : 'refreshStats')}
+            disabled={pending}
+            onClick={refresh}
+          />
+        )}
+        {workspace?.view === 'list' && (
+          <Link
+            to="/admin/gift-codes/$codeId/{-$action}"
+            params={{ codeId: 'new', action: undefined }}
+            search={workspace.search}
+            disabled={!ready || locked}
+            className={buttonVariants({ className: 'min-h-11' })}
+          >
+            {label('add')}
+          </Link>
+        )}
+        {showDetail && stats && (
+          <div className="flex flex-wrap gap-2">
+            <Link
+              to="/admin/gift-codes/$codeId/{-$action}"
+              params={{ codeId: stats.code.id, action: 'edit' }}
+              search={record.search}
+              disabled={!ready || locked}
+              className={buttonVariants({ className: 'min-h-11' })}
+            >
+              {label('edit')}
+            </Link>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={!ready || locked}
+              onClick={() => toggleCode(stats.code)}
+            >
+              {label(stats.code.status === 'active' ? 'deactivate' : 'activate')}
+            </Button>
+          </div>
+        )}
+      </header>
       <ListPage>
-        <ListPage.Toolbar>
-          {recovery()}
+        {record ? (
+          !isEditorRoute && <ListPage.Toolbar>{recovery()}</ListPage.Toolbar>
+        ) : (
           <form
             aria-label={label('filters')}
-            className="grid items-end gap-3 sm:grid-cols-2 lg:grid-cols-3"
             onSubmit={(event) => {
               event.preventDefault();
               if (owner.current) return;
@@ -414,8 +576,7 @@ export default function AdminGiftCodesPage({
                 expiry,
               };
               if (queries) {
-                if (selection) selection.apply(filters);
-                else queries.setQuery({ filters, cursor: '' });
+                queries.setQuery({ filters, cursor: '' });
                 if (giftFilter(filters) === filter && !queries.query.cursor) catalogue.retry();
               } else {
                 choose(null);
@@ -426,77 +587,99 @@ export default function AdminGiftCodesPage({
               if (scope.denied) scope.recover();
             }}
           >
-            <div>
-              <Label htmlFor="gift-search">{label('searchCode')}</Label>
-              <Input
-                disabled={locked}
-                id="gift-search"
-                maxLength={64}
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-              />
-            </div>
-            <div className="flex min-w-0 flex-col gap-2">
-              <Label htmlFor="gift-status-filter">{label('status')}</Label>
-              <NativeSelect
-                disabled={locked}
-                id="gift-status-filter"
-                className="w-full"
-                value={status}
-                onChange={(event) => setStatus(event.target.value)}
-              >
-                <option value="">{label('all')}</option>
-                <option value="active">{label('active')}</option>
-                <option value="inactive">{label('inactive')}</option>
-              </NativeSelect>
-            </div>
-            <div className="flex min-w-0 flex-col gap-2">
-              <Label htmlFor="gift-type-filter">{label('type')}</Label>
-              <NativeSelect
-                disabled={locked}
-                id="gift-type-filter"
-                className="w-full"
-                value={type}
-                onChange={(event) => setType(event.target.value)}
-              >
-                <option value="">{label('all')}</option>
-                <option value="fixed_irr">{label('fixed')}</option>
-                <option value="percentage">{label('percentage')}</option>
-              </NativeSelect>
-            </div>
-            <div className="flex min-w-0 flex-col gap-2">
-              <Label htmlFor="gift-eligibility-filter">{label('eligibility')}</Label>
-              <NativeSelect
-                disabled={locked}
-                id="gift-eligibility-filter"
-                className="w-full"
-                value={eligibility}
-                onChange={(event) => setEligibility(event.target.value)}
-              >
-                <option value="">{label('all')}</option>
-                <option value="public">{label('public')}</option>
-                <option value="profile">{label('restricted')}</option>
-              </NativeSelect>
-            </div>
-            <div className="flex min-w-0 flex-col gap-2">
-              <Label htmlFor="gift-expiry-filter">{label('expiry')}</Label>
-              <NativeSelect
-                disabled={locked}
-                id="gift-expiry-filter"
-                className="w-full"
-                value={expiry}
-                onChange={(event) => setExpiry(event.target.value)}
-              >
-                <option value="">{label('all')}</option>
-                <option value="not_expired">{label('notExpired')}</option>
-                <option value="expired">{label('expired')}</option>
-              </NativeSelect>
-            </div>
-            <Button type="submit" variant="outline" disabled={locked}>
-              {label('search')}
-            </Button>
+            <ListPage.Toolbar
+              search={
+                <ListSearchInput
+                  label={label('searchCode')}
+                  disabled={locked}
+                  id="gift-search"
+                  maxLength={64}
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                />
+              }
+              moreFilters={{
+                label: label('filters'),
+                count: appliedFilterCount ? numbers.number(appliedFilterCount) : undefined,
+                children: (
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="flex min-w-0 flex-col gap-2">
+                      <Label htmlFor="gift-status-filter">{label('status')}</Label>
+                      <NativeSelect
+                        disabled={locked}
+                        id="gift-status-filter"
+                        className="w-full"
+                        value={status}
+                        onChange={(event) => setStatus(event.target.value)}
+                      >
+                        <option value="">{label('all')}</option>
+                        <option value="active">{label('active')}</option>
+                        <option value="inactive">{label('inactive')}</option>
+                      </NativeSelect>
+                    </div>
+                    <div className="flex min-w-0 flex-col gap-2">
+                      <Label htmlFor="gift-type-filter">{label('type')}</Label>
+                      <NativeSelect
+                        disabled={locked}
+                        id="gift-type-filter"
+                        className="w-full"
+                        value={type}
+                        onChange={(event) => setType(event.target.value)}
+                      >
+                        <option value="">{label('all')}</option>
+                        <option value="fixed_irr">{label('fixed')}</option>
+                        <option value="percentage">{label('percentage')}</option>
+                      </NativeSelect>
+                    </div>
+                    <div className="flex min-w-0 flex-col gap-2">
+                      <Label htmlFor="gift-eligibility-filter">{label('eligibility')}</Label>
+                      <NativeSelect
+                        disabled={locked}
+                        id="gift-eligibility-filter"
+                        className="w-full"
+                        value={eligibility}
+                        onChange={(event) => setEligibility(event.target.value)}
+                      >
+                        <option value="">{label('all')}</option>
+                        <option value="public">{label('public')}</option>
+                        <option value="profile">{label('restricted')}</option>
+                      </NativeSelect>
+                    </div>
+                    <div className="flex min-w-0 flex-col gap-2">
+                      <Label htmlFor="gift-expiry-filter">{label('expiry')}</Label>
+                      <NativeSelect
+                        disabled={locked}
+                        id="gift-expiry-filter"
+                        className="w-full"
+                        value={expiry}
+                        onChange={(event) => setExpiry(event.target.value)}
+                      >
+                        <option value="">{label('all')}</option>
+                        <option value="not_expired">{label('notExpired')}</option>
+                        <option value="expired">{label('expired')}</option>
+                      </NativeSelect>
+                    </div>
+                  </div>
+                ),
+              }}
+              actions={
+                <Button type="submit" variant="secondary" disabled={locked}>
+                  {label('search')}
+                </Button>
+              }
+              refresh={
+                <ListRefreshButton
+                  ref={refreshButton}
+                  label={label('refresh')}
+                  disabled={pending}
+                  refreshing={catalogue.loading}
+                  focusableWhenDisabled={catalogue.loading && !pending}
+                  onClick={refresh}
+                />
+              }
+            />
           </form>
-        </ListPage.Toolbar>
+        )}
         <CommandFeedback message={saved ? label('saved') : null} />
         {uncertain && (
           <div role="alert" className="space-y-2">
@@ -520,30 +703,34 @@ export default function AdminGiftCodesPage({
           error={catalogue.error || scope.denied || preference.status === 'error'}
           empty={false}
           emptyView={null}
-          retainContent={catalogue.rows !== null}
+          retainContent={canRender}
           loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
           errorView={<p role="alert">{scope.denied ? label('denied') : label('error')}</p>}
         >
-          {catalogue.rows !== null && !scope.denied && (
+          {canRender && (
             <>
-              <div>
-                <Button disabled={!ready || locked} onClick={() => choose('new')}>
-                  {label('add')}
-                </Button>
-              </div>
+              {!workspace && (
+                <div>
+                  <Button disabled={!ready || locked} onClick={() => choose('new')}>
+                    {label('add')}
+                  </Button>
+                </div>
+              )}
               {editor && editor !== 'new' && (
                 <div className="space-y-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={detail.loading || pending}
-                    onClick={() => {
-                      if (!sending.current) detail.retry();
-                    }}
-                  >
-                    {label('refreshStats')}
-                  </Button>
-                  {!draft && (
+                  {!record && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={detail.loading || pending}
+                      onClick={() => {
+                        if (!sending.current) detail.retry();
+                      }}
+                    >
+                      {label('refreshStats')}
+                    </Button>
+                  )}
+                  {!record && !draft && (
                     <Button type="button" variant="outline" onClick={() => choose(null)}>
                       {label('cancel')}
                     </Button>
@@ -551,16 +738,18 @@ export default function AdminGiftCodesPage({
                   {detail.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
                   {detail.error && (
                     <p role="alert">
-                      {label('statsError')}{' '}
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => {
-                          if (!sending.current) detail.retry();
-                        }}
-                      >
-                        {label('retry')}
-                      </Button>
+                      {label(detail.missing ? 'missing' : 'statsError')}{' '}
+                      {!detail.missing && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            if (!sending.current) detail.retry();
+                          }}
+                        >
+                          {label('retry')}
+                        </Button>
+                      )}
                     </p>
                   )}
                 </div>
@@ -577,71 +766,213 @@ export default function AdminGiftCodesPage({
                       }
                     }}
                     onSubmit={save}
-                    className="flex flex-col gap-4 border-y py-5"
+                    className="min-w-0 rounded-xl border bg-card [&_[data-slot=form-message]]:min-h-4"
                   >
-                    {stale && <p role="alert">{label('stale')}</p>}
-                    <fieldset disabled={locked} className="min-w-0 space-y-4">
-                      <FormInput
-                        control={form.control}
-                        name="code"
-                        id="gift-code"
-                        label={label('code')}
-                        disabled={locked}
-                        inputProps={{ dir: 'ltr', maxLength: 64, 'aria-required': true }}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="discountType"
-                        render={({ field }) => (
-                          <FormItem id="gift-type">
-                            <Label htmlFor="gift-type">{label('type')}</Label>
-                            <FormControl>
-                              <select
-                                id="gift-type"
-                                aria-required="true"
-                                name={field.name}
-                                ref={field.ref}
-                                onBlur={field.onBlur}
-                                disabled={locked}
-                                className="max-w-full rounded-md border bg-background p-2"
-                                value={draft.discountType}
-                                onChange={(event) =>
-                                  updateDraft({
-                                    ...draft,
-                                    discountType: event.target.value as Draft['discountType'],
-                                    value: '',
-                                    cap: '',
-                                  })
-                                }
-                              >
-                                <option value="fixed_irr">{label('fixed')}</option>
-                                <option value="percentage">{label('percentage')}</option>
-                              </select>
-                            </FormControl>
-                            <FormMessage reserveSpace />
-                          </FormItem>
-                        )}
-                      />
-                      <FormInput
-                        control={form.control}
-                        name="value"
-                        id="gift-value"
-                        label={label(draft.discountType === 'percentage' ? 'percent' : 'amount')}
-                        disabled={locked}
-                        inputProps={{
-                          inputMode: draft.discountType === 'percentage' ? 'decimal' : 'numeric',
-                          maxLength: 19,
-                          dir: 'ltr',
-                          'aria-required': true,
-                        }}
-                      />
-                      {draft.discountType === 'percentage' && (
-                        <>
+                    {stale && (
+                      <p className="mx-4 mt-4 text-destructive" role="alert">
+                        {label('stale')}
+                      </p>
+                    )}
+                    <fieldset disabled={locked} className="min-w-0">
+                      <legend className="sr-only">{label('editor')}</legend>
+                      <RecordEditorSection title={label('discount')}>
+                        <div className={`${recordEditorGrid} min-[375px]:grid-cols-2`}>
                           <FormInput
                             control={form.control}
-                            name="cap"
-                            id="gift-cap"
-                            label={label('cap')}
+                            name="code"
+                            id="gift-code"
+                            label={label('code')}
+                            disabled={locked}
+                            inputProps={{
+                              dir: 'ltr',
+                              maxLength: 64,
+                              'aria-required': true,
+                              placeholder: 'AUTUMN-25',
+                            }}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="discountType"
+                            render={({ field }) => (
+                              <FormItem id="gift-type">
+                                <FormLabel>{label('type')}</FormLabel>
+                                <FormControl>
+                                  <NativeSelect
+                                    id="gift-type"
+                                    aria-required="true"
+                                    name={field.name}
+                                    ref={field.ref}
+                                    onBlur={field.onBlur}
+                                    disabled={locked}
+                                    className="w-full"
+                                    value={draft.discountType}
+                                    onChange={(event) =>
+                                      updateDraft({
+                                        ...draft,
+                                        discountType: event.target.value as Draft['discountType'],
+                                        value: '',
+                                        cap: '',
+                                      })
+                                    }
+                                  >
+                                    <option value="fixed_irr">{label('fixed')}</option>
+                                    <option value="percentage">{label('percentage')}</option>
+                                  </NativeSelect>
+                                </FormControl>
+                                <FormMessage reserveSpace />
+                              </FormItem>
+                            )}
+                          />
+                          <FormInput
+                            control={form.control}
+                            name="value"
+                            id="gift-value"
+                            label={label(
+                              draft.discountType === 'percentage' ? 'percent' : 'amount'
+                            )}
+                            disabled={locked}
+                            inputProps={{
+                              inputMode:
+                                draft.discountType === 'percentage' ? 'decimal' : 'numeric',
+                              maxLength: 19,
+                              dir: 'ltr',
+                              'aria-required': true,
+                            }}
+                          />
+                          {draft.discountType === 'percentage' && (
+                            <>
+                              <FormInput
+                                control={form.control}
+                                name="cap"
+                                id="gift-cap"
+                                label={label('cap')}
+                                disabled={locked}
+                                inputProps={{
+                                  inputMode: 'numeric',
+                                  maxLength: 19,
+                                  dir: 'ltr',
+                                  'aria-required': true,
+                                }}
+                              />
+                            </>
+                          )}
+                        </div>
+                        {draft.discountType === 'percentage' && (
+                          <div
+                            role="note"
+                            className="space-y-2 rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground"
+                          >
+                            <p>{label('percentageWarning')}</p>
+                            {capSubtotal !== null && (
+                              <dl className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 border-t pt-2">
+                                <dt>{label('capSubtotal')}</dt>
+                                <dd className="font-medium text-foreground tabular-nums wrap-anywhere">
+                                  <bdi>{money(capSubtotal)}</bdi>
+                                </dd>
+                              </dl>
+                            )}
+                          </div>
+                        )}
+                      </RecordEditorSection>
+                      <RecordEditorSection title={label('applicability')}>
+                        <FormField
+                          control={form.control}
+                          name="eligibility"
+                          render={({ field }) => (
+                            <FormItem id="gift-eligibility">
+                              <FormLabel>{label('eligibility')}</FormLabel>
+                              <FormControl>
+                                <NativeSelect
+                                  id="gift-eligibility"
+                                  aria-required="true"
+                                  name={field.name}
+                                  ref={field.ref}
+                                  onBlur={field.onBlur}
+                                  disabled={locked}
+                                  className="w-full"
+                                  value={draft.eligibility}
+                                  onChange={(event) =>
+                                    updateDraft({
+                                      ...draft,
+                                      eligibility: event.target.value as Draft['eligibility'],
+                                      profileIds: [],
+                                    })
+                                  }
+                                >
+                                  <option value="public">{label('public')}</option>
+                                  <option value="profile">{label('restricted')}</option>
+                                </NativeSelect>
+                              </FormControl>
+                              <FormMessage reserveSpace />
+                            </FormItem>
+                          )}
+                        />
+                        {draft.eligibility === 'profile' &&
+                          group(
+                            'profileIds',
+                            <GiftProfilePicker
+                              ids={draft.profileIds}
+                              onChange={(profileIds) => updateDraft({ ...draft, profileIds })}
+                              onDenied={scope.deny}
+                              label={label}
+                            />
+                          )}
+                        {group(
+                          'categories',
+                          <fieldset className="rounded-lg border px-3 pb-3">
+                            <legend className="px-1 font-semibold">{label('categories')}</legend>
+                            <p className="mb-1 text-xs text-muted-foreground">
+                              {label('categoriesHelp')}
+                            </p>
+                            <div className="grid gap-x-2 min-[375px]:grid-cols-2 sm:grid-cols-3">
+                              {GIFT_CODE_CATEGORIES.map((category) => (
+                                <label
+                                  key={category}
+                                  className="flex min-h-11 min-w-0 cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-sm hover:bg-muted/40"
+                                >
+                                  <input
+                                    type="checkbox"
+                                    className="size-4 shrink-0 accent-primary"
+                                    checked={draft.categories.includes(category)}
+                                    onChange={(event) =>
+                                      updateDraft({
+                                        ...draft,
+                                        categories: event.target.checked
+                                          ? [...draft.categories, category]
+                                          : draft.categories.filter((value) => value !== category),
+                                      })
+                                    }
+                                  />
+                                  {label(`category.${category}`)}
+                                </label>
+                              ))}
+                            </div>
+                          </fieldset>
+                        )}
+                      </RecordEditorSection>
+                      <RecordEditorSection title={label('usageLimits')}>
+                        <div className={recordEditorGrid}>
+                          {(['totalLimit', 'perProfileLimit'] as const).map((field) => (
+                            <FormInput
+                              key={field}
+                              control={form.control}
+                              name={field}
+                              id={`gift-${field}`}
+                              label={label(field)}
+                              disabled={locked}
+                              inputProps={{
+                                inputMode: 'numeric',
+                                maxLength: 10,
+                                placeholder: label('unlimited'),
+                                dir: 'ltr',
+                              }}
+                            />
+                          ))}
+                          <FormInput
+                            control={form.control}
+                            name="minimum"
+                            id="gift-minimum"
+                            label={label('minimum')}
                             disabled={locked}
                             inputProps={{
                               inputMode: 'numeric',
@@ -650,239 +981,137 @@ export default function AdminGiftCodesPage({
                               'aria-required': true,
                             }}
                           />
-                          <p role="note" className="rounded-md border p-3">
-                            {label('percentageWarning')}
-                          </p>
-                        </>
-                      )}
-                      <FormField
-                        control={form.control}
-                        name="eligibility"
-                        render={({ field }) => (
-                          <FormItem id="gift-eligibility">
-                            <Label htmlFor="gift-eligibility">{label('eligibility')}</Label>
-                            <FormControl>
-                              <select
-                                id="gift-eligibility"
-                                aria-required="true"
-                                name={field.name}
-                                ref={field.ref}
-                                onBlur={field.onBlur}
-                                disabled={locked}
-                                className="max-w-full rounded-md border bg-background p-2"
-                                value={draft.eligibility}
-                                onChange={(event) =>
-                                  updateDraft({
-                                    ...draft,
-                                    eligibility: event.target.value as Draft['eligibility'],
-                                    profileIds: [],
-                                  })
-                                }
-                              >
-                                <option value="public">{label('public')}</option>
-                                <option value="profile">{label('restricted')}</option>
-                              </select>
-                            </FormControl>
-                            <FormMessage reserveSpace />
-                          </FormItem>
-                        )}
-                      />
-                      {draft.eligibility === 'profile' &&
-                        group(
-                          'profileIds',
-                          <GiftProfilePicker
-                            ids={draft.profileIds}
-                            onChange={(profileIds) => updateDraft({ ...draft, profileIds })}
-                            onDenied={scope.deny}
-                            label={label}
-                          />
-                        )}
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        {(['totalLimit', 'perProfileLimit'] as const).map((field) => (
-                          <FormInput
-                            key={field}
-                            control={form.control}
-                            name={field}
-                            id={`gift-${field}`}
-                            label={label(field)}
-                            disabled={locked}
-                            inputProps={{
-                              inputMode: 'numeric',
-                              maxLength: 10,
-                              placeholder: label('unlimited'),
-                              dir: 'ltr',
-                            }}
-                          />
-                        ))}
-                      </div>
-                      <FormInput
-                        control={form.control}
-                        name="minimum"
-                        id="gift-minimum"
-                        label={label('minimum')}
-                        disabled={locked}
-                        inputProps={{
-                          inputMode: 'numeric',
-                          maxLength: 19,
-                          dir: 'ltr',
-                          'aria-required': true,
-                        }}
-                      />
-                      {group(
-                        'categories',
-                        <fieldset className="rounded-md border p-4">
-                          <legend className="px-1 font-semibold">{label('categories')}</legend>
-                          <p className="mb-3 text-sm text-muted-foreground">
-                            {label('categoriesHelp')}
-                          </p>
-                          <div className="flex flex-wrap gap-4">
-                            {GIFT_CODE_CATEGORIES.map((category) => (
-                              <label key={category} className="flex items-center gap-2">
-                                <input
-                                  type="checkbox"
-                                  checked={draft.categories.includes(category)}
-                                  onChange={(event) =>
-                                    updateDraft({
-                                      ...draft,
-                                      categories: event.target.checked
-                                        ? [...draft.categories, category]
-                                        : draft.categories.filter((value) => value !== category),
-                                    })
-                                  }
-                                />
-                                {label(`category.${category}`)}
-                              </label>
-                            ))}
-                          </div>
-                        </fieldset>
-                      )}
-                      {group(
-                        'restoreAfterPayment',
-                        <fieldset className="rounded-md border p-4">
-                          <legend className="px-1 font-semibold">
-                            {label('restorationPolicy')}
-                          </legend>
-                          <label className="flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={draft.restoreOnCancel}
-                              onChange={(event) =>
-                                updateDraft({
-                                  ...draft,
-                                  restoreOnCancel: event.target.checked,
-                                  restoreAfterPayment:
-                                    event.target.checked && draft.restoreAfterPayment,
-                                })
-                              }
-                            />
-                            {label('restoreOnCancel')}
-                          </label>
-                          <label className="mt-3 flex items-center gap-2">
-                            <input
-                              type="checkbox"
-                              checked={draft.restoreAfterPayment}
-                              disabled={!draft.restoreOnCancel}
-                              onChange={(event) =>
-                                updateDraft({ ...draft, restoreAfterPayment: event.target.checked })
-                              }
-                            />
-                            {label('restoreAfterPayment')}
-                          </label>
-                        </fieldset>
-                      )}
-                      <p className="text-sm">
-                        {label('timezone')}: <bdi>{zone}</bdi>
-                      </p>
-                      {(['start', 'end'] as const).map((field) =>
-                        group(
-                          field,
-                          <fieldset key={field} className="rounded-md border p-4">
-                            <legend className="px-1 font-semibold">{label(field)}</legend>
-                            {(field === 'end' || editor === 'new') && (
-                              <label className="mb-3 flex items-center gap-2">
-                                <input
-                                  type="checkbox"
-                                  checked={Boolean(draft[field].date)}
-                                  onChange={(event) =>
-                                    updateDraft({
-                                      ...draft,
-                                      [field]: {
-                                        ...dateField(
-                                          event.target.checked ? new Date().toISOString() : null,
-                                          zone
-                                        ),
-                                        changed: true,
-                                      },
-                                    })
-                                  }
-                                />
-                                {label(field === 'start' ? 'setStart' : 'setEnd')}
-                              </label>
-                            )}
-                            {draft[field].date ? (
-                              <div className="grid gap-4 sm:grid-cols-2">
-                                <DatePicker
-                                  label={label(`${field}Date`)}
-                                  placeholder={label('chooseDate')}
-                                  locale={locale}
-                                  timezone={zone}
-                                  value={draft[field].date}
-                                  triggerProps={{
-                                    'aria-required': true,
-                                    'aria-invalid': !!form.formState.errors[field] || undefined,
-                                    'aria-describedby': form.formState.errors[field]
-                                      ? `gift-${field}-message`
-                                      : undefined,
-                                  }}
-                                  onChange={(date) =>
-                                    updateDraft({
-                                      ...draft,
-                                      [field]: { ...draft[field], date, changed: true },
-                                    })
-                                  }
-                                />
-                                <div>
-                                  <Label htmlFor={`gift-${field}-time`}>
-                                    {label(`${field}Time`)}
-                                  </Label>
-                                  <Input
-                                    id={`gift-${field}-time`}
-                                    type="time"
-                                    required
-                                    aria-required="true"
-                                    aria-invalid={!!form.formState.errors[field] || undefined}
-                                    aria-describedby={
-                                      form.formState.errors[field]
-                                        ? `gift-${field}-message`
-                                        : undefined
-                                    }
-                                    value={draft[field].time}
+                        </div>
+                      </RecordEditorSection>
+                      <RecordEditorSection title={label('window')}>
+                        <p className="text-sm">
+                          {label('timezone')}: <bdi>{zone}</bdi>
+                        </p>
+                        {(['start', 'end'] as const).map((field) =>
+                          group(
+                            field,
+                            <fieldset key={field} className="rounded-md border p-4">
+                              <legend className="px-1 font-semibold">{label(field)}</legend>
+                              {(field === 'end' || editor === 'new') && (
+                                <label className="mb-3 flex items-center gap-2">
+                                  <input
+                                    type="checkbox"
+                                    checked={Boolean(draft[field].date)}
                                     onChange={(event) =>
                                       updateDraft({
                                         ...draft,
                                         [field]: {
-                                          ...draft[field],
-                                          time: event.target.value,
+                                          ...dateField(
+                                            event.target.checked ? new Date().toISOString() : null,
+                                            zone
+                                          ),
                                           changed: true,
                                         },
                                       })
                                     }
                                   />
+                                  {label(field === 'start' ? 'setStart' : 'setEnd')}
+                                </label>
+                              )}
+                              {draft[field].date ? (
+                                <div className={recordEditorGrid}>
+                                  <DatePicker
+                                    label={label(`${field}Date`)}
+                                    placeholder={label('chooseDate')}
+                                    locale={locale}
+                                    timezone={zone}
+                                    value={draft[field].date}
+                                    triggerProps={{
+                                      'aria-required': true,
+                                      'aria-invalid': !!form.formState.errors[field] || undefined,
+                                      'aria-describedby': form.formState.errors[field]
+                                        ? `gift-${field}-message`
+                                        : undefined,
+                                    }}
+                                    onChange={(date) =>
+                                      updateDraft({
+                                        ...draft,
+                                        [field]: { ...draft[field], date, changed: true },
+                                      })
+                                    }
+                                  />
+                                  <div className={recordEditorField}>
+                                    <Label htmlFor={`gift-${field}-time`}>
+                                      {label(`${field}Time`)}
+                                    </Label>
+                                    <Input
+                                      id={`gift-${field}-time`}
+                                      type="time"
+                                      required
+                                      aria-required="true"
+                                      aria-invalid={!!form.formState.errors[field] || undefined}
+                                      aria-describedby={
+                                        form.formState.errors[field]
+                                          ? `gift-${field}-message`
+                                          : undefined
+                                      }
+                                      value={draft[field].time}
+                                      onChange={(event) =>
+                                        updateDraft({
+                                          ...draft,
+                                          [field]: {
+                                            ...draft[field],
+                                            time: event.target.value,
+                                            changed: true,
+                                          },
+                                        })
+                                      }
+                                    />
+                                  </div>
                                 </div>
-                              </div>
-                            ) : (
-                              <p>{label(field === 'start' ? 'immediate' : 'noExpiry')}</p>
-                            )}
+                              ) : (
+                                <p>{label(field === 'start' ? 'immediate' : 'noExpiry')}</p>
+                              )}
+                            </fieldset>
+                          )
+                        )}
+                      </RecordEditorSection>
+                      <RecordEditorSection title={label('restorationPolicy')}>
+                        {group(
+                          'restoreAfterPayment',
+                          <fieldset className="space-y-2">
+                            <legend className="sr-only">{label('restorationPolicy')}</legend>
+                            <label className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                checked={draft.restoreOnCancel}
+                                onChange={(event) =>
+                                  updateDraft({
+                                    ...draft,
+                                    restoreOnCancel: event.target.checked,
+                                    restoreAfterPayment:
+                                      event.target.checked && draft.restoreAfterPayment,
+                                  })
+                                }
+                              />
+                              {label('restoreOnCancel')}
+                            </label>
+                            <label className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                checked={draft.restoreAfterPayment}
+                                disabled={!draft.restoreOnCancel}
+                                onChange={(event) =>
+                                  updateDraft({
+                                    ...draft,
+                                    restoreAfterPayment: event.target.checked,
+                                  })
+                                }
+                              />
+                              {label('restoreAfterPayment')}
+                            </label>
                           </fieldset>
-                        )
-                      )}
+                        )}
+                      </RecordEditorSection>
                       {form.formState.errors.root?.validation?.message && (
                         <p role="alert">{form.formState.errors.root.validation.message}</p>
                       )}
-                      <div className="flex gap-2">
-                        <FormSubmit loading={validating} disabled={locked || !editorReady || stale}>
-                          {label('save')}
-                        </FormSubmit>
+                      <RecordEditorActions className="rounded-b-xl bg-card px-3 py-2 max-lg:sticky max-lg:bottom-0 max-lg:z-20 sm:px-4">
                         {stale && (
                           <Button
                             type="button"
@@ -904,19 +1133,95 @@ export default function AdminGiftCodesPage({
                         >
                           {label('cancel')}
                         </Button>
-                      </div>
+                        <FormSubmit loading={validating} disabled={locked || !editorReady || stale}>
+                          {label('save')}
+                        </FormSubmit>
+                      </RecordEditorActions>
                     </fieldset>
                   </form>
                 </Form>
               )}
-              {stats && (
+              {showDetail && stats && (
+                <section
+                  className="space-y-4 rounded-lg border bg-card p-4 md:p-6"
+                  aria-label={label('editor')}
+                >
+                  <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+                    {(
+                      [
+                        ['discount', discount(stats.code)],
+                        ...(stats.code.maxCapIrr ? [['cap', money(stats.code.maxCapIrr)]] : []),
+                        [
+                          'eligibility',
+                          label(stats.code.eligibility === 'profile' ? 'restricted' : 'public'),
+                        ],
+                        ['categories', categories(stats.code.categories)],
+                        ['minimum', money(stats.code.minOrderAmount)],
+                        ['start', formatDate(stats.code.validFrom)],
+                        [
+                          'end',
+                          stats.code.validUntil
+                            ? formatDate(stats.code.validUntil)
+                            : label('noExpiry'),
+                        ],
+                        [
+                          'totalLimit',
+                          stats.code.totalLimit === null
+                            ? label('unlimited')
+                            : numbers.number(stats.code.totalLimit),
+                        ],
+                        [
+                          'perProfileLimit',
+                          stats.code.perProfileLimit === null
+                            ? label('unlimited')
+                            : numbers.number(stats.code.perProfileLimit),
+                        ],
+                        ['restorationPolicy', restoration(stats.code)],
+                      ] as const
+                    ).map(([key, value]) => (
+                      <div key={key} className="min-w-0">
+                        <dt className="text-sm text-muted-foreground">{label(key!)}</dt>
+                        <dd className="mt-1 font-medium" dir="auto">
+                          {value}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                  {stats.code.eligibility === 'profile' && (
+                    <GiftProfilePicker
+                      ids={stats.code.profileIds}
+                      label={label}
+                      onDenied={scope.deny}
+                    />
+                  )}
+                </section>
+              )}
+              {stats && (showDetail || !workspace) && (
                 <section
                   aria-label={label('usageStats')}
                   className="space-y-4 rounded-md border p-4"
                 >
-                  <h2 className="text-lg font-semibold">
-                    {label('usageStats')}: <bdi>{stats.code.code}</bdi>
-                  </h2>
+                  <h2 className="text-lg font-semibold">{label('usageStats')}</h2>
+                  <dl className="grid gap-4 sm:grid-cols-3">
+                    <div>
+                      <dt className="text-sm text-muted-foreground">{label('consumed')}</dt>
+                      <dd className="font-medium tabular-nums">
+                        {numbers.number(stats.code.usage.consumed)}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm text-muted-foreground">{label('released')}</dt>
+                      <dd className="font-medium tabular-nums">
+                        {numbers.number(stats.code.usage.released)}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm text-muted-foreground">{label('totalDiscount')}</dt>
+                      <dd className="font-medium tabular-nums">
+                        {money(stats.code.usage.totalDiscountIrr)}
+                      </dd>
+                    </div>
+                  </dl>
                   <div>
                     <h3 className="font-medium">{label('profileUsage')}</h3>
                     {stats.perProfile.length ? (
@@ -964,160 +1269,199 @@ export default function AdminGiftCodesPage({
                   </div>
                 </section>
               )}
-              <OperationalQueueTable
-                locale={locale}
-                cardHeading="h2"
-                rows={rows}
-                caption={label('title')}
-                scrollLabel={label('tableTitle')}
-                nameHeader={label('code')}
-                loading={catalogue.loading || catalogue.pending}
-                emptyMessage={label('empty')}
-                renderName={(row) => (
-                  <span dir="ltr">
-                    <TextCell value={row.code} />
-                  </span>
-                )}
-                fields={[
-                  {
-                    id: 'status',
-                    label: label('status'),
-                    render: (row) => <>{label(row.status)}</>,
-                  },
-                  {
-                    id: 'eligibility',
-                    label: label('eligibility'),
-                    render: (row) => (
-                      <>{label(row.eligibility === 'profile' ? 'restricted' : 'public')}</>
-                    ),
-                  },
-                  {
-                    id: 'restoration',
-                    label: label('restorationPolicy'),
-                    render: (row) => (
-                      <>
-                        {label(
-                          !row.restoreOnCancel
-                            ? 'noRestoration'
-                            : row.restoreAfterPayment
-                              ? 'restorePaid'
-                              : 'restoreUnpaid'
+              {!record && (
+                <>
+                  <OperationalQueueTable
+                    locale={locale}
+                    cardHeading="h2"
+                    rows={rows}
+                    caption={label('title')}
+                    scrollLabel={label('tableTitle')}
+                    nameHeader={label('code')}
+                    loading={catalogue.loading || catalogue.pending}
+                    emptyMessage={label('empty')}
+                    tableClassName="min-w-[52rem] [&_[data-slot=table-cell-details]]:min-w-28 [&_td]:px-2.5 [&_th]:px-2.5 [&_th[scope=row]]:min-w-36"
+                    fieldGroups={[
+                      {
+                        label: label('eligibility'),
+                        fields: ['eligibility', 'restoration'],
+                      },
+                      {
+                        label: label('usageStats'),
+                        fields: ['consumed', 'released', 'totalDiscount'],
+                      },
+                    ]}
+                    renderName={(row) =>
+                      workspace ? (
+                        <Link
+                          to="/admin/gift-codes/$codeId/{-$action}"
+                          params={{ codeId: row.id, action: undefined }}
+                          search={workspace.search}
+                          disabled={!ready || locked}
+                          className="inline-flex max-w-48 rounded-md bg-primary/8 px-1.5 py-1 font-mono text-[0.8125rem] leading-5 font-semibold text-primary hover:bg-primary/12 hover:underline focus-visible:ring-2 focus-visible:ring-primary"
+                        >
+                          <bdi dir="ltr" className="wrap-anywhere">
+                            {row.code}
+                          </bdi>
+                        </Link>
+                      ) : (
+                        <TextCell value={row.code} />
+                      )
+                    }
+                    fields={[
+                      {
+                        id: 'status',
+                        label: label('status'),
+                        render: (row) => (
+                          <Badge variant="outline">{label(availability(row, now))}</Badge>
+                        ),
+                      },
+                      {
+                        id: 'eligibility',
+                        label: label('eligibility'),
+                        render: (row) => (
+                          <>{label(row.eligibility === 'profile' ? 'restricted' : 'public')}</>
+                        ),
+                      },
+                      {
+                        id: 'restoration',
+                        label: label('restorationPolicy'),
+                        render: (row) => <>{restoration(row)}</>,
+                      },
+                      {
+                        id: 'discount',
+                        label: label('discount'),
+                        render: (row) => (
+                          <div className="space-y-1">
+                            <span className="block text-xs text-muted-foreground">
+                              {label(row.discountType === 'percentage' ? 'percentage' : 'fixed')}
+                            </span>
+                            <bdi className="tabular-nums">{discount(row)}</bdi>
+                            {row.discountType === 'percentage' && (
+                              <span className="block">
+                                {label('cap')}:{' '}
+                                <bdi className="tabular-nums">{money(row.maxCapIrr!)}</bdi>
+                              </span>
+                            )}
+                          </div>
+                        ),
+                      },
+                      {
+                        id: 'window',
+                        label: label('window'),
+                        render: (row) => (
+                          <div className="space-y-2 text-sm md:whitespace-nowrap">
+                            <div className="flex flex-col gap-0.5">
+                              <span className="text-xs text-muted-foreground">
+                                {label('start')}
+                              </span>
+                              <DateCell
+                                value={row.validFrom}
+                                format={() => formatDate(row.validFrom)}
+                              />
+                            </div>
+                            <div className="flex flex-col gap-0.5">
+                              <span className="text-xs text-muted-foreground">{label('end')}</span>
+                              {row.validUntil ? (
+                                <DateCell
+                                  value={row.validUntil}
+                                  format={() => formatDate(row.validUntil!)}
+                                />
+                              ) : (
+                                label('noExpiry')
+                              )}
+                            </div>
+                          </div>
+                        ),
+                      },
+                      {
+                        id: 'consumed',
+                        label: label('consumed'),
+                        render: (row) => (
+                          <bdi className="tabular-nums">{numbers.number(row.usage.consumed)}</bdi>
+                        ),
+                      },
+                      {
+                        id: 'released',
+                        label: label('released'),
+                        render: (row) => (
+                          <bdi className="tabular-nums">{numbers.number(row.usage.released)}</bdi>
+                        ),
+                      },
+                      {
+                        id: 'totalDiscount',
+                        label: label('totalDiscount'),
+                        render: (row) => (
+                          <bdi className="tabular-nums md:whitespace-nowrap">
+                            {money(row.usage.totalDiscountIrr)}
+                          </bdi>
+                        ),
+                      },
+                    ]}
+                    actionHeader={label('actions')}
+                    renderActions={(row) => (
+                      <div className="flex flex-wrap gap-2">
+                        {workspace ? (
+                          <Link
+                            to="/admin/gift-codes/$codeId/{-$action}"
+                            params={{ codeId: row.id, action: 'edit' }}
+                            search={workspace.search}
+                            disabled={!ready || locked}
+                            className={buttonVariants({
+                              variant: 'outline',
+                              className: 'min-h-11',
+                            })}
+                            aria-label={`${label('edit')} ${row.code}`}
+                            data-table-action-tooltip={label('edit')}
+                          >
+                            <TableActionIcon icon={TablePencilIcon}>
+                              {label('edit')}
+                            </TableActionIcon>
+                          </Link>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            disabled={!ready || locked}
+                            aria-label={`${label('edit')} ${row.code}`}
+                            onClick={() => choose(row.id)}
+                            data-table-action-tooltip={label('edit')}
+                          >
+                            <TableActionIcon icon={TablePencilIcon}>
+                              {label('edit')}
+                            </TableActionIcon>
+                          </Button>
                         )}
-                      </>
-                    ),
-                  },
-                  {
-                    id: 'discount',
-                    label: label('discount'),
-                    render: (row) => (
-                      <div className="space-y-1">
-                        <span className="block text-xs text-muted-foreground">
-                          {label(row.discountType === 'percentage' ? 'percentage' : 'fixed')}
-                        </span>
-                        <bdi className="tabular-nums">
-                          {row.discountType === 'percentage'
-                            ? numbers.percent(Number(row.discountValue) / 10000)
-                            : money(row.discountValue)}
-                        </bdi>
-                        {row.discountType === 'percentage' && (
-                          <span className="block">
-                            {label('cap')}:{' '}
-                            <bdi className="tabular-nums">{money(row.maxCapIrr!)}</bdi>
-                          </span>
-                        )}
-                      </div>
-                    ),
-                  },
-                  {
-                    id: 'window',
-                    label: label('window'),
-                    render: (row) => (
-                      <div className="space-y-1 text-sm">
-                        <div>
-                          {label('start')}:{' '}
-                          <DateCell
-                            value={row.validFrom}
-                            format={() => formatDate(row.validFrom)}
-                          />
-                        </div>
-                        <div>
-                          {label('end')}:{' '}
-                          {row.validUntil ? (
-                            <DateCell
-                              value={row.validUntil}
-                              format={() => formatDate(row.validUntil!)}
-                            />
-                          ) : (
-                            label('noExpiry')
+                        <Button
+                          variant="outline"
+                          disabled={!ready || locked}
+                          aria-label={`${label(row.status === 'active' ? 'deactivate' : 'activate')} ${row.code}`}
+                          onClick={() => toggleCode(row)}
+                          data-table-action-tooltip={label(
+                            row.status === 'active' ? 'deactivate' : 'activate'
                           )}
-                        </div>
+                        >
+                          <TableActionIcon
+                            icon={row.status === 'active' ? TableBanIcon : TableCheckCircleIcon}
+                          >
+                            {label(row.status === 'active' ? 'deactivate' : 'activate')}
+                          </TableActionIcon>
+                        </Button>
                       </div>
-                    ),
-                  },
-                  {
-                    id: 'consumed',
-                    label: label('consumed'),
-                    render: (row) => (
-                      <bdi className="tabular-nums">{numbers.number(row.usage.consumed)}</bdi>
-                    ),
-                  },
-                  {
-                    id: 'released',
-                    label: label('released'),
-                    render: (row) => (
-                      <bdi className="tabular-nums">{numbers.number(row.usage.released)}</bdi>
-                    ),
-                  },
-                  {
-                    id: 'totalDiscount',
-                    label: label('totalDiscount'),
-                    render: (row) => (
-                      <bdi className="tabular-nums">{money(row.usage.totalDiscountIrr)}</bdi>
-                    ),
-                  },
-                ]}
-                actionHeader={label('actions')}
-                renderActions={(row) => (
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      variant="outline"
-                      disabled={!ready || locked}
-                      aria-label={`${label('edit')} ${row.code}`}
-                      onClick={() => choose(row.id)}
-                    >
-                      {label('edit')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      disabled={!ready || locked}
-                      aria-label={`${label(row.status === 'active' ? 'deactivate' : 'activate')} ${row.code}`}
-                      onClick={() =>
-                        propose(
-                          `/api/admin/promotions/gift-codes/${row.id}/toggle`,
-                          'POST',
-                          label(row.status === 'active' ? 'deactivate' : 'activate'),
-                          `${row.code}. ${label('confirmStatus')}`,
-                          { status: row.status === 'active' ? 'inactive' : 'active' },
-                          row
-                        )
-                      }
-                    >
-                      {label(row.status === 'active' ? 'deactivate' : 'activate')}
-                    </Button>
-                  </div>
-                )}
-              />
-              {catalogue.more === 'error' && <p role="alert">{label('moreError')}</p>}
-              <ListPage.Pagination
-                kind="cursor"
-                hasMore={catalogue.hasMore}
-                loading={catalogue.more === 'loading' || locked}
-                onNext={() => {
-                  if (!owner.current) void catalogue.loadMore();
-                }}
-                label={label('pagination')}
-                nextLabel={label('loadMore')}
-              />
+                    )}
+                  />
+                  {catalogue.more === 'error' && <p role="alert">{label('moreError')}</p>}
+                  <ListPage.Pagination
+                    kind="cursor"
+                    hasMore={catalogue.hasMore}
+                    loading={catalogue.more === 'loading' || locked}
+                    onNext={() => {
+                      if (!owner.current) void catalogue.loadMore();
+                    }}
+                    label={label('pagination')}
+                    nextLabel={label('loadMore')}
+                  />
+                </>
+              )}
             </>
           )}
         </ListPage.Content>
@@ -1137,7 +1481,7 @@ export default function AdminGiftCodesPage({
             setAction(null);
             sending.current = false;
             setPending(false);
-            catalogue.retry();
+            if (loadList) catalogue.retry();
             detail.retry();
           }}
           onValidationError={(fields) => {
@@ -1197,6 +1541,7 @@ export default function AdminGiftCodesPage({
                       'eligibility',
                       label(proposed.eligibility === 'profile' ? 'restricted' : 'public'),
                     ],
+                    ['categories', categories(proposed.categories)],
                     [
                       'totalLimit',
                       proposed.totalLimit === null
@@ -1235,6 +1580,28 @@ export default function AdminGiftCodesPage({
                   ))}
                 </dl>
               )}
+              {currentBasis && (
+                <dl className="grid gap-2 text-sm sm:grid-cols-2">
+                  <div>
+                    <dt className="text-muted-foreground">{label('discount')}</dt>
+                    <dd>{discount(currentBasis)}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted-foreground">{label('categories')}</dt>
+                    <dd>{categories(currentBasis.categories)}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted-foreground">{label('eligibility')}</dt>
+                    <dd>
+                      {label(currentBasis.eligibility === 'profile' ? 'restricted' : 'public')}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-muted-foreground">{label('consumed')}</dt>
+                    <dd>{numbers.number(currentBasis.usage.consumed)}</dd>
+                  </div>
+                </dl>
+              )}
               {recovery(true)}
             </div>
           }
@@ -1249,9 +1616,8 @@ export default function AdminGiftCodesPage({
               throw new Error('Obsolete gift receipt');
             if (!matchesGiftReceipt(result, action.body, action.id))
               throw new Error('Invalid gift receipt');
-            catalogue.accept(result);
-            if (selection) selection.set('');
-            else setEditor(null);
+            if (!record) catalogue.accept(result);
+            if (!workspace) setEditor(null);
             setDraft(null);
             setDraftBasis(null);
             setAction(null);
@@ -1259,8 +1625,19 @@ export default function AdminGiftCodesPage({
             sending.current = false;
             setPending(false);
             setUncertain(false);
-            setSaved(true);
-            catalogue.retry();
+            if (record) {
+              if (showDetail) {
+                if (stats) detail.accept({ ...stats, code: result });
+                detail.retry();
+                setSaved(true);
+              } else {
+                toast.success(label('saved'));
+                record.goToRecord(result.id, true);
+              }
+            } else {
+              setSaved(true);
+              catalogue.retry();
+            }
           }}
         />
       )}

@@ -14,7 +14,7 @@ import {
   type OtpConfig,
   type OtpDraft,
 } from '../lib/verification-settings-form.js';
-import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button, Input, Label, ListRefreshButton } from '@barghsa/ui';
 import { CatalogueFieldFeedback, catalogueRootMessage } from './CatalogueEditorFeedback.js';
 import { SettingsFormSection } from './SettingsFormSection.js';
 import { AuditLogViewer } from './AuditLogViewer.js';
@@ -155,12 +155,18 @@ export function OtpConfigPanel({ onReadDenied }: { onReadDenied?: () => void }) 
         title={text('otpTitle')}
         headingId="otp-config-title"
         description={text('otpDescription')}
-        className="mt-8 max-w-xl"
+        className="max-w-xl"
         noValidate
         aria-busy={form.pending || undefined}
         onSubmit={(event) => void submit(event)}
         actions={
           <>
+            <ListRefreshButton
+              label={text('otpReload')}
+              refreshing={state.resource.loading}
+              disabled={pending}
+              onClick={refresh}
+            />
             <Button
               ref={saveRef}
               type="submit"
@@ -177,40 +183,48 @@ export function OtpConfigPanel({ onReadDenied }: { onReadDenied?: () => void }) 
               )}
               {text('otpSave')}
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={state.resource.loading || pending}
-              onClick={refresh}
-            >
-              {text('otpReload')}
-            </Button>
           </>
         }
       >
         {feedback}
         <CommandFeedback message={saved ? text('otpSaved') : null} />
-        <fieldset disabled={blocked || busy} className="space-y-2 min-w-0">
+        <fieldset disabled={blocked || busy} className="m-0 min-w-0 space-y-1 border-0 p-0">
           <legend className="sr-only">{text('otpTitle')}</legend>
           <Label htmlFor="otp-lifetime">{text('otpLabel')}</Label>
-          <Input
-            {...form.bind('ttlSeconds')}
-            id="otp-lifetime"
-            type="number"
-            min={60}
-            max={900}
-            step={1}
-            required
-            aria-required="true"
-            value={form.values.ttlSeconds}
-            aria-describedby={[form.bind('ttlSeconds')['aria-describedby'], 'otp-lifetime-hint']
-              .filter(Boolean)
-              .join(' ')}
-            onChange={(event) => {
-              form.field('ttlSeconds')[1](event.target.value);
-              setSaved(false);
-            }}
-          />
+          <div className="flex min-w-0 items-center gap-3">
+            <Input
+              {...form.bind('ttlSeconds')}
+              className="w-28 min-w-0"
+              dir="ltr"
+              id="otp-lifetime"
+              type="number"
+              min={60}
+              max={900}
+              step={1}
+              required
+              aria-required="true"
+              value={form.values.ttlSeconds}
+              aria-describedby={[
+                form.bind('ttlSeconds')['aria-describedby'],
+                'otp-lifetime-hint',
+                state.current ? 'otp-lifetime-current' : null,
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              onChange={(event) => {
+                form.field('ttlSeconds')[1](event.target.value);
+                setSaved(false);
+              }}
+            />
+            {state.current && (
+              <p
+                id="otp-lifetime-current"
+                className="min-w-0 border-s ps-3 text-sm text-muted-foreground"
+              >
+                {text('otpCurrent').replace('{seconds}', numbers.number(state.current.ttlSeconds))}
+              </p>
+            )}
+          </div>
           <p id="otp-lifetime-hint" className="text-sm text-muted-foreground">
             {text('otpRange')
               .replace('{min}', numbers.number(60))
@@ -220,6 +234,7 @@ export function OtpConfigPanel({ onReadDenied }: { onReadDenied?: () => void }) 
             id={form.errorId('ttlSeconds')}
             error={form.errors.ttlSeconds}
             message={text('invalidLifetime')}
+            compact
           />
         </fieldset>
       </SettingsFormSection>

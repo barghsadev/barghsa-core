@@ -1,6 +1,7 @@
 import type { Page, Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/crm';
+import { tCrmForm } from '@barghsa/i18n/crm-forms';
 import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 
@@ -246,9 +247,15 @@ for (const locale of ['fa', 'en'] as const) {
         await expect
           .poll(() => page.locator('html').evaluate((n) => n.classList.contains('dark')))
           .toBe(dark);
-        const panel = page.locator('#panel-details');
-        const edit = panel.getByRole('button', { name: t('crm.legal.edit', locale), exact: true });
+        const panel = page.locator('main[data-area=admin]');
+        const edit = panel.getByRole('link', { name: t('crm.legal.edit', locale), exact: true });
+        await expect(
+          page
+            .locator('#panel-details')
+            .getByRole('link', { name: t('crm.corrections.request', locale) })
+        ).toHaveCount(2);
         await edit.click();
+        await expect(page).toHaveURL(`/admin/crm/profiles/${profileId}/legal/edit`);
         // The open confirmation makes its background inert; still check that the draft survives.
         const form = panel.getByRole('form', {
           name: t('crm.legal.edit', locale),
@@ -257,10 +264,21 @@ for (const locale of ['fa', 'en'] as const) {
         });
         await expect(form.getByLabel(label('legalName', locale), { exact: true })).toHaveCount(0);
         await expect(
-          panel.getByRole('link', { name: t('crm.corrections.request', locale) })
-        ).toHaveCount(2);
+          form.getByRole('button', { name: t('crm.profile.edit.save', locale), exact: true })
+        ).toBeInViewport({ ratio: 0.99 });
         const registry = form.getByLabel(label('registrationNumber', locale), { exact: true });
         await registry.fill('Discard this draft');
+        const sections = form.getByRole('navigation', {
+          name: tCrmForm('crm.legal.formSections', locale),
+        });
+        await sections
+          .getByRole('link', {
+            name: tCrmForm('crm.legal.representativeDetails', locale),
+            exact: true,
+          })
+          .press('Enter');
+        await expect(form.locator('#crm-legal-representativeDetails')).toBeFocused();
+        await expect(registry).toHaveValue('Discard this draft');
         await expect(page.getByTestId('crm-legal-companyTypeId-retry')).toBeVisible();
         await page.getByTestId('crm-legal-companyTypeId-retry').click();
         await expect(
@@ -270,7 +288,7 @@ for (const locale of ['fa', 'en'] as const) {
         await form
           .getByRole('button', { name: t('crm.profile.edit.cancel', locale), exact: true })
           .click();
-        await expect(edit).toBeFocused();
+        await expect(edit).toBeVisible();
         await edit.click();
         await expect(registry).toHaveValue('REG-OLD');
         for (const [field, value] of Object.entries(changes)) {
@@ -280,12 +298,7 @@ for (const locale of ['fa', 'en'] as const) {
             await control.selectOption(value);
           } else await control.fill(value);
         }
-        await page
-          .getByRole('tab', { name: t('crm.profile.tab.overview', locale), exact: true })
-          .click();
-        await page
-          .getByRole('tab', { name: t('crm.profile.tab.details', locale), exact: true })
-          .click();
+        await expect(page.getByRole('tablist')).toHaveCount(0);
         await expect(registry).toHaveValue('REG-NEW');
         const postal = form.getByLabel(label('officialPostalCode', locale), { exact: true });
         await postal.fill('0123456789');
@@ -299,7 +312,10 @@ for (const locale of ['fa', 'en'] as const) {
         await postal.fill(changes.officialPostalCode);
         const widths = await form.evaluate((element) => ({
           editor: element.clientWidth,
-          available: element.parentElement!.clientWidth,
+          available:
+            element.parentElement!.clientWidth -
+            parseFloat(getComputedStyle(element.parentElement!).paddingInlineStart) -
+            parseFloat(getComputedStyle(element.parentElement!).paddingInlineEnd),
         }));
         expect(widths.editor / widths.available).toBeGreaterThan(0.95);
         await registry.scrollIntoViewIfNeeded();
@@ -344,12 +360,14 @@ for (const locale of ['fa', 'en'] as const) {
           }
         }
         await expect(dialog).toHaveCount(0);
-        await expect(edit).toBeFocused();
         await expect(panel.getByRole('status')).toHaveText(t('crm.profile.edit.saved', locale));
         expect(writes).toEqual(
           Array(4).fill({ legal: { expectedUpdatedAt: '2026-08-01T01:00:00.123456Z', changes } })
         );
-        await fixture.open();
+        await page
+          .getByRole('link', { name: t('crm.profile.returnToProfile', locale), exact: true })
+          .click();
+        await expect(page.locator('#panel-details')).toBeVisible();
         await expect(panel).toContainText('REG-NEW');
         await edit.click();
         for (const [field, value] of Object.entries(changes))
@@ -369,7 +387,7 @@ for (const locale of ['fa', 'en'] as const) {
         const fixture = await setup(page, locale, false, archived, archived);
         await fixture.open();
         await expect(
-          page.getByRole('button', { name: t('crm.legal.edit', locale), exact: true })
+          page.getByRole('link', { name: t('crm.legal.edit', locale), exact: true })
         ).toHaveCount(0);
         await expect(page.locator('#panel-details')).toContainText('Protected company');
       }
@@ -393,8 +411,8 @@ for (const locale of ['fa', 'en'] as const) {
       return route.fulfill({ status: 409, json: { error: { code: 'CONFLICT:STATE' } } });
     });
     await fixture.open();
-    const panel = page.locator('#panel-details');
-    const edit = panel.getByRole('button', { name: t('crm.legal.edit', locale), exact: true });
+    const panel = page.locator('main[data-area=admin]');
+    const edit = panel.getByRole('link', { name: t('crm.legal.edit', locale), exact: true });
     await edit.click();
     const form = panel.getByRole('form');
     const registry = form.getByLabel(label('registrationNumber', locale), { exact: true });
@@ -414,8 +432,7 @@ for (const locale of ['fa', 'en'] as const) {
     await form
       .getByRole('button', { name: t('crm.profile.edit.cancel', locale), exact: true })
       .click();
-    await expect(edit).toBeFocused();
-    await fixture.open();
+    await expect(edit).toBeVisible();
     await expect(panel).toContainText('CONCURRENT');
     await edit.click();
     await expect(registry).toHaveValue('CONCURRENT');
@@ -453,8 +470,8 @@ for (const locale of ['fa', 'en'] as const)
       });
     });
     await fixture.open();
-    const panel = page.locator('#panel-details');
-    await panel.getByRole('button', { name: t('crm.legal.edit', locale), exact: true }).click();
+    const panel = page.locator('main[data-area=admin]');
+    await panel.getByRole('link', { name: t('crm.legal.edit', locale), exact: true }).click();
     const registry = panel.getByLabel(label('registrationNumber', locale), { exact: true });
     const email = panel.getByLabel(label('officialEmail', locale), { exact: true });
     await registry.fill('RETAINED-REG');
@@ -487,6 +504,9 @@ for (const locale of ['fa', 'en'] as const)
     await confirm.click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(panel.getByRole('status')).toBeVisible();
+    await page
+      .getByRole('link', { name: t('crm.profile.returnToProfile', locale), exact: true })
+      .click();
     await expect(panel).toContainText('RETAINED-REG');
     await expect(panel).toContainText('corrected@example.test');
     expect(writes).toHaveLength(2);

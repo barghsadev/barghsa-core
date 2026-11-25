@@ -27,6 +27,11 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.goto('/admin/operational-retention');
     const section = page.getByRole('form', { name: label('savedPolicy') });
+    const edit = page.getByRole('link', { name: label('editTitle'), exact: true });
+    await expect(edit).toBeVisible();
+    await expect(section).toHaveCount(0);
+    await edit.click();
+    await expect(page).toHaveURL('/admin/operational-retention/edit');
     const input = section.getByLabel(label('searchableLogsDays'));
     const save = section.getByRole('button', { name: label('save') });
     await expect(section).toContainText(label('legal'));
@@ -51,6 +56,15 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: label('refresh'), exact: true }).click();
     await expect(input).toBeDisabled();
     await expect(save).toHaveCount(0);
+    await page
+      .getByRole('main')
+      .getByRole('link', { name: label('title'), exact: true })
+      .click();
+    await expect(page).toHaveURL('/admin/operational-retention');
+    await expect(section).toHaveCount(0);
+    await expect(edit).toHaveCount(0);
+    await expect(page.getByText(label('readOnly'), { exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: label('export'), exact: true })).toBeVisible();
   });
 }
 
@@ -91,8 +105,14 @@ for (const locale of ['en', 'fa'] as const) {
       baseVersion = 3;
       return route.fulfill({ json: { config, version: 3, draftId } });
     });
-    const toggle = page.getByRole('button', { name: label('recoveryTitle'), exact: true });
-    const field = page.getByLabel(label('leadTimeDays'), { exact: true });
+    const history = page
+      .getByRole('main')
+      .getByRole('link', { name: label('recoveryTitle'), exact: true });
+    const saved = page.getByRole('region', { name: label('savedLimits'), exact: true });
+    const lead = saved.locator('div').filter({
+      has: page.getByText(label('leadTimeDays'), { exact: true }),
+    });
+    const value = (days: number) => days.toLocaleString(locale);
     const activate = page.getByRole('button', { name: label('recoveryActivate'), exact: true });
     const dialog = page.getByRole('dialog');
     const confirm = dialog.getByRole('button', {
@@ -100,10 +120,10 @@ for (const locale of ['en', 'fa'] as const) {
       exact: true,
     });
     await page.goto('/admin/contract-limits');
-    await expect(field).toHaveValue('14');
-    await toggle.focus();
-    await toggle.press('Enter');
-    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(lead.locator('dd')).toContainText(value(14));
+    await history.focus();
+    await history.press('Enter');
+    await expect(page).toHaveURL('/admin/contract-limits/history');
     await page
       .getByRole('button', {
         name: label('recoveryStage').replace('{version}', locale === 'fa' ? '۱' : '1'),
@@ -113,15 +133,21 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toContainText(label('recoveryStageConfirm'));
     await confirm.click();
     await expect(activate).toBeVisible();
-    await expect(field).toHaveValue('14');
-    expect(
-      (await new AxeBuilder({ page }).include('#contract-limit-recovery').analyze()).violations
-    ).toEqual([]);
+    expect(active.leadTimeDays).toBe(14);
+    const section = page.getByRole('region', { name: label('recoveryTitle'), exact: true });
+    await expect(section).toContainText(
+      label('recoveryCurrent').replace('{version}', locale === 'fa' ? '۲' : '2')
+    );
+    expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
     await activate.click();
     await expect(dialog).toContainText(label('recoveryActivateConfirm'));
     await confirm.click();
-    await expect(field).toHaveValue('3');
     await expect(activate).toHaveCount(0);
+    await page
+      .getByRole('main')
+      .getByRole('link', { name: label('title'), exact: true })
+      .click();
+    await expect(lead.locator('dd')).toContainText(value(3));
   });
 }
 
@@ -164,13 +190,20 @@ for (const locale of ['en', 'fa'] as const) {
       active = { ...config, version: 3 };
       return route.fulfill({ json: { config, version: 3, draftId } });
     });
-    await page.goto('/admin/wallet-receipts');
-    const toggle = page.getByRole('button', { name: label('recoveryTitle'), exact: true });
+    const settings = '/admin/wallet-receipts/settings';
+    const search = '?queue_q=fixture';
+    await page.goto(settings + search);
+    const main = page.getByRole('main');
+    const history = main.getByRole('link', { name: label('recoveryTitle'), exact: true });
+    const current = page.getByTestId('wallet-top-up-limit-current');
     const field = page.locator('#online-top-up-limit');
-    await expect(field).toHaveValue('250000');
-    await toggle.focus();
-    await toggle.press('Enter');
-    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    const savedAmount = (amount: number) => amount.toLocaleString(locale);
+    await expect(current).toContainText(savedAmount(250_000));
+    await expect(field).toHaveCount(0);
+    await history.focus();
+    await history.press('Enter');
+    await expect(page).toHaveURL(settings + '/history' + search);
+    await expect(field).toHaveCount(0);
     const dialog = page.getByRole('dialog');
     const confirm = dialog.getByRole('button', {
       name: appText('team.confirm', locale),
@@ -186,7 +219,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toContainText(label('blocked'));
     await confirm.click();
     await expect(activate).toBeVisible();
-    await expect(field).toHaveValue('250000');
+    await expect(current).toContainText(savedAmount(250_000));
     expect(
       (await new AxeBuilder({ page }).include('#wallet-limit-recovery').analyze()).violations
     ).toEqual([]);
@@ -198,8 +231,11 @@ for (const locale of ['en', 'fa'] as const) {
       .getByLabel(confirmationText('typePhrase', locale))
       .fill(confirmationText('phrase', locale));
     await confirm.click();
-    await expect(field).toHaveValue('0');
+    await expect(main.getByText(label('blockedCurrent'), { exact: true })).toBeVisible();
     await expect(activate).toHaveCount(0);
+    await main.getByRole('link', { name: label('title'), exact: true }).click();
+    await expect(page).toHaveURL(settings + search);
+    await expect(main.getByText(label('blockedCurrent'), { exact: true })).toBeVisible();
   });
 }
 
@@ -211,7 +247,7 @@ for (const locale of ['en', 'fa'] as const)
     const cases = [
       {
         name: 'contract',
-        url: '/admin/contract-limits',
+        url: '/admin/contract-limits/edit',
         path: 'contract-electricity-limits',
         form: adminText('admin.settings.contractTerms', locale),
         label: contract,
@@ -229,7 +265,7 @@ for (const locale of ['en', 'fa'] as const)
       },
       {
         name: 'wallet',
-        url: '/admin/wallet-receipts',
+        url: '/admin/wallet-receipts/settings/edit',
         path: 'wallet-top-up-limit',
         form: wallet('title'),
         label: wallet,
@@ -243,7 +279,7 @@ for (const locale of ['en', 'fa'] as const)
       },
       {
         name: 'threshold',
-        url: '/admin/approval-requests',
+        url: '/admin/approval-requests/thresholds/edit',
         path: 'dual-approval-threshold',
         form: threshold('title'),
         label: threshold,
@@ -305,6 +341,14 @@ for (const locale of ['en', 'fa'] as const)
         await field.fill(item.raw);
         await save.click();
         let dialog = page.getByRole('dialog');
+        if (item.name === 'contract') {
+          const review = dialog.locator('dl');
+          const unit = item.label('unit.leadTimeDays');
+          await expect(review.locator('dt')).toHaveText([item.label('leadTimeDays')]);
+          await expect(review.locator('bdi')).toHaveText(
+            locale === 'fa' ? [`۰ ${unit}`, `۱۴ ${unit}`] : [`0 ${unit}`, `14 ${unit}`]
+          );
+        }
         if (item.name === 'threshold') await completeOtp(dialog, locale);
         else
           await dialog

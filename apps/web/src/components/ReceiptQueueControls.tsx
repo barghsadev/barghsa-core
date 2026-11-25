@@ -1,27 +1,30 @@
-import { useId } from 'react';
-import { Button, Input, ListToolbar, ListSortDropdown, ListPage } from '@barghsa/ui';
+import type { ReactNode } from 'react';
+import { Button, ListSearchInput, ListToolbar, ListSortDropdown, ListPage } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/workspace';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { encodeFinanceCursor, type FinanceCursor } from '../lib/finance-list-query.js';
 import { useLocale } from '../hooks/useLocale.js';
 
-export function ReceiptQueueControls({ binding }: { binding: ListQueryBinding }) {
+export function ReceiptQueueControls({
+  binding,
+  actions,
+  refresh,
+}: {
+  binding: ListQueryBinding;
+  actions?: ReactNode;
+  refresh?: ReactNode;
+}) {
   const locale = useLocale();
-  const id = useId();
   return (
     <ListToolbar
       search={
-        <label className="flex min-w-0 flex-col gap-1 text-sm" htmlFor={id}>
-          {t('historySearch.label', locale)}
-          <Input
-            id={id}
-            type="search"
-            value={binding.searchInput}
-            onChange={(event) => binding.setSearchInput(event.target.value)}
-            maxLength={120}
-            placeholder={t('historySearch.receiptQueue', locale)}
-          />
-        </label>
+        <ListSearchInput
+          label={t('historySearch.label', locale)}
+          value={binding.searchInput}
+          onChange={(event) => binding.setSearchInput(event.target.value)}
+          maxLength={120}
+          placeholder={t('historySearch.receiptQueue', locale)}
+        />
       }
       sort={
         <ListSortDropdown
@@ -35,12 +38,16 @@ export function ReceiptQueueControls({ binding }: { binding: ListQueryBinding })
         />
       }
       actions={
-        binding.query.search || binding.query.order !== 'asc' ? (
-          <Button variant="ghost" onClick={binding.clear}>
-            {t('historyFilters.clearAll', locale)}
-          </Button>
-        ) : undefined
+        <>
+          {(binding.query.search || binding.query.order !== 'asc') && (
+            <Button variant="ghost" onClick={binding.clear}>
+              {t('historyFilters.clearAll', locale)}
+            </Button>
+          )}
+          {actions}
+        </>
       }
+      refresh={refresh}
     />
   );
 }

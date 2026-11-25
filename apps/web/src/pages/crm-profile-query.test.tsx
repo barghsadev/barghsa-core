@@ -5,7 +5,7 @@ import { QueryComponentProvider } from '../test/query-provider.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import type { TeamActionDialog } from '../components/TeamActionDialog.js';
 import { t } from '@barghsa/i18n/crm';
-import CrmProfileDetail from './CrmProfileDetail.js';
+import CrmProfileDetail, { CrmProfileEditor } from './CrmProfileDetail.js';
 const profileId = '11111111-1111-4111-8111-111111111111';
 const language = vi.hoisted(() => ({ value: 'en' as 'en' | 'fa' }));
 const pending = vi.hoisted(() => ({
@@ -13,6 +13,8 @@ const pending = vi.hoisted(() => ({
 }));
 vi.mock('@tanstack/react-router', () => ({
   useParams: () => ({ profileId }),
+  useNavigate: () => () => {},
+  useBlocker: () => {},
   Link: ({ children }: { children: ReactNode }) => <a href="/admin/crm">{children}</a>,
 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => language.value }));
@@ -27,6 +29,33 @@ vi.mock('../components/TeamActionDialog.js', () => ({
     pending.props = props;
     return <p>Captured CRM action</p>;
   },
+}));
+vi.mock('../components/ProfileVerificationReview.js', () => ({
+  ProfileVerificationReview: ({
+    onReview,
+  }: {
+    onReview: (action: {
+      path: string;
+      method: string;
+      title: string;
+      description: string;
+      body: unknown;
+    }) => void;
+  }) => (
+    <button
+      onClick={() =>
+        onReview({
+          path: `/api/crm/profiles/${profileId}/verify`,
+          method: 'POST',
+          title: 'Verify',
+          description: 'Review',
+          body: { action: 'verify' },
+        })
+      }
+    >
+      Queue verification
+    </button>
+  ),
 }));
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -69,7 +98,10 @@ function detail(title = 'Private customer') {
     siblingProfiles: [],
   };
 }
-async function mount(handler: (url: string, init?: RequestInit) => Promise<Response>) {
+async function mount(
+  handler: (url: string, init?: RequestInit) => Promise<Response>,
+  editor: boolean | 'verification' = false
+) {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   document.documentElement.lang = 'en';
   vi.stubGlobal('fetch', vi.fn(handler));
@@ -81,7 +113,15 @@ async function mount(handler: (url: string, init?: RequestInit) => Promise<Respo
       root.render(
         <QueryComponentProvider>
           <AccountUserProvider value={actor}>
-            {visible ? <CrmProfileDetail /> : null}
+            {visible &&
+              (editor ? (
+                <CrmProfileEditor
+                  profileId={profileId}
+                  editor={{ kind: editor === 'verification' ? 'verification' : 'contact' }}
+                />
+              ) : (
+                <CrmProfileDetail />
+              ))}
           </AccountUserProvider>
         </QueryComponentProvider>
       )
@@ -102,7 +142,6 @@ function button(host: HTMLElement, label: string) {
   return found!;
 }
 async function queued(view: Awaited<ReturnType<typeof mount>>) {
-  await act(async () => button(view.host, t('crm.profile.edit', 'en')).click());
   await act(async () => button(view.host, t('crm.profile.edit.save', 'en')).click());
   expect(pending.props?.action).toBeDefined();
   const props = pending.props!;
@@ -197,7 +236,7 @@ it('retains committed CRM success through a failed post-action read and healthy 
   const fetcher = vi.fn(async () =>
     failed ? new Response('{}', { status: 503 }) : Response.json(detail())
   );
-  const view = await mount(fetcher);
+  const view = await mount(fetcher, true);
   try {
     const { props, ack } = await queued(view);
     failed = true;
@@ -211,40 +250,41 @@ it('retains committed CRM success through a failed post-action read and healthy 
     await view.close();
   }
 });
-it.each([401, 404])(
-  'withdraws the CRM profile on a records HTTP %s during a parent read',
+it.each([401, 404])('withdraws the CRM profile on a records HTTP %s', async (status) => {
+  const view = await mount(async (url) =>
+    url.endsWith('/records/verification')
+      ? new Response('{}', { status })
+      : Response.json({ ...detail(), verificationHistory: { items: [], nextCursor: null } })
+  );
+  try {
+    await act(async () =>
+      button(view.host, t('crm.profile.tab.verificationHistory', 'en')).click()
+    );
+    await act(async () => button(view.host, t('crm.records.refresh', 'en')).click());
+    expect(view.host.querySelector('[role=tablist]')).toBeNull();
+    expect(view.host.textContent).not.toContain('Private customer');
+    const key = status === 404 ? 'crm.profile.error.notFound' : 'crm.profile.error.accessDenied';
+    expect(view.host.textContent).toContain(t(key, 'en'));
+  } finally {
+    await view.close();
+  }
+});
+
+it.each([401, 403, 404])(
+  'withdraws the dedicated verification form after a post-action read returns HTTP %s',
   async (status) => {
-    let profileReads = 0;
-    let signal!: AbortSignal;
-    let finish!: (response: Response) => void;
-    const view = await mount(async (url, init) => {
-      if (url.endsWith('/records/verification')) return new Response('{}', { status });
-      if (++profileReads === 1) {
-        return Response.json({
-          ...detail(),
-          verificationHistory: { items: [], nextCursor: null },
-        });
-      }
-      signal = init!.signal as AbortSignal;
-      return new Promise<Response>((resolve) => {
-        finish = resolve;
-      });
-    });
+    let updated = false;
+    const view = await mount(
+      async () => (updated ? new Response('{}', { status }) : Response.json(detail())),
+      'verification'
+    );
     try {
-      const { props, ack } = await queued(view);
-      let settled!: ReturnType<typeof props.onSuccess>;
-      await act(async () => {
-        settled = props.onSuccess(ack);
-      });
-      await act(async () =>
-        button(view.host, t('crm.profile.tab.verificationHistory', 'en')).click()
-      );
-      await act(async () => button(view.host, t('crm.records.refresh', 'en')).click());
-      expect(signal.aborted).toBe(true);
-      await act(async () => finish(Response.json(detail('Late private title'))));
-      await settled;
-      expect(view.host.querySelector('[role=tablist]')).toBeNull();
-      expect(view.host.textContent).not.toContain('Late private title');
+      await act(async () => button(view.host, 'Queue verification').click());
+      const props = pending.props!;
+      updated = true;
+      await act(async () => props.onSuccess({ success: true, profileId, newStatus: 'VERIFIED' }));
+      expect(view.host.textContent).not.toContain('Private customer');
+      expect(view.host.textContent).not.toContain('Queue verification');
       const key = status === 404 ? 'crm.profile.error.notFound' : 'crm.profile.error.accessDenied';
       expect(view.host.textContent).toContain(t(key, 'en'));
     } finally {
@@ -264,7 +304,7 @@ it('cancels an old post-action CRM read without changing the replacement staff v
       });
     }
     return Response.json(detail(phase === 'initial' ? 'Old private title' : 'Fresh staff title'));
-  });
+  }, true);
   try {
     const { props, ack } = await queued(view);
     phase = 'pending';
@@ -275,7 +315,6 @@ it('cancels an old post-action CRM read without changing the replacement staff v
     phase = 'fresh';
     await view.render('staff-two');
     expect(signal.aborted).toBe(true);
-    await act(async () => button(view.host, t('crm.profile.tab.details', 'en')).click());
     await act(async () => {
       finish(Response.json(detail('Late old title')));
       await settled;
@@ -300,16 +339,16 @@ it('finishes loading when a current post-action read supersedes an in-flight loc
       });
     }
     return Response.json(detail());
-  });
+  }, true);
   try {
     const { props, ack } = await queued(view);
     language.value = 'fa';
     await view.render();
     await act(async () => props.onSuccess(ack));
     expect(signal.aborted).toBe(true);
-    expect(view.host.textContent).toContain('customer@example.test');
+    expect(view.host.textContent).toContain(t('crm.profile.edit.saved', 'fa'));
     await act(async () => finish(Response.json(detail('Obsolete locale read'))));
-    expect(view.host.textContent).toContain('customer@example.test');
+    expect(view.host.textContent).toContain(t('crm.profile.edit.saved', 'fa'));
     expect(reads).toBe(3);
   } finally {
     await view.close();

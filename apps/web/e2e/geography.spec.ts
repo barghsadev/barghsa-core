@@ -5,7 +5,7 @@ import { crmShell } from './crm-shell-fixture';
 test.use({ viewport: { width: 390, height: 844 } });
 
 for (const locale of ['en', 'fa'] as const) {
-  test(`province dialogs are localized and restore keyboard focus (${locale})`, async ({
+  test(`province creation opens a localized page from the keyboard (${locale})`, async ({
     page,
   }) => {
     await crmShell(page, locale);
@@ -23,25 +23,19 @@ for (const locale of ['en', 'fa'] as const) {
     const heading = locale === 'fa' ? 'مدیریت استان‌ها' : 'Province Management';
     const addName = locale === 'fa' ? 'افزودن استان' : 'Add Province';
     await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
-    const add = page.getByRole('button', { name: addName, exact: true });
+    const add = page.getByRole('link', { name: addName, exact: true });
     await add.focus();
     await add.press('Enter');
-    const dialog = page.getByRole('dialog', { name: addName, exact: true });
-    await expect(dialog).toBeVisible();
-    await expect(dialog.getByLabel(locale === 'fa' ? 'نام فارسی' : 'Persian Name')).toBeFocused();
-    await dialog.evaluate(async (element) => {
-      await Promise.all(
-        element
-          .getAnimations({ subtree: true })
-          .map((animation) => animation.finished.catch(() => {}))
-      );
-    });
-    expect(
-      (await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations
-    ).toEqual([]);
-    await page.keyboard.press('Escape');
-    await expect(dialog).toHaveCount(0);
-    await expect(add).toBeFocused();
+    await expect(page).toHaveURL('/admin/geography/provinces/new');
+    const createPage = page.getByRole('heading', { name: addName, level: 1, exact: true });
+    await expect(createPage).toBeFocused();
+    await expect(page.getByLabel(locale === 'fa' ? 'نام فارسی' : 'Persian Name')).toBeVisible();
+    expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+    await page
+      .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
+      .click();
+    await expect(page).toHaveURL('/admin/geography');
+    await expect(add).toBeVisible();
   });
 }
 
@@ -53,7 +47,15 @@ for (const locale of ['en', 'fa'] as const) {
     await crmShell(page, locale);
     await page.route('**/api/admin/geography/provinces**', async (route) => {
       const method = route.request().method();
-      if (method === 'GET') return route.fulfill({ json: { provinces: rows, total: rows.length } });
+      if (method === 'GET') {
+        const path = new URL(route.request().url()).pathname;
+        const json = path.endsWith('/cities')
+          ? { cities: [], total: 0 }
+          : path.endsWith('/province-1')
+            ? rows[0]
+            : { provinces: rows, total: rows.length };
+        return route.fulfill({ json });
+      }
       if (method === 'POST') {
         creates++;
         if (creates === 1)
@@ -67,29 +69,39 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.goto('/admin/geography');
     await page
-      .getByRole('button', { name: fa ? 'افزودن استان' : 'Add Province', exact: true })
+      .getByRole('link', { name: fa ? 'افزودن استان' : 'Add Province', exact: true })
+      .click();
+    const form = page.getByRole('main').getByRole('form');
+    const create = form.getByRole('button', { name: fa ? 'ایجاد' : 'Create', exact: true });
+    await create.click();
+    await expect(form.getByRole('alert').first()).toBeVisible();
+    expect(creates).toBe(0);
+    await form.getByLabel(fa ? 'نام فارسی' : 'Persian Name').fill('تهران');
+    await form.getByLabel(fa ? 'نام انگلیسی' : 'English Name').fill('Tehran');
+    await create.click();
+    await expect(form.getByRole('alert').first()).toBeVisible();
+    await expect(form).not.toContainText('private database error');
+    await expect(form.getByLabel(fa ? 'نام انگلیسی' : 'English Name')).toHaveValue('Tehran');
+    await create.click();
+    await expect(form).toHaveCount(0);
+    await expect(page).toHaveURL('/admin/geography/provinces/province-1');
+    await page
+      .getByRole('main')
+      .getByRole('link', { name: fa ? 'ویرایش استان' : 'Edit Province', exact: true })
+      .click();
+    await form.getByLabel(fa ? 'نام انگلیسی' : 'English Name').fill('Tehran Province');
+    await form.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
+    await expect(form).toHaveCount(0);
+    await expect(page.getByRole('main')).toContainText('Tehran Province');
+    await page
+      .getByRole('main')
+      .getByRole('link', { name: fa ? 'مدیریت استان‌ها' : 'Province Management', exact: true })
       .click();
     const dialog = page.getByRole('dialog');
-    const create = dialog.getByRole('button', { name: fa ? 'ایجاد' : 'Create', exact: true });
-    await create.click();
-    await expect(dialog.getByRole('alert').first()).toBeVisible();
-    expect(creates).toBe(0);
-    await dialog.getByLabel(fa ? 'نام فارسی' : 'Persian Name').fill('تهران');
-    await dialog.getByLabel(fa ? 'نام انگلیسی' : 'English Name').fill('Tehran');
-    await create.click();
-    await expect(dialog.getByRole('alert').first()).toBeVisible();
-    await expect(dialog).not.toContainText('private database error');
-    await expect(dialog.getByLabel(fa ? 'نام انگلیسی' : 'English Name')).toHaveValue('Tehran');
-    await create.click();
-    await expect(dialog).toHaveCount(0);
     const row = page
       .locator('table:visible tbody tr, ol[role=list]:visible > li')
       .filter({ hasText: 'Tehran' });
     await expect(row).toBeVisible();
-    await row.getByRole('button', { name: fa ? 'ویرایش' : 'Edit', exact: true }).click();
-    await dialog.getByLabel(fa ? 'نام انگلیسی' : 'English Name').fill('Tehran Province');
-    await dialog.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
-    await expect(dialog).toHaveCount(0);
     await expect(row).toContainText('Tehran Province');
     await row
       .getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Deactivate', exact: true })
@@ -154,7 +166,7 @@ test('province list retries malformed data and applies pagination and filters', 
     .getByRole('combobox', { name: 'Filter by status', exact: true })
     .selectOption('inactive');
   await expect.poll(() => new URLSearchParams(queries.at(-1)).get('status')).toBe('inactive');
-  await page.getByRole('textbox', { name: 'Search provinces', exact: true }).fill('تهران');
+  await page.getByRole('searchbox', { name: 'Search provinces', exact: true }).fill('تهران');
   await expect.poll(() => new URLSearchParams(queries.at(-1)).get('search')).toBe('تهران');
   expect(new URLSearchParams(queries.at(-1)).get('page')).toBe('1');
 });
@@ -169,6 +181,9 @@ test('city pagination resets only when the search changes', async ({ page }) => 
         total: 1,
       },
     })
+  );
+  await page.route('**/api/admin/geography/provinces/p1', (route) =>
+    route.fulfill({ json: { id: 'p1', nameFa: 'تهران', nameEn: 'Tehran', status: 'active' } })
   );
   await page.route('**/api/admin/geography/provinces/p1/cities?*', (route) => {
     const query = new URL(route.request().url()).searchParams;
@@ -189,7 +204,7 @@ test('city pagination resets only when the search changes', async ({ page }) => 
     });
   });
   await page.goto('/admin/geography');
-  await page.getByRole('button', { name: 'Cities', exact: true }).click();
+  await page.getByRole('link', { name: 'Cities', exact: true }).click();
   const panel = page.getByRole('region', { name: 'Cities — Tehran', exact: true });
   await expect(
     panel.locator('table:visible, ol[role=list]:visible').getByText('Rey', { exact: true })
@@ -206,14 +221,14 @@ test('city pagination resets only when the search changes', async ({ page }) => 
       .locator('table:visible, ol[role=list]:visible')
       .getByText('Second City Page', { exact: true })
   ).toBeVisible();
-  await panel.getByRole('textbox').fill('Rey');
+  await panel.getByRole('searchbox', { name: 'Search cities', exact: true }).fill('Rey');
   await expect.poll(() => new URLSearchParams(queries.at(-1)).get('search')).toBe('Rey');
   expect(new URLSearchParams(queries.at(-1)).get('page')).toBe('1');
   await expect(panel.getByRole('button', { name: 'Previous', exact: true })).toBeDisabled();
 });
 
 for (const locale of ['en', 'fa'] as const) {
-  test(`cities can be edited and imported with accessible localized dialogs (${locale})`, async ({
+  test(`cities can be edited and imported with accessible localized pages (${locale})`, async ({
     page,
   }) => {
     const fa = locale === 'fa';
@@ -228,10 +243,19 @@ for (const locale of ['en', 'fa'] as const) {
         },
       })
     );
+    await page.route('**/api/admin/geography/provinces/p1', (route) =>
+      route.fulfill({ json: { id: 'p1', nameFa: 'تهران', nameEn: 'Tehran', status: 'active' } })
+    );
     await page.route('**/api/admin/geography/provinces/p1/cities**', async (route) => {
       const req = route.request();
-      if (req.method() === 'GET')
-        return route.fulfill({ json: { cities: rows, total: rows.length } });
+      if (req.method() === 'GET') {
+        const path = new URL(req.url()).pathname;
+        return route.fulfill({
+          json: path.endsWith('/cities')
+            ? { cities: rows, total: rows.length }
+            : rows.find((row) => row.id === path.split('/').at(-1)),
+        });
+      }
       if (req.url().endsWith('/import')) {
         imports++;
         if (imports === 1) return route.fulfill({ status: 409, json: {} });
@@ -262,38 +286,34 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.goto('/admin/geography');
-    await page.getByRole('button', { name: fa ? 'شهرها' : 'Cities', exact: true }).click();
+    await page.getByRole('link', { name: fa ? 'شهرها' : 'Cities', exact: true }).click();
     const panel = page.getByRole('region', {
       name: fa ? 'شهرها — تهران' : 'Cities — Tehran',
       exact: true,
     });
-    const add = panel.getByRole('button', { name: fa ? 'افزودن شهر' : 'Add City', exact: true });
-    await add.click();
-    const dialog = page.getByRole('dialog');
-    const nameFa = dialog.getByLabel(fa ? 'نام فارسی' : 'Persian Name');
-    const nameEn = dialog.getByLabel(fa ? 'نام انگلیسی' : 'English Name');
-    await expect(nameFa).toBeFocused();
+    const addName = fa ? 'افزودن شهر' : 'Add City';
+    const editName = fa ? 'ویرایش شهر' : 'Edit City';
+    const main = page.getByRole('main');
+    await panel.getByRole('link', { name: addName, exact: true }).click();
+    const form = main.getByRole('form');
+    const nameFa = form.getByLabel(fa ? 'نام فارسی' : 'Persian Name');
+    const nameEn = form.getByLabel(fa ? 'نام انگلیسی' : 'English Name');
+    await expect(main.getByRole('heading', { name: addName, level: 1, exact: true })).toBeFocused();
     await nameFa.fill('تجریش');
     await nameEn.fill('Tajrish');
-    await dialog.evaluate(async (element) => {
-      await Promise.all(
-        element.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {}))
-      );
-    });
-    expect(
-      (await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations
-    ).toEqual([]);
-    await dialog.getByRole('button', { name: fa ? 'ایجاد' : 'Create', exact: true }).click();
-    await expect(dialog).toHaveCount(0);
-    await expect(add).toBeFocused();
+    expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+    await form.getByRole('button', { name: fa ? 'ایجاد' : 'Create', exact: true }).click();
+    await expect(page).toHaveURL('/admin/geography/provinces/p1/cities/new-city');
+    await main.getByRole('link', { name: editName, exact: true }).click();
+    await nameEn.fill('Tajrish City');
+    await form.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
+    await expect(form).toHaveCount(0);
+    await expect(main).toContainText('Tajrish City');
+    await main.getByRole('link', { name: fa ? 'تهران' : 'Tehran', exact: true }).click();
     const row = panel
       .locator('table:visible tbody tr, ol[role=list]:visible > li')
-      .filter({ hasText: 'Tajrish' });
-    await row.getByRole('button', { name: fa ? 'ویرایش' : 'Edit', exact: true }).click();
-    await nameEn.fill('Tajrish City');
-    await dialog.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
-    await expect(dialog).toHaveCount(0);
-    await expect(row).toContainText('Tajrish City');
+      .filter({ hasText: 'Tajrish City' });
+    const dialog = page.getByRole('dialog');
     await row
       .getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Deactivate', exact: true })
       .click();
@@ -308,20 +328,23 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toHaveCount(0);
     await expect(row.getByText(fa ? 'غیرفعال' : 'Inactive', { exact: true })).toBeVisible();
     const importName = fa ? 'ورود گروهی شهرها' : 'Import Cities';
-    const importButton = panel.getByRole('button', { name: importName, exact: true });
+    const importButton = panel.getByRole('link', { name: importName, exact: true });
     await importButton.click();
-    const input = dialog.getByLabel(fa ? 'ردیف‌های شهر' : 'City rows');
-    await expect(input).toBeFocused();
-    await dialog.getByRole('button', { name: importName, exact: true }).click();
-    await expect(dialog.getByRole('alert').first()).toBeVisible();
+    const input = form.getByLabel(fa ? 'ردیف‌های شهر' : 'City rows');
+    await expect(
+      main.getByRole('heading', { name: importName, level: 1, exact: true })
+    ).toBeFocused();
+    await form.getByRole('button', { name: importName, exact: true }).click();
+    await expect(form.getByRole('alert').first()).toBeVisible();
     expect(imports).toBe(0);
     await input.fill('اسلامشهر\tEslamshahr\nورامین\tVaramin');
-    await dialog.getByRole('button', { name: importName, exact: true }).click();
-    await expect(dialog.getByRole('alert').first()).toBeVisible();
-    await expect(input).toContainText('Eslamshahr');
-    await dialog.getByRole('button', { name: importName, exact: true }).click();
-    await expect(dialog).toHaveCount(0);
-    await expect(importButton).toBeFocused();
+    await expect(form.getByRole('table').getByRole('row')).toHaveCount(3);
+    await form.getByRole('button', { name: importName, exact: true }).click();
+    await expect(form.getByRole('alert').first()).toBeVisible();
+    await expect(input).toHaveValue(/Eslamshahr/);
+    await form.getByRole('button', { name: importName, exact: true }).click();
+    await expect(form).toHaveCount(0);
+    await expect(importButton).toBeVisible();
     await expect(
       panel.locator('table:visible, ol[role=list]:visible').getByText('Varamin', { exact: true })
     ).toBeVisible();

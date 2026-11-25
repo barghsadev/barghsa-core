@@ -54,6 +54,10 @@ async function shell(page: Page, locale: 'en' | 'fa', baseURL: string) {
   );
   await page.goto('/admin/providers');
 }
+async function openDraft(page: Page) {
+  await page.getByRole('link', { name: 'sms-draft', exact: true }).click();
+  await expect(page).toHaveURL(/\/admin\/providers\/sms\/sms-draft$/);
+}
 for (const locale of ['en', 'fa'] as const) {
   const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
   test(`active SMS breaker state is visible to staff (${locale})`, async ({ page, baseURL }) => {
@@ -148,8 +152,9 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: row });
     });
     await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
-    const panel = page.locator('section[aria-labelledby="sms-title"]');
-    await panel.getByRole('button', { name: text('edit'), exact: true }).click();
+    await openDraft(page);
+    const panel = page.getByRole('main');
+    await panel.getByRole('link', { name: text('edit'), exact: true }).click();
     await page
       .getByRole('combobox', { name: `${text('language')} 1`, exact: true })
       .selectOption('fa');
@@ -184,20 +189,22 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('textbox', { name: `${text('parameter')} 2.1`, exact: true }).fill('CODE');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
     await expect(panel.getByRole('status').filter({ hasText: text('saved') })).toBeVisible();
+    await panel.getByRole('link', { name: text('preview'), exact: true }).click();
     await expect(page.locator('#sms-test-event option')).toHaveCount(1);
     await expect(
       panel.getByRole('heading', { level: 3 }).filter({ hasText: 'auth.otp' })
     ).toHaveCount(2);
-    await panel.getByRole('button', { name: text('edit'), exact: true }).click();
+    await panel
+      .getByRole('link', { name: providerText('admin.providers.backToDetail', locale) })
+      .click();
+    await panel.getByRole('link', { name: text('edit'), exact: true }).click();
     await expect(
       page.getByRole('combobox', { name: `${text('language')} 1`, exact: true })
     ).toHaveValue('fa');
     await expect(
       page.getByRole('combobox', { name: `${text('language')} 2`, exact: true })
     ).toHaveValue('en');
-    expect(
-      (await new AxeBuilder({ page }).include('[aria-labelledby="sms-title"]').analyze()).violations
-    ).toEqual([]);
+    expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
   });
   test(`SMS saved settings recover reads, preserve edits and never echo the stored key (${locale})`, async ({
     page,
@@ -235,11 +242,12 @@ for (const locale of ['en', 'fa'] as const) {
     });
     expect(reads).toBe(0);
     await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
-    const panel = page.locator('section[aria-labelledby="sms-title"]');
+    const panel = page.getByRole('main');
     await expect(panel.getByRole('alert')).toContainText(text('loadFailed'));
     await expect(panel.getByRole('button', { name: text('new'), exact: true })).toBeDisabled();
     await panel.getByRole('button', { name: text('retry'), exact: true }).click();
-    await panel.getByRole('button', { name: text('edit'), exact: true }).click();
+    await openDraft(page);
+    await panel.getByRole('link', { name: text('edit'), exact: true }).click();
     await expect(page.locator('#sms-key')).toHaveValue('');
     await expect(page.locator('#sms-sender')).toHaveValue('3000');
     await expect(page.locator('#sms-key-hint')).toHaveText(text('keyHint'));
@@ -280,6 +288,8 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(panel.getByRole('status').filter({ hasText: text('saved') })).toHaveText(
       text('saved')
     );
+    await panel.getByRole('link', { name: text('preview'), exact: true }).click();
+    await page.locator('#sms-test-event').selectOption('invoice.created');
     await expect(panel).toContainText('test-amount');
     await expect(panel).not.toContainText('********live');
     expect(writes).toBe(2);
@@ -307,8 +317,8 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ status: 201, json: row });
     });
     await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
-    const panel = page.locator('section[aria-labelledby="sms-title"]');
-    await panel.getByRole('button', { name: text('new'), exact: true }).click();
+    const panel = page.getByRole('main');
+    await panel.getByRole('link', { name: text('new'), exact: true }).click();
     await expect(page.locator('#sms-key')).toHaveAttribute('aria-required', 'true');
     await page.locator('#sms-label').fill('Created SMS');
     await page.locator('#sms-sender').fill('3001');
@@ -412,9 +422,14 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: row });
     });
     await press(page.getByRole('tab', { name: 'SMS.ir', exact: true }));
-    const panel = page.locator('section[aria-labelledby="sms-title"]');
+    await openDraft(page);
+    const panel = page.getByRole('main');
+    const backToDetail = panel.getByRole('link', {
+      name: providerText('admin.providers.backToDetail', locale),
+    });
+    const previewLink = panel.getByRole('link', { name: text('preview'), exact: true });
     await expect(panel.getByRole('button', { name: text('activate'), exact: true })).toBeDisabled();
-    await press(panel.getByRole('button', { name: text('preview'), exact: true }));
+    await press(previewLink);
     await page.locator('#sms-test-event').selectOption('invoice.created');
     const preview = page.locator('section[aria-labelledby="sms-preview-title"]');
     await expect(preview).toContainText(
@@ -438,11 +453,16 @@ for (const locale of ['en', 'fa'] as const) {
     await press(dialog.locator('button[type=submit]'));
     await expect(dialog).toHaveCount(0);
     await expect(panel.getByRole('alert')).toContainText(text('failed'));
+    await press(backToDetail);
     await expect(panel.getByRole('button', { name: text('activate'), exact: true })).toBeDisabled();
+    await press(previewLink);
+    await page.locator('#sms-test-event').selectOption('invoice.created');
+    await preview.getByLabel(text('testRecipient'), { exact: true }).fill('+989121234567');
     await press(preview.getByRole('button', { name: text('test'), exact: true }));
     await expect(panel.getByRole('status').filter({ hasText: text('passed') })).toHaveText(
       text('passed')
     );
+    await press(backToDetail);
     const activate = panel.getByRole('button', { name: text('activate'), exact: true });
     const refresh = panel.getByRole('button', { name: text('refresh'), exact: true });
     const reviewed = panel.getByRole('button', { name: providerFormText('reviewChange', locale) });
@@ -468,8 +488,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog.getByRole('alert')).toBeVisible();
     await page.keyboard.press('Escape');
     row = { ...row, status: 'superseded' };
-    await press(page.getByRole('tab', { name: text('email'), exact: true }));
-    await press(page.getByRole('tab', { name: 'SMS.ir', exact: true }));
+    await press(refresh);
     await press(panel.getByRole('button', { name: text('rollback'), exact: true }));
     await expect(dialog).toContainText(text('rollbackNotice'));
     await press(dialog.locator('button[type=submit]'));
@@ -491,11 +510,13 @@ for (const locale of ['en', 'fa'] as const) {
     expect(tests).toBe(2);
     expect(activations).toBe(2);
     expect(rollbacks).toBe(2);
-    await press(panel.getByRole('button', { name: text('preview'), exact: true }));
+    await press(previewLink);
     await page.locator('#sms-test-event').selectOption('invoice.created');
     await expect(preview.getByLabel(text('testRecipient'), { exact: true })).toHaveValue('');
     await preview.getByLabel(text('testRecipient'), { exact: true }).fill('+989121234567');
     await press(preview.getByRole('button', { name: text('test'), exact: true }));
+    await expect(panel.getByRole('status').filter({ hasText: text('passed') })).toBeVisible();
+    await press(backToDetail);
     await expect(activate).toBeEnabled();
     await press(activate);
     await press(dialog.locator('button[type=submit]'));
@@ -514,8 +535,9 @@ for (const locale of ['en', 'fa'] as const) {
       route.fulfill({ json: [provider()] })
     );
     await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
-    const panel = page.locator('section[aria-labelledby="sms-title"]');
-    await panel.getByRole('button', { name: text('edit'), exact: true }).click();
+    await openDraft(page);
+    const panel = page.getByRole('main').locator('section[dir]');
+    await panel.getByRole('link', { name: text('edit'), exact: true }).click();
     expect(await panel.evaluate((el) => getComputedStyle(el).direction)).toBe(
       locale === 'fa' ? 'rtl' : 'ltr'
     );
@@ -539,7 +561,7 @@ for (const locale of ['en', 'fa'] as const) {
         )
         .toBe(true);
       const result = await new AxeBuilder({ page })
-        .include('section[aria-labelledby="sms-title"]')
+        .include('main')
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
         .analyze();
       expect(result.violations).toEqual([]);
@@ -585,7 +607,8 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
-    await page.getByRole('button', { name: text('edit'), exact: true }).click();
+    await openDraft(page);
+    await page.getByRole('link', { name: text('edit'), exact: true }).click();
     const variable = page.getByRole('combobox', { name: `${text('variable')} 1.1`, exact: true });
     const language = page.getByRole('combobox', { name: `${text('language')} 1`, exact: true });
     const options = async () =>

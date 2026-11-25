@@ -1,3 +1,4 @@
+import { manualRecordDateTime, selectRecordDateTime } from './record-date-time-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { test, expect } from './coverage-fixture';
@@ -87,7 +88,7 @@ for (const locale of ['fa', 'en'] as const)
         expect(route.request().headers()['x-csrf-token']).toBe('deadline-csrf');
         return route.fulfill({ json: { success: true } });
       });
-      await page.goto('/admin/invoices');
+      await page.goto(`/admin/invoices/${invoiceId}/deadline`);
       await page.locator('html').evaluate((element, language) => {
         element.lang = language;
         element.dir = language === 'fa' ? 'rtl' : 'ltr';
@@ -99,10 +100,28 @@ for (const locale of ['fa', 'en'] as const)
         ]);
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*dark)/);
       const panel = page.locator('#invoice-deadline-panel');
-      await panel.locator('#invoice-id').fill(invoiceId);
-      await panel.getByRole('button', { name: fa ? 'بارگذاری' : 'Load', exact: true }).click();
-      await expect(panel.locator('#due-at')).toHaveValue('2026-09-12T13:30');
-      await panel.locator('#due-at').fill('2026-09-25T12:30');
+      const timeField = panel.locator('#due-at-time');
+      const preview = panel.locator('#due-at-preview time');
+      const newDeadline = '2026-09-25T09:00:00.000Z';
+      await expect(timeField).toHaveValue('13:30');
+      await expect(preview).toHaveCount(0);
+      await selectRecordDateTime(page, 'due-at', '2026-09-25T12:30', locale);
+      await expect(preview).toHaveAttribute('datetime', newDeadline);
+      const localDeadline = await page.evaluate(
+        ({ locale, newDeadline }) =>
+          new Intl.DateTimeFormat(locale, {
+            dateStyle: 'medium',
+            timeStyle: 'short',
+            timeZone: 'Asia/Tehran',
+          }).format(new Date(newDeadline)),
+        { locale, newDeadline }
+      );
+      await expect(preview).toHaveText(localDeadline);
+      const dateField = await manualRecordDateTime(page, 'due-at');
+      await expect(dateField).toHaveValue('2026-09-25T12:30');
+      await dateField.fill('2026-08-31T12:30');
+      await expect(preview).toHaveCount(0);
+      await dateField.fill('2026-09-25T12:30');
       const reason = fa ? 'تمدید مهلت به درخواست مشتری' : 'Customer requested more time';
       await panel.locator('#override-reason').fill(reason);
       expect(
@@ -115,7 +134,13 @@ for (const locale of ['fa', 'en'] as const)
       await submit.click();
       const dialog = page.getByRole('dialog');
       await expect(dialog).toBeVisible();
-      await expect(panel.locator('#invoice-id')).toBeDisabled();
+      await expect(
+        panel.getByRole('button', {
+          name: fa ? 'بارگذاری' : 'Load',
+          exact: true,
+          includeHidden: true,
+        })
+      ).toBeDisabled();
       await expect(panel.locator('#due-at')).toBeDisabled();
       await expect(panel.locator('#override-reason')).toBeDisabled();
       const password = dialog.getByLabel(
@@ -140,9 +165,10 @@ for (const locale of ['fa', 'en'] as const)
         panel.getByText(fa ? 'سررسید با موفقیت تغییر کرد' : 'Due date overridden', { exact: true })
       ).toBeVisible();
       await expect(submit).toBeFocused();
+      await expect(preview).toHaveCount(0);
       expect(attempts).toEqual([
-        { dueAt: '2026-09-25T09:00:00.000Z', reason },
-        { dueAt: '2026-09-25T09:00:00.000Z', reason },
+        { dueAt: newDeadline, reason },
+        { dueAt: newDeadline, reason },
       ]);
       await expect(panel.locator('[data-testid="loaded-invoice-id"]')).toHaveText(invoiceId);
 
@@ -150,8 +176,7 @@ for (const locale of ['fa', 'en'] as const)
       await page.route(`**/api/admin/invoices/${otherId}/due-at`, (route) =>
         route.fulfill({ json: initial })
       );
-      await panel.locator('#invoice-id').fill(otherId);
-      await panel.getByRole('button', { name: fa ? 'بارگذاری' : 'Load', exact: true }).click();
+      await page.goto(`/admin/invoices/${otherId}/deadline`);
       await expect(panel.getByRole('alert')).toBeVisible();
       await expect(panel.locator('#due-at')).toHaveCount(0);
     });

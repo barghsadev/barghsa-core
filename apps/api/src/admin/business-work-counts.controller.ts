@@ -10,9 +10,11 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { getDbPool } from '@barghsa/db';
+import type { PoolClient } from 'pg';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { hasStaffPermission, resolveStaffPermissions } from '../session/staff-permissions.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
+import { readStaffWorkPreview } from './staff-work-preview.js';
 
 const widgetKeys = ['queue', 'work', 'failures'] as const;
 type WidgetKey = (typeof widgetKeys)[number];
@@ -21,6 +23,21 @@ const widgetFields = {
   work: ['consultations', 'solarRequests', 'documentReviews', 'refundObligations'],
   failures: ['failedJobs', 'deadLetterNotifications', 'failedRefundObligations'],
 } as const;
+
+function dashboardAccess(allowed: (permission: string) => boolean) {
+  const tickets = allowed('tickets:read') || allowed('tickets:*');
+  return {
+    orders: allowed('orders:read'),
+    contracts: allowed('contracts:read') || allowed('contracts:write'),
+    invoices: allowed('invoices:read'),
+    legal: allowed('legal:read'),
+    finance: allowed('admin:financial:edit'),
+    jobs: allowed('admin:jobs:view'),
+    tickets,
+    assignedTickets: !tickets && allowed('tickets:assigned'),
+  };
+}
+type DashboardAccess = ReturnType<typeof dashboardAccess>;
 
 // Only static, permission-gated expressions for the requested widget enter its SQL.
 const countColumns = [
@@ -127,16 +144,20 @@ export class BusinessWorkCountsController {
     return this.readCounts(req, widget);
   }
 
-  private async readCounts(req: AuthenticatedRequest, widget?: WidgetKey) {
-    const orders = hasStaffPermission(req, 'orders:read');
-    const contracts =
-      hasStaffPermission(req, 'contracts:read') || hasStaffPermission(req, 'contracts:write');
-    const invoices = hasStaffPermission(req, 'invoices:read');
-    const legal = hasStaffPermission(req, 'legal:read');
-    const finance = hasStaffPermission(req, 'admin:financial:edit');
-    const jobs = hasStaffPermission(req, 'admin:jobs:view');
-    const tickets = hasStaffPermission(req, 'tickets:read') || hasStaffPermission(req, 'tickets:*');
-    const assignedTickets = !tickets && hasStaffPermission(req, 'tickets:assigned');
+  @Get('work-queue')
+  @ApiOperation({ summary: 'Preview assigned, unassigned urgent and overdue support work' })
+  workQueue(@Req() req: AuthenticatedRequest) {
+    const access = dashboardAccess((permission) => hasStaffPermission(req, permission));
+    if (!access.orders && !access.tickets && !access.assignedTickets)
+      throw new ForbiddenException('Staff work queue permission required');
+    return this.readWithAuthority(req, access, (client) =>
+      readStaffWorkPreview(client, req.session.userId, access)
+    );
+  }
+
+  private readCounts(req: AuthenticatedRequest, widget?: WidgetKey) {
+    const access = dashboardAccess((permission) => hasStaffPermission(req, permission));
+    const { orders, contracts, invoices, legal, finance, jobs, tickets, assignedTickets } = access;
     const allowed =
       widget === 'queue'
         ? orders || contracts || tickets || assignedTickets
@@ -155,6 +176,34 @@ export class BusinessWorkCountsController {
     if (!allowed) throw new ForbiddenException('Staff dashboard permission required');
     const fields: readonly string[] | undefined = widget ? widgetFields[widget] : undefined;
     const columns = countColumns.filter(({ key }) => !fields || fields.includes(key));
+    return this.readWithAuthority(req, access, async (client) => {
+      const counts = (
+        await client.query<Record<string, number | null>>(
+          `WITH access AS (SELECT $1::boolean, $2::boolean, $3::boolean, $4::boolean,
+            $5::boolean, $6::boolean, $7::boolean, $8::boolean, $9::text)
+           SELECT ${columns.map(({ sql, alias }) => `${sql} AS ${alias}`).join(',\n')}`,
+          [
+            orders,
+            contracts,
+            invoices,
+            legal,
+            finance,
+            jobs,
+            tickets,
+            assignedTickets,
+            req.session.userId,
+          ]
+        )
+      ).rows[0]!;
+      return Object.fromEntries(columns.map(({ key, alias }) => [key, counts[alias]]));
+    });
+  }
+
+  private async readWithAuthority<T>(
+    req: AuthenticatedRequest,
+    access: DashboardAccess,
+    read: (client: PoolClient) => Promise<T>
+  ) {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
@@ -178,25 +227,8 @@ export class BusinessWorkCountsController {
       )
         throw new ForbiddenException('Staff dashboard permission required');
       await requireCurrentSession(client, req.session);
-      const counts = (
-        await client.query<Record<string, number | null>>(
-          `WITH access AS (SELECT $1::boolean, $2::boolean, $3::boolean, $4::boolean,
-            $5::boolean, $6::boolean, $7::boolean, $8::boolean, $9::text)
-           SELECT ${columns.map(({ sql, alias }) => `${sql} AS ${alias}`).join(',\n')}`,
-          [
-            orders,
-            contracts,
-            invoices,
-            legal,
-            finance,
-            jobs,
-            tickets,
-            assignedTickets,
-            req.session.userId,
-          ]
-        )
-      ).rows[0]!;
-      // A grant change during a blocked count must withdraw the old snapshot.
+      const data = await read(client);
+      // A grant change during a blocked read must withdraw the old snapshot.
       // Keep the final role rows stable until this read commits.
       const roles = await client.query<{ permissions: unknown }>(
         `SELECT r.permissions FROM user_roles ur JOIN staff_roles r ON r.role_id=ur.role_id
@@ -204,19 +236,9 @@ export class BusinessWorkCountsController {
         [req.session.userId]
       );
       const grants = resolveStaffPermissions(roles.rows.map((role) => role.permissions));
-      const current = (permission: string) =>
-        account.is_admin || grants.includes('*') || grants.includes(permission);
-      const currentTickets = current('tickets:read') || current('tickets:*');
-      const currentAccess = [
-        current('orders:read'),
-        current('contracts:read') || current('contracts:write'),
-        current('invoices:read'),
-        current('legal:read'),
-        current('admin:financial:edit'),
-        current('admin:jobs:view'),
-        currentTickets,
-        !currentTickets && current('tickets:assigned'),
-      ];
+      const current = dashboardAccess(
+        (permission) => account.is_admin || grants.includes('*') || grants.includes(permission)
+      );
       const context = (
         await client.query<{ operating_context: string }>(
           'SELECT operating_context FROM sessions WHERE session_id=$1 AND user_id=$2',
@@ -225,16 +247,14 @@ export class BusinessWorkCountsController {
       ).rows[0];
       if (
         context?.operating_context !== 'staff' ||
-        currentAccess.some(
-          (value, index) =>
-            value !==
-            [orders, contracts, invoices, legal, finance, jobs, tickets, assignedTickets][index]
+        (Object.keys(access) as Array<keyof DashboardAccess>).some(
+          (key) => current[key] !== access[key]
         )
       )
         throw new ForbiddenException('Staff dashboard permissions changed');
       await requireCurrentSession(client, req.session);
       await client.query('COMMIT');
-      return Object.fromEntries(columns.map(({ key, alias }) => [key, counts[alias]]));
+      return data;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

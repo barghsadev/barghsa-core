@@ -1,100 +1,70 @@
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { createFileRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
 import { RouteSkeleton } from '../../components/RouteSkeleton.js';
 import { RouteErrorBoundary } from '../../components/RouteErrorBoundary.js';
-import { useListQuery, writeListQuery } from '../../hooks/useListQuery.js';
+import { useListQuery } from '../../hooks/useListQuery.js';
+import { provinceQueryOptions } from '../../lib/admin-list-query.js';
 import {
-  geographySearch,
-  changeGeographySearch,
-  provinceQueryOptions,
-  cityQueryOptions,
-} from '../../lib/admin-list-query.js';
+  geographyId,
+  geographyListSearch,
+  geographyRecordSearch,
+} from '../../lib/geography-location.js';
 
 const Geography = lazyRouteComponent(() => import('../../pages/AdminGeographyPage.js'));
 
-function editorId(raw: unknown) {
-  return typeof raw === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(raw) ? raw : undefined;
-}
-
 function GeographyRoute() {
-  const search = Route.useSearch();
+  const search = geographyListSearch(Route.useSearch());
   const navigate = Route.useNavigate();
-  const change = (
-    update: (current: Record<string, unknown>) => Record<string, unknown>,
-    options?: { replace?: boolean }
-  ) =>
+  const provinces = useListQuery(provinceQueryOptions, search, (change, options) => {
     void navigate({
-      search: (current) => {
-        const proposed = update(current);
-        const next = changeGeographySearch(current, proposed);
-        const provincesChanged = ['q', 'status', 'page'].some((key) => current[key] !== next[key]);
-        const citiesChanged =
-          provincesChanged ||
-          ['province', 'city_q', 'city_status', 'city_page'].some(
-            (key) => current[key] !== next[key]
-          );
-        return {
-          ...next,
-          provinceEditor: provincesChanged ? undefined : editorId(proposed.provinceEditor),
-          cityEditor: !next.province || citiesChanged ? undefined : editorId(proposed.cityEditor),
-        };
-      },
+      search: (current) => geographyListSearch(change(current)),
       replace: options?.replace ?? false,
       resetScroll: false,
     });
-  const provinces = useListQuery(provinceQueryOptions, search, change);
-  const cities = useListQuery(cityQueryOptions, search, change);
-  const provinceEditor = editorId(search.provinceEditor) ?? null;
-  const setExpanded = (province: string | null, replace = false) =>
-    change(
-      (current) => ({
-        ...writeListQuery(current, cityQueryOptions, {
-          search: '',
-          filters: { status: '' },
-          page: 1,
-        }),
-        province: province || undefined,
-      }),
-      { replace }
-    );
-  return (
-    <Geography
-      query={{
-        provinces,
-        cities,
-        expanded: typeof search.province === 'string' ? search.province : null,
-        provinceEditor: {
-          id: provinceEditor,
-          set: (id, replace = false) =>
-            change(
-              (current) => ({
-                ...current,
-                provinceEditor: id,
-                ...(id ? { cityEditor: undefined } : {}),
-              }),
-              { replace }
-            ),
-        },
-        cityEditor: {
-          id: provinceEditor ? null : (editorId(search.cityEditor) ?? null),
-          set: (id, replace = false) =>
-            change(
-              (current) => ({
-                ...current,
-                cityEditor: id,
-                ...(id ? { provinceEditor: undefined } : {}),
-              }),
-              { replace }
-            ),
-        },
-        setExpanded,
-        clear: () => change(() => ({}), { replace: true }),
-      }}
-    />
-  );
+  });
+  return <Geography query={provinces} routeSearch={search} />;
 }
 
 export const Route = createFileRoute('/admin/geography')({
-  validateSearch: geographySearch,
+  validateSearch: (raw: Record<string, unknown>) => ({
+    ...geographyRecordSearch(raw),
+    province: geographyId(raw.province),
+    provinceEditor: geographyId(raw.provinceEditor),
+    cityEditor: geographyId(raw.cityEditor),
+  }),
+  beforeLoad: ({ search }) => {
+    const { province, provinceEditor, cityEditor } = search;
+    if (provinceEditor) {
+      throw redirect({
+        to: '/admin/geography/provinces/$provinceId/{-$action}',
+        params: {
+          provinceId: provinceEditor,
+          ...(provinceEditor !== 'new' ? { action: 'edit' } : {}),
+        },
+        search: geographyRecordSearch(search),
+        replace: true,
+      });
+    }
+    if (province && cityEditor) {
+      throw redirect({
+        to: '/admin/geography/provinces/$provinceId/cities/$cityId/{-$action}',
+        params: {
+          provinceId: province,
+          cityId: cityEditor,
+          ...(cityEditor !== 'new' ? { action: 'edit' } : {}),
+        },
+        search: geographyRecordSearch(search),
+        replace: true,
+      });
+    }
+    if (province) {
+      throw redirect({
+        to: '/admin/geography/provinces/$provinceId/{-$action}',
+        params: { provinceId: province },
+        search: geographyRecordSearch(search),
+        replace: true,
+      });
+    }
+  },
   component: GeographyRoute,
   pendingComponent: () => <RouteSkeleton layout="admin" />,
   errorComponent: RouteErrorBoundary,

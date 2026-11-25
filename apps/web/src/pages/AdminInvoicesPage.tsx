@@ -1,123 +1,89 @@
-import InvoiceCorrectionsPanel from '../components/InvoiceCorrectionsPanel.js';
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense } from 'react';
+import { Link } from '@tanstack/react-router';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
-import { contractText } from '@barghsa/i18n/contracts';
-import { Button } from '@barghsa/ui';
+import { tManualInvoice } from '@barghsa/i18n/manual-invoice';
+import { Button, buttonVariants, PageLoading } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
-import ReminderOffsetTogglePanel from '../components/ReminderOffsetTogglePanel.js';
-import ManualInvoicePanel from '../components/ManualInvoicePanel.js';
-import ServiceDuePeriodPanel from '../components/ServiceDuePeriodPanel.js';
-import { InvoiceBankReceiptQueue } from '../components/InvoiceBankReceiptQueue.js';
+import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import type { ReceiptHistoryQuery } from '../components/InvoiceBankReceiptQueue.js';
 import { InvoiceLedger } from '../components/InvoiceLedger.js';
-const InvoiceDueAtPanel = lazy(() => import('../components/InvoiceDueAtPanel.js'));
-const RefundPanel = lazy(() =>
-  import('../components/RefundPanel.js').then((module) => ({ default: module.RefundPanel }))
+
+const ReceiptQueue = lazy(() =>
+  import('../components/InvoiceBankReceiptQueue.js').then(({ InvoiceBankReceiptQueue }) => ({
+    default: InvoiceBankReceiptQueue,
+  }))
 );
+
 export interface InvoiceListQueries {
-  pending?: import('../hooks/useListQuery.js').ListQueryBinding;
-  ledger: import('../hooks/useListQuery.js').ListQueryBinding;
-  history: import('../components/InvoiceBankReceiptQueue.js').ReceiptHistoryQuery;
+  pending: ListQueryBinding;
+  ledger: ListQueryBinding;
+  history: ReceiptHistoryQuery;
   receiptsOpen: boolean;
-  setReceiptsOpen: (open: boolean, history?: boolean) => void;
+  setReceiptsOpen: (open: boolean) => void;
 }
-export default function AdminInvoicesPage({ queries }: { queries?: InvoiceListQueries } = {}) {
+
+export default function AdminInvoicesPage({
+  queries,
+  recordSearch,
+  onLookupInvoice,
+  onOpenReceiptRecord,
+}: {
+  queries: InvoiceListQueries;
+  recordSearch: Record<string, unknown>;
+  onLookupInvoice: (invoiceId: string) => void;
+  onOpenReceiptRecord: (receiptId: string) => void;
+}) {
   const locale = useLocale();
-  const [deadlineSelection, setDeadlineSelection] = useState<{
-    invoiceId: string;
-    revision: number;
-  } | null>(null);
-  const [refundInvoiceId, setRefundInvoiceId] = useState(
-    () =>
-      (typeof window === 'undefined'
-        ? ''
-        : new URLSearchParams(window.location.search).get('invoiceId')) ?? ''
-  );
-  const [showRefunds, setShowRefunds] = useState(() => !!refundInvoiceId);
-  const [localReceiptQueue, setLocalReceiptQueue] = useState(false);
-  const showReceiptQueue = queries?.receiptsOpen ?? localReceiptQueue;
-  const setShowReceiptQueue = (value: boolean, history?: boolean) =>
-    queries ? queries.setReceiptsOpen(value, history) : setLocalReceiptQueue(value);
-  const [receiptSelection, setReceiptSelection] = useState<{
-    receiptId: string;
-    state: string;
-    revision: number;
-  } | null>(null);
   return (
-    <div className="max-w-4xl space-y-8">
-      <h1 className="text-2xl font-bold">{t('admin.invoices.nav', locale)}</h1>
-      <InvoiceLedger
-        {...(queries ? { query: queries.ledger } : {})}
-        initialInvoiceId={
-          typeof window === 'undefined'
-            ? ''
-            : (new URLSearchParams(window.location.search).get('invoiceId') ?? '')
-        }
-        onSelectForDueAt={(id) => {
-          setDeadlineSelection((current) => ({
-            invoiceId: id,
-            revision: (current?.revision ?? 0) + 1,
-          }));
-          document.getElementById('invoice-deadline-panel')?.scrollIntoView?.({ block: 'start' });
-        }}
-        onSelectForRefund={(id) => {
-          setRefundInvoiceId(id);
-          setShowRefunds(true);
-          document.getElementById('invoice-refunds-panel')?.scrollIntoView?.({ block: 'start' });
-        }}
-        onOpenReceipt={(receiptId, state) => {
-          setReceiptSelection((current) => ({
-            receiptId,
-            state,
-            revision: (current?.revision ?? 0) + 1,
-          }));
-          setShowReceiptQueue(true, state === 'Confirmed' || state === 'Rejected');
-          document.getElementById('invoice-receipt-panel')?.scrollIntoView?.({ block: 'start' });
-        }}
-      />
-      <ManualInvoicePanel />
-      <InvoiceCorrectionsPanel />
-      <section id="invoice-refunds-panel" className="space-y-4">
-        {showRefunds ? (
-          <Suspense
-            fallback={<p role="status">{t('admin.invoices.walletRefunds.loading', locale)}</p>}
+    <div className="min-w-0 space-y-6">
+      <header className="flex flex-wrap items-center justify-between gap-4">
+        <h1 className="text-2xl font-semibold">{t('admin.invoices.nav', locale)}</h1>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            to="/admin/invoices/tools/{-$section}/{-$service}"
+            params={{ section: undefined, service: undefined }}
+            search={recordSearch}
+            className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
           >
-            <RefundPanel destination="wallet" selectedInvoiceId={refundInvoiceId} />
-            <RefundPanel destination="external_bank" selectedInvoiceId={refundInvoiceId} />
-          </Suspense>
-        ) : (
-          <Button type="button" variant="outline" onClick={() => setShowRefunds(true)}>
-            {contractText('refundOpen', locale)}
-          </Button>
-        )}
-      </section>
-      <ReminderOffsetTogglePanel />
-      <ServiceDuePeriodPanel />
+            {t('admin.invoices.tools', locale)}
+          </Link>
+          <Link
+            className={buttonVariants({ className: 'min-h-11' })}
+            to="/admin/invoices/new"
+            search={recordSearch}
+          >
+            {tManualInvoice('admin.manualInvoice.new', locale)}
+          </Link>
+        </div>
+      </header>
+      <InvoiceLedger
+        query={queries.ledger}
+        recordSearch={recordSearch}
+        onLookupInvoice={onLookupInvoice}
+      />
       <section id="invoice-receipt-panel" className="space-y-4">
-        <button
+        <Button
           type="button"
-          className="rounded-md border bg-card px-4 py-2 text-sm font-medium text-foreground"
-          aria-expanded={showReceiptQueue}
-          onClick={() => setShowReceiptQueue(!showReceiptQueue)}
+          variant="outline"
+          className="min-h-11"
+          aria-expanded={queries.receiptsOpen}
+          aria-controls="invoice-receipt-lists"
+          onClick={() => queries.setReceiptsOpen(!queries.receiptsOpen)}
         >
           {t('admin.invoiceReceipts.title', locale)}
-        </button>
-        {showReceiptQueue ? (
-          <InvoiceBankReceiptQueue
-            key={receiptSelection?.revision}
-            initialSelection={receiptSelection}
-            {...(queries
-              ? {
-                  historyQuery: queries.history,
-                  ...(queries.pending ? { pendingQuery: queries.pending } : {}),
-                }
-              : {})}
-          />
-        ) : null}
+        </Button>
+        <div id="invoice-receipt-lists" hidden={!queries.receiptsOpen}>
+          {queries.receiptsOpen && (
+            <Suspense fallback={<PageLoading label={t('admin.invoiceReceipts.loading', locale)} />}>
+              <ReceiptQueue
+                onOpenRecord={onOpenReceiptRecord}
+                pendingQuery={queries.pending}
+                historyQuery={queries.history}
+              />
+            </Suspense>
+          )}
+        </div>
       </section>
-
-      <Suspense fallback={<p role="status">{t('admin.invoices.loading', locale)}</p>}>
-        <InvoiceDueAtPanel selection={deadlineSelection} />
-      </Suspense>
     </div>
   );
 }

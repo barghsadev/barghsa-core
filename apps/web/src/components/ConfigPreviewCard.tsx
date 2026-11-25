@@ -11,6 +11,7 @@ export function ConfigPreviewCard({
   draft,
   controls,
   stacked = false,
+  hideTitle = false,
 }: {
   title: string;
   description?: ReactNode;
@@ -18,19 +19,29 @@ export function ConfigPreviewCard({
   draft: ReactNode;
   controls?: ReactNode;
   stacked?: boolean;
+  hideTitle?: boolean;
 }) {
   const locale = useLocale(),
     id = useId();
   return (
     <section aria-labelledby={id} className="min-w-0" data-testid="config-preview">
       <Card>
-        <CardHeader>
-          <CardTitle>
-            <h2 id={id}>{title}</h2>
-          </CardTitle>
-          {description && <CardDescription>{description}</CardDescription>}
-          {controls}
-        </CardHeader>
+        {hideTitle && (
+          <h2 id={id} className="sr-only">
+            {title}
+          </h2>
+        )}
+        {(!hideTitle || description || controls) && (
+          <CardHeader>
+            {!hideTitle && (
+              <CardTitle>
+                <h2 id={id}>{title}</h2>
+              </CardTitle>
+            )}
+            {description && <CardDescription>{description}</CardDescription>}
+            {controls}
+          </CardHeader>
+        )}
         <CardContent className={`grid min-w-0 gap-6 ${stacked ? '' : 'xl:grid-cols-2'}`}>
           {(
             [

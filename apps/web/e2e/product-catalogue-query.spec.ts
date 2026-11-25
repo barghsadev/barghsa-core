@@ -1,4 +1,4 @@
-import { test, expect } from './coverage-fixture';
+import { expandListFilters, test, expect } from './coverage-fixture';
 import type { Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { setupCatalogueForms } from './catalogue-form-fixture';
@@ -105,17 +105,30 @@ for (const locale of ['en', 'fa'] as const)
       await filters.getByRole('button', { name: copy('clearFilters'), exact: true }).click();
       await expect(search).toHaveValue('');
       expect(reads).toHaveLength(initialReads);
-      await records.first().getByRole('button').click();
-      const title = page.locator('#catalogue-titleEn');
-      await expect(title).toHaveValue(rows[55]!.title.en);
-      await expect(page).toHaveURL((url) => url.searchParams.get('selected') === rows[55]!.id);
-      await title.fill('  Retained out-of-filter product draft  ');
-      const selectedReads = detailReads.length;
       await next.click();
       await expect(page).toHaveURL(/page=2/);
       await expect(records).toHaveCount(25);
-      await expect(title).toHaveValue('  Retained out-of-filter product draft  ');
+      await expect(records.first()).toContainText(rows[30]!.title[locale]);
+      const edit = records.first().getByRole('link', { name: new RegExp(copy('edit')) });
+      const route = await edit.getAttribute('href');
+      const readsBeforeEdit = reads.length;
+      await edit.click();
+      const title = page.locator('#catalogue-titleEn');
+      await expect(page).toHaveURL(route!);
+      await expect(title).toHaveValue(rows[30]!.title.en);
+      expect(reads).toHaveLength(readsBeforeEdit);
+      await page.reload();
+      await expect(title).toHaveValue(rows[30]!.title.en);
+      await page.getByRole('link', { name: copy('cancel'), exact: true }).click();
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: copy('hardware'), exact: true })
+        .click();
+      await expect(page).toHaveURL(/page=2/);
+      await expect(records).toHaveCount(25);
+      const selectedReads = detailReads.length;
       await search.fill('  Panel%_  ');
+      await expandListFilters(filters, locale);
       await filters.getByLabel(copy('filter_status')).selectOption('active');
       await filters.getByLabel(copy('filter_sort')).selectOption('price');
       await filters.getByLabel(copy('filter_order')).selectOption('asc');
@@ -132,7 +145,6 @@ for (const locale of ['en', 'fa'] as const)
       expect(reads.at(-1)!.get('sort')).toBe('price');
       expect(reads.at(-1)!.get('order')).toBe('asc');
       await expect(records.first()).toContainText(rows[0]!.title[locale]);
-      await expect(title).toHaveValue('  Retained out-of-filter product draft  ');
       expect(detailReads).toHaveLength(selectedReads);
       await next.click();
       await expect(page).toHaveURL(/page=2/);
@@ -156,10 +168,6 @@ for (const locale of ['en', 'fa'] as const)
         info.project.name === 'mobile-safari' &&
         process.env.BARGHSA_SCREENSHOT_DIR
       ) {
-        await page
-          .getByRole('form', { name: copy('editor'), exact: true })
-          .getByRole('button', { name: copy('cancel'), exact: true })
-          .click();
         await page.setViewportSize({ width: 390, height: 2400 });
         await page
           .getByRole('heading', { name: copy('title'), exact: true })
@@ -178,8 +186,8 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page).toHaveURL(/page=2/);
       await page.reload();
       await expect(records).toHaveCount(3);
-      await expect(title).toHaveValue(rows[55]!.title.en);
       await expect(search).toHaveValue('Panel%_');
+      await expandListFilters(filters, locale);
       await expect(filters.getByLabel(copy('filter_status'))).toHaveValue('active');
       await expect(filters.getByLabel(copy('filter_sort'))).toHaveValue('price');
       await search.fill('x'.repeat(201));
@@ -198,7 +206,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(records).toHaveCount(3);
       await expect(content.getByText(copy('denied'))).toHaveCount(0);
       await filters.getByRole('button', { name: copy('clearFilters'), exact: true }).click();
-      await expect(page).toHaveURL(/type=hardware/);
+      await expect(page).toHaveURL('/admin/catalogue/hardware');
       await expect(page).not.toHaveURL(/q=|status=|sort=|page=/);
       await expect(records).toHaveCount(25);
       failed = true;

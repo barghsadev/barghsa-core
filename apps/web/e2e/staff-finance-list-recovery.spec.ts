@@ -4,6 +4,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
+import { receiptEditorMessages } from '@barghsa/i18n/receipt-editor';
 
 const first = '82000000-0000-4000-8000-000000000001';
 const older = '82000000-0000-4000-8000-000000000002';
@@ -66,7 +67,7 @@ async function shell(page: Page, locale: 'en' | 'fa') {
 for (const locale of ['en', 'fa'] as const) {
   const ledgerWord = (key: string) => adminText(`admin.invoices.ledger.${key}`, locale);
   const receiptWord = (key: string) => adminText(`admin.invoiceReceipts.${key}`, locale);
-  test(`staff invoice detail denial withdraws the ledger and aborts a pending page (${locale})`, async ({
+  test(`opening an invoice aborts pending pagination and keeps denial scoped to the record (${locale})`, async ({
     page,
   }) => {
     await shell(page, locale);
@@ -97,44 +98,42 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.goto('/admin/invoices');
     const ledger = page.getByRole('region', { name: ledgerWord('title'), exact: true });
-    const open = ledger.getByRole('button', {
+    const open = ledger.getByRole('link', {
       name: `${ledgerWord('detail')}: ${first}`,
       exact: true,
     });
-    const detail = ledger.getByRole('region', { name: ledgerWord('detail'), exact: true });
+    const detail = page.getByRole('region', { name: ledgerWord('detail'), exact: true });
     const more = ledger.getByRole('button', { name: ledgerWord('more'), exact: true });
     try {
+      await more.click();
+      await expect.poll(() => !!pendingPage).toBe(true);
       await open.click();
       await expect(detail.getByRole('status')).toHaveText(ledgerWord('loadingDetail'));
       await expect.poll(() => !!pendingDetail).toBe(true);
-      await more.click();
-      await expect.poll(() => !!pendingPage).toBe(true);
       await pendingDetail!.fulfill({ status: 403, json: { message: 'Private invoice error' } });
-      await expect(ledger.getByRole('alert')).toHaveText(ledgerWord('forbidden'));
-      await expect(open).toHaveCount(0);
-      await expect(detail).toHaveCount(0);
+      await expect(detail.getByRole('alert')).toHaveText(ledgerWord('forbidden'));
+      await expect(ledger).toHaveCount(0);
       await expect.poll(() => pageAborted).toBe(true);
       await pendingPage!
         .fulfill({ json: { items: [invoice(older)], nextCursor: null } })
         .catch(() => {});
-      await expect(ledger.getByText(older, { exact: true })).toHaveCount(0);
-      await expect(ledger).not.toContainText('Private invoice error');
+      await expect(detail.getByText(older, { exact: true })).toHaveCount(0);
+      await expect(detail).not.toContainText('Private invoice error');
     } finally {
       await pendingPage?.abort().catch(() => {});
       await pendingDetail?.abort().catch(() => {});
     }
     deny = false;
-    await page.goto('/admin/invoices');
-    await open.click();
+    await page.goto(`/admin/invoices/${first}`);
     await expect(detail.getByRole('alert')).toHaveText(loadingText('recordUnavailable', locale));
     await expect(
       detail.getByRole('button', { name: ledgerWord('retry'), exact: true })
     ).toHaveCount(0);
-    await expect(open).toBeVisible();
+    await expect(ledger).toHaveCount(0);
     await expect(detail).not.toContainText('Private invoice error');
   });
 
-  test(`staff ledger retains details and rows when retrying a failed page (${locale})`, async ({
+  test(`staff invoice rejects mismatched records and the ledger retries the exact page (${locale})`, async ({
     page,
   }, testInfo) => {
     await shell(page, locale);
@@ -173,14 +172,19 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/invoices');
     const ledger = page.getByRole('region', { name: ledgerWord('title'), exact: true });
     await ledger
-      .getByRole('button', { name: `${ledgerWord('detail')}: ${first}`, exact: true })
+      .getByRole('link', { name: `${ledgerWord('detail')}: ${first}`, exact: true })
       .click();
-    const detail = ledger.getByRole('region', { name: ledgerWord('detail'), exact: true });
+    const detail = page.getByRole('region', { name: ledgerWord('detail'), exact: true });
     await expect(detail.getByRole('alert')).toContainText(ledgerWord('detailError'));
     await expect(detail.getByText(older, { exact: true })).toHaveCount(0);
-    await expect(detail.getByRole('button', { name: ledgerWord('useDueAt') })).toHaveCount(0);
+    await expect(detail.getByRole('link', { name: ledgerWord('changeDueAt') })).toHaveCount(0);
     await detail.getByRole('button', { name: ledgerWord('retry'), exact: true }).click();
     await expect(detail.getByText(first, { exact: true })).toBeVisible();
+    const scroll = detail.locator('[data-slot="scroll-area-viewport"]');
+    await scroll.focus();
+    await page.keyboard.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
+    await expect.poll(() => scroll.evaluate((el) => Math.abs(el.scrollLeft))).toBeGreaterThan(0);
+    await page.getByRole('link', { name: ledgerWord('backToInvoices'), exact: true }).click();
     const content = ledger.locator('[data-slot="list-content"]');
     const more = ledger.getByRole('button', { name: ledgerWord('more'), exact: true });
     await more.click();
@@ -190,7 +194,7 @@ for (const locale of ['en', 'fa'] as const) {
       content.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
     ).toHaveCount(1);
     await expect(more).toBeDisabled();
-    await expect(detail.getByText(first, { exact: true })).toBeVisible();
+    await expect(detail).toHaveCount(0);
     await held!.fulfill({ status: 503, json: {} });
     const retry = content.getByRole('button', { name: ledgerWord('retry'), exact: true });
     await expect(retry).toBeVisible();
@@ -211,10 +215,6 @@ for (const locale of ['en', 'fa'] as const) {
     expect(queries.at(-1)).toBe(failed);
     expect(new URLSearchParams(failed).get('beforeAt')).toBe(stamp);
     expect(detailReads).toBe(2);
-    const scroll = detail.locator('[data-slot="scroll-area-viewport"]');
-    await scroll.focus();
-    await page.keyboard.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
-    await expect.poll(() => scroll.evaluate((el) => Math.abs(el.scrollLeft))).toBeGreaterThan(0);
     expect(
       (
         await new AxeBuilder({ page })
@@ -266,9 +266,16 @@ for (const locale of ['en', 'fa'] as const) {
     const queue = page.getByRole('region', { name: receiptWord('title'), exact: true });
     await queue.getByRole('button', { name: receiptWord('historyTitle'), exact: true }).click();
     const history = queue.getByRole('region', { name: receiptWord('historyTitle'), exact: true });
-    await history
+    const filterLabel = appText('historyFilters.label', locale);
+    await history.getByRole('button', { name: filterLabel, exact: true }).click();
+    const drawer = page.getByRole('dialog', { name: filterLabel, exact: true });
+    await drawer
       .getByRole('combobox', { name: receiptWord('historyState'), exact: true })
       .selectOption('Confirmed');
+    await drawer
+      .getByRole('button', { name: appText('historyFilters.apply', locale), exact: true })
+      .click();
+    await expect.poll(() => new URLSearchParams(queries.at(-1)).get('state')).toBe('Confirmed');
     const content = history.locator('[data-slot="list-content"]');
     await expect(content.getByText(first, { exact: true })).toHaveCount(2);
     const nav = history.getByRole('navigation', { name: receiptWord('historyPages'), exact: true });
@@ -315,11 +322,12 @@ for (const locale of ['en', 'fa'] as const) {
         .evaluate((el) => el.scrollWidth <= el.clientWidth)
     ).toBe(true);
   });
-  test(`staff queue retry preserves a receipt draft and permission denial removes it (${locale})`, async ({
+  test(`staff receipt retry preserves a rejection draft and permission denial withdraws it (${locale})`, async ({
     page,
   }) => {
     await shell(page, locale);
     let listStatus = 200,
+      recordStatus = 200,
       detailReads = 0,
       allocationReads = 0;
     await page.route('**/api/admin/invoices/bank-receipts', (route) =>
@@ -329,7 +337,10 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.route(`**/api/admin/invoices/bank-receipts/${first}`, (route) => {
       detailReads++;
-      return route.fulfill({ json: receipt(first) });
+      return route.fulfill({
+        status: recordStatus,
+        json: recordStatus === 200 ? receipt(first) : {},
+      });
     });
     await page.route(`**/api/admin/invoices/bank-receipts/${first}/allocation`, (route) => {
       allocationReads++;
@@ -353,25 +364,35 @@ for (const locale of ['en', 'fa'] as const) {
     const queue = page.getByRole('region', { name: receiptWord('title'), exact: true });
     const content = queue.locator('[data-slot="list-content"]').first();
     await content.getByRole('button', { name: receiptWord('open'), exact: true }).click();
-    const detail = queue.getByRole('region', { name: receiptWord('detail'), exact: true });
+    const detail = page.getByRole('region', { name: receiptWord('detail'), exact: true });
     await expect(detail.getByText(first, { exact: true })).toHaveCount(2);
-    listStatus = 503;
-    await queue.getByRole('button', { name: receiptWord('refresh'), exact: true }).click();
-    const retry = content.getByRole('button', {
+    await page.getByTestId('invoice-receipt-open-reject').click();
+    const reason = detail.getByRole('textbox');
+    await reason.fill('Keep this rejection explanation');
+    const refresh = detail.getByRole('button', {
+      name: receiptEditorMessages[locale].refreshReceipt,
+      exact: true,
+    });
+    recordStatus = 503;
+    await refresh.click();
+    const retry = detail.getByRole('button', {
       name: appText('historyPagination.retry', locale),
       exact: true,
     });
     await expect(retry).toBeVisible();
-    const reason = detail.getByRole('textbox');
-    await reason.fill('Keep this rejection explanation');
     const reads = [detailReads, allocationReads];
-    listStatus = 200;
+    recordStatus = 200;
     await retry.click();
     await expect(retry).toHaveCount(0);
     await expect(reason).toHaveValue('Keep this rejection explanation');
-    expect([detailReads, allocationReads]).toEqual(reads);
+    await expect.poll(() => [detailReads, allocationReads]).toEqual([reads[0]! + 1, reads[1]! + 1]);
+    recordStatus = 403;
+    await refresh.click();
+    await expect(detail.getByRole('alert')).toHaveText(receiptWord('forbidden'));
+    await expect(reason).toHaveCount(0);
     listStatus = 403;
-    await queue.getByRole('button', { name: receiptWord('refresh'), exact: true }).click();
+    await page.getByTestId('invoice-receipt-back-to-review').click();
+    await page.getByRole('link', { name: ledgerWord('backToReceipts'), exact: true }).click();
     await expect(content.getByRole('alert')).toHaveText(receiptWord('forbidden'));
     await expect(detail).toHaveCount(0);
     await expect(content.locator('ul')).toHaveCount(0);

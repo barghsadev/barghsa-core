@@ -3491,6 +3491,16 @@ it.each([
     expect((await staffQueue.json()) as { requests: Array<{ requestId: string }> }).toMatchObject({
       requests: [expect.objectContaining({ requestId: result.requestId })],
     });
+    const staffRecordUrl = `${http.base}/api/staff/electricity/increase-requests/${result.requestId}`;
+    const staffRecord = await fetch(staffRecordUrl, { headers: staffHeaders });
+    expect(staffRecord.status, http.logs()).toBe(200);
+    expect(await staffRecord.json()).toMatchObject({
+      requestId: result.requestId,
+      contractId: order.contractId,
+      status: 'pending',
+      canReview: true,
+    });
+    expect((await fetch(staffRecordUrl, { headers })).status).toBe(403);
     if (decision === 'expire_pending') {
       const disposition = await http.pool.query<{ disposition: string }>(
         'SELECT expire_electricity_increase($1,$2) AS disposition',
@@ -4938,6 +4948,22 @@ it.each(['charge', 'credit'] as const)(
     expect(((await (await propose()).json()) as { adjustmentId: string }).adjustmentId).toBe(
       proposed.adjustmentId
     );
+    const priceRecord = await fetch(`${staffPath}/${proposed.adjustmentId}`, {
+      headers: staffHeaders,
+    });
+    expect(priceRecord.status, http.logs()).toBe(200);
+    expect(await priceRecord.json()).toMatchObject({
+      contractId: order.contractId,
+      adjustments: [
+        {
+          adjustmentId: proposed.adjustmentId,
+          calculationSha256: proposed.calculationSha256,
+          adjustmentAmountIrR: proposed.adjustmentAmountIrR,
+        },
+      ],
+    });
+    expect((await fetch(`${staffPath}/${proposed.adjustmentId}`, { headers })).status).toBe(403);
+    expect((await fetch(`${staffPath}/${randomUUID()}`, { headers: staffHeaders })).status).toBe(404);
     const disclosedResponse = await fetch(customerPath, { headers });
     expect(disclosedResponse.status, http.logs()).toBe(200);
     expect(await disclosedResponse.json()).toMatchObject({

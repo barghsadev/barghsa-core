@@ -92,10 +92,10 @@ it('forwards the registered field ref, respects a parent key veto, and bounds re
   expect(submit).not.toHaveBeenCalled();
   Object.defineProperty(input, 'scrollHeight', { configurable: true, value: 500 });
   await mountInput({ textareaProps: { ...textareaProps, value: 'Long draft' } });
-  expect(input.style.height).toBe('240px');
+  expect(input.style.height).toBe('144px');
   Object.defineProperty(input, 'scrollHeight', { configurable: true, value: 120 });
   await mountInput({ active: false, textareaProps: { ...textareaProps, value: 'Hidden draft' } });
-  expect(input.style.height).toBe('240px');
+  expect(input.style.height).toBe('144px');
   await mountInput({ active: true, textareaProps: { ...textareaProps, value: 'Hidden draft' } });
   expect(input.style.height).toBe('120px');
 });

@@ -1,3 +1,4 @@
+import { manualRecordDateTime } from './record-date-time-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { t } from '../../../packages/i18n/src/admin-ui';
 import { formatBrowserDate } from './browser-date';
@@ -125,7 +126,7 @@ for (const locale of ['en', 'fa']) {
     await page.route(`**/api/admin/wallet/bank-receipt-top-ups/${id}`, (route) =>
       route.fulfill({ json: receipt })
     );
-    await page.goto('/admin/wallet-receipts');
+    await page.goto(`/admin/wallet-receipts/${id}`);
     const details = page.locator('section[aria-labelledby="receipt-review-heading"]');
     await expect(details).toContainText(await expected(page, locale));
     await expect(details).toContainText(
@@ -176,16 +177,11 @@ for (const locale of ['en', 'fa']) {
         },
       });
     });
-    await page.goto('/admin/invoices');
-    await page.locator('#invoice-id').fill(id);
-    const load = page
-      .locator('#invoice-id')
-      .locator('..')
-      .locator('..')
-      .getByRole('button', {
-        name: locale === 'fa' ? 'بارگذاری' : 'Load',
-        exact: true,
-      });
+    await page.goto(`/admin/invoices/${id}/deadline`);
+    const load = page.locator('#invoice-deadline-panel').getByRole('button', {
+      name: locale === 'fa' ? 'بارگذاری' : 'Load',
+      exact: true,
+    });
 
     await expect
       .poll(() =>
@@ -194,9 +190,8 @@ for (const locale of ['en', 'fa']) {
         )
       )
       .toBeLessThanOrEqual(1);
-    await load.click();
-    const input = page.locator('#due-at');
-    const form = input.locator('..').locator('..');
+    const input = await manualRecordDateTime(page, 'due-at');
+    const form = page.locator('form').filter({ has: input });
     const save = form.locator('button[type=submit]');
     await expect(input).toHaveValue('2026-11-01T01:30');
     await page.locator('#override-reason').fill('Customer requested corrected deadline');

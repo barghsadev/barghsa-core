@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { SERVICE_DUE_PERIOD_TYPES } from '@barghsa/shared/finance';
+import { tDuePeriods } from '@barghsa/i18n/invoice-due-periods';
 const periodId = '11111111-1111-7111-8111-111111111111';
 for (const locale of ['fa', 'en'] as const)
   for (const darkMode of [false, true])
@@ -100,7 +101,7 @@ for (const locale of ['fa', 'en'] as const)
         expect(route.request().headers()['x-csrf-token']).toBe('period-csrf');
         return route.fulfill({ json: { success: true } });
       });
-      await page.goto('/admin/invoices');
+      await page.goto('/admin/invoices/tools/due-periods');
       await page
         .context()
         .addCookies([
@@ -108,10 +109,17 @@ for (const locale of ['fa', 'en'] as const)
         ]);
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*dark)/);
       const panel = page.locator('#invoice-due-periods');
-      const service = panel.getByLabel(fa ? 'نوع خدمت' : 'Service type');
+      const period = (count: number) =>
+        tDuePeriods('periodLength', locale).replace('{days}', count.toLocaleString(locale));
+      const index = '/admin/invoices/tools/due-periods';
+      const electricity = panel.locator(`a[href="${index}/electricity"]`);
+      const manual = panel.locator(`a[href="${index}/manual"]`);
+      await expect(panel.getByRole('link')).toHaveCount(4);
+      await expect(electricity).toContainText(period(7));
+      await manual.click();
+      await expect(page).toHaveURL(new RegExp(`${index}/manual$`));
       const days = panel.getByLabel(fa ? 'تعداد روز پس از صدور' : 'Days after issue');
       await expect(days).toHaveValue('7');
-      await service.selectOption('manual');
       const save = panel.getByRole('button', {
         name: fa ? 'ذخیره مهلت پرداخت' : 'Save due period',
         exact: true,
@@ -124,7 +132,8 @@ for (const locale of ['fa', 'en'] as const)
       await save.click();
       const dialog = page.getByRole('dialog');
       await expect(dialog).toBeVisible();
-      await expect(service).toBeDisabled();
+      await expect(dialog.getByText(period(7), { exact: true })).toBeVisible();
+      await expect(dialog.getByText(period(14), { exact: true })).toBeVisible();
       await expect(days).toBeDisabled();
       const password = dialog.getByLabel(
         fa ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password'
@@ -141,9 +150,13 @@ for (const locale of ['fa', 'en'] as const)
         { serviceType: 'manual', defaultDays: 14, expectedPeriodId: null },
         { serviceType: 'manual', defaultDays: 14, expectedPeriodId: null },
       ]);
-      await service.selectOption('electricity');
+      const back = page.locator(`main header a[href="${index}"]`);
+      await back.click();
+      await expect(manual).toContainText(period(14));
+      await electricity.click();
       await expect(days).toHaveValue('7');
-      await service.selectOption('manual');
+      await back.click();
+      await manual.click();
       await expect(days).toHaveValue('14');
       await save.hover();
       await panel.evaluate(async (element) => {

@@ -2,6 +2,8 @@ import type { Locale } from './app.js';
 const en = {
   question: 'Enter a question from 1 to 1000 characters.',
   message: 'Enter a test message from 1 to 4000 characters.',
+  questionExample: 'Example: How do I pay an invoice?',
+  messageExample: 'Example: What documents do I need?',
   agentId: 'Select a currently enabled agent.',
   slotKey: 'Select an available preview slot.',
   unavailable: 'Validation could not load. Your message is preserved; try again.',
@@ -47,6 +49,8 @@ const en = {
 const fa: Record<keyof typeof en, string> = {
   question: 'پرسش خود را با ۱ تا ۱۰۰۰ نویسه وارد کنید.',
   message: 'پیام آزمایشی را با ۱ تا ۴۰۰۰ نویسه وارد کنید.',
+  questionExample: 'مثال: چطور فاکتور را پرداخت کنم؟',
+  messageExample: 'مثال: چه مدارکی لازم است؟',
   agentId: 'یک عامل فعال موجود را انتخاب کنید.',
   slotKey: 'یک جایگاه موجود برای پیش‌نمایش انتخاب کنید.',
   unavailable: 'اعتبارسنجی بارگیری نشد. پیام شما حفظ شده است؛ دوباره تلاش کنید.',

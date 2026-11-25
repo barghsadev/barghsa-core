@@ -31,7 +31,7 @@ export default function TosPreview({
           { title: text.proposedVersion, content: proposed },
         ].map((item) => (
           <section key={item.title} aria-label={item.title} className={style}>
-            <h4 className="mb-3 border-b pb-2 font-semibold">{item.title}</h4>
+            <h2 className="mb-3 border-b pb-2 font-semibold">{item.title}</h2>
             <div dir={language === 'fa' ? 'rtl' : 'ltr'} lang={language}>
               {item.content ? (
                 <TosContent content={item.content} language={language} />

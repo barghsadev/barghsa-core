@@ -1,15 +1,20 @@
 const messages = {
   en: {
     charts: 'Charts and analytics',
-    chartsDescription: 'Charts of electricity market data.',
+    chartsDescription: 'Electricity market charts are unavailable in this workspace.',
+    electricityServices: 'Electricity services',
     videos: 'Video uploads',
-    videosDescription: 'Inspection footage and media management.',
+    videosDescription:
+      'Find inspection instructions and supported documents on your solar request.',
+    solarRequests: 'Solar requests',
   },
   fa: {
     charts: 'نمودارها و تحلیل‌ها',
-    chartsDescription: 'نمودارهای داده‌های بازار برق.',
+    chartsDescription: 'نمودارهای بازار برق در این محیط در دسترس نیستند.',
+    electricityServices: 'خدمات برق',
     videos: 'بارگذاری ویدیو',
-    videosDescription: 'ویدیوهای بازدید و مدیریت رسانه‌ها.',
+    videosDescription: 'راهنمای بازدید و مدارک قابل ثبت را در درخواست خورشیدی خود ببینید.',
+    solarRequests: 'درخواست‌های خورشیدی',
   },
 } as const;
 

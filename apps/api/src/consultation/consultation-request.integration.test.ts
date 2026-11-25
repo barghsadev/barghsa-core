@@ -164,26 +164,60 @@ it('lists seeded products by profile, submits without invoicing, and isolates hi
   const certificateId = companyProducts.find(
     (product) => product.systemKey === 'electricity_saving_certificate'
   )!.id;
-  const post = (user: string, profileId: string, productId: string, submissionKey: string) =>
+  const post = (
+    user: string,
+    profileId: string,
+    productId: string,
+    submissionKey: string,
+    brief?: string
+  ) =>
     fetch(`${http.base}/api/consultations/requests`, {
       method: 'POST',
       headers: headers[user]!,
-      body: JSON.stringify({ profileId, productId, submissionKey }),
+      body: JSON.stringify({ profileId, productId, submissionKey, brief }),
     });
   expect((await post('individual', profiles.individual!, certificateId, randomUUID())).status).toBe(
     400
   );
   const key = randomUUID();
+  const productId = individualProducts[0]!.id;
+  const brief = 'Could you review my site and advise on suitable generation capacity?';
+  const findReceipt = (user: string, profileId: string, selection = productId) =>
+    fetch(
+      `${http.base}/api/consultations/requests/submissions/${key}?profileId=${profileId}&productId=${selection}`,
+      { headers: headers[user]! }
+    );
+  expect(await (await findReceipt('individual', profiles.individual!)).json()).toEqual({
+    receipt: null,
+  });
   await expectSubmissionNotificationRollback(http.pool, () =>
-    post('individual', profiles.individual!, individualProducts[0]!.id, key)
+    post('individual', profiles.individual!, productId, key, brief)
   );
-  const submitted = await post('individual', profiles.individual!, individualProducts[0]!.id, key);
+  expect(await (await findReceipt('individual', profiles.individual!)).json()).toEqual({
+    receipt: null,
+  });
+  const submitted = await post('individual', profiles.individual!, productId, key, ` ${brief} `);
   expect(submitted.status, http.logs()).toBe(201);
   const created = (await submitted.json()) as { requestId: string; status: string };
   expect(created.status).toBe('submitted');
-  const retry = await post('individual', profiles.individual!, individualProducts[0]!.id, key);
+  const retry = await post('individual', profiles.individual!, productId, key, brief);
   expect(retry.status, http.logs()).toBe(201);
   expect(await retry.json()).toEqual(created);
+  expect((await post('individual', profiles.individual!, productId, key, 'Changed')).status).toBe(
+    409
+  );
+  expect((await post('individual', profiles.individual!, productId, key)).status).toBe(409);
+  const recovered = await findReceipt('individual', profiles.individual!);
+  expect(recovered.status, http.logs()).toBe(200);
+  expect(recovered.headers.get('cache-control')).toContain('no-store');
+  expect(await recovered.json()).toEqual({ receipt: created });
+  expect((await findReceipt('company', profiles.individual!)).status).toBe(404);
+  expect(await (await findReceipt('company', profiles.company!)).json()).toEqual({ receipt: null });
+  expect(
+    await (await findReceipt('individual', profiles.individual!, certificateId)).json()
+  ).toEqual({
+    receipt: null,
+  });
   await expectOrderSubmitted(http.pool, {
     service: 'consultation',
     id: created.requestId,
@@ -241,7 +275,7 @@ it('lists seeded products by profile, submits without invoicing, and isolates hi
   expect(detail.status, http.logs()).toBe(200);
   expect(await detail.json()).toMatchObject({
     request: { id: created.requestId, invoice_id: null, fee: null },
-    history: [{ status: 'submitted', actor_type: 'customer' }],
+    history: [{ status: 'submitted', actor_type: 'customer', reason: brief }],
   });
   expect(
     (
@@ -450,7 +484,7 @@ it('lists seeded products by profile, submits without invoicing, and isolates hi
   ).toBe(400);
 });
 
-it('owns only malformed product selection and rejects protected or unauthorized submissions without writes', async () => {
+it('owns product and brief errors and rejects protected or unauthorized submissions without writes', async () => {
   const productId = (
     await http.pool.query(
       "SELECT id FROM products WHERE system_key='electricity_generation_station'"
@@ -472,6 +506,8 @@ it('owns only malformed product selection and rejects protected or unauthorized 
   for (const [input, fields] of [
     [{ ...body, productId: 'PRIVATE' }, ['productId']],
     [{ ...body, productId: null }, ['productId']],
+    [{ ...body, brief: { value: 'PRIVATE' } }, ['brief']],
+    [{ ...body, brief: 'PRIVATE'.repeat(300) }, ['brief']],
     [{ ...body, profileId: 'PRIVATE' }, undefined],
     [{ ...body, submissionKey: 'PRIVATE' }, undefined],
     [{ ...body, productId: 'PRIVATE', profileId: 'PRIVATE' }, undefined],

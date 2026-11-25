@@ -347,9 +347,9 @@ it('previews a fulfillment transition and submits its exact review hash', async 
       button.textContent?.includes('Buyer Company')
     );
     await act(async () => item!.click());
-    const note = container.querySelector<HTMLInputElement>('#saving-staff-note')!;
+    const note = container.querySelector<HTMLTextAreaElement>('#saving-staff-note')!;
     await act(async () => {
-      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
         note,
         'Delivered to customer'
       );
@@ -615,9 +615,14 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
       button.textContent?.includes('Buyer Company')
     );
     await act(async () => item!.click());
-    const reason = container.querySelector<HTMLInputElement>('#saving-amend-hardware-reason')!;
+    const reason = await vi.waitFor(async () => {
+      await act(async () => {});
+      const field = container.querySelector<HTMLTextAreaElement>('#saving-amend-hardware-reason');
+      expect(field).not.toBeNull();
+      return field!;
+    });
     await act(async () => {
-      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
         reason,
         'Customer requested the upgrade'
       );
@@ -662,11 +667,11 @@ it('confirms exact saving amendments and unpaid upgrade cancellation', async () 
       await act(async () => {});
       expect(document.querySelector('[role="dialog"]')).toBeNull();
     });
-    const cancelReason = container.querySelector<HTMLInputElement>(
+    const cancelReason = container.querySelector<HTMLTextAreaElement>(
       `#saving-upgrade-cancel-${upgradeId}`
     )!;
     await act(async () => {
-      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
         cancelReason,
         'Customer changed their mind'
       );

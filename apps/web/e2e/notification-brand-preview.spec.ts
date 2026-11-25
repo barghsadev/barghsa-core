@@ -1,6 +1,53 @@
 import { test, expect } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
+import { notificationFormText } from '@barghsa/i18n/notification-forms';
+
+test('the editor expands a longer email without submitting or disturbing the draft', async ({
+  page,
+}) => {
+  await crmShell(page, 'en');
+  await page.route('**/api/admin/notifications/templates', (route) => {
+    expect(route.request().method()).toBe('GET');
+    return route.fulfill({ json: [] });
+  });
+  await page.goto('/admin/notifications/new');
+  const body = page.locator('#notification-template-bodyTemplate');
+  const editor = page.locator('form').filter({ has: body });
+  await editor.locator('#notification-template-locale').selectOption('fa');
+  const message = Array.from({ length: 8 }, (_, index) => `<p>Invoice item ${index + 1}</p>`).join(
+    ''
+  );
+  await body.fill(message);
+  const iframe = editor.locator('iframe');
+  const footer = editor.frameLocator('iframe').getByText('Invoice item 8', { exact: true });
+  await expect(footer).toBeVisible();
+  const bounds = () =>
+    footer.evaluate((element) => ({
+      bottom: element.getBoundingClientRect().bottom,
+      viewport: window.innerHeight,
+    }));
+  const compact = await bounds();
+  expect(compact.viewport).toBeLessThan(300);
+  expect(compact.bottom).toBeGreaterThan(compact.viewport);
+
+  const expand = editor.getByRole('button', { name: notificationFormText('previewExpand', 'en') });
+  await expect(expand).toHaveAttribute('aria-expanded', 'false');
+  await expand.focus();
+  await expand.press('Enter');
+  const shrink = editor.getByRole('button', { name: notificationFormText('previewCompact', 'en') });
+  await expect(shrink).toHaveAttribute('aria-expanded', 'true');
+  await expect(shrink).toBeFocused();
+  await expect.poll(async () => (await bounds()).viewport).toBeGreaterThan(420);
+  await expect(iframe).toHaveAttribute('sandbox', '');
+  await expect(iframe).toHaveAttribute('referrerpolicy', 'no-referrer');
+  await expect(body).toHaveValue(message);
+  await expect(page).toHaveURL('/admin/notifications/new');
+
+  await shrink.press('Enter');
+  await expect(expand).toBeFocused();
+  await expect.poll(async () => (await bounds()).viewport).toBe(compact.viewport);
+});
 
 for (const locale of ['en', 'fa'] as const) {
   test(`system-policy email follows client theme inside its sandbox (${locale})`, async ({
@@ -56,7 +103,7 @@ for (const locale of ['en', 'fa'] as const) {
         ],
       })
     );
-    await page.goto('/admin/notifications');
+    await page.goto('/admin/notifications/preview');
     const iframe = page.locator('iframe').first();
     const frame = page.frameLocator('iframe').first();
     await expect(iframe).toHaveAttribute('sandbox', '');
@@ -132,7 +179,7 @@ for (const locale of ['en', 'fa'] as const)
           ],
         })
       );
-      await page.goto('/admin/notifications');
+      await page.goto('/admin/notifications/preview');
       const historyFrame = page.frameLocator('iframe').first();
       await expect(historyFrame.getByText('Branded <energy>', { exact: true })).toBeVisible();
       await expect(historyFrame.getByRole('heading', { name: 'Welcome user.name' })).toBeVisible();
@@ -148,23 +195,23 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('iframe').first()).toHaveAttribute('sandbox', '');
       await expect(page.locator('iframe').first()).toHaveAttribute('referrerpolicy', 'no-referrer');
       await historyFrame.getByRole('link', { name: 'Leave preview' }).click();
-      await expect(page).toHaveURL(/\/admin\/notifications$/);
+      await expect(page).toHaveURL(/\/admin\/notifications\/preview$/);
       expect(
         await page.evaluate(() => (window as unknown as Record<string, unknown>).__previewPwned)
       ).toBeUndefined();
       expect(requests).toEqual([]);
       // Warnings remain outside the isolated HTML, where staff can act on them.
       await expect(page.getByRole('listitem').filter({ hasText: /• missing —/ })).toBeVisible();
-      await page
-        .getByRole('button', { name: locale === 'fa' ? 'قالب جدید' : 'New Template', exact: true })
-        .click();
+      await page.goto('/admin/notifications/new');
       const editor = page
         .locator('form')
         .filter({ has: page.locator('#notification-template-eventKey') });
       await editor.locator('#notification-template-locale').selectOption(locale);
       await editor
-        .locator('#notification-template-variablesLabel')
-        .fill('user.name: Recipient name');
+        .getByRole('button', { name: notificationFormText('addVariable', locale) })
+        .click();
+      await editor.locator('[data-variable-name]').fill('user.name');
+      await editor.locator('[data-variable-description]').fill('Recipient name');
       await editor
         .locator('#notification-template-bodyTemplate')
         .fill('<h1>Live {{user.name}}</h1>');
@@ -207,7 +254,7 @@ for (const channel of ['sms', 'in_app']) {
         ],
       })
     );
-    await page.goto('/admin/notifications');
+    await page.goto('/admin/notifications/preview');
     await expect(page.locator('pre').filter({ hasText: '<b>Literal text</b>' })).toBeVisible();
     await expect(page.locator('iframe')).toHaveCount(0);
   });
@@ -254,7 +301,7 @@ for (const locale of ['fa', 'en'] as const)
           ],
         })
       );
-      await page.goto('/admin/notifications');
+      await page.goto('/admin/notifications/preview');
       const frame = page.frameLocator('iframe').first();
       await expect(
         frame.getByText(locale === 'fa' ? 'برق <آزمایش>' : 'English & Energy', { exact: true })

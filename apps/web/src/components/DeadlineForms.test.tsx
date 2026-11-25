@@ -1,3 +1,4 @@
+import { openManualRecordDateTime } from '../test/record-date-time.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -76,11 +77,17 @@ async function deadline() {
   );
   await fill('invoice-id', invoiceId);
   await submit('invoice-id');
+  await vi.waitFor(() => expect(input('due-at')).toBeTruthy());
+  await openManualRecordDateTime('due-at');
   await vi.waitFor(() => expect(input('due-at')?.value).toBe('2026-09-12T13:30'));
 }
 async function period() {
   await act(async () =>
-    root.render(<QueryComponentProvider>{<ServiceDuePeriodPanel />}</QueryComponentProvider>)
+    root.render(
+      <QueryComponentProvider>
+        {<ServiceDuePeriodPanel service="electricity" />}
+      </QueryComponentProvider>
+    )
   );
   await vi.waitFor(() => expect(input('due-period-days')?.value).toBe('7'));
 }

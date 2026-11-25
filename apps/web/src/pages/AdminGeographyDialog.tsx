@@ -1,6 +1,6 @@
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { ConfirmationFields } from '@barghsa/ui';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   AlertDescription,
@@ -13,6 +13,7 @@ import {
   DialogTitle,
   Input,
   Label,
+  NativeSelect,
 } from '@barghsa/ui';
 import { geographyText, type GeographyTextKey } from '@barghsa/i18n/geography';
 import { useLocale } from '../hooks/useLocale.js';
@@ -24,6 +25,12 @@ import {
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
+import {
+  RecordEditorActions,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 import {
   deactivateProvince,
   deactivateCity,
@@ -39,45 +46,6 @@ export type GeographyModal = {
   trigger: HTMLElement | null;
 };
 
-export type GeographyEditorAddress = {
-  id: string | null;
-  set: (id: string | null, replace?: boolean) => void;
-};
-
-export function useGeographyEditorAddress(
-  selection: GeographyEditorAddress | undefined,
-  rows: readonly Province[],
-  ready: boolean,
-  trigger: React.RefObject<HTMLElement | null>,
-  restore: (value: GeographyModal | null) => void
-) {
-  const applied = useRef<string | null>(null);
-  const request = useRef<{ id: string | null; restore: boolean }>({ id: null, restore: false });
-  const id = selection?.id;
-  useLayoutEffect(() => {
-    if (id === undefined) return;
-    if (request.current.id !== id) {
-      const pending = applied.current !== id;
-      if (pending) restore(null);
-      request.current = { id, restore: pending };
-    }
-    if (!request.current.restore || !ready) return;
-    const record = rows.find((row) => row.id === id);
-    if (id !== null && id !== 'new' && !record) return;
-    request.current.restore = false;
-    applied.current = id;
-    if (id === 'new') restore({ kind: 'add', province: null, trigger: trigger.current });
-    else if (record) restore({ kind: 'edit', province: record, trigger: trigger.current });
-  }, [id, rows, ready]);
-  return (next: string | null, replace = false) => {
-    if (!selection || (applied.current === next && !request.current.restore)) return;
-    applied.current = next;
-    request.current.restore = false;
-    selection.set(next, replace);
-  };
-}
-const selectClass =
-  'h-10 rounded-md border border-input bg-background px-3 text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring';
 function failureKey(error: unknown): GeographyTextKey {
   return error instanceof GeographyRequestError ? error.code : 'requestFailed';
 }
@@ -89,14 +57,16 @@ export function GeographyDialog({
   readReady = true,
   recovery,
   onDenied,
+  standalone = false,
 }: {
   readReady?: boolean;
   recovery?: React.ReactNode;
   onDenied?: () => void;
   provinceId?: string;
+  standalone?: boolean;
   modal: GeographyModal;
   onClose: () => void;
-  onSaved: () => void;
+  onSaved: (record: Province | null) => void;
 }) {
   const locale = useLocale();
   const t = (key: GeographyTextKey) =>
@@ -215,27 +185,23 @@ export function GeographyDialog({
       }
       if (destructive && !authorized.current) return;
       const draft = native.form.getValues();
+      const values = {
+        nameFa: draft.nameFa.trim(),
+        nameEn: draft.nameEn.trim(),
+        status: draft.status,
+      };
+      let saved: Province | null = null;
       if (deactivating && modal.province) {
         if (provinceId) await deactivateCity(provinceId, modal.province.id);
         else await deactivateProvince(modal.province.id);
-      } else if (provinceId)
-        await saveCity(provinceId, modal.province, {
-          nameFa: draft.nameFa.trim(),
-          nameEn: draft.nameEn.trim(),
-          status: draft.status,
-        });
-      else
-        await saveProvince(modal.province, {
-          nameFa: draft.nameFa.trim(),
-          nameEn: draft.nameEn.trim(),
-          status: draft.status,
-        });
+      } else if (provinceId) saved = await saveCity(provinceId, modal.province, values);
+      else saved = await saveProvince(modal.province, values);
       if (
         mounted.current &&
         latest.current.modal === modal &&
         latest.current.provinceId === provinceId
       )
-        onSaved();
+        onSaved(saved);
     } catch (cause) {
       if (
         !mounted.current ||
@@ -255,6 +221,166 @@ export function GeographyDialog({
       if (mounted.current) native.setValidationPending(false);
     }
   }
+  const title = t(deactivating ? 'deactivateTitle' : modal.kind === 'add' ? 'add' : 'editTitle');
+  const description = deactivating
+    ? t('deactivateDescription').replace(
+        '{name}',
+        (locale === 'fa' ? modal.province?.nameFa : modal.province?.nameEn) ?? ''
+      )
+    : t('formDescription');
+  const actions = (
+    <>
+      <Button
+        ref={cancel}
+        type="button"
+        variant="outline"
+        disabled={busy}
+        onClick={() => {
+          if (!inFlight.current) onClose();
+        }}
+      >
+        {t('cancel')}
+      </Button>
+      {deactivating ? (
+        <Button
+          type="submit"
+          variant="destructive"
+          disabled={busy || !readReady || !gate.allowed}
+          aria-busy={busy || undefined}
+        >
+          {busy && (
+            <span
+              aria-hidden="true"
+              className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+            />
+          )}
+          {t(busy ? 'deactivating' : 'deactivate')}
+        </Button>
+      ) : (
+        <CatalogueSaveButton
+          label={t(busy ? 'saving' : modal.kind === 'add' ? 'create' : 'save')}
+          pending={busy}
+          disabled={busy || !readReady || (destructive && !gate.allowed)}
+        />
+      )}
+    </>
+  );
+  const form = (
+    <form
+      onSubmit={submit}
+      noValidate
+      aria-label={title}
+      aria-busy={busy}
+      className={standalone ? recordEditorSurface : 'space-y-4'}
+    >
+      <div className={standalone ? 'space-y-3 px-4 py-4 sm:px-6' : 'space-y-3'}>
+        {standalone && (
+          <div className="space-y-1">
+            <h2 className="text-base font-semibold">
+              {t(deactivating ? 'status' : modal.kind === 'edit' ? 'namesAndStatus' : 'names')}
+            </h2>
+            {deactivating && <p className="text-sm text-muted-foreground">{description}</p>}
+          </div>
+        )}
+        {error && (
+          <Alert variant="destructive" role="alert" id="province-error">
+            <AlertDescription>{t(error)}</AlertDescription>
+          </Alert>
+        )}
+        {catalogueRootMessage(native.errors) && (
+          <Alert variant="destructive">{catalogueRootMessage(native.errors)}</Alert>
+        )}
+        {!deactivating && (
+          <fieldset disabled={busy} className="min-w-0 space-y-3 border-0 p-0">
+            <legend className="sr-only">{t(modal.kind === 'add' ? 'add' : 'editTitle')}</legend>
+            <div className={recordEditorGrid}>
+              <div className={recordEditorField}>
+                <Label htmlFor="province-name-fa">{t('nameFa')}</Label>
+                <Input
+                  {...native.bind('nameFa')}
+                  id="province-name-fa"
+                  ref={(node) => {
+                    firstField.current = node;
+                    native.bind('nameFa').ref(node);
+                  }}
+                  dir="rtl"
+                  lang="fa"
+                  placeholder={provinceId ? 'کرج' : 'البرز'}
+                  value={nameFa}
+                  onChange={(event) => {
+                    if (!inFlight.current) setNameFa(event.target.value);
+                  }}
+                  maxLength={100}
+                  required
+                  aria-required="true"
+                />
+                <CatalogueFieldFeedback
+                  id={native.errorId('nameFa')}
+                  error={native.errors.nameFa}
+                  message={t('invalidFa')}
+                  compact
+                />
+              </div>
+              <div className={recordEditorField}>
+                <Label htmlFor="province-name-en">{t('nameEn')}</Label>
+                <Input
+                  {...native.bind('nameEn')}
+                  id="province-name-en"
+                  dir="ltr"
+                  lang="en"
+                  placeholder={provinceId ? 'Karaj' : 'Alborz'}
+                  value={nameEn}
+                  onChange={(event) => {
+                    if (!inFlight.current) setNameEn(event.target.value);
+                  }}
+                  maxLength={100}
+                  required
+                  aria-required="true"
+                />
+                <CatalogueFieldFeedback
+                  id={native.errorId('nameEn')}
+                  error={native.errors.nameEn}
+                  message={t('invalidEn')}
+                  compact
+                />
+              </div>
+            </div>
+            {modal.kind === 'edit' && (
+              <div className={`${recordEditorField} max-w-xs`}>
+                <Label htmlFor="province-status">{t('status')}</Label>
+                <NativeSelect
+                  {...native.bind('status')}
+                  id="province-status"
+                  className="w-full"
+                  value={status}
+                  onChange={(event) => {
+                    if (!inFlight.current) setStatus(event.target.value as 'active' | 'inactive');
+                  }}
+                >
+                  <option value="active">{t('active')}</option>
+                  <option value="inactive">{t('inactive')}</option>
+                </NativeSelect>
+                <CatalogueFieldFeedback
+                  id={native.errorId('status')}
+                  error={native.errors.status}
+                  message={t('invalidStatus')}
+                  compact
+                />
+              </div>
+            )}
+          </fieldset>
+        )}
+        {!standalone && recovery}
+        {destructive && <ConfirmationFields gate={gate} disabled={busy} />}
+      </div>
+      {standalone ? (
+        <RecordEditorActions secondary={recovery}>{actions}</RecordEditorActions>
+      ) : (
+        <DialogFooter>{actions}</DialogFooter>
+      )}
+    </form>
+  );
+  if (standalone) return form;
   return (
     <Dialog
       open
@@ -270,148 +396,10 @@ export function GeographyDialog({
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
-          <DialogTitle>
-            {t(deactivating ? 'deactivateTitle' : modal.kind === 'add' ? 'add' : 'editTitle')}
-          </DialogTitle>
-          <DialogDescription>
-            {deactivating
-              ? t('deactivateDescription').replace(
-                  '{name}',
-                  (locale === 'fa' ? modal.province?.nameFa : modal.province?.nameEn) ?? ''
-                )
-              : t('formDescription')}
-          </DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <form onSubmit={submit} noValidate aria-busy={busy} className="flex flex-col gap-4">
-          {error && (
-            <Alert variant="destructive" role="alert" id="province-error">
-              <AlertDescription>{t(error)}</AlertDescription>
-            </Alert>
-          )}
-          {catalogueRootMessage(native.errors) && (
-            <Alert variant="destructive">{catalogueRootMessage(native.errors)}</Alert>
-          )}
-          {!deactivating && (
-            <fieldset disabled={busy} className="flex flex-col gap-4">
-              <legend className="sr-only">{t(modal.kind === 'add' ? 'add' : 'editTitle')}</legend>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="province-name-fa">{t('nameFa')}</Label>
-                <Input
-                  {...native.bind('nameFa')}
-                  id="province-name-fa"
-                  ref={(node) => {
-                    firstField.current = node;
-                    native.bind('nameFa').ref(node);
-                  }}
-                  dir="rtl"
-                  lang="fa"
-                  value={nameFa}
-                  onChange={(event) => {
-                    if (!inFlight.current) setNameFa(event.target.value);
-                  }}
-                  maxLength={100}
-                  required
-                  aria-required="true"
-                />
-                <CatalogueFieldFeedback
-                  id={native.errorId('nameFa')}
-                  error={native.errors.nameFa}
-                  message={t('invalidFa')}
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="province-name-en">{t('nameEn')}</Label>
-                <Input
-                  {...native.bind('nameEn')}
-                  id="province-name-en"
-                  dir="ltr"
-                  lang="en"
-                  value={nameEn}
-                  onChange={(event) => {
-                    if (!inFlight.current) setNameEn(event.target.value);
-                  }}
-                  maxLength={100}
-                  required
-                  aria-required="true"
-                />
-                <CatalogueFieldFeedback
-                  id={native.errorId('nameEn')}
-                  error={native.errors.nameEn}
-                  message={t('invalidEn')}
-                />
-              </div>
-              {modal.kind === 'edit' && (
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="province-status">{t('status')}</Label>
-                  <select
-                    {...native.bind('status')}
-                    id="province-status"
-                    className={selectClass}
-                    value={status}
-                    onChange={(event) => {
-                      if (!inFlight.current) setStatus(event.target.value as 'active' | 'inactive');
-                    }}
-                  >
-                    <option value="active">{t('active')}</option>
-                    <option value="inactive">{t('inactive')}</option>
-                  </select>
-                  <CatalogueFieldFeedback
-                    id={native.errorId('status')}
-                    error={native.errors.status}
-                    message={t('invalidStatus')}
-                  />
-                </div>
-              )}
-            </fieldset>
-          )}
-          {recovery}
-          {destructive && <ConfirmationFields gate={gate} disabled={busy} />}
-          <DialogFooter>
-            <Button
-              ref={cancel}
-              type="button"
-              variant="outline"
-              disabled={busy}
-              onClick={() => {
-                if (!inFlight.current) onClose();
-              }}
-            >
-              {t('cancel')}
-            </Button>
-            {deactivating ? (
-              <Button
-                type="submit"
-                variant={deactivating ? 'destructive' : 'default'}
-                disabled={busy || !readReady || (destructive && !gate.allowed)}
-                aria-busy={busy || undefined}
-              >
-                {busy && (
-                  <span
-                    aria-hidden="true"
-                    className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                  />
-                )}
-                {t(
-                  busy
-                    ? deactivating
-                      ? 'deactivating'
-                      : 'saving'
-                    : deactivating
-                      ? 'deactivate'
-                      : modal.kind === 'add'
-                        ? 'create'
-                        : 'save'
-                )}
-              </Button>
-            ) : (
-              <CatalogueSaveButton
-                label={t(busy ? 'saving' : modal.kind === 'add' ? 'create' : 'save')}
-                pending={busy}
-                disabled={busy || !readReady || (destructive && !gate.allowed)}
-              />
-            )}
-          </DialogFooter>
-        </form>
+        {form}
       </DialogContent>
     </Dialog>
   );

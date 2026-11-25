@@ -15,6 +15,7 @@ import {
   isNotificationDenied,
   markOneRead,
   markAllRead,
+  ticketRepliesSeen,
   toNavigationTarget,
   type NotificationItem,
 } from '../lib/notifications.js';
@@ -112,12 +113,14 @@ export function NotificationBell({
     setDenied(false);
     setError(null);
     void load();
+    if (operatingContext === 'customer') window.addEventListener(ticketRepliesSeen, load);
     return () => {
+      window.removeEventListener(ticketRepliesSeen, load);
       requestVersion.current++;
       preview.current?.abort();
       writingRef.current = false;
     };
-  }, [load]);
+  }, [load, operatingContext]);
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next);

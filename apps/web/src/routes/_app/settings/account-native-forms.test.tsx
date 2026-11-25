@@ -1,5 +1,5 @@
 import { act, type ComponentType } from 'react';
-import { cleanup } from '@testing-library/react';
+import { cleanup, configure, getConfig } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { Route } from './username.js';
 import { t } from '@barghsa/i18n/app';
@@ -143,6 +143,19 @@ async function pair() {
   await change('previous-otp', '112233');
   await change('change-otp', '123456');
 }
+
+it('loads the account when React replays the mount effects', async () => {
+  const previous = getConfig().reactStrictMode;
+  configure({ reactStrictMode: true });
+  try {
+    const state = fixture();
+    await mount();
+    expect(view.getByRole('button', { name: text('settings.username.change') })).toBeDefined();
+    expect(state.readCount).toBe(1);
+  } finally {
+    configure({ reactStrictMode: previous });
+  }
+});
 
 it.each([
   ['fa', 'rtl'],
@@ -417,7 +430,7 @@ it('cancels old-account reads and refuses their late authorization denial', asyn
   expect(signal?.aborted).toBe(true);
   await act(async () => held.resolve(Response.json({}, { status: 401 })));
   expect(
-    host.querySelector('[aria-labelledby="username-section-title"] p[dir="ltr"]')?.textContent
+    host.querySelector('[aria-labelledby="username-section-title"] bdi[dir="ltr"]')?.textContent
   ).toBe('rep...est');
   expect(host.textContent).not.toContain(copy('forbidden', 'en'));
   expect(state.writes).toHaveLength(0);

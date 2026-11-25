@@ -1,3 +1,4 @@
+import { backToSavingOrder, savingOperationLink } from './saving-operation-navigation';
 import { productionManifest } from './production-manifest';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -79,8 +80,10 @@ for (const [locale, theme] of [
     const release = await holdSchema(page);
     await page.goto(`/admin/saving-orders?lane=review&orderId=${savingChangeOrder}`);
     const note = page.locator('#saving-staff-note');
+    const rejectionLink = page.getByRole('link', { name: copy('staffReject'), exact: true });
+    await rejectionLink.click();
     await expect(note).toBeVisible();
-    await expect(note).not.toHaveAttribute('aria-required', 'true');
+    await expect(note).toHaveAttribute('aria-required', 'true');
     await expect(note).not.toHaveAttribute('aria-invalid', 'true');
     await action(page, 'staffReject').click();
     await expect(action(page, 'staffReject')).toBeDisabled();
@@ -93,11 +96,13 @@ for (const [locale, theme] of [
     await action(page, 'staffReject').click();
     await focusedError(note);
     expect(state.decisionPreviews).toEqual([]);
+    await backToSavingOrder(page, locale).click();
     state.decisionMode = 'foreign';
     await action(page, 'staffApprove').click();
     await expect(form(page).getByRole('alert')).toContainText(copy('staffReviewError'));
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(state.decisionPreviews[0]!.body).toEqual({ action: 'approve', reason: '' });
+    await rejectionLink.click();
     await expect(note).toHaveValue(unused);
     await checkRoutePresentation(page, info, locale);
     await expect(note).toHaveValue(unused);
@@ -105,12 +110,13 @@ for (const [locale, theme] of [
       page,
       form(page),
       '[data-testid="saving-staff-operation-form"]',
-      action(page, 'staffApprove')
+      action(page, 'staffReject')
     );
     await capture(
       note.locator('..'),
       info.outputPath(`saving-decision-unused-draft-${locale}-${theme}.png`)
     );
+    await backToSavingOrder(page, locale).click();
     state.decisionMode = 'success';
     await action(page, 'staffApprove').click();
     await expect(page.getByRole('dialog')).toContainText(
@@ -152,7 +158,7 @@ for (const [locale, theme] of [
     await state.heldWrite!.fulfill({ json: { ...receipt, refundId } });
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(retry(page)).toHaveText(formCopy('retryCaptured'));
-    await expect(note).toBeDisabled();
+    await expect(rejectionLink).toHaveAttribute('aria-disabled', 'true');
     const reads = state.reads.length;
     await form(page).locator('form').dispatchEvent('submit');
     await refresh(page).dispatchEvent('click');
@@ -164,18 +170,22 @@ for (const [locale, theme] of [
     await confirm(page).click();
     await cancel(page).click();
     await expect(retry(page)).toBeEnabled();
-    await expect(note).toHaveValue(unused);
+    await expect(rejectionLink).toHaveAttribute('aria-disabled', 'true');
     state.decisionWriteMode = 'success';
     await retry(page).click();
     await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
-    await expect(note).toHaveValue(unused);
+    await expect(rejectionLink).toHaveCount(0);
     expect(state.decisionWrites.map((call) => call.raw)).toEqual(Array(4).fill(approval.raw));
     expect(state.decisionWrites.slice(1).map((call) => call.csrf)).toEqual(
       Array(3).fill('rotated-saving-password-proof')
     );
-    await page.getByRole('button', { name: /Other Change Buyer/ }).click();
+    await page
+      .getByRole('link', { name: tSavingStaffReview('staffBackToQueue', locale), exact: true })
+      .click();
+    await page.getByRole('link', { name: /Other Change Buyer/ }).click();
+    await rejectionLink.click();
     await expect(note).toHaveValue('');
     await note.fill('  Customer declined the saving order  ');
     state.decisionMode = 'owned';
@@ -229,7 +239,7 @@ for (const [locale, theme] of [
     await approveRiskConfirmation(page, locale, 'both');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
-    await expect(note).toHaveValue('');
+    await expect(note).toHaveCount(0);
     expect(
       state.decisionWrites.filter((call) => call.action === 'reject').map((call) => call.raw)
     ).toEqual([rejection.raw, rejection.raw]);
@@ -241,11 +251,19 @@ for (const [locale, theme] of [
     const { state, persistStage } = await setupSavingStaffOperations(page, locale, 'stage');
     const release = await holdSchema(page);
     await page.goto(`/admin/saving-orders?lane=fulfillment&orderId=${savingChangeOrder}`);
+    await savingOperationLink(page, 'equipment-handover').click();
     const note = page.locator('#saving-staff-note'),
       handover = page.locator('#saving-handover');
     const intent = locale === 'en' ? 'complete' : 'skip';
     const submit = () => action(page, intent === 'complete' ? 'staffComplete' : 'staffSkip');
+    const progress = form(page).locator(`details[aria-label="${formCopy('stageProgress')}"]`);
     await expect(handover).toBeVisible();
+    const actionsPrecedeProgress = await submit().evaluate(
+      (button, history) =>
+        !!(button.compareDocumentPosition(history) & Node.DOCUMENT_POSITION_FOLLOWING),
+      await progress.elementHandle()
+    );
+    expect(actionsPrecedeProgress).toBe(true);
     await expect(note).toHaveAttribute('aria-required', 'true');
     await expect(handover).not.toHaveAttribute('aria-required', 'true');
     await submit().click();
@@ -350,15 +368,19 @@ for (const [locale, theme] of [
     await approveRiskConfirmation(page, locale, 'financial');
     await confirm(page).click();
     await expect(retry(page)).toHaveCount(0);
-    await expect(note).toHaveValue('');
+    await expect(note).toHaveCount(0);
     await expect(handover).toHaveCount(0);
     expect(state.stageWrites.map((call) => call.raw)).toEqual(Array(4).fill(captured.raw));
+    await page.clock.fastForward(6_100);
+    await backToSavingOrder(page, locale).click();
     const history = page.getByRole('region', { name: copy('staffHistory'), exact: true });
     await expect(history).toContainText('Delivery handover recorded');
     if (intent === 'complete')
       await expect(history).toContainText('Meter and accessories received');
     else await expect(history).toContainText(copy('skipped'));
     await capture(history, info.outputPath(`saving-handover-history-${locale}-${theme}.png`));
+    await savingOperationLink(page, 'process-completion').click();
+    await expect(note).toHaveValue('');
     await note.fill('  Old current-stage private explanation  ');
     state.stageMode = 'held';
     state.heldPreview = undefined;
@@ -367,7 +389,7 @@ for (const [locale, theme] of [
     const old = state.heldPreview;
     await page.evaluate((id) => {
       const url = new URL(location.href);
-      url.searchParams.set('orderId', id);
+      url.pathname = `/admin/saving-orders/${id}/product-delivery`;
       window.history.pushState({}, '', url);
       window.dispatchEvent(new PopStateEvent('popstate'));
     }, otherSavingChangeOrder);
@@ -388,22 +410,31 @@ for (const [locale, theme] of [
     await expect(note).toBeVisible();
     await expect(form(page)).not.toContainText('OLD_PRIVATE_ERROR');
     await note.fill('  Fresh product delivery explanation  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'installation-address').click();
     await page.locator('#saving-amend-reason').fill('  Independent address draft  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'hardware').click();
     await page.locator('#saving-amend-hardware-reason').fill('  Independent hardware draft  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'product-delivery').click();
+    await expect(note).toHaveValue('  Fresh product delivery explanation  ');
     state.stageMode = 'success';
     await action(page, 'staffComplete').click();
     await expect(page.getByRole('dialog')).toContainText('Other Change Buyer');
-    await expect(
-      page.locator('[data-testid="saving-staff-address-form"] button[type=submit]')
-    ).toBeDisabled();
-    await expect(
-      page.locator('[data-testid="saving-staff-hardware-form"] button[type=submit]')
-    ).toBeDisabled();
+    await expect(page.getByTestId('saving-staff-address-form')).toHaveCount(0);
+    await expect(page.getByTestId('saving-staff-hardware-form')).toHaveCount(0);
     await cancel(page).click();
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'installation-address').click();
     await expect(page.locator('#saving-amend-reason')).toHaveValue('  Independent address draft  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'hardware').click();
     await expect(page.locator('#saving-amend-hardware-reason')).toHaveValue(
       '  Independent hardware draft  '
     );
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'product-delivery').click();
     state.stageMode = locale === 'en' ? 'missing' : 'denied';
     await action(page, 'staffComplete').click();
     await expect(note).toHaveCount(0);

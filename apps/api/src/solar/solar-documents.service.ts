@@ -352,8 +352,18 @@ export class SolarDocumentsService {
       await requireStaffMutationPermission(client, actor.userId, 'orders:read');
       await requireCurrentSession(client, actor);
       const request = (
-        await client.query<{ id: string; profile_id: string; status: string }>(
-          'SELECT id,profile_id,status FROM solar_construction_requests WHERE id=$1',
+        await client.query<{
+          id: string;
+          profile_id: string;
+          status: string;
+          profile_name: string | null;
+          building_type: string;
+          created_at: Date;
+        }>(
+          `SELECT r.id,r.profile_id,r.status,r.building_type,r.created_at,
+               COALESCE(NULLIF(lp.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',p.first_name,p.last_name)),'')) AS profile_name
+             FROM solar_construction_requests r JOIN profiles p ON p.id=r.profile_id
+             LEFT JOIN legal_profiles lp ON lp.id=p.id WHERE r.id=$1`,
           [requestId]
         )
       ).rows[0];

@@ -11,7 +11,9 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { t as draftText } from '@barghsa/i18n/onboarding-drafts';
-import { LoadingStatus, Button } from '@barghsa/ui';
+import { LoadingStatus, Button, Badge } from '@barghsa/ui';
+import { Building2, UserRound } from 'lucide-react';
+import { RecordEditorActions, recordEditorSurface } from '../../components/RecordEditorLayout.js';
 
 export const Route = createFileRoute('/onboarding/')({ component: OnboardingPage });
 type ProfileType = 'INDIVIDUAL' | 'LEGAL';
@@ -104,13 +106,15 @@ function OnboardingContent({ accountId }: { accountId: string }) {
 
   return (
     <div
-      className="container mx-auto flex min-h-screen items-center justify-center p-4"
+      className="container mx-auto flex min-h-dvh items-start justify-center px-4 pt-7 pb-8 sm:pt-16"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <div className="w-full max-w-lg space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold">{t('onboarding.welcome.title', locale)}</h1>
-          <p className="text-muted-foreground">{t('onboarding.welcome.subtitle', locale)}</p>
+      <div className="w-full min-w-0 max-w-xl space-y-3.5">
+        <div className="space-y-1.5">
+          <h1 className="text-2xl font-semibold">{t('onboarding.welcome.title', locale)}</h1>
+          <p className="text-sm text-muted-foreground">
+            {t('onboarding.welcome.subtitle', locale)}
+          </p>
         </div>
         <InvitationBanner locale={locale} accountId={accountId} />
         <Suspense
@@ -123,87 +127,89 @@ function OnboardingContent({ accountId }: { accountId: string }) {
         {loading ? (
           <LoadingStatus>{t('onboarding.journey.loading', locale)}</LoadingStatus>
         ) : journey ? (
-          <>
-            <div className="rounded-xl border bg-card p-5 space-y-3">
+          <div className={recordEditorSurface}>
+            <div className="space-y-2.5 px-4 py-4 sm:px-6">
               <h2 className="font-semibold">{t('onboarding.journey.resumeTitle', locale)}</h2>
               <p className="text-sm text-muted-foreground">
                 {t('onboarding.journey.resumeHelp', locale)}
               </p>
-              <ul className="space-y-2">
+              <ul className="divide-y border-t">
                 {journey.profiles.map((p) => (
-                  <li key={p.id} className="flex justify-between gap-4">
+                  <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
                     <span>{t(`settings.profile.profileType.${p.profileType}`, locale)}</span>
-                    <span className="text-sm text-muted-foreground">
-                      {t(`onboarding.wizard.${p.status}`, locale)}
-                    </span>
+                    <Badge>{t(`onboarding.wizard.${p.status}`, locale)}</Badge>
                   </li>
                 ))}
               </ul>
             </div>
-            <Button
-              className="w-full"
-              type="button"
-              onClick={() => router.navigate(onboardingDestination(journey))}
-            >
-              {t('onboarding.journey.resume', locale)}
-            </Button>
-          </>
+            <RecordEditorActions>
+              <Button type="button" onClick={() => router.navigate(onboardingDestination(journey))}>
+                {t('onboarding.journey.resume', locale)}
+              </Button>
+            </RecordEditorActions>
+          </div>
         ) : (
-          <>
-            <fieldset disabled={submitting || error} className="space-y-4">
-              <legend className="font-medium">{t('onboarding.type.prompt', locale)}</legend>
-              <p className="text-sm text-muted-foreground">
-                {t('onboarding.journey.chooseHelp', locale)}
-              </p>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {types.map((type) => {
-                  const key = type === 'INDIVIDUAL' ? 'individual' : 'legal';
-                  return (
-                    <label
-                      key={type}
-                      className={`relative flex cursor-pointer flex-col items-center rounded-xl border-2 p-6 text-center transition-colors focus-within:ring-2 focus-within:ring-ring ${selected.includes(type) ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/40'}`}
-                    >
-                      <input
-                        type="checkbox"
-                        className="absolute top-4 start-4 h-4 w-4 accent-primary"
-                        aria-label={t(`onboarding.profile.${key}`, locale)}
-                        checked={selected.includes(type)}
-                        onChange={() => {
-                          requestId.current = null;
-                          setSelected((previous) =>
-                            types.filter((candidate) =>
-                              candidate === type
-                                ? !previous.includes(type)
-                                : previous.includes(candidate)
-                            )
-                          );
-                        }}
-                      />
-                      <span className="mb-3 text-3xl" aria-hidden="true">
-                        {type === 'INDIVIDUAL' ? '👤' : '🏢'}
-                      </span>
-                      <span className="font-semibold">
-                        {t(`onboarding.profile.${key}`, locale)}
-                      </span>
-                      <span className="mt-2 text-sm text-muted-foreground">
-                        {t(`onboarding.profile.${key}Desc`, locale)}
-                      </span>
-                    </label>
-                  );
-                })}
-              </div>
-            </fieldset>
-            <Button
-              className="w-full"
-              type="button"
-              disabled={!selected.length || submitting || error || !draftListReady}
-              onClick={handleContinue}
-            >
-              {submitting
-                ? t('onboarding.journey.creating', locale)
-                : t('onboarding.type.continue', locale)}
-            </Button>
-          </>
+          <div className={recordEditorSurface}>
+            <div className="px-4 py-4 sm:px-6">
+              <fieldset disabled={submitting || error} className="min-w-0 space-y-2.5">
+                <legend className="font-semibold">{t('onboarding.type.prompt', locale)}</legend>
+                <p className="text-sm text-muted-foreground">
+                  {t('onboarding.journey.chooseHelp', locale)}
+                </p>
+                <div className="grid gap-2">
+                  {types.map((type) => {
+                    const key = type === 'INDIVIDUAL' ? 'individual' : 'legal';
+                    const ProfileIcon = type === 'INDIVIDUAL' ? UserRound : Building2;
+                    return (
+                      <label
+                        key={type}
+                        className={`flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-2.5 transition-colors focus-within:ring-2 focus-within:ring-ring ${selected.includes(type) ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/40'}`}
+                      >
+                        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-muted text-primary">
+                          <ProfileIcon aria-hidden="true" className="size-4" />
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block font-medium">
+                            {t(`onboarding.profile.${key}`, locale)}
+                          </span>
+                          <span className="block text-sm leading-snug text-muted-foreground">
+                            {t(`onboarding.type.${key}Hint`, locale)}
+                          </span>
+                        </span>
+                        <input
+                          type="checkbox"
+                          className="size-4 shrink-0 accent-primary"
+                          aria-label={t(`onboarding.profile.${key}`, locale)}
+                          checked={selected.includes(type)}
+                          onChange={() => {
+                            requestId.current = null;
+                            setSelected((previous) =>
+                              types.filter((candidate) =>
+                                candidate === type
+                                  ? !previous.includes(type)
+                                  : previous.includes(candidate)
+                              )
+                            );
+                          }}
+                        />
+                      </label>
+                    );
+                  })}
+                </div>
+              </fieldset>
+            </div>
+            <RecordEditorActions>
+              <Button
+                type="button"
+                disabled={!selected.length || submitting || error || !draftListReady}
+                onClick={handleContinue}
+              >
+                {submitting
+                  ? t('onboarding.journey.creating', locale)
+                  : t('onboarding.type.continue', locale)}
+              </Button>
+            </RecordEditorActions>
+          </div>
         )}
         {error && (
           <div className="space-y-3">

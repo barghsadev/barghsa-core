@@ -4,7 +4,9 @@ import AxeBuilder from '@axe-core/playwright';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { feedbackText } from '@barghsa/i18n/feedback';
 import { t } from '@barghsa/i18n/app';
+import { invoiceReceiptPageMessages } from '@barghsa/i18n/receipt-editor';
 import { test, expect, type Page } from './coverage-fixture';
+import { selectCalendarDate } from './record-date-time-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const invoiceId = '22222222-2222-4222-8222-222222222222';
@@ -17,7 +19,7 @@ const pdf = {
 
 async function setup(
   page: Page,
-  locale: string,
+  locale: 'en' | 'fa',
   kind: 'wallet' | 'invoice',
   interruptAcknowledgements = false,
   theme: 'light' | 'dark' = 'light',
@@ -211,7 +213,14 @@ async function setup(
       },
     });
   });
-  await page.goto(kind === 'wallet' ? '/wallet' : `/invoices/${invoiceId}`);
+  await page.goto(kind === 'wallet' ? '/wallet/top-up/bank-receipt' : `/invoices/${invoiceId}`);
+  if (kind === 'invoice') {
+    await expect(page.getByTestId('invoice-receipt-form')).toHaveCount(0);
+    await page
+      .getByRole('link', { name: t('invoices.details.receiptTitle', locale), exact: true })
+      .click();
+    await expect(page).toHaveURL(`/invoices/${invoiceId}/receipts/new`);
+  }
   const prefix = `${kind}-receipt`;
   const form = page.getByTestId(`${prefix}-form`);
   await expect(form).toBeVisible();
@@ -219,7 +228,12 @@ async function setup(
     await page
       .getByTestId(`${prefix}-amount`)
       .fill(locale === 'fa' ? '۱۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۱' : '10,000,000,000,000,001');
-    await page.getByTestId(`${prefix}-date`).fill('2026-09-01');
+    await selectCalendarDate(
+      page,
+      kind === 'wallet' ? 'receipt-date' : 'invoice-receipt-date',
+      '2026-09-01',
+      locale
+    );
     await page.getByTestId(`${prefix}-payer-ref`).fill('  TRACK-123  ');
     await page.getByTestId(`${prefix}-note`).fill('  Customer note  ');
     await page.getByTestId(`${prefix}-file`).setInputFiles(pdf);
@@ -242,6 +256,9 @@ async function confirmReceipt(page: Page, locale: 'en' | 'fa', payerReference = 
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
   await expect(dialog).toContainText(payerReference);
+  await expect(dialog.locator('time[datetime="2026-09-01"]')).toHaveText(
+    locale === 'fa' ? '۱۰ شهریور ۱۴۰۵' : 'Sep 1, 2026'
+  );
   const submit = dialog.getByRole('button', {
     name: /تأیید و ثبت رسید|Confirm and submit receipt/,
   });
@@ -269,6 +286,10 @@ for (const kind of ['wallet', 'invoice'] as const) {
       await submit.click();
       await expect.poll(() => recordRequests).toBe(1);
       await expect(submit).toBeDisabled();
+      if (kind === 'invoice') {
+        await page.getByRole('link', { name: invoiceReceiptPageMessages[locale].back }).click();
+        await expect(page).toHaveURL(`/invoices/${invoiceId}/receipts/new`);
+      }
       await page.clock.fastForward(15_001);
       const error =
         kind === 'invoice'
@@ -413,6 +434,56 @@ for (const kind of ['wallet', 'invoice'] as const) {
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`invoice receipt route opens directly and rechecks eligibility (${locale})`, async ({
+    page,
+  }) => {
+    await page.clock.setFixedTime(new Date('2026-11-25T12:00:00Z'));
+    const { invoice, submissions } = await setup(page, locale, 'invoice', false, 'light', false);
+    await page.reload();
+    await expect(page.getByTestId('invoice-receipt-form')).toBeVisible();
+    await expect(page.locator('#invoice-payment-summary')).toHaveCount(0);
+    const date = page.locator('#invoice-receipt-date');
+    await expect(date).toHaveAttribute('aria-required', 'true');
+    if (locale === 'fa') {
+      await date.press('ArrowDown');
+      const calendar = page.getByRole('dialog', {
+        name: t('invoices.details.receiptDateLabel', locale),
+      });
+      const tomorrow = new Intl.DateTimeFormat('fa-IR', { timeZone: 'UTC' }).format(
+        new Date('2026-11-26T12:00:00Z')
+      );
+      await expect(calendar.locator(`button[data-day="${tomorrow}"]`)).toBeDisabled();
+      await page.keyboard.press('Escape');
+      await expect(date).toBeFocused();
+    } else {
+      await expect(date).toHaveAttribute('max', '2026-11-25');
+    }
+    const paid = { ...invoice, state: 'Paid', paidAmount: invoice.totalAmount };
+    await page.route(`**/api/invoices/${invoiceId}`, (route) =>
+      route.fulfill({
+        json: {
+          invoice: paid,
+          chain: [paid],
+          viewedInvoiceId: invoiceId,
+          originalInvoiceId: invoiceId,
+          payments: [],
+          refunds: [],
+          bankReceipts: [],
+        },
+      })
+    );
+    await page.reload();
+    await expect(page.getByText(invoiceReceiptPageMessages[locale].unavailable)).toBeVisible();
+    await expect(page.getByTestId('invoice-receipt-form')).toHaveCount(0);
+    await page.getByRole('link', { name: invoiceReceiptPageMessages[locale].back }).click();
+    await expect(page).toHaveURL(`/invoices/${invoiceId}`);
+    await expect(page.getByTestId(`invoice-card-${invoiceId}`)).toBeVisible();
+    await expect(
+      page.getByRole('link', { name: t('invoices.details.receiptTitle', locale) })
+    ).toHaveCount(0);
+    expect(submissions).toEqual([]);
+  });
+
   test(`saved invoice receipt retries only its history read (${locale})`, async ({ page }) => {
     const { submissions } = await setup(page, locale, 'invoice');
     let detailReads = 0;
@@ -436,7 +507,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect(detailReads).toBe(1);
 
     const retry = page
-      .locator('section[aria-labelledby="invoice-chain-heading"]')
+      .locator('section[aria-labelledby="invoice-receipt-heading"]')
       .getByRole('button', { name: t('invoices.activity.retry', locale), exact: true });
     const loading = page
       .getByRole('status')
@@ -553,11 +624,14 @@ for (const locale of ['en', 'fa'] as const) {
         },
       })
     );
-    await page.reload();
+    await page.goto(`/invoices/${invoiceId}`);
     const activity = page.getByTestId('invoice-activity');
     await expect(activity.locator('li')).toHaveCount(3);
     await expect(activity).toContainText(/۱۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۱|10,000,000,000,000,001/);
     await expect(activity).toContainText('Please upload a clearer receipt.');
+    await expect(activity.locator('time[datetime="2026-09-01"]')).toHaveText(
+      locale === 'fa' ? '۱۰ شهریور ۱۴۰۵' : 'Sep 1, 2026'
+    );
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
     ).toBe(true);
@@ -588,11 +662,22 @@ for (const locale of ['en', 'fa'] as const)
         const payer = page.getByTestId(`${prefix}-payer-ref`),
           bank = page.getByTestId(`${prefix}-bank-name`),
           submit = page.getByTestId(`${prefix}-submit`);
-        for (const name of ['amount', 'date', 'payer-ref', 'file'])
-          await expect(page.getByTestId(`${prefix}-${name}`)).toHaveAttribute(
-            'aria-required',
-            'true'
-          );
+        const date = form.getByLabel(
+          t(
+            kind === 'wallet'
+              ? 'wallet.page.receiptDateLabel'
+              : 'invoices.details.receiptDateLabel',
+            locale
+          ),
+          { exact: true }
+        );
+        for (const field of [
+          date,
+          payer,
+          page.getByTestId(`${prefix}-amount`),
+          page.getByTestId(`${prefix}-file`),
+        ])
+          await expect(field).toHaveAttribute('aria-required', 'true');
         for (const field of [bank, page.getByTestId(`${prefix}-note`)])
           await expect(field).not.toHaveAttribute('aria-required', 'true');
         await payer.fill('');
@@ -680,7 +765,7 @@ for (const locale of ['en', 'fa'] as const)
     test(`online wallet validation corrects a stale limit and retries without duplicate writes (${locale}, ${theme})`, async ({
       page,
     }) => {
-      await setup(page, locale, 'wallet', false, theme);
+      await setup(page, locale, 'wallet', false, theme, false);
       await page.route(`**/api/wallet/${profileId}`, (route) =>
         route.fulfill({
           json: { balance: '100', currency: 'IRR', onlineTopUpLimit: 1000, configVersion: 1 },
@@ -724,7 +809,7 @@ for (const locale of ['en', 'fa'] as const)
         writes.push(route.request().postDataJSON());
         return route.fulfill({ status: 502, json: {} });
       });
-      await page.reload();
+      await page.goto('/wallet/top-up/online');
       const input = page.getByTestId('wallet-amount'),
         submit = page.getByTestId('wallet-submit');
       await input.fill('1e3');

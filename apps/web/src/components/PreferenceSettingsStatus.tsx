@@ -1,4 +1,4 @@
-import { LoadingStatus, Button } from '@barghsa/ui';
+import { LoadingStatus, Button, ListRefreshButton } from '@barghsa/ui';
 import type { Locale } from '@barghsa/i18n/app';
 import { tPreferenceSettingsForms } from '@barghsa/i18n/preference-settings-forms';
 type State = {
@@ -22,6 +22,7 @@ export function PreferenceSettingsStatus({
   retry,
   success,
   saveError,
+  compactRefresh = false,
 }: {
   editor: State;
   locale: Locale;
@@ -31,6 +32,7 @@ export function PreferenceSettingsStatus({
   retry: string;
   success: string;
   saveError: string;
+  compactRefresh?: boolean;
 }) {
   const copy = (key: string) => tPreferenceSettingsForms(key, locale);
   return (
@@ -66,6 +68,12 @@ export function PreferenceSettingsStatus({
               </Button>
             )}
           </>
+        ) : compactRefresh && !editor.loadFailed ? (
+          <ListRefreshButton
+            label={copy('refresh')}
+            disabled={locked || editor.loading || !enabled}
+            onClick={() => void editor.refresh()}
+          />
         ) : (
           <Button
             type="button"

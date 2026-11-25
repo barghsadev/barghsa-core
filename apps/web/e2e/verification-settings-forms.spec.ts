@@ -4,6 +4,50 @@ import { cookieResponse } from './cookie-response';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import AxeBuilder from '@axe-core/playwright';
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`verification provider records use exact protected reads (${locale})`, async ({ page }) => {
+    await setupCatalogueForms(page, locale, locale === 'fa');
+    const t = (key: Parameters<typeof verificationConfigText>[0]) =>
+      verificationConfigText(key, locale);
+    const base = '/api/admin/verification/providers';
+    const providerId = 'identity-adapter';
+    const displayName = 'Identity adapter';
+    let collectionReads = 0;
+    let denied = false;
+    await page.route(`**${base}`, (route) => {
+      collectionReads++;
+      return route.fulfill({ json: [{ providerId, displayName, state: 'OPEN' }] });
+    });
+    await page.route(`**${base}/${providerId}/config`, (route) =>
+      route.fulfill({
+        status: denied ? 403 : 200,
+        json: {
+          providerId,
+          displayName,
+          config: { providerId, enabled: true, settingsConfigured: false },
+        },
+      })
+    );
+    await page.goto('/admin/verification/providers');
+    await expect(page.getByText(t('providerPaused'), { exact: true })).toBeVisible();
+    await page
+      .getByRole('link', { name: `${t('providerDetails')} · ${displayName}`, exact: true })
+      .click();
+    await expect(page).toHaveURL(`/admin/verification/providers/${providerId}`);
+    await expect(page.getByRole('heading', { name: t('providerDetails'), level: 1 })).toBeFocused();
+    await page.reload();
+    const details = page.getByRole('region', { name: t('providerDetails'), exact: true });
+    await expect(details).toContainText(displayName);
+    await expect(details).toContainText(t('providerConfigured'));
+    expect(collectionReads).toBe(1);
+    denied = true;
+    await details.getByRole('button', { name: t('reload'), exact: true }).click();
+    await expect(page.getByRole('alert')).toContainText(t('forbidden'));
+    await expect(details).toHaveCount(0);
+    expect(collectionReads).toBe(1);
+  });
+}
 test.use({ viewport: { width: 390, height: 844 } });
 for (const locale of ['en', 'fa'] as const) {
   test(`reviews an audited verification mode before restoring its draft (${locale})`, async ({
@@ -48,7 +92,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toHaveCount(0);
     expect(commands).toEqual([{ action: 'restore', sourceId, expectedVersion: 4 }]);
     await expect(
-      page.getByText(`${text('activeMode')}: ${text('DISABLED')}`, { exact: true })
+      page.locator('main dl').first().getByText(text('DISABLED'), { exact: true })
     ).toBeVisible();
     await expect(page.locator('#verification-mode-MANUAL')).toBeChecked();
   });
@@ -130,33 +174,45 @@ for (const locale of ['en', 'fa'] as const)
         await dialog.locator('button[type=submit]').click();
         await expect(dialog).toHaveCount(0);
       };
-      await expect(ttl).toHaveValue('300');
       await mode.check();
-      await ttl.fill('60.5');
-      await button('otpSave').click();
-      await expect(ttl).toBeFocused();
-      await expect(ttl).toHaveAttribute('aria-invalid', 'true');
-      expect(otpWrites).toHaveLength(0);
-      await expect(mode).toBeChecked();
-      await ttl.fill('120');
       await button('save').click();
       await expect(mode).toBeFocused();
       await expect(mode.locator('xpath=ancestor::fieldset')).toHaveAttribute(
         'aria-invalid',
         'true'
       );
-      await expect(ttl).toHaveValue('120');
+      await expect(ttl).toHaveCount(0);
       await expect(page.locator('main[data-area=admin]')).not.toContainText('private-server-value');
-      const linked = await mode.getAttribute('aria-describedby');
-      expect(linked).toContain('-mode-error');
+      expect(await mode.getAttribute('aria-describedby')).toContain('-mode-error');
       await page.screenshot({
         path: info.outputPath('verification-mode-feedback.png'),
         fullPage: true,
       });
+      denyRead = true;
+      await button('reload').click();
+      await expect(mode).toBeDisabled();
+      await expect(mode).toBeChecked();
+      denyRead = false;
+      await button('reload').click();
+      await expect(mode).toBeEnabled();
+      await button('save').click();
+      await expect(status('saved')).toHaveText(text('saved'));
+      await button('activate').click();
+      await confirm();
+      await expect(status('activated')).toHaveText(text('activated'));
+
+      await page.getByRole('link', { name: text('codesSection'), exact: true }).click();
+      await expect(mode).toHaveCount(0);
+      await expect(ttl).toHaveValue('300');
+      await ttl.fill('60.5');
+      await button('otpSave').click();
+      await expect(ttl).toBeFocused();
+      await expect(ttl).toHaveAttribute('aria-invalid', 'true');
+      expect(otpWrites).toHaveLength(0);
+      await ttl.fill('120');
       await button('otpSave').click();
       await confirm();
       await expect(ttl).toBeFocused();
-      await expect(mode).toBeChecked();
       await expect(ttl).toHaveValue('120');
       const results = await new AxeBuilder({ page }).include('main[data-area=admin]').analyze();
       expect(results.violations).toEqual([]);
@@ -168,24 +224,12 @@ for (const locale of ['en', 'fa'] as const)
         fullPage: true,
       });
       denyRead = true;
-      await button('reload').click();
-      await expect(mode).toBeDisabled();
-      await expect(mode).toBeChecked();
       await button('otpReload').click();
       await expect(ttl).toBeDisabled();
       await expect(ttl).toHaveValue('120');
       denyRead = false;
-      await button('reload').click();
-      await expect(mode).toBeEnabled();
       await button('otpReload').click();
       await expect(ttl).toBeEnabled();
-      await button('save').click();
-      await expect(status('saved')).toHaveText(text('saved'));
-      await expect(ttl).toHaveValue('120');
-      await button('activate').click();
-      await confirm();
-      await expect(status('activated')).toHaveText(text('activated'));
-      await expect(ttl).toHaveValue('120');
       await button('otpSave').click();
       await confirm();
       await expect(status('otpSaved')).toHaveText(text('otpSaved'));

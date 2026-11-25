@@ -21,11 +21,20 @@ import {
   type AddressFormValues,
   type SavedAddress,
 } from '../lib/settings-form.js';
-export function useSavedAddressSettingsEditor(locale: Locale) {
+export type SavedAddressView =
+  { kind: 'list' | 'new' } | { kind: 'detail' | 'edit'; addressId: string };
+
+export function useSavedAddressSettingsEditor(
+  locale: Locale,
+  view: SavedAddressView,
+  onSaved: (id?: string) => void,
+  onDeleted: () => void
+) {
   const actor = useAccountUser(),
     revision = useProfileContextRevision(),
     copy = (key: string) => tSettingsForms(key, locale);
-  const identity = JSON.stringify([actor, revision]),
+  const addressId = 'addressId' in view ? view.addressId : undefined;
+  const identity = JSON.stringify([actor, revision, view.kind, addressId]),
     current = useRef(identity);
   current.current = identity;
   const alive = useRef(true),
@@ -39,9 +48,10 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
     [loadError, setLoadError] = useState(false),
     [denied, setDenied] = useState(false),
     [profileId, setProfileId] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false),
-    [editingAddress, setEditingAddress] = useState<SavedAddress | null>(null),
-    [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [editingAddress, setEditingAddress] = useState<SavedAddress | null>(null);
+  const showForm =
+    (view.kind === 'new' || !!editingAddress) && acceptedIdentity === identity && !denied;
   const command = useSettingsCommand(
     identity,
     () => {
@@ -52,7 +62,7 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
       setAddresses([]);
       setAcceptedIdentity('');
       setProfileId(null);
-      setShowForm(false);
+      base.current = null;
       setEditingAddress(null);
       setDeleteConfirmId(null);
       form.reset(emptyAddress);
@@ -69,8 +79,7 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
   });
   const coordination = useRef(command.coordination);
   coordination.current = command.coordination;
-  const base = useRef(editingAddress);
-  base.current = editingAddress;
+  const base = useRef<SavedAddress | null>(null);
   const geography = useRef<{
     provinces: readonly { id: string }[];
     cities: readonly { id: string; provinceId?: string }[];
@@ -117,7 +126,9 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
     showForm && acceptedIdentity === identity && !denied
   );
   const formProvinceId = useWatch({ control: form.control, name: 'provinceId' }),
-    provinceOptions = useGeographyOptions('/api/geography/provinces'),
+    provinceOptions = useGeographyOptions(
+      view.kind === 'new' || view.kind === 'edit' ? '/api/geography/provinces' : null
+    ),
     cityOptions = useGeographyOptions(
       showForm && formProvinceId
         ? '/api/geography/provinces/' + encodeURIComponent(formProvinceId) + '/cities'
@@ -145,10 +156,23 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
     () => command.coordination.denied()
   );
   async function readAddresses(id: string, token: string) {
-    const rows = settingsAddresses(
-      await privateRead('/api/profiles/' + id + '/addresses', token),
-      id
-    );
+    const suffix = view.kind === 'new' ? '/access' : addressId ? '/' + addressId : '';
+    const payload = await privateRead('/api/profiles/' + id + '/addresses' + suffix, token);
+    const rows =
+      view.kind === 'new'
+        ? payload &&
+          typeof payload === 'object' &&
+          'profileId' in payload &&
+          payload.profileId === id &&
+          'canEdit' in payload &&
+          payload.canEdit === true
+          ? []
+          : null
+        : addressId
+          ? savedAddress(payload, id) && payload.id === addressId
+            ? [payload]
+            : null
+          : settingsAddresses(payload, id);
     if (!rows) throw new Error('Invalid addresses');
     if (permitted(token)) {
       accepted.current = rows;
@@ -163,11 +187,10 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
     accepted.current = [];
     acceptedProfile.current = null;
     base.current = null;
+    setEditingAddress(null);
     setAddresses([]);
     setProfileId(null);
     setAcceptedIdentity('');
-    setShowForm(false);
-    setEditingAddress(null);
     setDeleteConfirmId(null);
     form.reset(emptyAddress);
   }
@@ -190,10 +213,16 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
         retireAddresses();
       const rows = await readAddresses(context.activeProfileId, token);
       if (!permitted(token) || generation.current !== read) return;
-      if (base.current && !rows.some((row) => row.id === base.current?.id)) {
-        setShowForm(false);
-        setEditingAddress(null);
-        form.reset(emptyAddress);
+      const row = view.kind === 'edit' ? rows[0] : undefined;
+      if (row && !base.current) {
+        base.current = row;
+        setEditingAddress(row);
+        form.reset({
+          provinceId: row.provinceId,
+          cityId: row.cityId,
+          fullAddress: row.fullAddress,
+          postalCode: row.postalCode,
+        });
       }
     } catch {
       if (permitted(token) && generation.current === read) setLoadError(true);
@@ -208,9 +237,9 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
     alive.current = true;
     withdrawn.current = false;
     setDenied(false);
-    setShowForm(false);
-    setEditingAddress(null);
     setDeleteConfirmId(null);
+    base.current = null;
+    setEditingAddress(null);
     form.reset(emptyAddress);
     acceptedProfile.current = null;
     accepted.current = [];
@@ -227,32 +256,11 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
     setAddresses([]);
     setAcceptedIdentity('');
     setProfileId(null);
-    setShowForm(false);
+    base.current = null;
+    setEditingAddress(null);
+    setDeleteConfirmId(null);
     form.reset(emptyAddress);
   });
-  function openAddForm() {
-    if (command.coordination.isLocked() || !profileId) return;
-    setEditingAddress(null);
-    form.reset(emptyAddress);
-    setShowForm(true);
-  }
-  function openEditForm(address: SavedAddress) {
-    if (command.coordination.isLocked() || !accepted.current.some((row) => row.id === address.id))
-      return;
-    setEditingAddress(address);
-    form.reset({
-      provinceId: address.provinceId,
-      cityId: address.cityId,
-      fullAddress: address.fullAddress,
-      postalCode: address.postalCode,
-    });
-    setShowForm(true);
-  }
-  function closeForm() {
-    if (command.coordination.isLocked() || form.isSubmissionPending()) return;
-    setShowForm(false);
-    setEditingAddress(null);
-  }
   async function prepareSave(event: FormEvent) {
     event.preventDefault();
     if (!profileId || !showForm || !command.coordination.claim('address')) return;
@@ -268,8 +276,7 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
           if (!permitted(token)) return;
           if (!Object.keys(patch).length) {
             command.coordination.release('address');
-            setShowForm(false);
-            setEditingAddress(null);
+            onSaved(source?.id);
             return;
           }
           await command.submit({
@@ -285,14 +292,9 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
               toast.error(copy('error'));
               return true;
             },
-            accepted: async (value) => {
+            accepted: (value) => {
               if (!permitted(token)) return;
               const row = value as SavedAddress;
-              accepted.current = [...accepted.current.filter((a) => a.id !== row.id), row];
-              setAddresses(accepted.current);
-              setShowForm(false);
-              setEditingAddress(null);
-              form.reset(emptyAddress);
               toast.success(
                 t(
                   source
@@ -301,11 +303,7 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
                   locale
                 )
               );
-              try {
-                await readAddresses(target, token);
-              } catch {
-                if (permitted(token)) setLoadError(true);
-              }
+              onSaved(row.id);
             },
           });
         },
@@ -368,18 +366,23 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
         !Array.isArray(v) &&
         'message' in v &&
         v.message === 'Address deleted successfully.',
-      confirmation: () => readAddresses(target, token),
+      confirmation: async () => {
+        const rows = settingsAddresses(
+          await privateRead('/api/profiles/' + target + '/addresses', token),
+          target
+        );
+        if (!rows) throw new Error('Invalid address list');
+        return rows;
+      },
       confirmed: (v) =>
         Array.isArray(v) && !v.some((row) => savedAddress(row, target) && row.id === id),
       accepted: () => {
         if (permitted(token)) {
+          accepted.current = accepted.current.filter((row) => row.id !== id);
+          setAddresses(accepted.current);
           setDeleteConfirmId(null);
-          if (base.current?.id === id) {
-            setShowForm(false);
-            setEditingAddress(null);
-            form.reset(emptyAddress);
-          }
           toast.success(t('settings.addresses.success.delete', locale));
+          onDeleted();
         }
       },
     });
@@ -403,9 +406,6 @@ export function useSavedAddressSettingsEditor(locale: Locale) {
     provinceOptions,
     cityOptions,
     fetchAddresses,
-    openAddForm,
-    openEditForm,
-    closeForm,
     prepareSave,
     handleSetMain,
     confirmDelete,

@@ -82,7 +82,7 @@ for (const locale of ['en', 'fa'])
       verified = route.request().postDataJSON().password === 'correct';
       return route.fulfill({ status: verified ? 200 : 401, json: {} });
     });
-    await page.goto('/admin/electricity-rules');
+    await page.goto('/admin/electricity-rules/rules/edit');
     await expect(page.getByRole('alert')).toBeVisible();
     failed = false;
     await dismissMessages(page, locale as 'en' | 'fa');
@@ -91,7 +91,7 @@ for (const locale of ['en', 'fa'])
       name: fa ? 'سفارش ساده' : 'Simple orders',
       exact: true,
     });
-    await simple.getByRole('textbox').fill('1750');
+    await simple.locator('#simpleOrder-threshold').fill('1750');
     await page
       .getByRole('button', { name: fa ? 'ذخیره قواعد' : 'Save rules', exact: true })
       .click();
@@ -159,13 +159,13 @@ for (const locale of ['en', 'fa'] as const) {
       days = route.request().postDataJSON().days;
       return route.fulfill({ json: { days } });
     });
-    await page.goto('/admin/electricity-rules');
+    await page.goto('/admin/electricity-rules/retention/edit');
     await dismissMessages(page, locale);
     const ttl = page.locator('#electricity-draft-ttl');
     await expect(ttl).toHaveValue('7');
     await expect(
       page.getByRole('heading', {
-        name: fa ? 'مدت نگهداری پیش‌نویس فرم‌ها' : 'Customer form draft retention',
+        name: label('editRetention'),
         exact: true,
       })
     ).toBeVisible();

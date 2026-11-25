@@ -1,3 +1,4 @@
+import { backToSavingOrder, savingOperationLink } from './saving-operation-navigation';
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page } from '@playwright/test';
@@ -71,6 +72,7 @@ for (const [locale, theme] of [
     const { state } = await setupSavingChangeAddressForms(page, locale, true);
     state.staffReviewMode = 'held';
     await page.goto(`/admin/saving-orders?lane=fulfillment&orderId=${savingChangeOrder}`);
+    await savingOperationLink(page, 'installation-address').click();
     const region = page.getByTestId('saving-staff-address-form');
     const address = region.locator('#saving-amend-address');
     const reason = region.locator('#saving-amend-reason');
@@ -120,6 +122,11 @@ for (const [locale, theme] of [
     const release = await holdSchema(page, 'saving-change-form-schemas');
     await page.goto(`/savings/orders/${savingChangeOrder}`);
     const panel = page.getByTestId('saving-change-panel');
+    const edit = page.getByRole('link', { name: copy('changeOrder'), exact: true });
+    await expect(edit).toBeVisible();
+    await expect(panel).toHaveCount(0);
+    await edit.click();
+    await expect(page).toHaveURL(`/savings/orders/${savingChangeOrder}/edit`);
     const form = panel.getByTestId('saving-change-form');
     const acknowledge = panel.getByRole('checkbox', {
       name: confirmationText('acknowledge', locale),
@@ -162,7 +169,16 @@ for (const [locale, theme] of [
     await preview().click();
     const quote = panel.getByTestId('saving-change-quote');
     await expect(quote).toContainText('Replacement installation address');
+    await expect(quote).toBeFocused();
     await expect(quote).toContainText(copy('retainedDiscount'));
+    await expect(quote.getByText(copy('total'), { exact: true })).toBeInViewport();
+    const breakdown = quote.getByText(copy('priceBreakdown'), { exact: true });
+    const subtotal = quote.getByText(copy('subtotal'), { exact: true });
+    await expect(subtotal).toBeHidden();
+    await breakdown.press('Enter');
+    await expect(subtotal).toBeVisible();
+    await breakdown.press('Enter');
+    await expect(subtotal).toBeHidden();
     const terms = quote.locator('summary').filter({ hasText: 'Accepted saving terms' });
     await terms.click();
     await expect(quote.getByText('Saving agreement body.', { exact: true })).toHaveCSS(
@@ -182,6 +198,9 @@ for (const [locale, theme] of [
     state.customerWriteMode = 'held';
     await confirm.click();
     await expect.poll(() => !!state.customerWriteRoute).toBe(true);
+    await expect(
+      page.getByRole('link', { name: copy('orderDetail'), exact: true })
+    ).toHaveAttribute('aria-disabled', 'true');
     const captured = state.customerWrites.at(-1)!;
     const serialized = state.customerSerializedWrites.at(-1)!;
     expect(captured).toEqual({
@@ -266,11 +285,18 @@ for (const [locale, theme] of [
       form.getByRole('button', { name: copy('staffAmendAddress'), exact: true });
     const hardwareReason = page.locator('#saving-amend-hardware-reason');
     const note = page.locator('#saving-staff-note');
+    await savingOperationLink(page, 'hardware').click();
+    await hardwareReason.fill('  Independent device draft  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'product-delivery').click();
+    await note.fill('  Independent public progress draft  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'installation-address').click();
     await expect(region).toBeVisible();
     await expect(address).toHaveAttribute('aria-required', 'true');
+    await expect(address).toHaveValue('');
+    await expect(address.locator(`option[value="${currentAddress}"]`)).toHaveCount(0);
     await expect(reason).toHaveAttribute('aria-required', 'true');
-    await hardwareReason.fill('  Independent device draft  ');
-    await note.fill('  Independent public progress draft  ');
     await preview().click();
     await expect(form.locator('button[type=submit]')).toBeDisabled();
     await form.dispatchEvent('submit');
@@ -365,10 +391,16 @@ for (const [locale, theme] of [
     await expect(dialog).toHaveCount(0);
     await expect(region.getByTestId('saving-staff-address-retry')).toHaveCount(0);
     await expect(reason).toHaveValue('');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'hardware').click();
     await expect(hardwareReason).toHaveValue('  Independent device draft  ');
+    await backToSavingOrder(page, locale).click();
+    await savingOperationLink(page, 'product-delivery').click();
     await expect(note).toHaveValue('  Independent public progress draft  ');
+    await backToSavingOrder(page, locale).click();
     expect(state.staffWrites).toEqual(Array.from({ length: 4 }, () => captured));
     expect(state.staffSerializedWrites).toEqual(Array.from({ length: 4 }, () => serialized));
+    await savingOperationLink(page, 'installation-address').click();
     await inspect(page, region, '[data-testid="saving-staff-address-form"]', preview());
     await form.screenshot({
       path: info.outputPath(`saving-address-cleared-${locale}-${theme}.png`),
@@ -380,7 +412,12 @@ for (const [locale, theme] of [
     await preview().click();
     await expect.poll(() => !!state.staffReviewRoute).toBe(true);
     const stale = state.staffReviewRoute!;
-    await page.getByRole('button', { name: /Other Change Buyer/ }).click();
+    await backToSavingOrder(page, locale).click();
+    await page
+      .getByRole('link', { name: tSavingStaffReview('staffBackToQueue', locale), exact: true })
+      .click();
+    await page.getByRole('link', { name: /Other Change Buyer/ }).click();
+    await savingOperationLink(page, 'installation-address').click();
     region = page.getByTestId('saving-staff-address-form');
     form = region.locator('form');
     address = page.locator('#saving-amend-address');

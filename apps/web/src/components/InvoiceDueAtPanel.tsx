@@ -6,7 +6,7 @@ import { sendToast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Button } from '@barghsa/ui';
+import { Button, Input, Label, ListRefreshButton, Textarea } from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
 import type { InvoiceDueAtOverrideSnapshot } from '@barghsa/shared/finance';
@@ -18,15 +18,25 @@ import { useDeadlineForm } from '../hooks/useDeadlineForms.js';
 import { withCsrf } from '../lib/csrf.js';
 import { authErrorCode } from '../lib/auth-errors.js';
 import {
+  changedDeadline,
   deadlineInstant,
   isoToDatetimeLocal,
   lookupMatchesLoadedInvoice,
 } from '../lib/due-at-override.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { RecordDateTimeField } from './RecordDateTimeField.js';
 import {
   RefundFieldFeedback as FieldFeedback,
   RefundFormAlert as FormAlert,
 } from './RefundFormFeedback.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
+
 interface InvoiceDueAtDto {
   invoiceId: string;
   state: string;
@@ -80,12 +90,18 @@ interface Command {
 export default function InvoiceDueAtPanel(props: Parameters<typeof OwnedInvoiceDueAtPanel>[0]) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  return <OwnedInvoiceDueAtPanel key={JSON.stringify([actor, revision])} {...props} />;
+  return (
+    <OwnedInvoiceDueAtPanel key={JSON.stringify([actor, revision, props.recordId])} {...props} />
+  );
 }
 function OwnedInvoiceDueAtPanel({
   selection,
+  recordId,
+  onLocked,
 }: {
-  selection: { invoiceId: string; revision: number } | null;
+  selection?: { invoiceId: string; revision: number } | null;
+  recordId?: string;
+  onLocked?: (locked: boolean) => void;
 }) {
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
@@ -94,7 +110,7 @@ function OwnedInvoiceDueAtPanel({
     time = useAccountTime();
   const [dueTimezone, setDueTimezone] = useState('');
   const [invoice, setInvoice] = useState<InvoiceDueAtDto | null>(null);
-  const lookup = useInvoiceLookupForm(t('admin.invoices.error.invoiceId', locale));
+  const lookup = useInvoiceLookupForm(t('admin.invoices.error.invoiceId', locale), recordId);
   const [invoiceId, setInvoiceId] = lookup.field('invoiceId');
   const draft = useDeadlineForm({
     dueAt: invoice?.dueAt ?? null,
@@ -124,8 +140,20 @@ function OwnedInvoiceDueAtPanel({
   }, [saving, draft.form]);
   const submitButton = useRef<HTMLButtonElement>(null);
   const canEditTime = time.status === 'ready' && dueTimezone === time.timezone;
+  const proposedDue =
+    canEditTime && invoice && !unavailable
+      ? changedDeadline(dueLocal, {
+          dueAt: invoice.dueAt,
+          issuedAt: invoice.issuedAt,
+          timezone: dueTimezone,
+        })
+      : null;
   const locked = saving || Boolean(pendingAction),
     readLocked = locked || (lookup.form.formState.isSubmitting && !loading);
+  useEffect(() => {
+    onLocked?.(locked);
+    return () => onLocked?.(false);
+  }, [locked, onLocked]);
   useEffect(() => {
     live.current = true;
     return () => {
@@ -187,8 +215,8 @@ function OwnedInvoiceDueAtPanel({
     setError(null);
     if (invoice && !lookupMatchesLoadedInvoice(next, invoice.invoiceId)) clearWork();
   }
-  async function loadInvoice(event: FormEvent) {
-    event.preventDefault();
+  async function loadInvoice(event?: FormEvent) {
+    event?.preventDefault();
     if (
       time.status !== 'ready' ||
       inFlight.current ||
@@ -244,6 +272,11 @@ function OwnedInvoiceDueAtPanel({
       }
     })(event);
   }
+  useEffect(() => {
+    if (!recordId || time.status !== 'ready' || dueTimezone) return;
+    const start = window.setTimeout(() => void loadInvoice(), 0);
+    return () => window.clearTimeout(start);
+  }, [recordId, time.status, time.timezone, dueTimezone]);
   function accepted(data: unknown, command: Command) {
     if (!current(command.owner)) return;
     if (
@@ -389,192 +422,254 @@ function OwnedInvoiceDueAtPanel({
       )}
       <div
         id="invoice-deadline-panel"
-        className="max-w-xl space-y-6"
+        className="max-w-3xl space-y-4"
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
       >
-        <header>
-          <h2 className="text-2xl font-bold">{t('admin.invoices.title', locale)}</h2>
-          <p className="text-muted-foreground mt-2">{t('admin.invoices.description', locale)}</p>
-        </header>
-        <FormAlert message={error ?? undefined} />
-        <form
-          onSubmit={loadInvoice}
-          noValidate
-          className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-3"
-        >
+        <header className="flex items-start justify-between gap-3">
           <div>
-            <label htmlFor="invoice-id" className="block text-sm font-medium text-foreground mb-1">
-              {t('admin.invoices.invoiceId', locale)}
-            </label>
-            <input
-              id="invoice-id"
-              {...lookup.bind('invoiceId')}
-              type="text"
-              inputMode="text"
-              autoComplete="off"
-              spellCheck={false}
-              required
-              aria-required="true"
-              disabled={readLocked}
-              value={invoiceId}
-              onChange={(e) => handleInvoiceIdChange(e.target.value)}
-              aria-describedby={[
-                'invoice-id-hint',
-                lookup.errors.invoiceId ? lookup.errorId('invoiceId') : null,
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              className="w-full border border-input bg-background text-foreground rounded px-3 py-2 font-mono text-sm"
-              dir="ltr"
-            />
-            <p id="invoice-id-hint" className="text-xs text-muted-foreground mt-1">
-              {t('admin.invoices.invoiceIdHint', locale)}
+            {!recordId && (
+              <h2 className="text-2xl font-bold">{t('admin.invoices.title', locale)}</h2>
+            )}
+            <p className="text-sm text-muted-foreground">
+              {t('admin.invoices.description', locale)}
             </p>
           </div>
-          <FieldFeedback
-            id={lookup.errorId('invoiceId')}
-            error={lookup.errors.invoiceId}
-            message={t('admin.invoices.error.invoiceId', locale)}
-          />
-          <FormAlert message={lookup.errors.root?.validation?.message} />
-          <Button
-            type="submit"
-            disabled={readLocked || loading || time.status !== 'ready'}
-            aria-busy={loading || lookup.form.formState.isSubmitting || undefined}
+          {recordId && time.status === 'ready' && (
+            <ListRefreshButton
+              label={t('admin.invoices.load', locale)}
+              disabled={readLocked || loading}
+              onClick={() => void loadInvoice()}
+            />
+          )}
+        </header>
+        <FormAlert message={error ?? undefined} />
+        {recordId ? (
+          lookup.errors.root?.validation ? (
+            <FormAlert message={lookup.errors.root.validation.message} />
+          ) : loading || (time.status === 'ready' && !invoice && !error) ? (
+            <p role="status">{t('admin.invoices.loading', locale)}</p>
+          ) : null
+        ) : (
+          <form
+            onSubmit={loadInvoice}
+            noValidate
+            className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-3"
           >
-            {loading || lookup.form.formState.isSubmitting
-              ? t('admin.invoices.loading', locale)
-              : t('admin.invoices.load', locale)}
-          </Button>
-        </form>
-        {invoice && (
-          <section
-            className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
-            aria-labelledby="override-heading"
-          >
-            <h2 id="override-heading" className="text-lg font-semibold">
-              {t('admin.invoices.title', locale)}
-            </h2>
-            <dl className="grid grid-cols-1 gap-2 text-sm">
-              <div>
-                <dt className="text-muted-foreground">{t('admin.invoices.loadedId', locale)}</dt>
-                <dd
-                  className="font-mono text-sm break-all"
-                  dir="ltr"
-                  data-testid="loaded-invoice-id"
-                >
-                  {invoice.invoiceId}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-muted-foreground">{t('admin.invoices.state', locale)}</dt>
-                <dd className="font-medium">
-                  {appText(`invoices.state.${invoice.state}`, locale)}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-muted-foreground">{t('admin.invoices.issuedAt', locale)}</dt>
-                <dd>{time.format(invoice.issuedAt)}</dd>
-              </div>
-              <div>
-                <dt className="text-muted-foreground">{t('admin.invoices.currentDue', locale)}</dt>
-                <dd>{time.format(invoice.dueAt)}</dd>
-              </div>
-            </dl>
-            {invoice.dueAtOverride && (
-              <p className="text-sm text-muted-foreground">
-                {t('admin.invoices.previousOverride', locale)}: {invoice.dueAtOverride.reason}
+            <div className={recordEditorField}>
+              <Label htmlFor="invoice-id">{t('admin.invoices.invoiceId', locale)}</Label>
+              <Input
+                id="invoice-id"
+                {...lookup.bind('invoiceId')}
+                type="text"
+                inputMode="text"
+                autoComplete="off"
+                spellCheck={false}
+                required
+                aria-required="true"
+                disabled={readLocked}
+                value={invoiceId}
+                onChange={(e) => handleInvoiceIdChange(e.target.value)}
+                aria-describedby={[
+                  'invoice-id-hint',
+                  lookup.errors.invoiceId ? lookup.errorId('invoiceId') : null,
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                className="font-mono"
+                dir="ltr"
+              />
+              <p id="invoice-id-hint" className="text-xs text-muted-foreground mt-1">
+                {t('admin.invoices.invoiceIdHint', locale)}
               </p>
-            )}
+            </div>
+            <FieldFeedback
+              reserveSpace={false}
+              id={lookup.errorId('invoiceId')}
+              error={lookup.errors.invoiceId}
+              message={t('admin.invoices.error.invoiceId', locale)}
+            />
+            <FormAlert message={lookup.errors.root?.validation?.message} />
+            <Button
+              type="submit"
+              disabled={readLocked || loading || time.status !== 'ready'}
+              aria-busy={loading || lookup.form.formState.isSubmitting || undefined}
+            >
+              {loading || lookup.form.formState.isSubmitting
+                ? t('admin.invoices.loading', locale)
+                : t('admin.invoices.load', locale)}
+            </Button>
+          </form>
+        )}
+        {invoice && (
+          <div className={recordEditorSurface}>
+            <RecordEditorSection title={t('admin.invoices.deadlineSource', locale)}>
+              <dl className={`${recordEditorGrid} grid-cols-2`}>
+                <div className="col-span-2">
+                  <dt className="text-sm text-muted-foreground">
+                    {t('admin.invoices.loadedId', locale)}
+                  </dt>
+                  <dd className="text-sm break-all" data-testid="loaded-invoice-id">
+                    <bdi dir="ltr" className="font-mono">
+                      {invoice.invoiceId}
+                    </bdi>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-muted-foreground">
+                    {t('admin.invoices.state', locale)}
+                  </dt>
+                  <dd className="font-medium">
+                    {appText(`invoices.state.${invoice.state}`, locale)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-muted-foreground">
+                    {t('admin.invoices.issuedAt', locale)}
+                  </dt>
+                  <dd>{time.format(invoice.issuedAt)}</dd>
+                </div>
+                {!invoice.canOverride && (
+                  <div>
+                    <dt className="text-sm text-muted-foreground">
+                      {t('admin.invoices.currentDue', locale)}
+                    </dt>
+                    <dd>{time.format(invoice.dueAt)}</dd>
+                  </div>
+                )}
+              </dl>
+              {invoice.dueAtOverride && (
+                <p className="text-sm text-muted-foreground">
+                  {t('admin.invoices.previousOverride', locale)}: {invoice.dueAtOverride.reason}
+                </p>
+              )}
+            </RecordEditorSection>
             {!invoice.canOverride ? (
-              <p className="text-sm text-warning" role="status">
+              <p className="px-4 py-3 text-sm text-warning sm:px-6" role="status">
                 {t('admin.invoices.notOverrideable', locale)}
               </p>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-                <p id="due-at-timezone">
-                  {t('admin.invoices.accountTimezone', locale)}: {dueTimezone}
-                </p>
-                {!canEditTime && <p role="alert">{t('admin.invoices.reloadTimezone', locale)}</p>}
-                <div>
-                  <label
-                    htmlFor="due-at"
-                    className="block text-sm font-medium text-foreground mb-1"
-                  >
-                    {t('admin.invoices.overrideDue', locale)}{' '}
-                    <span className="text-destructive" aria-hidden="true">
-                      *
-                    </span>
-                  </label>
-                  <input
-                    id="due-at"
-                    {...draft.bind('dueAt')}
-                    type="datetime-local"
-                    required
-                    aria-required="true"
-                    disabled={!canEditTime || locked || loading || unavailable}
-                    value={dueLocal}
-                    onChange={(e) => {
-                      setDueLocal(e.target.value);
-                      setSaved(false);
-                    }}
-                    aria-describedby={[
-                      'due-at-timezone',
-                      draft.errors.dueAt ? draft.errorId('dueAt') : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
-                    className="w-full border border-input bg-background text-foreground rounded px-3 py-2"
-                    dir="ltr"
-                  />
-                  <FieldFeedback
-                    id={draft.errorId('dueAt')}
-                    error={draft.errors.dueAt}
-                    message={t('admin.invoices.error.dueAt', locale)}
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="override-reason"
-                    className="block text-sm font-medium text-foreground mb-1"
-                  >
-                    {t('admin.invoices.reason', locale)}{' '}
-                    <span className="text-destructive" aria-hidden="true">
-                      *
-                    </span>
-                  </label>
-                  <textarea
-                    id="override-reason"
-                    {...draft.bind('reason')}
-                    required
-                    aria-required="true"
-                    maxLength={2000}
-                    rows={4}
-                    disabled={locked || loading || unavailable}
-                    value={reason}
-                    onChange={(e) => {
-                      setReason(e.target.value);
-                      setSaved(false);
-                    }}
-                    aria-describedby={[
-                      'override-reason-hint',
-                      draft.errors.reason ? draft.errorId('reason') : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
-                    className="w-full border border-input bg-background text-foreground rounded px-3 py-2"
-                  />
-                  <p id="override-reason-hint" className="text-xs text-muted-foreground mt-1">
-                    {t('admin.invoices.reasonHint', locale)}
-                  </p>
-                  <FieldFeedback
-                    id={draft.errorId('reason')}
-                    error={draft.errors.reason}
-                    message={t('admin.invoices.error.reason', locale)}
-                  />
-                </div>
-                <FormAlert message={draft.errors.root?.validation?.message} />
-                <div className="flex items-center gap-3">
+              <form onSubmit={handleSubmit} noValidate>
+                <RecordEditorSection title={t('admin.invoices.deadlineChange', locale)}>
+                  {!canEditTime && <p role="alert">{t('admin.invoices.reloadTimezone', locale)}</p>}
+                  <div className="grid gap-3 sm:grid-cols-2 sm:items-start sm:gap-5">
+                    <div className={recordEditorField}>
+                      <Label htmlFor="due-at">
+                        {t('admin.invoices.overrideDue', locale)}{' '}
+                        <span className="text-destructive" aria-hidden="true">
+                          *
+                        </span>
+                      </Label>
+                      <RecordDateTimeField
+                        id="due-at"
+                        {...draft.bind('dueAt')}
+                        label={t('admin.invoices.overrideDue', locale)}
+                        locale={locale}
+                        timezone={dueTimezone}
+                        aria-required="true"
+                        disabled={!canEditTime || locked || loading || unavailable}
+                        value={dueLocal}
+                        onChange={(value) => {
+                          setDueLocal(value);
+                          setSaved(false);
+                        }}
+                        aria-describedby={[
+                          'due-at-timezone',
+                          draft.errors.dueAt ? draft.errorId('dueAt') : null,
+                          'due-at-preview',
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
+                      />
+                      <p id="due-at-timezone" className="text-sm text-muted-foreground">
+                        {t('admin.invoices.accountTimezone', locale)} · <bdi>{dueTimezone}</bdi>
+                      </p>
+                      <FieldFeedback
+                        reserveSpace={false}
+                        id={draft.errorId('dueAt')}
+                        error={draft.errors.dueAt}
+                        message={t('admin.invoices.error.dueAt', locale)}
+                      />
+                    </div>
+                    <dl className="grid min-w-0 grid-cols-2 gap-x-3 rounded-lg border bg-muted/35 px-3 py-2.5">
+                      <div className="min-w-0">
+                        <dt className="text-xs text-muted-foreground">
+                          {t('admin.invoices.currentDue', locale)}
+                        </dt>
+                        <dd className="text-sm">{time.format(invoice.dueAt)}</dd>
+                      </div>
+                      <div className="min-w-0 border-s ps-3">
+                        <dt className="text-xs text-muted-foreground">
+                          {t('admin.invoices.proposedDue', locale)}
+                        </dt>
+                        <dd
+                          id="due-at-preview"
+                          aria-live="polite"
+                          aria-atomic="true"
+                          className="text-sm"
+                        >
+                          {proposedDue ? (
+                            <time dateTime={proposedDue} className="font-semibold text-primary">
+                              {time.format(proposedDue)}
+                            </time>
+                          ) : (
+                            <span className="text-muted-foreground">
+                              {t('admin.invoices.proposedDueEmpty', locale)}
+                            </span>
+                          )}
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+                  <div className={recordEditorField}>
+                    <Label htmlFor="override-reason">
+                      {t('admin.invoices.reason', locale)}{' '}
+                      <span className="text-destructive" aria-hidden="true">
+                        *
+                      </span>
+                    </Label>
+                    <Textarea
+                      id="override-reason"
+                      {...draft.bind('reason')}
+                      required
+                      aria-required="true"
+                      maxLength={2000}
+                      rows={2}
+                      placeholder={t('admin.invoices.deadlineReasonExample', locale)}
+                      disabled={locked || loading || unavailable}
+                      value={reason}
+                      onChange={(e) => {
+                        setReason(e.target.value);
+                        setSaved(false);
+                      }}
+                      aria-describedby={[
+                        'override-reason-hint',
+                        draft.errors.reason ? draft.errorId('reason') : null,
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
+                      className="min-h-14 resize-y"
+                    />
+                    <p id="override-reason-hint" className="text-xs text-muted-foreground mt-1">
+                      {t('admin.invoices.reasonHint', locale)}
+                    </p>
+                    <FieldFeedback
+                      reserveSpace={false}
+                      id={draft.errorId('reason')}
+                      error={draft.errors.reason}
+                      message={t('admin.invoices.error.reason', locale)}
+                    />
+                  </div>
+                  <FormAlert message={draft.errors.root?.validation?.message} />
+                </RecordEditorSection>
+                <RecordEditorActions
+                  secondary={
+                    <CommandFeedback
+                      as="span"
+                      className="text-sm text-success"
+                      message={saved ? t('admin.invoices.saved', locale) : null}
+                    />
+                  }
+                >
                   <Button
                     type="submit"
                     ref={submitButton}
@@ -589,15 +684,10 @@ function OwnedInvoiceDueAtPanel({
                     )}
                     {t(saving ? 'admin.invoices.saving' : 'admin.invoices.submit', locale)}
                   </Button>
-                  <CommandFeedback
-                    as="span"
-                    className="text-sm text-success"
-                    message={saved ? t('admin.invoices.saved', locale) : null}
-                  />
-                </div>
+                </RecordEditorActions>
               </form>
             )}
-          </section>
+          </div>
         )}
       </div>
     </>

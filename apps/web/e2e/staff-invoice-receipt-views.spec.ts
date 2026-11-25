@@ -1,8 +1,11 @@
 import AxeBuilder from '@axe-core/playwright';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
+import { receiptEditorMessages } from '@barghsa/i18n/receipt-editor';
+import { confirmFinancialReview } from './confirmation-fixture';
+import { bankReceiptReview } from '../src/test/bank-receipt-review-fixture';
 import { dateRangePreset } from '@barghsa/ui';
-import { test, expect } from './coverage-fixture';
+import { test, expect, type Route } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { verifyClippedContrast } from './clipped-contrast';
 const receiptId = '91000000-0000-4000-8000-000000000001';
@@ -33,6 +36,68 @@ const receipt = {
   dualApprovalPending: false,
 };
 test.use({ viewport: { width: 390, height: 844 } });
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`invoice receipt decision routes preserve the exact reviewed allocation (${locale})`, async ({
+    page,
+  }) => {
+    await crmShell(page, locale);
+    const path = `/admin/invoices/receipts/${receiptId}`;
+    const endpoint = `/api/admin/invoices/bank-receipts/${receiptId}`;
+    const copy = receiptEditorMessages[locale];
+    const word = (key: string) => adminText(`admin.invoiceReceipts.${key}`, locale);
+    let current = { ...receipt, amount: '250000', canConfirm: true };
+    let allocationRequest: Route | undefined;
+    const writes: unknown[] = [];
+    const reviewed = bankReceiptReview(receiptId, invoiceId, receipt.profileId);
+    reviewed.scope.action = 'invoice.bank-receipt-confirmation';
+    await page.route(`**${endpoint}`, (route) => route.fulfill({ json: current }));
+    await page.route(`**${endpoint}/allocation`, (route) => {
+      allocationRequest = route;
+    });
+    await page.route(`**${endpoint}/confirm/review`, (route) => route.fulfill({ json: reviewed }));
+    await page.route(`**${endpoint}/confirm`, (route) => {
+      writes.push(route.request().postDataJSON());
+      current = { ...current, state: 'Confirmed', canConfirm: false, canReject: false };
+      return route.fulfill({ json: current });
+    });
+    await page.goto(`${path}?receipts=true&queue_q=BANK-REF`);
+    await expect.poll(() => Boolean(allocationRequest)).toBe(true);
+    await page.getByTestId('invoice-receipt-open-reject').click();
+    await page.locator('#invoice-receipt-reason').fill('Awaiting the bank response');
+    await page.getByTestId('invoice-receipt-back-to-review').click();
+    await page.getByTestId('invoice-receipt-open-reject').click();
+    await expect(page.locator('#invoice-receipt-reason')).toHaveValue('Awaiting the bank response');
+    await page.getByTestId('invoice-receipt-back-to-review').click();
+    await page.getByTestId('invoice-receipt-open-confirm').click();
+    await expect(page).toHaveURL(new RegExp(`${path}/confirm\\?`));
+    expect(new URL(page.url()).searchParams.get('queue_q')).toBe('BANK-REF');
+    await expect(page.getByRole('heading', { name: copy.confirmTitle, exact: true })).toBeVisible();
+    await expect(page.locator('#invoice-receipt-reason')).toHaveCount(0);
+    const submit = page.getByRole('button', { name: word('confirm'), exact: true });
+    await expect(submit).toBeDisabled();
+    await allocationRequest!.fulfill({
+      json: {
+        receiptId,
+        invoiceId,
+        invoiceState: 'Unpaid',
+        receiptAmount: '250000',
+        remaining: '100000',
+        invoiceAllocation: '100000',
+        walletCreditAmount: '150000',
+      },
+    });
+    await expect(page.getByText(word('walletCredit'), { exact: true })).toBeVisible();
+    await submit.click();
+    await expect(page.getByRole('dialog')).toContainText(invoiceId);
+    expect(writes).toEqual([]);
+    await confirmFinancialReview(page, locale);
+    await expect(submit).toHaveCount(0);
+    await expect(page.getByText(copy.actionUnavailable, { exact: true })).toBeVisible();
+    expect(writes).toEqual([{ expectedReviewHash: reviewed.hash }]);
+  });
+}
+
 for (const locale of ['en', 'fa'] as const)
   for (const darkMode of [false, true]) {
     test(`staff receipt views retain exact metadata, drafts and paged history (${locale}, dark=${darkMode})`, async ({
@@ -211,6 +276,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect.poll(() => viewport.evaluate((node) => node.scrollLeft)).not.toBe(position);
       const queueBeforeDetail = queueReads;
       await pending.getByRole('button', { name: word('open'), exact: true }).click();
+      await expect(page).toHaveURL(new RegExp(`/admin/invoices/receipts/${receiptId}\\?`));
       const detail = queue.getByRole('region', { name: word('detail'), exact: true });
       const retry = detail.getByRole('button', {
         name: appText('historyPagination.retry', locale),
@@ -221,12 +287,21 @@ for (const locale of ['en', 'fa'] as const)
       allocationFailure = true;
       await retry.click();
       await expect(detail.getByRole('alert')).toContainText(word('allocationError'));
+      await detail.getByTestId('invoice-receipt-open-reject').click();
+      await expect(page).toHaveURL(new RegExp(`/admin/invoices/receipts/${receiptId}/reject\\?`));
+      await expect(detail.getByRole('alert')).toHaveCount(0);
       await detail.locator('#invoice-receipt-reason').fill('Keep investigation');
       allocationFailure = false;
-      await retry.click();
+      await detail
+        .getByRole('button', { name: receiptEditorMessages[locale].refreshReceipt, exact: true })
+        .click();
       await expect(retry).toHaveCount(0);
       await expect(detail.locator('#invoice-receipt-reason')).toHaveValue('Keep investigation');
-      expect([queueReads, detailReads, allocationReads]).toEqual([queueBeforeDetail, 3, 3]);
+      await page.getByTestId('invoice-receipt-back-to-review').click();
+      await expect(page).toHaveURL(new RegExp(`/admin/invoices/receipts/${receiptId}\\?`));
+      await expect(detail.locator('#invoice-receipt-reason')).toHaveCount(0);
+      await expect(detail.getByText(word('invoiceAllocation'), { exact: true })).toBeVisible();
+      expect([queueReads, detailReads, allocationReads]).toEqual([queueBeforeDetail, 3, 2]);
       const timeline = detail.locator('[data-slot=status-timeline]');
       await expect(timeline.getByRole('listitem')).toHaveCount(2);
       await expect(timeline.locator('bdi').nth(0)).toHaveText(
@@ -250,11 +325,17 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         detail.getByRole('link', { name: word('attachment'), exact: true })
       ).toHaveAttribute('href', receipt.attachmentUrl);
-      await page.locator('#invoice-receipt-reason').fill('Keep investigation');
+      await page
+        .getByRole('link', {
+          name: adminText('admin.invoices.ledger.backToReceipts', locale),
+          exact: true,
+        })
+        .click();
+      await expect(pending.getByText(receiptId, { exact: true })).toBeVisible();
+      await expect(page.locator('#invoice-receipt-reason')).toHaveCount(0);
       const counts = [queueReads, detailReads, allocationReads];
       await pending.getByRole('button', { name: cardLabel, exact: true }).click();
       await checkMetadata();
-      await expect(page.locator('#invoice-receipt-reason')).toHaveValue('Keep investigation');
       expect([queueReads, detailReads, allocationReads]).toEqual(counts);
       await queue.getByRole('button', { name: word('historyTitle'), exact: true }).click();
       const history = queue.getByRole('region', { name: word('historyTitle'), exact: true });
@@ -364,15 +445,19 @@ for (const locale of ['en', 'fa'] as const)
       expect(appliedHistory.get('to')).toBe(range.to);
       expect(appliedHistory.has('beforeId')).toBe(false);
       await expect(history.getByText(receiptId, { exact: true })).toBeVisible();
-      await history
+      const readsBeforeInvoice = historyReads.length;
+      await openFilters();
+      await drawer
         .getByRole('combobox', { name: word('historyState'), exact: true })
         .selectOption('Confirmed');
-      await history.getByRole('textbox', { name: word('invoice'), exact: true }).fill(invoiceId);
-      await history.getByRole('button', { name: word('historyApply'), exact: true }).click();
+      await drawer.getByRole('textbox', { name: word('invoice'), exact: true }).fill(invoiceId);
+      expect(historyReads).toHaveLength(readsBeforeInvoice);
+      await applyFilters();
       await expect
         .poll(() => new URLSearchParams(historyReads.at(-1)).get('invoiceId'))
         .toBe(invoiceId);
       expect(new URLSearchParams(historyReads.at(-1)).get('state')).toBe('Confirmed');
+      expect(historyReads).toHaveLength(readsBeforeInvoice + 1);
       await page.reload();
       await expect(history.getByText(receiptId, { exact: true })).toBeVisible();
       expect(new URLSearchParams(historyReads.at(-1)).get('min')).toBe(amount);
@@ -450,10 +535,23 @@ for (const locale of ['en', 'fa'] as const)
         await page.screenshot({ path: '/tmp/barghsa-staff-receipt-history-query-fa-dark.png' });
       }
       await pending.getByRole('button', { name: word('open'), exact: true }).click();
+      await page.getByTestId('invoice-receipt-open-reject').click();
       await page.locator('#invoice-receipt-reason').fill('Clear this obsolete draft');
-      const historyReadCount = historyReads.length;
       const historyCursor = new URL(page.url()).searchParams.get('receipt_cursor');
+      await page.getByTestId('invoice-receipt-back-to-review').click();
+      await page
+        .getByRole('link', {
+          name: adminText('admin.invoices.ledger.backToReceipts', locale),
+          exact: true,
+        })
+        .click();
       const search = pending.getByRole('searchbox');
+      await expect(pending.getByText(receiptId, { exact: true })).toBeVisible();
+      await expect(history.getByRole('region', { name: word('detail'), exact: true })).toHaveCount(
+        0
+      );
+      await expect.poll(() => historyReads.length).toBeGreaterThan(0);
+      const historyReadCount = historyReads.length;
       await search.fill('Bank_%\\');
       await expect.poll(() => new URLSearchParams(queueQueries.at(-1)).get('q')).toBe('Bank_%\\');
       await expect(page.locator('#invoice-receipt-reason')).toHaveCount(0);

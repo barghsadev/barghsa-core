@@ -135,6 +135,7 @@ for (const kind of ['verification', 'selection']) {
       pending = false;
       payload = kind === 'verification' ? notice : choices;
       await render(kind);
+      await act(async () => vi.dynamicImportSettled());
       expect(document.body.textContent).toContain('Private');
       pending = true;
       await render(kind, 'replacement-owner');

@@ -1,9 +1,17 @@
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  Ban as TableBanIcon,
+  CheckCircle as TableCheckCircleIcon,
+  Pencil as TablePencilIcon,
+} from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Link } from '@tanstack/react-router';
 import {
   LoadingStatus,
   Alert,
   AlertDescription,
   Button,
+  buttonVariants,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -12,8 +20,10 @@ import {
   DialogTitle,
   Field,
   FieldLabel,
-  Input,
   ListPage,
+  ListRefreshButton,
+  ListSearchInput,
+  NativeSelect,
   Textarea,
 } from '@barghsa/ui';
 import { geographyText, type GeographyTextKey } from '@barghsa/i18n/geography';
@@ -26,12 +36,7 @@ import {
   type Province,
 } from '../lib/geography-api.js';
 import { GeographyRecordTable } from '../components/GeographyRecordTable.js';
-import {
-  GeographyDialog,
-  useGeographyEditorAddress,
-  type GeographyEditorAddress,
-  type GeographyModal,
-} from './AdminGeographyDialog.js';
+import { GeographyDialog, type GeographyModal } from './AdminGeographyDialog.js';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import {
   geographyBasis,
@@ -41,14 +46,19 @@ import {
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
-import { parseCityRows } from '../lib/geography-form-values.js';
+import { inspectCityRows, parseCityRows } from '../lib/geography-form-values.js';
 import {
   CatalogueFieldFeedback,
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
+import {
+  StickyRecordEditorActions,
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+} from '../components/StickyRecordEditorActions.js';
 
-function ImportCitiesDialog({
+export function ImportCitiesDialog({
   province,
   trigger,
   onClose,
@@ -56,14 +66,16 @@ function ImportCitiesDialog({
   readReady,
   recovery,
   onDenied,
+  standalone = false,
 }: {
   readReady: boolean;
   recovery: ReactNode;
   onDenied: () => void;
   province: Province;
-  trigger: HTMLElement;
+  trigger?: HTMLElement;
   onClose: () => void;
   onSaved: () => void;
+  standalone?: boolean;
 }) {
   const locale = useLocale();
   const { number } = useNumberFormatting(locale);
@@ -115,7 +127,17 @@ function ImportCitiesDialog({
       native.form.setFocus('rows');
     }
   }, [busy, native.errors, native.form]);
-  const rows = parseCityRows(text);
+  const preview = useMemo(() => inspectCityRows(text), [text]);
+  const issues = preview?.filter((row) => row.issue).length ?? 0;
+  function editRow(row: number) {
+    const input = field.current;
+    if (!input || inFlight.current) return;
+    const lines = input.value.split('\n');
+    const start = lines.slice(0, row - 1).reduce((offset, line) => offset + line.length + 1, 0);
+    input.focus();
+    input.setSelectionRange(start, start + (lines[row - 1]?.length ?? 0));
+    input.scrollTop = (row - 1) * Number.parseFloat(getComputedStyle(input).lineHeight);
+  }
   async function submit(event: React.FormEvent) {
     event.preventDefault();
     if (busy || inFlight.current || !readReady) return;
@@ -156,7 +178,7 @@ function ImportCitiesDialog({
       }
       setError(
         cause instanceof GeographyRequestError && cause.code === 'conflict'
-          ? 'cityConflict'
+          ? 'importConflict'
           : 'requestFailed'
       );
     } finally {
@@ -164,6 +186,216 @@ function ImportCitiesDialog({
       if (mounted.current) native.setValidationPending(false);
     }
   }
+  const actions = (
+    <>
+      <Button
+        type="button"
+        variant="outline"
+        disabled={busy}
+        onClick={() => {
+          if (!inFlight.current) onClose();
+        }}
+      >
+        {t('cancel')}
+      </Button>
+      <CatalogueSaveButton
+        label={t(busy ? 'saving' : 'importCities')}
+        pending={busy}
+        disabled={busy || !readReady}
+      />
+    </>
+  );
+  const form = (
+    <form
+      onSubmit={submit}
+      noValidate
+      aria-label={t('importCities')}
+      className={standalone ? recordEditorFormSurface : 'space-y-4'}
+      onFocus={standalone ? keepRecordFieldVisible : undefined}
+      aria-busy={busy}
+    >
+      <div className={standalone ? 'space-y-3 px-4 py-4 sm:px-6' : 'space-y-3'}>
+        {standalone && (
+          <div className="space-y-3 text-sm">
+            <p id="city-import-format" className="text-muted-foreground">
+              {t('importDescription')}
+            </p>
+            {!preview && (
+              <div className="space-y-2 rounded-lg bg-muted/40 px-3 py-2">
+                <p className="font-medium">{t('importExample')}</p>
+                <dl dir="ltr" className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+                    <dt className="text-xs text-muted-foreground">{t('nameFa')}</dt>
+                    <dd>
+                      <bdi dir="rtl" lang="fa">
+                        کرج
+                      </bdi>
+                    </dd>
+                  </div>
+                  <div className="space-y-1" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+                    <dt className="text-xs text-muted-foreground">{t('nameEn')}</dt>
+                    <dd>
+                      <bdi dir="ltr" lang="en">
+                        Karaj
+                      </bdi>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            )}
+          </div>
+        )}
+        {error && (
+          <Alert variant="destructive" role="alert" id="city-import-error">
+            <AlertDescription>{t(error)}</AlertDescription>
+          </Alert>
+        )}
+        {catalogueRootMessage(native.errors) && (
+          <Alert variant="destructive">{catalogueRootMessage(native.errors)}</Alert>
+        )}
+        <Field className="min-w-0 gap-1">
+          <FieldLabel htmlFor="city-import-rows">{t('importRows')}</FieldLabel>
+          <Textarea
+            {...native.bind('rows')}
+            id="city-import-rows"
+            ref={(node) => {
+              field.current = node;
+              native.bind('rows').ref(node);
+            }}
+            rows={4}
+            dir="ltr"
+            className="max-h-56 min-h-24 overflow-auto leading-6 whitespace-pre [tab-size:4]"
+            maxLength={41000}
+            disabled={busy}
+            onBlur={() => {
+              if (!native.isPending()) native.bind('rows').onBlur();
+            }}
+            aria-invalid={!!rowsError || undefined}
+            aria-describedby={
+              [standalone && 'city-import-format', rowsError && native.errorId('rows')]
+                .filter(Boolean)
+                .join(' ') || undefined
+            }
+            value={text}
+            onChange={(event) => {
+              if (!inFlight.current && event.target.value !== text) {
+                setRejectedRows(false);
+                setText(event.target.value);
+              }
+            }}
+          />
+          <CatalogueFieldFeedback
+            id={native.errorId('rows')}
+            error={rowsError}
+            message={t('importInvalid')}
+            compact
+          />
+        </Field>
+        {!standalone && preview && !issues && (
+          <p role="status" className="text-sm">
+            {t('importCount').replace('{count}', number(preview.length))}
+          </p>
+        )}
+      </div>
+      {standalone && preview && (
+        <div className="space-y-2 border-t px-4 py-4 sm:px-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="text-base font-semibold">{t('importPreview')}</h2>
+            <p
+              role="status"
+              className={issues ? 'text-sm text-destructive' : 'text-sm text-muted-foreground'}
+            >
+              {t(issues ? 'importNeedsCorrection' : 'importCount').replace(
+                '{count}',
+                number(issues || preview.length)
+              )}
+            </p>
+          </div>
+          <div
+            className="max-h-80 overflow-auto rounded-lg border"
+            // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- The named preview scroll region needs keyboard access.
+            tabIndex={0}
+            role="region"
+            aria-label={t('importPreview')}
+          >
+            <table className="w-full table-fixed text-start text-sm">
+              <caption className="sr-only">{t('importPreview')}</caption>
+              <colgroup>
+                <col className="w-12 sm:w-16" />
+                <col />
+                <col />
+              </colgroup>
+              <thead className="sticky top-0 z-10 bg-card shadow-[0_1px_var(--border)]">
+                <tr>
+                  {[t('importRow'), t('nameFa'), t('nameEn')].map((column) => (
+                    <th
+                      key={column}
+                      scope="col"
+                      className="p-2 text-start text-xs font-medium [overflow-wrap:anywhere] sm:text-sm"
+                    >
+                      {column}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {preview.map((row) => (
+                  <Fragment key={row.number}>
+                    <tr className="border-t align-top [overflow-wrap:anywhere]">
+                      <th scope="row" className="p-2 text-start font-medium tabular-nums">
+                        {number(row.number)}
+                      </th>
+                      <td className="p-2">
+                        <bdi lang="fa" dir="rtl">
+                          {row.nameFa.slice(0, 100) || '—'}
+                        </bdi>
+                      </td>
+                      <td className="p-2">
+                        <bdi lang="en" dir="ltr">
+                          {row.nameEn.slice(0, 100) || '—'}
+                        </bdi>
+                      </td>
+                    </tr>
+                    {row.issue && (
+                      <tr className="bg-destructive/5">
+                        <td colSpan={3} className="px-2 text-destructive">
+                          <div className="flex flex-wrap items-center justify-between gap-x-2 text-xs sm:text-sm">
+                            <span id={`city-import-issue-${row.number}`}>{t(row.issue)}</span>
+                            <Button
+                              type="button"
+                              variant="link"
+                              size="sm"
+                              className="min-h-10 px-1"
+                              disabled={busy}
+                              aria-describedby={`city-import-issue-${row.number}`}
+                              data-city-import-line={row.number}
+                              onClick={() => editRow(row.number)}
+                            >
+                              {t('importEditRow').replace('{row}', number(row.number))}
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-sm text-muted-foreground">{t('importCheck')}</p>
+        </div>
+      )}
+      {standalone ? (
+        <StickyRecordEditorActions secondary={recovery}>{actions}</StickyRecordEditorActions>
+      ) : (
+        <>
+          {recovery}
+          <DialogFooter>{actions}</DialogFooter>
+        </>
+      )}
+    </form>
+  );
+  if (standalone) return form;
   return (
     <Dialog
       open
@@ -174,73 +406,14 @@ function ImportCitiesDialog({
       <DialogContent
         showCloseButton={false}
         initialFocus={field}
-        finalFocus={() => trigger}
+        finalFocus={() => trigger ?? null}
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle>{t('importCities')}</DialogTitle>
           <DialogDescription>{t('importDescription')}</DialogDescription>
         </DialogHeader>
-        <form onSubmit={submit} noValidate className="flex flex-col gap-4" aria-busy={busy}>
-          {error && (
-            <Alert variant="destructive" role="alert" id="city-import-error">
-              <AlertDescription>{t(error)}</AlertDescription>
-            </Alert>
-          )}
-          {catalogueRootMessage(native.errors) && (
-            <Alert variant="destructive">{catalogueRootMessage(native.errors)}</Alert>
-          )}
-          <Field>
-            <FieldLabel htmlFor="city-import-rows">{t('importRows')}</FieldLabel>
-            <Textarea
-              {...native.bind('rows')}
-              id="city-import-rows"
-              ref={(node) => {
-                field.current = node;
-                native.bind('rows').ref(node);
-              }}
-              rows={8}
-              maxLength={41000}
-              disabled={busy}
-              onBlur={() => {
-                if (!native.isPending()) native.bind('rows').onBlur();
-              }}
-              aria-invalid={!!rowsError || undefined}
-              aria-describedby={rowsError ? native.errorId('rows') : undefined}
-              value={text}
-              onChange={(event) => {
-                if (!inFlight.current && event.target.value !== text) {
-                  setRejectedRows(false);
-                  setText(event.target.value);
-                }
-              }}
-            />
-            <CatalogueFieldFeedback
-              id={native.errorId('rows')}
-              error={rowsError}
-              message={t('importInvalid')}
-            />
-          </Field>
-          {rows && <p role="status">{t('importCount').replace('{count}', number(rows.length))}</p>}
-          {recovery}
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={busy}
-              onClick={() => {
-                if (!inFlight.current) onClose();
-              }}
-            >
-              {t('cancel')}
-            </Button>
-            <CatalogueSaveButton
-              label={t(busy ? 'saving' : 'importCities')}
-              pending={busy}
-              disabled={busy || !readReady}
-            />
-          </DialogFooter>
-        </form>
+        {form}
       </DialogContent>
     </Dialog>
   );
@@ -253,7 +426,7 @@ export function CitiesPanel({
   parentRecovery,
   onClose,
   query,
-  editorAddress,
+  routeSearch,
 }: {
   province: Province;
   scope?: GeographyScope;
@@ -261,7 +434,7 @@ export function CitiesPanel({
   parentRecovery?: ReactNode;
   onClose?: () => void;
   query?: ListQueryBinding;
-  editorAddress?: GeographyEditorAddress;
+  routeSearch?: Record<string, unknown>;
 }) {
   const locale = useLocale();
   const { number } = useNumberFormatting(locale);
@@ -330,23 +503,9 @@ export function CitiesPanel({
   const modalPage = useRef(1),
     acceptedCriteria = useRef(criteria),
     previousProvince = useRef(geographyBasis(province));
-  const publishEditor = useGeographyEditorAddress(
-    editorAddress,
-    cities,
-    ready &&
-      list.acceptedPage === page &&
-      acceptedCriteria.current === criteria &&
-      previousProvince.current === geographyBasis(province),
-    heading,
-    (value) => {
-      if (value) openModal(value, false);
-      else setModal(null);
-    }
-  );
   useEffect(() => {
     const nextProvince = geographyBasis(province);
     if (acceptedCriteria.current === criteria && previousProvince.current === nextProvince) return;
-    if (modal && acceptedCriteria.current === criteria) publishEditor(null, true);
     savedTrigger.current = null;
     acceptedCriteria.current = criteria;
     previousProvince.current = nextProvince;
@@ -363,18 +522,13 @@ export function CitiesPanel({
     )
       return;
     const next = list.data.rows.find((row) => row.id === modal.province?.id);
-    if (!next || geographyBasis(next) !== geographyBasis(modal.province)) closeModal(true);
+    if (!next || geographyBasis(next) !== geographyBasis(modal.province)) setModal(null);
   }, [list.data, list.acceptedPage, loading, error, modal]);
-  function openModal(value: GeographyModal, publish = true) {
+  function openModal(value: GeographyModal) {
     if (!ready) return;
     savedTrigger.current = null;
     modalPage.current = list.acceptedPage;
     setModal(value);
-    if (publish && value.kind !== 'deactivate') publishEditor(value.province?.id ?? 'new');
-  }
-  function closeModal(replace = false) {
-    setModal(null);
-    publishEditor(null, replace);
   }
   function refresh() {
     if (scope.denied) scope.recover();
@@ -401,7 +555,7 @@ export function CitiesPanel({
   }, [ready, modal, importTrigger]);
   function saved() {
     savedTrigger.current = modal?.trigger ?? importTrigger;
-    closeModal(true);
+    setModal(null);
     setImportTrigger(null);
     list.retry();
   }
@@ -421,59 +575,82 @@ export function CitiesPanel({
               {t('closeCities')}
             </Button>
           )}
-          <Button
-            disabled={!ready}
-            onClick={(event) =>
-              openModal({ kind: 'add', province: null, trigger: event.currentTarget })
-            }
-          >
-            {t('addCity')}
-          </Button>
-          <Button variant="outline" disabled={loading} onClick={refresh}>
-            {t('refresh')}
-          </Button>
-          <Button
-            variant="outline"
-            disabled={!ready}
-            onClick={(event) => {
-              savedTrigger.current = null;
-              setImportTrigger(event.currentTarget);
-            }}
-          >
-            {t('importCities')}
-          </Button>
+          {routeSearch && ready ? (
+            <Link
+              className={buttonVariants({ className: 'min-h-11' })}
+              to="/admin/geography/provinces/$provinceId/cities/$cityId/{-$action}"
+              params={{ provinceId: province.id, cityId: 'new' }}
+              search={routeSearch}
+            >
+              {t('addCity')}
+            </Link>
+          ) : (
+            <Button
+              disabled={!ready}
+              onClick={(event) =>
+                openModal({ kind: 'add', province: null, trigger: event.currentTarget })
+              }
+            >
+              {t('addCity')}
+            </Button>
+          )}
+          {routeSearch && ready ? (
+            <Link
+              className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+              to="/admin/geography/provinces/$provinceId/cities/$cityId/{-$action}"
+              params={{ provinceId: province.id, cityId: 'import' }}
+              search={routeSearch}
+            >
+              {t('importCities')}
+            </Link>
+          ) : (
+            <Button
+              variant="outline"
+              disabled={!ready}
+              onClick={(event) => {
+                savedTrigger.current = null;
+                setImportTrigger(event.currentTarget);
+              }}
+            >
+              {t('importCities')}
+            </Button>
+          )}
         </div>
       </header>
       <ListPage>
-        <ListPage.Toolbar className="flex flex-wrap gap-4">
-          <Input
-            aria-label={t('citySearch')}
-            placeholder={t('citySearch')}
-            value={searchInput}
-            onChange={(event) =>
-              query
-                ? query.setSearchInput(event.target.value)
-                : setLocalSearchInput(event.target.value)
-            }
-            className="max-w-sm"
-          />
-          <select
-            aria-label={t('filterStatus')}
-            className="h-10 rounded-md border border-input bg-background px-3"
-            value={status}
-            onChange={(event) => {
-              if (query) query.setQuery({ filters: { status: event.target.value } });
-              else {
-                setLocalStatus(event.target.value);
-                setPage(1);
+        <ListPage.Toolbar
+          search={
+            <ListSearchInput
+              label={t('citySearch')}
+              value={searchInput}
+              onChange={(event) =>
+                query
+                  ? query.setSearchInput(event.target.value)
+                  : setLocalSearchInput(event.target.value)
               }
-            }}
-          >
-            <option value="">{t('all')}</option>
-            <option value="active">{t('active')}</option>
-            <option value="inactive">{t('inactive')}</option>
-          </select>
-        </ListPage.Toolbar>
+            />
+          }
+          sort={
+            <NativeSelect
+              aria-label={t('filterStatus')}
+              value={status}
+              onChange={(event) => {
+                if (query) query.setQuery({ filters: { status: event.target.value } });
+                else {
+                  setLocalStatus(event.target.value);
+                  setPage(1);
+                }
+              }}
+            >
+              <option value="">{t('all')}</option>
+              <option value="active">{t('active')}</option>
+              <option value="inactive">{t('inactive')}</option>
+            </NativeSelect>
+          }
+          refresh={
+            <ListRefreshButton label={t('refresh')} refreshing={loading} onClick={refresh} />
+          }
+        />
         {scope.denied && <p role="alert">{t('denied')}</p>}
         <ListPage.Content
           loading={loading}
@@ -502,34 +679,70 @@ export function CitiesPanel({
               tableClassName="min-w-[34rem]"
               loading={loading}
               error={error}
+              {...(routeSearch && ready
+                ? {
+                    renderName: (city, name) => (
+                      <Link
+                        to="/admin/geography/provinces/$provinceId/cities/$cityId/{-$action}"
+                        params={{ provinceId: province.id, cityId: city.id }}
+                        search={routeSearch}
+                        className="font-semibold text-primary underline-offset-4 hover:underline"
+                      >
+                        {name}
+                      </Link>
+                    ),
+                  }
+                : {})}
               renderActions={(city) => (
                 <div className="flex flex-wrap gap-2">
-                  <Button
-                    variant="outline"
-                    disabled={!ready}
-                    onClick={(event) =>
-                      openModal({
-                        kind: 'edit',
-                        province: city,
-                        trigger: event.currentTarget,
-                      })
-                    }
-                  >
-                    {t('edit')}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    disabled={!ready}
-                    onClick={(event) =>
-                      openModal({
-                        kind: city.status === 'active' ? 'deactivate' : 'edit',
-                        province: city,
-                        trigger: event.currentTarget,
-                      })
-                    }
-                  >
-                    {t(city.status === 'active' ? 'deactivate' : 'activate')}
-                  </Button>
+                  {routeSearch && ready ? (
+                    <Link
+                      className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                      to="/admin/geography/provinces/$provinceId/cities/$cityId/{-$action}"
+                      params={{ provinceId: province.id, cityId: city.id, action: 'edit' }}
+                      search={routeSearch}
+                      data-table-action-tooltip={t('edit')}
+                    >
+                      <TableActionIcon icon={TablePencilIcon}>{t('edit')}</TableActionIcon>
+                    </Link>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      disabled={!ready}
+                      onClick={(event) =>
+                        openModal({
+                          kind: 'edit',
+                          province: city,
+                          trigger: event.currentTarget,
+                        })
+                      }
+                      data-table-action-tooltip={t('edit')}
+                    >
+                      <TableActionIcon icon={TablePencilIcon}>{t('edit')}</TableActionIcon>
+                    </Button>
+                  )}
+                  {(!routeSearch || city.status === 'active') && (
+                    <Button
+                      variant="outline"
+                      disabled={!ready}
+                      onClick={(event) =>
+                        openModal({
+                          kind: city.status === 'active' ? 'deactivate' : 'edit',
+                          province: city,
+                          trigger: event.currentTarget,
+                        })
+                      }
+                      data-table-action-tooltip={t(
+                        city.status === 'active' ? 'deactivate' : 'activate'
+                      )}
+                    >
+                      <TableActionIcon
+                        icon={city.status === 'active' ? TableBanIcon : TableCheckCircleIcon}
+                      >
+                        {t(city.status === 'active' ? 'deactivate' : 'activate')}
+                      </TableActionIcon>
+                    </Button>
+                  )}
                 </div>
               )}
             />
@@ -573,7 +786,7 @@ export function CitiesPanel({
           readReady={ready}
           recovery={recovery}
           onDenied={scope.deny}
-          onClose={() => closeModal()}
+          onClose={() => setModal(null)}
           onSaved={saved}
         />
       )}

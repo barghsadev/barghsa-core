@@ -1,4 +1,6 @@
 import { useOwnedInvoiceReview } from '../hooks/useOwnedInvoiceReview.js';
+import { Link } from '@tanstack/react-router';
+import type { InvoiceReceiptDecision } from '../lib/invoice-receipt-decision.js';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -16,12 +18,17 @@ import {
   Alert,
   AlertDescription,
   Button,
+  buttonVariants,
+  Label,
   ListPage,
+  ListRefreshButton,
   ListViewToggle,
   PageLoading,
   StatusBadge,
+  Textarea,
 } from '@barghsa/ui';
 import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
+import { receiptEditorMessages } from '@barghsa/i18n/receipt-editor';
 import { t as appText } from '@barghsa/i18n/workspace';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { BANK_RECEIPT_REJECT_REASON_MAX_LENGTH } from '@barghsa/shared/finance/browser';
@@ -37,6 +44,12 @@ import { useListView } from '../hooks/useListView.js';
 import { StaffInvoiceReceiptList } from './StaffInvoiceReceiptList.js';
 import { ReceiptDepositDate } from './ReceiptDepositDate.js';
 import { StaffReceiptAttachmentPreview } from './StaffReceiptAttachmentPreview.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 
 const base = '/api/admin/invoices/bank-receipts';
 
@@ -120,16 +133,31 @@ export function InvoiceBankReceiptQueue(
 ) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  return <OwnedInvoiceBankReceiptQueue key={JSON.stringify([actor, revision])} {...props} />;
+  return (
+    <OwnedInvoiceBankReceiptQueue
+      key={JSON.stringify([actor, revision, props.recordId])}
+      {...props}
+    />
+  );
 }
 function OwnedInvoiceBankReceiptQueue({
   initialSelection,
   historyQuery,
   pendingQuery,
+  recordId,
+  recordDecision,
+  recordSearch,
+  onOpenRecord,
+  onLocked,
 }: {
   initialSelection?: { receiptId: string; state: string } | null;
   historyQuery?: ReceiptHistoryQuery;
   pendingQuery?: ListQueryBinding;
+  recordId?: string;
+  recordDecision?: InvoiceReceiptDecision | undefined;
+  recordSearch?: Record<string, unknown>;
+  onOpenRecord?: (receiptId: string) => void;
+  onLocked?: (locked: boolean) => void;
 } = {}) {
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
@@ -146,12 +174,15 @@ function OwnedInvoiceBankReceiptQueue({
   const time = useAccountTime(locale);
   const numbers = useNumberFormatting(locale);
   const word = (key: string) => adminText(`admin.invoiceReceipts.${key}`, locale);
+  const editorText = receiptEditorMessages[locale];
   const { view, setView } = useListView('staff-invoice-receipts-pending');
   const [items, setItems] = useState<Receipt[]>([]);
   const [listState, setListState] = useState<'loading' | 'ready' | 'forbidden' | 'error'>(
     'loading'
   );
-  const [selectedId, setSelectedId] = useState<string | null>(initialSelection?.receiptId ?? null);
+  const [selectedId, setSelectedId] = useState<string | null>(
+    recordId ?? initialSelection?.receiptId ?? null
+  );
   const [selectedSource, setSelectedSource] = useState<'pending' | 'history'>(
     initialSelection?.state === 'Confirmed' || initialSelection?.state === 'Rejected'
       ? 'history'
@@ -165,7 +196,9 @@ function OwnedInvoiceBankReceiptQueue({
     historyQuery ? historyQuery.setOpen(value) : setLocalHistoryOpen(value);
   const [detail, setDetail] = useState<Receipt | null>(null);
   const [allocation, setAllocation] = useState<Allocation | null>(null);
-  const [detailState, setDetailState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [detailState, setDetailState] = useState<'loading' | 'ready' | 'forbidden' | 'error'>(
+    'loading'
+  );
   const [allocationError, setAllocationError] = useState(false);
   const rejection = useReceiptRejectionForm('invoice');
   const [reason, setReason] = rejection.field('reason');
@@ -179,6 +212,7 @@ function OwnedInvoiceBankReceiptQueue({
   const [listRevision, setListRevision] = useState(0);
   const [detailRevision, setDetailRevision] = useState(0);
   const detailRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const selectedIdRef = useRef(selectedId);
   selectedIdRef.current = selectedId;
   actionRef.current = action;
@@ -212,10 +246,19 @@ function OwnedInvoiceBankReceiptQueue({
     setReviewState('idle');
   }, [selectedId, selectedSource, revision, detailRevision]);
   useEffect(() => {
-    if (selectedId) detailRef.current?.scrollIntoView?.({ block: 'start' });
-  }, [selectedId, selectedSource]);
+    if (recordId) headingRef.current?.focus({ preventScroll: true });
+    else if (selectedId) detailRef.current?.scrollIntoView?.({ block: 'start' });
+  }, [selectedId, selectedSource, recordId, recordDecision]);
+  const commandLocked = Boolean(
+    action || (recordDecision && (rejectionBusy || reviewState === 'loading'))
+  );
+  useEffect(() => {
+    onLocked?.(commandLocked);
+    return () => onLocked?.(false);
+  }, [commandLocked, onLocked]);
 
   useEffect(() => {
+    if (recordId) return;
     const controller = new AbortController();
     setListState('loading');
     void getJson<{ items: Receipt[]; nextCursor?: FinanceCursor | null }>(
@@ -252,7 +295,7 @@ function OwnedInvoiceBankReceiptQueue({
         }
       });
     return () => controller.abort();
-  }, [revision, listRevision, queueParams, readStaff]);
+  }, [revision, listRevision, queueParams, recordId, readStaff]);
 
   useEffect(() => {
     if (!selectedId) {
@@ -268,24 +311,47 @@ function OwnedInvoiceBankReceiptQueue({
     setDetailState('loading');
     setAllocationError(false);
     setReviewState('idle');
-    void Promise.allSettled([
-      getJson<Receipt>(path, controller.signal, readStaff),
-      selectedSource === 'pending'
-        ? getJson<Allocation>(`${path}/allocation`, controller.signal, readStaff)
-        : Promise.resolve(null),
-    ]).then(([receipt, preview]) => {
+    const receiptRead = getJson<Receipt>(path, controller.signal, readStaff).then((receipt) => {
+      if (receipt.receiptId !== selectedId) throw Error('Receipt does not match requested ID');
+      if (!controller.signal.aborted) {
+        setDetail(receipt);
+        setDetailState('ready');
+      }
+      return receipt;
+    });
+    const readAllocation = () =>
+      getJson<Allocation>(`${path}/allocation`, controller.signal, readStaff);
+    const allocationRead = recordId
+      ? receiptRead.then(
+          (receipt) =>
+            ['Confirmed', 'Rejected'].includes(receipt.state) ? null : readAllocation(),
+          () => null
+        )
+      : selectedSource === 'pending'
+        ? readAllocation()
+        : Promise.resolve(null);
+    void Promise.allSettled([receiptRead, allocationRead]).then(([receipt, preview]) => {
       if (controller.signal.aborted) return;
       if (receipt.status === 'fulfilled') {
-        setDetail(receipt.value);
-        setDetailState('ready');
+        if (preview.status === 'fulfilled') {
+          if (
+            preview.value &&
+            (preview.value.receiptId !== receipt.value.receiptId ||
+              preview.value.invoiceId !== receipt.value.invoiceId ||
+              preview.value.receiptAmount !== receipt.value.amount)
+          )
+            setAllocationError(true);
+          else setAllocation(preview.value);
+        } else setAllocationError(true);
       } else {
-        setDetailState('error');
+        const denied =
+          receipt.reason instanceof Error && ['401', '403'].includes(receipt.reason.message);
+        if (denied) rejection.form.reset({ reason: '' });
+        setDetailState(denied ? 'forbidden' : 'error');
       }
-      if (preview.status === 'fulfilled') setAllocation(preview.value);
-      else if (selectedSource === 'pending') setAllocationError(true);
     });
     return () => controller.abort();
-  }, [selectedId, selectedSource, revision, detailRevision, readStaff]);
+  }, [selectedId, selectedSource, revision, detailRevision, recordId, readStaff]);
 
   function refresh() {
     setRevision((value) => value + 1);
@@ -295,6 +361,7 @@ function OwnedInvoiceBankReceiptQueue({
     if (
       !detail ||
       actionRef.current ||
+      (recordDecision && recordDecision !== kind) ||
       (kind === 'confirm' && rejection.form.isSubmissionPending())
     )
       return;
@@ -326,7 +393,11 @@ function OwnedInvoiceBankReceiptQueue({
         if (!response.ok) throw new Error(String(response.status));
         const { parseBankReceiptConfirmationReview } = await import('@barghsa/shared/finance');
         confirmation = parseBankReceiptConfirmationReview(await response.json());
-        if (generation !== reviewGeneration.current || selectedIdRef.current !== detail.receiptId)
+        if (
+          controller.signal.aborted ||
+          generation !== reviewGeneration.current ||
+          selectedIdRef.current !== detail.receiptId
+        )
           return;
         if (
           !confirmation ||
@@ -375,7 +446,7 @@ function OwnedInvoiceBankReceiptQueue({
   canRejectNow.current = Boolean(
     detail?.canReject &&
     detailState === 'ready' &&
-    listState === 'ready' &&
+    (recordId || listState === 'ready') &&
     reviewState !== 'loading' &&
     !action
   );
@@ -395,113 +466,197 @@ function OwnedInvoiceBankReceiptQueue({
     })(event);
   }
 
-  return (
-    <section className="space-y-4 rounded-xl border bg-card p-5" aria-label={word('title')}>
-      {time.notice}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="text-lg font-semibold">{word('title')}</h2>
-          <p className="text-sm text-muted-foreground">{word('description')}</p>
-        </div>
+  const historical = recordId
+    ? ['Confirmed', 'Rejected'].includes(detail?.state ?? '')
+    : selectedSource === 'history';
+  const DetailHeading = recordId ? 'h1' : 'h3';
+  const TimelineHeading = recordId ? 'h2' : 'h4';
+  const heading =
+    recordDecision === 'confirm'
+      ? editorText.confirmTitle
+      : recordDecision === 'reject'
+        ? editorText.rejectTitle
+        : word('detail');
+  const canConfirm = Boolean(detail?.canConfirm && !detail.dualApprovalPending);
+  const allocationPreview = allocation && (
+    <dl className="grid grid-cols-2 gap-3 rounded-lg bg-muted/40 p-3 text-sm sm:p-4">
+      <div className="min-w-0">
+        <dt className="text-muted-foreground">{word('invoiceAllocation')}</dt>
+        <dd className="wrap-anywhere font-semibold">
+          {numbers.money(allocation.invoiceAllocation)}
+        </dd>
       </div>
-      <ListPage>
-        <ListPage.Toolbar
-          filters={<ReceiptQueueControls binding={queueBinding} />}
-          actions={
-            <div className="flex flex-wrap items-center gap-2">
-              <ListViewToggle
-                value={view}
-                onChange={setView}
-                labels={{
-                  group: appText('historyView.group', locale),
-                  table: appText('historyView.table', locale),
-                  card: appText('historyView.card', locale),
-                }}
-              />
-              <Button variant="outline" onClick={refresh} disabled={listState === 'loading'}>
-                {word('refresh')}
-              </Button>
+      <div className="min-w-0">
+        <dt className="text-muted-foreground">{word('walletCredit')}</dt>
+        <dd className="wrap-anywhere font-semibold">
+          {numbers.money(allocation.walletCreditAmount)}
+        </dd>
+      </div>
+      <div className="min-w-0">
+        <dt className="text-muted-foreground">{word('remaining')}</dt>
+        <dd className="wrap-anywhere">{numbers.money(allocation.remaining)}</dd>
+      </div>
+      <div className="min-w-0">
+        <dt className="text-muted-foreground">{word('invoiceState')}</dt>
+        <dd>{appText(`invoices.state.${allocation.invoiceState}`, locale)}</dd>
+      </div>
+    </dl>
+  );
+  const confirmButton = (attachmentUrl: string | null) => (
+    <Button
+      onClick={() => void review('confirm')}
+      disabled={
+        !allocation || !attachmentUrl || reviewState === 'loading' || rejectionBusy || !!action
+      }
+    >
+      {word('confirm')}
+    </Button>
+  );
+  const attachment = detail?.attachmentUrl && (
+    <StaffReceiptAttachmentPreview
+      key={detail.receiptId}
+      url={detail.attachmentUrl}
+      previewUrl={`${base}/${encodeURIComponent(detail.receiptId)}/attachment-preview`}
+      label={word('attachment')}
+      openLabel={word('attachment')}
+    />
+  );
+  return (
+    <section
+      id={recordId ? 'invoice-receipt-panel' : undefined}
+      className={recordDecision ? 'min-w-0 space-y-4' : 'space-y-4 rounded-xl border bg-card p-5'}
+      aria-label={word('title')}
+    >
+      {time.notice}
+      {!recordId && (
+        <>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-semibold">{word('title')}</h2>
+              <p className="text-sm text-muted-foreground">{word('description')}</p>
             </div>
-          }
-        />
-        <ListPage.Content
-          loading={listState === 'loading'}
-          error={listState === 'error' || listState === 'forbidden'}
-          empty={items.length === 0}
-          retainContent={items.length > 0 && listState !== 'forbidden'}
-          loadingView={<PageLoading label={word('loading')} />}
-          errorView={
-            listState === 'forbidden' ? (
-              <p role="alert">{word('forbidden')}</p>
-            ) : (
-              <div className="space-y-2">
-                <p role="alert">{word('loadError')}</p>
-                <Button variant="outline" onClick={() => setListRevision((value) => value + 1)}>
-                  {appText('historyPagination.retry', locale)}
-                </Button>
-              </div>
-            )
-          }
-          emptyView={<p>{word('empty')}</p>}
-        >
-          {items.length ? (
-            <StaffInvoiceReceiptList
-              items={items}
-              view={view}
-              caption={word('title')}
+          </div>
+          <ListPage>
+            <ReceiptQueueControls
+              binding={queueBinding}
+              actions={
+                <ListViewToggle
+                  value={view}
+                  onChange={setView}
+                  labels={{
+                    group: appText('historyView.group', locale),
+                    table: appText('historyView.table', locale),
+                    card: appText('historyView.card', locale),
+                  }}
+                />
+              }
+              refresh={
+                <ListRefreshButton
+                  label={word('refresh')}
+                  onClick={refresh}
+                  refreshing={listState === 'loading'}
+                />
+              }
+            />
+            <ListPage.Content
+              loading={listState === 'loading'}
+              error={listState === 'error' || listState === 'forbidden'}
+              empty={items.length === 0}
+              retainContent={items.length > 0 && listState !== 'forbidden'}
+              loadingView={<PageLoading label={word('loading')} />}
+              errorView={
+                listState === 'forbidden' ? (
+                  <p role="alert">{word('forbidden')}</p>
+                ) : (
+                  <div className="space-y-2">
+                    <p role="alert">{word('loadError')}</p>
+                    <Button variant="outline" onClick={() => setListRevision((value) => value + 1)}>
+                      {appText('historyPagination.retry', locale)}
+                    </Button>
+                  </div>
+                )
+              }
+              emptyView={<p>{word('empty')}</p>}
+            >
+              {items.length ? (
+                <StaffInvoiceReceiptList
+                  items={items}
+                  view={view}
+                  caption={word('title')}
+                  onOpen={(receiptId) => {
+                    if (onOpenRecord) return onOpenRecord(receiptId);
+                    rejection.form.reset({ reason: '' });
+                    setSelectedSource('pending');
+                    setSelectedId(receiptId);
+                  }}
+                />
+              ) : null}
+            </ListPage.Content>
+            {listState !== 'forbidden' && (
+              <ReceiptQueuePagination
+                binding={queueBinding}
+                nextCursor={listState === 'error' ? null : nextCursor}
+                loading={listState === 'loading'}
+              />
+            )}
+          </ListPage>
+          <Button
+            variant="outline"
+            aria-expanded={historyOpen}
+            onClick={() => setHistoryOpen(!historyOpen)}
+          >
+            {word('historyTitle')}
+          </Button>
+          {historyOpen ? (
+            <InvoiceBankReceiptHistory
+              {...(historyQuery ? { binding: historyQuery.query } : {})}
+              revision={revision}
               onOpen={(receiptId) => {
+                if (onOpenRecord) return onOpenRecord(receiptId);
                 rejection.form.reset({ reason: '' });
-                setSelectedSource('pending');
+                setSelectedSource('history');
                 setSelectedId(receiptId);
               }}
             />
           ) : null}
-        </ListPage.Content>
-        {listState !== 'forbidden' && (
-          <ReceiptQueuePagination
-            binding={queueBinding}
-            nextCursor={listState === 'error' ? null : nextCursor}
-            loading={listState === 'loading'}
-          />
-        )}
-      </ListPage>
-      <Button
-        variant="outline"
-        aria-expanded={historyOpen}
-        onClick={() => setHistoryOpen(!historyOpen)}
-      >
-        {word('historyTitle')}
-      </Button>
-      {historyOpen ? (
-        <InvoiceBankReceiptHistory
-          {...(historyQuery ? { binding: historyQuery.query } : {})}
-          revision={revision}
-          onOpen={(receiptId) => {
-            rejection.form.reset({ reason: '' });
-            setSelectedSource('history');
-            setSelectedId(receiptId);
-          }}
-        />
-      ) : null}
+        </>
+      )}
       {selectedId ? (
         <section
           ref={detailRef}
-          className="space-y-4 rounded-lg border p-4"
+          className={recordDecision ? 'min-w-0 space-y-4' : 'space-y-4 rounded-lg border p-4'}
           aria-label={word('detail')}
         >
           <div className="flex items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="font-semibold">{word('detail')}</h3>
+              <DetailHeading
+                ref={recordId ? headingRef : undefined}
+                tabIndex={recordId ? -1 : undefined}
+                className={recordId ? 'text-2xl font-semibold' : 'font-semibold'}
+              >
+                {heading}
+              </DetailHeading>
               {detail ? (
                 <StatusBadge label={appText(`invoices.activity.state.${detail.state}`, locale)} />
               ) : null}
             </div>
-            <Button variant="ghost" onClick={() => setSelectedId(null)}>
-              {word('close')}
-            </Button>
+            {recordId && detailState === 'ready' ? (
+              <ListRefreshButton
+                label={recordDecision ? editorText.refreshReceipt : word('refresh')}
+                onClick={refresh}
+                refreshing={false}
+                disabled={commandLocked}
+              />
+            ) : null}
+            {!recordId && (
+              <Button variant="ghost" onClick={() => setSelectedId(null)}>
+                {word('close')}
+              </Button>
+            )}
           </div>
           {detailState === 'loading' ? <PageLoading label={word('loading')} /> : null}
-          {detailState === 'error' || allocationError ? (
+          {detailState === 'forbidden' ? <p role="alert">{word('forbidden')}</p> : null}
+          {detailState === 'error' || (allocationError && recordDecision !== 'reject') ? (
             <div className="space-y-2">
               <Alert variant="destructive">
                 <AlertDescription>
@@ -515,118 +670,154 @@ function OwnedInvoiceBankReceiptQueue({
           ) : null}
           {detail ? (
             <>
-              <dl className="grid gap-2 text-sm sm:grid-cols-2">
-                <div>
-                  <dt className="text-muted-foreground">{word('receipt')}</dt>
-                  <dd className="break-all">
-                    <bdi>{detail.receiptId}</bdi>
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('invoice')}</dt>
-                  <dd className="break-all">
-                    <bdi>{detail.invoiceId}</bdi>
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('amount')}</dt>
-                  <dd>{numbers.money(detail.amount)}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('paymentDate')}</dt>
-                  <dd>
-                    <ReceiptDepositDate value={detail.paymentDate} />
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('reference')}</dt>
-                  <dd className="break-all">
-                    <bdi>{detail.payerReference}</bdi>
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('bankName')}</dt>
-                  <dd className="break-words">{detail.bankName ?? '—'}</dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{word('submitted')}</dt>
-                  <dd>{time.format(detail.submittedAt)}</dd>
-                </div>
-                {detail.confirmedAt ? (
-                  <div>
-                    <dt className="text-muted-foreground">{word('confirmed')}</dt>
-                    <dd>{time.format(detail.confirmedAt)}</dd>
+              {recordDecision ? (
+                <dl className="grid grid-cols-2 gap-3 rounded-lg bg-muted/40 p-3 text-sm sm:p-4">
+                  <div className="min-w-0">
+                    <dt className="text-muted-foreground">{word('amount')}</dt>
+                    <dd className="wrap-anywhere font-semibold">{numbers.money(detail.amount)}</dd>
                   </div>
-                ) : null}
-              </dl>
-              {detail.customerNote ? <p className="text-sm">{detail.customerNote}</p> : null}
-              {detail.attachmentUrl ? (
-                <StaffReceiptAttachmentPreview
-                  key={detail.receiptId}
-                  url={detail.attachmentUrl}
-                  previewUrl={`/api/admin/invoices/bank-receipts/${encodeURIComponent(detail.receiptId)}/attachment-preview`}
-                  label={word('attachment')}
-                  openLabel={word('attachment')}
-                />
+                  <div className="min-w-0">
+                    <dt className="text-muted-foreground">{word('invoice')}</dt>
+                    <dd>
+                      <bdi title={detail.invoiceId} className="font-mono">
+                        …{detail.invoiceId.slice(-12)}
+                      </bdi>
+                    </dd>
+                  </div>
+                  <div className="min-w-0">
+                    <dt className="text-muted-foreground">{word('reference')}</dt>
+                    <dd className="wrap-anywhere">
+                      <bdi className="font-mono">{detail.payerReference}</bdi>
+                    </dd>
+                  </div>
+                  <div className="min-w-0">
+                    <dt className="text-muted-foreground">{word('paymentDate')}</dt>
+                    <dd>
+                      <ReceiptDepositDate
+                        value={detail.paymentDate}
+                        locale={locale}
+                        calendar="gregory"
+                      />
+                    </dd>
+                  </div>
+                </dl>
               ) : (
-                <p role="alert" className="text-sm">
-                  {word(
-                    selectedSource === 'history'
-                      ? 'historyAttachmentUnavailable'
-                      : 'attachmentUnavailable'
+                <>
+                  <dl className="grid gap-2 text-sm sm:grid-cols-2">
+                    <div>
+                      <dt className="text-muted-foreground">{word('receipt')}</dt>
+                      <dd className="break-all">
+                        <bdi>{detail.receiptId}</bdi>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">{word('invoice')}</dt>
+                      <dd className="break-all">
+                        <bdi>{detail.invoiceId}</bdi>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">{word('amount')}</dt>
+                      <dd>{numbers.money(detail.amount)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">{word('paymentDate')}</dt>
+                      <dd>
+                        <ReceiptDepositDate
+                          value={detail.paymentDate}
+                          locale={locale}
+                          calendar="gregory"
+                        />
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">{word('reference')}</dt>
+                      <dd className="break-all">
+                        <bdi>{detail.payerReference}</bdi>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">{word('bankName')}</dt>
+                      <dd className="break-words">{detail.bankName ?? '—'}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-muted-foreground">{word('submitted')}</dt>
+                      <dd>{time.format(detail.submittedAt)}</dd>
+                    </div>
+                    {detail.confirmedAt ? (
+                      <div>
+                        <dt className="text-muted-foreground">{word('confirmed')}</dt>
+                        <dd>{time.format(detail.confirmedAt)}</dd>
+                      </div>
+                    ) : null}
+                  </dl>
+                  {recordId && (canConfirm || detail.canReject) && (
+                    <div className="flex flex-wrap gap-2">
+                      {canConfirm && (
+                        <Link
+                          to="/admin/invoices/receipts/$receiptId/{-$decision}"
+                          params={{ receiptId: recordId, decision: 'confirm' }}
+                          search={recordSearch ?? {}}
+                          data-testid="invoice-receipt-open-confirm"
+                          className={buttonVariants()}
+                        >
+                          {editorText.confirmTitle}
+                        </Link>
+                      )}
+                      {detail.canReject && (
+                        <Link
+                          to="/admin/invoices/receipts/$receiptId/{-$decision}"
+                          params={{ receiptId: recordId, decision: 'reject' }}
+                          search={recordSearch ?? {}}
+                          data-testid="invoice-receipt-open-reject"
+                          className={buttonVariants({ variant: 'outline' })}
+                        >
+                          {editorText.rejectTitle}
+                        </Link>
+                      )}
+                    </div>
                   )}
-                </p>
+                  {detail.customerNote ? <p className="text-sm">{detail.customerNote}</p> : null}
+                  {attachment || (
+                    <p role="alert" className="text-sm">
+                      {word(historical ? 'historyAttachmentUnavailable' : 'attachmentUnavailable')}
+                    </p>
+                  )}
+                  {detail.rejectionReason ? (
+                    <p className="text-sm">
+                      {word('historyRejectionReason')}: {detail.rejectionReason}
+                    </p>
+                  ) : null}
+                  {detail.statusHistory?.length ? (
+                    <section aria-label={word('reviewTimeline')} className="space-y-2 text-sm">
+                      <TimelineHeading className="font-medium">
+                        {word('reviewTimeline')}
+                      </TimelineHeading>
+                      <ReceiptStatusTimeline
+                        history={detail.statusHistory}
+                        label={word('reviewTimeline')}
+                        locale={locale}
+                        formatTimestamp={time.format}
+                      />
+                    </section>
+                  ) : null}
+                  {allocationPreview}
+                  {historical &&
+                  detail.state === 'Confirmed' &&
+                  detail.invoiceAllocation !== null ? (
+                    <dl className="grid gap-2 rounded-lg bg-muted p-3 text-sm sm:grid-cols-2">
+                      <div>
+                        <dt>{word('invoiceAllocation')}</dt>
+                        <dd>{numbers.money(detail.invoiceAllocation)}</dd>
+                      </div>
+                      <div>
+                        <dt>{word('walletCredit')}</dt>
+                        <dd>{numbers.money(detail.walletCreditAmount ?? '0')}</dd>
+                      </div>
+                    </dl>
+                  ) : null}
+                </>
               )}
-              {detail.rejectionReason ? (
-                <p className="text-sm">
-                  {word('historyRejectionReason')}: {detail.rejectionReason}
-                </p>
-              ) : null}
-              {detail.statusHistory?.length ? (
-                <section aria-label={word('reviewTimeline')} className="space-y-2 text-sm">
-                  <h4 className="font-medium">{word('reviewTimeline')}</h4>
-                  <ReceiptStatusTimeline
-                    history={detail.statusHistory}
-                    label={word('reviewTimeline')}
-                    locale={locale}
-                    formatTimestamp={time.format}
-                  />
-                </section>
-              ) : null}
-              {allocation ? (
-                <dl className="grid gap-2 rounded-lg bg-muted p-3 text-sm sm:grid-cols-2">
-                  <div>
-                    <dt>{word('remaining')}</dt>
-                    <dd>{numbers.money(allocation.remaining)}</dd>
-                  </div>
-                  <div>
-                    <dt>{word('invoiceAllocation')}</dt>
-                    <dd>{numbers.money(allocation.invoiceAllocation)}</dd>
-                  </div>
-                  <div>
-                    <dt>{word('walletCredit')}</dt>
-                    <dd>{numbers.money(allocation.walletCreditAmount)}</dd>
-                  </div>
-                  <div>
-                    <dt>{word('invoiceState')}</dt>
-                    <dd>{appText(`invoices.state.${allocation.invoiceState}`, locale)}</dd>
-                  </div>
-                </dl>
-              ) : null}
-              {selectedSource === 'history' &&
-              detail.state === 'Confirmed' &&
-              detail.invoiceAllocation !== null ? (
-                <dl className="grid gap-2 rounded-lg bg-muted p-3 text-sm sm:grid-cols-2">
-                  <div>
-                    <dt>{word('invoiceAllocation')}</dt>
-                    <dd>{numbers.money(detail.invoiceAllocation)}</dd>
-                  </div>
-                  <div>
-                    <dt>{word('walletCredit')}</dt>
-                    <dd>{numbers.money(detail.walletCreditAmount ?? '0')}</dd>
-                  </div>
-                </dl>
-              ) : null}
               {detail.dualApprovalPending ? (
                 <p role="status" className="text-sm">
                   {word('approvalPending')}{' '}
@@ -638,58 +829,80 @@ function OwnedInvoiceBankReceiptQueue({
                   </a>
                 </p>
               ) : null}
-              {detail.requiresDualApproval && !detail.dualApprovalPending ? (
+              {detail.requiresDualApproval &&
+              !detail.dualApprovalPending &&
+              recordDecision !== 'reject' ? (
                 <p className="text-sm text-muted-foreground">{word('approvalRequired')}</p>
               ) : null}
-              <div className="flex flex-wrap gap-2">
-                {detail.canConfirm && !detail.dualApprovalPending ? (
-                  <Button
-                    onClick={() => void review('confirm')}
-                    disabled={
-                      !allocation ||
-                      !detail.attachmentUrl ||
-                      reviewState === 'loading' ||
-                      rejectionBusy ||
-                      !!action
-                    }
+              {recordDecision && attachment && (
+                <details className="rounded-lg border bg-card">
+                  <summary className="cursor-pointer px-4 py-2.5 text-sm font-medium">
+                    {word('attachment')}
+                  </summary>
+                  <div className="px-4 pb-3">{attachment}</div>
+                </details>
+              )}
+              {canConfirm && recordDecision === 'confirm' && (
+                <div className={recordEditorSurface}>
+                  <RecordEditorSection
+                    title={editorText.invoiceReceiptAllocation}
+                    description={editorText.invoiceReceiptConfirmHint}
                   >
-                    {word('confirm')}
-                  </Button>
-                ) : null}
-                {detail.canReject ? (
-                  <form onSubmit={rejectReceipt} noValidate className="flex min-w-0 flex-col gap-2">
-                    <label htmlFor="invoice-receipt-reason">{word('reason')}</label>
-                    <textarea
-                      {...rejection.bind('reason')}
-                      id="invoice-receipt-reason"
-                      value={reason}
-                      onChange={(event) => setReason(event.target.value)}
-                      disabled={rejectionBusy || !!action}
-                      required
-                      aria-required="true"
-                      aria-describedby={
-                        rejection.errors.reason
-                          ? `${rejection.errorId('reason')} invoice-receipt-reason-hint`
-                          : 'invoice-receipt-reason-hint'
-                      }
-                      maxLength={BANK_RECEIPT_REJECT_REASON_MAX_LENGTH}
-                      className="min-h-20 rounded-md border bg-background p-2"
-                    />
-                    <p id="invoice-receipt-reason-hint" className="text-xs text-muted-foreground">
-                      {word('reasonHint')}
-                    </p>
-                    {rejection.errors.reason && (
-                      <p
-                        id={rejection.errorId('reason')}
-                        role="alert"
-                        className="text-sm text-destructive"
-                      >
-                        {rejection.errors.reason.message}
+                    {allocationPreview}
+                    {!attachment && (
+                      <p role="alert" className="text-sm">
+                        {word('attachmentUnavailable')}
                       </p>
                     )}
+                  </RecordEditorSection>
+                  <RecordEditorActions>{confirmButton(detail.attachmentUrl)}</RecordEditorActions>
+                </div>
+              )}
+              {!recordId && canConfirm && (
+                <div className="flex justify-end">{confirmButton(detail.attachmentUrl)}</div>
+              )}
+              {detail.canReject && (!recordId || recordDecision === 'reject') ? (
+                <form onSubmit={rejectReceipt} noValidate className={recordEditorSurface}>
+                  <RecordEditorSection title={receiptEditorMessages[locale].rejectionDetails}>
+                    <div className={recordEditorField}>
+                      <Label htmlFor="invoice-receipt-reason">{word('reason')}</Label>
+                      <Textarea
+                        {...rejection.bind('reason')}
+                        id="invoice-receipt-reason"
+                        value={reason}
+                        onChange={(event) => setReason(event.target.value)}
+                        disabled={rejectionBusy || !!action}
+                        required
+                        aria-required="true"
+                        aria-describedby={
+                          rejection.errors.reason
+                            ? `${rejection.errorId('reason')} invoice-receipt-reason-hint`
+                            : 'invoice-receipt-reason-hint'
+                        }
+                        maxLength={BANK_RECEIPT_REJECT_REASON_MAX_LENGTH}
+                        rows={2}
+                        placeholder={receiptEditorMessages[locale].rejectionExample}
+                        className="min-h-14 max-h-48"
+                      />
+                      <p id="invoice-receipt-reason-hint" className="text-xs text-muted-foreground">
+                        {word('reasonHint')}
+                      </p>
+                      {rejection.errors.reason && (
+                        <p
+                          id={rejection.errorId('reason')}
+                          role="alert"
+                          className="text-sm text-destructive"
+                        >
+                          {rejection.errors.reason.message}
+                        </p>
+                      )}
+                    </div>
+                  </RecordEditorSection>
+                  <RecordEditorActions>
                     <Button
                       type="submit"
                       variant="outline"
+                      className="border-destructive/25 text-destructive hover:bg-destructive/10 hover:text-destructive"
                       disabled={!canRejectNow.current || rejectionBusy}
                       aria-busy={rejectionBusy || undefined}
                     >
@@ -701,9 +914,15 @@ function OwnedInvoiceBankReceiptQueue({
                       )}
                       {word('reject')}
                     </Button>
-                  </form>
-                ) : null}
-              </div>
+                  </RecordEditorActions>
+                </form>
+              ) : null}
+              {((recordDecision === 'confirm' && !canConfirm) ||
+                (recordDecision === 'reject' && !detail.canReject)) && (
+                <p role="status" className="rounded-lg border bg-card px-4 py-3 text-sm">
+                  {editorText.actionUnavailable}
+                </p>
+              )}
               {reviewState === 'loading' ? (
                 <LoadingStatus>{word('reviewLoading')}</LoadingStatus>
               ) : null}
@@ -735,7 +954,8 @@ function OwnedInvoiceBankReceiptQueue({
             selectedIdRef.current = null;
             actionRef.current = null;
             setAction(null);
-            setSelectedId(null);
+            if (!recordId) setSelectedId(null);
+            else setDetailState('forbidden');
             setDetail(null);
             setAllocation(null);
             setFinancialReview(null);

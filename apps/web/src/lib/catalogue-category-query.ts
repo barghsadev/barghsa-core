@@ -13,6 +13,14 @@ export const productCatalogueTypes = [
   'saving_plan',
 ] as const;
 export type ProductCatalogueType = (typeof productCatalogueTypes)[number];
+export function productCatalogueType(raw: unknown): ProductCatalogueType | undefined {
+  return productCatalogueTypes.find((type) => type === raw);
+}
+
+export function productCatalogueLocationSearch(raw: Record<string, unknown>) {
+  const { type: _type, ...filters } = productCatalogueSearch(raw);
+  return filters;
+}
 export type KnowledgeCatalogueKind = 'knowledge-bases' | 'kb-groups';
 export type PolicyCatalogueKind = 'policies' | 'policy-groups';
 

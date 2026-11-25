@@ -123,22 +123,41 @@ for (const linked of [false, true]) {
           });
         });
         await page.goto(`/admin/approval-requests${linked ? `?requestId=${first}` : ''}`);
+        if (!linked) {
+          await page
+            .getByRole('link', {
+              name: `${t('admin.approvals.openRequest', locale)} · ${first}`,
+              exact: true,
+            })
+            .click();
+        }
+        await expect(page).toHaveURL(new RegExp(`/admin/approval-requests/${first}$`));
         await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
         const region = page.getByRole('region', {
-          name: t('admin.approvals.title', locale),
+          name: t('admin.approvals.rejectRequest', locale),
           exact: true,
           includeHidden: true,
         });
         const field = page.locator(`#reason-${first}`);
         const companion = page.locator(`#reason-${second}`);
-        const form = page.locator('form').filter({ has: field });
+        const form = page.locator(`#decision-${first}`);
         const reject = form.getByRole('button', {
           name: t('admin.approvals.reject', locale),
           exact: true,
           includeHidden: true,
         });
+        const openRejection = page.getByRole('link', {
+          name: t('admin.approvals.reject', locale),
+          exact: true,
+        });
+        await expect(field).toHaveCount(0);
+        await expect(companion).toHaveCount(0);
+        await openRejection.click();
+        await expect(page).toHaveURL(new RegExp(`/admin/approval-requests/${first}/reject$`));
+        await expect(
+          page.getByRole('heading', { name: t('admin.approvals.rejectRequest', locale) })
+        ).toBeFocused();
         await expect(reject).toBeEnabled();
-        if (!linked) await companion.fill('Retain companion investigation');
         await reject.click();
         await expect(field).toBeFocused();
         await expect(field).toHaveAttribute('aria-invalid', 'true');
@@ -150,6 +169,16 @@ for (const linked of [false, true]) {
         const raw = '  Evidence mismatch  ';
         await field.fill(raw);
         await expect(field).not.toHaveAttribute('aria-invalid', 'true');
+        await form
+          .getByRole('link', { name: t('admin.approvals.cancelRejection', locale), exact: true })
+          .click();
+        await expect(page).toHaveURL(new RegExp(`/admin/approval-requests/${first}$`));
+        await expect(
+          page.getByRole('heading', { name: t('admin.approvals.decisionTitle', locale) })
+        ).toBeFocused();
+        await expect(field).toHaveCount(0);
+        await openRejection.click();
+        await expect(field).toHaveValue(raw);
         await reject.evaluate((node: HTMLButtonElement) => {
           node.click();
           node.click();
@@ -159,7 +188,7 @@ for (const linked of [false, true]) {
         await expect(dialog).toContainText(raw.trim());
         await expect(field).toBeDisabled();
         await expect(reject).toHaveAttribute('aria-busy', 'true');
-        if (!linked) await expect(companion).toBeDisabled();
+        await expect(companion).toHaveCount(0);
         const confirm = () =>
           dialog.getByRole('button', { name: appText('team.confirm', locale), exact: true });
         await expect(confirm()).toBeDisabled();
@@ -180,7 +209,7 @@ for (const linked of [false, true]) {
         await expect(field).toBeFocused();
         await expect(field).toBeEnabled();
         await expect(field).toHaveValue(raw);
-        if (!linked) await expect(companion).toHaveValue('Retain companion investigation');
+        await expect(companion).toHaveCount(0);
         await expect(region.getByRole('alert')).toHaveText(
           t('admin.approvals.invalidReason', locale)
         );
@@ -254,9 +283,15 @@ for (const linked of [false, true]) {
         await expect(
           region.getByRole('status').filter({ hasText: t('admin.approvals.saved', locale) })
         ).toBeVisible();
-        if (!linked) await expect(companion).toHaveValue('Retain companion investigation');
+        await expect(companion).toHaveCount(0);
         expect(writes).toEqual(Array.from({ length: 6 }, () => ({ reason: raw.trim() })));
         expect(verifications).toBe(2);
+        await page.reload();
+        await expect(
+          region.getByText(t('admin.approvals.rejectionUnavailable', locale))
+        ).toBeVisible();
+        await expect(field).toHaveCount(0);
+        expect(writes).toHaveLength(6);
       });
     }
   }
@@ -278,11 +313,25 @@ for (const linked of [false, true]) {
         });
       });
       await page.goto(`/admin/approval-requests${linked ? `?requestId=${first}` : ''}`);
+      if (!linked) {
+        await page
+          .getByRole('link', {
+            name: `${t('admin.approvals.openRequest', 'en')} · ${first}`,
+            exact: true,
+          })
+          .click();
+      }
+      await expect(page).toHaveURL(new RegExp(`/admin/approval-requests/${first}$`));
       const field = page.locator(`#reason-${first}`);
-      const region = page.getByRole('region', { name: 'Financial approvals', exact: true });
+      await page.getByRole('link', { name: 'Reject', exact: true }).click();
+      const region = page.getByRole('region', {
+        name: t('admin.approvals.rejectRequest', 'en'),
+        exact: true,
+      });
+      const reject = region.getByRole('button', { name: 'Reject', exact: true }).first();
       await field.fill('Private reason');
-      if (!linked) await page.locator(`#reason-${second}`).fill('Private companion');
-      await region.getByRole('button', { name: 'Reject', exact: true }).first().click();
+      await expect(page.locator(`#reason-${second}`)).toHaveCount(0);
+      await reject.click();
       const confirm = page
         .getByRole('dialog')
         .getByRole('button', { name: 'Confirm', exact: true });
@@ -297,7 +346,7 @@ for (const linked of [false, true]) {
       );
       await region.getByRole('button', { name: 'Refresh', exact: true }).click();
       await expect(field).toHaveValue('');
-      if (!linked) await expect(page.locator(`#reason-${second}`)).toHaveValue('');
+      await expect(page.locator(`#reason-${second}`)).toHaveCount(0);
       expect(writes).toBe(1);
     });
   }

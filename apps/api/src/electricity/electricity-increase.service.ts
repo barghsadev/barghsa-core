@@ -513,6 +513,12 @@ export class ElectricityIncreaseService {
     };
   }
 
+  async staffRecord(client: PoolClient, requestId: string) {
+    const record = (await client.query(requestSelect + ' AND r.id=$1', [requestId])).rows[0];
+    if (!record) throw new NotFoundException('Electricity increase request not found');
+    return record;
+  }
+
   private async decisionReviewForRow(
     client: PoolClient,
     owner: { contract_id: string; profile_id: string },

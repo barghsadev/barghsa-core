@@ -1,4 +1,7 @@
-import { Button, StatusBadge, type ListView } from '@barghsa/ui';
+import { Eye as TableEyeIcon } from 'lucide-react';
+import { TableActionIcon } from './TableActionIcon.js';
+import { Button, StatusBadge, buttonVariants, type ListView } from '@barghsa/ui';
+import { Link } from '@tanstack/react-router';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
 import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/app';
@@ -27,12 +30,14 @@ export function StaffWalletReceiptList({
   selectedId,
   disabled,
   onSelect,
+  receiptSearch,
 }: {
   items: readonly WalletReceiptSummary[];
   view: ListView;
   selectedId: string | null;
   disabled: boolean;
   onSelect: (id: string) => void;
+  receiptSearch?: Record<string, unknown>;
 }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
@@ -74,10 +79,7 @@ export function StaffWalletReceiptList({
       id: 'deposit',
       label: word('paymentDate'),
       render: (row: WalletReceiptSummary) => (
-        <ReceiptDepositDate
-          value={row.paymentDate}
-          calendar={locale === 'fa' ? 'persian' : 'gregory'}
-        />
+        <ReceiptDepositDate value={row.paymentDate} locale={locale} />
       ),
     },
     {
@@ -112,6 +114,13 @@ export function StaffWalletReceiptList({
     'aria-current': row.transactionId === selectedId ? ('true' as const) : undefined,
     onClick: () => onSelect(row.transactionId),
   });
+  const cardFields = (row: WalletReceiptSummary) =>
+    fields.map((field) => (
+      <span key={field.id} className="block min-w-0">
+        <span className="block text-xs text-muted-foreground">{field.label}</span>
+        {field.render(row)}
+      </span>
+    ));
   if (view === 'table')
     return (
       <HistoryTable
@@ -123,11 +132,27 @@ export function StaffWalletReceiptList({
           {
             id: 'open',
             label: invoiceText('open'),
-            render: (row) => (
-              <Button variant="outline" {...selectProps(row)}>
-                {invoiceText('open')}
-              </Button>
-            ),
+            actions: true,
+            render: (row) =>
+              receiptSearch && !disabled ? (
+                <Link
+                  to="/admin/wallet-receipts/$receiptId/{-$action}"
+                  params={{ receiptId: row.transactionId, action: undefined }}
+                  search={receiptSearch}
+                  className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                  data-table-action-tooltip={invoiceText('open')}
+                >
+                  <TableActionIcon icon={TableEyeIcon}>{invoiceText('open')}</TableActionIcon>
+                </Link>
+              ) : (
+                <Button
+                  variant="outline"
+                  {...selectProps(row)}
+                  data-table-action-tooltip={invoiceText('open')}
+                >
+                  <TableActionIcon icon={TableEyeIcon}>{invoiceText('open')}</TableActionIcon>
+                </Button>
+              ),
           },
         ]}
       />
@@ -136,18 +161,24 @@ export function StaffWalletReceiptList({
     <ul className="space-y-2">
       {items.map((row) => (
         <li key={row.transactionId}>
-          <button
-            type="button"
-            {...selectProps(row)}
-            className={`w-full min-w-0 space-y-2 rounded-lg border border-border p-3 text-start text-sm disabled:opacity-50 ${row.transactionId === selectedId ? 'bg-muted text-foreground' : 'bg-card text-card-foreground hover:bg-muted'}`}
-          >
-            {fields.map((field) => (
-              <span key={field.id} className="block min-w-0">
-                <span className="block text-xs text-muted-foreground">{field.label}</span>
-                {field.render(row)}
-              </span>
-            ))}
-          </button>
+          {receiptSearch && !disabled ? (
+            <Link
+              to="/admin/wallet-receipts/$receiptId/{-$action}"
+              params={{ receiptId: row.transactionId, action: undefined }}
+              search={receiptSearch}
+              className="grid grid-cols-2 gap-3 rounded-lg border bg-card p-3 text-sm hover:bg-muted sm:grid-cols-3"
+            >
+              {cardFields(row)}
+            </Link>
+          ) : (
+            <button
+              type="button"
+              {...selectProps(row)}
+              className={`w-full min-w-0 space-y-2 rounded-lg border border-border p-3 text-start text-sm disabled:opacity-50 ${row.transactionId === selectedId ? 'bg-muted text-foreground' : 'bg-card text-card-foreground hover:bg-muted'}`}
+            >
+              {cardFields(row)}
+            </button>
+          )}
         </li>
       ))}
     </ul>

@@ -20,6 +20,15 @@ export const en: Record<string, string> = {
   error: 'The request could not be completed. Your draft is retained.',
   forbidden: 'This profile is no longer available for this action.',
   refreshProfile: 'Refresh profile',
+  editProfile: 'Edit profile',
+  profileName: 'Profile name',
+  profileDetails: 'Profile details',
+  companyDetails: 'Company details',
+  verifiedIdentity: 'These details are verified. Contact support to request a change.',
+  mainAddressDescription: 'Saving a new main address keeps your previous addresses.',
+  registrationNumber: 'Registration number',
+  representativeDetails: 'Company representative',
+  viewDocuments: 'View profile documents',
 };
 export const fa: Record<string, string> = {
   titleInvalid: 'عنوان را با حداکثر ۵۰ نویسه وارد کنید.',
@@ -42,6 +51,15 @@ export const fa: Record<string, string> = {
   error: 'درخواست انجام نشد. پیش‌نویس شما حفظ شده است.',
   forbidden: 'این پروفایل دیگر برای این اقدام در دسترس نیست.',
   refreshProfile: 'تازه‌سازی پروفایل',
+  editProfile: 'ویرایش پروفایل',
+  profileName: 'نام پروفایل',
+  profileDetails: 'جزئیات پروفایل',
+  companyDetails: 'مشخصات شرکت',
+  verifiedIdentity: 'اطلاعات هویتی تأیید شده است. برای تغییر آن با پشتیبانی تماس بگیرید.',
+  mainAddressDescription: 'با ذخیره آدرس اصلی جدید، آدرس‌های قبلی حفظ می‌شوند.',
+  registrationNumber: 'شماره ثبت',
+  representativeDetails: 'نماینده شرکت',
+  viewDocuments: 'مشاهده مدارک پروفایل',
 };
 export function tSettingsForms(key: string, locale: Locale = 'fa'): string {
   return (locale === 'fa' ? fa : en)[key] ?? key;

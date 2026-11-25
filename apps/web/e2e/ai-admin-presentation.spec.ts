@@ -33,7 +33,8 @@ for (const locale of ['en', 'fa'] as const)
         route.fulfill({ json: aiOptions })
       );
       await page.route(`**/api/admin/agents/${aiAgent.id}`, (route) => {
-        if (route.request().method() === 'GET') return route.fulfill({ json: stored });
+        if (route.request().method() === 'GET')
+          return route.fulfill(denied ? { status: 403, json: {} } : { json: stored });
         const body = route.request().postDataJSON();
         writes.push(body);
         if (writes.length === 1)
@@ -96,7 +97,7 @@ for (const locale of ['en', 'fa'] as const)
           .locator('dd')
       ).toHaveText(locale === 'fa' ? '۰' : '0');
       await page
-        .getByRole('button', { name: `${agentText('edit')} ${aiAgent.title}`, exact: true })
+        .getByRole('link', { name: `${agentText('edit')} ${aiAgent.title}`, exact: true })
         .click();
       const input = page.locator('#agent-system-prompt'),
         backdrop = input.locator('..').locator('pre[aria-hidden=true]');
@@ -191,7 +192,7 @@ for (const locale of ['en', 'fa'] as const)
       expect(writes[0]).toEqual(writes[1]);
       expect(writes[1]!.systemPrompt).toBe(source);
       await page
-        .getByRole('button', { name: `${agentText('edit')} ${aiAgent.title}`, exact: true })
+        .getByRole('link', { name: `${agentText('edit')} ${aiAgent.title}`, exact: true })
         .click();
       await expect(backdrop).toContainText('#');
       denied = true;
@@ -248,21 +249,29 @@ for (const locale of ['en', 'fa'] as const)
           }))
         )
         .toEqual({ scroll: 0, overflow: 0 });
+      const first = region.locator('tbody tr').first();
+      await expect(first.getByRole('rowheader')).toHaveText(slotText('individual_chatbot'));
+      expect(reads).toEqual(['slots']);
+      await first
+        .getByRole('link', {
+          name: `${slotText('edit')} · ${slotText('individual_chatbot')}`,
+          exact: true,
+        })
+        .click();
+      await expect(page).toHaveURL('/admin/agent-slots/individual_chatbot/edit');
       const choice = page.locator('#slot-individual_chatbot');
       await choice.selectOption(assignmentAgent.id);
       await expect(choice).toHaveValue(assignmentAgent.id);
-      expect([...reads].sort()).toEqual(['agents', 'slots']);
+      expect([...reads].sort()).toEqual(['agents', 'slots', 'slots']);
       zoneFailed = false;
       await page.getByRole('button', { name: timezoneText('retry', locale), exact: true }).click();
-      await expect(region.locator('time').first()).not.toHaveText(
+      await expect(page.getByRole('main').locator('time')).not.toHaveText(
         timezoneText('display.pending', locale)
       );
       await expect(choice).toHaveValue(assignmentAgent.id);
-      expect([...reads].sort()).toEqual(['agents', 'slots']);
-      const first = region.locator('tbody tr').first();
-      await expect(first.getByRole('rowheader')).toHaveText(slotText('individual_chatbot'));
+      expect([...reads].sort()).toEqual(['agents', 'slots', 'slots']);
       await expect(
-        first.getByRole('button', {
+        page.getByRole('main').getByRole('button', {
           name: `${slotText('save')} ${slotText('individual_chatbot')}`,
           exact: true,
         })
@@ -307,14 +316,14 @@ for (const locale of ['en', 'fa'] as const) {
       try {
         await page.goto(`/admin/${routeName}`);
         const main = page.getByRole('main');
-        const add = main.getByRole('button', { name: label('add'), exact: true });
+        const add = main.getByRole('link', { name: label('add'), exact: true });
         await expect.poll(() => reads).toEqual([path]);
         await expect(main.getByText(label('loading'), { exact: true })).toBeVisible();
-        await expect(add).toBeDisabled();
+        await expect(add).toHaveCount(0);
         await page.clock.fastForward(15_100);
         await expect(main.getByRole('alert').filter({ hasText: label('error') })).toBeVisible();
         expect(reads).toEqual([path]);
-        await expect(add).toBeDisabled();
+        await expect(add).toHaveCount(0);
         await main.getByRole('button', { name: label('retry'), exact: true }).click();
         await expect(main.getByText(label('empty'), { exact: true })).toBeVisible();
         await expect(add).toBeEnabled();

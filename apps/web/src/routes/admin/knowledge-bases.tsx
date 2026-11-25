@@ -1,6 +1,6 @@
 import AdminAiSections from '../../components/AdminAiSections.js';
-import { useCallback, useRef } from 'react';
-import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { useRef } from 'react';
+import { createFileRoute, lazyRouteComponent, redirect } from '@tanstack/react-router';
 import { RouteSkeleton } from '../../components/RouteSkeleton.js';
 import { RouteErrorBoundary } from '../../components/RouteErrorBoundary.js';
 import { knowledgeCatalogueSearch } from '../../lib/catalogue-category-query.js';
@@ -11,38 +11,13 @@ function CatalogueRoute() {
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
   const kind = search.kind === 'kb-groups' ? 'kb-groups' : 'knowledge-bases';
-  const address = catalogueWorkspaceSearch(search);
-  const setAddress = useCallback(
-    (patch: { editing?: string | null; viewing?: string | null }, replace = false) => {
-      void navigate({
-        search: (raw) => ({
-          ...knowledgeCatalogueSearch(raw),
-          ...catalogueWorkspaceSearch({ ...raw, ...patch }),
-        }),
-        replace,
-        resetScroll: false,
-      });
-    },
-    [navigate]
-  );
-  const clear = useCallback(() => setAddress({ editing: null, viewing: null }, true), [setAddress]);
   return (
     <AdminAiSections section="/admin/knowledge-bases">
       <Page
         key={kind}
         initialKind={kind}
         focusCategory={focusCategory.current}
-        workspace={{
-          editor: {
-            id: address.editing ?? null,
-            set: (id, replace) => setAddress({ editing: id }, replace),
-          },
-          detail: {
-            id: address.viewing ?? null,
-            set: (id, replace) => setAddress({ viewing: id }, replace),
-          },
-          clear,
-        }}
+        workspace={{ view: 'list' }}
         onKindChange={(value) => {
           focusCategory.current = true;
           void navigate({ search: knowledgeCatalogueSearch({ kind: value }), resetScroll: false });
@@ -52,7 +27,22 @@ function CatalogueRoute() {
   );
 }
 export const Route = createFileRoute('/admin/knowledge-bases')({
-  validateSearch: knowledgeCatalogueSearch,
+  validateSearch: (raw: Record<string, unknown>) => ({
+    kind: knowledgeCatalogueSearch(raw).kind === 'kb-groups' ? ('kb-groups' as const) : undefined,
+    ...catalogueWorkspaceSearch(raw),
+  }),
+  beforeLoad: ({ search }) => {
+    const recordId = search.editing ?? search.viewing;
+    if (!recordId) return;
+    throw redirect({
+      to:
+        search.kind === 'kb-groups'
+          ? '/admin/knowledge-bases/groups/$recordId/{-$action}'
+          : '/admin/knowledge-bases/$recordId/{-$action}',
+      params: { recordId, action: search.editing && recordId !== 'new' ? 'edit' : undefined },
+      replace: true,
+    });
+  },
   component: CatalogueRoute,
   pendingComponent: () => <RouteSkeleton layout="admin" />,
   errorComponent: RouteErrorBoundary,

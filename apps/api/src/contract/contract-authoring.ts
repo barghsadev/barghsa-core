@@ -1,4 +1,5 @@
 import { getDbPool } from '@barghsa/db';
+import { NotFoundException } from '@nestjs/common';
 import type { PoolClient } from 'pg';
 import { z } from 'zod';
 import { contractUuid } from './contract-validation.js';
@@ -10,6 +11,48 @@ export const authoringQuery = z
     before: contractUuid.optional(),
   })
   .strict();
+
+export const contractInvoiceOptionsQuery = z
+  .object({ versionId: contractUuid, before: contractUuid.optional() })
+  .strict();
+
+/** List only references for invoices that can be linked to this draft. */
+export async function contractInvoiceOptions(
+  contractId: string,
+  { versionId, before }: z.infer<typeof contractInvoiceOptionsQuery>,
+  client: PoolClient
+) {
+  const { rows } = await client.query<{
+    profileId: string;
+    id: string | null;
+    createdAt: Date | null;
+  }>(
+    `SELECT c.profile_id AS "profileId", invoice.id, invoice.created_at AS "createdAt"
+     FROM contracts c JOIN profiles p ON p.id=c.profile_id
+     LEFT JOIN LATERAL (
+       SELECT i.id,i.created_at FROM invoices i
+       WHERE i.profile_id=c.profile_id AND i.adjustment_for_invoice_id IS NULL
+         AND i.state NOT IN ('Cancelled','Refunded','PartiallyRefunded')
+         AND (i.contract_id=c.id::text OR
+           (i.order_id=c.order_id AND (i.contract_id IS NULL OR i.contract_id=c.id::text)))
+         AND ($3::uuid IS NULL OR i.id<$3)
+       ORDER BY i.id DESC LIMIT 51
+     ) invoice ON true
+     WHERE c.id=$1 AND c.current_version_id=$2 AND NOT p.archived
+       AND c.state IN ('Draft','ChangesRequested')
+     ORDER BY invoice.id DESC`,
+    [contractId, versionId, before ?? null]
+  );
+  const draft = rows[0];
+  if (!draft) throw new NotFoundException();
+  return {
+    contractId,
+    versionId,
+    profileId: draft.profileId,
+    invoices: rows.slice(0, 50).flatMap(({ id, createdAt }) => (id ? [{ id, createdAt }] : [])),
+    nextBefore: rows.length > 50 ? rows[49]!.id : null,
+  };
+}
 
 /** Contract writers need only names and order references, not the CRM's private fields. */
 export async function contractAuthoringOptions(

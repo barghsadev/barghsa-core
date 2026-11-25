@@ -1,0 +1,68 @@
+/* Keep the amount and confirmation controls visible while the invoice details scroll. */
+[data-slot='dialog-content']:has(> form > .wallet-payment-review) {
+  --wallet-review-padding: 1rem;
+  --wallet-confirmation-bg: color-mix(in oklab, var(--muted) 35%, transparent);
+  top: 50dvh;
+  max-height: calc(100dvh - 2rem);
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+  padding: 0;
+
+  @media (min-width: 640px) {
+    --wallet-review-padding: 1.25rem;
+  }
+
+  & > form {
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+
+    & > * {
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    & > [data-slot='dialog-header'] {
+      padding: 0.75rem var(--wallet-review-padding);
+      padding-inline-end: 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    & > [role='alert'] {
+      margin: 0.75rem var(--wallet-review-padding) 0;
+    }
+
+    & > .wallet-payment-review {
+      min-height: 0;
+      flex-shrink: 1;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 0.75rem var(--wallet-review-padding);
+
+      &:focus-visible {
+        outline: 2px solid var(--foreground);
+        outline-offset: -2px;
+      }
+    }
+
+    & > [data-slot='financial-confirmation'],
+    & > :has(> #team-step-up-password),
+    & > [role='status'] {
+      padding: 0.75rem var(--wallet-review-padding) 0;
+      background: var(--wallet-confirmation-bg);
+    }
+
+    & > [data-slot='financial-confirmation'] {
+      border-top: 1px solid var(--border);
+    }
+
+    & > [data-slot='dialog-footer'] {
+      flex-direction: row;
+      justify-content: flex-end;
+      border: 0;
+      border-radius: 0;
+      padding: 0.625rem var(--wallet-review-padding);
+      background: var(--wallet-confirmation-bg);
+    }
+  }
+}

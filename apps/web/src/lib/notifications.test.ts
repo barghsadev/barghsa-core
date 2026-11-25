@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { interpolate, formatRelativeTime } from './notification-content.js';
+import { interpolate } from './notification-content.js';
+import { formatRelativeTime } from './relative-time.js';
 import {
   notificationTypeLabelKey,
   notificationDisplayType,

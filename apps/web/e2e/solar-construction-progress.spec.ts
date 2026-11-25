@@ -1,3 +1,4 @@
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import { fullNavigation } from './navigation-fixture';
 import { checkpointBrowserCoverage, test, expect, type Page, type Route } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -104,7 +105,9 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.goto(`/admin/solar-construction?requestId=${constructionRequest}`);
     await expect(
-      page.getByRole('heading', { name: copy('constructionStaffTitle'), exact: true })
+      page
+        .locator('[data-slot=solar-staff-construction]')
+        .getByRole('heading', { level: 1, name: tSolarStaffRecord('constructionTitle', locale) })
     ).toBeVisible();
     const progress = scope(page, 'constructionTitle', locale);
     await expect(progress.locator('[data-slot=progress-stepper]>li')).toHaveCount(6);
@@ -223,9 +226,7 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(main.getByRole('heading', { level: 1 })).toHaveText(copy('details'));
       await expect(detailError).toBeVisible();
       await expect(scope(page, 'constructionTitle', locale)).toHaveCount(0);
-      await expect(
-        main.locator(`a[href="/contracts?contractId=${constructionContract}"]`)
-      ).toHaveCount(0);
+      await expect(main.locator(`a[href="/contracts/${constructionContract}"]`)).toHaveCount(0);
       await main.getByRole('button', { name: copy('retry'), exact: true }).click();
     }
     await expect.poll(() => detailReads).toBe(3);
@@ -282,26 +283,31 @@ for (const locale of ['en', 'fa'] as const) {
       (r) => r.fulfill({ json: { ...constructionProgress(), canRecord: false } })
     );
     await page.goto(`/admin/solar-construction?requestId=${constructionRequest}&q=701`);
-    await expect(page.getByRole('button', { name: /701/ })).toBeVisible();
     await expect(page.getByText(copy('constructionBlocked'), { exact: true })).toBeVisible();
+    expect(new URL(page.url()).pathname).toBe(
+      `/admin/solar-requests/${constructionRequest}/construction`
+    );
+    expect(reads).toHaveLength(0);
     await expect(page.getByLabel(copy('constructionNote'), { exact: true })).toHaveCount(0);
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('backToConstruction', locale), exact: true })
+      .click();
     await page.getByRole('button', { name: copy('moreRequests'), exact: true }).click();
     await expect(page.getByRole('alert')).toContainText(copy('staffQueueLoadError'));
-    await expect(page.getByRole('button', { name: /701/ })).toBeVisible();
+    await expect(page.getByRole('link', { name: /701/ })).toBeVisible();
     expect(new URL(page.url()).searchParams.get('cursor')).toBe(constructionRequest);
     fail = false;
     malformed = true;
     const retry = page.getByRole('button', { name: copy('retry'), exact: true });
     await retry.click();
     await expect(page.getByRole('alert')).toContainText(copy('staffQueueLoadError'));
-    await expect(page.getByRole('button', { name: /701/ })).toBeVisible();
-    await expect(page.getByText(copy('constructionBlocked'), { exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: /701/ })).toBeVisible();
     expect(reads.at(-1)?.searchParams.get('before')).toBe(constructionRequest);
     malformed = false;
     await retry.click();
-    await expect(page.getByRole('button', { name: /702/ })).toBeVisible();
+    await expect(page.getByRole('link', { name: /702/ })).toBeVisible();
     await page.reload();
-    await expect(page.getByRole('button', { name: /702/ })).toBeVisible();
+    await expect(page.getByRole('link', { name: /702/ })).toBeVisible();
     await Promise.all([
       page.waitForRequest((request) => {
         const { pathname, searchParams } = new URL(request.url());
@@ -318,7 +324,7 @@ for (const locale of ['en', 'fa'] as const) {
       .poll(() => JSON.parse(new URL(page.url()).searchParams.get('q') ?? 'null'))
       .toBe('702');
     await expect.poll(() => new URL(page.url()).searchParams.has('cursor')).toBe(false);
-    expect(new URL(page.url()).searchParams.get('requestId')).toBe(constructionRequest);
+    expect(new URL(page.url()).pathname).toBe('/admin/solar-construction');
   });
   test(`${locale}: changed selection suppresses late preview, and a denied queue suppresses late private detail`, async ({
     page,
@@ -371,7 +377,12 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: copy('constructionReview'), exact: true }).click();
     const preview = await reviewed;
     const cancelled = page.waitForEvent('requestfailed', (request) => request === preview);
-    await page.getByRole('button', { name: /702/ }).click();
+    const back = page.getByRole('link', {
+      name: tSolarStaffRecord('backToConstruction', locale),
+      exact: true,
+    });
+    await back.click();
+    await page.getByRole('link', { name: /702/ }).click();
     await expect(page.getByLabel(copy('constructionNote'), { exact: true })).toHaveValue('');
     await cancelled;
     releasePreview();
@@ -380,18 +391,20 @@ for (const locale of ['en', 'fa'] as const) {
     const requested = page.waitForRequest(
       (url) => new URL(url.url()).pathname === `${base}/${constructionRequest}`
     );
-    await page.getByRole('button', { name: /701/ }).click();
-    await requested;
-    denied = true;
-    await page.getByRole('button', { name: copy('moreRequests'), exact: true }).click();
-    await expect(page.getByRole('alert').first()).toContainText(copy('staffQueueForbidden'));
-    const lateDetail = page.waitForResponse(
-      (response) => new URL(response.url()).pathname === `${base}/${constructionRequest}`
+    await back.click();
+    await page.getByRole('link', { name: /701/ }).click();
+    const pendingDetail = await requested;
+    const detailCancelled = page.waitForEvent(
+      'requestfailed',
+      (request) => request === pendingDetail
     );
+    denied = true;
+    await back.click();
+    await expect(page.getByRole('alert').first()).toContainText(copy('staffQueueForbidden'));
+    await detailCancelled;
     releaseDetail();
-    await (await lateDetail).finished();
     await expect(page.getByRole('region', { name: copy('constructionTitle') })).toHaveCount(0);
     await expect(page.getByLabel(copy('constructionNote'), { exact: true })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: /701|702/ })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: /701|702/ })).toHaveCount(0);
   });
 }

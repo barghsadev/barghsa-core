@@ -1,10 +1,5 @@
 import { z } from 'zod/mini';
-import {
-  suggestionLines,
-  type SolarGuidanceDraft,
-  type SolarReviewDraft,
-  type SolarReviewIntent,
-} from './solar-document-form.js';
+import { type SolarReviewDraft, type SolarReviewIntent } from './solar-document-form.js';
 
 export function solarReviewSchema(intent: SolarReviewIntent, message: string) {
   return z.custom<SolarReviewDraft>().check((ctx) => {
@@ -17,36 +12,25 @@ export function solarReviewSchema(intent: SolarReviewIntent, message: string) {
       ctx.issues.push({ code: 'custom', input: raw, path: ['reason'], message });
   });
 }
-export function solarGuidanceSchema(messages: Record<keyof SolarGuidanceDraft, string>) {
-  return z.custom<SolarGuidanceDraft>().check((ctx) => {
-    for (const field of ['fa', 'en'] as const) {
-      const raw = ctx.value?.[field];
-      if (typeof raw !== 'string' || !raw.trim() || raw.trim().length > 4000)
-        ctx.issues.push({ code: 'custom', input: raw, path: [field], message: messages[field] });
-    }
-    const fa =
-      typeof ctx.value?.faSuggestions === 'string'
-        ? suggestionLines(ctx.value.faSuggestions)
-        : null;
-    const en =
-      typeof ctx.value?.enSuggestions === 'string'
-        ? suggestionLines(ctx.value.enSuggestions)
-        : null;
-    for (const [field, lines] of [
-      ['faSuggestions', fa],
-      ['enSuggestions', en],
-    ] as const)
-      if (
-        !lines ||
-        lines.length > 30 ||
-        lines.some((line) => line.length > 200) ||
-        (fa && en && fa.length !== en.length)
-      )
-        ctx.issues.push({
-          code: 'custom',
-          input: ctx.value?.[field],
-          path: [field],
-          message: messages[field],
-        });
+export const guidanceTextSchema = (max: number, required: boolean, message: string) =>
+  z.string({ message }).check(
+    z.refine((value) => {
+      const length = value.trim().length;
+      return length <= max && (!required || length > 0);
+    }, message)
+  );
+
+export function guidanceItemsSchema(message: string) {
+  const translation = guidanceTextSchema(200, true, message);
+  return z
+    .array(z.object({ fa: translation, en: translation }), { message })
+    .check(z.maxLength(30, message));
+}
+
+export function solarGuidanceSchema(messages: { fa: string; en: string; items: string }) {
+  return z.object({
+    fa: guidanceTextSchema(4000, true, messages.fa),
+    en: guidanceTextSchema(4000, true, messages.en),
+    items: guidanceItemsSchema(messages.items),
   });
 }

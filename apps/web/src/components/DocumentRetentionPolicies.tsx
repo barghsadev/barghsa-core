@@ -2,7 +2,9 @@ import { CommandFeedback } from './CommandFeedback.js';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 import {
   Alert,
   AlertDescription,
@@ -12,6 +14,7 @@ import {
   Input,
   NativeSelect,
   Textarea,
+  buttonVariants,
 } from '@barghsa/ui';
 import { documentText } from '@barghsa/i18n/documents';
 import { confirmationText } from '@barghsa/i18n/confirmation';
@@ -19,6 +22,13 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentRequestError } from '../lib/documents.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
+import { RecordCommandGuard } from './RecordCommandGuard.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 
 type Policy = {
   id: string;
@@ -34,7 +44,7 @@ type PolicyChange = TeamAction & {
   previousVersion: string | undefined;
   body: Pick<Policy, 'retentionYears' | 'legalHold' | 'approvalNote'>;
 };
-const kinds = [
+export const retentionKinds = [
   'contract',
   'invoice',
   'payment',
@@ -51,7 +61,7 @@ function validPolicy(value: unknown): value is Policy {
   return (
     typeof policy.id === 'string' &&
     !!policy.id.trim() &&
-    kinds.some((kind) => kind === policy.businessRecordType) &&
+    retentionKinds.some((kind) => kind === policy.businessRecordType) &&
     Number.isInteger(policy.retentionYears) &&
     policy.retentionYears >= 1 &&
     policy.retentionYears <= 100 &&
@@ -62,12 +72,19 @@ function validPolicy(value: unknown): value is Policy {
   );
 }
 
-export function DocumentRetentionPolicies() {
+type Location = { recordId?: string | undefined; search: Record<string, unknown> };
+
+export function DocumentRetentionPolicies({ location }: { location?: Location } = {}) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  return <OwnedDocumentRetentionPolicies key={JSON.stringify([actor, revision])} />;
+  return (
+    <OwnedDocumentRetentionPolicies
+      key={JSON.stringify([actor, revision, location?.recordId])}
+      location={location}
+    />
+  );
 }
-function OwnedDocumentRetentionPolicies() {
+function OwnedDocumentRetentionPolicies({ location }: { location?: Location | undefined }) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
   const readDocument = useOwnedDocumentRead(
@@ -80,12 +97,15 @@ function OwnedDocumentRetentionPolicies() {
   const locale = useLocale();
   const word = (key: string) => documentText(key, locale);
   const time = useAccountTime();
+  const numbers = useNumberFormatting(locale);
+  const yearsInput = useRef<HTMLInputElement>(null);
+  const noteInput = useRef<HTMLTextAreaElement>(null);
   const [data, setData] = useState<PoliciesResponse | null>(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [unconfirmed, setUnconfirmed] = useState(false);
   const [reload, setReload] = useState(0);
-  const [kind, setKind] = useState<string>('contract');
+  const [kind, setKind] = useState(location?.recordId ?? 'contract');
   const [years, setYears] = useState(10);
   const [held, setHeld] = useState(false);
   const [note, setNote] = useState('');
@@ -98,6 +118,8 @@ function OwnedDocumentRetentionPolicies() {
   const savedHold = current?.legalHold;
   const validYears = Number.isInteger(years) && years >= 1 && years <= 100;
   const validNote = note.trim().length >= 3;
+  const directory = location && !location.recordId;
+  const Wrapper = location ? 'section' : 'details';
 
   useEffect(() => {
     const controller = new AbortController();
@@ -145,6 +167,8 @@ function OwnedDocumentRetentionPolicies() {
     if (!data?.canManage || loading || error || unconfirmed || action) return;
     if (!validYears || !validNote) {
       setAttempted(true);
+      if (!validYears) yearsInput.current?.focus();
+      else noteInput.current?.focus();
       return;
     }
     setAttempted(false);
@@ -161,11 +185,21 @@ function OwnedDocumentRetentionPolicies() {
     });
   }
   return (
-    <details className="rounded-xl border bg-card p-5">
-      <summary className="cursor-pointer font-semibold pointer-coarse:min-h-11 pointer-coarse:py-2">
-        {word('retentionPolicies')}
-      </summary>
-      <div className="mt-4 space-y-4">
+    <Wrapper
+      className="group rounded-xl border bg-card"
+      aria-label={location ? word('retentionPolicies') : undefined}
+    >
+      {location && <RecordCommandGuard blocked={() => !!action} />}
+      {!location && (
+        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-xl px-4 py-2.5 font-semibold hover:bg-muted/35 [&::-webkit-details-marker]:hidden">
+          {word('retentionPolicies')}
+          <ChevronDown
+            aria-hidden="true"
+            className="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180 motion-reduce:transition-none"
+          />
+        </summary>
+      )}
+      <div className={`space-y-3 p-4 ${location ? '' : 'border-t'}`}>
         <p className="text-sm text-muted-foreground">{word('retentionDescription')}</p>
         {loading && <p role="status">{word('loading')}</p>}
         {error || unconfirmed ? (
@@ -182,83 +216,148 @@ function OwnedDocumentRetentionPolicies() {
             </Button>
           </Alert>
         ) : null}
-        <Field>
-          <FieldLabel htmlFor="retention-kind">{word('kind')}</FieldLabel>
-          <NativeSelect
-            id="retention-kind"
-            aria-required="true"
-            value={kind}
-            disabled={unconfirmed || !!action}
-            onChange={(event) => select(event.target.value)}
-          >
-            {kinds.map((option) => (
-              <option key={option} value={option}>
-                {word(option)}
-              </option>
-            ))}
-          </NativeSelect>
-        </Field>
-        {current ? (
-          <p className="text-sm text-muted-foreground">
-            {word('retentionYears')}: {current.retentionYears} · {word('policyEffective')}:{' '}
-            {time.format(current.effectiveDate)}
-          </p>
-        ) : null}
-        {data?.canManage ? (
-          <form noValidate onSubmit={submit} className="grid gap-4 sm:grid-cols-2">
-            <Field data-invalid={(attempted && !validYears) || undefined}>
-              <FieldLabel htmlFor="retention-years">{word('retentionYears')}</FieldLabel>
-              <Input
-                id="retention-years"
-                type="number"
-                min={1}
-                max={100}
-                required
-                aria-required="true"
-                aria-invalid={(attempted && !validYears) || undefined}
-                aria-describedby={attempted && !validYears ? 'retention-years-error' : undefined}
-                value={years}
-                onChange={(event) => setYears(Number(event.target.value))}
-              />
-              {attempted && !validYears && (
-                <p id="retention-years-error" role="alert" className="text-sm text-destructive">
-                  {word('retentionYearsError')}
-                </p>
-              )}
-            </Field>
-            <label className="flex items-center gap-3 text-sm">
-              <input
-                type="checkbox"
-                checked={held}
-                onChange={(event) => setHeld(event.target.checked)}
-              />
-              {word('policyHold')}
-            </label>
-            <Field className="sm:col-span-2" data-invalid={(attempted && !validNote) || undefined}>
-              <FieldLabel htmlFor="retention-note">{word('approvalNote')}</FieldLabel>
-              <Textarea
-                id="retention-note"
-                maxLength={1000}
-                value={note}
-                onChange={(event) => setNote(event.target.value)}
-                required
-                aria-required="true"
-                aria-invalid={(attempted && !validNote) || undefined}
-                aria-describedby={attempted && !validNote ? 'retention-note-error' : undefined}
-              />
-              {attempted && !validNote && (
-                <p id="retention-note-error" role="alert" className="text-sm text-destructive">
-                  {word('legalReasonLength')}
-                </p>
-              )}
-            </Field>
-            <Button
-              type="submit"
-              className="justify-self-start"
-              disabled={loading || error || unconfirmed || !!action}
+        {directory && data && !error && (
+          <ul className="divide-y">
+            {retentionKinds.map((kind) => {
+              const policy = data.policies.find((entry) => entry.businessRecordType === kind);
+              return (
+                <li key={kind} className="flex flex-wrap items-center justify-between gap-2 py-3">
+                  <div className="space-y-0.5">
+                    <h2 className="text-sm font-medium">{word(kind)}</h2>
+                    <p className="text-xs text-muted-foreground">
+                      {policy
+                        ? word('retentionDuration').replace(
+                            '{years}',
+                            numbers.number(policy.retentionYears)
+                          )
+                        : word('noRetentionVersion')}
+                    </p>
+                  </div>
+                  {data.canManage && (
+                    <Link
+                      to="/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}"
+                      params={{ documentId: 'governance', section: 'retention', action: kind }}
+                      search={location.search}
+                      className={buttonVariants({
+                        variant: 'outline',
+                        size: 'sm',
+                        className: 'min-h-10',
+                      })}
+                      aria-label={word('editRetentionFor').replace('{kind}', word(kind))}
+                    >
+                      {word(policy ? 'editRetention' : 'setRetention')}
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        {location?.recordId && <h2 className="font-medium">{word(kind)}</h2>}
+        {!location && (
+          <Field className="max-w-sm gap-1.5">
+            <FieldLabel htmlFor="retention-kind">{word('kind')}</FieldLabel>
+            <NativeSelect
+              id="retention-kind"
+              className="w-full"
+              aria-required="true"
+              value={kind}
+              disabled={unconfirmed || !!action}
+              onChange={(event) => select(event.target.value)}
             >
-              {word('savePolicy')}
-            </Button>
+              {retentionKinds.map((option) => (
+                <option key={option} value={option}>
+                  {word(option)}
+                </option>
+              ))}
+            </NativeSelect>
+          </Field>
+        )}
+        {!directory && current ? (
+          <dl className="grid grid-cols-2 gap-3 rounded-lg border bg-muted/25 px-3 py-2.5 text-sm">
+            <div>
+              <dt className="text-xs text-muted-foreground">{word('currentRetention')}</dt>
+              <dd className="font-medium">
+                <bdi>{numbers.number(current.retentionYears)}</bdi>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs text-muted-foreground">{word('policyEffective')}</dt>
+              <dd>{time.format(current.effectiveDate)}</dd>
+            </div>
+          </dl>
+        ) : null}
+        {!directory && data?.canManage ? (
+          <form noValidate onSubmit={submit} className={recordEditorSurface}>
+            <RecordEditorSection title={word('retentionSettings')}>
+              <div className="grid items-start gap-3 sm:grid-cols-[minmax(0,10rem)_1fr]">
+                <Field className="gap-1.5" data-invalid={(attempted && !validYears) || undefined}>
+                  <FieldLabel htmlFor="retention-years">{word('retentionYears')}</FieldLabel>
+                  <Input
+                    id="retention-years"
+                    ref={yearsInput}
+                    dir="ltr"
+                    className="max-w-28"
+                    type="number"
+                    min={1}
+                    max={100}
+                    required
+                    aria-required="true"
+                    aria-invalid={(attempted && !validYears) || undefined}
+                    aria-describedby={
+                      attempted && !validYears ? 'retention-years-error' : undefined
+                    }
+                    value={years}
+                    onChange={(event) => setYears(Number(event.target.value))}
+                  />
+                  {attempted && !validYears && (
+                    <p id="retention-years-error" role="alert" className="text-sm text-destructive">
+                      {word('retentionYearsError')}
+                    </p>
+                  )}
+                </Field>
+                <label className="flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border bg-muted/25 px-3 py-2 text-sm sm:mt-5">
+                  <input
+                    type="checkbox"
+                    className="size-4 shrink-0 accent-primary"
+                    checked={held}
+                    onChange={(event) => setHeld(event.target.checked)}
+                  />
+                  {word('policyHold')}
+                </label>
+                <Field
+                  className="max-w-prose gap-1.5 sm:col-span-2"
+                  data-invalid={(attempted && !validNote) || undefined}
+                >
+                  <FieldLabel htmlFor="retention-note">{word('approvalNote')}</FieldLabel>
+                  <Textarea
+                    id="retention-note"
+                    ref={noteInput}
+                    maxLength={1000}
+                    rows={2}
+                    dir="auto"
+                    className={`min-h-14 resize-y ${locale === 'fa' ? 'placeholder:text-right' : 'placeholder:text-left'}`}
+                    placeholder={word('policyExample')}
+                    value={note}
+                    onChange={(event) => setNote(event.target.value)}
+                    required
+                    aria-required="true"
+                    aria-invalid={(attempted && !validNote) || undefined}
+                    aria-describedby={attempted && !validNote ? 'retention-note-error' : undefined}
+                  />
+                  {attempted && !validNote && (
+                    <p id="retention-note-error" role="alert" className="text-sm text-destructive">
+                      {word('legalReasonLength')}
+                    </p>
+                  )}
+                </Field>
+              </div>
+            </RecordEditorSection>
+            <RecordEditorActions>
+              <Button type="submit" disabled={loading || error || unconfirmed || !!action}>
+                {word(location ? 'reviewRetention' : 'savePolicy')}
+              </Button>
+            </RecordEditorActions>
           </form>
         ) : null}
         <CommandFeedback message={saved ? word('policyUpdated') : null} />
@@ -266,6 +365,26 @@ function OwnedDocumentRetentionPolicies() {
       {action ? (
         <TeamActionDialog
           action={action}
+          summary={
+            location && (
+              <div className="space-y-2 rounded-lg border bg-muted/30 p-3 text-sm">
+                <p className="font-medium">{word(action.kind)}</p>
+                <p>
+                  {word('retentionDuration').replace(
+                    '{years}',
+                    numbers.number(action.body.retentionYears)
+                  )}
+                </p>
+                {action.body.legalHold && <p>{word('policyHold')}</p>}
+                <div>
+                  <p className="text-muted-foreground">{word('approvalNote')}</p>
+                  <p dir="auto" className="whitespace-pre-wrap wrap-anywhere">
+                    {action.body.approvalNote}
+                  </p>
+                </div>
+              </div>
+            )
+          }
           onClose={() => setAction(null)}
           onDenied={() => {
             setAction(null);
@@ -291,6 +410,6 @@ function OwnedDocumentRetentionPolicies() {
           }}
         />
       ) : null}
-    </details>
+    </Wrapper>
   );
 }

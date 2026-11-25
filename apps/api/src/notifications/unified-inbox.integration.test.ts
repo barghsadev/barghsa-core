@@ -175,6 +175,18 @@ it('filters private profile notices from agents and other profile selections', a
     data: Array<{ id: string }>;
   };
   expect(agent.data.map((row) => row.id)).toEqual([publicId]);
+  const detail = await request('inbox-owner', `v1/notifications/${first.id}`);
+  expect(detail.status).toBe(200);
+  expect(
+    detail.headers
+      .get('cache-control')
+      ?.split(',')
+      .map((value) => value.trim())
+  ).toEqual(expect.arrayContaining(['private', 'no-store']));
+  expect(await detail.json()).toMatchObject({ id: first.id, isRead: false, readAt: null });
+  expect((await request('inbox-agent', `v1/notifications/${first.id}`)).status).toBe(404);
+  expect((await request('inbox-agent', `v1/notifications/${publicId}`)).status).toBe(200);
+  expect((await request('inbox-owner', 'v1/notifications/not-an-id')).status).toBe(400);
   expect((await request('inbox-agent', `v1/notifications/${first.id}/read`, 'PATCH')).status).toBe(
     404
   );
@@ -189,6 +201,7 @@ it('filters private profile notices from agents and other profile selections', a
     data: Array<{ id: string }>;
   };
   expect(switched.data.map((row) => row.id)).toEqual([other.id]);
+  expect((await request('inbox-owner', `v1/notifications/${first.id}`)).status).toBe(404);
   await db.pool.query("DELETE FROM profile_agents WHERE profile_id=$1 AND user_id='inbox-agent'", [
     profile,
   ]);
@@ -499,7 +512,7 @@ it('preserves sub-millisecond database timestamps in page cursors', async () => 
   }
 });
 
-for (const action of ['list', 'count', 'read', 'read-all'] as const) {
+for (const action of ['list', 'count', 'details', 'read', 'read-all'] as const) {
   it(`rechecks profile access after resolution before inbox ${action}`, async () => {
     await db.pool.query(
       "INSERT INTO profile_agents(profile_id,user_id,role) VALUES ($1,'inbox-agent','Finance') ON CONFLICT DO NOTHING",
@@ -528,6 +541,10 @@ for (const action of ['list', 'count', 'read', 'read-all'] as const) {
         unread_count: 0,
       });
     if (action === 'count') expect(await center.countUnread(selected, 'inbox-agent')).toBe(0);
+    if (action === 'details')
+      await expect(center.findOne(selected, id, 'inbox-agent')).rejects.toMatchObject({
+        status: 404,
+      });
     if (action === 'read')
       await expect(center.markRead(selected, id, 'inbox-agent')).rejects.toMatchObject({
         status: 404,

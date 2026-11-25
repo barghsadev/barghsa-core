@@ -24,6 +24,18 @@ const en = {
   changed: 'Saved model settings changed. Your entries are preserved; reset before continuing.',
   uncertain: 'The save could not be verified. Refresh models and reset before saving again.',
   reset: 'Reset model draft',
+  connection: 'Provider connection',
+  titleHint: 'Shown when staff choose a model.',
+  modelNameHint: 'Use the exact model name from your provider.',
+  requestPathHint: 'Path added to this URL',
+  temperatureHint: 'Lower values make replies more consistent.',
+  editModel: 'Edit model',
+  authentication: 'Authentication',
+  responseSettings: 'Response defaults',
+  budgetLimits: 'Monthly limits',
+  budgetPricing: 'Token pricing',
+  tokenLimit: 'Monthly token limit',
+  costLimit: 'Monthly cost limit (USD)',
 };
 const fa: Record<keyof typeof en, string> = {
   list: 'جدول مدل‌های هوش مصنوعی',
@@ -52,6 +64,18 @@ const fa: Record<keyof typeof en, string> = {
     'تنظیمات ذخیره‌شده مدل تغییر کرده است. داده‌های شما حفظ شده است؛ پیش از ادامه بازنشانی کنید.',
   uncertain: 'ذخیره تأیید نشد. پیش از ذخیره دوباره، مدل‌ها را تازه‌سازی و بازنشانی کنید.',
   reset: 'بازنشانی پیش‌نویس مدل',
+  connection: 'اتصال به ارائه‌دهنده',
+  titleHint: 'کارکنان مدل را با این نام انتخاب می‌کنند.',
+  modelNameHint: 'شناسه دقیق مدل را از ارائه‌دهنده بگیرید.',
+  requestPathHint: 'مسیر افزوده‌شده به این نشانی',
+  temperatureHint: 'مقدار کمتر پاسخ‌ها را یکدست‌تر می‌کند.',
+  editModel: 'ویرایش مدل',
+  authentication: 'احراز هویت',
+  responseSettings: 'پیش‌فرض‌های پاسخ',
+  budgetLimits: 'سقف‌های ماهانه',
+  budgetPricing: 'قیمت توکن',
+  tokenLimit: 'سقف ماهانه توکن',
+  costLimit: 'سقف هزینه ماهانه (دلار)',
 };
 export function aiModelFormText(key: keyof typeof en, locale: Locale): string {
   return (locale === 'fa' ? fa : en)[key];

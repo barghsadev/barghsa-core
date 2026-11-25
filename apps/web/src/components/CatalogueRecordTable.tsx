@@ -17,6 +17,7 @@ export function CatalogueRecordTable<T extends CatalogueRecord>({
   nameLabel,
   detailsLabel,
   actionsLabel,
+  renderTitle,
   renderDetails,
   renderActions,
 }: {
@@ -26,6 +27,7 @@ export function CatalogueRecordTable<T extends CatalogueRecord>({
   nameLabel: string;
   detailsLabel: string;
   actionsLabel: string;
+  renderTitle?: (row: T) => ReactNode;
   renderDetails: (row: T) => ReactNode;
   renderActions: (row: T) => ReactNode;
 }) {
@@ -41,7 +43,7 @@ export function CatalogueRecordTable<T extends CatalogueRecord>({
   const name = (row: T) => (
     <div className="min-w-0 space-y-2">
       <h2 className="font-semibold">
-        <TextCell value={row.title} />
+        {renderTitle ? renderTitle(row) : <TextCell value={row.title} />}
       </h2>
       <p className="whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
         <TextCell value={row.description} />
@@ -58,7 +60,7 @@ export function CatalogueRecordTable<T extends CatalogueRecord>({
       keyExtractor={(row) => row.id}
       sortable={false}
       className="max-h-[32rem]"
-      tableClassName="min-w-[42rem] table-fixed"
+      tableClassName="min-w-[42rem]"
       columns={[
         {
           id: 'name',
@@ -71,14 +73,12 @@ export function CatalogueRecordTable<T extends CatalogueRecord>({
           id: 'details',
           header: detailsLabel,
           cell: renderDetails,
-          headerClassName: 'w-[30%]',
           cellClassName: 'align-top p-4 [overflow-wrap:anywhere]',
         },
         {
           id: 'actions',
           header: actionsLabel,
           cell: actions,
-          headerClassName: 'w-[30%]',
           cellClassName: 'align-top p-4',
         },
       ]}

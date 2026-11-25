@@ -1,16 +1,20 @@
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
+import { Link } from '@tanstack/react-router';
 import { useAccountUser } from '../hooks/useAccountUser.js';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import {
   LoadingStatus,
   Alert,
   AlertDescription,
   Button,
+  buttonVariants,
   FinancialReviewSummary,
   Input,
   ListPage,
+  ListRefreshButton,
+  Textarea,
 } from '@barghsa/ui';
 import {
   Form,
@@ -20,13 +24,24 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  useFieldArray,
   useZodForm,
 } from '@barghsa/ui/form';
 import { tSolar } from '@barghsa/i18n/solar';
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
+import { SolarGuidanceField, SolarGuidanceItems } from '../components/SolarGuidanceFields.js';
+import { SolarStaffRecordHeader } from '../components/SolarStaffRecordHeader.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { withCsrf } from '../lib/csrf.js';
 import { toast } from '../lib/toast-api.js';
@@ -34,6 +49,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
   confirmedSolarGuidance,
+  guidanceErrorPaths,
   emptySolarGuidance,
   solarGuidanceBody,
   solarGuidanceDraft,
@@ -42,7 +58,7 @@ import {
   type SolarReviewDraft,
   type SolarReviewIntent,
 } from '../lib/solar-document-form.js';
-import type { SolarDocumentQueries } from '../lib/solar-staff-query.js';
+import type { SolarDocumentQueries, SolarDocumentSearch } from '../lib/solar-staff-query.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 
 interface RequestRow {
@@ -76,7 +92,8 @@ interface DocumentRow {
   revision: number;
 }
 interface Detail {
-  request: Pick<RequestRow, 'id' | 'profile_id' | 'status'>;
+  request: Pick<RequestRow, 'id' | 'profile_id' | 'status'> &
+    Partial<Pick<RequestRow, 'profile_name' | 'building_type' | 'created_at'>>;
   documents: DocumentRow[];
   requestedDocuments: Array<{ id: string; description: string }>;
 }
@@ -125,6 +142,60 @@ type ReviewDecision = {
       };
 };
 type ReviewAction = TeamAction & { setReview?: SetReview; decision?: ReviewDecision };
+
+type SolarDocumentEditor =
+  | { operation: 'approve' | 'reject'; documentId: string }
+  | { operation: 'request-additional' | 'advance-postal'; documentId?: undefined };
+
+const decisionCopy = {
+  approve: { title: 'approve', help: 'approveFileHelp' },
+  reject: { title: 'reject', help: 'rejectFileHelp' },
+  'request-additional': { title: 'requestAdditional', help: 'requestFileHelp' },
+  'advance-postal': { title: 'advancePostal', help: 'advanceDocumentsHelp' },
+} as const;
+
+function SolarDecisionLink({
+  requestId,
+  editor,
+  search,
+  disabled,
+  back,
+  children,
+}: {
+  requestId: string;
+  editor: SolarDocumentEditor;
+  search: SolarDocumentSearch;
+  disabled: boolean;
+  back?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <Link
+      to="/admin/solar-requests/$requestId/{-$operation}/{-$documentId}"
+      params={{
+        requestId,
+        operation: back ? undefined : editor.operation,
+        documentId: back ? undefined : editor.documentId,
+      }}
+      search={search}
+      className={
+        back
+          ? 'touch-action text-sm text-primary underline underline-offset-4'
+          : buttonVariants({
+              variant: editor.operation === 'advance-postal' ? 'default' : 'outline',
+              size: 'sm',
+              className: 'h-auto min-h-9 max-w-full whitespace-normal text-start',
+            })
+      }
+      aria-disabled={disabled || undefined}
+      onClick={(event) => {
+        if (disabled) event.preventDefault();
+      }}
+    >
+      {children}
+    </Link>
+  );
+}
 
 function confirmsDecision(value: unknown, decision: ReviewDecision) {
   if (!value || typeof value !== 'object') return false;
@@ -176,6 +247,43 @@ function usesReason(decision: ReviewDecision) {
   return outcome.kind === 'document' ? outcome.reason !== null : outcome.description !== null;
 }
 
+function SolarQueueRecord({
+  id,
+  fileId,
+  search,
+  disabled,
+  open,
+  children,
+}: {
+  id: string;
+  fileId?: string;
+  search?: SolarDocumentSearch | undefined;
+  disabled: boolean;
+  open: () => void;
+  children: ReactNode;
+}) {
+  const className = 'block min-h-11 w-full rounded-md border p-3 text-start hover:bg-muted';
+  return search ? (
+    <Link
+      to="/admin/solar-requests/$requestId/{-$operation}/{-$documentId}"
+      params={{ requestId: id, operation: undefined, documentId: undefined }}
+      search={search}
+      {...(fileId ? { hash: `solar-document-${fileId}` } : {})}
+      className={className}
+      aria-disabled={disabled || undefined}
+      onClick={(event) => {
+        if (disabled) event.preventDefault();
+      }}
+    >
+      {children}
+    </Link>
+  ) : (
+    <button type="button" disabled={disabled} className={className} onClick={open}>
+      {children}
+    </button>
+  );
+}
+
 export function AdminSolarDocumentsPage(
   props: Parameters<typeof OwnedAdminSolarDocumentsPage>[0] = {}
 ) {
@@ -183,7 +291,21 @@ export function AdminSolarDocumentsPage(
   const actor = useAccountUser();
   return <OwnedAdminSolarDocumentsPage key={JSON.stringify([actor, profileRevision])} {...props} />;
 }
-function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQueries } = {}) {
+function OwnedAdminSolarDocumentsPage({
+  queries,
+  recordId,
+  queueSearch,
+  selectedFile,
+  editor,
+  guidanceEditor = false,
+}: {
+  queries?: SolarDocumentQueries;
+  recordId?: string;
+  queueSearch?: SolarDocumentSearch;
+  selectedFile?: string;
+  editor?: SolarDocumentEditor | undefined;
+  guidanceEditor?: boolean;
+} = {}) {
   const readActor = useAccountUser();
   const readProfileRevision = useProfileContextRevision();
   const readStaff = useOwnedStaffServiceRead(readActor, readProfileRevision);
@@ -192,10 +314,15 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
   const copy = (key: string) => tSolar(key, locale);
   const [requests, setRequests] = useState<RequestRow[]>([]);
   const [pendingDocuments, setPendingDocuments] = useState<PendingDocumentRow[]>([]);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [localSelected, setSelected] = useState<string | null>(null);
+  const selected = recordId ?? localSelected;
+  const showQueue = !recordId && !guidanceEditor;
+  const loadGuidance = guidanceEditor || (showQueue && queueSearch === undefined);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [guidance, setGuidance] = useState<Guidance | null>(null);
-  const intent = useRef<SolarReviewIntent>('request_additional');
+  const intent = useRef<SolarReviewIntent>(
+    editor?.operation === 'reject' ? 'reject' : 'request_additional'
+  );
   const documentForm = useZodForm<SolarReviewDraft>(
     async () =>
       (await import('../lib/solar-document-form-schemas.js')).solarReviewSchema(
@@ -210,8 +337,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
   const guidanceMessages = {
     fa: copy('documentGuidanceInvalid'),
     en: copy('documentGuidanceInvalid'),
-    faSuggestions: copy('documentSuggestionsInvalid'),
-    enSuggestions: copy('documentSuggestionsInvalid'),
+    items: tSolarStaffRecord('guidancePairInvalid', locale),
   };
   const guidanceForm = useZodForm<SolarGuidanceDraft>(
     async () =>
@@ -234,9 +360,14 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
   );
   const currentDocumentFields = useRef(documentFields);
   currentDocumentFields.current = documentFields;
+  const guidanceItems = useFieldArray({ control: guidanceForm.control, name: 'items' });
   const guidanceFields = useActionFieldErrors(
     guidanceForm,
-    guidanceMessages,
+    {
+      ...guidanceMessages,
+      'items.0.fa': guidanceMessages.items,
+      'items.0.en': guidanceMessages.items,
+    },
     copy('documentError')
   );
   const [guidanceUnconfirmed, setGuidanceUnconfirmed] = useState(false);
@@ -246,13 +377,17 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
   const preparingDecisionRef = useRef(false);
   const actionRef = useRef<ReviewAction | null>(null);
 
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(selectedFile || null);
+  useEffect(() => {
+    if (recordId) setPreview(selectedFile || null);
+  }, [recordId, selectedFile]);
   const [action, setAction] = useState<ReviewAction | null>(null);
   const [recoveries, setRecoveries] = useState(() => new Map<string, ReviewDecision>());
   const latestRecoveries = useRef(recoveries);
   latestRecoveries.current = recoveries;
   const recovery = selected ? recoveries.get(selected) : undefined;
   const [unmatchedRecovery, setUnmatchedRecovery] = useState<string | null>(null);
+  const [decisionRecorded, setDecisionRecorded] = useState(false);
   const [preparingDecision, setPreparingDecision] = useState(false);
   const [revision, setRevision] = useState(0);
   const [localBefore, setBefore] = useState<string | null>(null);
@@ -327,10 +462,11 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
     ++reviewRequest.current;
   }
   useEffect(() => {
+    if (!showQueue) return;
     invalidateReview();
     if (extendingScope.current !== queryScope) selectRequest(null);
     extendingScope.current = null;
-  }, [queryScope]);
+  }, [queryScope, showQueue]);
   useEffect(
     () => () => {
       ++reviewRequest.current;
@@ -341,7 +477,9 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
   const refresh = () => {
     setError(false);
     invalidateReview();
-    if (queries) {
+    if (recordId) {
+      setDetailRevision((value) => value + 1);
+    } else if (queries) {
       queries.reset();
       if (!before) setQueueRevision((value) => value + 1);
       if (!beforeDocument) setDocumentsRevision((value) => value + 1);
@@ -353,6 +491,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
     }
   };
   useEffect(() => {
+    if (!showQueue) return;
     const controller = new AbortController();
     setDocumentsLoading(true);
     setDocumentsError(false);
@@ -398,8 +537,9 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
         if (!controller.signal.aborted) setDocumentsLoading(false);
       });
     return () => controller.abort();
-  }, [beforeDocument, revision, documentsRevision, readStaff]);
+  }, [beforeDocument, revision, documentsRevision, readStaff, showQueue]);
   useEffect(() => {
+    if (!showQueue) return;
     const controller = new AbortController();
     setQueueError(false);
     setQueueDenied(false);
@@ -439,7 +579,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
         if (!controller.signal.aborted) setQueueLoading(false);
       });
     return () => controller.abort();
-  }, [before, revision, queueRevision, readStaff]);
+  }, [before, revision, queueRevision, readStaff, showQueue]);
   useEffect(() => {
     setDetailError(false);
     setDetail(null);
@@ -456,6 +596,17 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
       controller.signal
     )
       .then(async (response) => {
+        if (controller.signal.aborted) return null;
+        if (recordId && [401, 403, 404].includes(response.status)) {
+          setPreview(null);
+          documentForm.reset({ reason: '' });
+          setRecoveries((current) => {
+            if (!current.has(selected)) return current;
+            const next = new Map(current);
+            next.delete(selected);
+            return next;
+          });
+        }
         if (!response.ok) throw new Error('details');
         const result = (await response.json()) as Detail | null;
         if (
@@ -481,7 +632,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
         return result;
       })
       .then((result) => {
-        if (controller.signal.aborted) return;
+        if (controller.signal.aborted || !result) return;
         setDetail(result);
         if (!recovery || latestRecoveries.current.get(selected) !== recovery) return;
         setRecoveries((current) => {
@@ -490,6 +641,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
           return next;
         });
         if (recordedDecision(result, recovery)) {
+          if (editor) setDecisionRecorded(true);
           if (usesReason(recovery)) documentForm.reset({ reason: '' });
           toast.success(confirmationText('recorded', locale));
         } else setUnmatchedRecovery(selected);
@@ -498,8 +650,9 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
         if (!controller.signal.aborted) setDetailError(true);
       });
     return () => controller.abort();
-  }, [selected, revision, detailRevision, readStaff]);
+  }, [selected, revision, detailRevision, readStaff, recordId, editor]);
   useEffect(() => {
+    if (!loadGuidance) return;
     const controller = new AbortController();
     setGuidanceError(false);
     void readStaff('catalogue', 'detail', '/api/admin/solar/document-guidance', controller.signal)
@@ -519,7 +672,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
         if (!controller.signal.aborted) setGuidanceError(true);
       });
     return () => controller.abort();
-  }, [guidanceRevision, readStaff]);
+  }, [guidanceRevision, readStaff, loadGuidance]);
   function saveGuidance(event: FormEvent<HTMLFormElement>) {
     if (busy() || guidanceUnconfirmed || guidanceDenied) {
       event.preventDefault();
@@ -530,7 +683,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
       if (generation !== reviewRequest.current) return;
       propose({
         title: copy('saveGuidance'),
-        description: copy('saveGuidance'),
+        description: tSolarStaffRecord('documentGuidanceAudience', locale),
         path: '/api/admin/solar/document-guidance',
         method: 'PUT',
         body: solarGuidanceBody(draft),
@@ -699,156 +852,294 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
     preparingDecision ||
     documentForm.formState.isSubmitting ||
     guidanceForm.formState.isSubmitting;
+  const reasonError = documentForm.formState.errors.reason;
+  const focusDocumentField = documentForm.setFocus;
+  useEffect(() => {
+    if (!editor || editorLocked || !reasonError) return;
+    const frame = requestAnimationFrame(() => focusDocumentField('reason'));
+    return () => cancelAnimationFrame(frame);
+  }, [editor, editorLocked, reasonError, focusDocumentField]);
   const guidanceAction = action?.path === '/api/admin/solar/document-guidance';
   const documentLocked = editorLocked || !!recovery;
   const canReview = ['documents_under_review', 'changes_requested'].includes(
     detail?.request.status ?? ''
   );
+  const navigationBlocked = () =>
+    commandPendingRef.current ||
+    !!actionRef.current ||
+    (recordId !== undefined && latestRecoveries.current.has(recordId));
+  const ownedPreview = preview && detail?.documents.some((row) => row.document_id === preview);
+  const operation = editor?.operation;
+  const decision = operation && decisionCopy[operation];
+  const file = editor?.documentId
+    ? detail?.documents.find((row) => row.document_id === editor.documentId)
+    : undefined;
+  const requiresText = operation === 'reject' || operation === 'request-additional';
+  const canExecute =
+    canReview &&
+    (!editor?.documentId || (!!file && ['Available', 'SubmittedForReview'].includes(file.state)));
+  const recoveryNotice = recovery && (
+    <div role="alert" className="space-y-2">
+      <p>{copy('documentDecisionUnconfirmed')}</p>
+      <Button
+        type="button"
+        variant="outline"
+        disabled={editorLocked}
+        onClick={() => setDetailRevision((value) => value + 1)}
+      >
+        {copy('documentDecisionReload')}
+      </Button>
+    </div>
+  );
+  function submitDecision(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!canExecute || decisionRecorded) return;
+    if (operation === 'approve' || operation === 'reject') {
+      if (file) review(file, operation);
+    } else if (operation) {
+      prepareSetDecision(operation === 'advance-postal' ? 'advance' : 'request_additional');
+    }
+  }
   return (
-    <div className="space-y-6 px-4 py-8" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <h1 className="text-3xl font-semibold">{copy('staffTitle')}</h1>
+    <div
+      data-slot={
+        guidanceEditor ? 'solar-staff-guidance' : recordId ? 'solar-staff-request' : undefined
+      }
+      className={recordId || guidanceEditor ? 'mx-auto max-w-3xl space-y-3' : 'space-y-5'}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {recordId || guidanceEditor ? (
+        <SolarStaffRecordHeader
+          stage="documents"
+          search={queueSearch ?? {}}
+          blocked={navigationBlocked}
+          {...(guidanceEditor
+            ? { headingText: tSolarStaffRecord('editDocumentGuidance', locale) }
+            : decision && { headingText: copy(decision.title) })}
+          backLink={
+            editor &&
+            recordId && (
+              <SolarDecisionLink
+                requestId={recordId}
+                editor={editor}
+                search={queueSearch ?? {}}
+                disabled={navigationBlocked()}
+                back
+              >
+                {tSolarStaffRecord('backToDocumentReview', locale)}
+              </SolarDecisionLink>
+            )
+          }
+          reference={
+            guidanceEditor
+              ? tSolarStaffRecord('documentGuidanceAudience', locale)
+              : !editor &&
+                detail && (
+                  <>
+                    {typeof detail.request.profile_name === 'string' && (
+                      <bdi>{detail.request.profile_name}</bdi>
+                    )}
+                    <bdi dir="ltr">{detail.request.id}</bdi>
+                  </>
+                )
+          }
+          action={
+            !editor &&
+            detail && (
+              <ListRefreshButton
+                label={tSolarStaffRecord('refresh', locale)}
+                onClick={refresh}
+                disabled={editorLocked || !!recovery}
+              />
+            )
+          }
+        />
+      ) : (
+        <header className="flex flex-wrap items-center justify-between gap-2">
+          <h1 className="text-2xl font-semibold">{copy('staffTitle')}</h1>
+          {queueSearch !== undefined && (
+            <Link
+              to="/admin/solar-requests/$requestId/{-$operation}/{-$documentId}"
+              params={{ requestId: 'guidance', operation: undefined, documentId: undefined }}
+              search={queueSearch}
+              className={buttonVariants({ variant: 'outline', size: 'sm' })}
+            >
+              {tSolarStaffRecord('editDocumentGuidance', locale)}
+            </Link>
+          )}
+        </header>
+      )}
       {time.notice}
+      {recordId &&
+        !editor &&
+        detail &&
+        [
+          'waiting_for_postal_submission',
+          'postal_documents_received',
+          'final_review',
+          'approved',
+        ].includes(detail.request.status) && (
+          <Link
+            to="/admin/solar-requests/$requestId/postal/{-$operation}"
+            params={{ requestId: recordId, operation: undefined }}
+            className="touch-action text-sm text-primary underline underline-offset-4"
+            aria-disabled={navigationBlocked() || undefined}
+            onClick={(event) => {
+              if (navigationBlocked()) event.preventDefault();
+            }}
+          >
+            {tSolarStaffRecord('openPostal', locale)}
+          </Link>
+        )}
       {error && (
         <Alert variant="destructive">
           <AlertDescription>{copy('documentError')}</AlertDescription>
         </Alert>
       )}
-      <section className="space-y-3 rounded-xl border p-5">
-        <h2 className="text-xl font-semibold">{copy('staffPendingFiles')}</h2>
-        <ListPage>
-          <ListPage.Content
-            loading={documentsLoading}
-            error={documentsError || documentsDenied}
-            empty={!pendingDocuments.length}
-            retainContent={!!pendingDocuments.length && !documentsDenied}
-            loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
-            errorView={
-              documentsDenied ? (
-                <p role="alert">{copy('staffQueueForbidden')}</p>
-              ) : (
-                <div className="space-y-2">
-                  <p role="alert">{copy('staffFilesLoadError')}</p>
-                  <Button variant="outline" onClick={() => setDocumentsRevision((v) => v + 1)}>
-                    {copy('retry')}
-                  </Button>
-                </div>
-              )
-            }
-            emptyView={<p>{copy('staffNoPendingFiles')}</p>}
-          >
-            <ul className="space-y-2">
-              {pendingDocuments.map((document) => (
-                <li key={document.id}>
-                  <button
-                    type="button"
-                    disabled={commandPending}
-                    className="w-full rounded-md border p-3 text-start"
-                    onClick={() => {
-                      selectRequest(document.request_id, document.document_id);
-                    }}
-                  >
-                    <span className="block font-medium">{document.file_name}</span>
-                    <span className="block text-sm text-muted-foreground">
-                      {copy('staffUploader')}: {document.uploaded_by_name} ·{' '}
-                      {time.format(document.uploaded_at)} · {copy('staffPending')}
-                    </span>
-                    <span className="block text-xs text-muted-foreground">
-                      {copy('staffRequest')}: <bdi>{document.request_id}</bdi>
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </ListPage.Content>
-          <ListPage.Pagination
-            kind="cursor"
-            hasMore={
-              !!nextBeforeDocument &&
-              !documentsError &&
-              !documentsDenied &&
-              (acceptedDocumentCursor.current !== beforeDocument ||
-                (nextBeforeDocument !== beforeDocument &&
-                  (!queries || queries.files.canAdvance(nextBeforeDocument))))
-            }
-            loading={documentsLoading}
-            label={copy('staffPendingFiles')}
-            nextLabel={copy('moreFiles')}
-            onNext={() => {
-              extendingScope.current = JSON.stringify([before, nextBeforeDocument]);
-              if (queries && nextBeforeDocument) queries.files.next(nextBeforeDocument);
-              else setBeforeDocument(nextBeforeDocument);
-            }}
-          />
-        </ListPage>
-      </section>
-      <section className="space-y-3 rounded-xl border p-5">
-        <h2 className="text-xl font-semibold">{copy('staffQueue')}</h2>
-        <ListPage>
-          <ListPage.Content
-            loading={queueLoading}
-            error={queueError || queueDenied}
-            empty={!requests.length}
-            retainContent={!!requests.length && !queueDenied}
-            loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
-            errorView={
-              queueDenied ? (
-                <p role="alert">{copy('staffQueueForbidden')}</p>
-              ) : (
-                <div className="space-y-2">
-                  <p role="alert">{copy('staffQueueLoadError')}</p>
-                  <Button variant="outline" onClick={() => setQueueRevision((v) => v + 1)}>
-                    {copy('retry')}
-                  </Button>
-                </div>
-              )
-            }
-            emptyView={<p>{copy('staffEmpty')}</p>}
-          >
-            <ul className="space-y-2">
-              {requests.map((row) => (
-                <li key={row.id}>
-                  <button
-                    type="button"
-                    disabled={commandPending}
-                    className={`w-full rounded-md border p-3 text-start ${selected === row.id ? 'border-primary' : ''}`}
-                    onClick={() => {
-                      selectRequest(row.id);
-                    }}
-                  >
-                    <span className="block font-medium">{row.profile_name}</span>
-                    <span className="block text-sm text-muted-foreground">
-                      {copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building')} ·{' '}
-                      {copy(`status_${row.status}`)} · {row.document_count} ·{' '}
-                      {time.format(row.created_at, { dateStyle: 'medium' })}
-                    </span>
-                    <span className="block text-xs text-muted-foreground">
-                      {copy('staffRequest')}: <bdi>{row.id}</bdi>
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </ListPage.Content>
-          <ListPage.Pagination
-            kind="cursor"
-            hasMore={
-              !!nextBefore &&
-              !queueError &&
-              !queueDenied &&
-              (acceptedCursor.current !== before ||
-                (nextBefore !== before && (!queries || queries.requests.canAdvance(nextBefore))))
-            }
-            loading={queueLoading}
-            label={copy('staffQueue')}
-            nextLabel={copy('moreRequests')}
-            onNext={() => {
-              extendingScope.current = JSON.stringify([nextBefore, beforeDocument]);
-              if (queries && nextBefore) queries.requests.next(nextBefore);
-              else setBefore(nextBefore);
-            }}
-          />
-        </ListPage>
-      </section>
+      {showQueue && (
+        <>
+          <section className="space-y-3 rounded-xl border p-5">
+            <h2 className="text-xl font-semibold">{copy('staffPendingFiles')}</h2>
+            <ListPage>
+              <ListPage.Content
+                loading={documentsLoading}
+                error={documentsError || documentsDenied}
+                empty={!pendingDocuments.length}
+                retainContent={!!pendingDocuments.length && !documentsDenied}
+                loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+                errorView={
+                  documentsDenied ? (
+                    <p role="alert">{copy('staffQueueForbidden')}</p>
+                  ) : (
+                    <div className="space-y-2">
+                      <p role="alert">{copy('staffFilesLoadError')}</p>
+                      <Button variant="outline" onClick={() => setDocumentsRevision((v) => v + 1)}>
+                        {copy('retry')}
+                      </Button>
+                    </div>
+                  )
+                }
+                emptyView={<p>{copy('staffNoPendingFiles')}</p>}
+              >
+                <ul className="space-y-2">
+                  {pendingDocuments.map((document) => (
+                    <li key={document.id}>
+                      <SolarQueueRecord
+                        id={document.request_id}
+                        fileId={document.document_id}
+                        search={queueSearch}
+                        disabled={commandPending}
+                        open={() => selectRequest(document.request_id, document.document_id)}
+                      >
+                        <span className="block font-medium" dir="auto">
+                          {document.file_name}
+                        </span>
+                        <span className="block text-sm text-muted-foreground">
+                          {copy('staffUploader')}: {document.uploaded_by_name} ·{' '}
+                          {time.format(document.uploaded_at)} · {copy('staffPending')}
+                        </span>
+                        <span className="block text-xs text-muted-foreground">
+                          {copy('staffRequest')}: <bdi>{document.request_id}</bdi>
+                        </span>
+                      </SolarQueueRecord>
+                    </li>
+                  ))}
+                </ul>
+              </ListPage.Content>
+              <ListPage.Pagination
+                kind="cursor"
+                hasMore={
+                  !!nextBeforeDocument &&
+                  !documentsError &&
+                  !documentsDenied &&
+                  (acceptedDocumentCursor.current !== beforeDocument ||
+                    (nextBeforeDocument !== beforeDocument &&
+                      (!queries || queries.files.canAdvance(nextBeforeDocument))))
+                }
+                loading={documentsLoading}
+                label={copy('staffPendingFiles')}
+                nextLabel={copy('moreFiles')}
+                onNext={() => {
+                  extendingScope.current = JSON.stringify([before, nextBeforeDocument]);
+                  if (queries && nextBeforeDocument) queries.files.next(nextBeforeDocument);
+                  else setBeforeDocument(nextBeforeDocument);
+                }}
+              />
+            </ListPage>
+          </section>
+          <section className="space-y-3 rounded-xl border p-5">
+            <h2 className="text-xl font-semibold">{copy('staffQueue')}</h2>
+            <ListPage>
+              <ListPage.Content
+                loading={queueLoading}
+                error={queueError || queueDenied}
+                empty={!requests.length}
+                retainContent={!!requests.length && !queueDenied}
+                loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+                errorView={
+                  queueDenied ? (
+                    <p role="alert">{copy('staffQueueForbidden')}</p>
+                  ) : (
+                    <div className="space-y-2">
+                      <p role="alert">{copy('staffQueueLoadError')}</p>
+                      <Button variant="outline" onClick={() => setQueueRevision((v) => v + 1)}>
+                        {copy('retry')}
+                      </Button>
+                    </div>
+                  )
+                }
+                emptyView={<p>{copy('staffEmpty')}</p>}
+              >
+                <ul className="space-y-2">
+                  {requests.map((row) => (
+                    <li key={row.id}>
+                      <SolarQueueRecord
+                        id={row.id}
+                        search={queueSearch}
+                        disabled={commandPending}
+                        open={() => selectRequest(row.id)}
+                      >
+                        <span className="block font-medium" dir="auto">
+                          {row.profile_name}
+                        </span>
+                        <span className="block text-sm text-muted-foreground">
+                          {copy(
+                            row.building_type === 'non_household' ? 'nonHousehold' : 'building'
+                          )}{' '}
+                          · {copy(`status_${row.status}`)} · {row.document_count} ·{' '}
+                          {time.format(row.created_at, { dateStyle: 'medium' })}
+                        </span>
+                        <span className="block text-xs text-muted-foreground">
+                          {copy('staffRequest')}: <bdi>{row.id}</bdi>
+                        </span>
+                      </SolarQueueRecord>
+                    </li>
+                  ))}
+                </ul>
+              </ListPage.Content>
+              <ListPage.Pagination
+                kind="cursor"
+                hasMore={
+                  !!nextBefore &&
+                  !queueError &&
+                  !queueDenied &&
+                  (acceptedCursor.current !== before ||
+                    (nextBefore !== before &&
+                      (!queries || queries.requests.canAdvance(nextBefore))))
+                }
+                loading={queueLoading}
+                label={copy('staffQueue')}
+                nextLabel={copy('moreRequests')}
+                onNext={() => {
+                  extendingScope.current = JSON.stringify([nextBefore, beforeDocument]);
+                  if (queries && nextBefore) queries.requests.next(nextBefore);
+                  else setBefore(nextBefore);
+                }}
+              />
+            </ListPage>
+          </section>
+        </>
+      )}
       {selected && !detail && !detailError && <p role="status">{copy('loading')}</p>}
       {selected && detailError && (
         <div role="alert" className="space-y-2">
@@ -864,6 +1155,9 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
           </Button>
         </div>
       )}
+      {guidanceEditor && !guidance && !guidanceError && (
+        <LoadingStatus>{copy('loading')}</LoadingStatus>
+      )}
       {guidanceError && (
         <div role="alert" className="space-y-2">
           <p>{copy('staffGuidanceLoadError')}</p>
@@ -872,213 +1166,424 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
           </Button>
         </div>
       )}
-      {detail && selected && (
-        <section
-          role="group"
-          aria-label={copy('staffDocuments')}
-          className="space-y-4 rounded-xl border p-5"
-        >
-          <h2 className="text-xl font-semibold">{copy('staffDocuments')}</h2>
-          <p>
-            {copy('status')}: {copy(`status_${detail.request.status}`)}
-          </p>
-          {recovery && (
-            <div role="alert" className="space-y-2">
-              <p>{copy('documentDecisionUnconfirmed')}</p>
-              <Button
-                type="button"
-                variant="outline"
-                disabled={editorLocked}
-                onClick={() => setDetailRevision((value) => value + 1)}
-              >
-                {copy('documentDecisionReload')}
-              </Button>
-            </div>
-          )}
-          {unmatchedRecovery === selected && <p role="alert">{copy('documentDecisionNotFound')}</p>}
-          {!!detail.requestedDocuments.length && (
-            <div>
-              <h3 className="font-medium">{copy('requestedDocuments')}</h3>
-              <ul className="list-inside list-disc">
-                {detail.requestedDocuments.map((item) => (
-                  <li key={item.id} dir="auto" className="break-words">
-                    {item.description}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          <ul className="space-y-3">
-            {detail.documents.map((document) => (
-              <li key={document.id} className="rounded-md border p-3">
-                <p className="font-medium">{document.file_name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {document.uploaded_by} · {time.format(document.uploaded_at)} ·{' '}
-                  {documentText(document.state, locale)} ·{' '}
-                  {copy(`documentReview_${document.staff_status}`)}
-                </p>
-                {document.staff_reason && <p>{document.staff_reason}</p>}
-                <div className="mt-2 flex flex-wrap gap-2">
+      {detail && selected && editor && decision && (
+        <Form {...documentForm}>
+          <form
+            aria-label={copy(decision.title)}
+            className={recordEditorSurface}
+            onSubmit={submitDecision}
+            noValidate
+          >
+            <RecordEditorSection
+              title={tSolarStaffRecord(file ? 'fileDecision' : 'requestDecision', locale)}
+            >
+              <div className="flex min-w-0 flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/50 p-3">
+                <div className="min-w-0 space-y-1">
+                  <p className="wrap-anywhere font-medium" dir="auto">
+                    {file?.file_name ?? detail.request.profile_name ?? detail.request.id}
+                  </p>
+                  <p className="wrap-anywhere text-sm text-muted-foreground">
+                    {file
+                      ? documentText(file.state, locale)
+                      : copy(`status_${detail.request.status}`)}
+                    {file && detail.request.profile_name && (
+                      <>
+                        {' '}
+                        · <bdi>{detail.request.profile_name}</bdi>
+                      </>
+                    )}
+                  </p>
+                </div>
+                {file && (
                   <Button
-                    variant="outline"
-                    disabled={!!recovery}
-                    onClick={() => setPreview(document.document_id)}
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    disabled={documentLocked}
+                    onClick={() => setPreview(file.document_id)}
                   >
                     {copy('preview')}
                   </Button>
-                  {['Available', 'SubmittedForReview'].includes(document.state) && canReview && (
-                    <>
-                      <Button
-                        variant="outline"
-                        disabled={documentLocked}
-                        onClick={() => review(document, 'approve')}
-                      >
-                        {copy('approve')}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => review(document, 'reject')}
-                        loading={documentForm.formState.isSubmitting}
-                        disabled={documentLocked}
-                      >
-                        {copy('reject')}
-                      </Button>
-                    </>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-          {preview && !recovery && (
-            <DocumentDetail
-              id={preview}
-              staff
-              onClose={() => setPreview(null)}
-              onPrevious={setPreview}
-              onChanged={refresh}
-              onReplace={() => {}}
-              allowReplacement={false}
-            />
-          )}
-          <Form {...documentForm}>
-            {documentForm.formState.errors.root && (
-              <Alert variant="destructive">
-                <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
-              </Alert>
-            )}
-            <FormField
-              control={documentForm.control}
-              name="reason"
-              render={({ field }) => (
-                <FormItem id="solar-review-reason">
-                  <FormLabel>{copy('reason')}</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={documentLocked} />
-                  </FormControl>
-                  <FormDescription>{copy('documentReviewHelp')}</FormDescription>
-                  <div className="grid">
-                    {(['documentReasonInvalid', 'documentDescriptionInvalid'] as const).map(
-                      (key) => (
-                        <p
-                          key={key}
-                          aria-hidden="true"
-                          className="invisible col-start-1 row-start-1 text-sm"
-                        >
-                          {copy(key)}
-                        </p>
-                      )
-                    )}
-                    <FormMessage className="col-start-1 row-start-1" />
-                  </div>
-                </FormItem>
+                )}
+              </div>
+              {recoveryNotice}
+              {unmatchedRecovery === selected && (
+                <p role="alert">{copy('documentDecisionNotFound')}</p>
               )}
-            />
-          </Form>
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant="outline"
-              disabled={documentLocked || !canReview}
-              loading={preparingDecision || documentForm.formState.isSubmitting}
-              onClick={() => void prepareSetDecision('request_additional')}
-            >
-              {copy('requestAdditional')}
-            </Button>
-            <Button
-              className="h-auto min-h-11 max-w-full whitespace-normal"
-              disabled={documentLocked || !canReview}
-              loading={preparingDecision}
-              onClick={() => void prepareSetDecision('advance')}
-            >
-              {copy('advancePostal')}
-            </Button>
+              {decisionRecorded ? (
+                <p role="status" className="text-sm font-medium">
+                  {confirmationText('recorded', locale)}
+                </p>
+              ) : !canExecute ? (
+                <p role="alert" className="text-sm">
+                  {tSolarStaffRecord('decisionUnavailable', locale)}
+                </p>
+              ) : (
+                <>
+                  <p className="text-sm text-muted-foreground">
+                    {tSolarStaffRecord(decision.help, locale)}
+                  </p>
+                  {documentForm.formState.errors.root && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
+                    </Alert>
+                  )}
+                  {requiresText && (
+                    <FormField
+                      control={documentForm.control}
+                      name="reason"
+                      render={({ field }) => (
+                        <FormItem id="solar-review-reason" className={recordEditorField}>
+                          <FormLabel>
+                            {tSolarStaffRecord(
+                              operation === 'reject' ? 'rejectFileLabel' : 'requestFileLabel',
+                              locale
+                            )}
+                          </FormLabel>
+                          <FormControl>
+                            <Textarea
+                              {...field}
+                              rows={2}
+                              className="max-h-36 overflow-y-auto"
+                              dir="auto"
+                              required
+                              disabled={!!recovery || commandPending}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            {tSolarStaffRecord(
+                              operation === 'reject'
+                                ? 'rejectFileExample'
+                                : 'documentDecisionExample',
+                              locale
+                            )}
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </>
+              )}
+            </RecordEditorSection>
+            {canExecute && !decisionRecorded && (
+              <RecordEditorActions>
+                <Button
+                  type="submit"
+                  disabled={documentLocked}
+                  loading={preparingDecision || documentForm.formState.isSubmitting}
+                >
+                  {tSolarStaffRecord('reviewDecision', locale)}
+                </Button>
+              </RecordEditorActions>
+            )}
+          </form>
+        </Form>
+      )}
+      {detail && selected && !editor && (
+        <section role="group" aria-label={copy('staffDocuments')} className="space-y-3">
+          <div className={recordEditorSurface}>
+            <RecordEditorSection title={copy('staffDocuments')}>
+              <p className="text-sm text-muted-foreground">
+                {copy(`status_${detail.request.status}`)}
+                {detail.request.building_type && (
+                  <>
+                    {' '}
+                    ·{' '}
+                    {copy(
+                      detail.request.building_type === 'non_household' ? 'nonHousehold' : 'building'
+                    )}
+                  </>
+                )}
+                {typeof detail.request.created_at === 'string' && (
+                  <>
+                    {' '}
+                    ·{' '}
+                    <time dateTime={detail.request.created_at}>
+                      {time.format(detail.request.created_at, { dateStyle: 'medium' })}
+                    </time>
+                  </>
+                )}
+              </p>
+              {recoveryNotice}
+              {unmatchedRecovery === selected && (
+                <p role="alert">{copy('documentDecisionNotFound')}</p>
+              )}
+              {!!detail.requestedDocuments.length && (
+                <div>
+                  <h3 className="font-medium">{copy('requestedDocuments')}</h3>
+                  <ul className="list-inside list-disc">
+                    {detail.requestedDocuments.map((item) => (
+                      <li key={item.id} dir="auto" className="break-words">
+                        {item.description}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {recordId && detail.documents.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  {tSolarStaffRecord('noFiles', locale)}
+                </p>
+              )}
+              <ul className="space-y-3">
+                {detail.documents.map((document) => (
+                  <li
+                    key={document.id}
+                    id={`solar-document-${document.document_id}`}
+                    className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-lg border p-3"
+                  >
+                    <div className="min-w-0 flex-1 basis-64 space-y-1">
+                      <p className="wrap-anywhere font-medium" dir="auto">
+                        {document.file_name}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {document.uploaded_by} · {time.format(document.uploaded_at)} ·{' '}
+                        {documentText(document.state, locale)} ·{' '}
+                        {copy(`documentReview_${document.staff_status}`)}
+                      </p>
+                      {document.staff_reason && (
+                        <p dir="auto" className="whitespace-pre-wrap wrap-anywhere">
+                          {document.staff_reason}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={!!recovery}
+                        onClick={() => setPreview(document.document_id)}
+                      >
+                        {copy('preview')}
+                      </Button>
+                      {['Available', 'SubmittedForReview'].includes(document.state) &&
+                        canReview &&
+                        (recordId ? (
+                          <>
+                            {(['approve', 'reject'] as const).map((operation) => (
+                              <SolarDecisionLink
+                                key={operation}
+                                requestId={recordId}
+                                editor={{ operation, documentId: document.document_id }}
+                                search={queueSearch ?? {}}
+                                disabled={documentLocked}
+                              >
+                                {copy(operation)}
+                              </SolarDecisionLink>
+                            ))}
+                          </>
+                        ) : (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={documentLocked}
+                              onClick={() => review(document, 'approve')}
+                            >
+                              {copy('approve')}
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => review(document, 'reject')}
+                              loading={documentForm.formState.isSubmitting}
+                              disabled={documentLocked}
+                            >
+                              {copy('reject')}
+                            </Button>
+                          </>
+                        ))}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </RecordEditorSection>
           </div>
+          {recordId ? (
+            canReview && (
+              <div className={recordEditorSurface}>
+                <RecordEditorSection title={tSolarStaffRecord('documentDecision', locale)}>
+                  <div className="flex flex-wrap gap-2">
+                    {(['request-additional', 'advance-postal'] as const).map((operation) => (
+                      <SolarDecisionLink
+                        key={operation}
+                        requestId={recordId}
+                        editor={{ operation }}
+                        search={queueSearch ?? {}}
+                        disabled={documentLocked}
+                      >
+                        {copy(decisionCopy[operation].title)}
+                      </SolarDecisionLink>
+                    ))}
+                  </div>
+                </RecordEditorSection>
+              </div>
+            )
+          ) : (
+            <div className={recordEditorSurface}>
+              <RecordEditorSection
+                title={tSolarStaffRecord('documentDecision', locale)}
+                description={tSolarStaffRecord('documentDecisionHelp', locale)}
+              >
+                <Form {...documentForm}>
+                  {documentForm.formState.errors.root && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
+                    </Alert>
+                  )}
+                  <FormField
+                    control={documentForm.control}
+                    name="reason"
+                    render={({ field }) => (
+                      <FormItem id="solar-review-reason" className={recordEditorField}>
+                        <FormLabel>{tSolarStaffRecord('documentDecisionField', locale)}</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder={tSolarStaffRecord('documentDecisionExample', locale)}
+                            disabled={documentLocked || !canReview}
+                          />
+                        </FormControl>
+                        <FormDescription>{copy('documentReviewHelp')}</FormDescription>
+                        <div className="grid">
+                          {(['documentReasonInvalid', 'documentDescriptionInvalid'] as const).map(
+                            (key) => (
+                              <p
+                                key={key}
+                                aria-hidden="true"
+                                className="invisible col-start-1 row-start-1 text-sm"
+                              >
+                                {copy(key)}
+                              </p>
+                            )
+                          )}
+                          <FormMessage className="col-start-1 row-start-1" />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </Form>
+              </RecordEditorSection>
+              <RecordEditorActions>
+                <Button
+                  variant="outline"
+                  disabled={documentLocked || !canReview}
+                  loading={preparingDecision || documentForm.formState.isSubmitting}
+                  onClick={() => void prepareSetDecision('request_additional')}
+                >
+                  {copy('requestAdditional')}
+                </Button>
+                <Button
+                  className="h-auto min-h-11 max-w-full whitespace-normal"
+                  disabled={documentLocked || !canReview}
+                  loading={preparingDecision}
+                  onClick={() => void prepareSetDecision('advance')}
+                >
+                  {copy('advancePostal')}
+                </Button>
+              </RecordEditorActions>
+            </div>
+          )}
         </section>
+      )}
+      {preview && ownedPreview && !recovery && (
+        <DocumentDetail
+          id={preview}
+          staff
+          onClose={() => setPreview(null)}
+          onPrevious={setPreview}
+          onChanged={refresh}
+          allowReplacement={false}
+          previewOnly={!!recordId}
+        />
       )}
       {guidance && (
         <Form {...guidanceForm}>
-          <div role="group" aria-label={copy('documentGuidance')}>
-            <form className="space-y-3 rounded-xl border p-5" onSubmit={saveGuidance} noValidate>
-              <h2 className="text-xl font-semibold">{copy('documentGuidance')}</h2>
-              {guidanceForm.formState.errors.root && (
-                <Alert variant="destructive">
-                  <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
-                </Alert>
-              )}
-              {(guidanceUnconfirmed || guidanceDenied) && (
-                <Alert variant="destructive">
-                  <AlertDescription>
-                    {copy(
-                      guidanceDenied ? 'documentGuidanceForbidden' : 'documentGuidanceUnconfirmed'
-                    )}
-                  </AlertDescription>
-                </Alert>
-              )}
-              {(
-                [
-                  ['fa', 'solar-guidance-fa', 'guidanceFa', 'documentGuidanceHelp'],
-                  ['en', 'solar-guidance-en', 'guidanceEn', 'documentGuidanceHelp'],
-                  [
-                    'faSuggestions',
-                    'solar-guidance-fa-suggestions',
-                    'suggestionsFa',
-                    'documentSuggestionsHelp',
-                  ],
-                  [
-                    'enSuggestions',
-                    'solar-guidance-en-suggestions',
-                    'suggestionsEn',
-                    'documentSuggestionsHelp',
-                  ],
-                ] as const
-              ).map(([name, id, label, help]) => (
-                <FormField
-                  key={name}
-                  control={guidanceForm.control}
-                  name={name}
-                  render={({ field }) => (
-                    <FormItem id={id}>
-                      <FormLabel>{copy(label)}</FormLabel>
-                      <FormControl>
-                        <textarea
-                          {...field}
-                          disabled={editorLocked || guidanceDenied}
-                          aria-required={name === 'fa' || name === 'en' || undefined}
-                          dir={name.startsWith('fa') ? 'rtl' : 'ltr'}
-                          className="min-h-24 w-full rounded-md border bg-background p-2"
-                        />
-                      </FormControl>
-                      <FormDescription>{copy(help)}</FormDescription>
-                      <div className="grid">
-                        <p aria-hidden="true" className="invisible col-start-1 row-start-1 text-sm">
-                          {guidanceMessages[name]}
-                        </p>
-                        <FormMessage className="col-start-1 row-start-1" />
-                      </div>
-                    </FormItem>
+          <div
+            role="group"
+            aria-label={copy('documentGuidance')}
+            className="mx-auto w-full max-w-3xl"
+          >
+            <form className={recordEditorSurface} onSubmit={saveGuidance} noValidate>
+              {(!guidanceEditor ||
+                guidanceForm.formState.errors.root ||
+                guidanceUnconfirmed ||
+                guidanceDenied) && (
+                <div className="space-y-2 border-b px-4 py-3 sm:px-6">
+                  {!guidanceEditor && (
+                    <h2 className="text-base font-semibold">{copy('documentGuidance')}</h2>
                   )}
-                />
-              ))}
-              <div className="flex flex-wrap gap-2">
+                  {guidanceForm.formState.errors.root && (
+                    <Alert variant="destructive">
+                      <AlertDescription>{copy('documentValidationUnavailable')}</AlertDescription>
+                    </Alert>
+                  )}
+                  {(guidanceUnconfirmed || guidanceDenied) && (
+                    <Alert variant="destructive">
+                      <AlertDescription>
+                        {copy(
+                          guidanceDenied
+                            ? 'documentGuidanceForbidden'
+                            : 'documentGuidanceUnconfirmed'
+                        )}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+              )}
+              <RecordEditorSection title={tSolarStaffRecord('customerInstructions', locale)}>
+                <div className={recordEditorGrid}>
+                  <SolarGuidanceField
+                    form={guidanceForm}
+                    name="fa"
+                    id="solar-guidance-fa"
+                    label={copy('guidanceFa')}
+                    direction="rtl"
+                    help={copy('documentGuidanceHelp')}
+                    disabled={editorLocked || guidanceDenied}
+                    required
+                  />
+                  <SolarGuidanceField
+                    form={guidanceForm}
+                    name="en"
+                    id="solar-guidance-en"
+                    label={copy('guidanceEn')}
+                    direction="ltr"
+                    help={copy('documentGuidanceHelp')}
+                    disabled={editorLocked || guidanceDenied}
+                    required
+                  />
+                </div>
+              </RecordEditorSection>
+              <SolarGuidanceItems
+                title={tSolarStaffRecord('suggestedDocuments', locale)}
+                rows={guidanceItems.fields}
+                disabled={editorLocked || guidanceDenied}
+                error={
+                  guidanceForm.formState.errors.items?.root?.message ??
+                  guidanceForm.formState.errors.items?.message
+                }
+                onAdd={() =>
+                  guidanceItems.append(
+                    { fa: '', en: '' },
+                    { focusName: `items.${guidanceItems.fields.length}.${locale}` }
+                  )
+                }
+                onRemove={guidanceItems.remove}
+                renderField={(index, language, label) => (
+                  <SolarGuidanceField
+                    form={guidanceForm}
+                    name={`items.${index}.${language}`}
+                    id={`solar-guidance-item-${index}-${language}`}
+                    label={label}
+                    direction={language === 'fa' ? 'rtl' : 'ltr'}
+                    disabled={editorLocked || guidanceDenied}
+                    required
+                  />
+                )}
+              />
+              <RecordEditorActions>
                 <Button
                   type="submit"
                   loading={guidanceForm.formState.isSubmitting}
@@ -1097,7 +1602,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
                     {copy('documentGuidanceReload')}
                   </Button>
                 )}
-              </div>
+              </RecordEditorActions>
             </form>
           </div>
         </Form>
@@ -1105,6 +1610,19 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
       {action && (
         <TeamActionDialog
           action={action}
+          finalFocus={
+            guidanceEditor && guidanceAction
+              ? () =>
+                  document.querySelector<HTMLElement>(
+                    '[data-slot="solar-staff-guidance"] [aria-invalid="true"]'
+                  ) ?? true
+              : editor && !guidanceAction
+                ? () =>
+                    document.querySelector<HTMLElement>(
+                      '#solar-review-reason[aria-invalid="true"]'
+                    ) ?? true
+                : undefined
+          }
           confirmationDisabled={guidanceAction ? guidanceUnconfirmed || guidanceDenied : !!recovery}
           onPendingChange={(pending) => {
             if (actionGeneration === reviewRequest.current) {
@@ -1114,20 +1632,10 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
           }}
           onValidationError={(fields) => {
             if (actionGeneration !== reviewRequest.current) return false;
-            if (guidanceAction) {
-              const names = {
-                fa: 'fa',
-                en: 'en',
-                suggestionsFa: 'faSuggestions',
-                suggestionsEn: 'enSuggestions',
-              } as const;
-              if (
-                !fields.length ||
-                !fields.every((field) => typeof field === 'string' && Object.hasOwn(names, field))
-              )
-                return false;
-              return guidanceFields(fields.map((field) => names[field as keyof typeof names]));
-            }
+            if (guidanceAction)
+              return guidanceFields(
+                guidanceErrorPaths(fields, 'suggestions', !!guidanceItems.fields.length)
+              );
             const expected = action.path.endsWith('/reject')
               ? 'reason'
               : action.path.endsWith('/request-additional')
@@ -1154,7 +1662,8 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
               invalidateReview();
               selectRequest(null);
               setDetail(null);
-              setError(true);
+              if (recordId) setDetailError(true);
+              else setError(true);
             }
           }}
           onClose={() => {
@@ -1201,6 +1710,10 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
                 }}
                 notice={copy('solarFinalNoFinancialChange')}
               />
+            ) : action.decision?.outcome.kind === 'document' && action.decision.outcome.reason ? (
+              <p className="whitespace-pre-wrap wrap-anywhere text-sm" dir="auto">
+                {action.decision.outcome.reason}
+              </p>
             ) : undefined
           }
           onSuccess={async (receipt) => {
@@ -1220,6 +1733,7 @@ function OwnedAdminSolarDocumentsPage({ queries }: { queries?: SolarDocumentQuer
             const decision = action.decision;
             if (!decision || !confirmsDecision(receipt, decision))
               throw new Error('Unconfirmed solar document decision');
+            if (editor) setDecisionRecorded(true);
             if (usesReason(decision)) documentForm.reset({ reason: '' });
             setPreview(null);
             refresh();

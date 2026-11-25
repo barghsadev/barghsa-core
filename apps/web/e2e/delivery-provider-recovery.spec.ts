@@ -42,40 +42,35 @@ for (const locale of ['en', 'fa'] as const) {
       route.fulfill({ json: [{ eventKey: 'auth.otp', locale, variables: ['code'] }] })
     );
     await page.goto('/admin/providers');
-    await page.getByRole('button', { name: emailText('update'), exact: true }).click();
+    await expect(page).toHaveURL(/\/admin\/providers\/email$/);
+    await page.getByRole('link', { name: emailText('new'), exact: true }).click();
+    await expect(page).toHaveURL(/\/admin\/providers\/email\/new$/);
+    await expect(page.locator('#email-provider-label')).toBeVisible();
+    await page.goBack();
+    await page.getByRole('link', { name: email.label, exact: true }).click();
+    await expect(page).toHaveURL(/\/admin\/providers\/email\/email$/);
+    await expect(page.getByRole('heading', { name: email.label, exact: true })).toBeVisible();
+    await page.getByRole('link', { name: emailText('update.title'), exact: true }).click();
     const emailLabel = page.locator('#email-provider-label');
     const apiKey = page.getByLabel(emailText('field.apiKey'), { exact: false });
-    await expect(page).toHaveURL(
-      (url) =>
-        url.searchParams.get('panel') === 'edit' && url.searchParams.get('selected') === 'email'
-    );
+    await expect(page).toHaveURL(/\/admin\/providers\/email\/email\/edit$/);
     await emailLabel.fill('Unsaved label');
     await apiKey.fill('temporary-secret');
     await page.reload();
     await expect(emailLabel).toHaveValue(email.label);
     await expect(apiKey).toHaveValue('');
-    await page.getByRole('tab', { name: text('sms'), exact: true }).click();
-    const preview = page.getByRole('button', { name: text('preview'), exact: true });
-    await preview.click();
-    await expect(page).toHaveURL(
-      (url) =>
-        url.searchParams.get('channel') === 'sms' &&
-        url.searchParams.get('panel') === 'preview' &&
-        url.searchParams.get('selected') === 'sms'
-    );
+    await page.goBack();
+    await expect(page).toHaveURL(/\/admin\/providers\/email\/email$/);
+
+    await page.goto('/admin/providers?channel=sms&panel=preview&selected=sms');
+    await expect(page).toHaveURL(/\/admin\/providers\/sms\/sms\/test$/);
     const recipient = page.getByLabel(text('testRecipient'), { exact: true });
     await recipient.fill('+989121234567');
     await page.reload();
     await expect(recipient).toHaveValue('');
-    await expect(page.getByRole('tab', { name: text('sms'), exact: true })).toHaveAttribute(
-      'aria-selected',
-      'true'
-    );
-    await page.goBack();
-    await expect(recipient).toHaveCount(0);
-    await expect(preview).toBeVisible();
-    await page.goBack();
-    await expect(emailLabel).toHaveValue(email.label);
+    await page.getByRole('link', { name: emailText('backToDetail'), exact: true }).click();
+    await expect(page).toHaveURL(/\/admin\/providers\/sms\/sms$/);
+    await expect(page.getByRole('link', { name: text('preview'), exact: true })).toBeVisible();
   });
 
   test(`an authorized empty SMS catalogue shows its next action (${locale})`, async ({ page }) => {
@@ -112,7 +107,9 @@ for (const locale of ['en', 'fa'] as const) {
     const panel = page.getByRole('region', { name: text('title'), exact: true });
     const content = panel.locator('[data-slot="list-content"]');
     const empty = content.getByText(text('empty'), { exact: true });
-    const create = panel.getByRole('button', { name: text('new'), exact: true });
+    const create = panel
+      .getByRole('button', { name: text('new'), exact: true })
+      .or(panel.getByRole('link', { name: text('new'), exact: true }));
     await expect.poll(() => reads).toBe(1);
     try {
       await expect(content).toHaveAttribute('aria-busy', 'true');
@@ -245,17 +242,16 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/providers');
       await expect(page.locator('html')).toHaveClass(theme === 'dark' ? /dark/ : /^(?!.*dark).*$/);
       const text = (key: string) => providerText(`admin.providers.${key}`, locale);
-      const row = page
-        .locator('table:visible tbody tr, ol[role=list]:visible > li')
-        .filter({ hasText: 'Saved provider' });
-      await row.locator('input[type=email]').fill('staff@example.test');
-      await row.getByRole('button', { name: text('update'), exact: true }).click();
+      await page.getByRole('link', { name: email.label, exact: true }).click();
+      const recipient = page.getByRole('textbox', { name: text('test.recipient'), exact: true });
+      const edit = page.getByRole('link', { name: text('update.title'), exact: true });
+      await recipient.fill('staff@example.test');
+      await edit.click();
       await page.locator('#email-provider-label').fill('Local draft');
       await page.getByLabel(text('field.apiKey'), { exact: false }).fill('synthetic-secret');
       fail = true;
       await page.getByRole('button', { name: text('refresh'), exact: true }).click();
       await expect(page.getByRole('alert').filter({ hasText: text('error.load') })).toBeVisible();
-      await expect(row.locator('input[type=email]')).toHaveValue('staff@example.test');
       await expect(page.getByLabel(text('field.apiKey'), { exact: false })).toHaveValue(
         'synthetic-secret'
       );
@@ -263,7 +259,10 @@ for (const locale of ['en', 'fa'] as const)
       fail = false;
       await page.getByRole('button', { name: text('retry'), exact: true }).click();
       await expect(page.locator('form button[type=submit]')).toBeEnabled();
-      await expect(row.locator('input[type=email]')).toHaveValue('staff@example.test');
+      await page.getByRole('link', { name: text('backToDetail'), exact: true }).click();
+      await expect(recipient).toHaveValue('staff@example.test');
+      await edit.click();
+      await page.locator('#email-provider-label').fill('Local draft');
       changed = true;
       await page.getByRole('button', { name: text('refresh'), exact: true }).click();
       await expect(page.getByRole('alert').filter({ hasText: text('stale') })).toBeVisible();
@@ -333,24 +332,28 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('html')).toHaveClass(theme === 'dark' ? /dark/ : /^(?!.*dark).*$/);
       await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
       const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
-      await page.getByRole('button', { name: text('edit'), exact: true }).click();
+      await page.getByRole('link', { name: sms.label, exact: true }).click();
+      await page.getByRole('link', { name: text('edit'), exact: true }).click();
       const bounds = await page.locator('form').boundingBox();
       for (const selector of ['#sms-label', '#sms-key', '#sms-sender', '#sms-timeout']) {
         const field = await page.locator(selector).boundingBox();
         expect(field!.x).toBeGreaterThanOrEqual(bounds!.x);
         expect(field!.x + field!.width).toBeLessThanOrEqual(bounds!.x + bounds!.width);
       }
-      const mappings = page.locator('form [data-slot=scroll-area-viewport]');
-      await expect(mappings).toHaveAttribute('tabindex', '0');
-      await mappings.focus();
-      const initial = await mappings.evaluate((node) => node.scrollLeft);
-      await page.keyboard.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
-      await expect.poll(() => mappings.evaluate((node) => node.scrollLeft)).not.toBe(initial);
-      expect(
-        await page
-          .locator('input[list=sms-events]')
-          .evaluate((node) => node.getBoundingClientRect().width)
-      ).toBeGreaterThanOrEqual(120);
+      const eventField = page.locator('input[list=sms-events]');
+      const language = page.getByRole('combobox', { name: `${text('language')} 1`, exact: true });
+      const template = page.getByRole('textbox', { name: `${text('template')} 1`, exact: true });
+      for (const control of [eventField, language, template]) {
+        const field = await control.boundingBox();
+        expect(field!.x).toBeGreaterThanOrEqual(bounds!.x);
+        expect(field!.x + field!.width).toBeLessThanOrEqual(bounds!.x + bounds!.width);
+        expect(field!.width).toBeGreaterThanOrEqual(120);
+      }
+      await eventField.focus();
+      await page.keyboard.press('Tab');
+      await expect(language).toBeFocused();
+      await page.keyboard.press('Tab');
+      await expect(template).toBeFocused();
       await page.locator('#sms-key').fill('synthetic-secret');
       await page.locator('#sms-label').fill('Local draft');
       fail = true;

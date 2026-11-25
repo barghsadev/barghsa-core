@@ -1,3 +1,4 @@
+import { electricityDraftDecisionText } from '@barghsa/i18n/electricity-draft-decision';
 import { test, expect } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -116,9 +117,27 @@ for (const locale of ['en', 'fa'] as const)
       await expect(details).toHaveAttribute('open', '');
       await expect(details).not.toContainText('PRIVATE');
       await expect(details).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
-      await details.getByRole('button', { name: copy('reject'), exact: true }).click();
+      const reject = details.getByRole('button', { name: copy('reject'), exact: true });
+      await reject.click();
       const reason = details.getByLabel(copy('reason'), { exact: true });
       await expect(reason).toHaveAttribute('aria-required', 'true');
+      await expect(reason).toBeFocused();
+      await reason.fill('   ');
+      const review = details.getByRole('button', { name: copy('review'), exact: true });
+      await review.click();
+      await expect(reason).toBeFocused();
+      await expect(reason).toHaveAccessibleDescription(copy('reasonInvalid'));
+      await reason.fill('Discard this local draft text');
+      await details
+        .getByRole('button', {
+          name: electricityDraftDecisionText('dismissDecision', locale),
+          exact: true,
+        })
+        .click();
+      await expect(reason).toHaveCount(0);
+      await expect(reject).toBeFocused();
+      await reject.click();
+      await expect(reason).toHaveValue('');
       await reason.fill('Keyboard reviewed reason');
       await reason.press('Tab');
       await page.keyboard.press('Enter');
@@ -130,9 +149,15 @@ for (const locale of ['en', 'fa'] as const)
       await expect(dialog).toContainText(copy('gift.release'));
       await expect(dialog).toContainText('86000000-0000-4000-8000-000000000001');
       if (funded) {
+        await expect(
+          dialog.getByRole('region', {
+            name: electricityDraftDecisionText('financialReview', locale),
+          })
+        ).toContainText(copy('walletReturn'));
         await expect(dialog).toContainText(copy('manualRetryRequired'));
         await expect(dialog).toContainText('97000000-0000-4000-8000-000000000001');
-      }
+      } else
+        await expect(dialog).toContainText(electricityDraftDecisionText('noWalletReturn', locale));
       expect(writes).toHaveLength(0);
       expect(
         (

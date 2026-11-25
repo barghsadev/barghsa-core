@@ -151,6 +151,19 @@ export class UploadPolicyService {
     return result.rows.map((row) => this.toDto(row));
   }
 
+  async getVersion(category: string, id: string): Promise<UploadPolicyDto> {
+    const result = await getDbPool().query<UploadPolicyRow>(
+      `SELECT id, category, allowed_extensions, max_size_bytes,
+              effective_from, effective_until, created_by, created_at, updated_at
+         FROM upload_policies
+        WHERE category = $1 AND id = $2`,
+      [category, id]
+    );
+    const row = result.rows[0];
+    if (!row) throw this.policyNotFound(id);
+    return this.toDto(row);
+  }
+
   // ─── Mutations ──────────────────────────────────────────────────────────
 
   /**

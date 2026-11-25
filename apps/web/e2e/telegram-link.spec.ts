@@ -86,7 +86,7 @@ async function setup(page: Page, locale: 'en' | 'fa') {
   };
 }
 for (const locale of ['en', 'fa'] as const) {
-  test(`Telegram status retry clears the old error and keeps security lists visible (${locale})`, async ({
+  test(`Telegram status retry is independent of the security lists (${locale})`, async ({
     page,
   }) => {
     const f = await setup(page, locale);
@@ -97,14 +97,14 @@ for (const locale of ['en', 'fa'] as const) {
       if (++reads === 1) return route.fulfill({ status: 503, json: {} });
       retry = route;
     });
-    await page.goto('/settings/security');
+    await page.goto('/settings/security/telegram');
     const panel = page.getByRole('region', { name: copy('title', locale), exact: true });
     const refresh = panel.getByRole('button', { name: copy('refresh', locale), exact: true });
     await expect(panel.getByRole('alert')).toHaveText(copy('error', locale));
     await refresh.click();
     await expect(panel.getByRole('status')).toHaveText(securitySettingsText('loading', locale));
     await expect(refresh).toBeDisabled();
-    await expect(page.getByText(appText('settings.security.noSessions', locale))).toBeVisible();
+    await expect(page.getByText(appText('settings.security.noSessions', locale))).toHaveCount(0);
     await expect.poll(() => !!retry).toBe(true);
     await retry!.fulfill({ json: f.state });
     await expect(panel.getByRole('alert')).toHaveCount(0);
@@ -112,13 +112,18 @@ for (const locale of ['en', 'fa'] as const) {
       panel.getByRole('button', { name: copy('connect', locale), exact: true })
     ).toBeEnabled();
     expect(reads).toBe(2);
+    await page
+      .getByRole('link', { name: appText('settings.security.title', locale), exact: true })
+      .click();
+    await expect(page.getByText(appText('settings.security.noSessions', locale))).toBeVisible();
+    expect(reads).toBe(2);
   });
 
   test(`private Telegram settings confirm normalized code and unlink (${locale})`, async ({
     page,
   }, info) => {
     const f = await setup(page, locale);
-    await page.goto('/settings/security');
+    await page.goto('/settings/security/telegram');
     const panel = page.getByRole('region', { name: copy('title', locale), exact: true });
     await panel.getByRole('button', { name: copy('connect', locale), exact: true }).click();
     const link = panel.getByRole('link', { name: copy('open', locale), exact: true });
@@ -165,7 +170,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }, info) => {
     const f = await setup(page, locale);
-    await page.goto('/settings/security');
+    await page.goto('/settings/security/telegram');
     const panel = page.getByRole('region', { name: copy('title', locale), exact: true });
     f.fail();
     await panel.getByRole('button', { name: copy('connect', locale), exact: true }).click();
@@ -202,7 +207,7 @@ for (const locale of ['en', 'fa'] as const) {
         expires_at: '2030-01-01T00:00:00Z',
       };
     });
-    await page.goto('/settings/security');
+    await page.goto('/settings/security/telegram');
     const panel = page.getByRole('region', { name: copy('title', locale), exact: true });
     const connect = panel.getByRole('button', { name: copy('connect', locale), exact: true });
     const refresh = panel.getByRole('button', { name: copy('refresh', locale), exact: true });

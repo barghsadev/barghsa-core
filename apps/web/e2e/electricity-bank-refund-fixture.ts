@@ -7,6 +7,7 @@ import { bankReceiptReview } from '../src/test/bank-receipt-review-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { expect, type Page, type Route } from './coverage-fixture';
 import { correctionStaffOrder, correctionStaffReview } from './electricity-correction-form-fixture';
+import { selectCalendarDate } from './record-date-time-fixture';
 import { pdfPreviewFixture } from './upload-fixture';
 
 const receiptId = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
@@ -285,8 +286,10 @@ export async function runElectricityBankRefund(
     });
   });
 
+  await page.getByRole('link', { name: app('invoices.details.receiptTitle'), exact: true }).click();
+  await expect(page).toHaveURL(`/invoices/${invoiceId}/receipts/new`);
   await page.getByTestId('invoice-receipt-amount').fill(amount);
-  await page.getByTestId('invoice-receipt-date').fill(receiptDate);
+  await selectCalendarDate(page, 'invoice-receipt-date', receiptDate, locale);
   await page.getByTestId('invoice-receipt-payer-ref').fill(payerReference);
   await page.getByTestId('invoice-receipt-file').setInputFiles({
     name: uploadFields.fileName,
@@ -301,6 +304,9 @@ export async function runElectricityBankRefund(
   });
   await expect(dialog).toContainText(payerReference);
   await expect(dialog).toContainText(money);
+  await expect(dialog.locator(`time[datetime="${receiptDate}"]`)).toHaveText(
+    locale === 'fa' ? '۳۱ شهریور ۱۴۰۵' : 'Sep 22, 2026'
+  );
   await expect(submit).toBeDisabled();
   expect(state.stage).toBe('unsubmitted');
   await approveRiskConfirmation(page, locale, 'financial');
@@ -326,7 +332,11 @@ export async function runElectricityBankRefund(
     .getByRole('button', { name: admin('admin.invoiceReceipts.open'), exact: true })
     .click();
   await expect(queue).toContainText(payerReference);
-  await queue
+  await queue.getByTestId('invoice-receipt-open-confirm').click();
+  await expect(page).toHaveURL(
+    new RegExp(`/admin/invoices/receipts/${receiptId}/confirm(?:\\?|$)`)
+  );
+  await page
     .getByRole('button', { name: admin('admin.invoiceReceipts.confirm'), exact: true })
     .click();
   const confirm = dialog.getByRole('button', { name: app('team.confirm'), exact: true });
@@ -343,6 +353,9 @@ export async function runElectricityBankRefund(
 
   state.context = 'staff';
   await page.goto(`/admin/electricity-orders?orderId=${orderId}`);
+  await page
+    .getByRole('link', { name: admin('admin.electricityOrders.reject'), exact: true })
+    .click();
   await page.locator('#electricity-review-reason').fill(bankRefundReason);
   await page
     .getByRole('button', { name: admin('admin.electricityOrders.reject'), exact: true })

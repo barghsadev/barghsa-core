@@ -131,7 +131,19 @@ it('shows individual pending solar files with uploader, time and another page', 
               profile_id: 'profile-1',
               status: 'documents_under_review',
             },
-            documents: [],
+            documents: [
+              {
+                id: 'first-file',
+                document_id: 'document-1',
+                file_name: 'first.pdf',
+                uploaded_by: 'customer-1',
+                uploaded_at: '2026-09-23T10:00:00Z',
+                staff_status: 'pending',
+                staff_reason: null,
+                state: 'SubmittedForReview',
+                revision: 1,
+              },
+            ],
             requestedDocuments: [],
           }
         : url.includes('document-review-queue')

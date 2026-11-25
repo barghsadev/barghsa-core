@@ -5,7 +5,7 @@ import {
   type ShipmentDraft,
   type PostalGuidanceDraft,
 } from './solar-postal-form.js';
-import { suggestionLines } from './solar-document-form.js';
+import { guidanceItemsSchema, guidanceTextSchema } from './solar-document-form-schemas.js';
 export function shipmentSchema(messages: Record<keyof ShipmentDraft, string>, today: string) {
   return z.custom<ShipmentDraft>().check((ctx) => {
     for (const [field, max] of [
@@ -35,37 +35,12 @@ export function shipmentSchema(messages: Record<keyof ShipmentDraft, string>, to
   });
 }
 export function postalGuidanceSchema(messages: Record<keyof PostalGuidanceDraft, string>) {
-  return z.custom<PostalGuidanceDraft>().check((ctx) => {
-    for (const [field, max, required] of [
-      ['fa', 4000, true],
-      ['en', 4000, true],
-      ['destinationAddress', 2000, false],
-      ['contactDetails', 1000, false],
-    ] as const) {
-      const value = ctx.value?.[field];
-      if (typeof value !== 'string' || (required && !value.trim()) || value.trim().length > max)
-        ctx.issues.push({ code: 'custom', input: value, path: [field], message: messages[field] });
-    }
-    const fa =
-      typeof ctx.value?.originalsFa === 'string' ? suggestionLines(ctx.value.originalsFa) : null;
-    const en =
-      typeof ctx.value?.originalsEn === 'string' ? suggestionLines(ctx.value.originalsEn) : null;
-    for (const [field, lines] of [
-      ['originalsFa', fa],
-      ['originalsEn', en],
-    ] as const)
-      if (
-        !lines ||
-        lines.length > 30 ||
-        lines.some((line) => line.length > 200) ||
-        (fa && en && fa.length !== en.length)
-      )
-        ctx.issues.push({
-          code: 'custom',
-          input: ctx.value?.[field],
-          path: [field],
-          message: messages[field],
-        });
+  return z.object({
+    fa: guidanceTextSchema(4000, true, messages.fa),
+    en: guidanceTextSchema(4000, true, messages.en),
+    destinationAddress: guidanceTextSchema(2000, false, messages.destinationAddress),
+    contactDetails: guidanceTextSchema(1000, false, messages.contactDetails),
+    items: guidanceItemsSchema(messages.items),
   });
 }
 export function postalReasonSchema(message: string) {

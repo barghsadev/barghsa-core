@@ -8,6 +8,7 @@ import {
 import {
   greenValues,
   greenBody,
+  greenShareValue,
   validGreenConfig,
   validGreenSafety,
   matchesGreenReceipt,
@@ -42,8 +43,8 @@ it.each(['', '-1', '1.5', '1e3', '9007199254740992'])(
 );
 it('reports thresholds and shares separately, and zero share does not activate a blocked rule', () => {
   const safety = { ...greenSafety, simpleOrder: { blocked: true, reasons: ['inactive'] } };
-  const schema = greenSettingsSchema(messages, boundedCatalogueInteger, safety);
-  const draft = { ...greenValues(greenConfig), simpleThreshold: '-1', advancedShare: 101 };
+  const schema = greenSettingsSchema(messages, boundedCatalogueInteger, greenShareValue, safety);
+  const draft = { ...greenValues(greenConfig), simpleThreshold: '-1', advancedShare: '101' };
   const invalid = schema.safeParse(draft);
   expect(invalid.success).toBe(false);
   if (!invalid.success)
@@ -52,7 +53,7 @@ it('reports thresholds and shares separately, and zero share does not activate a
       ['simpleEnabled'],
       ['advancedShare'],
     ]);
-  expect(schema.safeParse({ ...greenValues(greenConfig), simpleShare: 0 }).success).toBe(true);
+  expect(schema.safeParse({ ...greenValues(greenConfig), simpleShare: '۰' }).success).toBe(true);
   expect(schema.safeParse({ ...greenValues(greenConfig), simpleEnabled: false }).success).toBe(
     true
   );
@@ -88,8 +89,13 @@ it('rejects malformed reads and verifies all captured save values', () => {
     validGreenSafety({ ...greenSafety, simpleOrder: { blocked: false, reasons: ['secret'] } })
   ).toBe(false);
   expect(validRetention({ days: 366 })).toBe(false);
-  const body = greenBody({ ...greenValues(greenConfig), simpleThreshold: ' ۱۷۵۰ ' });
+  const body = greenBody({
+    ...greenValues(greenConfig),
+    simpleThreshold: ' ۱۷۵۰ ',
+    simpleShare: ' ۴٫۵ ',
+  });
   expect(body.simpleOrder.averagePowerThresholdKw).toBe(1750);
+  expect(body.simpleOrder.mandatoryGreenSharePercent).toBe(4.5);
   expect(matchesGreenReceipt(body, body)).toBe(true);
   expect(matchesGreenReceipt(greenConfig, body)).toBe(false);
   expect(
@@ -118,4 +124,14 @@ it('rejects malformed reads and verifies all captured save values', () => {
       options: [...templateSetting.options].reverse().map(({ id, ...rest }) => ({ ...rest, id })),
     })
   ).toBe(templateBasis(templateSetting));
+});
+
+it('preserves saved shares smaller than the previous slider step', () => {
+  const smallShare = {
+    ...greenConfig,
+    simpleOrder: { ...greenConfig.simpleOrder, mandatoryGreenSharePercent: 1.23e-7 },
+  };
+  const draft = greenValues(smallShare);
+  expect(draft.simpleShare).toBe('0.000000123');
+  expect(greenBody(draft)).toEqual(smallShare);
 });

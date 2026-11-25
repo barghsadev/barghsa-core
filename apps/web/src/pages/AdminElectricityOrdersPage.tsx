@@ -1,10 +1,16 @@
+import { Eye as TableEyeIcon } from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
+import { getRouteApi, Link, Navigate, notFound, useRouterState } from '@tanstack/react-router';
 import { ElectricityRejectionPanel } from '../components/ElectricityRejectionPanel.js';
 import { ElectricityRawDraftQueue } from '../components/ElectricityRawDraftQueue.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
+import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import { CompactFieldFeedback } from '../components/CompactFieldFeedback.js';
+import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import {
@@ -13,6 +19,7 @@ import {
   AlertDescription,
   Textarea,
   Button,
+  buttonVariants,
   Card,
   CardContent,
   DualStatusDisplay,
@@ -20,7 +27,9 @@ import {
   Input,
   Label,
   ListPage,
+  ListRefreshButton,
   ScrollArea,
+  StatusBadge,
   StatusTimeline,
   TextCell,
   DateCell,
@@ -31,16 +40,7 @@ import {
 import { t as appText } from '@barghsa/i18n/app';
 import { type ElectricityStaffDecisionReview } from '@barghsa/shared/finance';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useZodForm,
-} from '@barghsa/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, useZodForm } from '@barghsa/ui/form';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import {
@@ -51,9 +51,11 @@ import {
 } from '../lib/electricity-staff-reason-form.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { QueueEmptyState } from '../components/QueueEmptyState.js';
+import { ClipboardCheckIcon, GaugeIcon } from 'lucide-react';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { ElectricityOrderComments } from '../components/SavingOrderComments.js';
+import { OrderDiscussionSection } from '../components/OrderDiscussionSection.js';
 import {
   commercialStatusTone,
   financialStatusTone,
@@ -61,7 +63,11 @@ import {
 } from '../lib/electricity-status-tone.js';
 import { electricityTimelineKey, electricityTimelineState } from '../lib/electricity-timeline.js';
 import { withCsrf } from '../lib/csrf.js';
-import { staffOrderId, type StaffOrderListQuery } from '../lib/staff-order-list-query.js';
+import {
+  staffOrderId,
+  type ElectricityQueueFilters,
+  type StaffOrderListQuery,
+} from '../lib/staff-order-list-query.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 
 interface ReviewOrder {
@@ -118,6 +124,15 @@ interface ReviewFacts {
 }
 
 type Decision = 'approve' | 'request-changes' | 'reject';
+type ReasonDecision = Exclude<Decision, 'approve'>;
+const reasonDecisions = ['request-changes', 'reject'] as const;
+function canReviewOrder(decision: Decision, status: string) {
+  return decision === 'reject'
+    ? ['draft', 'submitted', 'awaiting_staff_review', 'changes_requested', 'approved'].includes(
+        status
+      )
+    : status === 'awaiting_staff_review';
+}
 interface CapturedDecision {
   action: TeamAction;
   review: ElectricityStaffDecisionReview;
@@ -166,6 +181,42 @@ function contractTemplate(snapshot: Record<string, unknown>) {
   return { name: template.name, versionNumber: template.versionNumber, text: template.text };
 }
 
+export function ElectricityOrderRecord() {
+  const route = getRouteApi('/admin/electricity-orders/$orderId');
+  const params = route.useParams();
+  const search = route.useSearch();
+  const action = useRouterState({
+    select: (state) => state.matches.at(-1)?.params.decision,
+  });
+  const orderId = staffOrderId(params.orderId).toLowerCase();
+  const reasonDecision = reasonDecisions.find((decision) => decision === action);
+  if (!orderId || (action && !reasonDecision)) throw notFound();
+  if (params.orderId !== orderId)
+    return reasonDecision ? (
+      <Navigate
+        to="/admin/electricity-orders/$orderId/decisions/$decision"
+        params={{ orderId, decision: reasonDecision }}
+        search={search}
+        replace
+      />
+    ) : (
+      <Navigate
+        to="/admin/electricity-orders/$orderId"
+        params={{ orderId }}
+        search={search}
+        replace
+      />
+    );
+  return (
+    <AdminElectricityOrdersPage
+      key={orderId}
+      recordId={orderId}
+      queueSearch={search}
+      reasonDecision={reasonDecision}
+    />
+  );
+}
+
 export default function AdminElectricityOrdersPage(
   props: Parameters<typeof OwnedAdminElectricityOrdersPage>[0] = {}
 ) {
@@ -175,7 +226,17 @@ export default function AdminElectricityOrdersPage(
     <OwnedAdminElectricityOrdersPage key={JSON.stringify([actor, profileRevision])} {...props} />
   );
 }
-function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderListQuery } = {}) {
+function OwnedAdminElectricityOrdersPage({
+  queries,
+  recordId,
+  queueSearch,
+  reasonDecision,
+}: {
+  queries?: StaffOrderListQuery;
+  recordId?: string;
+  queueSearch?: ElectricityQueueFilters;
+  reasonDecision?: ReasonDecision | undefined;
+} = {}) {
   const readActor = useAccountUser();
   const readProfileRevision = useProfileContextRevision();
   const readStaff = useOwnedStaffServiceRead(readActor, readProfileRevision);
@@ -210,22 +271,37 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
   const [localSelected, setLocalSelected] = useState<string | null>(
     () => staffOrderId(new URLSearchParams(window.location.search).get('orderId')) || null
   );
-  const selectedId = (queries ? queries.selected : localSelected)?.toLowerCase() ?? null;
-  const setSelectedId = (id: string | null, replace = false) =>
-    queries ? queries.select(id, replace) : setLocalSelected(id);
+  const selectedId =
+    recordId ?? (queries ? queries.selected : localSelected)?.toLowerCase() ?? null;
+  const setSelectedId = (id: string | null, replace = false) => {
+    if (recordId) return;
+    if (queries) queries.select(id, replace);
+    else setLocalSelected(id);
+  };
   const [lookupId, setLookupId] = useState(
     () => new URLSearchParams(window.location.search).get('orderId') ?? ''
   );
   const [lookupInvalid, setLookupInvalid] = useState(false);
   const [localView, setLocalView] = useState<'review' | 'conversations'>('review');
-  const queueView = queries?.queue.query.filters.view || localView;
+  const queueView = queries?.queue.query.filters.view || queueSearch?.view || localView;
+  const otherView = queueView === 'review' ? 'conversations' : 'review';
+  function changeQueueView(view: 'review' | 'conversations') {
+    if (queueView === view || pending.current || action || uncertain) return;
+    if (queries) queries.changeLane(view);
+    else {
+      setLocalView(view);
+      setLocalAfter(null);
+      setSelectedId(null);
+    }
+  }
+  const showQueue = !recordId;
   const orders =
     accepted?.criteria === queueView && accepted.actor === actor ? accepted.orders : [];
   const nextAfter =
     accepted?.criteria === queueView && accepted.actor === actor ? accepted.nextAfter : null;
   const [loadedDetail, setDetail] = useState<ReviewOrder | null>(null);
   const [detailScope, setDetailScope] = useState('');
-  const scope = JSON.stringify([actor, selectedId, queueView]);
+  const scope = JSON.stringify([actor, selectedId, recordId ? null : queueView]);
   const detail =
     loadedDetail?.orderId === selectedId && detailScope === scope ? loadedDetail : null;
   const [detailError, setDetailError] = useState(false);
@@ -259,6 +335,11 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
       validationUnavailableMessage: formCopy('validationUnavailable'),
     }
   );
+  const draftOwner = useRef(reasonDecision);
+  const otherReasons = useRef<Partial<Record<ReasonDecision, string>>>({});
+  const activeDecision = useRef(reasonDecision);
+  activeDecision.current = reasonDecision;
+  const [recordedDecision, setRecordedDecision] = useState<ReasonDecision>();
   const reasonFields = useActionFieldErrors(
     form,
     { reason: formCopy('invalid') },
@@ -286,10 +367,11 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
       command.scope === currentScope.current
     );
   }
+  function navigationBlocked() {
+    return pending.current || !!action || uncertain;
+  }
   function locked() {
-    return (
-      preparing.current || pending.current || form.isSubmissionPending() || !!action || uncertain
-    );
+    return preparing.current || form.isSubmissionPending() || navigationBlocked();
   }
   function invalidate() {
     ++reviewRequest.current;
@@ -307,6 +389,8 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
     accessDenied.current = true;
     invalidate();
     form.reset({ reason: '' });
+    otherReasons.current = {};
+    setRecordedDecision(undefined);
     setDenied(true);
     setLoading(false);
     setAccepted(null);
@@ -317,6 +401,8 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
   function missing() {
     invalidate();
     form.reset({ reason: '' });
+    otherReasons.current = {};
+    setRecordedDecision(undefined);
     setDetail(null);
     setDetailScope('');
     setDetailError(true);
@@ -385,6 +471,10 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
 
   function refreshQueue() {
     invalidate();
+    if (recordId) {
+      setDetailRevision((value) => value + 1);
+      return;
+    }
     setAccepted(null);
     setAfter(null);
     setRevision((value) => value + 1);
@@ -420,6 +510,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
   }
 
   useEffect(() => {
+    if (!showQueue) return;
     const controller = new AbortController();
     setLoading(true);
     setError(false);
@@ -483,13 +574,25 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
           setLoading(false);
       });
     return () => controller.abort();
-  }, [after, revision, queueView, listRevision, actor, readStaff]);
+  }, [after, revision, queueView, listRevision, actor, readStaff, showQueue]);
 
   useEffect(() => {
     setLookupId(selectedId ?? '');
     setLookupInvalid(false);
     form.reset({ reason: '' });
-  }, [selectedId, queueView, actor]);
+    otherReasons.current = {};
+    setRecordedDecision(undefined);
+  }, [scope]);
+
+  useEffect(() => {
+    if (preparing.current) invalidate();
+    setReviewError(false);
+    if (!reasonDecision || draftOwner.current === reasonDecision) return;
+    if (draftOwner.current) otherReasons.current[draftOwner.current] = form.getValues('reason');
+    draftOwner.current = reasonDecision;
+    form.reset({ reason: otherReasons.current[reasonDecision] ?? '' });
+    delete otherReasons.current[reasonDecision];
+  }, [reasonDecision]);
 
   useEffect(() => {
     invalidate();
@@ -555,11 +658,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
   function choose(decision: Decision) {
     if (
       !detail ||
-      !(decision === 'reject'
-        ? ['draft', 'submitted', 'awaiting_staff_review', 'changes_requested', 'approved'].includes(
-            detail.commercialStatus
-          )
-        : detail.commercialStatus === 'awaiting_staff_review') ||
+      !canReviewOrder(decision, detail.commercialStatus) ||
       locked() ||
       captured.current ||
       accessDenied.current
@@ -576,6 +675,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
       !accessDenied.current &&
       request === reviewRequest.current &&
       currentScope.current === scope &&
+      activeDecision.current === reasonDecision &&
       (decision === 'approve' || form.getValues('reason') === rawReason);
     async function prepare(decisionReason: string) {
       if (!fresh()) return;
@@ -679,314 +779,558 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
     });
   }
 
+  const canApprove = detail && canReviewOrder('approve', detail.commercialStatus);
+  const availableDecisions = detail
+    ? reasonDecisions.filter((decision) => canReviewOrder(decision, detail.commercialStatus))
+    : [];
+  const canUseReason = !!reasonDecision && availableDecisions.includes(reasonDecision);
+  const decisionEditor = detail && (
+    <Form {...form}>
+      <form
+        data-testid="electricity-staff-reason-form"
+        className={reasonDecision ? recordEditorSurface : undefined}
+        aria-label={copy(reasonDecision ?? 'orderDecision')}
+        noValidate
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (reasonDecision) choose(reasonDecision);
+        }}
+      >
+        <div className={reasonDecision ? 'space-y-4 px-4 py-4 sm:px-6' : undefined}>
+          {reasonDecision === 'reject' && (
+            <p className="rounded-lg bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
+              {copy('reject.notice')}
+            </p>
+          )}
+          <FormField
+            control={form.control}
+            name="reason"
+            render={({ field, fieldState }) => (
+              <FormItem id="electricity-review-reason">
+                <FormLabel>{copy(reasonDecision ? reasonDecision + '.field' : 'reason')}</FormLabel>
+                {reasonDecision && (
+                  <p
+                    id="electricity-review-reason-prompt"
+                    className="text-sm text-muted-foreground"
+                  >
+                    {copy(reasonDecision + '.prompt')}
+                  </p>
+                )}
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    rows={reasonDecision ? 3 : undefined}
+                    dir="auto"
+                    aria-describedby={
+                      reasonDecision ? 'electricity-review-reason-prompt' : undefined
+                    }
+                    aria-required={
+                      !!reasonDecision ||
+                      detail.commercialStatus !== 'awaiting_staff_review' ||
+                      undefined
+                    }
+                    disabled={reviewLoading || form.formState.isSubmitting || navigationBlocked()}
+                    className={reasonDecision ? 'max-h-56' : undefined}
+                  />
+                </FormControl>
+                <CompactFieldFeedback
+                  help={reasonDecision ? copy('reasonLimit') : formCopy('help')}
+                  validationMessage={formCopy('invalid')}
+                  invalid={!!fieldState.error?.message}
+                />
+              </FormItem>
+            )}
+          />
+        </div>
+        {reasonDecision && (
+          <RecordEditorActions>
+            <Button
+              type="submit"
+              variant={reasonDecision === 'reject' ? 'destructive' : 'default'}
+              disabled={!canUseReason || locked()}
+              loading={reviewLoading || form.formState.isSubmitting}
+            >
+              {copy(reasonDecision)}
+            </Button>
+          </RecordEditorActions>
+        )}
+      </form>
+    </Form>
+  );
+  const decisionFeedback = (
+    <>
+      {form.formState.errors.root && (
+        <Alert variant="destructive">
+          <AlertDescription>{formCopy('validationUnavailable')}</AlertDescription>
+        </Alert>
+      )}
+      {uncertain && (
+        <Alert data-toast-anchor>
+          <AlertDescription>{formCopy('uncertain')}</AlertDescription>
+          <Button
+            variant="outline"
+            disabled={pending.current || !!action}
+            onClick={() => {
+              const command = captured.current;
+              if (!command || !live(command) || pending.current || action) return;
+              command.attempted = false;
+              command.rejected = false;
+              // The original hash, body and idempotency key are required to retry.
+              command.action = { ...command.action };
+              decorateAction(command, command.action);
+              setDecisionReview(command.review);
+              setAction(command.action);
+            }}
+          >
+            {formCopy('retry')}
+          </Button>
+        </Alert>
+      )}
+      {reviewLoading && <LoadingStatus>{copy('reviewLoading')}</LoadingStatus>}
+      {reviewError && <p role="alert">{copy('reviewError')}</p>}
+    </>
+  );
   const selectedTemplate = detail ? contractTemplate(detail.contractSnapshot) : null;
+  const recordHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (recordId) recordHeading.current?.focus();
+  }, [recordId, reasonDecision]);
+  const Content = showQueue ? ListPage : 'div';
 
   return (
-    <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">{copy('title')}</h1>
-          <p className="text-muted-foreground">{copy('description')}</p>
-        </div>
-      </header>
-      <ElectricityRawDraftQueue />
-      <ListPage>
-        <ListPage.Toolbar
-          filters={
-            <div className="space-y-3">
-              <form className="flex flex-wrap items-end gap-3" onSubmit={lookupOrder}>
-                <div className="min-w-0 flex-1 basis-64 space-y-2">
-                  <Label htmlFor="electricity-order-lookup">{copy('lookupOrderId')}</Label>
-                  <Input
-                    id="electricity-order-lookup"
-                    dir="ltr"
-                    value={lookupId}
-                    onChange={(event) => {
-                      setLookupId(event.target.value);
-                      setLookupInvalid(false);
-                    }}
-                    aria-invalid={lookupInvalid}
-                    aria-describedby={lookupInvalid ? 'electricity-order-lookup-error' : undefined}
-                  />
-                </div>
-                <Button type="submit" disabled={pending.current || !!action || uncertain}>
-                  {copy('lookup')}
-                </Button>
-                {lookupInvalid ? (
-                  <p id="electricity-order-lookup-error" role="alert" className="w-full text-sm">
-                    {copy('invalidOrderId')}
-                  </p>
-                ) : null}
-              </form>
-              <nav className="flex flex-wrap gap-2" aria-label={copy('views')}>
-                <Button
-                  variant={queueView === 'review' ? 'secondary' : 'outline'}
-                  disabled={pending.current || !!action || uncertain}
-                  onClick={() => {
-                    if (queueView === 'review' || pending.current || action || uncertain) return;
-                    if (queries) queries.changeLane('review');
-                    else {
-                      setLocalView('review');
-                      setLocalAfter(null);
-                      setSelectedId(null);
-                    }
-                  }}
-                >
-                  {copy('reviewView')}
-                </Button>
-                <Button
-                  variant={queueView === 'conversations' ? 'secondary' : 'outline'}
-                  disabled={pending.current || !!action || uncertain}
-                  onClick={() => {
-                    if (queueView === 'conversations' || pending.current || action || uncertain)
-                      return;
-                    if (queries) queries.changeLane('conversations');
-                    else {
-                      setLocalView('conversations');
-                      setLocalAfter(null);
-                      setSelectedId(null);
-                    }
-                  }}
-                >
-                  {copy('conversationView')}
-                </Button>
-              </nav>
-            </div>
-          }
-          actions={
-            <Button
-              variant="outline"
-              onClick={() => {
-                if (!locked()) refreshQueue();
+    <section
+      data-slot={recordId ? 'electricity-staff-order' : undefined}
+      className={reasonDecision ? 'mx-auto max-w-3xl space-y-4' : 'space-y-5'}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {recordId ? (
+        <>
+          <RecordCommandGuard blocked={navigationBlocked} />
+          <header className="space-y-3">
+            <Link
+              to={
+                reasonDecision ? '/admin/electricity-orders/$orderId' : '/admin/electricity-orders'
+              }
+              params={reasonDecision ? { orderId: recordId } : {}}
+              search={queueSearch ?? {}}
+              className="touch-action text-sm text-primary underline underline-offset-4"
+              aria-disabled={navigationBlocked() || undefined}
+              onClick={(event) => {
+                if (navigationBlocked()) event.preventDefault();
               }}
-              disabled={loading || locked()}
             >
-              {copy('refresh')}
-            </Button>
-          }
-        />
-        {time.notice}
-        <div className="grid min-w-0 gap-5">
-          <div
-            className="min-w-0 space-y-3"
-            aria-label={copy(queueView === 'conversations' ? 'conversationView' : 'queue')}
-          >
-            <ListPage.Content
-              loading={loading}
-              error={error || denied}
-              empty={orders.length === 0 && !selectedId}
-              retainContent={orders.length > 0 && !denied}
-              loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
-              errorView={
-                denied ? (
-                  <p role="alert">{copy('forbidden')}</p>
-                ) : (
-                  <div className="space-y-2">
-                    <p role="alert">{copy('error')}</p>
-                    <Button variant="outline" onClick={() => setListRevision((value) => value + 1)}>
-                      {appText('historyPagination.retry', locale)}
-                    </Button>
+              {copy(reasonDecision ? 'backToOrder' : 'backToQueue')}
+            </Link>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="min-w-0 space-y-1" data-toast-anchor={uncertain ? undefined : true}>
+                <h1 ref={recordHeading} tabIndex={-1} className="text-2xl font-semibold">
+                  {copy(reasonDecision ?? 'recordTitle')}
+                </h1>
+                {detail && (
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm wrap-anywhere text-muted-foreground">
+                    <bdi>{detail.customerName}</bdi>
+                    {reasonDecision ? (
+                      <StatusBadge
+                        state={detail.commercialStatus}
+                        label={statusLabel(detail.commercialStatus, 'commercial')}
+                        tone={commercialStatusTone(detail.commercialStatus)}
+                      />
+                    ) : (
+                      <bdi dir="ltr">{detail.orderId}</bdi>
+                    )}
                   </div>
-                )
-              }
-              emptyView={
-                <p>{copy(queueView === 'conversations' ? 'emptyConversations' : 'empty')}</p>
-              }
-            >
-              {orders.length > 0 && (
-                <OperationalQueueTable
-                  locale={locale}
-                  rows={orders.map((order) => ({ ...order, id: order.orderId }))}
-                  caption={copy(
-                    queueView === 'conversations' ? 'conversationDirectory' : 'reviewDirectory'
-                  )}
-                  scrollLabel={copy(
-                    queueView === 'conversations' ? 'conversationDirectory' : 'reviewDirectory'
-                  )}
-                  nameHeader={copy('customer')}
-                  renderName={(order) => (
-                    <>
-                      <TextCell value={order.customerName} />
-                      <span className="block font-mono text-xs font-normal">
-                        <TextCell value={order.orderId} />
-                      </span>
-                    </>
-                  )}
-                  fields={[
-                    ...(queueView === 'conversations'
-                      ? [
-                          {
-                            id: 'comment',
-                            label: copy('latestComment'),
-                            render: (order: ReviewOrder) => (
-                              <DateCell
-                                value={order.latestCommentAt}
-                                format={(value) => time.format(value)}
-                              />
-                            ),
-                          },
-                        ]
-                      : [
-                          {
-                            id: 'priority',
-                            label: copy('priorityLabel'),
-                            render: (order: ReviewOrder) => (
-                              <TextCell value={copy(`priority.${order.priority ?? 'normal'}`)} />
-                            ),
-                          },
-                          {
-                            id: 'age',
-                            label: copy('ageLabel'),
-                            render: (order: ReviewOrder) => (
-                              <NumberCell
-                                value={order.ageHours}
-                                locale={locale}
-                                numerals={
-                                  numbers.numberStyle === 'western'
-                                    ? 'latn'
-                                    : numbers.numberStyle === 'persian'
-                                      ? 'arabext'
-                                      : locale === 'fa'
-                                        ? 'arabext'
-                                        : 'latn'
-                                }
-                              />
-                            ),
-                          },
-                        ]),
-                    {
-                      id: 'commercial',
-                      label: copy('commercial'),
-                      render: (order) =>
-                        order.commercialStatus ? (
-                          <StatusCell
-                            state={order.commercialStatus}
-                            label={statusLabel(order.commercialStatus, 'commercial')}
-                            tone={commercialStatusTone(order.commercialStatus)}
-                          />
-                        ) : (
-                          <TextCell value={null} />
-                        ),
-                    },
-                    {
-                      id: 'financial',
-                      label: copy('financial'),
-                      render: (order) =>
-                        order.financialStatus ? (
-                          <StatusCell
-                            state={order.financialStatus}
-                            label={statusLabel(order.financialStatus, 'financial')}
-                            tone={financialStatusTone(order.financialStatus)}
-                          />
-                        ) : (
-                          <TextCell value={null} />
-                        ),
-                    },
-                    {
-                      id: 'period',
-                      label: copy('period'),
-                      render: (order) => (
-                        <TextCell
-                          value={
-                            order.periodStart && order.periodEnd
-                              ? periodText(order.periodStart, order.periodEnd)
-                              : null
-                          }
-                        />
-                      ),
-                    },
-                    {
-                      id: 'quantity',
-                      label: copy('quantity'),
-                      render: (order) => (
-                        <TextCell
-                          value={order.totalKwh ? `${numbers.irrDigits(order.totalKwh)} kWh` : null}
-                        />
-                      ),
-                    },
-                    {
-                      id: 'total',
-                      label: copy('price'),
-                      render: (order) => (
-                        <CurrencyCell amount={order.totalIrR} format={numbers.money} />
-                      ),
-                    },
-                    {
-                      id: 'paid',
-                      label: copy('paid'),
-                      render: (order) => (
-                        <CurrencyCell amount={order.paidIrR} format={numbers.money} />
-                      ),
-                    },
-                    {
-                      id: 'submitted',
-                      label: copy('submitted'),
-                      render: (order) => (
-                        <DateCell
-                          value={order.submittedAt}
-                          format={(value) => time.format(value)}
-                        />
-                      ),
-                    },
-                  ]}
-                  actionHeader={copy('actions')}
-                  renderActions={(order) => (
-                    <Button
-                      variant={selectedId === order.orderId ? 'secondary' : 'outline'}
-                      className="min-h-11"
-                      disabled={pending.current || !!action || uncertain}
-                      aria-pressed={selectedId === order.orderId}
-                      onClick={() => selectOrder(order.orderId)}
-                    >
-                      {copy('openOrder')}
-                      <span className="sr-only">
-                        : {order.customerName} · {order.orderId}
-                      </span>
-                    </Button>
-                  )}
-                  cardHeading="h2"
-                  loading={loading}
-                  emptyMessage={copy(
-                    queueView === 'conversations' ? 'emptyConversations' : 'empty'
-                  )}
-                  tableClassName="min-w-[76rem]"
+                )}
+              </div>
+              {detail && (
+                <ListRefreshButton
+                  label={copy('refresh')}
+                  onClick={refreshQueue}
+                  disabled={locked()}
                 />
               )}
-            </ListPage.Content>
-            <ListPage.Pagination
-              kind="cursor"
-              hasMore={
-                !!nextAfter &&
-                !error &&
-                !denied &&
-                !pending.current &&
-                !action &&
-                !uncertain &&
-                (loading || (queries ? queries.queue.canAdvance(nextAfter) : nextAfter !== after))
-              }
-              loading={loading}
-              onNext={() => {
-                if (!nextAfter || pending.current || action || uncertain) return;
-                if (queries) queries.queue.next(nextAfter);
-                else setAfter(nextAfter);
-              }}
-              previous={{
-                enabled:
+            </div>
+            {!reasonDecision && (canApprove || availableDecisions.length > 0) && (
+              <section
+                aria-label={copy('orderDecision')}
+                className="flex flex-wrap gap-2 border-t pt-3"
+              >
+                {canApprove && (
+                  <Button disabled={locked()} onClick={() => choose('approve')}>
+                    {copy('approve')}
+                  </Button>
+                )}
+                {availableDecisions.map((decision) => (
+                  <Link
+                    key={decision}
+                    to="/admin/electricity-orders/$orderId/decisions/$decision"
+                    params={{ orderId: recordId, decision }}
+                    search={queueSearch ?? {}}
+                    className={buttonVariants({ variant: 'outline' })}
+                    disabled={locked()}
+                  >
+                    {copy(decision)}
+                  </Link>
+                ))}
+              </section>
+            )}
+          </header>
+        </>
+      ) : (
+        <>
+          <header className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h1 className="text-2xl font-semibold">{copy('title')}</h1>
+              <p className="text-muted-foreground">{copy('description')}</p>
+            </div>
+          </header>
+          <ElectricityRawDraftQueue />
+        </>
+      )}
+      <Content>
+        {showQueue && (
+          <ListPage.Toolbar
+            filters={
+              <div className="space-y-3">
+                <form className="flex flex-wrap items-end gap-3" onSubmit={lookupOrder}>
+                  <div className="min-w-0 flex-1 basis-64 space-y-2">
+                    <Label htmlFor="electricity-order-lookup">{copy('lookupOrderId')}</Label>
+                    <Input
+                      id="electricity-order-lookup"
+                      dir="ltr"
+                      value={lookupId}
+                      onChange={(event) => {
+                        setLookupId(event.target.value);
+                        setLookupInvalid(false);
+                      }}
+                      aria-invalid={lookupInvalid}
+                      aria-describedby={
+                        lookupInvalid ? 'electricity-order-lookup-error' : undefined
+                      }
+                    />
+                  </div>
+                  <Button type="submit" disabled={pending.current || !!action || uncertain}>
+                    {copy('lookup')}
+                  </Button>
+                  {lookupInvalid ? (
+                    <p id="electricity-order-lookup-error" role="alert" className="w-full text-sm">
+                      {copy('invalidOrderId')}
+                    </p>
+                  ) : null}
+                </form>
+                <nav className="flex flex-wrap gap-2" aria-label={copy('views')}>
+                  <Button
+                    variant={queueView === 'review' ? 'secondary' : 'outline'}
+                    disabled={pending.current || !!action || uncertain}
+                    onClick={() => changeQueueView('review')}
+                  >
+                    {copy('reviewView')}
+                  </Button>
+                  <Button
+                    variant={queueView === 'conversations' ? 'secondary' : 'outline'}
+                    disabled={pending.current || !!action || uncertain}
+                    onClick={() => changeQueueView('conversations')}
+                  >
+                    {copy('conversationView')}
+                  </Button>
+                </nav>
+              </div>
+            }
+            actions={
+              <ListRefreshButton
+                label={copy('refresh')}
+                onClick={() => {
+                  if (!locked()) refreshQueue();
+                }}
+                disabled={loading || locked()}
+              />
+            }
+          />
+        )}
+        {time.notice}
+        <div className="grid min-w-0 gap-5">
+          {showQueue && (
+            <div
+              className="min-w-0 space-y-3"
+              aria-label={copy(queueView === 'conversations' ? 'conversationView' : 'queue')}
+            >
+              <ListPage.Content
+                loading={loading}
+                error={error || denied}
+                empty={orders.length === 0 && !selectedId}
+                retainContent={orders.length > 0 && !denied}
+                loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+                errorView={
+                  denied ? (
+                    <p role="alert">{copy('forbidden')}</p>
+                  ) : (
+                    <div className="space-y-2">
+                      <p role="alert">{copy('error')}</p>
+                      <Button
+                        variant="outline"
+                        onClick={() => setListRevision((value) => value + 1)}
+                      >
+                        {appText('historyPagination.retry', locale)}
+                      </Button>
+                    </div>
+                  )
+                }
+                emptyView={
+                  after ? (
+                    <p>{copy(queueView === 'conversations' ? 'emptyConversations' : 'empty')}</p>
+                  ) : (
+                    <QueueEmptyState
+                      locale={locale}
+                      message={copy(queueView === 'conversations' ? 'emptyConversations' : 'empty')}
+                      alternatives={[
+                        {
+                          value: otherView,
+                          label: copy(
+                            otherView === 'conversations' ? 'conversationView' : 'reviewView'
+                          ),
+                          path: `/api/staff/electricity/orders${otherView === 'conversations' ? '/conversations' : ''}`,
+                        },
+                      ]}
+                      hasResults={(body) => {
+                        const items = (body as { orders?: unknown } | null)?.orders;
+                        return (
+                          Array.isArray(items) &&
+                          items.some((order) => staffOrderId(order?.orderId))
+                        );
+                      }}
+                      select={() => changeQueueView(otherView)}
+                      disabled={locked()}
+                    />
+                  )
+                }
+              >
+                {orders.length > 0 && (
+                  <OperationalQueueTable
+                    locale={locale}
+                    rows={orders.map((order) => ({ ...order, id: order.orderId }))}
+                    caption={copy(
+                      queueView === 'conversations' ? 'conversationDirectory' : 'reviewDirectory'
+                    )}
+                    scrollLabel={copy(
+                      queueView === 'conversations' ? 'conversationDirectory' : 'reviewDirectory'
+                    )}
+                    nameHeader={copy('customer')}
+                    fieldGroups={[
+                      {
+                        label: appText('recordTable.progress', locale),
+                        fields: ['commercial', 'financial'],
+                        icon: ClipboardCheckIcon,
+                      },
+                      {
+                        label: appText('recordTable.orderTerms', locale),
+                        fields: ['period', 'quantity'],
+                        icon: GaugeIcon,
+                      },
+                    ]}
+                    renderName={(order) => (
+                      <>
+                        <TextCell value={order.customerName} />
+                        <span className="block font-mono text-xs font-normal">
+                          <TextCell value={order.orderId} />
+                        </span>
+                      </>
+                    )}
+                    fields={[
+                      ...(queueView === 'conversations'
+                        ? [
+                            {
+                              id: 'comment',
+                              label: copy('latestComment'),
+                              render: (order: ReviewOrder) => (
+                                <DateCell
+                                  value={order.latestCommentAt}
+                                  format={(value) => time.format(value)}
+                                />
+                              ),
+                            },
+                          ]
+                        : [
+                            {
+                              id: 'priority',
+                              label: copy('priorityLabel'),
+                              render: (order: ReviewOrder) => (
+                                <TextCell value={copy(`priority.${order.priority ?? 'normal'}`)} />
+                              ),
+                            },
+                            {
+                              id: 'age',
+                              label: copy('ageLabel'),
+                              render: (order: ReviewOrder) => (
+                                <NumberCell
+                                  value={order.ageHours}
+                                  locale={locale}
+                                  numerals={
+                                    numbers.numberStyle === 'western'
+                                      ? 'latn'
+                                      : numbers.numberStyle === 'persian'
+                                        ? 'arabext'
+                                        : locale === 'fa'
+                                          ? 'arabext'
+                                          : 'latn'
+                                  }
+                                />
+                              ),
+                            },
+                          ]),
+                      {
+                        id: 'commercial',
+                        label: copy('commercial'),
+                        render: (order) =>
+                          order.commercialStatus ? (
+                            <StatusCell
+                              state={order.commercialStatus}
+                              label={statusLabel(order.commercialStatus, 'commercial')}
+                              tone={commercialStatusTone(order.commercialStatus)}
+                            />
+                          ) : (
+                            <TextCell value={null} />
+                          ),
+                      },
+                      {
+                        id: 'financial',
+                        label: copy('financial'),
+                        render: (order) =>
+                          order.financialStatus ? (
+                            <StatusCell
+                              state={order.financialStatus}
+                              label={statusLabel(order.financialStatus, 'financial')}
+                              tone={financialStatusTone(order.financialStatus)}
+                            />
+                          ) : (
+                            <TextCell value={null} />
+                          ),
+                      },
+                      {
+                        id: 'period',
+                        label: copy('period'),
+                        render: (order) => (
+                          <TextCell
+                            value={
+                              order.periodStart && order.periodEnd
+                                ? periodText(order.periodStart, order.periodEnd)
+                                : null
+                            }
+                          />
+                        ),
+                      },
+                      {
+                        id: 'quantity',
+                        label: copy('quantity'),
+                        render: (order) => (
+                          <TextCell
+                            value={
+                              order.totalKwh ? `${numbers.irrDigits(order.totalKwh)} kWh` : null
+                            }
+                          />
+                        ),
+                      },
+                      {
+                        id: 'total',
+                        label: copy('price'),
+                        render: (order) => (
+                          <CurrencyCell amount={order.totalIrR} format={numbers.money} />
+                        ),
+                      },
+                      {
+                        id: 'paid',
+                        label: copy('paid'),
+                        render: (order) => (
+                          <CurrencyCell amount={order.paidIrR} format={numbers.money} />
+                        ),
+                      },
+                      {
+                        id: 'submitted',
+                        label: copy('submitted'),
+                        render: (order) => (
+                          <DateCell
+                            value={order.submittedAt}
+                            format={(value) => time.format(value)}
+                          />
+                        ),
+                      },
+                    ]}
+                    actionHeader={copy('actions')}
+                    renderActions={(order) => {
+                      const text = (
+                        <>
+                          {copy('openOrder')}
+                          <span className="sr-only">
+                            : {order.customerName} · {order.orderId}
+                          </span>
+                        </>
+                      );
+                      return queueSearch ? (
+                        <Link
+                          to="/admin/electricity-orders/$orderId"
+                          params={{ orderId: order.orderId }}
+                          search={queueSearch}
+                          className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                          data-table-action-tooltip={copy('openOrder')}
+                        >
+                          <TableActionIcon icon={TableEyeIcon}>{text}</TableActionIcon>
+                        </Link>
+                      ) : (
+                        <Button
+                          variant={selectedId === order.orderId ? 'secondary' : 'outline'}
+                          className="min-h-11"
+                          disabled={pending.current || !!action || uncertain}
+                          aria-pressed={selectedId === order.orderId}
+                          onClick={() => selectOrder(order.orderId)}
+                          data-table-action-tooltip={copy('openOrder')}
+                        >
+                          <TableActionIcon icon={TableEyeIcon}>{text}</TableActionIcon>
+                        </Button>
+                      );
+                    }}
+                    cardHeading="h2"
+                    loading={loading}
+                    emptyMessage={copy(
+                      queueView === 'conversations' ? 'emptyConversations' : 'empty'
+                    )}
+                    tableClassName="min-w-[76rem]"
+                  />
+                )}
+              </ListPage.Content>
+              <ListPage.Pagination
+                kind="cursor"
+                hasMore={
+                  !!nextAfter &&
+                  !error &&
                   !denied &&
                   !pending.current &&
                   !action &&
                   !uncertain &&
-                  (queries?.queue.hasPrevious ?? false),
-                onClick: () => {
-                  if (!pending.current && !action && !uncertain) queries?.queue.previous();
-                },
-                label: appText('historyPagination.previous', locale),
-              }}
-              label={appText('historyPagination.label', locale)}
-              nextLabel={copy('more')}
-            />
-          </div>
-          {selectedId && !detail && !detailError ? (
+                  (loading || (queries ? queries.queue.canAdvance(nextAfter) : nextAfter !== after))
+                }
+                loading={loading}
+                onNext={() => {
+                  if (!nextAfter || pending.current || action || uncertain) return;
+                  if (queries) queries.queue.next(nextAfter);
+                  else setAfter(nextAfter);
+                }}
+                previous={{
+                  enabled:
+                    !denied &&
+                    !pending.current &&
+                    !action &&
+                    !uncertain &&
+                    (queries?.queue.hasPrevious ?? false),
+                  onClick: () => {
+                    if (!pending.current && !action && !uncertain) queries?.queue.previous();
+                  },
+                  label: appText('historyPagination.previous', locale),
+                }}
+                label={appText('historyPagination.label', locale)}
+                nextLabel={copy('more')}
+              />
+            </div>
+          )}
+          {recordId && denied && <p role="alert">{copy('forbidden')}</p>}
+          {selectedId && !detail && !detailError && !denied ? (
             <p role="status">{copy('loadingDetail')}</p>
           ) : null}
           {detailError ? (
@@ -997,10 +1341,27 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
               </Button>
             </div>
           ) : null}
-          {detail ? (
+          {recordId && decisionFeedback}
+          {reasonDecision &&
+            detail &&
+            (canUseReason || uncertain ? (
+              decisionEditor
+            ) : (
+              <p role="status" className="rounded-lg border bg-card p-4 text-sm">
+                {recordedDecision === reasonDecision
+                  ? confirmationText('recorded', locale)
+                  : copy('decisionUnavailable')}
+              </p>
+            ))}
+          {detail && !reasonDecision ? (
             <Card>
               <CardContent className="space-y-5 pt-6">
-                <h2 className="text-lg font-semibold">{copy('detail')}</h2>
+                <h2 className="text-lg font-semibold">
+                  {copy(recordId ? 'reviewEvidence' : 'detail')}
+                </h2>
+                {recordId && canApprove && (
+                  <p className="text-sm text-muted-foreground">{copy('reviewNext')}</p>
+                )}
                 <DualStatusDisplay
                   commercialLabel={copy('commercial')}
                   commercialStatus={statusLabel(detail.commercialStatus, 'commercial')}
@@ -1010,10 +1371,12 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
                   financialTone={financialStatusTone(detail.financialStatus)}
                 />
                 <dl className="grid gap-3 text-sm sm:grid-cols-2">
-                  <div>
-                    <dt className="text-muted-foreground">{copy('customer')}</dt>
-                    <dd>{detail.customerName}</dd>
-                  </div>
+                  {!recordId && (
+                    <div>
+                      <dt className="text-muted-foreground">{copy('customer')}</dt>
+                      <dd>{detail.customerName}</dd>
+                    </div>
+                  )}
                   <div>
                     <dt className="text-muted-foreground">{copy('submitted')}</dt>
                     <dd>{time.format(detail.submittedAt)}</dd>
@@ -1039,7 +1402,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
                     <dd>
                       <a
                         className="touch-action text-primary underline underline-offset-2"
-                        href={`/admin/invoices?invoiceId=${encodeURIComponent(detail.invoiceId)}`}
+                        href={`/admin/invoices/${encodeURIComponent(detail.invoiceId)}`}
                       >
                         {copy('openInvoice')}
                       </a>
@@ -1051,7 +1414,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
                       <dd>
                         <a
                           className="touch-action text-primary underline underline-offset-2"
-                          href={`/admin/contracts?contractId=${encodeURIComponent(detail.contractId)}`}
+                          href={`/admin/contracts/${encodeURIComponent(detail.contractId)}`}
                         >
                           {copy('openContract')}
                         </a>
@@ -1297,7 +1660,8 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
                   scopeKey={JSON.stringify([scope, detail.orderId, detail.versionId])}
                   staff
                 />
-                <ElectricityOrderComments
+                <OrderDiscussionSection
+                  kind="electricity"
                   key={detail.orderId}
                   orderId={detail.orderId}
                   profileId={detail.profileId}
@@ -1305,125 +1669,27 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
                   staff
                   formatTimestamp={time.format}
                 />
-                {[
-                  'draft',
-                  'submitted',
-                  'awaiting_staff_review',
-                  'changes_requested',
-                  'approved',
-                ].includes(detail.commercialStatus) ? (
-                  <div className="space-y-3 border-t pt-4">
-                    <Form {...form}>
-                      <div data-testid="electricity-staff-reason-form">
-                        <FormField
-                          control={form.control}
-                          name="reason"
-                          render={({ field }) => (
-                            <FormItem id="electricity-review-reason">
-                              <FormLabel>{copy('reason')}</FormLabel>
-                              <FormControl>
-                                <Textarea
-                                  {...field}
-                                  aria-required={
-                                    detail.commercialStatus !== 'awaiting_staff_review' || undefined
-                                  }
-                                  disabled={
-                                    reviewLoading ||
-                                    form.formState.isSubmitting ||
-                                    pending.current ||
-                                    !!action ||
-                                    uncertain
-                                  }
-                                />
-                              </FormControl>
-                              <FormDescription>{formCopy('help')}</FormDescription>
-                              <div className="grid">
-                                <p
-                                  aria-hidden="true"
-                                  className="invisible col-start-1 row-start-1 text-sm"
-                                >
-                                  {formCopy('invalid')}
-                                </p>
-                                <FormMessage className="col-start-1 row-start-1" />
-                              </div>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </Form>
-                    {form.formState.errors.root && (
-                      <Alert variant="destructive">
-                        <AlertDescription>{formCopy('validationUnavailable')}</AlertDescription>
-                      </Alert>
-                    )}
-                    {uncertain && (
-                      <Alert>
-                        <AlertDescription>{formCopy('uncertain')}</AlertDescription>
-                        <Button
-                          variant="outline"
-                          disabled={pending.current || !!action}
-                          onClick={() => {
-                            const command = captured.current;
-                            if (!command || !live(command) || pending.current || action) return;
-                            command.attempted = false;
-                            command.rejected = false;
-                            // The hash, body and idempotency key belong to the original uncertain attempt.
-                            command.action = { ...command.action };
-                            decorateAction(command, command.action);
-                            setDecisionReview(command.review);
-                            setAction(command.action);
-                          }}
-                        >
-                          {formCopy('retry')}
-                        </Button>
-                      </Alert>
-                    )}
+                {!recordId && canReviewOrder('reject', detail.commercialStatus) && (
+                  <div id="electricity-order-decision" className="space-y-3 border-t pt-4">
+                    {decisionEditor}
+                    {decisionFeedback}
                     <div className="flex flex-wrap gap-2">
-                      <Button
-                        disabled={
-                          detail.commercialStatus !== 'awaiting_staff_review' ||
-                          reviewLoading ||
-                          form.formState.isSubmitting ||
-                          pending.current ||
-                          !!action ||
-                          uncertain
-                        }
-                        onClick={() => void choose('approve')}
-                      >
+                      <Button disabled={!canApprove || locked()} onClick={() => choose('approve')}>
                         {copy('approve')}
                       </Button>
-                      <Button
-                        variant="outline"
-                        disabled={
-                          detail.commercialStatus !== 'awaiting_staff_review' ||
-                          reviewLoading ||
-                          form.formState.isSubmitting ||
-                          pending.current ||
-                          !!action ||
-                          uncertain
-                        }
-                        onClick={() => void choose('request-changes')}
-                      >
-                        {copy('request-changes')}
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        disabled={
-                          reviewLoading ||
-                          form.formState.isSubmitting ||
-                          pending.current ||
-                          !!action ||
-                          uncertain
-                        }
-                        onClick={() => void choose('reject')}
-                      >
-                        {copy('reject')}
-                      </Button>
+                      {reasonDecisions.map((decision) => (
+                        <Button
+                          key={decision}
+                          variant={decision === 'reject' ? 'destructive' : 'outline'}
+                          disabled={!canReviewOrder(decision, detail.commercialStatus) || locked()}
+                          onClick={() => choose(decision)}
+                        >
+                          {copy(decision)}
+                        </Button>
+                      ))}
                     </div>
-                    {reviewLoading ? <LoadingStatus>{copy('reviewLoading')}</LoadingStatus> : null}
-                    {reviewError ? <p role="alert">{copy('reviewError')}</p> : null}
                   </div>
-                ) : null}
+                )}
                 {detail.contractId &&
                 [
                   'draft',
@@ -1437,8 +1703,11 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
                     contractId={detail.contractId}
                     unavailable={reviewLoading || !!action || uncertain || pending.current}
                     onChanged={() => {
-                      setSelectedId(null);
-                      setDetail(null);
+                      if (recordId) refreshQueue();
+                      else {
+                        setSelectedId(null);
+                        setDetail(null);
+                      }
                     }}
                   />
                 ) : null}
@@ -1446,7 +1715,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
             </Card>
           ) : null}
         </div>
-      </ListPage>
+      </Content>
       {action && decisionReview && captured.current && live(captured.current) ? (
         <TeamActionDialog
           action={action}
@@ -1575,6 +1844,7 @@ function OwnedAdminElectricityOrdersPage({ queries }: { queries?: StaffOrderList
             if (!command || !live(command) || command.action !== action) return;
             if (!confirmedStaffDecision(result, command.review))
               throw new Error('Unconfirmed decision');
+            setRecordedDecision(reasonDecision);
             form.reset({ reason: '' });
             refreshQueue();
             return confirmationText('recorded', locale);

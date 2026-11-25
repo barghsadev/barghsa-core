@@ -18,6 +18,14 @@ export interface SavingHardwareUpgrade {
   hardwareTitle: { fa: string; en: string };
 }
 
+export function canCancelSavingHardwareUpgrade(upgrade: SavingHardwareUpgrade) {
+  return (
+    upgrade.status === 'awaiting_payment' &&
+    upgrade.paidIrR === '0' &&
+    ['Unpaid', 'Overdue'].includes(upgrade.invoiceState)
+  );
+}
+
 export function SavingHardwareUpgradeHistory({
   upgrades,
   renderCancel,
@@ -54,10 +62,9 @@ export function SavingHardwareUpgradeHistory({
                 </Link>
               </p>
               <p className="whitespace-pre-wrap text-muted-foreground">{upgrade.reason}</p>
-              {upgrade.status === 'awaiting_payment' &&
-                upgrade.paidIrR === '0' &&
-                ['Unpaid', 'Overdue'].includes(upgrade.invoiceState) &&
-                renderCancel && <div className="space-y-2 pt-2">{renderCancel(upgrade)}</div>}
+              {canCancelSavingHardwareUpgrade(upgrade) && renderCancel && (
+                <div className="space-y-2 pt-2">{renderCancel(upgrade)}</div>
+              )}
             </li>
           ))}
         </ol>

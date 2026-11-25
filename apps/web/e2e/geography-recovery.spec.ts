@@ -35,81 +35,10 @@ async function shell(page: Page, locale: 'en' | 'fa', darkMode: boolean) {
     })
   );
 }
-async function inspect(page: Page, name: string, locale: string, project: string, dialog = false) {
-  const popup = page.getByRole('dialog');
-  if (dialog) {
-    await popup.evaluate(async (node) => {
-      await Promise.all(
-        node.getAnimations({ subtree: true }).map((animation) => animation.finished.catch(() => {}))
-      );
-    });
-  }
-  const scan = await new AxeBuilder({ page })
-    .include(dialog ? '[role="dialog"]' : 'main')
-    .analyze();
+async function inspect(page: Page, name: string, locale: string, project: string) {
+  const scan = await new AxeBuilder({ page }).include('main').analyze();
   expect(scan.violations).toEqual([]);
-  if (dialog) {
-    // Wrapped description/alert text can appear partially obscured to Axe.
-    // Verify every reported text node against its opaque dialog background and
-    // hit-test its visible lines rather than assuming one affected node.
-    for (const item of scan.incomplete.filter((item) => item.id === 'color-contrast')) {
-      for (const reported of item.nodes) {
-        expect(reported.html).toMatch(/data-slot="dialog-description"|role="alert"/);
-        const measured = await popup.locator(reported.target[0] as string).evaluate((node) => {
-          const popup = node.closest('[role="dialog"]')!;
-          const canvas = document.createElement('canvas');
-          canvas.width = canvas.height = 1;
-          const ctx = canvas.getContext('2d')!;
-          const color = (value: string) => {
-            ctx.clearRect(0, 0, 1, 1);
-            ctx.fillStyle = value;
-            ctx.fillRect(0, 0, 1, 1);
-            return Array.from(ctx.getImageData(0, 0, 1, 1).data);
-          };
-          const fg = color(getComputedStyle(node).color),
-            bg = color(getComputedStyle(popup).backgroundColor);
-          const luminance = (rgb: number[]) =>
-            rgb.slice(0, 3).reduce((sum, value, index) => {
-              const s = value / 255;
-              return (
-                sum +
-                [0.2126, 0.7152, 0.0722][index]! *
-                  (s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4)
-              );
-            }, 0);
-          const f = luminance(fg),
-            b = luminance(bg);
-          const range = document.createRange();
-          range.selectNodeContents(node);
-          const unobscured = Array.from(range.getClientRects()).every((rect) =>
-            node.contains(
-              document.elementFromPoint(
-                rect.x + Math.min(10, rect.width / 2),
-                rect.y + rect.height / 2
-              )
-            )
-          );
-          let opaque = true;
-          for (let ancestor: Element | null = node; ancestor; ancestor = ancestor.parentElement)
-            if (getComputedStyle(ancestor).opacity !== '1') opaque = false;
-          return {
-            ratio: (Math.max(f, b) + 0.05) / (Math.min(f, b) + 0.05),
-            fg,
-            bg,
-            unobscured,
-            opaque,
-          };
-        });
-        expect(measured.fg[3]).toBe(255);
-        expect(measured.bg[3]).toBe(255);
-        expect(measured.opaque).toBe(true);
-        expect(measured.unobscured).toBe(true);
-        expect(measured.ratio).toBeGreaterThanOrEqual(4.5);
-      }
-    }
-  } else {
-    await verifyClippedContrast(page, scan);
-  }
+  await verifyClippedContrast(page, scan);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   if (locale === 'fa' && project === 'mobile-safari')
     await page.screenshot({
@@ -127,28 +56,44 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/geography/provinces/p1/cities?*', (route) =>
       route.fulfill({ json: { cities: [city], total: 1 } })
     );
+    const exactReads = new Set<string>();
+    await page.route('**/api/admin/geography/provinces/p1', (route) => {
+      exactReads.add(new URL(route.request().url()).pathname);
+      return route.fulfill({ json: province });
+    });
+    await page.route('**/api/admin/geography/provinces/p1/cities/c1', (route) => {
+      exactReads.add(new URL(route.request().url()).pathname);
+      return route.fulfill({ json: city });
+    });
     await page.goto('/admin/geography');
-    const dialog = page.getByRole('dialog');
-    const englishName = dialog.getByLabel(word('nameEn'), { exact: true });
-    await page.getByRole('button', { name: word('edit'), exact: true }).click();
-    await expect(page).toHaveURL((url) => url.searchParams.get('provinceEditor') === province.id);
+    const provinceForm = page.getByRole('form', { name: word('editTitle'), exact: true });
+    const englishName = provinceForm.getByLabel(word('nameEn'), { exact: true });
+    await page.getByRole('link', { name: word('edit'), exact: true }).click();
+    await expect(page).toHaveURL('/admin/geography/provinces/p1/edit');
     await englishName.fill('Local province name');
     await page.reload();
     await expect(englishName).toHaveValue(province.nameEn);
     await page.goBack();
-    await expect(dialog).toHaveCount(0);
-    await page.getByRole('button', { name: word('cities'), exact: true }).click();
+    await expect(provinceForm).toHaveCount(0);
+    await page.getByRole('link', { name: word('cities'), exact: true }).click();
     const cityWorkspace = page.locator('#cities-p1');
-    await cityWorkspace.getByRole('button', { name: word('edit'), exact: true }).click();
-    await expect(page).toHaveURL(
-      (url) =>
-        url.searchParams.get('province') === province.id &&
-        url.searchParams.get('cityEditor') === city.id
-    );
+    await cityWorkspace.getByRole('link', { name: word('edit'), exact: true }).click();
+    await expect(page).toHaveURL('/admin/geography/provinces/p1/cities/c1/edit');
+    exactReads.clear();
     await page.reload();
-    await expect(englishName).toHaveValue(city.nameEn);
-    await page.goBack();
-    await expect(dialog).toHaveCount(0);
+    const cityForm = page.getByRole('form', { name: word('editCity'), exact: true });
+    await expect(cityForm.getByLabel(word('nameEn'), { exact: true })).toHaveValue(city.nameEn);
+    expect([...exactReads].sort()).toEqual([
+      '/api/admin/geography/provinces/p1',
+      '/api/admin/geography/provinces/p1/cities/c1',
+    ]);
+    await cityForm.getByRole('button', { name: word('cancel'), exact: true }).click();
+    await expect(page).toHaveURL('/admin/geography/provinces/p1/cities/c1');
+    await expect(cityForm).toHaveCount(0);
+    await page
+      .getByRole('main')
+      .getByRole('link', { name: locale === 'fa' ? province.nameFa : province.nameEn, exact: true })
+      .click();
     await expect(cityWorkspace).toBeVisible();
   });
 }
@@ -160,13 +105,12 @@ for (const [locale, darkMode] of [
   ['fa', true],
 ] as const) {
   const word = (key: Parameters<typeof geographyText>[0]) => geographyText(key, locale);
-  test(`province page recovery retains expanded cities and exact request (${locale}, dark=${darkMode})`, async ({
+  test(`province list recovery retains accepted rows and the exact request (${locale}, dark=${darkMode})`, async ({
     page,
   }, info) => {
     await shell(page, locale, darkMode);
     let fail = false,
-      denied = false,
-      cityReads = 0;
+      denied = false;
     const queries: string[] = [];
     await page.route('**/api/admin/geography/provinces?*', (route) => {
       queries.push(route.request().url());
@@ -179,15 +123,8 @@ for (const [locale, darkMode] of [
         },
       });
     });
-    await page.route('**/api/admin/geography/provinces/p1/cities?*', (route) => {
-      cityReads++;
-      return route.fulfill({ json: { cities: [city], total: 1 } });
-    });
     await page.goto('/admin/geography');
-    await page.getByRole('button', { name: word('cities'), exact: true }).click();
-    await expect(
-      page.locator('table:visible, ol[role=list]:visible').getByText('Rey', { exact: true })
-    ).toBeVisible();
+    await expect(page.getByRole('link', { name: word('cities'), exact: true })).toBeVisible();
     await page.setViewportSize({ width: 800, height: 844 });
     const viewport = page
       .locator('[role=region][tabindex="0"]')
@@ -206,7 +143,9 @@ for (const [locale, darkMode] of [
     await page.getByRole('button', { name: word('next'), exact: true }).click();
     await expect(page.getByRole('alert')).toBeVisible();
     await expect(
-      page.locator('table:visible, ol[role=list]:visible').getByText('Rey', { exact: true })
+      page
+        .locator('table:visible, ol[role=list]:visible')
+        .getByText(province.nameEn, { exact: true })
     ).toBeVisible();
     const failed = queries.at(-1);
     expect(new URL(failed!).searchParams.get('page')).toBe('2');
@@ -215,7 +154,6 @@ for (const [locale, darkMode] of [
     await page.getByRole('button', { name: word('retry'), exact: true }).click();
     await expect(page.getByRole('alert')).toHaveCount(0);
     expect(queries.at(-1)).toBe(failed);
-    expect(cityReads).toBe(1);
     await expect(
       page
         .locator('table:visible, ol[role=list]:visible')
@@ -235,60 +173,49 @@ for (const [locale, darkMode] of [
     await shell(page, locale, darkMode);
     let fail = false,
       changed = false;
-    await page.route('**/api/admin/geography/provinces?*', (route) =>
+    await page.route('**/api/admin/geography/provinces/p1', (route) =>
       route.fulfill({
         status: fail ? 503 : 200,
-        json: {
-          provinces: [{ ...province, nameEn: changed ? 'Changed Province' : province.nameEn }],
-          total: 1,
-        },
+        json: { ...province, nameEn: changed ? 'Changed Province' : province.nameEn },
       })
     );
-    await page.goto('/admin/geography');
-    await page.getByRole('button', { name: word('edit'), exact: true }).click();
-    const dialog = page.getByRole('dialog');
+    await page.goto('/admin/geography/provinces/p1/edit');
+    const dialog = page.getByRole('form', { name: word('editTitle'), exact: true });
     await dialog.locator('#province-name-en').fill('Unsaved Province');
     fail = true;
     await dialog.getByRole('button', { name: word('provinceRetry'), exact: true }).click();
     await expect(dialog.getByRole('button', { name: word('save'), exact: true })).toBeDisabled();
     await expect(dialog.locator('#province-name-en')).toHaveValue('Unsaved Province');
-    await inspect(page, `edit-${darkMode ? 'dark' : 'light'}`, locale, info.project.name, true);
+    await inspect(page, `edit-${darkMode ? 'dark' : 'light'}`, locale, info.project.name);
     fail = false;
     await dialog.getByRole('button', { name: word('provinceRetry'), exact: true }).click();
     await expect(dialog.getByRole('button', { name: word('save'), exact: true })).toBeEnabled();
     await expect(dialog.locator('#province-name-en')).toHaveValue('Unsaved Province');
     changed = true;
     await dialog.getByRole('button', { name: word('provinceRetry'), exact: true }).click();
-    await expect(dialog).toHaveCount(0);
-    await expect(
-      page
-        .locator('table:visible, ol[role=list]:visible')
-        .getByText('Changed Province', { exact: true })
-    ).toBeVisible();
+    await expect(dialog.locator('#province-name-en')).toHaveValue('Changed Province');
   });
-  test(`city import preserves rows through independent retries and permission denial (${locale}, dark=${darkMode})`, async ({
+  test(`city import preserves rows through exact parent retries and permission denial (${locale}, dark=${darkMode})`, async ({
     page,
   }, info) => {
     await shell(page, locale, darkMode);
     let fail = false,
       denied = false,
-      provinceReads = 0;
+      collectionReads = 0;
     const writes: unknown[] = [];
     await page.route('**/api/admin/geography/provinces?*', (route) => {
-      provinceReads++;
+      collectionReads++;
       return route.fulfill({ json: { provinces: [province], total: 1 } });
     });
-    await page.route('**/api/admin/geography/provinces/p1/cities?*', (route) =>
-      route.fulfill({ status: denied ? 403 : fail ? 503 : 200, json: { cities: [city], total: 1 } })
+    await page.route('**/api/admin/geography/provinces/p1', (route) =>
+      route.fulfill({ status: denied ? 403 : fail ? 503 : 200, json: province })
     );
     await page.route('**/api/admin/geography/provinces/p1/cities/import', (route) => {
       writes.push(route.request().postDataJSON());
       return route.fulfill({ status: 409, json: {} });
     });
-    await page.goto('/admin/geography');
-    await page.getByRole('button', { name: word('cities'), exact: true }).click();
-    await page.getByRole('button', { name: word('importCities'), exact: true }).click();
-    const dialog = page.getByRole('dialog');
+    await page.goto('/admin/geography/provinces/p1/cities/import');
+    const dialog = page.getByRole('form', { name: word('importCities'), exact: true });
     await dialog.locator('#city-import-rows').fill('اسلامشهر\tEslamshahr');
     fail = true;
     await dialog.getByRole('button', { name: word('cityRetry'), exact: true }).click();
@@ -296,15 +223,15 @@ for (const [locale, darkMode] of [
       dialog.getByRole('button', { name: word('importCities'), exact: true })
     ).toBeDisabled();
     await expect(dialog.locator('#city-import-rows')).toHaveValue('اسلامشهر\tEslamshahr');
-    await inspect(page, `import-${darkMode ? 'dark' : 'light'}`, locale, info.project.name, true);
+    await inspect(page, `import-${darkMode ? 'dark' : 'light'}`, locale, info.project.name);
     fail = false;
     await dialog.getByRole('button', { name: word('cityRetry'), exact: true }).click();
     await expect(
       dialog.getByRole('button', { name: word('importCities'), exact: true })
     ).toBeEnabled();
-    expect(provinceReads).toBe(1);
+    expect(collectionReads).toBe(0);
     await dialog.getByRole('button', { name: word('importCities'), exact: true }).click();
-    await expect(dialog.getByRole('alert')).toContainText(word('cityConflict'));
+    await expect(dialog.getByRole('alert')).toContainText(word('importConflict'));
     expect(writes).toEqual([{ cities: [{ nameFa: 'اسلامشهر', nameEn: 'Eslamshahr' }] }]);
     await expect(dialog.locator('#city-import-rows')).toHaveValue('اسلامشهر\tEslamshahr');
     denied = true;

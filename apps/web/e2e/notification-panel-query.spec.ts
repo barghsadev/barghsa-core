@@ -1,4 +1,4 @@
-import { test, expect, type Page } from './coverage-fixture';
+import { expandListFilters, test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/admin-ui';
@@ -103,8 +103,9 @@ for (const locale of ['en', 'fa'] as const)
         return route.fulfill({ json: [deadLetter] });
       });
       await page.goto(
-        `/admin/notifications?locale=${locale}&preview_event=fixture.versions&preview_channel=in_app&preview_locale=${locale}&preview_version=draft-v3&failed_status=all&failed_channel=email&failed_severity=critical&failed_page=3`
+        `/admin/notifications/preview?locale=${locale}&preview_event=fixture.versions&preview_channel=in_app&preview_locale=${locale}&preview_version=draft-v3&failed_status=all&failed_channel=email&failed_severity=critical&failed_page=3`
       );
+      await expandListFilters(page, locale);
       const catalogue = page
         .locator('main [data-slot="list-page"]')
         .filter({ has: page.getByRole('combobox', { name: word('allStatus'), exact: true }) });
@@ -115,14 +116,7 @@ for (const locale of ['en', 'fa'] as const)
       const version = page.locator('#tpl-preview-version');
       await expect(version).toHaveValue('draft-v3');
       await expect(page.locator('pre').first()).toHaveText('Draft preview');
-      await expect
-        .poll(() => Object.fromEntries(queueReads.at(-1)?.searchParams ?? []))
-        .toEqual({
-          channel: 'email',
-          severity: 'critical',
-          limit: '26',
-          offset: '50',
-        });
+      expect(queueReads).toHaveLength(0);
       expect(Object.fromEntries(catalogueReads.at(-1)!.searchParams)).toEqual({ locale });
       await version.selectOption('active-v2');
       await expect.poll(() => params(page).get('preview_version')).toBe('active-v2');
@@ -133,31 +127,15 @@ for (const locale of ['en', 'fa'] as const)
       await expect(version).toHaveValue('draft-v3');
       await page.goForward();
       await expect(version).toHaveValue('active-v2');
-      // The first catalogue row is the draft in both dictionaries.
-      await catalogue
-        .getByRole('button', { name: word('edit'), exact: true })
-        .first()
-        .click();
-      const body = page.locator('#notification-template-bodyTemplate');
-      await body.fill('Private draft preserved');
-      const queue = page
-        .locator('main section')
-        .filter({ has: page.getByRole('heading', { name: word('deadLetter.title'), exact: true }) })
-        .last();
-      await queue
-        .getByRole('combobox', { name: word('deadLetter.severity'), exact: true })
-        .selectOption('error');
-      await expect.poll(() => params(page).get('failed_severity')).toBe('error');
-      expect(params(page).has('failed_page')).toBe(false);
-      expect(params(page).get('preview_version')).toBe('active-v2');
-      await expect(body).toHaveValue('Private draft preserved');
+      expect(params(page).get('failed_severity')).toBe('critical');
+      expect(params(page).get('failed_page')).toBe('3');
       await page.locator('#tpl-preview-channel').selectOption('in_app');
       await expect.poll(() => params(page).has('preview_version')).toBe(false);
-      expect(params(page).get('failed_severity')).toBe('error');
+      expect(params(page).get('failed_severity')).toBe('critical');
       expect(params(page).get('locale')).toBe(locale);
-      await expect(body).toHaveValue('Private draft preserved');
       await version.selectOption('draft-v3');
       await expect.poll(() => params(page).get('preview_version')).toBe('draft-v3');
+      await expandListFilters(page, locale);
       await catalogue
         .getByRole('combobox', { name: word('allStatus'), exact: true })
         .selectOption('archived');
@@ -184,9 +162,30 @@ for (const locale of ['en', 'fa'] as const)
       await page.getByRole('button', { name: word('preview.reset'), exact: true }).click();
       await expect.poll(() => params(page).has('preview_event')).toBe(false);
       expect(params(page).has('preview_version')).toBe(false);
-      expect(params(page).get('failed_severity')).toBe('error');
-      await queue.scrollIntoViewIfNeeded();
-      await inspect(page, locale, info.project.name, 'combined', dark);
+      expect(params(page).get('failed_severity')).toBe('critical');
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: word('title'), exact: true })
+        .click();
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: word('deadLetter.title'), exact: true })
+        .click();
+      await expect
+        .poll(() => Object.fromEntries(queueReads.at(-1)?.searchParams ?? []))
+        .toEqual({
+          channel: 'email',
+          severity: 'critical',
+          limit: '26',
+          offset: '50',
+        });
+      const queue = page.getByRole('main');
+      await queue
+        .getByRole('combobox', { name: word('deadLetter.severity'), exact: true })
+        .selectOption('error');
+      await expect.poll(() => params(page).get('failed_severity')).toBe('error');
+      expect(params(page).has('failed_page')).toBe(false);
+      await inspect(page, locale, info.project.name, 'queue', dark);
     });
 
     test(`failed notification URLs restore filters and exact page recovery (${locale}, ${dark})`, async ({

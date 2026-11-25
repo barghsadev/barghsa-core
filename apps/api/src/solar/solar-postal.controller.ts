@@ -160,6 +160,12 @@ export class StaffSolarPostalController {
     private readonly tracking: SolarPostalTrackingService
   ) {}
 
+  @Get('requests/:id/postal')
+  @ApiOperation({ summary: 'Read the shipment and postal review status for one solar request' })
+  shipmentState(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
+    return this.service.staffShipment(req.session, id);
+  }
+
   @Get('requests/:id/postal/tracking')
   @ApiOperation({ summary: 'Read staff shipment arrival estimate and tracking page' })
   trackingState(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {

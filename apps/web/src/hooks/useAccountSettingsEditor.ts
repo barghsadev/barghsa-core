@@ -302,9 +302,11 @@ export function useAccountSettingsEditor(locale: Locale) {
       return;
     }
     setLoading(true);
-    void readUser(token)
+    // Let a replayed mount retire its read before starting a query.
+    void Promise.resolve()
+      .then(() => (permitted(token) && read === generation.current ? readUser(token) : undefined))
       .then((next) => {
-        if (permitted(token) && read === generation.current) acceptUser(next);
+        if (next && permitted(token) && read === generation.current) acceptUser(next);
       })
       .catch(() => {
         if (permitted(token) && read === generation.current)

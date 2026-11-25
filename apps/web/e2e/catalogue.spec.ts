@@ -25,7 +25,9 @@ for (const locale of ['en', 'fa'])
       verified = false,
       denied = false;
     const attempts: unknown[] = [];
-    await page.route('**/api/admin/catalogue/products*', (route) => {
+    await page.route('**/api/admin/catalogue/products**', (route) => {
+      if (route.request().method() === 'GET' && route.request().url().endsWith('/rule-references'))
+        return route.fulfill({ json: { greenModes: [], vatOverride: false } });
       if (route.request().method() === 'GET')
         return route.fulfill(
           denied ? { status: 403, json: {} } : failed ? { status: 503, json: {} } : { json: [] }
@@ -48,7 +50,7 @@ for (const locale of ['en', 'fa'])
     failed = false;
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
     await page
-      .getByRole('button', { name: fa ? 'افزودن محصول' : 'Add product', exact: true })
+      .getByRole('link', { name: fa ? 'افزودن محصول' : 'Add product', exact: true })
       .click();
     await page
       .getByLabel(fa ? 'عنوان فارسی' : 'Persian title', { exact: true })

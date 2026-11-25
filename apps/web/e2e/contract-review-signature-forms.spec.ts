@@ -96,9 +96,23 @@ for (const [locale, theme] of [
   const acknowledgement = (page: Page) => page.locator('#signature-acknowledgement');
   const requestForm = (page: Page) => page.getByTestId('contract-signature-request-form');
   const recordForm = (page: Page) => page.getByTestId('contract-signature-record-form');
+  async function openSigning(page: Page, request: boolean, version = acceptedVersion) {
+    await page
+      .getByRole('link', {
+        name: word(request ? 'prepareSignature' : 'recordSignature'),
+        exact: true,
+      })
+      .click();
+    await expect(page).toHaveURL(
+      new RegExp(
+        `/contracts/${contractId}/${request ? 'signature-request' : 'record-signature'}/${version}`
+      )
+    );
+    await expect((request ? recordForm : requestForm)(page)).toHaveCount(0);
+  }
   async function open(page: Page, staff: boolean, number: number) {
     await page.goto(staff ? '/admin/contracts' : '/contracts');
-    await page.getByRole('button', { name: rowName(number), exact: true }).click();
+    await page.getByRole('link', { name: rowName(number), exact: true }).click();
   }
   async function financialDisclosure(page: Page, amendment: boolean, signedName: string | null) {
     const region = dialog(page).getByRole('region', { name: word('financialReview'), exact: true });
@@ -131,31 +145,53 @@ for (const [locale, theme] of [
     const reason = page.locator('#contract-change-reason'),
       reasonForm = page.getByTestId('contract-request-changes-form');
     const reasonSubmit = reasonForm.locator('button[type=submit]');
+    const correctionEntry = page.getByRole('link', { name: word('request-changes'), exact: true });
+    const correctionsBack = page.getByRole('link', { name: word('backToContract'), exact: true });
+    await page.goto(`/admin/contracts/${contractId}/request-changes/${acceptedVersion}`);
+    await expect(
+      page.getByRole('status').filter({ hasText: copy('changeUnavailable') })
+    ).toBeVisible();
+    await expect(reasonForm).toHaveCount(0);
+    expect(state.writes).toEqual([]);
     state.holdRead = true;
     await open(page, true, 1);
     await expect.poll(() => !!state.heldRead).toBe(true);
     const oldRead = state.heldRead!;
     state.holdRead = false;
-    await page.getByRole('button', { name: rowName(8), exact: true }).click();
+    const back = page.getByRole('link', { name: word('backToContracts'), exact: true });
+    await back.click();
+    await page.getByRole('link', { name: rowName(8), exact: true }).click();
+    await correctionEntry.click();
+    await expect(page).toHaveURL(new RegExp(`/admin/contracts/${otherContract}/request-changes/`));
     await expect(reason).toBeEnabled();
     await expect(reason).toHaveAccessibleName(word('reason'));
     await expect(reason).toHaveAttribute('aria-required', 'true');
     await reason.fill('Fresh private review draft');
     await error(oldRead, 403, ErrorCodes.AUTHZ_FORBIDDEN.code);
     await expect(reason).toHaveValue('Fresh private review draft');
-    await page.getByRole('button', { name: rowName(1), exact: true }).click();
+    await correctionsBack.click();
+    await expect(page).toHaveURL(`/admin/contracts/${otherContract}`);
+    await back.click();
+    await page.getByRole('link', { name: rowName(1), exact: true }).click();
+    await correctionEntry.click();
+    await expect(page).toHaveURL(`/admin/contracts/${contractId}/request-changes/${reviewVersion}`);
+    const terms = page.locator('summary').filter({ hasText: word('terms') });
+    await expect(page.getByText('Published contract terms', { exact: true })).toBeHidden();
+    await terms.click();
+    await expect(page.getByText('Published contract terms', { exact: true })).toBeVisible();
+    await terms.click();
     await expect(reason).toBeEnabled();
     await reason.focus();
     await reason.fill('x'.repeat(1001));
     // Native blur starts the deferred resolver before duplicate native submit events.
-    await page.locator('#contracts-number').fill('  23  ');
+    await reason.blur();
     await reasonForm.dispatchEvent('submit');
     await expect(reasonSubmit).toBeDisabled();
     await reasonForm.dispatchEvent('submit');
     expect(state.writes).toEqual([]);
     release();
     await focusedError(reason);
-    await expect(page.locator('#contracts-number')).toHaveValue('23');
+    await expect(page.locator('#contracts-number')).toHaveCount(0);
     await expect(reasonForm).toContainText(copy('reasonHelp'));
     await inspect(page, reasonForm, '[data-testid="contract-request-changes-form"]', reasonSubmit);
     await fieldCapture(reason, info.outputPath(`contract-staff-fields-${locale}-${theme}.png`));
@@ -163,6 +199,8 @@ for (const [locale, theme] of [
     state.writeMode = 'held';
     await reasonSubmit.click();
     await expect(dialog(page)).toBeVisible();
+    await expect(dialog(page)).toContainText('Revise the delivery milestones');
+    await expect(dialog(page)).toContainText(copy('changeReviewHelp'));
     await confirm(page).click();
     await expect.poll(() => !!state.heldWrite).toBe(true);
     await error(state.heldWrite!, 400, ErrorCodes.VALIDATION_INPUT_INVALID.code, ['reason']);
@@ -194,15 +232,18 @@ for (const [locale, theme] of [
     await expect(retry).toBeEnabled();
     await heldChanges.fulfill({ json: receipt }).catch(() => {});
     await expect(reason).toBeDisabled();
-    const other = page.getByRole('button', { name: rowName(8), exact: true });
-    await expect(other).toBeDisabled();
-    await expect(page.getByRole('button', { name: word('close'), exact: true })).toBeDisabled();
+    const before = page.url();
+    await expect(page.getByRole('link', { name: rowName(8), exact: true })).toHaveCount(0);
+    await expect(page.getByRole('link', { name: word('uploadSigned'), exact: true })).toHaveCount(
+      0
+    );
     for (const upload of await page
       .getByRole('button', { name: word('uploadSigned'), exact: true })
       .all())
       await expect(upload).toBeDisabled();
     const reads = state.reads.length;
-    await other.dispatchEvent('click');
+    await correctionsBack.dispatchEvent('click');
+    await expect(page).toHaveURL(before);
     for (const refresh of await page
       .getByRole('button', { name: word('refresh'), exact: true })
       .all())
@@ -222,6 +263,14 @@ for (const [locale, theme] of [
     await retry.click();
     await confirm(page).click();
     await expect(dialog(page)).toHaveCount(0);
+    await expect(
+      page.getByRole('status').filter({ hasText: copy('changeRecorded') })
+    ).toBeVisible();
+    await expect(reasonForm).toHaveCount(0);
+    await correctionsBack.click();
+    await expect(back).toBeVisible();
+    await expect(requestForm(page)).toHaveCount(0);
+    await openSigning(page, true);
     await expect(original(page)).toBeEnabled();
     expect(state.effects).toBe(1);
     for (const command of state.writes.slice(1)) expect(command.raw).toBe(captured.raw);
@@ -229,13 +278,13 @@ for (const [locale, theme] of [
     expect(
       state.writes.slice(2).every((command) => command.csrf === 'contract-signature-rotated')
     ).toBe(true);
-    await expect(page.getByRole('button', { name: rowName(8), exact: true })).toBeEnabled();
     await expect(
       original(page).locator('option', { hasText: 'ineligible-original.png' })
     ).toHaveCount(0);
     await requestForm(page).dispatchEvent('submit');
     await focusedError(original(page));
     await original(page).selectOption(originalDocument);
+    await expect(requestForm(page).getByText('PDF', { exact: true })).toBeVisible();
     state.previewMode = 'owned';
     await requestForm(page).locator('button[type=submit]').click();
     await focusedError(original(page));
@@ -270,8 +319,8 @@ for (const [locale, theme] of [
     await approveSignatureReview(page);
     await confirm(page).click();
     await expect(dialog(page)).toHaveCount(0);
+    await openSigning(page, false);
     await expect(signed(page)).toBeEnabled();
-    await original(page).selectOption(originalDocument);
     await signed(page).selectOption(signedDocument);
     await acknowledgement(page).check();
     await recordForm(page).locator('button[type=submit]').click();
@@ -281,13 +330,15 @@ for (const [locale, theme] of [
     await expect(dialog(page)).toHaveCount(0);
     await expect(panel(page).getByRole('status')).toContainText('approved-signed.png');
     expect(state.status).toBe('Signed');
+    await correctionsBack.click();
     fixture.pendingAmendment();
     await page
-      .getByRole('region', { name: word('staffTitle'), exact: true })
+      .getByRole('region', { name: word('terms'), exact: true })
       .getByRole('button', { name: word('refresh'), exact: true })
       .first()
       .click();
     await page.getByRole('button', { name: word('amendmentReview'), exact: true }).click();
+    await openSigning(page, true, amendmentVersion);
     await expect(original(page)).toBeEnabled();
     await expect(
       original(page).locator('option', { hasText: 'approved-original.pdf' })
@@ -298,8 +349,8 @@ for (const [locale, theme] of [
     await approveSignatureReview(page);
     await confirm(page).click();
     await expect(dialog(page)).toHaveCount(0);
+    await openSigning(page, false, amendmentVersion);
     await expect(signed(page)).toBeEnabled();
-    await original(page).selectOption(amendmentDocument);
     await signed(page).selectOption(amendmentSignedDocument);
     await acknowledgement(page).check();
     state.writeMode = 'held';
@@ -331,7 +382,7 @@ for (const [locale, theme] of [
     const signatureRetry = page.getByTestId('contract-signature-retry');
     await expect(signatureRetry).toBeEnabled();
     await expect(signed(page)).toBeDisabled();
-    await expect(original(page)).toHaveValue(amendmentDocument);
+    await expect(panel(page)).toContainText('approved-amendment.pdf');
     await expect(acknowledgement(page)).toBeChecked();
     state.writeMode = 'success';
     await signatureRetry.click();
@@ -355,6 +406,7 @@ for (const [locale, theme] of [
     await open(page, false, 2);
     await expect(requestForm(page)).toHaveCount(0);
     await expect(original(page)).toHaveCount(0);
+    await openSigning(page, false);
     const initialView = fixture.signingView(acceptedVersion);
     expect(initialView.request).not.toHaveProperty('requestedBy');
     expect(initialView.canRequest).toBe(false);
@@ -368,6 +420,7 @@ for (const [locale, theme] of [
     release();
     await focusedError(signed(page));
     await signed(page).selectOption(signedDocument);
+    await expect(recordForm(page).getByText('PNG', { exact: true })).toBeVisible();
     await recordForm(page).locator('button[type=submit]').click();
     await focusedError(acknowledgement(page));
     await expect(signed(page)).toHaveValue(signedDocument);
@@ -440,6 +493,10 @@ for (const [locale, theme] of [
     await heldSignature.fulfill({ json: receipt }).catch(() => {});
     await expect(signed(page)).toBeDisabled();
     await expect(acknowledgement(page)).toBeChecked();
+    const backToContract = page.getByRole('link', { name: word('backToContract'), exact: true });
+    await expect(backToContract).toHaveAttribute('aria-disabled', 'true');
+    await backToContract.dispatchEvent('click');
+    await expect(page).toHaveURL(`/contracts/${contractId}/record-signature/${acceptedVersion}`);
     const previews = state.previews.length,
       reads = state.reads.length,
       effects = state.effects;

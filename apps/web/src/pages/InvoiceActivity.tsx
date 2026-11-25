@@ -1,7 +1,6 @@
-import { ReceiptStatusTimeline } from '../components/ReceiptStatusTimeline.js';
+import { InvoiceReceiptContent } from './InvoiceReceiptContent.js';
 import { t } from '@barghsa/i18n/app';
 import { Link } from '@tanstack/react-router';
-import { ReceiptAttachmentPreview } from '../components/ReceiptAttachmentPreview.js';
 import { useEffect, type ReactNode } from 'react';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -62,77 +61,19 @@ export function InvoiceActivity({
         'receipts',
         (details.bankReceipts ?? []).map((row) => (
           <li key={row.id} id={`bank-receipt-${row.id}`} className={`${rowClass} scroll-mt-24`}>
-            <div className="flex flex-wrap justify-between gap-2">
-              <span>{state(row.state)}</span>
-              <strong>{numbers.money(row.amount)}</strong>
-            </div>
-            <p className="text-muted-foreground">{label(`description.${row.state}`)}</p>
-            <p>
-              {label('receiptId')}: <bdi>{row.id}</bdi>
-            </p>
-            <p>
-              {label('reference')}: <bdi>{row.payerReference}</bdi>
-            </p>
-            <p>
-              {t('invoices.receipts.invoice', locale)}:{' '}
-              <Link
-                to="/invoices/$invoiceId"
-                params={{ invoiceId: details.viewedInvoiceId }}
-                className="text-primary underline underline-offset-4"
-              >
-                <bdi dir="ltr">{details.viewedInvoiceId}</bdi>
-              </Link>
-            </p>
-            {row.bankName ? (
-              <p>
-                {label('bankName')}: {row.bankName}
-              </p>
-            ) : null}
-            <p>
-              {label('paymentDate')}: <bdi>{row.paymentDate}</bdi>
-            </p>
-            {row.customerNote ? <p>{row.customerNote}</p> : null}
-            {row.rejectionReason ? (
-              <p className="text-destructive">
-                {label('rejectionReason')}: {row.rejectionReason}
-              </p>
-            ) : null}
-            <ReceiptAttachmentPreview
-              key={`${details.viewedInvoiceId}:${row.id}`}
-              invoiceId={details.viewedInvoiceId}
-              receiptId={row.id}
-              initiallyOpen={window.location.hash === `#bank-receipt-${row.id}`}
-            />
-            <a
-              href={`/api/invoices/${encodeURIComponent(details.viewedInvoiceId)}/bank-receipts/${encodeURIComponent(row.id)}/attachment`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block text-primary underline underline-offset-4"
+            <Link
+              to="/invoices/$invoiceId/receipts/$receiptId"
+              params={{ invoiceId: details.viewedInvoiceId, receiptId: row.id }}
+              className="touch-action font-medium text-primary underline underline-offset-4"
             >
-              {label('viewReceiptAttachment')}
-            </a>
-            {row.statusHistory?.length ? (
-              <section aria-label={`${label('reviewTimeline')}: ${row.id}`} className="pt-2">
-                <h3 className="mb-2 font-medium">{label('reviewTimeline')}</h3>
-                <ReceiptStatusTimeline
-                  history={row.statusHistory}
-                  label={label('reviewTimeline')}
-                  locale={locale}
-                  formatTimestamp={formatTimestamp}
-                />
-              </section>
-            ) : (
-              <>
-                <p className="text-muted-foreground">
-                  {label('submittedAt')}: {formatTimestamp(row.createdAt)}
-                </p>
-                {row.confirmedAt ? (
-                  <p className="text-muted-foreground">
-                    {label('confirmedAt')}: {formatTimestamp(row.confirmedAt)}
-                  </p>
-                ) : null}
-              </>
-            )}
+              {t('invoices.receipts.openDetail', locale)}
+            </Link>
+            <InvoiceReceiptContent
+              invoiceId={details.viewedInvoiceId}
+              row={row}
+              initiallyOpen={window.location.hash === `#bank-receipt-${row.id}`}
+              formatTimestamp={formatTimestamp}
+            />
           </li>
         ))
       )}

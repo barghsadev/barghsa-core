@@ -479,43 +479,48 @@ it.each(['', '/detail', '/comments'] as const)(
   }
 );
 
-it('reports current read-only capabilities after a staff permission change', async () => {
-  const actor = await freshActor(false),
-    roleId = randomUUID();
-  await http.pool.query(
-    `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$1,'Ticket reader','["tickets:read","tickets:write"]')`,
-    [roleId]
-  );
-  await grantStaffRole(actor.userId, roleId);
-  const client = await http.pool.connect();
-  let response: Promise<Response> | undefined,
-    finished = false;
-  try {
-    await client.query('BEGIN');
-    await client.query(`UPDATE staff_roles SET permissions='["tickets:read"]' WHERE role_id=$1`, [
-      roleId,
-    ]);
-    await client.query('LOCK TABLE tickets IN ACCESS EXCLUSIVE MODE');
-    const pid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
-    response = fetch(`${http.base}/api/staff/tickets`, { headers: actor.headers }).finally(() => {
-      finished = true;
-    });
-    await blockedOrFinished(pid, () => finished);
-    await client.query('COMMIT');
-    const result = await response;
-    expect(result.status).toBe(200);
-    expect(((await result.json()) as { viewer: unknown }).viewer).toEqual({
-      userId: actor.userId,
-      canWrite: false,
-      canAssignOthers: false,
-      canApproveClosure: false,
-    });
-  } finally {
-    await client.query('ROLLBACK');
-    client.release();
-    await response;
+it.each(['list', 'detail'] as const)(
+  'reports current read-only capabilities on the %s after a staff permission change',
+  async (view) => {
+    const actor = await freshActor(false),
+      roleId = randomUUID(),
+      id = await ticket();
+    await http.pool.query(
+      `INSERT INTO staff_roles(role_id,name,description,permissions) VALUES ($1,$1,'Ticket reader','["tickets:read","tickets:write"]')`,
+      [roleId]
+    );
+    await grantStaffRole(actor.userId, roleId);
+    const client = await http.pool.connect();
+    let response: Promise<Response> | undefined,
+      finished = false;
+    try {
+      await client.query('BEGIN');
+      await client.query(`UPDATE staff_roles SET permissions='["tickets:read"]' WHERE role_id=$1`, [
+        roleId,
+      ]);
+      await client.query('LOCK TABLE tickets IN ACCESS EXCLUSIVE MODE');
+      const pid = (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+      const path = view === 'detail' ? `/api/staff/tickets/${id}` : '/api/staff/tickets';
+      response = fetch(`${http.base}${path}`, { headers: actor.headers }).finally(() => {
+        finished = true;
+      });
+      await blockedOrFinished(pid, () => finished);
+      await client.query('COMMIT');
+      const result = await response;
+      expect(result.status).toBe(200);
+      expect(((await result.json()) as { viewer: unknown }).viewer).toEqual({
+        userId: actor.userId,
+        canWrite: false,
+        canAssignOthers: false,
+        canApproveClosure: false,
+      });
+    } finally {
+      await client.query('ROLLBACK');
+      client.release();
+      await response;
+    }
   }
-});
+);
 
 it.each(['list', 'detail', 'comments', 'options'] as const)(
   'does not return a customer ticket %s read after its session expires',
@@ -1270,7 +1275,17 @@ it('limits assigned-only staff to their current tickets and refuses reassignment
       headers: headers.assigned!,
       ...(body ? { body: JSON.stringify(body) } : {}),
     });
-  expect((await call(mine)).status).toBe(200);
+  const ownRecord = await call(mine);
+  expect(ownRecord.status).toBe(200);
+  expect(await ownRecord.json()).toMatchObject({
+    id: mine,
+    viewer: {
+      userId: 'assigned',
+      canWrite: true,
+      canAssignOthers: false,
+      canApproveClosure: false,
+    },
+  });
   expect((await call(other)).status).toBe(404);
   expect((await call(other, '/comments')).status).toBe(404);
   expect(
@@ -1365,8 +1380,8 @@ it('paginates older related records without exposing another profile', async () 
     'INSERT INTO invoices(profile_id,order_id,total_amount) SELECT $1,NULL,100 FROM generate_series(1,25)',
     [profile]
   );
-  const get = (page: number) =>
-    fetch(`${http.base}/api/tickets/options?profileId=${profile}&recordPage=${page}`, {
+  const get = (page: number, related = '') =>
+    fetch(`${http.base}/api/tickets/options?profileId=${profile}&recordPage=${page}${related}`, {
       headers: headers.customer!,
     });
   const first = (await (await get(1)).json()) as {
@@ -1383,7 +1398,103 @@ it('paginates older related records without exposing another profile', async () 
   expect(second.hasMoreRecords).toBe(false);
   expect(new Set([...first.records, ...second.records].map((row) => row.id)).size).toBe(25);
   expect((await get(1.5)).status).toBe(400);
+  const preferred = second.records[0]!.id;
+  const query = `relatedType=invoice&relatedId=${preferred}`;
+  const lookup = (actor: 'customer' | 'staff') =>
+    fetch(`${http.base}/api/tickets/options?${query}`, { headers: headers[actor]! });
+  expect(await (await lookup('customer')).json()).toMatchObject({ suggestedProfileId: profile });
+  expect(await (await lookup('staff')).json()).not.toHaveProperty('suggestedProfileId');
+  const prioritized = (await (await get(1, '&' + query)).json()) as typeof first;
+  const remaining = (await (await get(2, '&' + query)).json()) as typeof second;
+  expect(prioritized.records[0]!.id).toBe(preferred);
+  expect(new Set([...prioritized.records, ...remaining.records].map((row) => row.id)).size).toBe(
+    25
+  );
 });
+it('projects only public queue previews and acknowledges exactly the customer replies displayed', async () => {
+  const id = await ticket();
+  const sibling = await ticket();
+  const send = async (ticketId: string, actor: string, body: string, visibility = 'public') => {
+    const response = await postReply(ticketId, actor, {
+      body,
+      visibility,
+      submissionId: randomUUID(),
+    });
+    expect(response.status, http.logs()).toBe(201);
+    return (await response.json()) as TicketCommentRow;
+  };
+  const first = await send(id, 'staff', 'Here is the\n  public answer');
+  const privateNote = await send(id, 'staff', 'Private reassignment evidence', 'internal');
+  const customerReply = await send(id, 'customer', 'A customer follow-up');
+  const siblingReply = await send(sibling, 'staff', 'A different ticket reply');
+  const customerPath = `/api/tickets/${id}`;
+  async function queue(staff = false) {
+    const response = await fetch(`${http.base}/api/${staff ? 'staff/' : ''}tickets?limit=100`, {
+      headers: staff ? headers.staff! : headers.customer!,
+    });
+    expect(response.status).toBe(200);
+    return (await response.json()) as {
+      data: {
+        id: string;
+        latestReply: { id: string; preview: string; createdAt: string } | null;
+        hasUnreadReply: boolean;
+      }[];
+    };
+  }
+  expect((await queue()).data.find((row) => row.id === id)).toMatchObject({
+    latestReply: { id: first.id, preview: 'Here is the public answer' },
+    hasUnreadReply: true,
+  });
+  expect((await queue(true)).data.find((row) => row.id === id)).toMatchObject({
+    latestReply: { id: customerReply.id, preview: 'A customer follow-up' },
+    hasUnreadReply: false,
+  });
+  const details = await fetch(`${http.base}${customerPath}/comments`, {
+    headers: headers.customer!,
+  });
+  expect(details.status).toBe(200);
+  expect(await details.json()).toEqual([
+    expect.objectContaining({ id: first.id, unreadReply: true }),
+    expect.objectContaining({ id: customerReply.id, unreadReply: false }),
+  ]);
+
+  // A previous notification can carry the legacy URL while matching the same reply.
+  await http.pool.query(
+    `UPDATE in_app_notifications SET link_route=$1 WHERE delivery_key IN (
+      SELECT 'outbox:' || id::text FROM notification_outbox WHERE idempotency_key = $2
+    )`,
+    [`/tickets?ticketId=${id}`, `ticket.new_reply:${id}:${first.id}:customer`]
+  );
+  const latest = await send(id, 'staff', 'A reply posted while the conversation is open');
+  const acknowledge = (replyIds: string[], actor = headers.customer!) =>
+    durableTicketCommand(`${customerPath}/replies/seen`, 'PATCH', { replyIds }, actor);
+  const foreign = await freshActor(false);
+  expect((await acknowledge([first.id], foreign.headers)).status).toBe(404);
+  expect((await acknowledge([])).status).toBe(400);
+  const shown = [first.id, privateNote.id, customerReply.id, siblingReply.id];
+  expect((await acknowledge(shown)).status).toBe(204);
+  expect((await acknowledge(shown)).status).toBe(204);
+  const remaining = await queue();
+  expect(remaining.data.find((row) => row.id === id)).toMatchObject({
+    latestReply: { id: latest.id },
+    hasUnreadReply: true,
+  });
+  expect(remaining.data.find((row) => row.id === sibling)).toMatchObject({ hasUnreadReply: true });
+  const refreshed = await fetch(`${http.base}${customerPath}/comments`, {
+    headers: headers.customer!,
+  });
+  expect(await refreshed.json()).toEqual([
+    expect.objectContaining({ id: first.id, unreadReply: false }),
+    expect.objectContaining({ id: customerReply.id, unreadReply: false }),
+    expect.objectContaining({ id: latest.id, unreadReply: true }),
+  ]);
+  expect((await acknowledge([latest.id])).status).toBe(204);
+  expect((await queue()).data.find((row) => row.id === id)).toMatchObject({
+    latestReply: { id: latest.id },
+    hasUnreadReply: false,
+  });
+});
+
 it('keeps ticket notices private, bilingual and free of internal conversation text', async () => {
   const id = await ticket();
   await assign(id, 'assigned');
@@ -1399,7 +1510,7 @@ it('keeps ticket notices private, bilingual and free of internal conversation te
   ).rows;
   expect(internal).toHaveLength(1);
   expect(internal[0].recipient_user_id).toBe('assigned');
-  expect(internal[0].link_route).toBe(`/admin/tickets?ticketId=${id}`);
+  expect(internal[0].link_route).toBe(`/admin/tickets/${id}`);
   expect(JSON.stringify(internal)).not.toContain('Confidential internal detail');
   expect(internal[0].localized_content.en.title).toBe('New internal ticket note');
   expect(internal[0].localized_content.fa.title).not.toBe(internal[0].localized_content.en.title);
@@ -1411,7 +1522,7 @@ it('keeps ticket notices private, bilingual and free of internal conversation te
     )
   ).rows;
   expect(customer).toHaveLength(1);
-  expect(customer[0].link_route).toBe(`/tickets?ticketId=${id}`);
+  expect(customer[0].link_route).toBe(`/tickets/${id}`);
   expect(customer[0].localized_content.en.title).toBe('New ticket reply');
   await http.pool.query("DELETE FROM user_roles WHERE user_id='assigned'");
   try {
@@ -1435,7 +1546,8 @@ it('rolls back a reply and its audit when its private notification cannot be sav
   await assign(id);
   await http.pool
     .query(`CREATE FUNCTION fail_ticket_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
-    IF NEW.link_route LIKE '%ticketId=%' THEN RAISE EXCEPTION 'test notice failure'; END IF; RETURN NEW; END $$;
+    IF NEW.link_route LIKE '/tickets/%' OR NEW.link_route LIKE '/admin/tickets/%'
+      THEN RAISE EXCEPTION 'test notice failure'; END IF; RETURN NEW; END $$;
     CREATE TRIGGER fail_ticket_notice BEFORE INSERT ON in_app_notifications FOR EACH ROW EXECUTE FUNCTION fail_ticket_notice()`);
   try {
     expect((await comment(id, 'Not saved')).status).toBe(500);
@@ -2311,9 +2423,20 @@ it('offers only published owned contracts and validates their profile and record
   expect((await linkedRequest(f, 'contract', f.contractId)).status).toBe(404);
   await publishLinkedContract(f);
   await publishLinkedContract(other);
-  expect(((await (await options()).json()) as { records: unknown[] }).records).toContainEqual(
-    expect.objectContaining({ id: f.contractId, type: 'contract' })
+  const contractNumber = (
+    await http.pool.query<{ number: string }>(
+      'SELECT contract_number::text AS number FROM contracts WHERE id=$1',
+      [f.contractId]
+    )
+  ).rows[0]!.number;
+  const relatedRecords = ((await (await options()).json()) as { records: unknown[] }).records;
+  expect(relatedRecords).toContainEqual(
+    expect.objectContaining({ id: f.contractId, type: 'contract', contractNumber })
   );
+  expect(relatedRecords).toContainEqual(
+    expect.objectContaining({ id: f.invoiceId, type: 'invoice', contractNumber: null })
+  );
+  expect(relatedRecords).not.toContainEqual(expect.objectContaining({ id: other.contractId }));
   expect((await options(other.profileId)).status).toBe(404);
   expect((await linkedRequest(f, 'contract', other.contractId)).status).toBe(404);
   expect((await linkedRequest(f, 'contract', f.invoiceId)).status).toBe(404);
@@ -2900,7 +3023,7 @@ it('rolls back a keyed assignment and its original receipt when the private noti
   const effects = await durableTicketEffects(id);
   await http.pool
     .query(`CREATE FUNCTION fail_durable_ticket_notice() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN
-    IF NEW.link_route LIKE '%tickets?ticketId=%' THEN RAISE EXCEPTION 'test failure'; END IF; RETURN NEW; END $$;
+    IF NEW.link_route LIKE '/admin/tickets/%' THEN RAISE EXCEPTION 'test failure'; END IF; RETURN NEW; END $$;
     CREATE TRIGGER fail_durable_ticket_notice BEFORE INSERT ON in_app_notifications FOR EACH ROW EXECUTE FUNCTION fail_durable_ticket_notice()`);
   try {
     expect(
@@ -3066,7 +3189,7 @@ it('persists the assigned-only canonical inbox with audit identity and recovers/
     (
       await http.pool.query(
         "SELECT type FROM in_app_notifications WHERE recipient_user_id='customer' AND link_route=$1",
-        [`/tickets?ticketId=${id}`]
+        [`/tickets/${id}`]
       )
     ).rows
   ).toEqual([{ type: 'general' }]);
@@ -3097,7 +3220,7 @@ it('preserves read/content/receipts on a matching private ticket occurrence and 
     operatingContext: 'customer' as const,
     type: 'general' as const,
     title: 'Replacement is forbidden',
-    link: `/tickets?ticketId=${id}`,
+    link: `/tickets/${id}`,
     eventKey: 'ticket.new_reply' as const,
     occurrenceKey: row.idempotency_key,
     payload: { ticketNumber: id },

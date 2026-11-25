@@ -137,16 +137,21 @@ for (const locale of ['en', 'fa'] as const)
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/admin/contracts');
     await page
-      .getByRole('button', {
+      .getByRole('link', {
         name: `${w('electricity')} · ${w('version')} ${(1).toLocaleString(locale)}`,
         exact: true,
       })
       .click();
     const panel = page.getByRole('region', { name: w('cancellationTitle'), exact: true });
+    await page.getByRole('link', { name: w('uploadOriginal'), exact: true }).click();
+    await expect(page).toHaveURL(`/admin/contracts/${id}/upload-original/${versionId}`);
     await expect(
-      page.getByRole('button', { name: w('uploadOriginal'), exact: true })
+      page.getByRole('heading', { name: w('uploadOriginal'), exact: true })
     ).toBeVisible();
-    await panel.getByRole('button', { name: w('rejectionTitle'), exact: true }).click();
+    await page.getByRole('link', { name: w('backToContract'), exact: true }).click();
+    await expect(page).toHaveURL(`/admin/contracts/${id}#contract-documents`);
+    await panel.getByRole('link', { name: w('rejectionTitle'), exact: true }).click();
+    await expect(page).toHaveURL(`/admin/contracts/${id}/reject`);
     await panel.getByLabel(w('rejectionReason'), { exact: true }).fill('Discard incomplete order');
     await panel.getByRole('button', { name: w('rejectionSave'), exact: true }).click();
     const dialog = page.getByRole('dialog');
@@ -179,7 +184,10 @@ for (const locale of ['en', 'fa'] as const)
     await expect(dialog).toHaveCount(0);
     expect(commands).toHaveLength(2);
     await expect(panel).toContainText(w('rejectionServiceEnded'));
-    await expect(panel.getByRole('button', { name: w('rejectionTitle'), exact: true })).toHaveCount(
+    await page.getByRole('link', { name: w('backToContract'), exact: true }).click();
+    await expect(page).toHaveURL(`/admin/contracts/${id}`);
+    await expect(panel).toContainText(w('rejectionServiceEnded'));
+    await expect(panel.getByRole('link', { name: w('rejectionTitle'), exact: true })).toHaveCount(
       0
     );
     for (const action of [
@@ -187,6 +195,8 @@ for (const locale of ['en', 'fa'] as const)
       'uploadSigned',
       'uploadAmendment',
       'generateContractPdf',
-    ])
+    ]) {
       await expect(page.getByRole('button', { name: w(action), exact: true })).toHaveCount(0);
+      await expect(page.getByRole('link', { name: w(action), exact: true })).toHaveCount(0);
+    }
   });

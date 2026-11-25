@@ -14,8 +14,9 @@ for (const locale of ['en', 'fa'] as const) {
     await page.clock.install();
     try {
       await page.goto('/admin/solar-postal');
-      await page.getByRole('button', { name: /Older solar buyer/ }).click();
-      const prepare = page.getByRole('button', { name: copy('solarCloseNoContract'), exact: true });
+      await page.getByRole('link', { name: /Older solar buyer/ }).click();
+      await page.getByRole('link', { name: copy('solarCloseNoContract'), exact: true }).click();
+      const prepare = page.locator('main form button[type=submit]');
       const reason = page.locator('#solar-postal-reason');
       const draft = 'Close the request after checking the recorded reason';
       const expected = { decision: 'close-no-contract', reason: draft };
@@ -53,8 +54,8 @@ for (const locale of ['en', 'fa'] as const) {
     const copy = (key: string) => adminText(`admin.electricityIncreases.${key}`, locale);
     await crmShell(page, locale);
     await page.route(
-      (url) => url.pathname === '/api/staff/electricity/increase-requests',
-      (route) => route.fulfill({ json: { requests: [increaseRow], nextBefore: null } })
+      `**/api/staff/electricity/increase-requests/${increaseRow.requestId}`,
+      (route) => route.fulfill({ json: { ...increaseRow, canReview: true } })
     );
     const previews: unknown[] = [];
     const decisions: unknown[] = [];
@@ -79,9 +80,9 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.clock.install();
     try {
-      await page.goto('/admin/electricity-increases');
+      await page.goto(`/admin/electricity-increases/${increaseRow.requestId}/reject`);
       const reason = page.locator('#increase-reason-' + increaseRow.requestId);
-      const prepare = page.getByRole('button', { name: copy('reject'), exact: true });
+      const prepare = page.getByRole('button', { name: copy('previewRejection'), exact: true });
       const draft = 'Capacity cannot be increased on this request';
       const expected = { reason: draft };
       await reason.fill(draft);

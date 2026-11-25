@@ -1,6 +1,7 @@
 import { expect, it } from 'vitest';
 import {
   electricityOrdersSearch,
+  electricityOrderFilters,
   savingOrdersSearch,
   electricityQueueOptions,
 } from './staff-order-list-query.js';
@@ -10,18 +11,18 @@ import { firstWork, olderWork } from '../test/staff-business-fixtures.js';
 it.each([electricityOrdersSearch, savingOrdersSearch])(
   'rejects malformed order/cursor links and unsupported list fields',
   (parse) => {
-    expect(
-      parse({
-        orderId: 'other',
-        cursor: ['x'],
-        sort: 'amount',
-        page: 20,
-        pageSize: 100,
-        q: 'secret',
-        lane: 'bad',
-        view: 'bad',
-      })
-    ).toEqual(expect.objectContaining({ orderId: undefined, cursor: undefined }));
+    const malformed = parse({
+      orderId: 'other',
+      cursor: ['x'],
+      sort: 'amount',
+      page: 20,
+      pageSize: 100,
+      q: 'secret',
+      lane: 'bad',
+      view: 'bad',
+    });
+    expect(malformed.orderId).toBeUndefined();
+    expect(malformed.cursor).toBeUndefined();
     expect(Object.keys(parse({ q: 'secret' }))).not.toContain('q');
     expect(parse({ orderId: firstWork, cursor: olderWork })).toMatchObject({
       orderId: firstWork,
@@ -36,9 +37,10 @@ it('keeps selected order independent of pagination and resets the page when the 
     cursor: olderWork,
     orderId: olderWork,
   });
-  expect(
-    electricityOrdersSearch(
-      writeListQuery(raw, electricityQueueOptions, { filters: { view: 'conversations' } })
-    )
-  ).toMatchObject({ view: 'conversations', cursor: undefined });
+  const updated = electricityOrdersSearch(
+    writeListQuery(raw, electricityQueueOptions, { filters: { view: 'conversations' } })
+  );
+  expect(updated.view).toBe('conversations');
+  expect(updated.cursor).toBeUndefined();
+  expect(electricityOrderFilters(raw)).toEqual({ view: 'review', cursor: olderWork });
 });

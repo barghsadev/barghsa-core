@@ -103,8 +103,13 @@ export function useLoginNativeForm(stage: LoginStage, context: string, locale: L
       if (capture.current()) await effect({ ...values }, capture);
     };
     try {
-      if (validate) await form.handleSubmit(perform, feedback.invalid)(event);
-      else await perform(form.getValues());
+      if (validate) {
+        await form.handleSubmit(perform, (fields) => {
+          feedback.invalid(
+            stage === 'credentials' && fields.username ? { username: fields.username } : fields
+          );
+        })(event);
+      } else await perform(form.getValues());
     } finally {
       if (capture.current()) {
         setBusy(false);

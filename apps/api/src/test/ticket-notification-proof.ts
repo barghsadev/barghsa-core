@@ -18,7 +18,7 @@ export async function expectTicketDelivery(
   expect(rows.map((r) => r.user_id)).toEqual(recipients.map((r) => r.user).sort());
   for (const recipient of recipients) {
     const row = rows.find((r) => r.user_id === recipient.user)!;
-    const link = `${recipient.context === 'staff' ? '/admin' : ''}/tickets?ticketId=${id}`;
+    const link = recipient.context === 'staff' ? `/admin/tickets/${id}` : `/tickets/${id}`;
     expect(row).toMatchObject({
       profile_id: null,
       event_key: event,

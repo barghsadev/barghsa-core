@@ -12,6 +12,7 @@ const navigation = vi.hoisted(() => vi.fn(async () => {}));
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (options: unknown) => ({ options }),
   useRouter: () => ({ navigate: navigation }),
+  useSearch: () => ({}),
   Link: ({ children }: { children: unknown }) => children,
 }));
 vi.mock('../components/AuthLayout.js', () => ({
@@ -201,6 +202,14 @@ it('keeps password and confirmation after backend password-history rejection', a
     ' Raw synthetic value 12A '
   );
   expect(navigation).not.toHaveBeenCalled();
+  const restart = Array.from(host.querySelectorAll<HTMLButtonElement>('button')).find(
+    (button) => button.textContent === copy('restart', 'en')
+  )!;
+  await act(async () => restart.click());
+  expect(host.querySelector<HTMLInputElement>('#username')!.value).toBe(' Recovery@Example.test ');
+  expect(document.activeElement).toBe(host.querySelector('#username'));
+  expect(host.querySelector('#new-password')).toBeNull();
+  expect(state.writes).toHaveLength(3);
 });
 it('owns deferred validation and a pending write before duplicate native/synthetic submit or resend', async () => {
   const state = fixture(),

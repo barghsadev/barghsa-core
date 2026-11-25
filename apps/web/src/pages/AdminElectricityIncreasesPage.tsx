@@ -1,3 +1,14 @@
+import { ArrowLeft, ArrowRight, ChevronDown, Eye as TableEyeIcon } from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
+import { Link } from '@tanstack/react-router';
+import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import { RecordDateTimeField } from '../components/RecordDateTimeField.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -5,7 +16,7 @@ import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState } from 'react';
-import { t as appText } from '@barghsa/i18n/electricity-increase-decision-forms';
+import { editorText, t as appText } from '@barghsa/i18n/electricity-increase-decision-forms';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   Form,
@@ -35,8 +46,10 @@ import {
   Card,
   CardContent,
   FinancialReviewSummary,
-  Input,
+  Textarea,
+  buttonVariants,
   ListPage,
+  ListRefreshButton,
   TextCell,
   DateCell,
   CurrencyCell,
@@ -50,6 +63,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
+import { QueueEmptyState } from '../components/QueueEmptyState.js';
 
 interface IncreaseRequest {
   requestId: string;
@@ -69,6 +83,10 @@ interface IncreaseRequest {
   adjustmentInvoiceState: string | null;
   adjustmentPaidAmount: string | null;
   financialFollowUp: boolean;
+  canReview?: boolean;
+  adjustmentAmount?: string | null;
+  reviewedAt?: string | null;
+  reviewReason?: string | null;
 }
 
 type DecisionForm = ReturnType<typeof useZodForm<IncreaseDecisionDraft>>;
@@ -155,7 +173,7 @@ function IncreaseDecisionEditor({
       <form
         noValidate
         data-testid={`electricity-increase-${decision}-form`}
-        className="space-y-2"
+        className={recordEditorSurface}
         onSubmit={(event) => {
           event.preventDefault();
           onPrepare(
@@ -172,86 +190,109 @@ function IncreaseDecisionEditor({
           );
         }}
       >
-        <FormField
-          control={form.control}
-          name={name}
-          render={({ field }) => (
-            <FormItem
-              id={`increase-${decision === 'approve' ? 'effective' : 'reason'}-${request.requestId}`}
-            >
-              <FormLabel>{copy(decision === 'approve' ? 'approveDate' : 'reason')}</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  aria-required={decision === 'reject' || undefined}
-                  type={decision === 'approve' ? 'datetime-local' : 'text'}
-                  disabled={disabled || dateUnavailable}
-                  onChange={(event) => {
-                    field.onChange(event);
-                    onDraft(event.target.value);
-                  }}
-                />
-              </FormControl>
-              <FormDescription>
-                {decision === 'approve' ? (
-                  <>
-                    {copy('approveDateHelp')} {copy('dateZone')}:{' '}
-                    <bdi dir="ltr">{timezone ?? '—'}</bdi>
-                  </>
-                ) : (
-                  formCopy('reasonHelp')
-                )}
-              </FormDescription>
-              <FormMessage reserveSpace />
-            </FormItem>
+        <RecordEditorSection
+          title={editorText(decision === 'approve' ? 'approvalDetails' : 'declineDetails', locale)}
+          description={editorText(
+            decision === 'approve' ? 'approvalEffect' : 'declineEffect',
+            locale
           )}
-        />
-        {decision === 'approve' ? (
+        >
+          {decision === 'approve' && (
+            <FormField
+              control={form.control}
+              name="effectiveDate"
+              render={({ field }) => (
+                <FormItem
+                  className={recordEditorField}
+                  id={`increase-effective-${request.requestId}`}
+                >
+                  <FormLabel>{copy('approveDate')}</FormLabel>
+                  <FormControl>
+                    <RecordDateTimeField
+                      {...field}
+                      label={copy('approveDate')}
+                      locale={locale}
+                      timezone={timezone}
+                      clearable
+                      disabled={disabled || dateUnavailable}
+                      onChange={(value) => {
+                        field.onChange(value);
+                        onDraft(value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    {copy('approveDateHelp')} {copy('dateZone')}{' '}
+                    <bdi dir="ltr">{timezone ?? '—'}</bdi>
+                  </FormDescription>
+                  <FormMessage reserveSpace className="min-h-5" />
+                </FormItem>
+              )}
+            />
+          )}
           <FormField
             control={form.control}
             name="reason"
             render={({ field }) => (
-              <FormItem id={`increase-approval-reason-${request.requestId}`}>
-                <FormLabel>{copy('approvalReason')}</FormLabel>
+              <FormItem
+                id={`increase-${decision === 'approve' ? 'approval-' : ''}reason-${request.requestId}`}
+                className={recordEditorField}
+              >
+                <FormLabel>{copy(decision === 'approve' ? 'approvalReason' : 'reason')}</FormLabel>
                 <FormControl>
-                  <Input
+                  <Textarea
                     {...field}
                     aria-required="true"
+                    rows={2}
+                    dir="auto"
+                    className={`max-w-prose resize-y border-border ${locale === 'fa' ? 'placeholder:text-right' : 'placeholder:text-left'}`}
+                    placeholder={editorText(
+                      decision === 'approve' ? 'approvalExample' : 'declineExample',
+                      locale
+                    )}
                     disabled={disabled || dateUnavailable}
                     onChange={(event) => {
                       field.onChange(event);
-                      onApprovalReason?.(event.target.value);
+                      if (decision === 'approve') onApprovalReason?.(event.target.value);
+                      else onDraft(event.target.value);
                     }}
                   />
                 </FormControl>
-                <FormDescription>{formCopy('approvalReasonHelp')}</FormDescription>
-                <FormMessage reserveSpace />
+                <FormDescription>
+                  {editorText(
+                    decision === 'approve' ? 'approvalReasonUse' : 'declineReasonUse',
+                    locale
+                  )}
+                </FormDescription>
+                <FormMessage reserveSpace className="min-h-5" />
               </FormItem>
             )}
           />
-        ) : null}
-        {form.formState.errors.root?.validation ? (
-          <p role="alert">{formCopy('validationUnavailable')}</p>
-        ) : null}
-        <Button
-          type="submit"
-          variant={decision === 'reject' ? 'destructive' : 'default'}
-          className={
-            decision === 'reject'
-              ? 'dark:bg-destructive/10 dark:hover:bg-destructive/20'
-              : undefined
-          }
-          disabled={disabled || dateUnavailable || blocked || busy}
-          aria-busy={busy || undefined}
-        >
-          {busy ? (
-            <span
-              aria-hidden="true"
-              className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-            />
+          {form.formState.errors.root?.validation ? (
+            <p role="alert">{formCopy('validationUnavailable')}</p>
           ) : null}
-          {copy(decision)}
-        </Button>
+        </RecordEditorSection>
+        <RecordEditorActions>
+          <Button
+            type="submit"
+            variant={decision === 'reject' ? 'destructive' : 'default'}
+            className={
+              decision === 'reject'
+                ? 'dark:bg-destructive/10 dark:hover:bg-destructive/20'
+                : undefined
+            }
+            disabled={disabled || dateUnavailable || blocked || busy}
+            aria-busy={busy || undefined}
+          >
+            {busy ? (
+              <span
+                aria-hidden="true"
+                className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+              />
+            ) : null}
+            {copy(decision === 'approve' ? 'previewApproval' : 'previewRejection')}
+          </Button>
+        </RecordEditorActions>
       </form>
     </Form>
   );
@@ -263,7 +304,17 @@ export default function AdminElectricityIncreasesPage(
   const revision = useProfileContextRevision();
   return <OwnedAdminElectricityIncreasesPage key={revision} {...props} />;
 }
-function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBinding } = {}) {
+function OwnedAdminElectricityIncreasesPage({
+  queries,
+  recordId,
+  recordDecision,
+  queueSearch,
+}: {
+  queries?: ListQueryBinding;
+  recordId?: string;
+  recordDecision?: IncreaseDecision | undefined;
+  queueSearch?: Record<string, unknown>;
+} = {}) {
   const locale = useLocale();
   const actor = useAccountUser();
   const profileRevision = useProfileContextRevision();
@@ -281,6 +332,16 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
   const [localView, setLocalView] = useState<'pending' | 'expired'>('pending');
   const before = queries ? queries.query.cursor || null : localBefore;
   const view = queries ? (queries.query.filters.status as 'pending' | 'expired') : localView;
+  const otherView = view === 'pending' ? 'expired' : 'pending';
+  function changeQueueStatus(status: 'pending' | 'expired') {
+    if (status === view || readLocked()) return;
+    setNextBefore(null);
+    if (queries) queries.setQuery({ filters: { status } });
+    else {
+      setLocalView(status);
+      setLocalBefore(null);
+    }
+  }
   const setBefore = (cursor: string | null) =>
     queries ? queries.setQuery({ cursor: cursor ?? '' }) : setLocalBefore(cursor);
   const expectedNext = useRef<string | null>(null);
@@ -312,8 +373,9 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [denied, setDenied] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
-  const scope = JSON.stringify([actor, view, before]);
+  const scope = JSON.stringify([actor, recordId, view, before]);
   const currentScope = useRef(scope);
   if (currentScope.current !== scope) {
     currentScope.current = scope;
@@ -362,10 +424,12 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
     const controller = new AbortController();
     setLoading(true);
     setError(false);
-    const path =
-      `/api/staff/electricity/increase-requests?status=${view}` +
-      (before ? `&before=${encodeURIComponent(before)}` : '');
-    void readStaff('orders', 'list', path, controller.signal)
+    setNotFound(false);
+    const base = '/api/staff/electricity/increase-requests';
+    const path = recordId
+      ? `${base}/${encodeURIComponent(recordId)}`
+      : `${base}?status=${view}` + (before ? `&before=${encodeURIComponent(before)}` : '');
+    void readStaff('orders', recordId ? 'detail' : 'list', path, controller.signal)
       .then(async (response) => {
         if (
           controller.signal.aborted ||
@@ -374,7 +438,19 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
         )
           return null;
         if ([401, 403].includes(response.status)) throw new Error('denied');
+        if (recordId && response.status === 404) throw new Error('not found');
         if (!response.ok) throw new Error('Queue unavailable');
+        if (recordId) {
+          const record = (await response.json()) as IncreaseRequest | null;
+          if (
+            record?.requestId !== recordId ||
+            typeof record.profileId !== 'string' ||
+            typeof record.status !== 'string' ||
+            typeof record.canReview !== 'boolean'
+          )
+            throw new Error('Invalid record');
+          return { requests: [record], nextBefore: null };
+        }
         return response.json() as Promise<{
           requests: IncreaseRequest[];
           nextBefore: string | null;
@@ -417,8 +493,11 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
         )
           return;
         setError(true);
-        if (caught instanceof Error && caught.message === 'denied') {
-          deny();
+        if (caught instanceof Error && caught.message === 'denied') deny();
+        if (caught instanceof Error && caught.message === 'not found') {
+          clearReview();
+          setRequests([]);
+          setNotFound(true);
         }
       })
       .finally(() => {
@@ -430,7 +509,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
           setLoading(false);
       });
     return () => controller.abort();
-  }, [before, revision, view, actor, readStaff]);
+  }, [before, revision, view, actor, readStaff, recordId]);
 
   function deny() {
     accessDenied.current = true;
@@ -587,6 +666,8 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
   ) {
     if (
       locked() ||
+      (recordId &&
+        (recordDecision !== decision || request.status !== 'pending' || !request.canReview)) ||
       (decision === 'approve' && !timezone) ||
       loading ||
       error ||
@@ -711,52 +792,99 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
       });
   }
 
+  const recordHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (recordId) {
+      if (!readLocked()) clearReview();
+      recordHeading.current?.focus({ preventScroll: true });
+    }
+  }, [recordId, recordDecision]);
   const command = captured.current;
   const frozen = pending.current || !!captured.current || uncertain;
   return (
-    <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">{copy('title')}</h1>
-          <p className="text-muted-foreground">{copy('description')}</p>
+    <section
+      data-slot={recordId ? 'electricity-increase-record' : undefined}
+      className={recordId ? 'mx-auto max-w-3xl space-y-3' : 'space-y-5'}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {recordId && <RecordCommandGuard blocked={readLocked} />}
+      <header
+        className={
+          recordId
+            ? 'grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3'
+            : 'flex flex-wrap items-start justify-between gap-3'
+        }
+      >
+        {recordId && (
+          <Link
+            {...(recordDecision
+              ? {
+                  to: '/admin/electricity-increases/$requestId/{-$decision}' as const,
+                  params: { requestId: recordId, decision: undefined },
+                }
+              : { to: '/admin/electricity-increases' as const })}
+            search={queueSearch ?? {}}
+            className="col-start-1 row-start-1 inline-flex min-h-11 w-fit items-center gap-2 text-sm font-medium text-primary hover:underline hover:underline-offset-4 aria-disabled:opacity-60"
+            aria-disabled={readLocked() || undefined}
+            onClick={(event) => {
+              if (readLocked()) event.preventDefault();
+            }}
+          >
+            <ArrowLeft aria-hidden="true" className="size-4 rtl:hidden" />
+            <ArrowRight aria-hidden="true" className="hidden size-4 rtl:block" />
+            {copy(recordDecision ? 'backToRequest' : 'backToQueue')}
+          </Link>
+        )}
+        <div className={recordId ? 'col-span-2 mt-1' : undefined}>
+          <h1
+            ref={recordHeading}
+            tabIndex={recordId ? -1 : undefined}
+            className={
+              recordId
+                ? 'w-fit text-xl font-semibold focus-visible:shadow-none! focus-visible:outline-hidden!'
+                : 'text-2xl font-semibold'
+            }
+          >
+            {copy(
+              recordDecision === 'approve'
+                ? 'prepareApproval'
+                : (recordDecision ?? (recordId ? 'recordTitle' : 'title'))
+            )}
+          </h1>
+          {!recordId && <p className="text-muted-foreground">{copy('description')}</p>}
         </div>
-        <Button
-          variant="outline"
-          disabled={loading || readLocked()}
-          onClick={() => {
-            if (readLocked()) return;
-            if (preparing.current) clearReview();
-            setBefore(null);
-            setRevision((value) => value + 1);
-          }}
-        >
-          {copy('refresh')}
-        </Button>
+        <div className={recordId ? 'col-start-2 row-start-1' : undefined}>
+          <ListRefreshButton
+            label={copy('refresh')}
+            refreshing={loading}
+            disabled={readLocked()}
+            onClick={() => {
+              if (readLocked()) return;
+              if (preparing.current) clearReview();
+              setBefore(null);
+              setRevision((value) => value + 1);
+            }}
+          />
+        </div>
       </header>
       {time.notice}
       <ListPage role="region" aria-label={copy('listTitle')}>
-        <ListPage.Toolbar>
-          <div className="flex flex-wrap gap-2" role="group" aria-label={copy('viewLabel')}>
-            {(['pending', 'expired'] as const).map((status) => (
-              <Button
-                key={status}
-                variant={view === status ? 'default' : 'outline'}
-                disabled={readLocked()}
-                onClick={() => {
-                  if (status === view || readLocked()) return;
-                  setNextBefore(null);
-                  if (queries) queries.setQuery({ filters: { status } });
-                  else {
-                    setLocalView(status);
-                    setLocalBefore(null);
-                  }
-                }}
-              >
-                {copy(`${status}Tab`)}
-              </Button>
-            ))}
-          </div>
-        </ListPage.Toolbar>
+        {!recordId && (
+          <ListPage.Toolbar>
+            <div className="flex flex-wrap gap-2" role="group" aria-label={copy('viewLabel')}>
+              {(['pending', 'expired'] as const).map((status) => (
+                <Button
+                  key={status}
+                  variant={view === status ? 'default' : 'outline'}
+                  disabled={readLocked()}
+                  onClick={() => changeQueueStatus(status)}
+                >
+                  {copy(`${status}Tab`)}
+                </Button>
+              ))}
+            </div>
+          </ListPage.Toolbar>
+        )}
         <ListPage.Content
           loading={loading}
           error={error}
@@ -765,17 +893,42 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
           loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
           errorView={
             <div role="alert" className="space-y-2">
-              <p>{copy(denied ? 'forbidden' : 'error')}</p>
-              {!denied && (
+              <p>{copy(denied ? 'forbidden' : notFound ? 'recordNotFound' : 'error')}</p>
+              {!denied && !notFound && (
                 <Button type="button" variant="outline" disabled={readLocked()} onClick={refresh}>
                   {copy('retry')}
                 </Button>
               )}
             </div>
           }
-          emptyView={<p>{copy(view === 'pending' ? 'empty' : 'emptyExpired')}</p>}
+          emptyView={
+            !recordId && !before ? (
+              <QueueEmptyState
+                locale={locale}
+                message={copy(view === 'pending' ? 'empty' : 'emptyExpired')}
+                alternatives={[
+                  {
+                    value: otherView,
+                    label: copy(`${otherView}Tab`),
+                    path: `/api/staff/electricity/increase-requests?status=${otherView}`,
+                  },
+                ]}
+                hasResults={(body, value) => {
+                  const rows = (body as { requests?: unknown } | null)?.requests;
+                  return (
+                    Array.isArray(rows) &&
+                    rows.some((row) => row?.status === value && typeof row.requestId === 'string')
+                  );
+                }}
+                select={() => changeQueueStatus(otherView)}
+                disabled={readLocked()}
+              />
+            ) : (
+              <p>{copy(view === 'pending' ? 'empty' : 'emptyExpired')}</p>
+            )
+          }
         >
-          {!!visibleRequests?.length && (
+          {!recordId && !!visibleRequests?.length && (
             <OperationalQueueTable
               locale={locale}
               rows={visibleRequests.map((request) => ({ ...request, id: request.requestId }))}
@@ -788,9 +941,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
                   id: 'contract',
                   label: copy('contract'),
                   render: (request) => (
-                    <LinkCell
-                      href={`/admin/contracts?contractId=${encodeURIComponent(request.contractId)}`}
-                    >
+                    <LinkCell href={`/admin/contracts/${encodeURIComponent(request.contractId)}`}>
                       {request.contractId}
                     </LinkCell>
                   ),
@@ -800,7 +951,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
                   label: copy('order'),
                   render: (request) => (
                     <LinkCell
-                      href={`/admin/electricity-orders?orderId=${encodeURIComponent(request.orderId)}`}
+                      href={`/admin/electricity-orders/${encodeURIComponent(request.orderId)}`}
                     >
                       {request.orderId}
                     </LinkCell>
@@ -880,7 +1031,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
                             {request.adjustmentInvoiceId ? (
                               <div className="break-all">
                                 <LinkCell
-                                  href={`/admin/invoices?invoiceId=${encodeURIComponent(request.adjustmentInvoiceId)}`}
+                                  href={`/admin/invoices/${encodeURIComponent(request.adjustmentInvoiceId)}`}
                                 >
                                   {request.adjustmentInvoiceId}
                                 </LinkCell>
@@ -913,119 +1064,281 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
                     ]
                   : []),
               ]}
-              {...(view === 'pending'
+              {...(queueSearch
                 ? {
                     actionHeader: copy('actions'),
                     renderActions: (request: IncreaseRequest) => (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="min-h-11"
-                        disabled={loading || error || locked()}
-                        onClick={() => {
-                          if (loading || error || locked()) return;
-                          document
-                            .getElementById(`increase-decision-${request.requestId}`)
-                            ?.focus();
-                        }}
+                      <Link
+                        to="/admin/electricity-increases/$requestId/{-$decision}"
+                        params={{ requestId: request.requestId, decision: undefined }}
+                        search={queueSearch}
+                        className="inline-flex min-h-11 items-center text-primary underline underline-offset-4"
+                        data-table-action-tooltip={copy(
+                          view === 'pending' ? 'reviewRequest' : 'openRecord'
+                        )}
                       >
-                        {copy('reviewRequest')}
-                        <span className="sr-only">: {request.requestId}</span>
-                      </Button>
+                        <TableActionIcon icon={TableEyeIcon}>
+                          {copy(view === 'pending' ? 'reviewRequest' : 'openRecord')}
+                        </TableActionIcon>
+                        <span className="sr-only"> {request.requestId}</span>
+                      </Link>
                     ),
                   }
-                : {})}
+                : view === 'pending'
+                  ? {
+                      actionHeader: copy('actions'),
+                      renderActions: (request: IncreaseRequest) => (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="min-h-11"
+                          disabled={loading || error || locked()}
+                          onClick={() => {
+                            if (loading || error || locked()) return;
+                            document
+                              .getElementById(`increase-decision-${request.requestId}`)
+                              ?.focus();
+                          }}
+                          data-table-action-tooltip={copy('reviewRequest')}
+                        >
+                          <TableActionIcon icon={TableEyeIcon}>
+                            {copy('reviewRequest')}
+                          </TableActionIcon>
+                          <span className="sr-only">: {request.requestId}</span>
+                        </Button>
+                      ),
+                    }
+                  : {})}
               cardHeading="h2"
               loading={loading}
               emptyMessage={copy(view === 'pending' ? 'empty' : 'emptyExpired')}
               tableClassName="min-w-[80rem]"
             />
           )}
-          {view === 'pending' ? (
-            <div className="mt-5 grid gap-4 lg:grid-cols-2">
+          {recordId || (!queueSearch && view === 'pending') ? (
+            <div
+              className={recordId ? 'mx-auto w-full max-w-3xl' : 'mt-5 grid gap-4 lg:grid-cols-2'}
+            >
               {visibleRequests?.map((request) => (
-                <Card
-                  key={request.requestId}
-                  id={`increase-decision-${request.requestId}`}
-                  tabIndex={-1}
-                  aria-labelledby={`increase-decision-title-${request.requestId}`}
-                  className="focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <CardContent className="space-y-3 pt-6 text-sm">
-                    <h2
-                      id={`increase-decision-title-${request.requestId}`}
-                      className="font-semibold"
-                    >
-                      {copy('request')}
-                      <span className="block font-mono text-xs font-normal">
-                        <TextCell value={request.requestId} />
-                      </span>
-                    </h2>
-                    <p>
-                      {copy('contract')}:{' '}
-                      <LinkCell
-                        href={`/admin/contracts?contractId=${encodeURIComponent(request.contractId)}`}
-                      >
-                        {request.contractId}
-                      </LinkCell>
-                    </p>
-                    <p>
-                      {copy('quantity')}:{' '}
-                      <bdi>
-                        {numbers.irrDigits(request.originalKwh)} →{' '}
-                        {numbers.irrDigits(request.requestedKwh)} kWh
-                      </bdi>
-                    </p>
-                    {view === 'pending' ? (
-                      <>
+                <div key={request.requestId} className="min-w-0 space-y-3">
+                  <Card
+                    id={`increase-decision-${request.requestId}`}
+                    tabIndex={-1}
+                    aria-labelledby={`increase-decision-title-${request.requestId}`}
+                    className="gap-0 py-0 focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <CardContent className="space-y-3 px-4 py-4 text-sm sm:px-6">
+                      <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/55 px-3 py-2">
+                        <div>
+                          <h2
+                            id={`increase-decision-title-${request.requestId}`}
+                            className="text-xs font-medium text-muted-foreground"
+                          >
+                            {copy('quantity')}
+                          </h2>
+                          <bdi dir="ltr" className="text-lg font-semibold tabular-nums">
+                            {numbers.irrDigits(request.originalKwh)} →{' '}
+                            {numbers.irrDigits(request.requestedKwh)} kWh
+                          </bdi>
+                        </div>
+                        <StatusCell
+                          state={request.status}
+                          label={copy(`requestState.${request.status}`)}
+                        />
+                      </div>
+                      {recordId && (
+                        <dl className="grid grid-cols-2 gap-3">
+                          <div>
+                            <dt className="text-muted-foreground">{copy('effective')}</dt>
+                            <dd>
+                              <DateCell
+                                value={request.effectiveFrom}
+                                format={(value) => time.format(value)}
+                              />
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-muted-foreground">{copy('end')}</dt>
+                            <dd>
+                              <DateCell
+                                value={request.periodEnd}
+                                format={(value) => time.format(value)}
+                              />
+                            </dd>
+                          </div>
+                          {request.reviewedAt && (
+                            <div>
+                              <dt className="text-muted-foreground">{copy('reviewedAt')}</dt>
+                              <dd>
+                                <DateCell
+                                  value={request.reviewedAt}
+                                  format={(value) => time.format(value)}
+                                />
+                              </dd>
+                            </div>
+                          )}
+                          {request.reviewReason && (
+                            <div className="sm:col-span-2">
+                              <dt className="text-muted-foreground">{copy('reviewReason')}</dt>
+                              <dd dir="auto" className="wrap-anywhere">
+                                {request.reviewReason}
+                              </dd>
+                            </div>
+                          )}
+                          {request.adjustmentInvoiceId && (
+                            <div>
+                              <dt className="text-muted-foreground">{copy('invoiceState')}</dt>
+                              <dd>
+                                <LinkCell
+                                  href={`/admin/invoices/${encodeURIComponent(request.adjustmentInvoiceId)}`}
+                                >
+                                  {request.adjustmentInvoiceState
+                                    ? copy(`invoice.${request.adjustmentInvoiceState}`)
+                                    : request.adjustmentInvoiceId}
+                                </LinkCell>
+                              </dd>
+                            </div>
+                          )}
+                          {request.adjustmentAmount && (
+                            <div>
+                              <dt className="text-muted-foreground">{copy('adjustmentAmount')}</dt>
+                              <dd>
+                                <CurrencyCell
+                                  amount={request.adjustmentAmount}
+                                  format={numbers.money}
+                                />
+                              </dd>
+                            </div>
+                          )}
+                          {request.adjustmentPaidAmount && (
+                            <div>
+                              <dt className="text-muted-foreground">{copy('paidAmount')}</dt>
+                              <dd>
+                                <CurrencyCell
+                                  amount={request.adjustmentPaidAmount}
+                                  format={numbers.money}
+                                />
+                              </dd>
+                            </div>
+                          )}
+                        </dl>
+                      )}
+                      <details className="group border-t pt-1">
+                        <summary className="flex min-h-9 cursor-pointer list-none items-center gap-2 text-xs font-medium text-muted-foreground hover:text-foreground [&::-webkit-details-marker]:hidden">
+                          <ChevronDown
+                            aria-hidden="true"
+                            className="size-3.5 group-open:rotate-180"
+                          />
+                          {copy('requestReferences')}
+                        </summary>
+                        <dl className="grid gap-x-4 gap-y-2 pb-1 text-xs sm:grid-cols-2">
+                          <div>
+                            <dt className="text-muted-foreground">{copy('request')}</dt>
+                            <dd>
+                              <TextCell value={request.requestId} />
+                            </dd>
+                          </div>
+                          <div>
+                            <dt className="text-muted-foreground">{copy('contract')}</dt>
+                            <dd>
+                              <LinkCell
+                                href={`/admin/contracts/${encodeURIComponent(request.contractId)}`}
+                              >
+                                {request.contractId}
+                              </LinkCell>
+                            </dd>
+                          </div>
+                          {recordId && (
+                            <div>
+                              <dt className="text-muted-foreground">{copy('order')}</dt>
+                              <dd>
+                                <LinkCell
+                                  href={`/admin/electricity-orders/${encodeURIComponent(request.orderId)}`}
+                                >
+                                  {request.orderId}
+                                </LinkCell>
+                              </dd>
+                            </div>
+                          )}
+                        </dl>
+                      </details>
+                      {recordId && request.status === 'pending' && !request.canReview && (
+                        <p>{copy('readOnlyRecord')}</p>
+                      )}
+                      {recordId && recordDecision && request.status !== 'pending' && (
+                        <p role="status" className="rounded-lg border bg-muted/25 p-3">
+                          {copy(
+                            request.status === 'awaiting_signature'
+                              ? 'approvalRecorded'
+                              : request.status === 'rejected'
+                                ? 'rejectionRecorded'
+                                : 'decisionUnavailable'
+                          )}
+                        </p>
+                      )}
+                      {recordId &&
+                        !recordDecision &&
+                        request.status === 'pending' &&
+                        request.canReview && (
+                          <div className="flex flex-wrap gap-2 border-t pt-3">
+                            {(['approve', 'reject'] as const).map((decision) => (
+                              <Link
+                                key={decision}
+                                to="/admin/electricity-increases/$requestId/{-$decision}"
+                                params={{ requestId: recordId, decision }}
+                                search={queueSearch ?? {}}
+                                disabled={loading || error}
+                                className={buttonVariants({
+                                  variant: decision === 'approve' ? 'default' : 'outline',
+                                  className: 'min-h-11 aria-disabled:opacity-60',
+                                })}
+                              >
+                                {copy(decision === 'approve' ? 'prepareApproval' : 'reject')}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                    </CardContent>
+                  </Card>
+                  {(recordId
+                    ? request.status === 'pending' && request.canReview
+                    : view === 'pending') &&
+                    (recordId
+                      ? recordDecision
+                        ? [recordDecision]
+                        : []
+                      : (['approve', 'reject'] as const)
+                    ).map((decision) => {
+                      const approving = decision === 'approve';
+                      const setDraft = approving ? setEffectiveDate : setReason;
+                      return (
                         <IncreaseDecisionEditor
-                          key={`approve-${actor}-${request.requestId}`}
+                          key={`${decision}-${actor}-${request.requestId}`}
                           request={request}
-                          decision="approve"
+                          decision={decision}
                           timezone={timezone}
                           locale={locale}
-                          draft={effectiveDate[request.requestId] ?? ''}
+                          draft={(approving ? effectiveDate : reason)[request.requestId] ?? ''}
                           approvalReasonDraft={approvalReason[request.requestId] ?? ''}
-                          onApprovalReason={(draft) =>
+                          onApprovalReason={(value) =>
                             setApprovalReason((current) => ({
                               ...current,
-                              [request.requestId]: draft,
+                              [request.requestId]: value,
                             }))
                           }
                           disabled={frozen}
                           blocked={loading || error || reviewLoading}
-                          busy={busyRow === request.requestId && busyDecision === 'approve'}
-                          onDraft={(draft) =>
-                            setEffectiveDate((current) => ({
-                              ...current,
-                              [request.requestId]: draft,
-                            }))
+                          busy={busyRow === request.requestId && busyDecision === decision}
+                          onDraft={(value) =>
+                            setDraft((current) => ({ ...current, [request.requestId]: value }))
                           }
                           onPrepare={(form, fields) =>
-                            reviewDecision(request, 'approve', form, fields)
+                            reviewDecision(request, decision, form, fields)
                           }
                         />
-                        <IncreaseDecisionEditor
-                          key={`reject-${actor}-${request.requestId}`}
-                          request={request}
-                          decision="reject"
-                          timezone={timezone}
-                          locale={locale}
-                          draft={reason[request.requestId] ?? ''}
-                          disabled={frozen}
-                          blocked={loading || error || reviewLoading}
-                          busy={busyRow === request.requestId && busyDecision === 'reject'}
-                          onDraft={(draft) =>
-                            setReason((current) => ({ ...current, [request.requestId]: draft }))
-                          }
-                          onPrepare={(form, fields) =>
-                            reviewDecision(request, 'reject', form, fields)
-                          }
-                        />
-                      </>
-                    ) : null}
-                  </CardContent>
-                </Card>
+                      );
+                    })}
+                </div>
               ))}
             </div>
           ) : null}
@@ -1045,34 +1358,36 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
           </div>
         ) : null}
         {reviewError ? <p role="alert">{copy('reviewError')}</p> : null}
-        <ListPage.Pagination
-          kind="cursor"
-          hasMore={
-            !!nextBefore &&
-            !error &&
-            !denied &&
-            (loading ||
-              (nextBefore !== acceptedCursor.current &&
-                (!queries || queries.canAdvance(nextBefore))))
-          }
-          loading={loading || readLocked()}
-          label={copy('pages')}
-          nextLabel={copy('more')}
-          onNext={() => {
-            if (
-              nextBefore &&
-              !loading &&
-              !readLocked() &&
+        {!recordId && (
+          <ListPage.Pagination
+            kind="cursor"
+            hasMore={
+              !!nextBefore &&
               !error &&
               !denied &&
-              nextBefore !== before &&
-              (!queries || queries.canAdvance(nextBefore))
-            ) {
-              expectedNext.current = JSON.stringify([actor, view, nextBefore]);
-              setBefore(nextBefore);
+              (loading ||
+                (nextBefore !== acceptedCursor.current &&
+                  (!queries || queries.canAdvance(nextBefore))))
             }
-          }}
-        />
+            loading={loading || readLocked()}
+            label={copy('pages')}
+            nextLabel={copy('more')}
+            onNext={() => {
+              if (
+                nextBefore &&
+                !loading &&
+                !readLocked() &&
+                !error &&
+                !denied &&
+                nextBefore !== before &&
+                (!queries || queries.canAdvance(nextBefore))
+              ) {
+                expectedNext.current = JSON.stringify([actor, recordId, view, nextBefore]);
+                setBefore(nextBefore);
+              }
+            }}
+          />
+        )}
       </ListPage>
       {action && command && command.actor === actor ? (
         <TeamActionDialog
@@ -1182,6 +1497,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
             }
             if (!live(command) || command.action !== action) return;
             clearReview();
+            setLoading(true);
             setRequests(
               (current) =>
                 current?.filter((row) => row.requestId !== command.review.data.requestId) ?? null
@@ -1202,7 +1518,7 @@ function OwnedAdminElectricityIncreasesPage({ queries }: { queries?: ListQueryBi
               return next;
             });
             setRevision((value) => value + 1);
-            return confirmationText('recorded', locale);
+            return recordId ? undefined : confirmationText('recorded', locale);
           }}
         />
       ) : null}

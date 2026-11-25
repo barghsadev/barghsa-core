@@ -4,6 +4,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { InvoiceDetailsPage } from './InvoiceDetailsPage.js';
+import { InvoiceBankReceiptUploadForm } from './InvoiceBankReceiptUploadForm.js';
 import type { CustomerInvoiceDetails } from '../lib/customer-invoices.js';
 
 const ORIGINAL_ID = '22222222-2222-7222-8222-222222222222';
@@ -11,6 +12,7 @@ const REPLACEMENT_ID = '33333333-3333-7333-8333-333333333333';
 const ADJUSTMENT_ID = '44444444-4444-7444-8444-444444444444';
 
 vi.mock('@tanstack/react-router', () => ({
+  useBlocker: vi.fn(),
   Link: ({
     children,
     to,
@@ -23,10 +25,9 @@ vi.mock('@tanstack/react-router', () => ({
     params?: Record<string, string>;
     search?: Record<string, string>;
   }) => {
-    const path = Object.entries(params ?? {}).reduce(
-      (path, [key, value]) => path.replace(`$${key}`, encodeURIComponent(value)),
-      to
-    );
+    const path = Object.entries(params ?? {})
+      .reduce((path, [key, value]) => path.replace(`$${key}`, encodeURIComponent(value)), to)
+      .replace(/\/\{-\$[^}]+\}/g, '');
     const href = search ? `${path}?${new URLSearchParams(search)}` : path;
     return (
       <a href={href} {...rest}>
@@ -357,7 +358,7 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
           </QueryProvider>
         );
       });
-      const link = container.querySelector('a[href="/contracts?contractId=contract-1"]');
+      const link = container.querySelector('a[href="/contracts/contract-1"]');
       expect(link?.textContent).toBe(locale === 'en' ? 'Open contract' : 'مشاهده قرارداد');
       expect(container.textContent).toContain(
         locale === 'en'
@@ -636,7 +637,7 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
   });
 
   it.each(['Unpaid', 'Overdue'] as const)(
-    'shows the bank-receipt upload form for a %s invoice',
+    'links to the bank-receipt editor for a %s invoice',
     async (state) => {
       const payload = replacementPayload();
       payload.chain[1]!.state = state;
@@ -662,12 +663,15 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         );
       });
 
-      expect(container.querySelector('[data-testid="invoice-receipt-form"]')).toBeTruthy();
+      expect(container.querySelector('[data-testid="invoice-receipt-form"]')).toBeNull();
+      expect(
+        container.querySelector(`a[href="/invoices/${REPLACEMENT_ID}/receipts/new"]`)
+      ).toBeTruthy();
       expect(container.textContent).toContain('Submit a bank receipt');
     }
   );
 
-  it('hides the bank-receipt upload form for a paid invoice', async () => {
+  it('hides the bank-receipt action for a paid invoice', async () => {
     const payload = adjustmentPayload();
     vi.stubGlobal(
       'fetch',
@@ -686,7 +690,7 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       );
     });
 
-    expect(container.querySelector('[data-testid="invoice-receipt-form"]')).toBeNull();
+    expect(container.querySelector('a[href$="/receipts/new"]')).toBeNull();
   });
 
   it.each(['0', '12.5'])(
@@ -707,7 +711,10 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       await act(async () =>
         root.render(
           <QueryProvider>
-            <InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />
+            <InvoiceDetailsPage
+              invoiceId={REPLACEMENT_ID}
+              ReceiptForm={InvoiceBankReceiptUploadForm}
+            />
           </QueryProvider>
         )
       );
@@ -877,7 +884,10 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       await act(async () => {
         root.render(
           <QueryProvider>
-            <InvoiceDetailsPage invoiceId={REPLACEMENT_ID} />
+            <InvoiceDetailsPage
+              invoiceId={REPLACEMENT_ID}
+              ReceiptForm={InvoiceBankReceiptUploadForm}
+            />
           </QueryProvider>
         );
       });

@@ -12,6 +12,7 @@ export function AiModelRecordTable({
   numerals,
   formatNumber,
   formatTime,
+  renderTitle,
   renderActions,
 }: {
   models: Model[];
@@ -21,6 +22,7 @@ export function AiModelRecordTable({
   numerals: 'latn' | 'arabext';
   formatNumber: (value: number) => string;
   formatTime: (value: string) => string;
+  renderTitle?: (model: Model) => ReactNode;
   renderActions: (model: Model) => ReactNode;
 }) {
   const usd = new Intl.NumberFormat(locale, {
@@ -32,7 +34,7 @@ export function AiModelRecordTable({
   const name = (model: Model) => (
     <div className="space-y-2">
       <h2 className="font-semibold">
-        <TextCell value={model.title} />
+        {renderTitle ? renderTitle(model) : <TextCell value={model.title} />}
       </h2>
       <p className="break-all" dir="ltr">
         <TextCell value={model.baseUrl} />
@@ -117,7 +119,7 @@ export function AiModelRecordTable({
       keyExtractor={(model) => model.id}
       sortable={false}
       className="max-h-[40rem]"
-      tableClassName="min-w-[760px] table-fixed text-start"
+      tableClassName="min-w-[760px] text-start"
       columns={[
         {
           id: 'name',

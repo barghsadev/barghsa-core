@@ -93,49 +93,36 @@ for (const locale of ['en', 'fa'] as const)
         return route.fulfill({ json: { roles: body.roles, sessionRevoked: false } });
       });
       await page.goto('/settings/team');
-      const member = page
+      const main = page.getByRole('main');
+      const details = fa ? 'مشاهده جزئیات' : 'View details';
+      const edit = fa ? 'ویرایش نقش‌ها' : 'Edit roles';
+      const member = main
         .getByRole('listitem')
         .filter({ has: page.getByRole('heading', { name: fa ? 'عضو نمونه' : 'Example Member' }) });
-      await member
-        .getByRole('button', { name: fa ? 'مشاهده جزئیات' : 'View details', exact: true })
-        .click();
-      let dialog = page.getByRole('dialog');
-      await expect(dialog).toContainText(fa ? 'سفارش ایجاد شد' : 'Order created');
-      await expect(dialog).not.toContainText('member@example.test');
-      const finance = dialog.getByRole('checkbox', { name: fa ? 'مالی' : 'Finance', exact: true });
-      await finance.focus();
-      await page.keyboard.press('Space');
-      await expect(finance).toBeChecked();
-      await dialog
+      await member.getByRole('link', { name: details, exact: true }).click();
+      await expect(page).toHaveURL(/settings\/team\/members\/member$/);
+      await expect(
+        main.getByRole('heading', { name: fa ? 'جزئیات عضو' : 'Member details' })
+      ).toBeFocused();
+      await expect(main).toContainText(fa ? 'سفارش ایجاد شد' : 'Order created');
+      await expect(main).not.toContainText('member@example.test');
+      await page.reload();
+      await expect(main).toContainText(fa ? 'سفارش ایجاد شد' : 'Order created');
+      await main
         .getByRole('button', { name: fa ? 'فعالیت‌های قدیمی‌تر' : 'Older activity', exact: true })
         .click();
-      await expect(dialog.getByRole('alert')).toBeVisible();
-      await expect(dialog).toContainText(fa ? 'سفارش ایجاد شد' : 'Order created');
+      await expect(main.getByRole('alert')).toBeVisible();
+      await expect(main).toContainText(fa ? 'سفارش ایجاد شد' : 'Order created');
       fail = false;
-      await dialog
+      await main
         .getByRole('button', {
           name: fa ? 'تلاش مجدد برای فعالیت‌ها' : 'Retry activity',
           exact: true,
         })
         .click();
-      await expect(dialog).toContainText(fa ? 'نقش‌های عضو تغییر کرد' : 'Member roles changed');
+      await expect(main).toContainText(fa ? 'نقش‌های عضو تغییر کرد' : 'Member roles changed');
       expect(cursors.slice(-2)).toEqual(['next-page', 'next-page']);
-      await expect(finance).toBeChecked();
-      await expect(page.getByRole('dialog')).toHaveCount(1);
-      await expect
-        .poll(() =>
-          page
-            .getByRole('dialog')
-            .evaluate(
-              (element) =>
-                element.getAnimations().filter((animation) => animation.playState === 'running')
-                  .length
-            )
-        )
-        .toBe(0);
-      expect(
-        (await new AxeBuilder({ page }).include('[role=dialog]').analyze()).violations
-      ).toEqual([]);
+      expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
       expect(
         await page.evaluate(
           () => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1
@@ -145,72 +132,51 @@ for (const locale of ['en', 'fa'] as const)
         path: `/tmp/barghsa-team-details-${locale}-${theme}.png`,
         fullPage: true,
       });
-      await dialog
-        .getByRole('button', { name: fa ? 'ذخیره نقش‌ها' : 'Save roles', exact: true })
-        .click();
-      dialog = page.getByRole('dialog');
+
+      await main.getByRole('link', { name: edit, exact: true }).click();
+      await expect(page).toHaveURL(/settings\/team\/members\/member\/edit$/);
+      const finance = main.getByRole('checkbox', { name: fa ? 'مالی' : 'Finance', exact: true });
+      await finance.focus();
+      await page.keyboard.press('Space');
+      await expect(finance).toBeChecked();
+      const save = main.getByRole('button', {
+        name: fa ? 'ذخیره نقش‌ها' : 'Save roles',
+        exact: true,
+      });
+      await save.click();
+      const dialog = page.getByRole('dialog');
       await expect(dialog).toContainText('m***@example.test');
       expect(commands).toBe(0);
       await dialog.getByRole('button', { name: fa ? 'انصراف' : 'Cancel', exact: true }).click();
-      await expect(
-        page
-          .getByRole('dialog')
-          .getByRole('checkbox', { name: fa ? 'مالی' : 'Finance', exact: true })
-      ).toBeChecked();
-      await page
-        .getByRole('dialog')
-        .getByRole('button', { name: fa ? 'ذخیره نقش‌ها' : 'Save roles', exact: true })
-        .click();
-      const confirm = page
-        .getByRole('dialog')
-        .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
+      await expect(finance).toBeChecked();
+      await save.click();
+      const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
       await expect(confirm).toBeDisabled();
       expect(commands).toBe(0);
       await approveRiskConfirmation(page, locale, 'destructive');
       await expect(confirm).toBeEnabled();
       await confirm.click();
       await expect(
-        page
-          .getByRole('dialog')
-          .getByRole('heading', { name: fa ? 'جزئیات عضو' : 'Member details', exact: true })
+        main.getByRole('heading', { name: fa ? 'جزئیات عضو' : 'Member details', exact: true })
       ).toBeVisible();
       expect(commands).toBe(1);
-      await page
-        .getByRole('dialog')
-        .getByRole('button', { name: fa ? 'بستن' : 'Close', exact: true })
-        .last()
+      const invitations = fa ? 'دعوت‌نامه‌ها' : 'Invitations';
+      await main.getByRole('link', { name: invitations, exact: true }).click();
+      await main
+        .getByRole('listitem')
+        .filter({ hasText: 'i***@example.test' })
+        .getByRole('link', { name: details, exact: true })
         .click();
-      await expect(
-        member.getByRole('button', { name: fa ? 'مشاهده جزئیات' : 'View details', exact: true })
-      ).toBeFocused();
-      const invitation = page.getByRole('listitem').filter({ hasText: 'i***@example.test' });
-      await invitation
-        .getByRole('button', { name: fa ? 'مشاهده جزئیات' : 'View details', exact: true })
-        .click();
-      await expect(page.getByRole('dialog')).toContainText(
-        '<script>Plain invitation note</script>'
-      );
-      expect(await page.getByRole('dialog').locator('script').count()).toBe(0);
-      await page
-        .getByRole('dialog')
+      await expect(main).toContainText('<script>Plain invitation note</script>');
+      expect(await main.locator('script').count()).toBe(0);
+      await main
         .getByRole('button', {
           name: fa ? 'پس گرفتن دعوت‌نامه' : 'Withdraw invitation',
           exact: true,
         })
         .click();
-      await expect(page.getByRole('dialog')).toContainText('i***@example.test');
-      await expect(page.getByRole('dialog')).toHaveCount(1);
-      await expect
-        .poll(() =>
-          page
-            .getByRole('dialog')
-            .evaluate(
-              (element) =>
-                element.getAnimations().filter((animation) => animation.playState === 'running')
-                  .length
-            )
-        )
-        .toBe(0);
+      await expect(dialog).toContainText('i***@example.test');
+      await expect(dialog).toHaveCount(1);
       expect(
         (await new AxeBuilder({ page }).include('[role=dialog]').analyze()).violations
       ).toEqual([]);

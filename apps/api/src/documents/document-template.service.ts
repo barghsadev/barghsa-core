@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { createHash, randomUUID } from 'node:crypto';
 import { getDbPool } from '@barghsa/db';
+import { documentTemplateRequiredPlaceholders } from '@barghsa/shared/admin';
 import { scanWithClamAv, type StorageProvider, type ScanVerdict } from '@barghsa/shared/storage';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
@@ -128,9 +129,7 @@ function versionDto(version: VersionRow, files: FileRow[]) {
     changeSummary: version.change_summary,
     placeholders: names,
     conflicts,
-    missingRequired: ['date', 'customerName', 'contractNumber'].filter(
-      (name) => !names.includes(name)
-    ),
+    missingRequired: documentTemplateRequiredPlaceholders.filter((name) => !names.includes(name)),
     createdAt: version.created_at,
     files: files.map(fileDto),
   };

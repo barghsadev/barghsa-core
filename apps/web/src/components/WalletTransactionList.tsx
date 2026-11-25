@@ -15,10 +15,20 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { useManualServerRead } from '../hooks/useServerQuery.js';
+import { Currency } from './Currency.js';
+import { isInvoiceUuid } from '../lib/invoice-uuid.js';
+
+interface WalletBalance {
+  posted: string;
+  reserved: string;
+  available: string;
+  updatedAt: string;
+}
 
 interface Page {
   transactions: WalletTransaction[];
   nextCursor: string | null;
+  balance: WalletBalance | null;
 }
 
 function record(value: unknown): value is Record<string, unknown> {
@@ -31,6 +41,21 @@ function textOrNull(value: unknown): boolean {
 
 function timestamp(value: unknown): boolean {
   return typeof value === 'string' && Number.isFinite(Date.parse(value));
+}
+
+function integerText(value: unknown): value is string {
+  return typeof value === 'string' && /^-?\d+$/.test(value);
+}
+
+function validBalance(value: unknown): value is WalletBalance {
+  return (
+    record(value) &&
+    integerText(value.posted) &&
+    integerText(value.reserved) &&
+    integerText(value.available) &&
+    BigInt(value.posted) - BigInt(value.reserved) === BigInt(value.available) &&
+    timestamp(value.updatedAt)
+  );
 }
 
 function validBankReceipt(value: unknown): boolean {
@@ -64,12 +89,19 @@ function validTransaction(value: unknown): value is WalletTransaction {
     value.id.length > 0 &&
     walletHistoryTypes.some((type) => type === value.type) &&
     walletHistoryStates.some((state) => state === value.state) &&
-    typeof value.amount === 'string' &&
-    /^-?\d+$/.test(value.amount) &&
+    integerText(value.amount) &&
     textOrNull(value.refId) &&
     textOrNull(value.description) &&
     timestamp(value.createdAt) &&
-    (value.bankReceipt === undefined || validBankReceipt(value.bankReceipt))
+    (value.bankReceipt === undefined || validBankReceipt(value.bankReceipt)) &&
+    (value.staffSource === undefined ||
+      ['ledger', 'bank_receipt', 'online', 'invoice'].some(
+        (source) => source === value.staffSource
+      )) &&
+    (value.receiptId === undefined ||
+      (value.staffSource === 'bank_receipt' &&
+        typeof value.receiptId === 'string' &&
+        isInvoiceUuid(value.receiptId)))
   );
 }
 
@@ -138,20 +170,6 @@ function History({
       </h2>
       {time.notice}
       <ListPage>
-        <ListPage.Toolbar
-          filters={<WalletHistoryFilters binding={binding} locale={locale} />}
-          actions={
-            <ListViewToggle
-              value={view}
-              onChange={setView}
-              labels={{
-                group: t('historyView.group', locale),
-                table: t('historyView.table', locale),
-                card: t('historyView.card', locale),
-              }}
-            />
-          }
-        />
         <HistoryPage
           profileId={profileId}
           locale={locale}
@@ -159,6 +177,7 @@ function History({
           binding={binding}
           formatTime={time.format}
           view={view}
+          setView={setView}
           staff={staff}
         />
       </ListPage>
@@ -172,6 +191,7 @@ function HistoryPage({
   binding,
   formatTime,
   view,
+  setView,
   staff,
 }: {
   profileId: string;
@@ -180,6 +200,7 @@ function HistoryPage({
   binding: ListQueryBinding;
   formatTime: ReturnType<typeof useAccountTime>['format'];
   view: ListView;
+  setView: (view: ListView) => void;
   staff: boolean;
 }) {
   const criteria = JSON.stringify([profileId, filters, staff]);
@@ -235,12 +256,17 @@ function HistoryPage({
       if (
         !record(data) ||
         !Array.isArray(data.transactions) ||
-        !data.transactions.every(validTransaction) ||
+        !data.transactions.every((row) => validTransaction(row) && (!staff || !row.bankReceipt)) ||
         (staff && data.profileId !== profileId) ||
+        (staff && data.balance != null && !validBalance(data.balance)) ||
         !(data.nextCursor === null || typeof data.nextCursor === 'string')
       )
         throw new Error('Invalid history');
-      return { transactions: data.transactions, nextCursor: data.nextCursor };
+      return {
+        transactions: data.transactions,
+        nextCursor: data.nextCursor,
+        balance: staff && validBalance(data.balance) ? data.balance : null,
+      };
     })
       .then((data) => {
         if (!current()) return;
@@ -252,8 +278,43 @@ function HistoryPage({
       });
     return () => controller.abort();
   }, [requestScope, readPage, accountId]);
+  const balance = staff && status !== 'denied' ? accepted.page?.balance : null;
   return (
     <>
+      {balance && (
+        <div className="space-y-3 rounded-lg border bg-card p-4">
+          <p className="text-sm font-medium">
+            {label('balance.title')}{' '}
+            <time className="ms-1 text-muted-foreground" dateTime={balance.updatedAt}>
+              {formatTime(balance.updatedAt)}
+            </time>
+          </p>
+          <dl className="grid gap-4 sm:grid-cols-3">
+            {(['available', 'posted', 'reserved'] as const).map((key) => (
+              <div key={key}>
+                <dt className="text-sm text-muted-foreground">{label(`balance.${key}`)}</dt>
+                <dd className="mt-1 font-semibold">
+                  <Currency amount={balance[key]} variant="small" locale={locale} />
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )}
+      <ListPage.Toolbar
+        filters={<WalletHistoryFilters binding={binding} locale={locale} />}
+        actions={
+          <ListViewToggle
+            value={view}
+            onChange={setView}
+            labels={{
+              group: t('historyView.group', locale),
+              table: t('historyView.table', locale),
+              card: t('historyView.card', locale),
+            }}
+          />
+        }
+      />
       <ListPage.Content
         loading={loading}
         error={error}

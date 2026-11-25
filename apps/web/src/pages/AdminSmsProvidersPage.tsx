@@ -1,5 +1,18 @@
+import {
+  Ban as TableBanIcon,
+  CheckCircle as TableCheckCircleIcon,
+  Copy as TableCopyIcon,
+  Eye as TableEyeIcon,
+  Pencil as TablePencilIcon,
+  Plus as TablePlusIcon,
+  RotateCcw as TableRotateCcwIcon,
+  Trash2 as TableTrash2Icon,
+} from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
+import { Link } from '@tanstack/react-router';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import {
+  providerDestination,
   providerSelectionKey,
   type ProviderSelection,
   type ProviderWorkspace,
@@ -12,10 +25,21 @@ import {
   useProviderCommandRecovery,
 } from '../hooks/useProviderCatalogue.js';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
-import { LoadingStatus, Button, DateCell, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  buttonVariants,
+  DateCell,
+  Input,
+  Label,
+  ListPage,
+  NativeSelect,
+  TextCell,
+} from '@barghsa/ui';
 import { buildSmsTestParameters } from '@barghsa/shared/notifications';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
+import { DeliveryProviderDetail } from '../components/DeliveryProviderDetail.js';
 import { DeliveryProviderTable } from '../components/DeliveryProviderTable.js';
 import { ProviderHealthMetrics } from '../components/ProviderHealthMetrics.js';
 import { ProviderAlertHistory } from '../components/ProviderAlertHistory.js';
@@ -25,6 +49,18 @@ import {
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
+import {
+  StickyRecordEditorActions,
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+} from '../components/StickyRecordEditorActions.js';
 import { providerFormText } from '@barghsa/i18n/provider-forms';
 import {
   editorFor,
@@ -211,12 +247,13 @@ export default function AdminSmsProvidersPage({
       setFirstEvent('');
     }
   }, [catalogue.data, selected]);
-  const recovery = (
-    <div className="flex flex-wrap gap-3">
+  const recovery = (compact = false) => (
+    <div className="flex flex-wrap gap-x-2 gap-y-1">
       <div>
         <Button
           type="button"
-          variant="outline"
+          variant={compact ? 'ghost' : 'outline'}
+          size={compact ? 'sm' : 'default'}
           disabled={loading || busy}
           onClick={async () => {
             if (scope.denied) return scope.recover();
@@ -232,7 +269,8 @@ export default function AdminSmsProvidersPage({
           {templateVariables.error && <p role="alert">{text('variablesFailed')}</p>}
           <Button
             type="button"
-            variant="outline"
+            variant={compact ? 'ghost' : 'outline'}
+            size={compact ? 'sm' : 'default'}
             disabled={templateVariables.loading || busy}
             onClick={() => void templateVariables.refresh()}
           >
@@ -246,7 +284,8 @@ export default function AdminSmsProvidersPage({
           {eventKeys.error && <p role="alert">{text('eventsFailed')}</p>}
           <Button
             type="button"
-            variant="outline"
+            variant={compact ? 'ghost' : 'outline'}
+            size={compact ? 'sm' : 'default'}
             disabled={eventKeys.loading || busy}
             onClick={() => void eventKeys.refresh()}
           >
@@ -368,7 +407,7 @@ export default function AdminSmsProvidersPage({
           setEditor(null);
           setSelected(saved.id);
           setFirstEvent(saved.config.template_mappings[0]?.event_key ?? '');
-          navigateEditor({ panel: 'preview', id: saved.id }, true);
+          navigateEditor({ panel: workspace ? 'detail' : 'preview', id: saved.id }, true);
           setNotice(text('saved'));
           await refresh();
         },
@@ -408,7 +447,8 @@ export default function AdminSmsProvidersPage({
         )
           throw new ProviderRequestError(false, [], true);
         setSelected(null);
-        navigateEditor(undefined, true);
+        if (workspace) navigateEditor({ panel: 'detail', id: saved.id }, true);
+        else navigateEditor(undefined, true);
         setNotice(text(operation === 'rollback' ? 'restoredDraft' : 'changed'));
         await refresh();
       },
@@ -513,7 +553,7 @@ export default function AdminSmsProvidersPage({
       if (row && selection.panel === 'clone' && row.status !== 'draft') open(row, true, false);
       else if (row?.status === 'draft' && selection.panel === 'edit') open(row, false, false);
       else if (row?.status === 'draft' && selection.panel === 'preview') openPreview(row, false);
-      else setError(text('stale'));
+      else if (selection.panel !== 'detail') setError(text('stale'));
     }
   }, [requestedPanel, requestedId, scope.denied, loading, loadFailed, catalogue.data]);
 
@@ -590,26 +630,66 @@ export default function AdminSmsProvidersPage({
     <div className="flex flex-wrap gap-2">
       {p.status === 'draft' ? (
         <>
-          <Button variant="outline" disabled={disabled || !!editor} onClick={() => open(p)}>
-            {text('edit')}
-          </Button>
-          <Button
-            variant="outline"
-            disabled={disabled || !!editor || !p.config.template_mappings.length}
-            onClick={() => openPreview(p)}
-          >
-            {text('preview')}
-          </Button>
+          {workspace && !disabled ? (
+            <Link
+              {...providerDestination('sms', { panel: 'edit', id: p.id })}
+              className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+              data-table-action-tooltip={text('edit')}
+            >
+              <TableActionIcon icon={TablePencilIcon}>{text('edit')}</TableActionIcon>
+            </Link>
+          ) : (
+            <Button
+              variant="outline"
+              disabled={disabled || !!editor}
+              onClick={() => open(p)}
+              data-table-action-tooltip={text('edit')}
+            >
+              <TableActionIcon icon={TablePencilIcon}>{text('edit')}</TableActionIcon>
+            </Button>
+          )}
+          {workspace && !disabled && p.config.template_mappings.length > 0 ? (
+            <Link
+              {...providerDestination('sms', { panel: 'preview', id: p.id })}
+              className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+              data-table-action-tooltip={text('preview')}
+            >
+              <TableActionIcon icon={TableEyeIcon}>{text('preview')}</TableActionIcon>
+            </Link>
+          ) : (
+            <Button
+              variant="outline"
+              disabled={disabled || !!editor || !p.config.template_mappings.length}
+              onClick={() => openPreview(p)}
+              data-table-action-tooltip={text('preview')}
+            >
+              <TableActionIcon icon={TableEyeIcon}>{text('preview')}</TableActionIcon>
+            </Button>
+          )}
           <Button
             disabled={disabled || !eventsReady || !!editor || p.lastTestStatus !== 'passed'}
             onClick={() => lifecycle(p, 'activate')}
+            data-table-action-tooltip={text('activate')}
           >
-            {text('activate')}
+            <TableActionIcon icon={TableCheckCircleIcon}>{text('activate')}</TableActionIcon>
           </Button>
         </>
+      ) : workspace && !disabled ? (
+        <Link
+          {...providerDestination('sms', { panel: 'clone', id: p.id })}
+          className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+          data-table-action-tooltip={text('clone')}
+        >
+          <TableActionIcon icon={TableCopyIcon}>{text('clone')}</TableActionIcon>
+        </Link>
       ) : (
-        <Button variant="outline" disabled={disabled || !!editor} onClick={() => open(p, true)}>
-          {text('clone')}
+        <Button
+          variant="outline"
+          disabled={disabled || !!editor}
+          onClick={() => open(p, true)}
+          data-table-action-tooltip={text('clone')}
+        >
+          <TableActionIcon icon={TableCopyIcon}>{text('clone')}</TableActionIcon>
         </Button>
       )}
       {p.status === 'active' && (
@@ -617,8 +697,9 @@ export default function AdminSmsProvidersPage({
           variant="outline"
           disabled={disabled || !eventsReady || !!editor}
           onClick={() => lifecycle(p, 'disable')}
+          data-table-action-tooltip={text('disable')}
         >
-          {text('disable')}
+          <TableActionIcon icon={TableBanIcon}>{text('disable')}</TableActionIcon>
         </Button>
       )}
       {(p.status === 'superseded' || p.status === 'disabled') && (
@@ -626,16 +707,22 @@ export default function AdminSmsProvidersPage({
           variant="outline"
           disabled={disabled || !eventsReady || !!editor}
           onClick={() => lifecycle(p, 'rollback')}
+          data-table-action-tooltip={text('rollback')}
         >
-          {text('rollback')}
+          <TableActionIcon icon={TableRotateCcwIcon}>{text('rollback')}</TableActionIcon>
         </Button>
       )}
     </div>
   );
 
+  const showingRecord = workspace?.selection !== undefined;
+  const detail =
+    requestedPanel === 'detail' && providers.find((provider) => provider.id === requestedId);
+  const failed = loadFailed || scope.denied;
+
   return (
     <section
-      aria-labelledby="sms-title"
+      aria-labelledby={showingRecord ? undefined : 'sms-title'}
       className="min-w-0 space-y-5 text-foreground"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -654,7 +741,7 @@ export default function AdminSmsProvidersPage({
               {(loadFailed || scope.denied) && (
                 <p role="alert">{text(scope.denied ? 'denied' : 'loadFailed')}</p>
               )}
-              {recovery}
+              {recovery()}
             </>
           }
           onUnconfirmed={() => command.mark(protectedAction.kind)}
@@ -679,18 +766,29 @@ export default function AdminSmsProvidersPage({
           }
         />
       )}
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <Heading id="sms-title" className="text-xl font-semibold">
-            {text('title')}
-          </Heading>
-          <p className="text-muted-foreground">{text('subtitle')}</p>
-        </div>
-        <Button disabled={disabled || !!editor} onClick={() => open()}>
-          {text('new')}
-        </Button>
-      </header>
-      <p className="text-sm text-muted-foreground">{text('recovery')}</p>
+      {!showingRecord && (
+        <header className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <Heading id="sms-title" className="text-xl font-semibold">
+              {text('title')}
+            </Heading>
+            <p className="text-muted-foreground">{text('subtitle')}</p>
+          </div>
+          {workspace && !disabled ? (
+            <Link
+              {...providerDestination('sms', { panel: 'new' })}
+              className={buttonVariants({ className: 'min-h-11' })}
+            >
+              {text('new')}
+            </Link>
+          ) : (
+            <Button disabled={disabled || !!editor} onClick={() => open()}>
+              {text('new')}
+            </Button>
+          )}
+        </header>
+      )}
+      {!showingRecord && <p className="text-sm text-muted-foreground">{text('recovery')}</p>}
       {error && (
         <p role="alert" className="text-destructive">
           {error}
@@ -714,102 +812,146 @@ export default function AdminSmsProvidersPage({
           </Button>
         </div>
       )}
-      <ListPage>
-        <ListPage.Toolbar>{recovery}</ListPage.Toolbar>
-        <ListPage.Content
-          loading={loading}
-          error={loadFailed || scope.denied}
-          retainContent={providers.length > 0}
-          loadingView={<LoadingStatus>{smsProviderText('tabs', locale)}…</LoadingStatus>}
-          errorView={<p role="alert">{text(scope.denied ? 'denied' : 'loadFailed')}</p>}
-          empty={!providers.length}
-          emptyView={<p>{text('empty')}</p>}
-        >
-          <DeliveryProviderTable
-            rows={providers}
-            caption={text('title')}
-            scrollLabel={text('table')}
-            labelHeader={text('label')}
-            actionHeader={text('actions')}
-            fields={providerFields}
-            renderActions={providerActions}
+      {showingRecord && !failed && recovery(true)}
+      {showingRecord && loading && <LoadingStatus>{text('tabs')}…</LoadingStatus>}
+      {showingRecord && failed && (
+        <div role="alert" className="space-y-2">
+          {text(scope.denied ? 'denied' : 'loadFailed')}
+          {recovery()}
+        </div>
+      )}
+      {requestedPanel === 'detail' &&
+        !loading &&
+        !failed &&
+        (detail ? (
+          <DeliveryProviderDetail provider={detail} fields={providerFields}>
+            {providerActions(detail)}
+          </DeliveryProviderDetail>
+        ) : (
+          <p role="alert">{providerText('admin.providers.missing', locale)}</p>
+        ))}
+      {!showingRecord && (
+        <ListPage>
+          <ListPage.Toolbar>{recovery()}</ListPage.Toolbar>
+          <ListPage.Content
             loading={loading}
-            emptyMessage=""
-            tableClassName="min-w-[52rem]"
-          />
-        </ListPage.Content>
-      </ListPage>
+            error={loadFailed || scope.denied}
+            retainContent={providers.length > 0}
+            loadingView={<LoadingStatus>{smsProviderText('tabs', locale)}…</LoadingStatus>}
+            errorView={<p role="alert">{text(scope.denied ? 'denied' : 'loadFailed')}</p>}
+            empty={!providers.length}
+            emptyView={<p>{text('empty')}</p>}
+          >
+            <DeliveryProviderTable
+              rows={providers}
+              caption={text('title')}
+              scrollLabel={text('table')}
+              labelHeader={text('label')}
+              actionHeader={text('actions')}
+              fields={providerFields}
+              {...(workspace
+                ? {
+                    renderLabel: (p: SmsProvider) => (
+                      <Link
+                        {...providerDestination('sms', { panel: 'detail', id: p.id })}
+                        className="inline-flex min-h-11 items-center text-primary underline underline-offset-4"
+                      >
+                        <TextCell value={p.label} />
+                      </Link>
+                    ),
+                  }
+                : { renderActions: providerActions })}
+              loading={loading}
+              emptyMessage=""
+              tableClassName="min-w-[52rem]"
+            />
+          </ListPage.Content>
+        </ListPage>
+      )}
       {editor && (
-        <form noValidate onSubmit={save} className="min-w-0 rounded border p-4 space-y-4">
-          {staleEditor && <p role="alert">{text('stale')}</p>}
-          {invalidEvents && eventsReady && <p role="alert">{text('eventsChanged')}</p>}
-          {uncertain && <p role="alert">{providerFormText('uncertain', locale)}</p>}
-          {(staleEditor || uncertain) && (
-            <Button
-              type="button"
-              variant="outline"
-              disabled={
-                loading ||
-                loadFailed ||
-                busy ||
-                !!protectedAction ||
-                (uncertain && !command.canReview)
-              }
-              onClick={() => {
-                const row = providers.find((p) => p.id === editSource?.id);
-                if (editor.id && row?.status !== 'draft') {
-                  command.reset();
-                  setEditor(null);
-                  navigateEditor(undefined, true);
-                } else open(row, editor.id === null && !!row);
-              }}
-            >
-              {providerFormText('reset', locale)}
-            </Button>
-          )}
-          {catalogueRootMessage(form.errors) && (
-            <p role="alert">{catalogueRootMessage(form.errors)}</p>
+        <form
+          noValidate
+          onSubmit={save}
+          onFocus={keepRecordFieldVisible}
+          aria-label={text(editor.id ? 'edit' : 'new')}
+          className={recordEditorFormSurface}
+        >
+          {(staleEditor ||
+            (invalidEvents && eventsReady) ||
+            uncertain ||
+            catalogueRootMessage(form.errors)) && (
+            <div className="space-y-2 border-b px-4 py-3 sm:px-6">
+              {staleEditor && <p role="alert">{text('stale')}</p>}
+              {invalidEvents && eventsReady && <p role="alert">{text('eventsChanged')}</p>}
+              {uncertain && <p role="alert">{providerFormText('uncertain', locale)}</p>}
+              {(staleEditor || uncertain) && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={
+                    loading ||
+                    loadFailed ||
+                    busy ||
+                    !!protectedAction ||
+                    (uncertain && !command.canReview)
+                  }
+                  onClick={() => {
+                    const row = providers.find((p) => p.id === editSource?.id);
+                    if (editor.id && row?.status !== 'draft') {
+                      command.reset();
+                      setEditor(null);
+                      navigateEditor(undefined, true);
+                    } else open(row, editor.id === null && !!row);
+                  }}
+                >
+                  {providerFormText('reset', locale)}
+                </Button>
+              )}
+              {catalogueRootMessage(form.errors) && (
+                <p role="alert">{catalogueRootMessage(form.errors)}</p>
+              )}
+            </div>
           )}
           <fieldset
             disabled={
               busy || form.pending || !!protectedAction || scope.denied || staleEditor || uncertain
             }
-            className="min-w-0 space-y-4"
+            className="min-w-0"
           >
-            <legend className="font-semibold">{text(editor.id ? 'edit' : 'new')}</legend>
-            <div className="grid gap-4 md:grid-cols-2">
-              {(['label', 'sender', 'timeout', 'throughput', 'credit'] as const).map((key) => (
-                <div key={key}>
-                  <Label htmlFor={`sms-${key}`}>{text(key)}</Label>
-                  <Input
-                    {...form.bind(key)}
-                    id={`sms-${key}`}
-                    value={editor[key]}
-                    onChange={(e) => field(key, e.target.value)}
-                    required
-                    aria-required="true"
-                    type={['timeout', 'throughput', 'credit'].includes(key) ? 'number' : 'text'}
-                    {...(key === 'timeout'
-                      ? { min: 1, max: 300 }
-                      : key === 'throughput'
-                        ? { min: 1, max: 10000 }
-                        : key === 'credit'
-                          ? { min: 0, max: 1_000_000_000 }
-                          : { maxLength: key === 'sender' ? 64 : 120 })}
-                  />
-                  {form.errors[key] && (
-                    <p id={form.errorId(key)} role="alert" className="text-sm text-destructive">
-                      {form.errors[key]?.message}
-                    </p>
-                  )}
-                </div>
-              ))}
-              <div>
+            <legend className="sr-only">{text(editor.id ? 'edit' : 'new')}</legend>
+            <RecordEditorSection title={providerFormText('providerDetails', locale)}>
+              <div className={recordEditorGrid}>
+                {(['label', 'sender'] as const).map((key) => (
+                  <div key={key} className={recordEditorField}>
+                    <Label htmlFor={`sms-${key}`}>{text(key)}</Label>
+                    <Input
+                      {...form.bind(key)}
+                      id={`sms-${key}`}
+                      dir={key === 'label' ? 'auto' : 'ltr'}
+                      value={editor[key]}
+                      onChange={(e) => field(key, e.target.value)}
+                      required
+                      aria-required="true"
+                      type="text"
+                      maxLength={key === 'sender' ? 64 : 120}
+                    />
+                    {form.errors[key] && (
+                      <p id={form.errorId(key)} role="alert" className="text-sm text-destructive">
+                        {form.errors[key]?.message}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </RecordEditorSection>
+            <RecordEditorSection title={providerFormText('credentials', locale)}>
+              <div className={recordEditorField}>
                 <Label htmlFor="sms-key">{text('key')}</Label>
                 <Input
                   {...form.bind('key')}
                   id="sms-key"
                   type="password"
+                  dir="ltr"
                   autoComplete="new-password"
                   value={editor.key}
                   required={!editor.keyConfigured}
@@ -825,53 +967,93 @@ export default function AdminSmsProvidersPage({
                     {form.errors.key.message}
                   </p>
                 )}
-                <p id="sms-key-hint" className="text-sm text-muted-foreground">
+                <p id="sms-key-hint" className="text-xs text-muted-foreground">
                   {text(editor.keyConfigured ? 'keyHint' : 'keyMissing')}
                 </p>
               </div>
-            </div>
-            <datalist id="sms-events">
-              {events.map((event) => (
-                <option key={event} value={event} />
-              ))}
-            </datalist>
-            {form.errors.mappings && (
-              <p id={form.errorId('mappings')} role="alert" className="text-sm text-destructive">
-                {form.errors.mappings.message}
-              </p>
-            )}
-            <ScrollArea
-              scrollbarOrientation="horizontal"
-              aria-label={text('mappings')}
-              className="min-w-0"
-            >
-              <table className="min-w-[64rem] w-full text-sm">
-                <caption className="font-semibold text-start">{text('mappings')}</caption>
-                <thead>
-                  <tr>
-                    <th scope="col" className="text-start">
-                      {text('event')}
-                    </th>
-                    <th scope="col" className="text-start">
-                      {text('language')}
-                    </th>
-                    <th scope="col" className="text-start">
-                      {text('template')}
-                    </th>
-                    <th scope="col" className="text-start">
-                      {text('parameter')}
-                    </th>
-                    <th scope="col" className="text-start">
-                      {text('actions')}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {editor.mappings.map((m, index) => (
-                    <tr key={m.id} className="border-t align-top">
-                      <td className="p-2">
+            </RecordEditorSection>
+            <RecordEditorSection title={providerFormText('limits', locale)}>
+              <div className="grid max-w-xl gap-3 min-[375px]:grid-cols-2 sm:grid-cols-3">
+                {(['timeout', 'throughput', 'credit'] as const).map((key) => (
+                  <div key={key} className={recordEditorField}>
+                    <Label htmlFor={`sms-${key}`}>{text(key)}</Label>
+                    <Input
+                      {...form.bind(key)}
+                      id={`sms-${key}`}
+                      dir="ltr"
+                      value={editor[key]}
+                      onChange={(e) => field(key, e.target.value)}
+                      required
+                      aria-required="true"
+                      type="number"
+                      {...(key === 'timeout'
+                        ? { min: 1, max: 300 }
+                        : key === 'throughput'
+                          ? { min: 1, max: 10000 }
+                          : { min: 0, max: 1_000_000_000 })}
+                    />
+                    {form.errors[key] && (
+                      <p id={form.errorId(key)} role="alert" className="text-sm text-destructive">
+                        {form.errors[key]?.message}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </RecordEditorSection>
+            <RecordEditorSection title={text('mappings')}>
+              <datalist id="sms-events">
+                {events.map((event) => (
+                  <option key={event} value={event} />
+                ))}
+              </datalist>
+              {form.errors.mappings && (
+                <p id={form.errorId('mappings')} role="alert" className="text-sm text-destructive">
+                  {form.errors.mappings.message}
+                </p>
+              )}
+              {editor.mappings.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  {providerFormText('noMappings', locale)}
+                </p>
+              )}
+              {editor.mappings.map((m, index) => {
+                const id = `sms-mapping-${m.id}`;
+                const title = `${providerFormText('mappingTitle', locale)} ${new Intl.NumberFormat(locale).format(index + 1)}`;
+                return (
+                  <div
+                    key={m.id}
+                    role="group"
+                    aria-labelledby={`${id}-title`}
+                    className="min-w-0 space-y-3 rounded-lg border p-3 sm:p-4"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 id={`${id}-title`} className="text-sm font-semibold">
+                        {title}
+                      </h3>
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="ghost"
+                        aria-label={`${text('remove')} ${text('event')} ${index + 1}`}
+                        title={text('remove')}
+                        onClick={() =>
+                          field(
+                            'mappings',
+                            editor.mappings.filter((entry) => entry.id !== m.id)
+                          )
+                        }
+                      >
+                        <TableTrash2Icon aria-hidden="true" />
+                      </Button>
+                    </div>
+                    <div className="grid min-w-0 gap-3 sm:grid-cols-3">
+                      <div className={recordEditorField}>
+                        <Label htmlFor={`${id}-event`}>{text('event')}</Label>
                         <Input
                           {...(index === 0 ? { ...form.bind('mappings'), ref: mappingRef } : {})}
+                          id={`${id}-event`}
+                          dir="ltr"
                           aria-invalid={form.errors.mappings ? true : undefined}
                           aria-describedby={
                             form.errors.mappings ? form.errorId('mappings') : undefined
@@ -884,13 +1066,15 @@ export default function AdminSmsProvidersPage({
                           aria-required="true"
                           onChange={(e) => changeMapping(m.id, { event: e.target.value })}
                         />
-                      </td>
-                      <td className="p-2">
-                        <select
+                      </div>
+                      <div className={recordEditorField}>
+                        <Label htmlFor={`${id}-language`}>{text('language')}</Label>
+                        <NativeSelect
+                          id={`${id}-language`}
+                          className="w-full"
                           aria-label={`${text('language')} ${index + 1}`}
                           aria-required="true"
                           value={m.locale}
-                          className="border rounded bg-background p-2"
                           onChange={(e) =>
                             changeMapping(m.id, { locale: e.target.value as Mapping['locale'] })
                           }
@@ -898,10 +1082,13 @@ export default function AdminSmsProvidersPage({
                           <option value="all">{text('allLanguages')}</option>
                           <option value="fa">{text('persian')}</option>
                           <option value="en">{text('english')}</option>
-                        </select>
-                      </td>
-                      <td className="p-2">
+                        </NativeSelect>
+                      </div>
+                      <div className={recordEditorField}>
+                        <Label htmlFor={`${id}-template`}>{text('template')}</Label>
                         <Input
+                          id={`${id}-template`}
+                          dir="ltr"
                           aria-label={`${text('template')} ${index + 1}`}
                           value={m.template}
                           maxLength={128}
@@ -910,26 +1097,36 @@ export default function AdminSmsProvidersPage({
                           aria-required="true"
                           onChange={(e) => changeMapping(m.id, { template: e.target.value })}
                         />
-                      </td>
-                      <td className="p-2 space-y-2">
-                        <datalist id={`sms-variables-${m.id}`}>
-                          {smsVariableChoices(templateVariables.data ?? [], m.event, m.locale).map(
-                            (name) => (
-                              <option key={name} value={name} />
-                            )
-                          )}
-                        </datalist>
-                        <p
-                          id={`sms-variables-hint-${m.id}`}
-                          className="max-w-xs whitespace-normal text-xs text-muted-foreground"
+                      </div>
+                    </div>
+                    <datalist id={`sms-variables-${m.id}`}>
+                      {smsVariableChoices(templateVariables.data ?? [], m.event, m.locale).map(
+                        (name) => (
+                          <option key={name} value={name} />
+                        )
+                      )}
+                    </datalist>
+                    <div className="space-y-2 border-t pt-3">
+                      <p className="text-sm font-medium">
+                        {providerFormText('variablePairs', locale)}
+                      </p>
+                      <p
+                        id={`sms-variables-hint-${m.id}`}
+                        className="text-xs text-muted-foreground"
+                      >
+                        {text('variablesHint')}
+                      </p>
+                      {m.variables.map((v, vi) => (
+                        <div
+                          key={v.id}
+                          className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]"
                         >
-                          {text('variablesHint')}
-                        </p>
-                        {m.variables.map((v, vi) => (
-                          <div key={v.id} className="flex gap-2">
+                          <div className={`${recordEditorField} col-span-2 sm:col-span-1`}>
+                            <Label htmlFor={`${id}-variable-${v.id}`}>{text('variable')}</Label>
                             <Input
+                              id={`${id}-variable-${v.id}`}
+                              dir="ltr"
                               aria-label={`${text('variable')} ${index + 1}.${vi + 1}`}
-                              placeholder={text('variable')}
                               list={`sms-variables-${m.id}`}
                               aria-describedby={`sms-variables-hint-${m.id}`}
                               value={v.internal}
@@ -938,171 +1135,178 @@ export default function AdminSmsProvidersPage({
                               aria-required="true"
                               onChange={(e) =>
                                 changeMapping(m.id, {
-                                  variables: m.variables.map((x) =>
-                                    x.id === v.id ? { ...x, internal: e.target.value } : x
+                                  variables: m.variables.map((entry) =>
+                                    entry.id === v.id
+                                      ? { ...entry, internal: e.target.value }
+                                      : entry
                                   ),
                                 })
                               }
                             />
+                          </div>
+                          <div className={recordEditorField}>
+                            <Label htmlFor={`${id}-parameter-${v.id}`}>{text('parameter')}</Label>
                             <Input
+                              id={`${id}-parameter-${v.id}`}
+                              dir="ltr"
                               aria-label={`${text('parameter')} ${index + 1}.${vi + 1}`}
-                              placeholder={text('parameter')}
                               value={v.parameter}
                               maxLength={255}
                               required
                               aria-required="true"
                               onChange={(e) =>
                                 changeMapping(m.id, {
-                                  variables: m.variables.map((x) =>
-                                    x.id === v.id ? { ...x, parameter: e.target.value } : x
+                                  variables: m.variables.map((entry) =>
+                                    entry.id === v.id
+                                      ? { ...entry, parameter: e.target.value }
+                                      : entry
                                   ),
                                 })
                               }
                             />
-                            <Button
-                              type="button"
-                              variant="outline"
-                              aria-label={`${text('remove')} ${text('variable')} ${index + 1}.${vi + 1}`}
-                              onClick={() =>
-                                changeMapping(m.id, {
-                                  variables: m.variables.filter((x) => x.id !== v.id),
-                                })
-                              }
-                            >
-                              {text('remove')}
-                            </Button>
                           </div>
-                        ))}
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() =>
-                            changeMapping(m.id, { variables: [...m.variables, variable()] })
-                          }
-                        >
-                          {text('addVariable')}
-                        </Button>
-                      </td>
-                      <td className="p-2">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          aria-label={`${text('remove')} ${text('event')} ${index + 1}`}
-                          onClick={() =>
-                            field(
-                              'mappings',
-                              editor.mappings.filter((x) => x.id !== m.id)
-                            )
-                          }
-                        >
-                          {text('remove')}
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </ScrollArea>
-            <Button
-              type="button"
-              variant="outline"
-              {...(!editor.mappings.length ? { ...form.bind('mappings'), ref: mappingRef } : {})}
-              onClick={() => field('mappings', [...editor.mappings, mapping()])}
-            >
-              {text('addMapping')}
-            </Button>
-            <div className="flex gap-2">
-              <CatalogueSaveButton
-                pending={form.pending}
-                disabled={disabled || !eventsReady || staleEditor || uncertain}
-                label={text('save')}
-              />
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="ghost"
+                            aria-label={`${text('remove')} ${text('variable')} ${index + 1}.${vi + 1}`}
+                            title={text('remove')}
+                            onClick={() =>
+                              changeMapping(m.id, {
+                                variables: m.variables.filter((entry) => entry.id !== v.id),
+                              })
+                            }
+                          >
+                            <TableTrash2Icon aria-hidden="true" />
+                          </Button>
+                        </div>
+                      ))}
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() =>
+                          changeMapping(m.id, { variables: [...m.variables, variable()] })
+                        }
+                      >
+                        <TablePlusIcon aria-hidden="true" />
+                        {text('addVariable')}
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+              <Button
+                type="button"
+                variant="outline"
+                {...(!editor.mappings.length ? { ...form.bind('mappings'), ref: mappingRef } : {})}
+                onClick={() => field('mappings', [...editor.mappings, mapping()])}
+              >
+                {text('addMapping')}
+              </Button>
+            </RecordEditorSection>
+            <StickyRecordEditorActions>
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => {
                   setEditor(null);
-                  navigateEditor(undefined);
+                  navigateEditor(
+                    workspace && editSource ? { panel: 'detail', id: editSource.id } : undefined
+                  );
                 }}
               >
                 {text('cancel')}
               </Button>
-            </div>
+              <CatalogueSaveButton
+                pending={form.pending}
+                disabled={disabled || !eventsReady || staleEditor || uncertain}
+                label={text('save')}
+              />
+            </StickyRecordEditorActions>
           </fieldset>
         </form>
       )}
-      {testProvider && !editor && (
-        <section aria-labelledby="sms-preview-title" className="rounded border p-4 space-y-3">
-          <h2 id="sms-preview-title" className="font-semibold">
-            {text('preview')}: {testProvider.label}
-          </h2>
-          <Label htmlFor="sms-test-event">{text('firstEvent')}</Label>
-          <select
-            id="sms-test-event"
-            disabled={disabled}
-            value={firstEvent}
-            onChange={(e) => setFirstEvent(e.target.value)}
-            className="border rounded bg-background p-2"
-          >
-            {[...new Set(testProvider.config.template_mappings.map((m) => m.event_key))].map(
-              (event) => (
-                <option key={event} value={event}>
-                  {event}
-                </option>
-              )
-            )}
-          </select>
-          <p>
-            {text('testNotice').replace(
-              '{count}',
-              new Intl.NumberFormat(locale).format(testMappings.length)
-            )}
-          </p>
-          {testMappings.map((m) => (
-            <div key={`${m.event_key}:${m.locale ?? '*'}`} className="border rounded p-3">
-              <h3 className="font-mono" dir="ltr">
-                {m.event_key} · {m.template_id} ·{' '}
-                {text(
-                  m.locale === 'fa' ? 'persian' : m.locale === 'en' ? 'english' : 'allLanguages'
+      {testProvider && !editor && (!workspace || requestedPanel === 'preview') && (
+        <section aria-labelledby="sms-preview-title" className={recordEditorSurface}>
+          <div className="space-y-3 px-4 py-4 sm:px-6">
+            <h2 id="sms-preview-title" className="text-base font-semibold">
+              {text('preview')}: {testProvider.label}
+            </h2>
+            <div className={recordEditorField}>
+              <Label htmlFor="sms-test-event">{text('firstEvent')}</Label>
+              <NativeSelect
+                id="sms-test-event"
+                disabled={disabled}
+                value={firstEvent}
+                onChange={(e) => setFirstEvent(e.target.value)}
+                className="w-full max-w-sm"
+              >
+                {[...new Set(testProvider.config.template_mappings.map((m) => m.event_key))].map(
+                  (event) => (
+                    <option key={event} value={event}>
+                      {event}
+                    </option>
+                  )
                 )}
-              </h3>
-              <dl>
-                {buildSmsTestParameters(m.variables).map((p) => (
-                  <div key={p.name} className="flex gap-4 font-mono" dir="ltr">
-                    <dt>{p.name}</dt>
-                    <dd>{p.value}</dd>
-                  </div>
-                ))}
-              </dl>
+              </NativeSelect>
             </div>
-          ))}
-          <div className="space-y-1">
-            <Label htmlFor="sms-test-recipient">{text('testRecipient')}</Label>
-            <Input
-              id="sms-test-recipient"
-              dir="ltr"
-              type="tel"
-              autoComplete="off"
-              maxLength={16}
-              value={testRecipient}
-              disabled={disabled}
-              onChange={(event) =>
-                setTestContact({ basis: testContactBasis, value: event.target.value })
-              }
-            />
+            <p className="text-sm text-muted-foreground">
+              {text('testNotice').replace(
+                '{count}',
+                new Intl.NumberFormat(locale).format(testMappings.length)
+              )}
+            </p>
+            {testMappings.map((m) => (
+              <div
+                key={`${m.event_key}:${m.locale ?? '*'}`}
+                className="space-y-2 rounded-lg border bg-muted/35 p-3"
+              >
+                <h3 className="text-sm font-medium [overflow-wrap:anywhere]">
+                  {m.event_key} · {m.template_id} ·{' '}
+                  {text(
+                    m.locale === 'fa' ? 'persian' : m.locale === 'en' ? 'english' : 'allLanguages'
+                  )}
+                </h3>
+                <dl>
+                  {buildSmsTestParameters(m.variables).map((p) => (
+                    <div key={p.name} className="flex gap-4 font-mono" dir="ltr">
+                      <dt>{p.name}</dt>
+                      <dd>{p.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            ))}
+            <div className={recordEditorField}>
+              <Label htmlFor="sms-test-recipient">{text('testRecipient')}</Label>
+              <Input
+                id="sms-test-recipient"
+                dir="ltr"
+                type="tel"
+                autoComplete="off"
+                maxLength={16}
+                value={testRecipient}
+                disabled={disabled}
+                onChange={(event) =>
+                  setTestContact({ basis: testContactBasis, value: event.target.value })
+                }
+              />
+            </div>
           </div>
-          <Button
-            disabled={
-              disabled ||
-              !eventsReady ||
-              testProvider.status !== 'draft' ||
-              !testMappings.length ||
-              !validTestRecipient
-            }
-            onClick={() => void test()}
-          >
-            {text('test')}
-          </Button>
+          <RecordEditorActions>
+            <Button
+              disabled={
+                disabled ||
+                !eventsReady ||
+                testProvider.status !== 'draft' ||
+                !testMappings.length ||
+                !validTestRecipient
+              }
+              onClick={() => void test()}
+            >
+              {text('test')}
+            </Button>
+          </RecordEditorActions>
         </section>
       )}
     </section>

@@ -176,7 +176,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route(`**/api/saving/orders/${id}`, (r) => r.fulfill({ json: response }));
     await page.goto('/admin/saving-orders?lane=fulfillment');
     await page
-      .getByRole('button', { name: /Saving customer.*Home plan|Saving customer.*طرح خانه/ })
+      .getByRole('link', { name: /Saving customer.*Home plan|Saving customer.*طرح خانه/ })
       .click();
     const staffHistory = page.getByRole('region', { name: copy('staffHistory') });
     await expect(staffHistory).toContainText('کارشناس <img src=x>');

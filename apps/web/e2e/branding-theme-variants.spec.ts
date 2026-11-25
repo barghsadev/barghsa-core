@@ -85,6 +85,9 @@ for (const locale of ['fa', 'en'] as const) {
     await page
       .getByRole('button', { name: settingsText('admin.settings.edit', locale), exact: true })
       .click();
+    await expect(page).toHaveURL(/\/admin\/branding\/edit$/);
+    const titles = page.locator('#branding-title-fa, #adminbrandingconfig-field-2');
+    await expect(titles.first()).toHaveAttribute('lang', locale);
     await expect(
       page.getByRole('button', { name: brandingText('save', locale), exact: true })
     ).toBeDisabled();
@@ -107,8 +110,10 @@ for (const locale of ['fa', 'en'] as const) {
     expect(received.body).toEqual(png);
     await expect(page.locator('html')).toHaveCSS('--primary', brandSettings.primaryColor);
     expect(publicImageReads).toBe(0);
-    await page.getByRole('button', { name: brandingText('save', locale), exact: true }).click();
+    await titles.first().press('Enter');
     const dialog = page.getByRole('dialog');
+    await expect(dialog).toBeVisible();
+    expect(writes).toHaveLength(0);
     await dialog
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
       .click();

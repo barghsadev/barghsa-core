@@ -43,11 +43,15 @@ const fa: Record<string, string> = {
   'admin.walletReceipts.review.notice':
     'تأیید این رسید، قرارداد را لغو نمی‌کند و بازپرداخت به بررسی جداگانه نیاز دارد.',
   'admin.receiptThreshold.title': 'آستانه تأیید دو نفره',
+  'admin.receiptThreshold.editTitle': 'ویرایش آستانه',
   'admin.receiptThreshold.description':
     'پرداخت\u200cهای بانکی، بازپرداخت\u200cها و اصلاحات مالی دستی با مبلغ مساوی یا بیشتر از این آستانه ریالی به تأیید کارشناس مجاز دوم نیاز دارند.',
   'admin.receiptThreshold.stepUp':
     'تغییرات به تأیید کد یک‌بارمصرف نیاز دارند و در سابقه حسابرسی ثبت می‌شوند.',
   'admin.receiptThreshold.label': 'آستانه (ریال)',
+  'admin.receiptThreshold.current': 'آستانه فعلی',
+  'admin.receiptThreshold.proposed': 'آستانه پیشنهادی',
+  'admin.receiptThreshold.reloadValue': 'تازه‌سازی آستانه',
   'admin.receiptThreshold.save': 'ذخیره آستانه',
   'admin.receiptThreshold.saved': 'آستانه ذخیره شد.',
   'admin.receiptThreshold.loading': 'در حال بارگذاری آستانه…',
@@ -77,6 +81,11 @@ const fa: Record<string, string> = {
     'رسید با تأیید اضطراری تسویه شد. کارشناسان مالی مطلع شدند.',
   'admin.walletReceipts.nav': 'رسیدهای کیف پول',
   'admin.walletReceipts.title': 'بررسی رسید شارژ کیف پول',
+  'admin.walletReceipts.backToQueue': 'بازگشت به صف رسیدهای کیف پول',
+  'admin.walletReceipts.limitSettings': 'تنظیم سقف شارژ',
+  'admin.walletReceipts.recordState': 'وضعیت رسید',
+  'admin.walletReceipts.walletHistoryLink': 'مشاهده گردش کیف پول',
+  'admin.walletReceipts.readOnlyReview': 'بررسی این رسید به دسترسی کارشناس نیاز دارد.',
   'admin.walletReceipts.description':
     'رسید بانکی مشتری را بررسی کنید و آن را تأیید یا با دلیل رد کنید. تأیید، مبلغ را از طریق دفترکل به کیف پول واریز می‌کند و مشتری را مطلع می‌سازد. رد هرگز موجودی را افزایش نمی‌دهد و دلیل را برای مشتری ارسال می‌کند.',
   'admin.walletReceipts.loading': 'در حال بارگذاری رسیدهای در انتظار…',
@@ -177,11 +186,15 @@ const en: Record<string, string> = {
   'admin.walletReceipts.review.notice':
     'Confirming this receipt does not cancel a contract. Refunds require a separate review.',
   'admin.receiptThreshold.title': 'Dual-approval threshold',
+  'admin.receiptThreshold.editTitle': 'Edit threshold',
   'admin.receiptThreshold.description':
     'Bank payments, refunds and manual adjustments at or above this IRR amount require a second authorized reviewer.',
   'admin.receiptThreshold.stepUp':
     'Changes require one-time-code verification and are recorded in audit history.',
   'admin.receiptThreshold.label': 'Threshold (IRR)',
+  'admin.receiptThreshold.current': 'Current threshold',
+  'admin.receiptThreshold.proposed': 'Proposed threshold',
+  'admin.receiptThreshold.reloadValue': 'Reload current value',
   'admin.receiptThreshold.save': 'Save threshold',
   'admin.receiptThreshold.saved': 'Threshold saved.',
   'admin.receiptThreshold.loading': 'Loading threshold…',
@@ -211,6 +224,11 @@ const en: Record<string, string> = {
     'Receipt settled with emergency override. Finance staff alerted.',
   'admin.walletReceipts.nav': 'Wallet receipts',
   'admin.walletReceipts.title': 'Staff wallet receipt review',
+  'admin.walletReceipts.backToQueue': 'Back to wallet receipts',
+  'admin.walletReceipts.limitSettings': 'Top-up limit settings',
+  'admin.walletReceipts.recordState': 'Receipt status',
+  'admin.walletReceipts.walletHistoryLink': 'View wallet history',
+  'admin.walletReceipts.readOnlyReview': 'Reviewing this receipt requires reviewer access.',
   'admin.walletReceipts.description':
     'Review the customer bank receipt and confirm or reject it with a reason. Confirm credits the wallet through the ledger and notifies the customer. Reject never increases the balance and sends the reason to the customer.',
   'admin.walletReceipts.loading': 'Loading pending receipts…',

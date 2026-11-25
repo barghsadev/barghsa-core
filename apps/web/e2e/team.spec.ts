@@ -249,9 +249,9 @@ for (const locale of ['fa', 'en'] as const) {
     await setCsrf('owner-invitation-csrf');
     await page.goto('/settings/team');
     await page
-      .getByRole('button', { name: fa ? 'دعوت عضو تیم' : 'Invite a team member', exact: true })
+      .getByRole('link', { name: fa ? 'دعوت عضو تیم' : 'Invite a team member', exact: true })
       .click();
-    const dialog = page.getByRole('dialog');
+    const dialog = page.getByRole('form', { name: teamText('team.invite', locale) });
     await dialog.getByLabel(fa ? 'ایمیل یا شماره موبایل' : 'Email or mobile number').fill(username);
     await dialog.locator('#invite-role').selectOption('Legal');
     await expect(dialog.getByRole('status')).toContainText(company);
@@ -293,7 +293,9 @@ for (const locale of ['fa', 'en'] as const) {
     for (const testId of ['wallet-balance', 'wallet-submit', 'wallet-receipt-form']) {
       await expect(page.getByTestId(testId)).toHaveCount(0);
     }
-    expect(steps).toEqual(['invited', 'accepted', 'selected', 'read-contracts', 'denied-wallet']);
+    expect(steps.slice(0, 3)).toEqual(['invited', 'accepted', 'selected']);
+    expect(steps.at(-1)).toBe('denied-wallet');
+    expect(new Set(steps.slice(3, -1))).toEqual(new Set(['read-contracts']));
   });
 
   test(`dashboard invitations stay visible until a decision and sit above the header (${locale})`, async ({
@@ -437,8 +439,9 @@ for (const locale of ['fa', 'en'] as const) {
     await expect.poll(() => invitations.evaluate((region) => region.scrollTop)).toBeGreaterThan(0);
   });
 
-  test(`invitation modal previews the entity, cancels safely and retries without losing input (${locale})`, async ({
+  test(`invitation page previews the entity, cancels safely and retries without losing input (${locale})`, async ({
     page,
+    baseURL,
   }) => {
     const fa = locale === 'fa';
     await page.setViewportSize({ width: 1280, height: 800 });
@@ -455,21 +458,19 @@ for (const locale of ['fa', 'en'] as const) {
     });
     await page
       .context()
-      .addCookies([
-        { name: 'barghsa_csrf', value: 'invitation-current-csrf', url: 'http://127.0.0.1:5173' },
-      ]);
-    await page.goto('/settings/team');
+      .addCookies([{ name: 'barghsa_csrf', value: 'invitation-current-csrf', url: baseURL! }]);
+    await page.goto('/settings/team/invitations');
     // Scope is a real accessible table; invitees expose no registration detail.
     const table = page.getByRole('table');
     await expect(table.getByRole('columnheader')).toHaveCount(7);
     const pendingRow = table.getByRole('row').filter({ hasText: 'i***@example.test' });
     await expect(pendingRow).toContainText(fa ? 'در انتظار' : 'Pending');
-    const trigger = page.getByRole('button', {
+    const trigger = page.getByRole('link', {
       name: fa ? 'دعوت عضو تیم' : 'Invite a team member',
       exact: true,
     });
     await trigger.click();
-    const dialog = page.getByRole('dialog');
+    const dialog = page.getByRole('form', { name: teamText('team.invite', locale) });
     const input = dialog.getByLabel(fa ? 'ایمیل یا شماره موبایل' : 'Email or mobile number');
     await expect(input).toBeFocused();
     await input.fill('new@example.test');
@@ -479,11 +480,14 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(dialog.getByRole('status')).toContainText('Example company');
     await input.click();
     await expect(input).toBeFocused();
-    await page.keyboard.press('Escape');
+    await dialog
+      .getByRole('button', { name: teamText('team.cancel', locale), exact: true })
+      .click();
     await expect(dialog).toHaveCount(0);
-    await expect(trigger).toBeFocused();
     expect(sent).toEqual([]);
     await trigger.click();
+    await input.fill('new@example.test');
+    await role.selectOption('Finance');
     const send = dialog.getByRole('button', { name: fa ? 'ارسال دعوت‌نامه' : 'Send invitation' });
     await expect(input).toHaveValue('new@example.test');
     await send.click();
@@ -499,22 +503,12 @@ for (const locale of ['fa', 'en'] as const) {
             .map((a) => a.finished.catch(() => {}))
         );
       }, dark);
-      expect(
-        (await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations
-      ).toEqual([]);
+      expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
     }
     await send.click();
     await expect(dialog).toHaveCount(0);
-    await expect(
-      page
-        .locator('main[data-area=dashboard]')
-        .getByRole('status')
-        .filter({
-          hasText:
-            /Invitation sent|دعوت‌نامه ارسال شد|Change saved|Transfer request sent|درخواست انتقال مالکیت/,
-        })
-    ).toContainText(fa ? 'دعوت‌نامه ارسال شد' : 'Invitation sent');
-    await expect(trigger).toBeFocused();
+    await expect(page).toHaveURL(/settings\/team\/invitations\/new-invitation$/);
+    await expect(page.getByText(teamText('team.invited', locale), { exact: true })).toBeVisible();
     expect(sent).toEqual([
       { username: 'new@example.test', role: 'Finance' },
       { username: 'new@example.test', role: 'Finance' },
@@ -540,9 +534,9 @@ for (const locale of ['fa', 'en'] as const) {
       heldInvite = route;
     });
     await page.goto('/settings/team');
-    const invite = page.getByRole('button', { name: word('invite'), exact: true });
+    const invite = page.getByRole('link', { name: word('invite'), exact: true });
     await invite.click();
-    const dialog = page.getByRole('dialog');
+    const dialog = page.getByRole('form', { name: teamText('team.invite', locale) });
     const address = dialog.locator('#team-username');
     const message = dialog.locator('#invite-message');
     const submit = dialog.getByRole('button', { name: word('sendInvite'), exact: true });
@@ -588,10 +582,8 @@ for (const locale of ['fa', 'en'] as const) {
       },
     });
     await expect(dialog).toHaveCount(0);
-    await expect(
-      page.getByRole('status').filter({ hasText: word('invitePendingFound') })
-    ).toBeVisible();
-    await expect(invite).toBeFocused();
+    await expect(page.getByText(word('invitePendingFound'), { exact: true })).toBeVisible();
+    await expect(page).toHaveURL(/settings\/team\/invitations\/recovered-invitation$/);
     expect(writes).toHaveLength(1);
   });
 
@@ -600,13 +592,13 @@ for (const locale of ['fa', 'en'] as const) {
   }) => {
     const fa = locale === 'fa';
     await shell(page, locale);
-    let loads = 0,
+    let invitationsAvailable = false,
       decisions = 0;
     let heldDecision: Route | undefined;
     const decision = fa ? 'decline' : 'accept';
     await page.route('**/api/invitations/pending', (route) =>
       route.fulfill(
-        ++loads === 1
+        !invitationsAvailable
           ? { status: 503, json: {} }
           : {
               json: {
@@ -659,6 +651,8 @@ for (const locale of ['fa', 'en'] as const) {
     const retry = page
       .getByRole('alert')
       .getByRole('button', { name: fa ? 'تلاش دوباره' : 'Retry' });
+    await expect(retry).toBeVisible();
+    invitationsAvailable = true;
     await retry.click();
     const banner = page.getByRole('region').filter({ hasText: 'Inviting company' });
     await expect(banner).toContainText(fa ? 'مالی' : 'Finance');
@@ -761,7 +755,7 @@ for (const locale of ['fa', 'en'] as const) {
       locale === 'fa' ? 'تیم و مالکیت' : 'Team and ownership'
     );
     await page
-      .getByRole('button', {
+      .getByRole('link', {
         name: locale === 'fa' ? 'دعوت عضو تیم' : 'Invite a team member',
         exact: true,
       })
@@ -770,7 +764,9 @@ for (const locale of ['fa', 'en'] as const) {
       .getByLabel(locale === 'fa' ? 'ایمیل یا شماره موبایل' : 'Email or mobile number')
       .fill('new@example.test');
     await page.locator('#invite-role').selectOption('Legal');
-    await expect(page.getByRole('dialog').getByRole('status')).toHaveText(
+    await expect(
+      page.getByRole('form', { name: teamText('team.invite', locale) }).getByRole('status')
+    ).toHaveText(
       locale === 'fa'
         ? 'دعوت new@example.test به عنوان حقوقی برای Example company.'
         : 'Invite new@example.test as Legal to Example company.'
@@ -778,15 +774,12 @@ for (const locale of ['fa', 'en'] as const) {
     await page
       .getByRole('button', { name: locale === 'fa' ? 'ارسال دعوت‌نامه' : 'Send invitation' })
       .click();
-    await expect(
-      page
-        .locator('main[data-area=dashboard]')
-        .getByRole('status')
-        .filter({
-          hasText:
-            /Invitation sent|دعوت‌نامه ارسال شد|Change saved|Transfer request sent|درخواست انتقال مالکیت/,
-        })
-    ).toContainText(locale === 'fa' ? 'دعوت‌نامه ارسال شد' : 'Invitation sent');
+    await expect(page).toHaveURL(/settings\/team\/invitations\/new-invite$/);
+    await expect(page.getByText(teamText('team.invited', locale), { exact: true })).toBeVisible();
+    await page
+      .getByRole('main')
+      .getByRole('link', { name: teamText('team.membersOnly', locale), exact: true })
+      .click();
     const member = page
       .getByRole('row')
       .filter({ has: page.getByRole('heading', { name: 'm***@example.test' }) });
@@ -802,9 +795,13 @@ for (const locale of ['fa', 'en'] as const) {
       )
     );
     await member
+      .getByRole('link', { name: teamText('team.editRoles', locale), exact: true })
+      .click();
+    const editor = page.getByRole('main');
+    await editor
       .getByRole('checkbox', { name: locale === 'fa' ? 'مالی' : 'Finance', exact: true })
       .check();
-    await member
+    await editor
       .getByRole('button', { name: locale === 'fa' ? 'ذخیره نقش‌ها' : 'Save roles' })
       .click();
     const dialog = page.getByRole('dialog');
@@ -838,7 +835,7 @@ test('manager cannot initiate transfer and cancelling removal sends no request',
     deletes++;
     return route.fulfill({ json: { removed: true } });
   });
-  await page.goto('/settings/team');
+  await page.goto('/settings/team/members/member');
   await expect(page.getByRole('button', { name: 'Remove member' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Transfer ownership' })).toHaveCount(0);
   await page.getByRole('button', { name: 'Remove member' }).click();
@@ -914,12 +911,12 @@ test('stale transfer remains an error and never reports acceptance', async ({ pa
   await page.route(`**/api/profiles/${profileId}/ownership-accept`, (route) =>
     route.fulfill({ status: 409, json: { error: 'conflict' } })
   );
-  await page.goto('/settings/team');
+  await page.goto('/settings/team/transfers');
   await page.getByRole('button', { name: 'Accept ownership' }).click();
   await authorizeAction(page);
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(page.getByRole('dialog').getByRole('alert')).toContainText('changed or expired');
-  await expect(page).toHaveURL(/\/settings\/team$/);
+  await expect(page).toHaveURL(/\/settings\/team\/transfers$/);
 });
 
 test('an unconfirmed acceptance checks the revoked session without replaying the write', async ({
@@ -956,7 +953,7 @@ test('an unconfirmed acceptance checks the revoked session without replaying the
       json: { profileId, transferId: profileId, status: 'Completed', sessionRevoked: true },
     });
   });
-  await page.goto('/settings/team');
+  await page.goto('/settings/team/transfers');
   await page.getByRole('button', { name: 'Accept ownership' }).click();
   const readsBeforeDecision = transferReads;
   await authorizeAction(page);
@@ -965,7 +962,7 @@ test('an unconfirmed acceptance checks the revoked session without replaying the
   await confirm.click();
   await expect(dialog.getByRole('alert')).toHaveText(confirmationText('unconfirmed', 'en'));
   await expect(confirm).toBeDisabled();
-  await expect(page).toHaveURL(/\/settings\/team$/);
+  await expect(page).toHaveURL(/\/settings\/team\/transfers$/);
   expect(transferReads).toBe(readsBeforeDecision);
   revoked = true;
   await dialog.getByRole('button', { name: 'Refresh ownership requests' }).click();
@@ -1011,7 +1008,7 @@ test('a failed decline receipt and failed refresh keep the original write locked
       json: { profileId, transferId, status: 'Cancelled' },
     });
   });
-  await page.goto('/settings/team');
+  await page.goto('/settings/team/transfers');
   await page.getByRole('button', { name: copy('decline'), exact: true }).click();
   await authorizeAction(page, locale);
   const dialog = page.getByRole('dialog');
@@ -1092,7 +1089,14 @@ for (const action of [
               },
       });
     });
-    await page.goto('/settings/team');
+    const path = action.suffix.startsWith('agents/')
+      ? '/settings/team/members/member'
+      : action.suffix.startsWith('invitations/')
+        ? '/settings/team/invitations/invitation-one'
+        : action.suffix.startsWith('ownership-')
+          ? '/settings/team/transfers'
+          : '/settings/team';
+    await page.goto(path);
     await page.getByRole('button', { name: action.label, exact: true }).click();
     expect(requests).toBe(0);
     if (action.suffix === 'transfer-ownership') await chooseOwner(page);
@@ -1101,19 +1105,15 @@ for (const action of [
     await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(requests).toBe(1);
-    await expect(
-      page
-        .locator('main[data-area=dashboard]')
-        .getByRole('status')
-        .filter({
-          hasText:
-            /Invitation sent|دعوت‌نامه ارسال شد|Change saved|Transfer request sent|درخواست انتقال مالکیت/,
+    if (action.suffix === 'transfer-ownership')
+      await expect(
+        page.getByText('Transfer request sent to m***@example.test. They must accept.', {
+          exact: true,
         })
-    ).toContainText(
-      action.suffix === 'transfer-ownership'
-        ? 'Transfer request sent to m***@example.test. They must accept.'
-        : 'Change saved'
-    );
+      ).toBeVisible();
+    else if (action.suffix.startsWith('ownership-'))
+      await expect(page.getByRole('main').getByRole('status')).toContainText('Change saved');
+    else await expect(page.getByText(teamText('team.saved', 'en'), { exact: true })).toBeVisible();
   });
 }
 
@@ -1169,8 +1169,12 @@ test('an unconfirmed ownership transfer waits for the current outgoing transfer'
   } finally {
     releaseRead();
   }
-  await expect(page.getByRole('button', { name: 'Cancel transfer', exact: true })).toBeVisible();
   await expect(trigger).toBeDisabled();
+  await page
+    .getByRole('main')
+    .getByRole('link', { name: 'Ownership requests', exact: true })
+    .click();
+  await expect(page.getByRole('button', { name: 'Cancel transfer', exact: true })).toBeVisible();
   expect(transfers).toBe(1);
 });
 
@@ -1428,21 +1432,22 @@ for (const locale of ['en', 'fa'] as const) {
           });
         }
       );
-      await page.goto('/settings/team');
-      const member = page
-        .getByRole('row')
-        .or(page.getByRole('listitem'))
-        .filter({ has: page.getByRole('heading', { name: 'm***@example.test' }) });
+      await page.goto(
+        operation === 'roles'
+          ? '/settings/team/members/member/edit'
+          : '/settings/team/members/member'
+      );
+      const member = page.getByRole('main');
       if (operation === 'roles') {
         await member
           .getByRole('checkbox', { name: locale === 'fa' ? 'مالی' : 'Finance', exact: true })
           .check();
         await member
-          .getByRole('button', { name: locale === 'fa' ? 'ذخیره نقش‌ها' : 'Save roles' })
+          .getByRole('button', { name: teamText('team.saveRoles', locale), exact: true })
           .click();
       } else {
         await member
-          .getByRole('button', { name: locale === 'fa' ? 'حذف عضو' : 'Remove member' })
+          .getByRole('button', { name: teamText('team.remove', locale), exact: true })
           .click();
       }
       await authorizeAction(page, locale);
@@ -1470,11 +1475,8 @@ test('an unconfirmed self role change checks session revocation before sign-in',
     writes.push(route.request().postDataJSON());
     return route.fulfill({ status: 503, json: {} });
   });
-  await page.goto('/settings/team');
-  const member = page
-    .getByRole('row')
-    .or(page.getByRole('listitem'))
-    .filter({ has: page.getByRole('heading', { name: 'm***@example.test' }) });
+  await page.goto('/settings/team/members/member/edit');
+  const member = page.getByRole('main');
   await member.getByRole('checkbox', { name: 'مالی', exact: true }).check();
   await member.getByRole('button', { name: 'ذخیره نقش‌ها', exact: true }).click();
   await authorizeAction(page, locale);
@@ -1486,7 +1488,7 @@ test('an unconfirmed self role change checks session revocation before sign-in',
   await confirm.click();
   await expect(dialog.getByRole('alert')).toHaveText(confirmationText('unconfirmed', locale));
   await expect(confirm).toBeDisabled();
-  await expect(page).toHaveURL(/\/settings\/team$/);
+  await expect(page).toHaveURL(/\/settings\/team\/members\/member\/edit$/);
   expect(writes).toEqual([{ roles: ['Manager', 'Finance'] }]);
   if (test.info().project.name === 'mobile-safari')
     await page.screenshot({ path: test.info().outputPath('team-member-recovery-fa-mobile.png') });

@@ -1,3 +1,4 @@
+import { openManualRecordDateTime } from '../test/record-date-time.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { act, useLayoutEffect, useState, type ComponentProps } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -151,9 +152,17 @@ async function click(label: string) {
   await act(async () => button!.click());
 }
 async function change(name: 'effective' | 'reason' | 'approval-reason', value: string) {
-  const input = container.querySelector<HTMLInputElement>(`[id^="increase-${name}-"]`)!;
+  if (name === 'effective')
+    await openManualRecordDateTime(container.querySelector('[id^="increase-effective-"]')!.id);
+  const input = container.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+    `[id^="increase-${name}-"]`
+  )!;
   await act(async () => {
-    Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, value);
+    const prototype =
+      input instanceof HTMLTextAreaElement
+        ? HTMLTextAreaElement.prototype
+        : HTMLInputElement.prototype;
+    Object.getOwnPropertyDescriptor(prototype, 'value')!.set!.call(input, value);
     input.dispatchEvent(new Event('input', { bubbles: true }));
   });
   return input;
@@ -187,7 +196,7 @@ it('links local rejection feedback, focuses it, and preserves the independent ap
   const fetchMock = vi.fn(async () => queue());
   await render(fetchMock);
   const date = await change('effective', '2026-10-01T12:00');
-  await click('Decline request');
+  await click('Preview rejection');
   await settled(() =>
     expect(container.querySelector('[id^="increase-reason-"]')?.getAttribute('aria-invalid')).toBe(
       'true'
@@ -211,7 +220,7 @@ it('approves with an optional date without validating or submitting the rejectio
   );
   await render(fetchMock);
   await change('approval-reason', 'Capacity reviewed');
-  await click('Approve and issue amendment');
+  await click('Preview approval');
   await settled(() => expect(dialogs.length).toBeGreaterThan(0));
   expect(
     JSON.parse(
@@ -231,7 +240,7 @@ it('approves with an optional date without validating or submitting the rejectio
   expect(action.body).not.toHaveProperty('expectedVersionId');
 });
 
-it('projects only owned preview date feedback and focuses the editable native input', async () => {
+it('projects only owned preview date feedback and focuses the active date control', async () => {
   const fetchMock = vi.fn(async (path: string, _init?: RequestInit) =>
     path.endsWith('/review')
       ? Response.json(publicError(['effectiveFrom']), { status: 400 })
@@ -240,7 +249,7 @@ it('projects only owned preview date feedback and focuses the editable native in
   await render(fetchMock);
   await change('reason', 'Keep this companion');
   await change('approval-reason', 'Capacity reviewed');
-  await click('Approve and issue amendment');
+  await click('Preview approval');
   await settled(() =>
     expect(
       container.querySelector('[id^="increase-effective-"]')?.getAttribute('aria-invalid')
@@ -262,7 +271,7 @@ it('keeps protected or mixed preview fields generic', async () => {
   );
   await render(fetchMock);
   await change('approval-reason', 'Capacity reviewed');
-  await click('Approve and issue amendment');
+  await click('Preview approval');
   await settled(() => expect(container.textContent).toContain('review'));
   expect(
     container.querySelector('[id^="increase-effective-"]')?.getAttribute('aria-invalid')
@@ -281,7 +290,7 @@ it.each([200, 400])(
     await render(fetchMock);
     const date = await change('effective', '2026-10-01T12:00');
     await change('approval-reason', 'Capacity reviewed');
-    await click('Approve and issue amendment');
+    await click('Preview approval');
     await settled(() =>
       expect(fetchMock.mock.calls.filter(([path]) => path.endsWith('/review'))).toHaveLength(1)
     );
@@ -322,7 +331,7 @@ it('retains an exact captured rejection after a malformed success and prevents l
   );
   await render(fetchMock);
   await change('reason', 'Outside capacity plan');
-  await click('Decline request');
+  await click('Preview rejection');
   await settled(() => expect(dialogs.length).toBeGreaterThan(0));
   await click('Confirm decision');
   expect(container.textContent).toContain('Retry captured decision');
@@ -358,7 +367,7 @@ it('retains the original unknown command after a later complete rejection and fe
   );
   await render(fetchMock);
   await change('reason', 'Outside capacity plan');
-  await click('Decline request');
+  await click('Preview rejection');
   await settled(() => expect(dialogs.length).toBeGreaterThan(0));
   const original = dialogs.at(-1)!;
   await click('Confirm decision');
@@ -390,7 +399,7 @@ it('requires a complete owned write error before unlocking and focusing the reas
   );
   await render(fetchMock);
   await change('reason', 'Outside capacity plan');
-  await click('Decline request');
+  await click('Preview rejection');
   await settled(() => expect(dialogs.length).toBeGreaterThan(0));
   await click('Confirm decision');
   await settled(() =>
@@ -420,7 +429,7 @@ it('keeps a malformed owned write error uncertain instead of granting a fresh co
   );
   await render(fetchMock);
   await change('reason', 'Outside capacity plan');
-  await click('Decline request');
+  await click('Preview rejection');
   await settled(() => expect(dialogs.length).toBeGreaterThan(0));
   await click('Confirm decision');
   await click('Close decision');
@@ -446,7 +455,7 @@ it.each([{ complete: false }, { complete: true }])(
     );
     await render(fetchMock);
     await change('reason', 'Outside capacity plan');
-    await click('Decline request');
+    await click('Preview rejection');
     await settled(() => expect(dialogs.length).toBeGreaterThan(0));
     await click('Confirm decision');
     if (complete) {
@@ -471,7 +480,7 @@ it('withdraws a missing row and its drafts while retaining authorized queue refr
   );
   await render(fetchMock);
   await change('reason', 'Private draft');
-  await click('Decline request');
+  await click('Preview rejection');
   await settled(() => expect(container.querySelector('[id^="increase-reason-"]')).toBeNull());
   expect(container.textContent).not.toContain('Private draft');
   await click('Refresh');
@@ -485,7 +494,7 @@ it('withdraws private queue and draft data after denied preview even if the draf
   );
   await render(fetchMock);
   await change('reason', 'Private draft');
-  await click('Decline request');
+  await click('Preview rejection');
   await settled(() =>
     expect(fetchMock.mock.calls.filter(([path]) => path.endsWith('/review'))).toHaveLength(1)
   );
@@ -503,7 +512,7 @@ it('fences a previous actor preview and immediately hides their queue and drafts
   );
   await render(fetchMock);
   await change('reason', 'Private draft');
-  await click('Decline request');
+  await click('Preview rejection');
   await settled(() =>
     expect(fetchMock.mock.calls.filter(([path]) => path.endsWith('/review'))).toHaveLength(1)
   );
@@ -535,7 +544,7 @@ it('hides captured private review at the new actor commit and rejects a stale re
   );
   await render(fetchMock);
   await change('reason', 'Outside capacity plan');
-  await click('Decline request');
+  await click('Preview rejection');
   await settled(() => expect(dialogs.length).toBeGreaterThan(0));
   await click('Confirm decision');
   const staleRetry = retryHandlers.at(-1)!;
@@ -556,7 +565,7 @@ it('hides captured private review at the new actor commit and rejects a stale re
     privateRow: false,
   });
   await change('reason', 'Outside capacity plan');
-  await click('Decline request');
+  await click('Preview rejection');
   await settled(() => expect(container.querySelector('[role="dialog"]')).not.toBeNull());
   await click('Confirm decision');
   const count = dialogs.length;
@@ -590,7 +599,7 @@ it('preserves an in-flight captured write across an external cursor change', asy
     )
   );
   await change('reason', 'Outside capacity plan');
-  await click('Decline request');
+  await click('Preview rejection');
   await settled(() => expect(dialogs.length).toBeGreaterThan(0));
   const captured = dialogs.at(-1)!.action;
   await click('Confirm decision');
@@ -625,7 +634,7 @@ it('rejects a stale retry entry from the previous cursor without rebinding its c
     )
   );
   await change('reason', 'Outside capacity plan');
-  await click('Decline request');
+  await click('Preview rejection');
   await settled(() => expect(dialogs.length).toBeGreaterThan(0));
   await click('Confirm decision');
   const staleRetry = retryHandlers.at(-1)!;
@@ -657,7 +666,7 @@ it('blocks unavailable approval time and rejects a preview resolved for an obsol
     return Response.json({ requests: [request], nextBefore: null });
   });
   await render(fetchMock);
-  const date = container.querySelector<HTMLInputElement>('[id^="increase-effective-"]')!;
+  const date = container.querySelector<HTMLButtonElement>('[id^="increase-effective-"]')!;
   const approveForm = container.querySelector<HTMLFormElement>(
     '[data-testid="electricity-increase-approve-form"]'
   )!;
@@ -681,9 +690,9 @@ it('blocks unavailable approval time and rejects a preview resolved for an obsol
     );
   accountClock.status = 'ready';
   await update();
-  await change('effective', '2026-10-01T12:00');
+  const manualDate = await change('effective', '2026-10-01T12:00');
   await change('approval-reason', 'Capacity reviewed');
-  await click('Approve and issue amendment');
+  await click('Preview approval');
   await settled(() =>
     expect(inputs).toEqual([
       { effectiveFrom: '2026-10-01T08:30:00.000Z', reason: 'Capacity reviewed' },
@@ -695,15 +704,15 @@ it('blocks unavailable approval time and rejects a preview resolved for an obsol
     finish(Response.json(decisionReview('approve', 'Capacity reviewed', inputs[0]!.effectiveFrom)))
   );
   await settled(() => expect(container.querySelector('[role="dialog"]')).toBeNull());
-  expect(date.value).toBe('2026-10-01T12:00');
+  expect(manualDate.value).toBe('2026-10-01T12:00');
   await change('approval-reason', 'Capacity reviewed');
-  await click('Approve and issue amendment');
+  await click('Preview approval');
   await settled(() => expect(dialogs.length).toBeGreaterThan(0));
   expect(inputs[1]).toEqual({
     effectiveFrom: '2026-10-01T16:00:00.000Z',
     reason: 'Capacity reviewed',
   });
-  expect(date.value).toBe('2026-10-01T12:00');
+  expect(manualDate.value).toBe('2026-10-01T12:00');
 });
 
 it.each(['', '   ', 'x'.repeat(1001)])(
@@ -714,7 +723,7 @@ it.each(['', '   ', 'x'.repeat(1001)])(
     const date = await change('effective', '2026-10-01T12:00');
     const rejection = await change('reason', 'Independent rejection draft');
     const reason = await change('approval-reason', value);
-    await click('Approve and issue amendment');
+    await click('Preview approval');
     await settled(() => expect(reason.getAttribute('aria-invalid')).toBe('true'));
     await settled(() => expect(document.activeElement).toBe(reason));
     expect(reason.getAttribute('aria-describedby')).toContain(`${reason.id}-message`);
@@ -732,7 +741,7 @@ it('discards a held approval preview after its reason changes', async () => {
   );
   await render(fetchMock);
   await change('approval-reason', 'Capacity reviewed');
-  await click('Approve and issue amendment');
+  await click('Preview approval');
   await settled(() =>
     expect(fetchMock.mock.calls.filter(([path]) => path.endsWith('/review'))).toHaveLength(1)
   );

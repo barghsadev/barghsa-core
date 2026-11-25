@@ -6,7 +6,7 @@ import { queryKeys } from '../lib/query-keys.js';
 import { ServerQueryError } from '../lib/server-query-client.js';
 
 /** Shared permission boundary for the resources of one staff catalogue. */
-export function useCatalogueScope(onDenied: (status?: 401 | 403) => void) {
+export function useCatalogueScope(onDenied?: (status?: 401 | 403) => void) {
   const identity = useId();
   const live = useRef(0);
   const [version, setVersion] = useState(0);
@@ -14,7 +14,7 @@ export function useCatalogueScope(onDenied: (status?: 401 | 403) => void) {
   const deny = useCallback(
     (status?: 401 | 403) => {
       live.current++;
-      onDenied(status);
+      onDenied?.(status);
       setDenied(true);
       setVersion(live.current);
     },
@@ -33,10 +33,10 @@ export function useCatalogueResource<T>(
   scope: ReturnType<typeof useCatalogueScope>,
   path: string | null,
   validate: (value: unknown) => value is T,
-  options: { onUnauthorized?: () => void } = {}
+  options: { onUnauthorized?: () => void; clearOnMissing?: boolean } = {}
 ) {
   const { live, version, denied, deny } = scope;
-  const { onUnauthorized } = options;
+  const { onUnauthorized, clearOnMissing = false } = options;
   const readIdentity = useId();
   const accountId = useAccountUser();
   const profileRevision = useProfileContextRevision();
@@ -90,6 +90,7 @@ export function useCatalogueResource<T>(
   });
   const status = query.error instanceof ServerQueryError ? query.error.status : null;
   const forbidden = receipt.current !== request && (status === 401 || status === 403);
+  const missing = clearOnMissing && receipt.current !== request && status === 404;
   useEffect(() => {
     if (!path || denied) {
       setResult(null);
@@ -99,6 +100,10 @@ export function useCatalogueResource<T>(
     if (forbidden) {
       if (status === 401) onUnauthorized?.();
       deny(status);
+      return;
+    }
+    if (missing) {
+      setResult({ key, data: null, loading: false, error: true, readAttempt: null });
       return;
     }
     const loading = query.isPending || query.isFetching;
@@ -131,6 +136,7 @@ export function useCatalogueResource<T>(
     onUnauthorized,
     request,
     forbidden,
+    missing,
     status,
     query.error,
     query.isPending,
@@ -138,12 +144,13 @@ export function useCatalogueResource<T>(
     query.isSuccess,
     query.data,
   ]);
-  const accepted = !denied && !forbidden && result?.key === key ? result : null;
+  const accepted = !denied && !forbidden && !missing && result?.key === key ? result : null;
   return {
     ownerKey: key,
     data: accepted?.data ?? null,
-    loading: !!path && !denied && !forbidden && (accepted?.loading ?? true),
-    error: accepted?.error ?? false,
+    loading: !!path && !denied && !forbidden && !missing && (accepted?.loading ?? true),
+    error: missing || (accepted?.error ?? false),
+    missing,
     // Only a successful authoritative read satisfies recovery; local receipts do not.
     readAttempt: accepted?.readAttempt ?? null,
     nextReadAttempt,

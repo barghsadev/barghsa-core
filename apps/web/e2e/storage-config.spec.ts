@@ -1,8 +1,70 @@
 import { test, expect } from './coverage-fixture';
+import { t } from '@barghsa/i18n/admin-ui';
+import { storagePolicyFormText } from '@barghsa/i18n/storage-policy-forms';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 
 for (const locale of ['en', 'fa'] as const) {
-  test(`multipart cleanup loading and recovery keep the provider draft (${locale})`, async ({
+  test(`storage overview masks credentials and reports a checked connection (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, locale === 'fa');
+    const label = (key: string) => t(`admin.storage.${key}`, locale);
+    const setting = (key: Parameters<typeof storagePolicyFormText>[0]) =>
+      storagePolicyFormText(key, locale);
+    const config = {
+      endpoint: 'https://objects.example.test',
+      region: 'us-east-1',
+      bucket: 'documents',
+      accessKeyId: 'stored-preview-key',
+      hasSecretKey: true,
+      forcePathStyle: true,
+      privateEndpointUrl: '',
+      publicEndpointUrl: '',
+      version: 7,
+    };
+    const attempts: unknown[] = [];
+    await page.route('**/api/admin/storage/config', (route) => {
+      expect(route.request().method()).toBe('GET');
+      return route.fulfill({ json: config });
+    });
+    await page.route('**/api/admin/storage/test-connection', (route) => {
+      attempts.push(route.request().postDataJSON());
+      return attempts.length === 1
+        ? route.fulfill({ status: 400, json: { error: { code: 'STORAGE:CONNECTION_FAILED' } } })
+        : route.fulfill({ json: { success: true } });
+    });
+    await page.goto('/admin/storage');
+    const main = page.getByRole('main');
+    await expect(main).toContainText(config.endpoint);
+    await expect(main).toContainText(setting('accessKeyEnding').replace('{suffix}', '-key'));
+    await expect(main).not.toContainText(config.accessKeyId);
+    await expect(main.locator('#storage-secret')).toHaveCount(0);
+    const dialog = page.getByRole('dialog');
+    const check = main.getByRole('status').filter({ hasText: setting('lastConnectionCheck') });
+    await main.getByRole('button', { name: label('test'), exact: true }).click();
+    await dialog.locator('button[type=submit]').click();
+    await expect(dialog.getByRole('alert')).toContainText(label('connectionFailed'));
+    await dialog
+      .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
+      .click();
+    await expect(check).toContainText(label('connectionFailed'));
+    await main.getByRole('button', { name: label('test'), exact: true }).click();
+    await dialog.locator('button[type=submit]').click();
+    await expect(dialog).toHaveCount(0);
+    await expect(check).toContainText(label('tested'));
+    await expect(check).toContainText(setting('checkedSavedConnection'));
+    await expect(check.locator('time')).toHaveAttribute('datetime', /T\d{2}:\d{2}:/);
+    expect(attempts).toHaveLength(2);
+    for (const attempt of attempts)
+      expect(attempt).toMatchObject({ bucket: 'documents', version: 7 });
+    expect(attempts).not.toContainEqual(
+      expect.objectContaining({ secretAccessKey: expect.anything() })
+    );
+  });
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`multipart cleanup fetches independently and keeps connection secrets out of its form (${locale})`, async ({
     page,
   }) => {
     const fa = locale === 'fa';
@@ -39,39 +101,42 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ json: { hours: 24, version: 3 } });
     });
     try {
-      await page.goto('/admin/storage');
+      await page.goto('/admin/storage/edit');
       const main = page.getByRole('main');
       const bucket = main.locator('#storage-bucket');
       const hours = main.locator('#storage-cleanup-hours');
       await expect(bucket).toBeEnabled();
       await bucket.fill('unsaved-provider-draft');
+      expect(providerReads).toBe(1);
+      expect(cleanupReads).toBe(0);
+      await main
+        .getByRole('link', { name: t('admin.storage.cleanupTitle', locale), exact: true })
+        .click();
       const loading = main.getByRole('status').filter({
-        hasText: fa
-          ? 'در حال دریافت سیاست پاک‌سازی بارگذاری‌های ناتمام…'
-          : 'Loading the incomplete upload cleanup policy…',
+        hasText: storagePolicyFormText('cleanupLoading', locale),
       });
       await expect(loading).toBeVisible();
       await expect(hours).toHaveCount(0);
+      await expect(bucket).toHaveCount(0);
       expect(providerReads).toBe(1);
       expect(cleanupReads).toBe(1);
       release();
       const error = main.getByRole('alert').filter({
-        hasText: fa
-          ? 'دریافت سیاست پاک‌سازی بارگذاری‌های ناتمام انجام نشد.'
-          : 'The incomplete upload cleanup policy could not be loaded.',
+        hasText: storagePolicyFormText('cleanupLoadError', locale),
       });
       await expect(error).toBeVisible();
       await expect(loading).toHaveCount(0);
       await expect(main).not.toContainText('Private provider failure');
-      await expect(bucket).toHaveValue('unsaved-provider-draft');
       await error
-        .getByRole('button', { name: fa ? 'تلاش مجدد' : 'Try again', exact: true })
+        .getByRole('button', { name: t('admin.storage.reload', locale), exact: true })
         .press('Enter');
       await expect(hours).toHaveValue('24');
       await expect(error).toHaveCount(0);
-      await expect(bucket).toHaveValue('unsaved-provider-draft');
+      await expect(bucket).toHaveCount(0);
       expect(providerReads).toBe(1);
       expect(cleanupReads).toBe(2);
+      await page.goBack();
+      await expect(bucket).toHaveValue('documents');
     } finally {
       release();
     }
@@ -132,7 +197,7 @@ for (const locale of ['en', 'fa'])
       verified = route.request().postDataJSON().password === 'correct-password';
       return route.fulfill({ status: verified ? 200 : 401, json: {} });
     });
-    await page.goto('/admin/storage');
+    await page.goto('/admin/storage/edit');
     await expect(page.getByRole('alert')).toBeVisible();
     failLoad = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Try again', exact: true }).click();

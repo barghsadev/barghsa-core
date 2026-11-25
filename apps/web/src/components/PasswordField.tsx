@@ -62,10 +62,9 @@ function EyeOffIcon({ className }: { className?: string }) {
 export interface PasswordFieldProps {
   id?: string;
   label?: ReactNode;
+  labelAction?: ReactNode;
   locale?: Locale;
   error?: string | null;
-  /** Reserve the error line before blur validation updates it. */
-  errorPlaceholder?: string | undefined;
   autoFocus?: boolean;
   /** Disable the input (loading / submission in progress) */
   disabled?: boolean;
@@ -86,9 +85,9 @@ export interface PasswordFieldProps {
 export function PasswordField({
   id = 'password',
   label,
+  labelAction,
   locale = 'fa',
   error,
-  errorPlaceholder,
   autoFocus = false,
   disabled = false,
   name,
@@ -151,6 +150,8 @@ export function PasswordField({
   const strength = currentAssessment?.result;
   const checkingStrength = !!value && !strength && !currentAssessment?.failed;
   const meetsReq = meetsPasswordMinimum(value);
+  const requirements = t('auth.register.passwordRequirements', locale);
+  const showRequirements = showStrength && !meetsReq && error !== requirements;
   const color = STRENGTH_COLORS[strength ? strength.score / 25 : 0]!;
   const filled = strength ? Math.max(1, strength.score / 25) : 0;
 
@@ -168,16 +169,20 @@ export function PasswordField({
           : 'auth.register.passwordStrengthWeak',
       locale
     );
+  const errorMessage = error && (
+    <p id={`${id}-error`} className="text-sm text-destructive" role="alert">
+      {error}
+    </p>
+  );
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1.5">
       {label && <Label htmlFor={id}>{label}</Label>}
       <div className="relative">
         <Input
           id={id}
           name={name}
           type={visible ? 'text' : 'password'}
-          placeholder={t('auth.register.passwordPlaceholder', locale)}
           autoComplete={autoCompleteProp ?? 'new-password'}
           autoFocus={autoFocus}
           disabled={disabled}
@@ -191,40 +196,40 @@ export function PasswordField({
           aria-required="true"
           aria-invalid={!!error}
           aria-describedby={
-            error ? `${id}-error` : showStrengthMeter ? `${id}-strength` : undefined
+            error ? `${id}-error` : showRequirements ? `${id}-requirements` : undefined
           }
           className="pe-12"
         />
-        {value.length > 0 && (
-          <button
-            type="button"
-            onClick={handleToggle}
-            disabled={disabled}
-            aria-pressed={visible}
-            className="absolute inset-y-0 end-0 flex w-11 items-center justify-center text-muted-foreground hover:text-foreground"
-            aria-label={t('auth.register.passwordVisibilityLabel', locale)}
-          >
-            {visible ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={handleToggle}
+          disabled={disabled || !value}
+          aria-pressed={visible}
+          className="absolute inset-y-0 end-0 flex w-11 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-ring disabled:opacity-60"
+          aria-label={t('auth.register.passwordVisibilityLabel', locale)}
+        >
+          {visible ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+        </button>
       </div>
 
-      {(error || errorPlaceholder) && (
-        <p
-          id={`${id}-error`}
-          aria-hidden={!error || undefined}
-          className={`text-sm text-destructive${error ? '' : ' invisible'}`}
-          role={error ? 'alert' : undefined}
-        >
-          {error || errorPlaceholder}
+      {labelAction ? (
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+          <div>{errorMessage}</div>
+          {labelAction}
+        </div>
+      ) : (
+        errorMessage
+      )}
+      {showRequirements && (
+        <p id={`${id}-requirements`} className="text-xs leading-relaxed text-muted-foreground">
+          {requirements}
         </p>
       )}
-
-      {/* Reserve space so blur cannot move the form control being clicked. */}
       {showStrength && (
         <div
           id={`${id}-strength`}
-          className={`space-y-1 transition-transform motion-reduce:transition-none ${showStrengthMeter ? 'translate-y-0' : 'invisible -translate-y-1'}`}
+          className="space-y-1.5"
+          hidden={!showStrengthMeter}
           aria-hidden={!showStrengthMeter}
           aria-live="polite"
         >
@@ -245,14 +250,7 @@ export function PasswordField({
               />
             ))}
           </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">{displayLabel}</span>
-            {!meetsReq && (
-              <span className="text-muted-foreground">
-                {t('auth.register.passwordRequirements', locale)}
-              </span>
-            )}
-          </div>
+          <p className="text-xs text-muted-foreground">{displayLabel}</p>
           {value && currentAssessment?.feedback && (
             <p className="text-xs text-muted-foreground">{currentAssessment.feedback.hint}</p>
           )}

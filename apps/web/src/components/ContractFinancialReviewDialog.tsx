@@ -2,7 +2,8 @@ import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useEffect, useMemo, useState } from 'react';
 import type { ContractFinancialReview } from '@barghsa/shared/finance';
 import { contractText } from '@barghsa/i18n/contracts';
-import { PageLoading } from '@barghsa/ui';
+import { Alert, AlertDescription, Button, PageLoading } from '@barghsa/ui';
+import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useLocale } from '../hooks/useLocale.js';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
 import { sameContractEvidence } from '../lib/contract-review-signature-form.js';
@@ -10,6 +11,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { ContractFinancialReviewSummary } from './ContractFinancialReviewSummary.js';
+import { DocumentRequestError } from '../lib/documents.js';
 
 /** The selected intent and server review stay fixed through password and network retries. */
 export function ContractFinancialReviewDialog(
@@ -32,6 +34,7 @@ function OwnedContractFinancialReviewDialog({
   onDenied,
   onUnconfirmed,
   retryReview,
+  inlineAcceptance = false,
 }: {
   action: TeamAction;
   review?: ContractFinancialReview;
@@ -40,6 +43,7 @@ function OwnedContractFinancialReviewDialog({
   onDenied?: () => void;
   onUnconfirmed?: (command?: TeamAction) => void;
   retryReview?: { hash: string; idempotencyKey: string };
+  inlineAcceptance?: boolean;
   profileId: string;
   contractId: string;
   time: ReturnType<typeof useAccountTime>;
@@ -57,6 +61,7 @@ function OwnedContractFinancialReviewDialog({
   );
   const [review, setReview] = useState<ContractFinancialReview | null>(null);
   const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     const controller = new AbortController();
     setReview(capturedReview ?? null);
@@ -114,11 +119,20 @@ function OwnedContractFinancialReviewDialog({
           throw new Error('Mismatched contract review');
         setReview(parsed);
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setError(true);
+      .catch((failure: unknown) => {
+        if (controller.signal.aborted) return;
+        if (
+          inlineAcceptance &&
+          failure instanceof DocumentRequestError &&
+          [401, 403, 404].includes(failure.status)
+        ) {
+          onDenied?.();
+          return;
+        }
+        setError(true);
       });
     return () => controller.abort();
-  }, [action, profileId, contractId, capturedReview, readContract]);
+  }, [action, profileId, contractId, capturedReview, readContract, attempt, inlineAcceptance]);
   const confirmedAction = useMemo(
     () => ({
       ...action,
@@ -135,6 +149,11 @@ function OwnedContractFinancialReviewDialog({
   return (
     <TeamActionDialog
       risk="financial"
+      focusSummary={!inlineAcceptance}
+      {...(inlineAcceptance && {
+        inlineConfirmLabel: contractText('accept', locale),
+        financialAcknowledgement: `${contractText('acceptAcknowledgement', locale)} ${confirmationText('acknowledge', locale)}`,
+      })}
       action={confirmedAction}
       {...(onPendingChange ? { onPendingChange } : {})}
       {...(onCommandDispatch ? { onCommandDispatch } : {})}
@@ -145,9 +164,26 @@ function OwnedContractFinancialReviewDialog({
         <>
           {time.notice}
           {error ? (
-            <p role="alert">{contractText('financialReviewError', locale)}</p>
+            inlineAcceptance ? (
+              <Alert variant="destructive">
+                <AlertDescription>{contractText('financialReviewError', locale)}</AlertDescription>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setAttempt((value) => value + 1)}
+                >
+                  {contractText('refresh', locale)}
+                </Button>
+              </Alert>
+            ) : (
+              <p role="alert">{contractText('financialReviewError', locale)}</p>
+            )
           ) : review ? (
-            <ContractFinancialReviewSummary review={review} formatDate={time.format} />
+            <ContractFinancialReviewSummary
+              review={review}
+              formatDate={time.format}
+              standalone={inlineAcceptance}
+            />
           ) : (
             <PageLoading label={contractText('loading', locale)} />
           )}

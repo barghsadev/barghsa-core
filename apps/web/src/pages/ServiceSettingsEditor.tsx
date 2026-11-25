@@ -1,10 +1,12 @@
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tServiceSettings } from '@barghsa/i18n/service-settings';
 import { lazy, Suspense, useCallback, useRef, useState } from 'react';
-import { Alert, Button, Input, Label, LoadingStatus } from '@barghsa/ui';
+import { Alert, Button, Input, Label, ListRefreshButton, LoadingStatus } from '@barghsa/ui';
 import { TeamActionDialog } from '../components/TeamActionDialog.js';
 import { SettingsFormSection } from '../components/SettingsFormSection.js';
+import { recordEditorField, recordEditorGrid } from '../components/RecordEditorLayout.js';
 import { AuditLogViewer } from '../components/AuditLogViewer.js';
+import { ConfigPreviewCard } from '../components/ConfigPreviewCard.js';
 import {
   CatalogueEditorStatus,
   CatalogueSaveButton,
@@ -48,8 +50,9 @@ const definitions = {
 };
 export function ServiceSettingsEditor({
   kind,
+  showComparison = false,
   ...props
-}: CatalogueEditorProps & { kind: ServiceSettingsKind }) {
+}: CatalogueEditorProps & { kind: ServiceSettingsKind; showComparison?: boolean }) {
   const locale = useLocale(),
     numbers = useNumberFormatting(locale);
   const label = (key: string) => tServiceSettings(`admin.${kind}.${key}`, locale);
@@ -122,17 +125,15 @@ export function ServiceSettingsEditor({
   const recoveryId = `${kind}-settings-recovery`;
   return (
     <section className="space-y-4" role="group" aria-label={label('formTitle')}>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-xl font-semibold">{label('title')}</h2>
-        <Button
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-lg font-semibold">{label('title')}</h2>
+        <ListRefreshButton
           ref={refreshButton}
-          type="button"
-          variant="outline"
-          disabled={editor.resource.loading || editor.commandPending || recoveryBusy}
+          label={label('refresh')}
+          disabled={editor.commandPending || recoveryBusy}
+          refreshing={editor.resource.loading}
           onClick={refresh}
-        >
-          {label('refresh')}
-        </Button>
+        />
       </div>
       <CatalogueEditorStatus
         {...editor}
@@ -161,11 +162,6 @@ export function ServiceSettingsEditor({
           }
           actions={
             <>
-              <CatalogueSaveButton
-                label={label(editor.pending ? 'working' : 'save')}
-                pending={editor.pending}
-                disabled={editor.disabled || !dirty}
-              />
               <Button
                 type="button"
                 variant="outline"
@@ -179,13 +175,18 @@ export function ServiceSettingsEditor({
               >
                 {label('reset')}
               </Button>
+              <CatalogueSaveButton
+                label={label(editor.pending ? 'working' : 'save')}
+                pending={editor.pending}
+                disabled={editor.disabled || !dirty}
+              />
             </>
           }
         >
           {root && <Alert variant="destructive">{root}</Alert>}
           <fieldset
             disabled={editor.disabled}
-            className="grid min-w-0 gap-6 border-0 p-0 md:grid-cols-2"
+            className={`${recordEditorGrid} m-0 gap-y-3 border-0 p-0`}
           >
             {fields.map((field) => {
               const [enabled, setEnabled] = editor.field(field.enabled),
@@ -193,9 +194,13 @@ export function ServiceSettingsEditor({
                 [email, setEmail] = editor.field(field.email);
               const id = kind === 'targets' ? `target-${field.type}` : `escalation-${field.prefix}`;
               const help = `${id}-help`;
+              const binding = editor.bind(field.hours);
               return (
-                <fieldset key={field.prefix} className="min-w-0 space-y-3 rounded-md border p-4">
-                  <legend className="px-1 font-medium">{title(field)}</legend>
+                <fieldset
+                  key={field.prefix}
+                  className="m-0 min-w-0 space-y-2 rounded-lg border px-3 pb-3"
+                >
+                  <legend className="px-1 text-sm font-semibold">{title(field)}</legend>
                   <label className="touch-label flex items-center gap-2 pointer-coarse:min-h-[45px]!">
                     <input
                       type="checkbox"
@@ -209,30 +214,51 @@ export function ServiceSettingsEditor({
                     />
                     {label('enabled')}
                   </label>
-                  <div className="space-y-2">
+                  <div className={recordEditorField}>
                     <Label htmlFor={id}>
                       {label('hours')}
                       <span className="sr-only"> — {title(field)}</span>
                     </Label>
-                    <Input
-                      id={id}
-                      {...editor.bind(field.hours)}
-                      disabled={!enabled}
-                      inputMode="numeric"
-                      dir="ltr"
-                      value={hours}
-                      onChange={(event) => setHours(event.target.value)}
-                      aria-describedby={`${help} ${editor.errorId(field.hours)}`}
-                    />
+                    <div className="flex min-w-0 items-center gap-3">
+                      <Input
+                        id={id}
+                        {...binding}
+                        className="w-28 min-w-0"
+                        disabled={!enabled}
+                        inputMode="numeric"
+                        dir="ltr"
+                        value={hours}
+                        onChange={(event) => setHours(event.target.value)}
+                        aria-describedby={[
+                          help,
+                          showComparison && currentValues ? `${id}-saved` : null,
+                          binding['aria-describedby'],
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
+                      />
+                      {showComparison && currentValues && (
+                        <dl id={`${id}-saved`} className="min-w-0 border-s ps-3 text-sm">
+                          <dt className="text-muted-foreground">
+                            {tServiceSettings('admin.targets.savedValue', locale)}
+                          </dt>
+                          <dd className="font-medium tabular-nums">
+                            {currentValues[field.enabled]
+                              ? `${numbers.number(Number(currentValues[field.hours]))} ${label('hours')}`
+                              : label('disabled')}
+                          </dd>
+                        </dl>
+                      )}
+                    </div>
                     <p id={help} className="text-sm text-muted-foreground">
                       {field.type === 'consultation' && (
-                        <span className="mb-2 block">
+                        <span className="mb-1 block">
                           {tServiceSettings('admin.consultation.responseHelp', locale)}
                         </span>
                       )}
                       {kind === 'targets' ? label('range') : label(`${field.tier}Help`)}
                     </p>
-                    {editor.feedback(field.hours)}
+                    {editor.feedback(field.hours, true)}
                   </div>
                   {kind === 'escalation' && (
                     <div className="space-y-2">
@@ -313,7 +339,17 @@ export function ServiceSettingsEditor({
           }
           summary={
             <div className="space-y-3 rounded-md border p-3">
-              {proposal && renderValues(proposal)}
+              {proposal &&
+                (showComparison && editor.resource.data ? (
+                  <ConfigPreviewCard
+                    title={label('title')}
+                    current={<div className="space-y-2">{renderValues(editor.resource.data)}</div>}
+                    draft={<div className="space-y-2">{renderValues(proposal)}</div>}
+                    stacked
+                  />
+                ) : (
+                  renderValues(proposal)
+                ))}
               <Button
                 type="button"
                 variant="outline"

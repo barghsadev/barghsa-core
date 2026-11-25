@@ -9,13 +9,14 @@ const en = {
   loading: 'Loading invoice…',
   loadError: 'The invoice could not be loaded. Check the reference and your finance access.',
   source: 'Original invoice',
+  originalTotal: 'Original total',
   paid: 'Confirmed payment',
   state: 'Invoice state',
   unavailable: 'This invoice cannot be corrected in its current state.',
   replacementTitle: 'Cancel and replace invoice',
   adjustmentTitle: 'Adjust paid invoice',
-  replacementIssue: 'Cancel original and issue replacement',
-  adjustmentIssue: 'Issue adjustment',
+  replacementIssue: 'Review replacement',
+  adjustmentIssue: 'Review adjustment',
   reviewTitle: 'Review invoice adjustment',
   reviewDescription:
     'Confirm the current invoice and adjustment amount before submitting. The financial state is checked again when you continue.',
@@ -37,10 +38,13 @@ const en = {
   replacementReviewDueAtIssue: 'Set when issued',
   replacementReviewConfirm: 'Cancel and issue replacement',
   reason: 'Explanation shown to customer',
+  reasonExample: 'For example, correct the network service charge.',
   amount: 'Adjustment amount (IRR)',
   amountHint:
     'Positive adds a charge; negative creates a credit note. A credit note does not transfer money to the wallet.',
   total: 'Correction total',
+  draftTotal: 'Draft correction total',
+  adjustmentIncomplete: 'Enter an amount and reason.',
   created: 'Correction issued.',
   decisionSaved:
     'Decision saved. Approved adjustments are issued; rejected adjustments create no invoice.',
@@ -54,7 +58,7 @@ const en = {
   verifyTitle: 'Verify invoice correction',
   verifyDescription: 'Confirm your password to issue this correction.',
   verify: 'Verify and correct',
-  issuing: 'Issuing correction…',
+  issuing: 'Processing…',
 };
 const fa: Record<keyof typeof en, string> = {
   invoiceIdInvalid: 'شناسه معتبر فاکتور اصلی را وارد کنید.',
@@ -67,13 +71,14 @@ const fa: Record<keyof typeof en, string> = {
   loading: 'در حال دریافت فاکتور…',
   loadError: 'فاکتور دریافت نشد. شناسه و دسترسی مالی خود را بررسی کنید.',
   source: 'فاکتور اصلی',
+  originalTotal: 'مبلغ کل فاکتور اصلی',
   paid: 'پرداخت تأییدشده',
   state: 'وضعیت فاکتور',
   unavailable: 'این فاکتور در وضعیت فعلی قابل اصلاح نیست.',
   replacementTitle: 'لغو و جایگزینی فاکتور',
   adjustmentTitle: 'اصلاح فاکتور پرداخت‌شده',
-  replacementIssue: 'لغو اصل و صدور فاکتور جایگزین',
-  adjustmentIssue: 'صدور فاکتور اصلاحی',
+  replacementIssue: 'بررسی فاکتور جایگزین',
+  adjustmentIssue: 'بررسی فاکتور اصلاحی',
   reviewTitle: 'مرور اصلاح مالی فاکتور',
   reviewDescription:
     'فاکتور و مبلغ اصلاح را پیش از ثبت تأیید کنید. وضعیت مالی هنگام ادامه دوباره بررسی می‌شود.',
@@ -95,10 +100,13 @@ const fa: Record<keyof typeof en, string> = {
   replacementReviewDueAtIssue: 'هنگام صدور تعیین می‌شود',
   replacementReviewConfirm: 'لغو و صدور فاکتور جایگزین',
   reason: 'شرح تغییرات برای مشتری',
+  reasonExample: 'مثلاً اصلاح هزینه خدمات شبکه.',
   amount: 'مبلغ اصلاح (ریال)',
   amountHint:
     'مبلغ مثبت بدهی اضافه می‌کند؛ مبلغ منفی سند بستانکار ایجاد می‌کند. سند بستانکار به کیف پول وجه منتقل نمی‌کند.',
   total: 'جمع اصلاح',
+  draftTotal: 'جمع پیش‌نویس اصلاح',
+  adjustmentIncomplete: 'مبلغ و دلیل اصلاح را وارد کنید.',
   created: 'فاکتور اصلاحی صادر شد.',
   decisionSaved:
     'نتیجه بررسی ثبت شد. اصلاح تأییدشده صادر می‌شود؛ درخواست ردشده فاکتوری ایجاد نمی‌کند.',
@@ -112,7 +120,7 @@ const fa: Record<keyof typeof en, string> = {
   verifyTitle: 'تأیید هویت برای اصلاح فاکتور',
   verifyDescription: 'برای صدور این اصلاح، رمز عبور خود را تأیید کنید.',
   verify: 'تأیید و اصلاح',
-  issuing: 'در حال صدور اصلاح…',
+  issuing: 'در حال پردازش…',
 };
 export function tInvoiceCorrections(key: string, locale: 'fa' | 'en'): string | undefined {
   return (locale === 'fa' ? fa : en)[key as keyof typeof en];

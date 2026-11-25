@@ -82,6 +82,13 @@ export function giftPercentBps(value: string): string | null {
   const bps = BigInt(whole!) * 100n + BigInt(fraction.padEnd(2, '0'));
   return bps > 0n && bps <= 10000n ? bps.toString() : null;
 }
+export function giftCapSubtotal({ value, cap }: Pick<GiftDraft, 'value' | 'cap'>): bigint | null {
+  const bps = giftPercentBps(value);
+  const limit = irr(cap);
+  if (!bps || !limit) return null;
+  const rate = BigInt(bps);
+  return (BigInt(limit) * 10000n + rate - 1n) / rate;
+}
 function limit(value: string): number | null | undefined {
   const text = digits(value);
   if (!text) return null;

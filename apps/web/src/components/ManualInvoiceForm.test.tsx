@@ -10,6 +10,7 @@ import {
   manualInvoiceReviewFixture,
   type ManualReviewCommand,
 } from '../test/manual-invoice-review-fixture.js';
+const reviewInvoice = tManualInvoice('admin.manualInvoice.issue', 'en');
 const profileId = '11111111-1111-4111-8111-111111111111',
   invoiceId = '22222222-2222-4222-8222-222222222222';
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
@@ -112,13 +113,13 @@ async function fill() {
   await set(input('price'), '۴۰');
 }
 async function issue() {
-  await click('Issue invoice');
+  await click(reviewInvoice);
   await vi.waitFor(() => expect(document.querySelector('[role=dialog]')).not.toBeNull());
 }
 
 it('validates blank fields on submit and preserves localized input through correction', async () => {
   await mount();
-  await click('Issue invoice');
+  await click(reviewInvoice);
   await vi.waitFor(() =>
     expect(host.querySelector('select')?.getAttribute('aria-invalid')).toBe('true')
   );
@@ -142,7 +143,7 @@ it.each(['lineDescription0', 'lineQuantity0', 'lineUnitPrice0', 'lineVatRate0'])
     await fill();
     reviewStatus = 400;
     fields = [field];
-    await click('Issue invoice');
+    await click(reviewInvoice);
     const name = {
       lineDescription0: 'description',
       lineQuantity0: 'quantity',
@@ -168,7 +169,7 @@ it('keeps indexed feedback attached to the captured row after reordering', async
   await click('Move line up 2');
   reviewStatus = 400;
   fields = ['lineDescription0'];
-  await click('Issue invoice');
+  await click(reviewInvoice);
   await vi.waitFor(() =>
     expect(host.querySelector('#' + secondId)?.getAttribute('aria-invalid')).toBe('true')
   );
@@ -185,7 +186,7 @@ it('retains the customer and raw rows after a failed unchanged search and recove
   expect(host.querySelector<HTMLSelectElement>('select')?.value).toBe(profileId);
   expect(input('price').value).toBe('۴۰');
   expect(
-    [...host.querySelectorAll('button')].find((button) => button.textContent === 'Issue invoice')
+    [...host.querySelectorAll('button')].find((button) => button.textContent === reviewInvoice)
       ?.disabled
   ).toBe(true);
   readStatus = 200;
@@ -244,7 +245,7 @@ it('clears private work after explicit denial', async () => {
   await mount();
   await fill();
   reviewStatus = 403;
-  await click('Issue invoice');
+  await click(reviewInvoice);
   await vi.waitFor(() => expect(host.textContent).toContain('Sign in with current Finance access'));
   expect(host.querySelector('form')).toBeNull();
   expect(host.textContent).not.toContain('Service');
@@ -253,7 +254,7 @@ it('revalidates a zero aggregate without losing a valid raw description', async 
   await mount();
   await fill();
   await set(input('price'), '۰');
-  await click('Issue invoice');
+  await click(reviewInvoice);
   await vi.waitFor(() => expect(host.textContent).toContain('Add 1 to 100 valid lines'));
   await set(input('price'), '۴۰');
   await vi.waitFor(() => expect(host.querySelector('[role=alert]')).toBeNull());
@@ -304,7 +305,7 @@ it('discards old review callbacks after the editor is replaced', async () => {
     }
     return original(url, options);
   });
-  await click('Issue invoice');
+  await click(reviewInvoice);
   await vi.waitFor(() => expect(reviews).toHaveLength(1));
   await act(async () =>
     root.render(

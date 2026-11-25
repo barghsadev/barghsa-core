@@ -1,4 +1,4 @@
-import { test, expect, type Page } from './coverage-fixture';
+import { expandListFilters, test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { tGift } from '@barghsa/i18n/gifts';
@@ -61,54 +61,50 @@ for (const locale of ['en', 'fa'] as const)
       const searchForm = page.getByRole('form', { name: word('filters'), exact: true });
       const search = page.locator('#gift-search');
       await expect(form.locator('#gift-value')).toHaveValue('1000');
-      await expect(search).toHaveValue('CODE');
-      await expect(page.locator('#gift-status-filter')).toHaveValue('active');
-      await expect(page.locator('#gift-type-filter')).toHaveValue('fixed_irr');
-      await expect(page.locator('#gift-eligibility-filter')).toHaveValue('public');
-      await expect(page.locator('#gift-expiry-filter')).toHaveValue('not_expired');
-      expect(Object.fromEntries(reads.at(-1)!.searchParams)).toEqual({
-        search: 'CODE',
-        status: 'active',
-        discountType: 'fixed_irr',
-        eligibility: 'public',
-        expiry: 'not_expired',
-        limit: '50',
-        before: giftCode(49).id,
-      });
-      const count = reads.length;
-      await search.fill('UNAPPLIED');
-      await form.locator('#gift-value').fill('2222');
+      await expect(page).toHaveURL(new RegExp(`/gift-codes/${giftCode(50).id}/edit`));
+      expect(params(page).has('selected')).toBe(false);
       expect(params(page).get('search')).toBe('CODE');
-      expect(reads).toHaveLength(count);
+      expect(reads).toHaveLength(0);
+      await expect(search).toHaveCount(0);
+      await form.locator('#gift-value').fill('2222');
       detailFail = true;
       await page.getByRole('button', { name: word('refreshStats'), exact: true }).click();
       await expect(form.locator('button[type=submit]')).toBeDisabled();
       await expect(form.locator('#gift-value')).toHaveValue('2222');
-      await expect(search).toHaveValue('UNAPPLIED');
       detailFail = false;
       await page.getByRole('button', { name: word('retry'), exact: true }).click();
       await expect(form.locator('button[type=submit]')).toBeEnabled();
       await page.reload();
       await expect(form.locator('#gift-value')).toHaveValue('1000');
-      await expect(search).toHaveValue('CODE');
       await form.getByRole('button', { name: word('cancel'), exact: true }).click();
-      await expect(form).toHaveCount(0);
-      expect(params(page).has('selected')).toBe(false);
-      expect(params(page).get('cursor')).toBe(giftCode(49).id);
-      await page.goBack();
-      await expect(form.locator('#gift-value')).toHaveValue('1000');
-      await form.locator('#gift-value').fill('3333');
+      await expect(page.getByRole('heading', { name: 'CODE50', level: 1 })).toBeVisible();
+      await expect(page.getByRole('region', { name: word('usageStats') })).toBeVisible();
+      expect(reads).toHaveLength(0);
+      await page
+        .getByRole('link', { name: word('title'), exact: true })
+        .last()
+        .click();
+      await expect(search).toHaveValue('CODE');
+      await expect(page.locator('#gift-status-filter')).toHaveValue('active');
+      await expect(page.locator('#gift-type-filter')).toHaveValue('fixed_irr');
+      await expect(page.locator('#gift-eligibility-filter')).toHaveValue('public');
+      await expect(page.locator('#gift-expiry-filter')).toHaveValue('not_expired');
+      await expect.poll(() => reads.at(-1)?.searchParams.get('before')).toBe(giftCode(49).id);
       await search.fill('NEXT');
+      const filterToggle = searchForm.getByRole('button', { name: word('filters'), exact: true });
+      await expect(filterToggle).toHaveAttribute('aria-expanded', 'false');
+      await expect(page.locator('#gift-status-filter')).toBeHidden();
+      await expandListFilters(searchForm, locale, word('filters'));
       await page.locator('#gift-status-filter').selectOption('inactive');
       await searchForm.locator('button[type=submit]').click();
       await expect.poll(() => reads.at(-1)?.searchParams.get('search')).toBe('NEXT');
-      await expect(form).toHaveCount(0);
       expect(params(page).get('status')).toBe('inactive');
       expect(params(page).has('cursor')).toBe(false);
-      expect(params(page).has('selected')).toBe(false);
       await page.goBack();
-      await expect(form.locator('#gift-value')).toHaveValue('1000');
       await expect(search).toHaveValue('CODE');
+      await page.getByRole('link', { name: 'CODE50', exact: true }).click();
+      await page.getByRole('link', { name: word('edit'), exact: true }).click();
+      await expect(form.locator('#gift-value')).toHaveValue('1000');
       await expect
         .poll(() => page.evaluate(() => document.documentElement.classList.contains('dark')))
         .toBe(dark);
@@ -154,46 +150,46 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/gift-codes?search=CODE');
       const root = page.getByRole('main');
       await expect(
-        root.getByRole('button', { name: `${word('edit')} CODE00`, exact: true })
+        root.getByRole('link', { name: `${word('edit')} CODE00`, exact: true })
       ).toBeVisible();
       await root.getByRole('button', { name: word('loadMore'), exact: true }).click();
       await expect(root.getByRole('alert')).toContainText(word('moreError'));
       await expect(
-        root.getByRole('button', { name: `${word('edit')} CODE00`, exact: true })
+        root.getByRole('link', { name: `${word('edit')} CODE00`, exact: true })
       ).toBeVisible();
       expect(params(page).get('cursor')).toBe(giftCode(49).id);
       const query = reads.at(-1)!.search;
       failed = false;
       await root.getByRole('button', { name: word('loadMore'), exact: true }).click();
       await expect(
-        root.getByRole('button', { name: `${word('edit')} CODE50`, exact: true })
+        root.getByRole('link', { name: `${word('edit')} CODE50`, exact: true })
       ).toBeVisible();
       expect(reads.at(-1)!.search).toBe(query);
       await expect(
-        root.getByRole('button', { name: `${word('edit')} CODE49`, exact: true })
+        root.getByRole('link', { name: `${word('edit')} CODE49`, exact: true })
       ).toHaveCount(1);
       await page.reload();
       await expect(
-        root.getByRole('button', { name: `${word('edit')} CODE50`, exact: true })
+        root.getByRole('link', { name: `${word('edit')} CODE50`, exact: true })
       ).toBeVisible();
       await expect(
-        root.getByRole('button', { name: `${word('edit')} CODE00`, exact: true })
+        root.getByRole('link', { name: `${word('edit')} CODE00`, exact: true })
       ).toHaveCount(0);
       expect(reads.at(-1)!.search).toBe(query);
       await page.goBack();
       await expect(
-        root.getByRole('button', { name: `${word('edit')} CODE00`, exact: true })
+        root.getByRole('link', { name: `${word('edit')} CODE00`, exact: true })
       ).toBeVisible();
       await page.goForward();
       await expect(
-        root.getByRole('button', { name: `${word('edit')} CODE50`, exact: true })
+        root.getByRole('link', { name: `${word('edit')} CODE50`, exact: true })
       ).toBeVisible();
       await root.getByRole('button', { name: `${word('deactivate')} CODE50`, exact: true }).click();
       await expect(page.getByRole('dialog')).toBeVisible();
       await page.goBack();
       await expect(page.getByRole('dialog')).toHaveCount(0);
       await expect(
-        root.getByRole('button', { name: `${word('edit')} CODE00`, exact: true })
+        root.getByRole('link', { name: `${word('edit')} CODE00`, exact: true })
       ).toBeVisible();
       const before = reads.length;
       await root

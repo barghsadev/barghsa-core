@@ -241,7 +241,21 @@ async function orderAddressShell(page: Page, locale: string) {
       },
     })
   );
-  await page.route('**/api/products/electricity', (route) => route.fulfill({ json: [] }));
+  await page.route('**/api/products/electricity', (route) =>
+    route.fulfill({
+      json: [
+        {
+          id: '55555555-5555-4555-8555-555555555555',
+          systemKey: 'thermal',
+          title: { en: 'Thermal electricity', fa: 'برق حرارتی' },
+          status: 'active',
+          price: '100000',
+          simpleOrderable: true,
+          limits: { minKwh: '1', maxKwh: '10000' },
+        },
+      ],
+    })
+  );
   await page.route('**/api/electricity/drafts/simple/guarded?*', (route) => {
     expect(route.request().method()).toBe('GET');
     expect(new URL(route.request().url()).searchParams.get('profileId')).toBe(orderAddressProfile);
@@ -256,92 +270,78 @@ async function orderAddressShell(page: Page, locale: string) {
 }
 
 for (const locale of ['en', 'fa']) {
-  test(`address dialog labels, focus trap and Escape (${locale})`, async ({ page }) => {
+  test(`address creation route supports direct reload and keyboard navigation (${locale})`, async ({
+    page,
+  }) => {
     await shell(page, locale, settingsProfileId);
     await page.route(`**/api/profiles/${settingsProfileId}/addresses`, (route) =>
       route.fulfill({ json: { addresses: [] } })
     );
+    await page.route(`**/api/profiles/${settingsProfileId}/addresses/access`, (route) =>
+      route.fulfill({ json: { profileId: settingsProfileId, canEdit: true } })
+    );
     await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
     await page.goto('/settings/addresses');
-    const add = page.getByRole('button', {
-      name: locale === 'fa' ? 'افزودن آدرس' : 'Add Address',
-      exact: true,
-    });
-    await expect(add).toBeEnabled();
+    const add = page.getByRole('link', { name: t('settings.addresses.add', locale), exact: true });
+    await expect(add).toBeVisible();
     await add.focus();
     await page.keyboard.press('Enter');
-    const dialog = page.getByRole('dialog', {
-      name: locale === 'fa' ? 'آدرس جدید' : 'New Address',
-    });
-    await expect(dialog).toBeVisible();
-    await expect(dialog.getByRole('combobox')).toHaveCount(2);
-    const controls = dialog.locator('select, textarea, input');
-    for (const control of await controls.all()) {
+    await expect(page).toHaveURL('/settings/addresses/new');
+    const owner = page.locator('[data-slot=settings-address-form]');
+    await expect(owner.getByRole('combobox')).toHaveCount(2);
+    await page.reload();
+    await expect(owner).toBeVisible();
+    for (const control of await owner.locator('select, textarea, input').all())
       await expect(control).toHaveAccessibleName(/.+/);
-    }
-    for (let index = 0; index < 10; index++) {
-      await page.keyboard.press('Tab');
-      await expect
-        .poll(() => dialog.evaluate((node) => node.contains(document.activeElement)))
-        .toBe(true);
-    }
-    await page.keyboard.press('Escape');
-    await expect(dialog).toHaveCount(0);
-    await expect(add).toBeFocused();
+    await owner.getByRole('button', { name: t('settings.addresses.form.cancel', locale) }).focus();
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL('/settings/addresses');
+    await expect(add).toBeVisible();
   });
 }
 
-test('TOS detail has a name, contains keyboard focus and restores its trigger', async ({
-  page,
-}) => {
+test('TOS detail has a named heading and keyboard access from history', async ({ page }) => {
   await tosShell(page);
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'America/Los_Angeles' } })
   );
-  await page.route('**/api/admin/tos/versions', (route) =>
-    route.fulfill({
-      json: [
-        {
-          id: 'version-one',
-          versionId: 'v1',
-          contentFa: 'شرایط',
-          contentEn: 'Terms',
-          changeType: 'minor',
-          status: 'published',
-          isActive: true,
-          publishedAt: '2026-09-01T00:00:00Z',
-          createdAt: '2026-09-01T00:00:00Z',
-          updatedAt: '2026-09-01T00:00:00Z',
-          createdBy: null,
-        },
-      ],
-    })
+  const version = {
+    id: 'version-one',
+    versionId: 'v1',
+    contentFa: 'شرایط',
+    contentEn: 'Terms',
+    changeType: 'minor',
+    status: 'published',
+    isActive: true,
+    publishedAt: '2026-09-01T00:00:00Z',
+    createdAt: '2026-09-01T00:00:00Z',
+    updatedAt: '2026-09-01T00:00:00Z',
+    createdBy: null,
+  };
+  await page.route('**/api/admin/tos/versions', (route) => route.fulfill({ json: [version] }));
+  await page.route('**/api/admin/tos/versions/version-one', (route) =>
+    route.fulfill({ json: version })
   );
   await page.goto('/admin/tos');
-  const view = page.getByRole('button', { name: 'View', exact: true });
+  const main = page.getByRole('main');
+  const view = main.getByRole('link', { name: 'v1', exact: true });
   await view.focus();
   await page.keyboard.press('Enter');
-  const dialog = page.getByRole('dialog', { name: 'TOS Version: v1' });
-  await expect(dialog).toBeVisible();
-  await expect(dialog).toContainText(
+  await expect(page).toHaveURL('/admin/tos/versions/version-one');
+  await expect(main.getByRole('heading', { name: 'Terms version v1', exact: true })).toBeFocused();
+  await expect(main).toContainText(
     await formatBrowserDate(
       page,
       'en',
       { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'short' },
-      '2026-09-01T00:00:00Z'
+      version.publishedAt
     )
   );
-  await dialog.getByRole('button', { name: 'English', exact: true }).click();
-  await expect(dialog.getByText('Terms', { exact: true })).toBeVisible();
-  for (let index = 0; index < 5; index++) {
-    await page.keyboard.press('Tab');
-    await expect
-      .poll(() => dialog.evaluate((node) => node.contains(document.activeElement)))
-      .toBe(true);
-  }
-  await page.keyboard.press('Escape');
-  await expect(dialog).toHaveCount(0);
-  await expect(view).toBeFocused();
+  await main.getByRole('button', { name: 'English', exact: true }).click();
+  await expect(main.getByText('Terms', { exact: true })).toBeVisible();
+  await main.getByRole('link', { name: 'Terms version history', exact: true }).press('Enter');
+  await expect(page).toHaveURL('/admin/tos');
+  await expect(view).toBeVisible();
 });
 
 test('branding controls have distinct labels and color IDs', async ({ page }) => {
@@ -418,6 +418,9 @@ for (const locale of ['en', 'fa']) {
         ],
       })
     );
+    await page.route(`**/api/profiles/${settingsProfileId}/addresses/access`, (route) =>
+      route.fulfill({ json: { profileId: settingsProfileId, canEdit: true } })
+    );
     let fail = false;
     await page.route(`**/api/geography/provinces/${provinceOne}/cities`, (route) =>
       route.fulfill(
@@ -442,13 +445,13 @@ for (const locale of ['en', 'fa']) {
     await page.goto('/settings/addresses');
     await expect(
       page.getByText(
-        locale === 'fa' ? 'استان ذخیره‌شده، شهر ذخیره‌شده' : 'Saved Province، Saved City'
+        locale === 'fa' ? 'استان ذخیره‌شده، شهر ذخیره‌شده' : 'Saved Province, Saved City'
       )
     ).toBeVisible();
     await page
-      .getByRole('button', { name: locale === 'fa' ? 'افزودن آدرس' : 'Add Address', exact: true })
+      .getByRole('link', { name: locale === 'fa' ? 'افزودن آدرس' : 'Add Address', exact: true })
       .click();
-    const dialog = page.getByRole('dialog');
+    const dialog = page.locator('[data-slot=settings-address-form]');
     const province = dialog.getByRole('combobox').nth(0);
     const city = dialog.getByRole('combobox').nth(1);
     await province.selectOption(provinceOne);
@@ -1002,7 +1005,7 @@ test('legal profile settings show attachment names and refresh expiring download
       },
     });
   });
-  await page.goto('/settings/profile');
+  await page.goto('/settings/profile/edit');
   const link = page.getByRole('link', { name: 'registration.pdf', exact: true });
   await expect(link).toHaveAttribute('href', 'https://storage.example.test/document?version=1');
   await page.getByRole('button', { name: 'Refresh download links', exact: true }).click();
@@ -1041,7 +1044,7 @@ for (const locale of ['en', 'fa']) {
     ).toBeVisible();
     await expect(
       page.getByRole('button', {
-        name: locale === 'fa' ? 'رفتن به داشبورد' : 'Go to dashboard',
+        name: locale === 'fa' ? 'رفتن به خانه' : 'Go to Home',
         exact: true,
       })
     ).toHaveCount(0);
@@ -1061,7 +1064,7 @@ for (const locale of ['en', 'fa']) {
     );
     await page
       .getByRole('button', {
-        name: locale === 'fa' ? 'رفتن به داشبورد' : 'Go to dashboard',
+        name: locale === 'fa' ? 'رفتن به خانه' : 'Go to Home',
         exact: true,
       })
       .click();
@@ -1089,7 +1092,7 @@ test('completion does not guess a profile and rejects mismatched success respons
   await expect(
     page.getByRole('heading', { name: 'Profile completion failed', exact: true })
   ).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Go to dashboard', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Go to Home', exact: true })).toHaveCount(0);
   expect(requests).toBe(1);
 });
 
@@ -1156,7 +1159,7 @@ for (const locale of ['en', 'fa']) {
         ],
       })
     );
-    await page.goto('/settings/profile');
+    await page.goto('/settings/profile/edit');
     const firstName = page.locator('#profile-first-name');
     await expect(firstName).toBeEnabled();
     await firstName.fill('Changed');
@@ -1242,7 +1245,7 @@ for (const locale of ['en', 'fa']) {
     await page.route('**/api/onboarding/documents/01900000-0000-7000-8000-000000000001', (route) =>
       route.fulfill({ json: { documents: [] } })
     );
-    await page.goto('/settings/profile');
+    await page.goto('/settings/profile/edit');
     const name = page.locator('#profile-legalName');
     const identifier = page.locator('#profile-nationalIdentifier');
     await expect(name).toBeEnabled();
@@ -1298,7 +1301,7 @@ for (const locale of ['en', 'fa']) {
       writes++;
       return route.fulfill({ status: 503, json: { message: 'Unavailable' } });
     });
-    await page.goto('/admin/notifications');
+    await page.goto('/admin/notifications/settings');
     const windowForm = page
       .locator('form')
       .filter({ has: page.locator('#delivery-window-timezone') });
@@ -1343,13 +1346,11 @@ for (const locale of ['en', 'fa']) {
     await reset.click();
     await expect(saveWindow).toBeEnabled();
     expect(writes).toBe(1);
-    await page
-      .getByRole('button', { name: locale === 'fa' ? 'قالب جدید' : 'New Template', exact: true })
-      .click();
+    await page.goto('/admin/notifications/new');
     const editor = page
       .locator('form')
       .filter({ has: page.locator('#notification-template-eventKey') });
-    await expect(editor.locator('select, input, textarea')).toHaveCount(6);
+    await expect(editor.locator('select, input, textarea')).toHaveCount(5);
     for (const control of await editor.locator('select, input, textarea').all()) {
       await expect(control).toHaveAccessibleName(/.+/);
     }
@@ -1358,6 +1359,11 @@ for (const locale of ['en', 'fa']) {
     await expect(subject).toBeFocused();
     await subject.fill('Test subject');
     await expect(subject).toHaveValue('Test subject');
+    await editor.getByRole('button', { name: copy('addVariable'), exact: true }).click();
+    await expect(editor.locator('[data-variable-name]')).toHaveAccessibleName(copy('variableName'));
+    await expect(editor.locator('[data-variable-description]')).toHaveAccessibleName(
+      copy('variableDescription')
+    );
   });
 }
 
@@ -1901,7 +1907,7 @@ for (const locale of ['en', 'fa']) {
       )
     );
     await page
-      .getByRole('button', {
+      .getByRole('link', {
         name: locale === 'fa' ? 'ارائه‌دهنده جدید' : 'New provider',
         exact: true,
       })
@@ -2045,7 +2051,12 @@ for (const locale of ['en', 'fa']) {
           page.evaluate(() => document.documentElement.style.getPropertyValue('--primary'))
         )
         .toBe('#2563eb');
-      await expect(page.getByTestId('admin-settings-layout').locator('nav')).toHaveCount(0);
+      await expect(
+        page.getByTestId('admin-settings-layout').getByRole('navigation', {
+          name: verificationConfigText('navigation', locale === 'fa' ? 'fa' : 'en'),
+          exact: true,
+        })
+      ).toBeVisible();
       const checkContrast = async (scrollToEnd = false) => {
         const content = await new AxeBuilder({ page })
           .include('main[data-area=admin]')
@@ -2304,7 +2315,7 @@ for (const locale of ['en', 'fa']) {
         json: { timezone: 'Asia/Tokyo', startHour: writes === 2 ? 9 : 8, endHour: 21 },
       });
     });
-    await page.goto('/admin/notifications');
+    await page.goto('/admin/notifications/settings');
     const panel = page.getByRole('region', {
       name: locale === 'fa' ? 'پنجره ارسال روزانه' : 'Daily Delivery Window',
       exact: true,
@@ -2388,7 +2399,7 @@ test('protected delivery window timeout requires a fresh read and explicit reset
       return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
   });
   await page.route('**/api/auth/step-up', (route) => route.fulfill({ json: { ok: true } }));
-  await page.goto('/admin/notifications');
+  await page.goto('/admin/notifications/settings');
   const panel = page.getByRole('region', { name: 'Daily Delivery Window', exact: true });
   const start = panel.locator('#delivery-window-start');
   await start.fill('09:15');
@@ -2454,7 +2465,7 @@ for (const locale of ['en', 'fa']) {
         json: {},
       });
     });
-    await page.goto('/admin/notifications');
+    await page.goto('/admin/notifications/settings');
     const panel = page.getByRole('region', {
       name: locale === 'fa' ? 'پنجره ارسال روزانه' : 'Daily Delivery Window',
       exact: true,
@@ -2698,10 +2709,16 @@ for (const locale of ['en', 'fa']) {
     });
     await page.goto('/electricity/order?step=4');
     for (let attempt = 0; attempt < 2; attempt++) {
-      const alert = page.getByRole('main').getByRole('alert');
-      await expect(alert).toContainText(
-        locale === 'fa' ? 'بارگذاری آدرس‌های ذخیره‌شده انجام نشد' : 'Could not load saved addresses'
-      );
+      const alert = page
+        .getByRole('main')
+        .getByRole('alert')
+        .filter({
+          hasText:
+            locale === 'fa'
+              ? 'بارگذاری آدرس‌های ذخیره‌شده انجام نشد'
+              : 'Could not load saved addresses',
+        });
+      await expect(alert).toBeVisible();
       await expect(
         page.getByRole('button', {
           name: locale === 'fa' ? 'افزودن آدرس جدید' : 'Add New Address',
@@ -2801,10 +2818,10 @@ for (const locale of ['en', 'fa']) {
         .click();
     }
     await expect(main.getByRole('alert')).toHaveCount(0);
-    await expect(page.getByRole('radio')).toHaveCount(1);
+    await expect(main.getByRole('radio')).toHaveCount(0);
     await expect(
-      page.getByRole('radio', { name: locale === 'fa' ? /برق حرارتی/ : /Thermal supply/ })
-    ).toBeChecked();
+      main.locator('header').getByText(locale === 'fa' ? /برق حرارتی/ : /Thermal supply/)
+    ).toBeVisible();
     await expect(
       page.getByText(
         new Intl.NumberFormat(locale, {
@@ -2905,7 +2922,7 @@ for (const locale of ['en', 'fa'] as const) {
     await crmShell(page, locale);
     const versions = ['active', 'archived', 'draft'].map((status, index) => ({
       ...notificationTemplate(),
-      id: `version-${index}`,
+      id: `30000000-0000-4000-8000-${String(index + 31).padStart(12, '0')}`,
       eventKey: 'profile_verified',
       channel: 'email',
       locale: 'en',
@@ -2927,9 +2944,12 @@ for (const locale of ['en', 'fa'] as const) {
       writes.push(route.request().postDataJSON());
       return route.fulfill({ status: 503, json: { message: 'Unavailable' } });
     });
-    await page.route('**/api/admin/config/delivery-window', (route) =>
-      route.fulfill({ json: { timezone: 'Asia/Tehran', startHour: 9, endHour: 21 } })
-    );
+    await page.route('**/api/admin/notifications/templates/*', (route) => {
+      expect(route.request().method()).toBe('GET');
+      reads++;
+      const id = new URL(route.request().url()).pathname.split('/').at(-1);
+      return route.fulfill({ json: versions.find((version) => version.id === id) });
+    });
     await page.goto('/admin/notifications');
     const editor = page
       .locator('form')
@@ -2941,30 +2961,20 @@ for (const locale of ['en', 'fa'] as const) {
         )
         .filter({ hasText: version.subject });
       await expect(
-        row.getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
+        row.getByRole('link', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
       ).toHaveCount(0);
       await row
-        .getByRole('button', { name: locale === 'fa' ? 'مشاهده' : 'View', exact: true })
+        .getByRole('link', { name: locale === 'fa' ? 'مشاهده' : 'View', exact: true })
         .click();
-      for (const id of ['subject', 'bodyTemplate', 'variablesLabel']) {
-        await expect(editor.locator(`#notification-template-${id}`)).toHaveAttribute(
-          'readonly',
-          ''
-        );
-      }
-      await expect(editor.locator('button[type="submit"]')).toBeDisabled();
+      const detail = page.getByRole('main');
+      await expect(detail.getByText(version.bodyTemplate, { exact: true })).toBeVisible();
+      await expect(editor).toHaveCount(0);
       await expect(
-        editor.getByRole('button', { name: '{{userName}}', exact: true })
-      ).toBeDisabled();
-      await expect(editor.locator('#notification-template-bodyTemplate')).toHaveValue(
-        version.bodyTemplate
-      );
-      await editor
-        .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
-        .click();
+        detail.getByRole('link', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
+      ).toHaveCount(0);
       if (index === 1) {
-        await row
-          .getByRole('button', { name: locale === 'fa' ? 'نسخه جدید' : 'New version', exact: true })
+        await detail
+          .getByRole('link', { name: locale === 'fa' ? 'نسخه جدید' : 'New version', exact: true })
           .click();
         await expect(editor.locator('#notification-template-bodyTemplate')).not.toHaveAttribute(
           'readonly',
@@ -2994,16 +3004,6 @@ for (const locale of ['en', 'fa'] as const) {
         ]);
         await expect(editor).toBeVisible();
         await expect(editor.locator('button[type="submit"]')).toBeDisabled();
-        await editor
-          .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
-          .click();
-        const nextVersion = page
-          .locator(
-            'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
-          )
-          .filter({ hasText: versions[2]!.subject })
-          .getByRole('button', { name: locale === 'fa' ? 'مشاهده' : 'View', exact: true });
-        await expect(nextVersion).toBeDisabled();
         const readsBeforeRefresh = reads;
         await page
           .getByRole('button', {
@@ -3012,9 +3012,19 @@ for (const locale of ['en', 'fa'] as const) {
           })
           .click();
         await expect.poll(() => reads).toBe(readsBeforeRefresh + 1);
-        await expect(nextVersion).toBeEnabled();
+        await expect(editor.locator('button[type="submit"]')).toBeDisabled();
+        await expect(editor.locator('#notification-template-bodyTemplate')).toHaveValue(
+          'Replacement {{userName}}'
+        );
+        await editor
+          .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
+          .click();
         expect(writes).toHaveLength(1);
       }
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: settingsText('admin.notifications.title', locale), exact: true })
+        .click();
     }
   });
 }
@@ -3057,7 +3067,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
     const input = {
       profileId: orderAddressProfile,
-      currentStep: 4,
+      currentStep: 1,
       data: { period: 'next_week', totalKwh: '100', addressId: reviewedAddress },
     };
     const savedPacket = {
@@ -3084,7 +3094,7 @@ for (const locale of ['en', 'fa'] as const) {
         json: saved
           ? savedPacket
           : {
-              currentStep: input.currentStep,
+              currentStep: 4,
               data: { ...input.data, addressId: originalAddress },
               revision,
             },
@@ -3186,9 +3196,9 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await crmShell(page, locale);
-    const templates = ['email', 'sms', 'in_app'].map((channel) => ({
+    const templates = ['email', 'sms', 'in_app'].map((channel, index) => ({
       ...notificationTemplate(),
-      id: channel,
+      id: `30000000-0000-4000-8000-${String(index + 41).padStart(12, '0')}`,
       eventKey: `test.${channel}`,
       channel,
       locale: 'en',
@@ -3206,14 +3216,18 @@ for (const locale of ['en', 'fa'] as const) {
       reads++;
       return route.fulfill({ json: templates });
     });
-    await page.route('**/api/admin/config/delivery-window', (route) =>
-      route.fulfill({ json: { timezone: 'Asia/Tehran', startHour: 9, endHour: 21 } })
-    );
+    await page.route('**/api/admin/notifications/templates/*', (route) => {
+      reads++;
+      const id = new URL(route.request().url()).pathname.split('/').at(-1);
+      return route.fulfill({ json: templates.find((template) => template.id === id) });
+    });
     let response: unknown = {};
     let writes = 0;
+    const destinations: unknown[] = [];
     let delayed = false;
     let finish!: () => void;
     await page.route('**/api/admin/notifications/templates/*/test-send', async (route) => {
+      destinations.push(route.request().postDataJSON());
       writes++;
       if (delayed)
         await new Promise<void>((done) => {
@@ -3221,7 +3235,6 @@ for (const locale of ['en', 'fa'] as const) {
         });
       return route.fulfill({ json: response });
     });
-    await page.goto('/admin/notifications');
     const editor = page
       .locator('form')
       .filter({ has: page.locator('#notification-template-eventKey') });
@@ -3233,14 +3246,9 @@ for (const locale of ['en', 'fa'] as const) {
       notificationFormText('testUnconfirmed', locale === 'fa' ? 'fa' : 'en'),
       { exact: true }
     );
+    const edit = (id: string) => page.goto(`/admin/notifications/${id}/edit`);
     for (const template of templates) {
-      await page
-        .locator(
-          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
-        )
-        .filter({ hasText: template.eventKey })
-        .getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
-        .click();
+      await edit(template.id);
       const send = editor.getByRole('button', {
         name: locale === 'fa' ? 'ارسال آزمایشی' : 'Test Send',
         exact: true,
@@ -3257,10 +3265,35 @@ for (const locale of ['en', 'fa'] as const) {
         )
       ).toBeVisible();
       await editor.locator('#notification-template-bodyTemplate').fill('Saved body');
-      if (template.channel !== 'in_app')
-        await editor
-          .locator('#test-destination')
-          .fill(template.channel === 'email' ? 'own@example.test' : '+989121234567');
+      const destination = editor.locator('#test-destination');
+      if (template.channel === 'in_app') {
+        await expect(destination).toHaveCount(0);
+        await expect(
+          editor.getByText(notificationFormText('testInbox', locale), { exact: true })
+        ).toBeVisible();
+      } else {
+        const email = template.channel === 'email';
+        const before = writes;
+        await expect(destination).toHaveAttribute('type', email ? 'email' : 'tel');
+        await expect(destination).toHaveAccessibleName(
+          notificationFormText(email ? 'testEmail' : 'testPhone', locale)
+        );
+        await expect(destination).toHaveAttribute('required', '');
+        await send.click();
+        await expect(destination).toBeFocused();
+        await expect(destination).toHaveAttribute('aria-invalid', 'true');
+        await expect(destination).toHaveAccessibleDescription(
+          notificationFormText(email ? 'testEmailRequired' : 'testPhoneRequired', locale)
+        );
+        await destination.fill('invalid');
+        await destination.press('Enter');
+        await expect(destination).toHaveAccessibleDescription(
+          notificationFormText(email ? 'testEmailInvalid' : 'testPhoneInvalid', locale)
+        );
+        expect(writes).toBe(before);
+        await destination.fill(email ? 'own@example.test' : '+۹۸۹۱۲۱۲۳۴۵۶۷');
+        await expect(destination).not.toHaveAttribute('aria-invalid', 'true');
+      }
       const message =
         template.channel === 'email'
           ? locale === 'fa'
@@ -3292,26 +3325,25 @@ for (const locale of ['en', 'fa'] as const) {
         expect(writes).toBe(before + 1);
       }
       response = { ok: true, destination: template.channel, lastTestStatus: 'delivered' };
-      await send.click();
+      if (template.channel === 'in_app') await send.click();
+      else await destination.press('Enter');
       await expect(editor.getByText(message, { exact: true })).toBeVisible();
+      expect(destinations.at(-1)).toEqual(
+        template.channel === 'in_app'
+          ? {}
+          : { destination: template.channel === 'email' ? 'own@example.test' : '+989121234567' }
+      );
       await editor.locator('#notification-template-bodyTemplate').fill('Changed after test');
       await expect(editor.getByText(message, { exact: true })).toHaveCount(0);
       await editor
         .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
         .click();
+      await expect(page).toHaveURL(`/admin/notifications/${template.id}`);
     }
     expect(writes).toBe(12);
     delayed = true;
     response = { ok: true, destination: 'in_app', lastTestStatus: 'delivered' };
-    const edit = (event: string) =>
-      page
-        .locator(
-          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
-        )
-        .filter({ hasText: event })
-        .getByRole('button', { name: locale === 'fa' ? 'ویرایش' : 'Edit', exact: true })
-        .click();
-    await edit('test.in_app');
+    await edit(templates[2]!.id);
     const send = editor.getByRole('button', {
       name: locale === 'fa' ? 'ارسال آزمایشی' : 'Test Send',
       exact: true,
@@ -3326,11 +3358,18 @@ for (const locale of ['en', 'fa'] as const) {
         'readonly',
         ''
       );
-      await expect(editor.locator('#test-destination')).toBeDisabled();
+      await expect(editor.locator('#test-destination')).toHaveCount(0);
+      await expect(
+        editor.getByRole('button', {
+          name: settingsText('admin.notifications.sending', locale),
+          exact: true,
+        })
+      ).toBeDisabled();
       await editor
         .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
         .click();
-      await edit('test.email');
+      await expect(page).toHaveURL(`/admin/notifications/${templates[2]!.id}`);
+      await edit(templates[0]!.id);
     } finally {
       finish();
     }
@@ -3381,7 +3420,7 @@ for (const failure of ['unavailable', 'malformed']) {
     );
     recovered = true;
     await page.getByRole('button', { name: 'Retry', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'New Draft', exact: true })).toBeEnabled();
+    await expect(page.getByRole('link', { name: 'New Draft', exact: true })).toBeVisible();
     await expect(page.getByRole('alert')).toHaveCount(0);
   });
 }
@@ -3407,7 +3446,7 @@ for (const locale of ['en', 'fa']) {
     });
     await page.goto('/admin/tos');
     await page
-      .getByRole('button', { name: locale === 'fa' ? 'پیش‌نویس جدید' : 'New Draft', exact: true })
+      .getByRole('link', { name: locale === 'fa' ? 'پیش‌نویس جدید' : 'New Draft', exact: true })
       .click();
     await page.getByLabel(locale === 'fa' ? 'شناسه نسخه' : 'Version ID').fill('rich-v1');
     const persian = page.getByRole('textbox', {
@@ -3498,11 +3537,12 @@ test('TOS editor preserves unsupported existing formatting when editing another 
   await page.route('**/api/admin/tos/versions', (route) => route.fulfill({ json: [version] }));
   let saved: Record<string, string> | undefined;
   await page.route('**/api/admin/tos/versions/table-draft', (route) => {
+    if (route.request().method() === 'GET') return route.fulfill({ json: version });
     saved = route.request().postDataJSON();
     return route.fulfill({ status: 503, json: {} });
   });
   await page.goto('/admin/tos');
-  await page.getByRole('button', { name: 'Edit', exact: true }).click();
+  await page.getByRole('link', { name: 'Edit', exact: true }).click();
   const source = page.getByRole('textbox', { name: 'English content', exact: true });
   const rich = page.getByRole('textbox', { name: 'Persian content', exact: true });
   await expect(page.locator('#admintospage-field-1')).toHaveAttribute('aria-required', 'true');
@@ -3563,12 +3603,17 @@ test('TOS preview renders safely, shows changes and blocks stale publication', a
       ],
     })
   );
+  await page.route('**/api/admin/tos/versions/draft-terms', (route) =>
+    route.fulfill({
+      json: reload ? { ...draft, revision: 'b'.repeat(64), contentEn: 'Latest wording' } : draft,
+    })
+  );
   await page.route('**/api/admin/tos/versions/draft-terms/publish', (route) => {
     writes.push(route.request().postDataJSON());
     return route.fulfill({ status: 409, json: { error: 'TOS_PREVIEW_CHANGED' } });
   });
   await page.goto('/admin/tos');
-  await page.getByRole('button', { name: 'Publish', exact: true }).click();
+  await page.getByRole('link', { name: 'Publish', exact: true }).click();
   const proposed = page.getByRole('region', { name: 'Draft preview', exact: true });
   await expect(proposed.getByRole('heading', { name: 'New wording', exact: true })).toBeVisible();
   await expect(proposed.locator('strong')).toHaveText('Important');
@@ -3591,7 +3636,7 @@ test('TOS preview renders safely, shows changes and blocks stale publication', a
   await expect(publish).toBeDisabled();
   reload = true;
   await page.getByRole('button', { name: 'Cancel', exact: true }).click();
-  await page.getByRole('button', { name: 'Publish', exact: true }).click();
+  await page.getByRole('link', { name: 'Publish', exact: true }).click();
   await expect(page.getByRole('region', { name: 'Draft preview' })).toContainText('Latest wording');
   await expect(page.getByRole('checkbox', { name: 'Mark as material change' })).not.toBeChecked();
   await publish.click();
@@ -3624,12 +3669,13 @@ test('TOS edit conflicts preserve local text and reload the newer revision expli
   const writes: Record<string, string>[] = [];
   await page.route('**/api/admin/tos/versions', (route) => route.fulfill({ json: [original] }));
   await page.route('**/api/admin/tos/versions/edit-draft', (route) => {
-    if (route.request().method() === 'GET') return route.fulfill({ json: newer });
+    if (route.request().method() === 'GET')
+      return route.fulfill({ json: writes.length ? newer : original });
     writes.push(route.request().postDataJSON());
     return route.fulfill({ status: writes.length === 1 ? 409 : 503, json: {} });
   });
   await page.goto('/admin/tos');
-  await page.getByRole('button', { name: 'Edit', exact: true }).click();
+  await page.getByRole('link', { name: 'Edit', exact: true }).click();
   const english = page.getByRole('textbox', { name: 'English content', exact: true });
   await english.fill('My unsaved text');
   await page.getByRole('button', { name: 'Update Draft', exact: true }).click();
@@ -3654,7 +3700,7 @@ test('TOS creation does not report malformed success as a saved draft', async ({
     route.fulfill({ json: route.request().method() === 'GET' ? [] : {} })
   );
   await page.goto('/admin/tos');
-  await page.getByRole('button', { name: 'New Draft', exact: true }).click();
+  await page.getByRole('link', { name: 'New Draft', exact: true }).click();
   await page.getByLabel('Version ID').fill('uncertain-save');
   await page.getByRole('textbox', { name: 'Persian content', exact: true }).fill('Terms');
   await page.getByRole('textbox', { name: 'English content', exact: true }).fill('Unsaved terms');
@@ -3695,8 +3741,11 @@ test('TOS draft creation conflicts retain local content until explicit replaceme
     exists = true;
     return route.fulfill({ status: 409, json: { error: { code: 'TOS_DRAFT_EXISTS' } } });
   });
+  await page.route('**/api/admin/tos/versions/other-draft', (route) =>
+    route.fulfill({ json: saved })
+  );
   await page.goto('/admin/tos');
-  await page.getByRole('button', { name: 'New Draft', exact: true }).click();
+  await page.getByRole('link', { name: 'New Draft', exact: true }).click();
   await page.getByLabel('Version ID').fill('local-v1');
   await page.getByRole('textbox', { name: 'Persian content', exact: true }).fill('شرایط من');
   const english = page.getByRole('textbox', { name: 'English content', exact: true });
@@ -3890,7 +3939,7 @@ for (const locale of ['en', 'fa']) {
       return route.fulfill({ json: settingsProfileFixture(detail) });
     });
     await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
-    await page.goto('/settings/profile');
+    await page.goto('/settings/profile/edit');
     const title = page.locator('#profile-title');
     await title.fill('Changed');
     const save = page.getByRole('button', {
@@ -4123,6 +4172,13 @@ for (const locale of ['en', 'fa']) {
       }
       return route.fulfill(fail ? { status: 503, json: {} } : { json: { addresses } });
     });
+    await page.route(`**/api/profiles/${settingsProfileId}/addresses/access`, (route) =>
+      route.fulfill({ json: { profileId: settingsProfileId, canEdit: true } })
+    );
+    await page.route(
+      `**/api/profiles/${settingsProfileId}/addresses/01900000-0000-7000-8000-000000000043`,
+      (route) => route.fulfill({ json: addresses[0] })
+    );
     await page.route('**/api/geography/provinces', (route) =>
       route.fulfill({ json: [{ id: provinceId, nameFa: 'استان', nameEn: 'Province' }] })
     );
@@ -4132,7 +4188,7 @@ for (const locale of ['en', 'fa']) {
       })
     );
     await page.goto('/settings/addresses');
-    const add = page.getByRole('button', {
+    const add = page.getByRole('link', {
       name: locale === 'fa' ? 'افزودن آدرس' : 'Add Address',
       exact: true,
     });
@@ -4140,13 +4196,14 @@ for (const locale of ['en', 'fa']) {
       hasText: locale === 'fa' ? 'خطا در بارگذاری آدرس‌ها' : 'Failed to load addresses',
     });
     await expect(loadError).toBeVisible();
-    await expect(add).toBeDisabled();
+    await expect(add).toHaveCount(0);
     fail = false;
     await loadError
       .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
       .click();
-    await expect(add).toBeEnabled();
+    await expect(add).toBeVisible();
     await add.click();
+    await expect(page.locator('[data-slot=settings-address-form]')).toBeVisible();
     // A context change elsewhere must not silently retarget this already displayed form.
     await page.route('**/api/profiles', (route) =>
       route.fulfill({
@@ -4159,7 +4216,7 @@ for (const locale of ['en', 'fa']) {
         },
       })
     );
-    const dialog = page.getByRole('dialog');
+    const dialog = page.locator('[data-slot=settings-address-form]');
     await dialog.locator('#addresses-field-1').selectOption(provinceId);
     await expect(dialog.locator(`#addresses-field-2 option[value="${cityId}"]`)).toHaveCount(1);
     await dialog.locator('#addresses-field-2').selectOption(cityId);

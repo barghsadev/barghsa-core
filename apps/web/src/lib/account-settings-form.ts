@@ -1,5 +1,5 @@
 import { isE164, normalizeUsername } from '@barghsa/shared/username-normalization';
-import { settingsUuid } from './settings-form.js';
+import { settingsUuid } from './settings-profile-directory.js';
 
 export type ContactType = 'email' | 'mobile';
 export type AccountSettingsUser = {

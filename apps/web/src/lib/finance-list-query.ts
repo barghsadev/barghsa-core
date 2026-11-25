@@ -103,6 +103,12 @@ export function pendingReceiptSearch(raw: Record<string, unknown>) {
     ['queue_q', 'queue_order', 'queue_cursor'].map((key) => [key, normalized[key]])
   );
 }
+export function invoiceQueueSearch(raw: Record<string, unknown>) {
+  const search = invoiceListsSearch(raw);
+  delete search.invoiceId;
+  return search;
+}
+
 export function invoiceListsSearch(raw: Record<string, unknown>) {
   const dates = parseDateRangeFilter(raw.receipt_from, raw.receipt_to) ?? {};
   const amounts = parseNumberRange(raw.receipt_min, raw.receipt_max) ?? {};

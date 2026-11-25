@@ -1,12 +1,13 @@
 import { useAccountTime } from '../../../hooks/useAccountTime.js';
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocale } from '../../../hooks/useLocale.js';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { trustedDeviceText } from '@barghsa/i18n/trusted-devices';
 import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
 import { MonitorIcon, SmartphoneIcon, GlobeIcon, Trash2Icon, ShieldAlertIcon } from 'lucide-react';
-import { Badge, LoadingStatus, Button } from '@barghsa/ui';
+import { Badge, LoadingStatus, Button, buttonVariants } from '@barghsa/ui';
+import { telegramText } from '@barghsa/i18n/telegram';
 import { TrustedDevices } from '../../../components/TrustedDevices.js';
 import { SecurityRevocationDialog } from '../../../components/SecurityRevocationDialog.js';
 import { usePreferenceSettingsOwner } from '../../../hooks/usePreferenceSettingsForm.js';
@@ -15,7 +16,6 @@ import type {
   SecuritySession as SessionItem,
   SecurityOperation,
 } from '../../../lib/security-settings-form.js';
-const TelegramLinkPanel = lazy(() => import('../../../components/TelegramLinkPanel.js'));
 export const Route = createFileRoute('/_app/settings/security')({
   component: SettingsSecurityPage,
 });
@@ -192,9 +192,6 @@ function SettingsSecurityPage() {
           >
             {time.notice}
           </div>
-          <Suspense fallback={<LoadingStatus>{text('loadingTelegram')}</LoadingStatus>}>
-            <TelegramLinkPanel scope={scope} />
-          </Suspense>
           {confirmed && (
             <p role="status" className="text-sm text-primary">
               {text('confirmed')}
@@ -317,6 +314,13 @@ function SettingsSecurityPage() {
             trackRevokeTrigger={(id, node) => trackRevokeTrigger('trust:' + id, node)}
             trackRevokeAllTrigger={(node) => trackRevokeTrigger('allTrust', node)}
           />
+          <Link
+            to="/settings/security/telegram"
+            disabled={scope.locked}
+            className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+          >
+            {telegramText('title', locale)}
+          </Link>
           {selected && (
             <SecurityRevocationDialog
               key={

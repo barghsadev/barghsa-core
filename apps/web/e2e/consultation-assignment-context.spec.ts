@@ -3,7 +3,7 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
-import { tConsultation } from '@barghsa/i18n/consultation';
+import { tStaffConsultation } from '@barghsa/i18n/consultation-staff';
 import {
   consultationContextRows,
   consultationContextDetail,
@@ -21,7 +21,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.route('**/api/user/settings/timezone', (route) =>
         route.fulfill({ json: { timezone: 'Pacific/Kiritimati' } })
       );
-      const copy = (key: string) => tConsultation(key, locale);
+      const copy = (key: string) => tStaffConsultation(key, locale);
       const requests = consultationContextRows();
       const selectedId = requests[0]!.id;
       let verified = false,
@@ -56,8 +56,8 @@ for (const locale of ['en', 'fa'] as const)
           ];
         }
         await route.fulfill({
-          status: request ? 200 : 404,
-          json: body ?? {},
+          status: denied ? 403 : request ? 200 : 404,
+          json: denied ? {} : (body ?? {}),
         });
         if (request?.id === selectedId && route.request().method() === 'GET')
           selectedDetailReceipts += 1;
@@ -107,7 +107,16 @@ for (const locale of ['en', 'fa'] as const)
       await expect(rows.nth(4)).toContainText(copy('unassigned'));
       await expect(rows.nth(5)).toContainText(copy('unassigned'));
       await expect(rows.nth(9)).toContainText(copy('status_unknown'));
-      await rows.nth(1).getByRole('button').click();
+      for (const privateValue of [
+        privateConsultationOwnerId,
+        'Unbound private name',
+        'private_future_status',
+        'private_actor_type',
+        'Private future actor',
+      ]) {
+        await expect(queue).not.toContainText(privateValue);
+      }
+      await rows.nth(1).getByRole('link').click();
       await expect(
         detail.getByRole('heading', {
           name: requests[1]!.product_snapshot.title[locale],
@@ -117,7 +126,8 @@ for (const locale of ['en', 'fa'] as const)
       await expect(detail.locator('[data-slot=consultation-assignment]')).toContainText(
         copy('assignedStaff')
       );
-      await rows.nth(3).getByRole('button').click();
+      await page.getByRole('link', { name: copy('backToStaffRequests'), exact: true }).click();
+      await rows.nth(3).getByRole('link').click();
       await expect(
         detail.getByRole('heading', {
           name: requests[3]!.product_snapshot.title[locale],
@@ -127,7 +137,8 @@ for (const locale of ['en', 'fa'] as const)
       await expect(detail.locator('[data-slot=consultation-assignment]')).toContainText(
         copy('awaitingOwner')
       );
-      await rows.nth(0).getByRole('button').click();
+      await page.getByRole('link', { name: copy('backToStaffRequests'), exact: true }).click();
+      await rows.nth(0).getByRole('link').click();
       await expect(
         detail.getByRole('heading', {
           name: requests[0]!.product_snapshot.title[locale],
@@ -162,7 +173,6 @@ for (const locale of ['en', 'fa'] as const)
         'private_actor_type',
         'Private future actor',
       ]) {
-        await expect(queue).not.toContainText(privateValue);
         await expect(detail).not.toContainText(privateValue);
         await expect(timeline).not.toContainText(privateValue);
       }
@@ -210,13 +220,11 @@ for (const locale of ['en', 'fa'] as const)
       await expect(detail.locator('[data-slot=consultation-assignment]')).not.toContainText(
         'Reviewer <script>'
       );
-      await expect(rows.nth(0).getByRole('button')).toHaveAttribute('aria-pressed', 'true');
-      await expect(rows.nth(0)).toContainText('Operations Team');
+      await expect(page).toHaveURL(`/admin/consultations/${selectedId}`);
       expect(writes).toEqual(Array(2).fill({ assignTo: 'team', team: 'Operations Team' }));
       expect(
         (
           await new AxeBuilder({ page })
-            .include(`section[aria-label="${copy('staffTitle')}"]`)
             .include(`section[aria-label="${copy('details')}"]`)
             .analyze()
         ).violations
@@ -224,13 +232,6 @@ for (const locale of ['en', 'fa'] as const)
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true
       );
-      for (const node of await queue.locator('button').all()) {
-        const bounds = await node.boundingBox();
-        if (bounds) {
-          expect(bounds.x).toBeGreaterThanOrEqual(0);
-          expect(bounds.x + bounds.width).toBeLessThanOrEqual(391);
-        }
-      }
       if (
         (locale === 'en' && theme === 'light' && info.project.name === 'chromium') ||
         (locale === 'fa' && theme === 'dark' && info.project.name === 'mobile-safari')
@@ -241,11 +242,34 @@ for (const locale of ['en', 'fa'] as const)
           ),
           fullPage: true,
         });
+      const back = page.getByRole('link', { name: copy('backToStaffRequests'), exact: true });
+      await back.click();
+      await expect(rows.nth(0)).toContainText('Operations Team');
+      expect(
+        (
+          await new AxeBuilder({ page })
+            .include(`section[aria-label="${copy('staffTitle')}"]`)
+            .analyze()
+        ).violations
+      ).toEqual([]);
+      for (const node of await queue.getByRole('link').all()) {
+        const bounds = await node.boundingBox();
+        if (bounds) {
+          expect(bounds.x).toBeGreaterThanOrEqual(0);
+          expect(bounds.x + bounds.width).toBeLessThanOrEqual(391);
+        }
+      }
+      await rows.nth(0).getByRole('link').click();
+      await expect(detail.locator('[data-slot=consultation-assignment]')).toContainText(
+        'Operations Team'
+      );
       denied = true;
       await page.getByRole('button', { name: copy('refresh'), exact: true }).click();
-      await expect(rows).toHaveCount(0);
-      await expect(queue.getByRole('alert')).toContainText(copy('queueForbidden'));
+      await expect(detail.getByRole('alert')).toContainText(copy('requestUnavailable'));
       await expect(detail.locator('[data-slot=consultation-assignment]')).toHaveCount(0);
       await expect(detail.locator('[data-slot=status-timeline]')).toHaveCount(0);
+      await back.click();
+      await expect(rows).toHaveCount(0);
+      await expect(queue.getByRole('alert')).toContainText(copy('queueForbidden'));
       expect(writes).toHaveLength(2);
     });

@@ -2,7 +2,6 @@ import { test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/admin-ui';
-import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { deadLetter, failedJob } from '../src/test/operational-queue-fixtures';
 test.use({ viewport: { width: 390, height: 844 } });
 const params = (page: Page) => new URL(page.url()).searchParams;
@@ -85,15 +84,14 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/failed-jobs?status=failed&jobType=storage_cleanup&page=2');
       const root = page.getByRole('main');
       const type = root.getByRole('combobox', { name: word('type'), exact: true });
+      const status = root.getByRole('combobox', { name: word('status'), exact: true });
       await expect(
         root.locator(
           'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
         )
       ).toHaveCount(25);
       await expect(type).toHaveValue('storage_cleanup');
-      await expect(
-        root.getByRole('button', { name: word('status.failed'), exact: true })
-      ).toHaveAttribute('aria-pressed', 'true');
+      await expect(status).toHaveValue('failed');
       expect(Object.fromEntries(reads.at(-1)!.searchParams)).toEqual({
         status: 'failed',
         jobType: 'storage_cleanup',
@@ -153,7 +151,7 @@ for (const locale of ['en', 'fa'] as const)
           'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
         )
       ).toHaveCount(1);
-      await root.getByRole('button', { name: word('status.all'), exact: true }).click();
+      await status.selectOption('all');
       await expect.poll(() => reads.at(-1)?.searchParams.has('status')).toBe(false);
       expect(params(page).get('status')).toBe('all');
       expect(params(page).has('page')).toBe(false);
@@ -161,9 +159,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect.poll(() => reads.at(-1)?.searchParams.has('jobType')).toBe(false);
       await page.reload();
       await expect(type).toHaveValue('');
-      await expect(
-        root.getByRole('button', { name: word('status.all'), exact: true })
-      ).toHaveAttribute('aria-pressed', 'true');
+      await expect(status).toHaveValue('all');
       await inspect(page, locale, info.project.name, 'jobs', dark);
       denied = true;
       await root.getByRole('button', { name: word('refresh'), exact: true }).click();
@@ -185,14 +181,14 @@ for (const locale of ['en', 'fa'] as const)
         let fail = false,
           denied = false;
         const reads: URL[] = [];
-        await page.route('**/api/admin/notifications/templates*', (route) =>
-          route.fulfill({ json: [{ ...notificationTemplate(), locale }] })
-        );
         await page.route('**/api/admin/failed-notifications/access', (route) =>
           route.fulfill({ status: denied ? 403 : 200, json: { canView: true, canRetry: true } })
         );
         await page.route('**/api/admin/failed-notifications?*', (route) =>
           route.fulfill({ json: [deadLetter] })
+        );
+        await page.route(`**/api/admin/failed-notifications/${deadLetter.id}`, (route) =>
+          route.fulfill({ json: deadLetter })
         );
         await page.route('**/api/admin/notifications/delivery-logs?*', (route) => {
           const url = new URL(route.request().url());
@@ -222,14 +218,17 @@ for (const locale of ['en', 'fa'] as const)
           });
         });
         await page.goto(
-          `/admin/${path}?failed_status=all&failed_channel=email&failed_page=2&history_mode=all&history_notificationId=${deadLetter.outboxId}&history_channel=email&history_status=delivered&history_page=2${path === 'notifications' ? `&locale=${locale}&preview_event=welcome_email&preview_channel=email&preview_locale=${locale}&preview_version=template-recovery` : ''}`
+          `/admin/${path}?failed_status=all&failed_channel=email&failed_page=2&history_mode=all&history_notificationId=${deadLetter.outboxId}&history_channel=email&history_status=delivered&history_page=2`
         );
-        const dialog = page.getByRole('dialog');
-        const id = dialog.getByRole('textbox', { name: word('notificationId'), exact: true });
-        const channel = dialog.getByRole('combobox', { name: word('channel'), exact: true });
-        const status = dialog.getByRole('combobox', { name: word('status'), exact: true });
+        const history = page.getByRole('main');
+        await expect(page).toHaveURL(
+          (url) => url.pathname === '/admin/failed-notifications/history'
+        );
+        const id = history.getByRole('textbox', { name: word('notificationId'), exact: true });
+        const channel = history.getByRole('combobox', { name: word('channel'), exact: true });
+        const status = history.getByRole('combobox', { name: word('status'), exact: true });
         await expect(
-          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+          history.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
         ).toHaveCount(1);
         await expect(id).toHaveValue(deadLetter.outboxId);
         await expect(channel).toHaveValue('email');
@@ -244,7 +243,7 @@ for (const locale of ['en', 'fa'] as const)
         const newId = 'abcdef00-0000-4000-8000-000000000001';
         const initialReads = reads.length;
         await id.fill('invalid');
-        await dialog.getByRole('button', { name: word('search'), exact: true }).click();
+        await history.getByRole('button', { name: word('search'), exact: true }).click();
         expect(await id.evaluate((node: HTMLInputElement) => node.validity.valid)).toBe(false);
         expect(reads).toHaveLength(initialReads);
         await id.fill(newId);
@@ -252,69 +251,57 @@ for (const locale of ['en', 'fa'] as const)
         await status.selectOption('failed');
         expect(params(page).get('history_notificationId')).toBe(deadLetter.outboxId);
         expect(reads).toHaveLength(initialReads);
-        await dialog.getByRole('button', { name: word('search'), exact: true }).click();
+        await history.getByRole('button', { name: word('search'), exact: true }).click();
         await expect.poll(() => reads.at(-1)?.searchParams.get('notificationId')).toBe(newId);
         await expect(
-          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+          history.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
         ).toHaveCount(25);
         expect(params(page).get('failed_page')).toBe('2');
         expect(params(page).has('history_page')).toBe(false);
-        if (path === 'notifications') {
-          expect(params(page).get('preview_version')).toBe('template-recovery');
-          expect(params(page).get('locale')).toBe(locale);
-        }
         fail = true;
-        await dialog.getByRole('button', { name: common('next'), exact: true }).click();
-        await expect(dialog.getByRole('alert')).toBeVisible();
+        await history.getByRole('button', { name: common('next'), exact: true }).click();
+        await expect(history.getByRole('alert')).toBeVisible();
         await expect(id).toHaveValue(newId);
         const failedQuery = reads.at(-1)!.search;
         fail = false;
-        await dialog.getByRole('button', { name: common('reload'), exact: true }).click();
+        await history.getByRole('button', { name: common('reload'), exact: true }).click();
         await expect(
-          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+          history.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
         ).toHaveCount(1);
         expect(reads.at(-1)!.search).toBe(failedQuery);
         await page.reload();
         await expect(
-          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+          history.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
         ).toHaveCount(1);
         await expect(id).toHaveValue(newId);
         await expect(channel).toHaveValue('sms');
         await expect(status).toHaveValue('failed');
-        await page.keyboard.press('Escape');
-        await expect(dialog).toHaveCount(0);
+        const queueBack = history.getByRole('link', {
+          name: t('admin.notifications.deadLetter.title', locale),
+          exact: true,
+        });
+        await queueBack.click();
+        await expect(page).toHaveURL((url) => url.pathname === '/admin/failed-notifications');
         expect(params(page).has('history_mode')).toBe(false);
         await page.goBack();
-        await expect(
-          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
-        ).toHaveCount(1);
         await expect(id).toHaveValue(newId);
-        await page.keyboard.press('Escape');
-        await expect(dialog).toHaveCount(0);
-        const queue = page
-          .locator('main section')
-          .filter({
-            has: page.getByRole('heading', {
-              name: t('admin.notifications.deadLetter.title', locale),
-              exact: true,
-            }),
-          })
-          .last();
-        await queue.locator('summary:visible').click();
-        await queue.getByRole('button', { name: word('title'), exact: true }).click();
+        await queueBack.click();
+        await history.getByRole('link', { name: deadLetter.eventKey, exact: true }).click();
+        await history.getByRole('link', { name: word('title'), exact: true }).click();
+        await expect(page).toHaveURL(
+          (url) => url.pathname === `/admin/failed-notifications/${deadLetter.id}/history`
+        );
         await expect(
-          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+          history.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
         ).toHaveCount(25);
-        await expect(dialog.getByRole('textbox')).toHaveCount(0);
-        expect(params(page).get('history_mode')).toBe('target');
-        expect(params(page).get('history_notificationId')).toBe(deadLetter.outboxId);
-        expect(params(page).get('history_channel')).toBe('email');
+        await expect(history.getByRole('textbox')).toHaveCount(0);
+        expect(params(page).has('history_mode')).toBe(false);
         expect(params(page).has('history_status')).toBe(false);
         await page.reload();
         await expect(
-          dialog.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
+          history.locator('table:visible tbody tr, [data-slot=card-list-view]:visible > li')
         ).toHaveCount(25);
-        await expect(dialog.getByRole('textbox')).toHaveCount(0);
+        await expect(history.getByRole('textbox')).toHaveCount(0);
         expect(Object.fromEntries(reads.at(-1)!.searchParams)).toEqual({
           notificationId: deadLetter.outboxId,
           channel: 'email',
@@ -323,11 +310,11 @@ for (const locale of ['en', 'fa'] as const)
         });
         await inspect(page, locale, info.project.name, `history-${path}`, dark);
         denied = true;
-        await page
-          .getByRole('button', { name: common('refresh'), exact: true, includeHidden: true })
-          .last()
-          .evaluate((node) => (node as HTMLButtonElement).click());
-        await expect(dialog).toHaveCount(0);
+        await page.reload();
+        await expect(history.getByRole('alert')).toContainText(
+          t('admin.notifications.deadLetter.accessDenied', locale)
+        );
+        await expect(history.locator('table, [data-slot=card-list-view]')).toHaveCount(0);
       });
     }
   }

@@ -5,6 +5,7 @@ import {
   solarContractAmounts,
   solarInt8,
   solarRowPrice,
+  solarInvoiceInteger,
   type SolarContractDraft,
   type SolarContractOptions,
 } from './solar-contract-form.js';
@@ -64,13 +65,7 @@ export function solarContractSchema(
           ['quantity', 1, 2147483647],
           ['vatRate', 0, 10000],
         ] as const)
-          if (
-            typeof line?.[field] !== 'string' ||
-            !line[field].trim() ||
-            !Number.isInteger(Number(line[field])) ||
-            Number(line[field]) < min ||
-            Number(line[field]) > max
-          )
+          if (!solarInvoiceInteger(line?.[field], min, max))
             issue(['invoiceLines', index, field], messages[field]!, line?.[field]);
         if (!solarRowPrice(line?.unitPrice))
           issue(['invoiceLines', index, 'unitPrice'], messages.unitPrice!, line?.unitPrice);

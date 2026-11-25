@@ -1,14 +1,19 @@
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
-import { reconciliationApiQuery, reconciliationLocalTime } from '../lib/decision-queue-query.js';
+import { ClipboardCheckIcon, SearchCheckIcon, CheckIcon, ArchiveIcon } from 'lucide-react';
+import { QueueEmptyState, statusAlternatives } from '../components/QueueEmptyState.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { Link, useBlocker } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/admin-ui';
 import {
   LoadingStatus,
   Button,
+  buttonVariants,
   ListPage,
+  ListRefreshButton,
   Grid,
   DateCell,
   TextCell,
@@ -17,9 +22,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
+  StatusBadge,
 } from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { formatRelativeTime } from '../lib/relative-time.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useManualServerRead } from '../hooks/useServerQuery.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -38,6 +46,8 @@ import {
   useZodForm,
 } from '@barghsa/ui/form';
 import {
+  reconciliationApiQuery,
+  reconciliationLocalTime,
   reconciliationBounds,
   reconciliationFilterErrors,
   reconciliationNoteErrors,
@@ -62,12 +72,29 @@ async function reconciliationRead(path: string, signal: AbortSignal): Promise<un
 const readDenied = (error: unknown) =>
   error instanceof ServerQueryError && [401, 403].includes(error.status);
 
-export default function AdminReconciliationPage(props: { queries?: ListQueryBinding } = {}) {
+interface ReconciliationProps {
+  queries?: ListQueryBinding;
+  recordId?: string;
+  recordVerb?: 'resolve' | 'close' | undefined;
+  recordSearch?: Record<string, unknown>;
+}
+
+export default function AdminReconciliationPage(props: ReconciliationProps = {}) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
-  return <OwnedReconciliation key={JSON.stringify([actor, revision])} {...props} />;
+  return (
+    <OwnedReconciliation
+      key={JSON.stringify([actor, revision, props.recordId, props.recordVerb])}
+      {...props}
+    />
+  );
 }
-function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
+function ReconciliationNavigationGuard({ shouldBlock }: { shouldBlock: () => boolean }) {
+  useBlocker({ shouldBlockFn: shouldBlock, enableBeforeUnload: shouldBlock });
+  return null;
+}
+
+function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: ReconciliationProps) {
   const accountId = useAccountUser();
   const scope = {
     context: 'staff' as const,
@@ -78,9 +105,13 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
   const read = useManualServerRead();
   const time = useAccountTime();
   const detailTrigger = useRef<HTMLElement | null>(null);
+  const decisionTrigger = useRef<HTMLElement | null>(null);
+  const noteNeedsFocus = useRef(false);
+  const invalidNoteNeedsFocus = useRef(false);
   const listHeading = useRef<HTMLHeadingElement>(null);
   const locale = useLocale(),
     label = (key: string) => t(`admin.reconciliation.${key}`, locale);
+  const numbers = useNumberFormatting(locale);
   const initialFilters = useRef(queries?.query.filters).current;
   const filters = useZodForm<ReconciliationFilterDraft>(
     async () => {
@@ -136,6 +167,22 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
     [localOffset, setOffset] = useState(0),
     [revision, setRevision] = useState(0);
   const offset = queries ? (queries.query.page - 1) * pageSize : localOffset;
+  const appliedStatus = new URLSearchParams(query).get('status');
+  function changeQueueStatus(value: string) {
+    if (owned.current || !accessValid.current) return;
+    setSaved(false);
+    if (queries) {
+      queries.setQuery({ filters: { status: value || 'all' }, page: 1 });
+    } else {
+      const params = new URLSearchParams(query);
+      if (value) params.set('status', value);
+      else params.delete('status');
+      filters.setValue('status', value);
+      clearWork();
+      setOffset(0);
+      setQuery(params.toString());
+    }
+  }
   const hydratedZone = useRef<string | null>(null);
   useEffect(() => {
     if (!initialFilters || time.status !== 'ready' || hydratedZone.current === time.timezone)
@@ -176,12 +223,23 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
     clearWork();
     setSaved(false);
   }, [offset]);
+  useEffect(() => {
+    if (recordId) listHeading.current?.focus({ preventScroll: true });
+  }, [recordId]);
   const reviewed = useRef<Item | null>(null);
   const visibleItems = acceptedScope === query ? items : [];
   const locked = validating !== null || !!action || uncertain;
+  const noteError = notes.formState.errors.note;
+  useEffect(() => {
+    if (locked || !noteError || !invalidNoteNeedsFocus.current) return;
+    invalidNoteNeedsFocus.current = false;
+    notes.setFocus('note');
+  }, [locked, noteError, notes]);
+
   function clearWork() {
     ++workGeneration.current;
     reviewed.current = null;
+    invalidNoteNeedsFocus.current = false;
     setSelected(null);
     notes.reset({ note: '' });
     setAction(null);
@@ -257,6 +315,24 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
     setError(false);
     void (async () => {
       try {
+        if (recordId) {
+          const path = `${endpoint}/${encodeURIComponent(recordId)}`;
+          const key = queryKeys.operations.detail(
+            scope,
+            JSON.stringify([path, accessVersion, revision])
+          );
+          const row = await read(key, controller.signal, (signal) =>
+            reconciliationRead(path, signal)
+          );
+          if (!isReconciliationItem(row) || row.id !== recordId)
+            throw new Error('Invalid reconciliation case');
+          if (controller.signal.aborted || !accessValid.current) return;
+          if (reviewed.current && JSON.stringify(reviewed.current) !== JSON.stringify(row))
+            clearWork();
+          reviewed.current = row;
+          setSelected(row);
+          return;
+        }
         const search = `${query}&limit=${pageSize}&offset=${offset}`;
         const key = queryKeys.operations.queue(
           scope,
@@ -290,7 +366,7 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
       }
     })();
     return () => controller.abort();
-  }, [query, offset, revision, canView, accessVersion, accessLoading, read]);
+  }, [query, offset, revision, canView, accessVersion, accessLoading, recordId, read]);
   function refreshAccess() {
     if (
       sending.current ||
@@ -361,6 +437,10 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
     )
       return;
     owned.current = 'note';
+    decisionTrigger.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    noteNeedsFocus.current = false;
+    invalidNoteNeedsFocus.current = false;
     setValidating('note');
     const current = workGeneration.current;
     const capture = (value: ReconciliationNoteDraft) => {
@@ -385,13 +465,16 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
         responseDeadline: true,
         body: verb === 'investigate' ? {} : { note },
         successStatus: 200,
-        conflictMessage: label('changed'),
+        conflictMessage: label(recordId ? 'changedCase' : 'changed'),
         forbiddenMessage: label('denied'),
       });
     };
     try {
       if (verb === 'investigate') capture({ note: '' });
-      else await notes.handleSubmit(capture)(event);
+      else
+        await notes.handleSubmit(capture, (errors) => {
+          if (current === workGeneration.current) invalidNoteNeedsFocus.current = !!errors.note;
+        })(event);
     } finally {
       if (owned.current === 'note' && current === workGeneration.current) {
         owned.current = null;
@@ -450,214 +533,674 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
     </div>
   );
   const date = (value: string) => <DateCell value={value} format={(stamp) => time.format(stamp)} />;
-  const actionGeneration = commandGeneration.current;
-  return (
-    <section className="space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      {time.notice}
-      <header>
-        <h1 ref={listHeading} tabIndex={-1} className="text-2xl font-semibold">
-          {label('title')}
-        </h1>
-        <p className="text-muted-foreground">{label('description')}</p>
-      </header>
-      <ListPage>
-        <ListPage.Toolbar>
+  const balanceEvidence = selected?.details?.walletId
+    ? (['posted', 'reserved'] as const).flatMap((kind) => {
+        const fields =
+          kind === 'posted'
+            ? ['postedBalance', 'ledgerPostedSum', 'postedDelta']
+            : ['reservedBalance', 'ledgerReservedSum', 'reservedDelta'];
+        const values = fields.map((key) => selected?.details?.[key]);
+        if (
+          !values.every(
+            (value): value is string => typeof value === 'string' && /^-?\d{1,19}$/.test(value)
+          )
+        )
+          return [];
+        return [{ kind, wallet: values[0]!, ledger: values[1]!, difference: values[2]! }];
+      })
+    : [];
+  const decisionAvailable =
+    selected && recordVerb && reconciliationAllowed(selected.status, recordVerb);
+  const closing = recordVerb === 'close' || selected?.status === 'resolved';
+  const recoveryCompletesAction =
+    fresh && recordVerb && !reconciliationAllowed(fresh.status, recordVerb);
+  const readPending = loading || error || accessLoading || accessError;
+  const noteLabel = (verb: ReconciliationVerb) =>
+    label(verb === 'close' ? 'closureReason' : 'resolutionNote');
+  const balanceCards = balanceEvidence.length > 0 && (
+    <div className="grid gap-3 sm:grid-cols-2">
+      {balanceEvidence.map(({ kind, wallet, ledger, difference }) => (
+        <section key={kind} className="min-w-0 space-y-2 rounded-lg border bg-muted/30 p-3 text-sm">
+          <h3 className="font-semibold">{label(kind)}</h3>
+          <dl className="space-y-2 tabular-nums">
+            <div className="flex flex-wrap justify-between gap-2">
+              <dt>{label('walletAmount')}</dt>
+              <dd>
+                <bdi>{numbers.money(wallet)}</bdi>
+              </dd>
+            </div>
+            <div className="flex flex-wrap justify-between gap-2">
+              <dt>{label('ledgerAmount')}</dt>
+              <dd>
+                <bdi>{numbers.money(ledger)}</bdi>
+              </dd>
+            </div>
+            <div className="flex flex-wrap justify-between gap-2 border-t pt-2 font-medium">
+              <dt>{label('difference')}</dt>
+              <dd>
+                <bdi>{numbers.money(difference)}</bdi>
+              </dd>
+            </div>
+          </dl>
+        </section>
+      ))}
+    </div>
+  );
+  const recordContent = selected ? (
+    <>
+      {recordId ? (
+        <>
+          <div className="flex flex-wrap items-center gap-2">
+            <StatusBadge state={selected.status} label={label(selected.status)} />
+            <StatusBadge
+              tone={
+                selected.severity === 'critical'
+                  ? 'destructive'
+                  : selected.severity === 'high'
+                    ? 'warning'
+                    : 'default'
+              }
+              label={label(selected.severity)}
+            />
+          </div>
+          <dl className="grid grid-cols-2 gap-3 text-sm">
+            <div>
+              <dt className="text-muted-foreground">{label('assigned')}</dt>
+              <dd className="[overflow-wrap:anywhere]">
+                <bdi>{selected.assignedToUsername ?? label('unassigned')}</bdi>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">{label('created')}</dt>
+              <dd>{date(selected.createdAt)}</dd>
+            </div>
+          </dl>
+          {recordVerb && balanceCards ? (
+            <details className="rounded-lg border px-3 text-sm">
+              <summary className="min-h-11 cursor-pointer py-3 font-medium">
+                {label('balanceEvidence')}
+              </summary>
+              <div className="pb-3">{balanceCards}</div>
+            </details>
+          ) : (
+            balanceCards
+          )}
+        </>
+      ) : (
+        <>
+          <p>
+            {label(selected.status)} · {label(selected.severity)}
+          </p>
+          <pre
+            dir="ltr"
+            className="overflow-auto whitespace-pre-wrap break-all rounded bg-muted p-3 text-xs"
+          >
+            {JSON.stringify(selected.details ?? {}, null, 2)}
+          </pre>
+        </>
+      )}
+      {selected.resolutionNote && (
+        <div className="space-y-1 rounded-lg border bg-muted/25 p-3 text-sm">
+          <h3 className="font-medium">{label('resolution')}</h3>
+          <p dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
+            {selected.resolutionNote}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            <bdi>{selected.resolvedByUsername}</bdi>
+          </p>
+        </div>
+      )}
+      {recoveryView}
+      {reconciliationLinks(selected.details).length > 0 && (
+        <nav aria-label={label('related')} className="flex flex-wrap gap-3">
+          {reconciliationLinks(selected.details).map((link) => (
+            <a key={link.href} className="underline underline-offset-4" href={link.href}>
+              {label(link.label)}
+            </a>
+          ))}
+        </nav>
+      )}
+      {uncertain && (
+        <div role="alert" className="space-y-3">
+          <p>{label('unconfirmed')}</p>
+          {freshState === 'loading' && <LoadingStatus>{label('reviewLoading')}</LoadingStatus>}
+          {freshState === 'error' && (
+            <>
+              <p>{label('reviewError')}</p>
+              <Button variant="outline" onClick={() => setFreshRevision((v) => v + 1)}>
+                {label('reviewRetry')}
+              </Button>
+            </>
+          )}
+          {fresh && (
+            <p>
+              {label('savedStatus')}: <strong>{label(fresh.status)}</strong>
+              {fresh.resolutionNote && <> · {fresh.resolutionNote}</>}
+            </p>
+          )}
           <Button
             variant="outline"
-            disabled={loading || accessLoading || validating !== null || pending || uncertain}
+            disabled={freshState !== 'ready' || !fresh || !accessValid.current}
             onClick={() => {
-              if (queries) queries.setQuery({ page: 1 });
-              else setOffset(0);
-              refreshAccess();
+              if (!fresh || freshState !== 'ready' || !accessValid.current) return;
+              ++workGeneration.current;
+              reviewed.current = fresh;
+              setSelected(fresh);
+              captured.current = null;
+              owned.current = null;
+              setUncertain(false);
+              if (recoveryCompletesAction) notes.reset({ note: '' });
+              else notes.clearErrors();
             }}
           >
-            {label('refresh')}
+            {label(recoveryCompletesAction ? 'reviewedStatus' : 'returnToEditing')}
           </Button>
-          <Form {...filters}>
-            <form
-              onSubmit={filter}
-              noValidate
-              onChangeCapture={(event) => {
-                if (owned.current) {
-                  event.preventDefault();
-                  event.stopPropagation();
-                }
-              }}
-              className="rounded-lg border bg-card text-card-foreground p-4"
-            >
-              <fieldset disabled={locked} className="min-w-0">
-                <Grid columns={{ base: 1, sm: 2, xl: 5 }} gap={3}>
-                  {(['status', 'severity'] as const).map((name) => (
-                    <FormField
-                      key={name}
-                      control={filters.control}
-                      name={name}
-                      render={({ field }) => (
-                        <FormItem id={`rex-${name}`} className="min-w-0">
-                          <FormLabel>{label(name)}</FormLabel>
-                          <FormControl>
-                            <select
-                              {...field}
-                              className="block w-full min-w-0 rounded border bg-card p-2"
-                            >
-                              <option value="">{label('all')}</option>
-                              {(name === 'status' ? statuses : severities).map((value) => (
-                                <option key={value} value={value}>
-                                  {label(value)}
-                                </option>
-                              ))}
-                            </select>
-                          </FormControl>
-                          <FormMessage reserveSpace />
-                        </FormItem>
-                      )}
-                    />
-                  ))}
-                  <FormInput
-                    control={filters.control}
-                    name="from"
-                    id="rex-from"
-                    label={label('from')}
-                    disabled={time.status !== 'ready'}
-                    inputProps={{ type: 'datetime-local', className: 'min-w-0 w-full' }}
-                    itemClassName="min-w-0"
-                  />
-                  <FormInput
-                    control={filters.control}
-                    name="before"
-                    id="rex-before"
-                    label={label('before')}
-                    disabled={time.status !== 'ready'}
-                    inputProps={{ type: 'datetime-local', className: 'min-w-0 w-full' }}
-                    itemClassName="min-w-0"
-                  />
-                  <FormSubmit
-                    loading={validating === 'filter'}
-                    disabled={locked || time.status !== 'ready'}
+        </div>
+      )}
+      {recordId && recordVerb && !uncertain && !saved && (!canResolve || !decisionAvailable) && (
+        <p role="status" className="rounded-lg border bg-muted/25 p-3 text-sm">
+          {label(canResolve ? 'actionUnavailable' : 'denied')}
+        </p>
+      )}
+      {recordId &&
+        canResolve &&
+        !uncertain &&
+        !decisionAvailable &&
+        selected.status !== 'closed' && (
+          <section aria-labelledby="reconciliation-actions" className="space-y-3 border-t pt-4">
+            <h3 id="reconciliation-actions" className="text-base font-semibold">
+              {label('decision')}
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {(['resolve', 'close'] as const).map((verb) => {
+                if (!reconciliationAllowed(selected.status, verb)) return null;
+                const Icon = verb === 'resolve' ? CheckIcon : ArchiveIcon;
+                return (
+                  <Link
+                    key={verb}
+                    to="/admin/reconciliation/$caseId/{-$verb}"
+                    params={{ caseId: recordId, verb }}
+                    search={recordSearch ?? {}}
+                    disabled={locked || readPending}
+                    className={buttonVariants({
+                      variant:
+                        verb === 'resolve' || selected.status === 'resolved'
+                          ? 'default'
+                          : 'outline',
+                      className: 'min-h-11 aria-disabled:opacity-60',
+                    })}
                   >
-                    {label('apply')}
-                  </FormSubmit>
-                  <p className="sm:col-span-2 xl:col-span-5 text-sm text-muted-foreground">
-                    {time.status === 'ready' && label('timeHint').replace('{zone}', time.timezone)}
-                  </p>
-                  {filters.formState.errors.root?.validation?.message && (
-                    <p role="alert">{filters.formState.errors.root.validation.message}</p>
-                  )}
-                </Grid>
-              </fieldset>
-            </form>
-          </Form>
-        </ListPage.Toolbar>
-        {accessError && (
-          <div role="alert" className="space-y-2">
-            <p>{label('accessError')}</p>
-            <Button variant="outline" onClick={refreshAccess}>
-              {label('accessRetry')}
-            </Button>
-          </div>
-        )}
-        <CommandFeedback message={saved ? label('saved') : null} />
-        <ListPage.Content
-          loading={loading || accessLoading}
-          error={error || (!accessLoading && !accessError && !canView)}
-          empty={!visibleItems.length}
-          retainContent={!!visibleItems.length && canView}
-          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
-          errorView={
-            <div role="alert" className="space-y-2">
-              <p>{label(canView ? 'error' : 'forbidden')}</p>
-              {canView && (
-                <Button variant="outline" onClick={() => setRevision((v) => v + 1)}>
-                  {label('retry')}
+                    <Icon aria-hidden="true" />
+                    {label(verb)}
+                  </Link>
+                );
+              })}
+              {!recordVerb && selected.status === 'open' && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  disabled={locked || readPending}
+                  onClick={() => void prepare('investigate')}
+                >
+                  <SearchCheckIcon aria-hidden="true" />
+                  {label('investigate')}
                 </Button>
               )}
             </div>
-          }
-          emptyView={!accessError && <p>{label('empty')}</p>}
-        >
-          <OperationalQueueTable
-            locale={locale}
-            cardHeading="h2"
-            rows={visibleItems}
-            caption={label('title')}
-            scrollLabel={label('tableTitle')}
-            loading={loading || accessLoading}
-            emptyMessage={label('empty')}
-            tableClassName="min-w-[40rem]"
-            nameHeader={label('details')}
-            renderName={(item) => (
-              <>
-                <Button
-                  variant="link"
-                  className="h-auto max-w-full whitespace-normal text-start"
-                  disabled={locked}
-                  onClick={(event) => {
-                    if (owned.current) return;
-                    detailTrigger.current = event.currentTarget;
-                    ++workGeneration.current;
-                    reviewed.current = item;
-                    setSelected(item);
-                    notes.reset({ note: '' });
-                    setSaved(false);
+          </section>
+        )}
+      {canResolve && (decisionAvailable || (!recordId && selected.status !== 'closed')) && (
+        <Form {...notes}>
+          <form
+            noValidate
+            onSubmit={(event) => {
+              const submitter = (event.nativeEvent as SubmitEvent).submitter;
+              const verb =
+                submitter instanceof HTMLButtonElement && submitter.value === 'close'
+                  ? 'close'
+                  : selected.status === 'resolved'
+                    ? 'close'
+                    : 'resolve';
+              void prepare(recordVerb ?? verb, event);
+            }}
+            onChangeCapture={(event) => {
+              if (owned.current) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+            }}
+            className={recordEditorSurface}
+            aria-label={label(recordVerb ?? 'decision')}
+          >
+            <fieldset disabled={locked} className="min-w-0">
+              <div className="space-y-2.5 px-4 py-3 sm:px-6">
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center justify-between gap-x-3">
+                    <h3 className="text-base font-semibold">
+                      {label(
+                        recordVerb === 'resolve'
+                          ? 'resolutionDecision'
+                          : closing
+                            ? 'closureDecision'
+                            : 'decision'
+                      )}
+                    </h3>
+                    {!recordVerb && selected.status === 'open' && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        className="text-primary"
+                        disabled={locked || loading || error || accessLoading || accessError}
+                        onClick={() => void prepare('investigate')}
+                      >
+                        {label('investigate')}
+                      </Button>
+                    )}
+                  </div>
+                  <p className="max-w-prose text-sm text-muted-foreground">
+                    {label(
+                      recordVerb === 'resolve'
+                        ? 'resolutionHelp'
+                        : closing
+                          ? selected.resolutionNote || !recordVerb
+                            ? 'closureHelp'
+                            : 'closureOpenHelp'
+                          : 'decisionHelp'
+                    )}
+                  </p>
+                </div>
+                <FormTextarea
+                  control={notes.control}
+                  name="note"
+                  id="rex-note"
+                  label={recordVerb ? noteLabel(recordVerb) : label('note')}
+                  itemClassName={
+                    recordVerb ? 'max-w-prose' : 'max-w-prose [&_[data-slot=form-message]]:min-h-5'
+                  }
+                  inputProps={{
+                    maxLength: 1000,
+                    rows: 2,
+                    dir: 'auto',
+                    className: 'min-h-14 resize-y',
+                    placeholder: label(closing ? 'closureExample' : 'noteExample'),
+                    'aria-required': true,
                   }}
-                >
-                  <TextCell value={item.description} />
-                </Button>
-                <span className="mt-1 block text-sm text-muted-foreground">
-                  {label(item.exceptionType)}
-                </span>
-              </>
-            )}
-            fields={[
-              {
-                id: 'severity',
-                label: label('severity'),
-                render: (item) => <>{label(item.severity)}</>,
-              },
-              { id: 'status', label: label('status'), render: (item) => <>{label(item.status)}</> },
-              {
-                id: 'created',
-                label: label('created'),
-                render: (item) => <>{date(item.createdAt)}</>,
-              },
-              {
-                id: 'assigned',
-                label: label('assigned'),
-                render: (item) => (
-                  <TextCell value={item.assignedToUsername ?? label('unassigned')} />
-                ),
-              },
-            ]}
-          />
-        </ListPage.Content>
-        <ListPage.Pagination
-          kind="cursor"
-          label={label('pages')}
-          loading={loading || accessLoading || locked}
-          hasMore={
-            canView &&
-            !error &&
-            !accessError &&
-            visibleItems.length >= pageSize &&
-            (!queries || queries.query.page < 1_000_000)
-          }
-          nextLabel={label('next')}
-          onNext={() =>
-            queries
-              ? queries.setQuery({ page: queries.query.page + 1 })
-              : setOffset((v) => v + pageSize)
-          }
-          previous={{
-            enabled: canView && !error && !accessError && offset > 0,
-            label: label('previous'),
-            onClick: () =>
+                />
+                {notes.formState.errors.root?.validation?.message && (
+                  <p role="alert">{notes.formState.errors.root.validation.message}</p>
+                )}
+              </div>
+              <RecordEditorActions>
+                {recordVerb !== 'close' && reconciliationAllowed(selected.status, 'resolve') && (
+                  <FormSubmit
+                    name="decision"
+                    value="resolve"
+                    loading={validating === 'note'}
+                    disabled={locked || loading || error || accessLoading || accessError}
+                  >
+                    {label('resolve')}
+                  </FormSubmit>
+                )}
+                {recordVerb !== 'resolve' && (
+                  <FormSubmit
+                    name="decision"
+                    value="close"
+                    variant={recordVerb || selected.status === 'resolved' ? 'default' : 'outline'}
+                    loading={validating === 'note'}
+                    disabled={locked || loading || error || accessLoading || accessError}
+                  >
+                    {label('close')}
+                  </FormSubmit>
+                )}
+              </RecordEditorActions>
+            </fieldset>
+          </form>
+        </Form>
+      )}
+      {recordId && selected.details && (
+        <details className="rounded-lg border p-3 text-sm">
+          <summary className="cursor-pointer font-medium">{label('diagnostics')}</summary>
+          <pre
+            dir="ltr"
+            className="mt-3 overflow-auto whitespace-pre-wrap break-all rounded bg-muted p-3 text-xs"
+          >
+            {JSON.stringify(selected.details, null, 2)}
+          </pre>
+        </details>
+      )}
+    </>
+  ) : null;
+  const actionGeneration = commandGeneration.current;
+  return (
+    <section
+      className={
+        recordVerb
+          ? 'mx-auto max-w-3xl space-y-4'
+          : recordId
+            ? 'mx-auto max-w-4xl space-y-5'
+            : 'space-y-5'
+      }
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {recordId && <ReconciliationNavigationGuard shouldBlock={() => Boolean(owned.current)} />}
+      {time.notice}
+      <header className="space-y-3">
+        {recordId && recordVerb ? (
+          <Link
+            to="/admin/reconciliation/$caseId/{-$verb}"
+            params={{ caseId: recordId, verb: undefined }}
+            search={recordSearch ?? {}}
+            disabled={locked}
+            className="touch-action text-sm text-primary underline underline-offset-4 aria-disabled:opacity-60"
+          >
+            {label('backToCase')}
+          </Link>
+        ) : (
+          recordId && (
+            <Link
+              to="/admin/reconciliation"
+              search={recordSearch ?? {}}
+              className="touch-action text-sm text-primary underline underline-offset-4"
+            >
+              {label('backToQueue')}
+            </Link>
+          )
+        )}
+        <h1
+          ref={listHeading}
+          tabIndex={-1}
+          className="text-2xl font-semibold focus-visible:shadow-none! focus-visible:outline-hidden!"
+        >
+          {label(recordVerb ?? (recordId ? 'reviewTitle' : 'title'))}
+        </h1>
+        {!recordId && <p className="text-muted-foreground">{label('description')}</p>}
+      </header>
+      {recordId && (
+        <>
+          <CommandFeedback message={saved ? label('saved') : null} />
+          {!selected &&
+            (accessLoading || loading ? (
+              <LoadingStatus>{label('loading')}</LoadingStatus>
+            ) : (
+              recoveryView || (!canView && <p role="alert">{label('forbidden')}</p>)
+            ))}
+          {selected && (
+            <article
+              data-testid="reconciliation-record"
+              className="space-y-4 rounded-xl border bg-card p-4 sm:p-6"
+            >
+              <header className="flex items-start justify-between gap-2">
+                <div className="min-w-0 space-y-1">
+                  <h2 className="text-lg font-semibold">{label(selected.exceptionType)}</h2>
+                  <p dir="auto" className="text-sm text-muted-foreground [overflow-wrap:anywhere]">
+                    {selected.description}
+                  </p>
+                </div>
+                <ListRefreshButton
+                  label={label('refresh')}
+                  disabled={locked || loading || accessLoading}
+                  onClick={refreshAccess}
+                />
+              </header>
+              {recordContent}
+            </article>
+          )}
+        </>
+      )}
+      {!recordId && (
+        <ListPage>
+          <ListPage.Toolbar>
+            <ListRefreshButton
+              label={label('refresh')}
+              disabled={loading || accessLoading || validating !== null || pending || uncertain}
+              onClick={() => {
+                if (queries) queries.setQuery({ page: 1 });
+                else setOffset(0);
+                refreshAccess();
+              }}
+            />
+            <Form {...filters}>
+              <form
+                onSubmit={filter}
+                noValidate
+                onChangeCapture={(event) => {
+                  if (owned.current) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                  }
+                }}
+                className="rounded-lg border bg-card text-card-foreground p-4"
+              >
+                <fieldset disabled={locked} className="min-w-0">
+                  <Grid columns={{ base: 1, sm: 2, xl: 5 }} gap={3}>
+                    {(['status', 'severity'] as const).map((name) => (
+                      <FormField
+                        key={name}
+                        control={filters.control}
+                        name={name}
+                        render={({ field }) => (
+                          <FormItem id={`rex-${name}`} className="min-w-0">
+                            <FormLabel>{label(name)}</FormLabel>
+                            <FormControl>
+                              <select
+                                {...field}
+                                className="block w-full min-w-0 rounded border bg-card p-2"
+                              >
+                                <option value="">{label('all')}</option>
+                                {(name === 'status' ? statuses : severities).map((value) => (
+                                  <option key={value} value={value}>
+                                    {label(value)}
+                                  </option>
+                                ))}
+                              </select>
+                            </FormControl>
+                            <FormMessage reserveSpace />
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                    <FormInput
+                      control={filters.control}
+                      name="from"
+                      id="rex-from"
+                      label={label('from')}
+                      disabled={time.status !== 'ready'}
+                      inputProps={{ type: 'datetime-local', className: 'min-w-0 w-full' }}
+                      itemClassName="min-w-0"
+                    />
+                    <FormInput
+                      control={filters.control}
+                      name="before"
+                      id="rex-before"
+                      label={label('before')}
+                      disabled={time.status !== 'ready'}
+                      inputProps={{ type: 'datetime-local', className: 'min-w-0 w-full' }}
+                      itemClassName="min-w-0"
+                    />
+                    <FormSubmit
+                      loading={validating === 'filter'}
+                      disabled={locked || time.status !== 'ready'}
+                    >
+                      {label('apply')}
+                    </FormSubmit>
+                    <p className="sm:col-span-2 xl:col-span-5 text-sm text-muted-foreground">
+                      {time.status === 'ready' &&
+                        label('timeHint').replace('{zone}', time.timezone)}
+                    </p>
+                    {filters.formState.errors.root?.validation?.message && (
+                      <p role="alert">{filters.formState.errors.root.validation.message}</p>
+                    )}
+                  </Grid>
+                </fieldset>
+              </form>
+            </Form>
+          </ListPage.Toolbar>
+          {accessError && (
+            <div role="alert" className="space-y-2">
+              <p>{label('accessError')}</p>
+              <Button variant="outline" onClick={refreshAccess}>
+                {label('accessRetry')}
+              </Button>
+            </div>
+          )}
+          <CommandFeedback message={saved ? label('saved') : null} />
+          <ListPage.Content
+            loading={loading || accessLoading}
+            error={error || (!accessLoading && !accessError && !canView)}
+            empty={!visibleItems.length}
+            retainContent={!!visibleItems.length && canView}
+            loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+            errorView={
+              <div role="alert" className="space-y-2">
+                <p>{label(canView ? 'error' : 'forbidden')}</p>
+                {canView && (
+                  <Button variant="outline" onClick={() => setRevision((v) => v + 1)}>
+                    {label('retry')}
+                  </Button>
+                )}
+              </div>
+            }
+            emptyView={
+              !accessError &&
+              (offset === 0 && appliedStatus ? (
+                <QueueEmptyState
+                  locale={locale}
+                  message={label('empty')}
+                  status={label(appliedStatus)}
+                  alternatives={statusAlternatives(statuses, appliedStatus, label, endpoint, query)}
+                  hasResults={(body, value) =>
+                    Array.isArray(body) &&
+                    body.some((row) => isReconciliationItem(row) && row.status === value)
+                  }
+                  select={changeQueueStatus}
+                  all={() => changeQueueStatus('')}
+                  disabled={Boolean(validating || pending || uncertain)}
+                />
+              ) : (
+                <p>{label('empty')}</p>
+              ))
+            }
+          >
+            <OperationalQueueTable
+              locale={locale}
+              cardHeading="h2"
+              rows={visibleItems}
+              caption={label('title')}
+              scrollLabel={label('tableTitle')}
+              loading={loading || accessLoading}
+              emptyMessage={label('empty')}
+              tableClassName="min-w-[40rem]"
+              fieldGroups={[
+                {
+                  label: label('status'),
+                  fields: ['status', 'severity'],
+                  icon: ClipboardCheckIcon,
+                },
+              ]}
+              nameHeader={label('details')}
+              renderName={(item) => (
+                <>
+                  {recordSearch &&
+                  !locked &&
+                  !error &&
+                  !accessError &&
+                  !loading &&
+                  !accessLoading ? (
+                    <Link
+                      to="/admin/reconciliation/$caseId/{-$verb}"
+                      params={{ caseId: item.id, verb: undefined }}
+                      search={recordSearch}
+                      className="touch-action font-medium text-primary underline underline-offset-4"
+                    >
+                      <TextCell value={item.description} />
+                    </Link>
+                  ) : (
+                    <Button
+                      variant="link"
+                      className="h-auto max-w-full whitespace-normal text-start"
+                      disabled={
+                        locked ||
+                        Boolean(recordSearch && (error || accessError || loading || accessLoading))
+                      }
+                      onClick={(event) => {
+                        if (owned.current) return;
+                        detailTrigger.current = event.currentTarget;
+                        ++workGeneration.current;
+                        reviewed.current = item;
+                        setSelected(item);
+                        notes.reset({ note: '' });
+                        setSaved(false);
+                      }}
+                    >
+                      <TextCell value={item.description} />
+                    </Button>
+                  )}
+                  <span className="mt-1 block text-sm text-muted-foreground">
+                    {label(item.exceptionType)}
+                  </span>
+                </>
+              )}
+              fields={[
+                {
+                  id: 'severity',
+                  label: label('severity'),
+                  render: (item) => <>{label(item.severity)}</>,
+                },
+                {
+                  id: 'status',
+                  label: label('status'),
+                  render: (item) => <StatusBadge state={item.status} label={label(item.status)} />,
+                },
+                {
+                  id: 'created',
+                  label: label('created'),
+                  render: (item) => (
+                    <>
+                      {recordSearch
+                        ? formatRelativeTime(item.createdAt, locale) || date(item.createdAt)
+                        : date(item.createdAt)}
+                    </>
+                  ),
+                },
+                {
+                  id: 'assigned',
+                  label: label('assigned'),
+                  render: (item) => (
+                    <TextCell value={item.assignedToUsername ?? label('unassigned')} />
+                  ),
+                },
+              ]}
+            />
+          </ListPage.Content>
+          <ListPage.Pagination
+            kind="cursor"
+            label={label('pages')}
+            loading={loading || accessLoading || locked}
+            hasMore={
+              canView &&
+              !error &&
+              !accessError &&
+              visibleItems.length >= pageSize &&
+              (!queries || queries.query.page < 1_000_000)
+            }
+            nextLabel={label('next')}
+            onNext={() =>
               queries
-                ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
-                : setOffset((v) => Math.max(0, v - pageSize)),
-          }}
-        />
-      </ListPage>
-      {selected && !action && (
+                ? queries.setQuery({ page: queries.query.page + 1 })
+                : setOffset((v) => v + pageSize)
+            }
+            previous={{
+              enabled: canView && !error && !accessError && offset > 0,
+              label: label('previous'),
+              onClick: () =>
+                queries
+                  ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
+                  : setOffset((v) => Math.max(0, v - pageSize)),
+            }}
+          />
+        </ListPage>
+      )}
+      {!recordId && selected && !action && (
         <Dialog
           open
           onOpenChange={(open) => {
@@ -682,137 +1225,7 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
               <DialogTitle>{label('details')}</DialogTitle>
               <DialogDescription>{selected.description}</DialogDescription>
             </DialogHeader>
-            <p>
-              {label(selected.status)} · {label(selected.severity)}
-            </p>
-            <pre
-              dir="ltr"
-              className="overflow-auto whitespace-pre-wrap break-all rounded bg-muted p-3 text-xs"
-            >
-              {JSON.stringify(selected.details ?? {}, null, 2)}
-            </pre>
-            {selected.resolutionNote && (
-              <div>
-                <h3 className="font-medium">{label('resolution')}</h3>
-                <p className="whitespace-pre-wrap">{selected.resolutionNote}</p>
-                <p>{selected.resolvedByUsername}</p>
-              </div>
-            )}
-            {recoveryView}
-            {reconciliationLinks(selected.details).length > 0 && (
-              <nav aria-label={label('related')} className="flex flex-wrap gap-3">
-                {reconciliationLinks(selected.details).map((link) => (
-                  <a key={link.href} className="underline underline-offset-4" href={link.href}>
-                    {label(link.label)}
-                  </a>
-                ))}
-              </nav>
-            )}
-            {uncertain && (
-              <div role="alert" className="space-y-3">
-                <p>{label('unconfirmed')}</p>
-                {freshState === 'loading' && (
-                  <LoadingStatus>{label('reviewLoading')}</LoadingStatus>
-                )}
-                {freshState === 'error' && (
-                  <>
-                    <p>{label('reviewError')}</p>
-                    <Button variant="outline" onClick={() => setFreshRevision((v) => v + 1)}>
-                      {label('reviewRetry')}
-                    </Button>
-                  </>
-                )}
-                {fresh && (
-                  <p>
-                    {label('savedStatus')}: <strong>{label(fresh.status)}</strong>
-                    {fresh.resolutionNote && <> · {fresh.resolutionNote}</>}
-                  </p>
-                )}
-                <Button
-                  variant="outline"
-                  disabled={freshState !== 'ready' || !fresh || !accessValid.current}
-                  onClick={() => {
-                    if (!fresh || freshState !== 'ready' || !accessValid.current) return;
-                    ++workGeneration.current;
-                    reviewed.current = fresh;
-                    setSelected(fresh);
-                    captured.current = null;
-                    owned.current = null;
-                    setUncertain(false);
-                    notes.clearErrors();
-                  }}
-                >
-                  {label('returnToEditing')}
-                </Button>
-              </div>
-            )}
-            {canResolve && selected.status !== 'closed' && (
-              <Form {...notes}>
-                <form
-                  noValidate
-                  onSubmit={(event) => {
-                    const submitter = (event.nativeEvent as SubmitEvent).submitter;
-                    const verb =
-                      submitter instanceof HTMLButtonElement && submitter.value === 'close'
-                        ? 'close'
-                        : selected.status === 'resolved'
-                          ? 'close'
-                          : 'resolve';
-                    void prepare(verb, event);
-                  }}
-                  onChangeCapture={(event) => {
-                    if (owned.current) {
-                      event.preventDefault();
-                      event.stopPropagation();
-                    }
-                  }}
-                  className="space-y-3"
-                >
-                  <fieldset disabled={locked} className="space-y-3">
-                    {selected.status === 'open' && (
-                      <Button
-                        type="button"
-                        disabled={locked || loading || error || accessLoading || accessError}
-                        onClick={() => void prepare('investigate')}
-                      >
-                        {label('investigate')}
-                      </Button>
-                    )}
-                    <FormTextarea
-                      control={notes.control}
-                      name="note"
-                      id="rex-note"
-                      label={label('note')}
-                      inputProps={{ maxLength: 1000, className: 'min-h-24', 'aria-required': true }}
-                    />
-                    {notes.formState.errors.root?.validation?.message && (
-                      <p role="alert">{notes.formState.errors.root.validation.message}</p>
-                    )}
-                    <div className="flex flex-wrap gap-3">
-                      {['open', 'investigating'].includes(selected.status) && (
-                        <FormSubmit
-                          name="decision"
-                          value="resolve"
-                          loading={validating === 'note'}
-                          disabled={locked || loading || error || accessLoading || accessError}
-                        >
-                          {label('resolve')}
-                        </FormSubmit>
-                      )}
-                      <FormSubmit
-                        name="decision"
-                        value="close"
-                        variant="outline"
-                        loading={validating === 'note'}
-                        disabled={locked || loading || error || accessLoading || accessError}
-                      >
-                        {label('close')}
-                      </FormSubmit>
-                    </div>
-                  </fieldset>
-                </form>
-              </Form>
-            )}
+            {recordContent}
             <Button variant="outline" disabled={validating !== null} onClick={dismiss}>
               {label('dismiss')}
             </Button>
@@ -822,6 +1235,18 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
       {action && (
         <TeamActionDialog
           action={action}
+          toastErrors={!recordId}
+          {...(recordId
+            ? {
+                finalFocus: () => {
+                  if (noteNeedsFocus.current) return document.getElementById('rex-note');
+                  const trigger = decisionTrigger.current;
+                  return trigger?.isConnected && !trigger.hasAttribute('disabled')
+                    ? trigger
+                    : listHeading.current;
+                },
+              }
+            : {})}
           summary={
             <div className="space-y-3">
               {captured.current && (
@@ -845,7 +1270,9 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
                   </div>
                   {captured.current.verb !== 'investigate' && (
                     <div>
-                      <dt className="font-semibold">{label('note')}</dt>
+                      <dt className="font-semibold">
+                        {recordVerb ? noteLabel(recordVerb) : label('note')}
+                      </dt>
                       <dd className="whitespace-pre-wrap">{captured.current.note}</dd>
                     </div>
                   )}
@@ -875,6 +1302,7 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
           onValidationError={(fields) => {
             if (actionGeneration !== workGeneration.current || !fields.includes('note'))
               return false;
+            noteNeedsFocus.current = true;
             notes.setError('note', { type: 'server', message: label('invalidNote') });
             return true;
           }}
@@ -903,7 +1331,10 @@ function OwnedReconciliation({ queries }: { queries?: ListQueryBinding }) {
               throw new Error('Unconfirmed reconciliation receipt');
             clearWork();
             setSaved(true);
-            setRevision((v) => v + 1);
+            if (recordId && isReconciliationItem(data)) {
+              setSelected(data);
+              reviewed.current = data;
+            } else setRevision((v) => v + 1);
           }}
         />
       )}

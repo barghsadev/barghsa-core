@@ -31,6 +31,7 @@ export const crmCaseDetail = {
   evidenceUrls: ['verification-evidence/fixed'],
   evidenceDownloadUrls: ['https://storage.example.test/fixed'],
   reviewerNotes: null,
+  viewer: { userId: 'reviewer', canReview: true },
 };
 export const crmCorrectionProfile = {
   profile: { id: crmProfileId, profileType: 'INDIVIDUAL', archived: false },

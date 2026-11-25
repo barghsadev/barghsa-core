@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { ShieldCheck } from 'lucide-react';
 import { Button, Input, Label } from '@barghsa/ui';
-import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
+import { stepUpText } from '@barghsa/i18n/confirmation';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -19,20 +20,26 @@ export function StepUpAuthGate({
   const locale = useLocale(),
     numbers = useNumberFormatting(locale),
     id = useId();
-  const text = (key: string) => t(`admin.stepUp.${key}`, locale);
+  const text = (key: Parameters<typeof stepUpText>[0]) => stepUpText(key, locale);
   const [challenge, setChallenge] = useState<{
     id: string;
     channel: 'email' | 'sms';
     expires: number;
   } | null>(null);
-  const [code, setCode] = useState(''),
-    [busy, setBusy] = useState(false),
-    [error, setError] = useState<string | null>(null);
+  const [code, setCode] = useState('');
+  const [pending, setPending] = useState<'send' | 'verify' | null>(null);
+  const [error, setError] = useState<
+    'denied' | 'rateLimited' | 'sendFailed' | 'invalid' | 'unavailable' | null
+  >(null);
+  const busy = pending !== null;
   const [retryAt, setRetryAt] = useState(0),
     [now, setNow] = useState(Date.now());
   const request = useRef<AbortController | null>(null),
     inFlight = useRef(false),
     alive = useRef(false);
+  const codeInput = useRef<HTMLInputElement>(null);
+  const sendButton = useRef<HTMLButtonElement>(null);
+  const returnFocus = useRef<'code' | 'send' | null>(null);
   const allowed = useRef(!disabled);
   allowed.current = !disabled;
   useEffect(() => {
@@ -49,6 +56,13 @@ export function StepUpAuthGate({
   }, [retryAt, challenge]);
   const delay = Math.max(0, Math.ceil((retryAt - now) / 1000));
   const expired = !!challenge && challenge.expires <= now;
+  const feedback = expired ? 'expired' : error === 'rateLimited' && !delay ? null : error;
+  useEffect(() => {
+    if (busy || disabled || !returnFocus.current) return;
+    if (returnFocus.current === 'code') codeInput.current?.focus();
+    else sendButton.current?.focus();
+    returnFocus.current = null;
+  }, [busy, challenge, code, disabled, error]);
   async function submit(event: FormEvent, send = false) {
     event.preventDefault();
     if (
@@ -61,7 +75,7 @@ export function StepUpAuthGate({
     const controller = new AbortController();
     request.current = controller;
     inFlight.current = true;
-    setBusy(true);
+    setPending(send ? 'send' : 'verify');
     setError(null);
     try {
       const { response, data } = await readWithDeadline(controller.signal, async (signal) => {
@@ -88,7 +102,7 @@ export function StepUpAuthGate({
         setChallenge(null);
         setCode('');
         onDenied?.(response.status as 401 | 403);
-        setError(text('denied'));
+        setError('denied');
         return;
       }
       if (response.status === 429) {
@@ -103,13 +117,14 @@ export function StepUpAuthGate({
                 : 1000;
         setRetryAt(Date.now() + Math.max(1000, Number.isFinite(wait) ? wait : 1000));
         setNow(Date.now());
-        setError(text('rateLimited'));
+        setError('rateLimited');
         return;
       }
       if (!response.ok) {
         if (response.status === 408 || response.status >= 500) throw new Error('Unconfirmed OTP');
         setCode('');
-        setError(text(send ? 'sendFailed' : 'invalid'));
+        returnFocus.current = send ? 'send' : 'code';
+        setError(send ? 'sendFailed' : 'invalid');
         return;
       }
       if (send) {
@@ -122,6 +137,7 @@ export function StepUpAuthGate({
           (body.channel !== 'email' && body.channel !== 'sms')
         )
           throw new Error('Invalid challenge');
+        returnFocus.current = 'code';
         setChallenge({ id: body.challengeId, channel: body.channel, expires });
         setCode('');
         setNow(Date.now());
@@ -140,67 +156,95 @@ export function StepUpAuthGate({
         // An unknown send may have replaced the code, and an unknown verify may have used it.
         setChallenge(null);
         setCode('');
-        setError(text('unavailable'));
+        returnFocus.current = 'send';
+        setError('unavailable');
       }
     } finally {
       inFlight.current = false;
-      if (alive.current) setBusy(false);
+      if (alive.current) setPending(null);
     }
   }
   return (
-    <div className="space-y-4">
-      <p className="text-sm font-medium">{text('required')}</p>
-      <p className="text-sm text-muted-foreground">{text('help')}</p>
-      {challenge && (
-        <p role="status">{text(challenge.channel === 'email' ? 'sentEmail' : 'sentSms')}</p>
-      )}
-      {expired && <p role="alert">{text('expired')}</p>}
-      {error && (
-        <p role="alert" className="text-sm text-destructive">
-          {error}
-        </p>
-      )}
-      {delay > 0 && (
-        <p role="status">{text('retryAfter').replace('{seconds}', numbers.number(delay))}</p>
-      )}
-      {challenge && (
-        <form className="space-y-3" onSubmit={submit}>
-          <Label htmlFor={id}>{text('code')}</Label>
-          <Input
-            id={id}
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            dir="ltr"
-            maxLength={6}
-            autoFocus
-            value={code}
-            disabled={disabled || busy || expired}
-            onChange={(event) =>
-              setCode(
-                event.target.value
-                  .replace(/[۰-۹٠-٩]/g, (digit) =>
-                    String(digit.charCodeAt(0) - (digit >= '۰' ? 1776 : 1632))
-                  )
-                  .replace(/\D/g, '')
-              )
-            }
-          />
+    <section
+      aria-labelledby={`${id}-title`}
+      className="space-y-3 rounded-xl border bg-muted/25 px-4 py-3"
+    >
+      <header className="space-y-1">
+        <h3 id={`${id}-title`} className="flex items-start gap-2 text-sm font-semibold">
+          <ShieldCheck aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+          {text('required')}
+        </h3>
+        {challenge ? (
+          <p id={`${id}-delivery`} role="status" className="text-sm text-muted-foreground">
+            {text(challenge.channel === 'email' ? 'sentEmail' : 'sentSms')}
+          </p>
+        ) : (
+          <p className="text-sm text-muted-foreground">{text('help')}</p>
+        )}
+      </header>
+      <form className="space-y-3" onSubmit={submit}>
+        {challenge && (
+          <div className="space-y-1.5">
+            <Label htmlFor={id}>{text('code')}</Label>
+            <Input
+              ref={codeInput}
+              id={id}
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              dir="ltr"
+              maxLength={6}
+              aria-invalid={feedback === 'invalid' || undefined}
+              aria-describedby={
+                feedback === 'invalid' ? `${id}-delivery ${id}-error` : `${id}-delivery`
+              }
+              className="max-w-48 bg-background text-center font-mono tracking-[0.35em] tabular-nums"
+              value={code}
+              disabled={disabled || busy || expired}
+              onChange={(event) => {
+                setCode(
+                  event.target.value
+                    .replace(/[۰-۹٠-٩]/g, (digit) =>
+                      String(digit.charCodeAt(0) - (digit >= '۰' ? 1776 : 1632))
+                    )
+                    .replace(/\D/g, '')
+                );
+                if (error === 'invalid') setError(null);
+              }}
+            />
+          </div>
+        )}
+        {feedback && (
+          <p id={`${id}-error`} role="alert" className="text-sm text-destructive">
+            {text(feedback)}
+          </p>
+        )}
+        {delay > 0 && (
+          <p className="text-xs text-muted-foreground">
+            {text('retryAfter').replace('{seconds}', numbers.number(delay))}
+          </p>
+        )}
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <Button
-            type="submit"
-            disabled={disabled || busy || !!delay || expired || code.length !== 6}
+            ref={sendButton}
+            type="button"
+            variant={challenge && !expired ? 'ghost' : 'default'}
+            loading={pending === 'send'}
+            disabled={disabled || busy || !!delay}
+            onClick={(event) => void submit(event, true)}
           >
-            {text(busy ? 'working' : 'verify')}
+            {text(challenge ? 'resend' : 'send')}
           </Button>
-        </form>
-      )}
-      <Button
-        type="button"
-        variant="outline"
-        disabled={disabled || busy || !!delay}
-        onClick={(event) => void submit(event, true)}
-      >
-        {text(busy ? 'working' : challenge ? 'resend' : 'send')}
-      </Button>
-    </div>
+          {challenge && !expired && (
+            <Button
+              type="submit"
+              loading={pending === 'verify'}
+              disabled={disabled || busy || !!delay || code.length !== 6}
+            >
+              {text('verify')}
+            </Button>
+          )}
+        </div>
+      </form>
+    </section>
   );
 }

@@ -186,6 +186,10 @@ for (const [locale, dark] of [
       await confirm.click();
       const password = dialog.locator('input[type=password]');
       await password.fill('pending-password');
+      await dialog
+        .locator('summary')
+        .filter({ hasText: t('admin.operationalReview.checks', locale) })
+        .click();
       fail = true;
       await dialog.getByRole('button', { name: common('queueRetry'), exact: true }).click();
       await expect(confirm).toBeDisabled();

@@ -58,19 +58,32 @@ export const staffDocumentQueryOptions: ListQueryOptions = {
 function recordSearch(
   raw: Record<string, unknown>,
   options: ListQueryOptions,
-  selection: string
+  selection?: string
 ): Record<string, unknown> {
   const normalized = writeListQuery({ ...raw, cursor: staffOrderId(raw.cursor) }, options, {});
   return {
     ...(options.searchLimit ? { q: normalized.q } : {}),
     ...Object.fromEntries(Object.keys(options.filters).map((key) => [key, normalized[key]])),
     cursor: normalized.cursor,
-    [selection]: staffOrderId(raw[selection]) || undefined,
+    ...(selection ? { [selection]: staffOrderId(raw[selection]) || undefined } : {}),
   };
 }
 export const staffContractsSearch = (raw: Record<string, unknown>) =>
   recordSearch(raw, staffContractQueryOptions, 'contractId');
+export const staffContractFilters = (raw: Record<string, unknown>) =>
+  recordSearch(raw, staffContractQueryOptions);
 export const customerDocumentsSearch = (raw: Record<string, unknown>) =>
   recordSearch(raw, customerDocumentQueryOptions, 'documentId');
+export function customerDocumentFilters(raw: Record<string, unknown>) {
+  const search = recordSearch(raw, customerDocumentQueryOptions);
+  if (search.kind === 'standalone') delete search.kind;
+  return search;
+}
 export const staffDocumentsSearch = (raw: Record<string, unknown>) =>
   recordSearch(raw, staffDocumentQueryOptions, 'documentId');
+export function staffDocumentFilters(raw: Record<string, unknown>) {
+  const search = recordSearch(raw, staffDocumentQueryOptions);
+  if (search.kind === 'standalone') delete search.kind;
+  if (search.state === 'SubmittedForReview') delete search.state;
+  return search;
+}

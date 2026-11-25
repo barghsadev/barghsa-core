@@ -1,3 +1,5 @@
+import { openManualRecordDateTime } from '../test/record-date-time.js';
+import { accountTimeInputText } from '@barghsa/i18n/account-time-input';
 import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -18,7 +20,12 @@ vi.mock('../hooks/useAccountUser.js', () => ({ useAccountUser: () => 'builder' }
 vi.mock('../lib/profile-context.js', () => ({ useProfileContextRevision: () => 0 }));
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => harness.locale }));
 vi.mock('../hooks/useAccountTime.js', () => ({
-  useAccountTime: () => ({ timezone: harness.timezone, status: harness.status, notice: null }),
+  useAccountTime: () => ({
+    timezone: harness.timezone,
+    status: harness.status,
+    notice: null,
+    format: (value: string) => value,
+  }),
 }));
 vi.mock('./TeamActionDialog.js', () => ({
   TeamActionDialog: ({
@@ -109,6 +116,7 @@ async function click(text: string) {
 }
 
 async function change(id: string, value: string) {
+  if (id === 'start' || id === 'end') await openManualRecordDateTime('contract-context-' + id);
   await act(async () => {
     const input = container.querySelector<HTMLInputElement | HTMLTextAreaElement>(
       '#contract-context-' + id
@@ -142,7 +150,6 @@ async function render(extra: Partial<ContractActivationData> = {}) {
       </QueryProvider>
     )
   );
-  await click((harness.locale === 'fa' ? fa : en).editContext);
 }
 it.each(['en', 'fa'] as const)(
   'captures a versioned edit in the account timezone in %s',
@@ -150,6 +157,7 @@ it.each(['en', 'fa'] as const)(
     harness.locale = locale;
     const words = locale === 'fa' ? fa : en;
     await render();
+    await openManualRecordDateTime('contract-context-start');
     expect(container.querySelector<HTMLInputElement>('#contract-context-start')!.value).toBe(
       '2026-09-22T03:30'
     );
@@ -176,8 +184,11 @@ it.each(['en', 'fa'] as const)(
 );
 it('clears optional fields and explains resubmission', async () => {
   await render({ state: 'ChangesRequested' });
-  await change('start', '');
-  await change('end', '');
+  const clearButtons = [...container.querySelectorAll('button')].filter(
+    (button) => button.textContent === accountTimeInputText('clear', 'en')
+  );
+  expect(clearButtons).toHaveLength(2);
+  for (const button of clearButtons) await act(async () => button.click());
   await change('reason', 'Remove dates');
   await click(en.saveContext);
   expect(harness.action).toMatchObject({
@@ -192,6 +203,7 @@ it('clears optional fields and explains resubmission', async () => {
 });
 it('rejects invalid invoice references and reversed date ranges', async () => {
   await render();
+  await click(tContractAuthoring('invoiceEnterId', 'en'));
   await change('invoice', 'not-an-invoice');
   await change('reason', 'Change');
   await click(en.saveContext);

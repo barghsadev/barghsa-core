@@ -22,6 +22,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
+import { receiptEditorMessages } from '@barghsa/i18n/receipt-editor';
 import type { Locale } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
@@ -38,10 +39,14 @@ import {
   Alert,
   Button,
   buttonVariants,
+  Input,
   inputVariants,
+  Label,
   ListPage,
+  ListRefreshButton,
   ListViewToggle,
   ScrollArea,
+  Textarea,
 } from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
 import { useListView } from '../hooks/useListView.js';
@@ -58,7 +63,15 @@ import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 import { serverListParams } from '../lib/query-keys.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import WalletTopUpLimitConfigPanel from '../components/WalletTopUpLimitConfigPanel.js';
+import { Link, useBlocker } from '@tanstack/react-router';
+import { walletReceiptActions, type WalletReceiptAction } from '../lib/wallet-receipt-action.js';
+import { WalletReceiptInvoicePicker } from '../components/WalletReceiptInvoicePicker.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 
 /**
  * Staff bank-receipt confirmation queue (T-04.2.02.04 / T-04.2.02.05).
@@ -201,16 +214,41 @@ function formatPaymentDate(value: string | null, locale: Locale): string {
 
 function receiptDetail(label: string, value: ReactNode, className?: string, dir?: 'ltr') {
   return (
-    <div>
+    <div className="min-w-0">
       <dt className="text-muted-foreground">{label}</dt>
-      <dd className={className} dir={dir}>
-        {value}
+      <dd className={`break-words ${className ?? ''}`}>
+        {dir ? <bdi dir={dir}>{value}</bdi> : value}
       </dd>
     </div>
   );
 }
 
-export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQueryBinding } = {}) {
+interface StaffWalletReceiptProps {
+  binding?: ListQueryBinding;
+  recordId?: string;
+  recordAction?: WalletReceiptAction | undefined;
+  recordSearch?: Record<string, unknown>;
+}
+
+export default function AdminWalletReceiptsPage(props: StaffWalletReceiptProps = {}) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return (
+    <WalletReceiptsWorkspace key={JSON.stringify([actor, revision, props.recordId])} {...props} />
+  );
+}
+
+function ReceiptNavigationGuard({ locked }: { locked: boolean }) {
+  useBlocker({ shouldBlockFn: () => locked, enableBeforeUnload: () => locked });
+  return null;
+}
+
+function WalletReceiptsWorkspace({
+  binding,
+  recordId,
+  recordAction,
+  recordSearch,
+}: StaffWalletReceiptProps) {
   const readQuery = useStaffQueryRead('wallet');
   const queueBinding = useReceiptQueueQuery(binding);
   const queueParams = receiptQueueParams(queueBinding);
@@ -219,11 +257,23 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const time = useAccountTime();
   const locale = useLocale();
   const copy = (key: string) => t(`admin.walletReceipts.${key}`, locale);
+  const editorText = receiptEditorMessages[locale];
+  const actionTitle = {
+    confirm: editorText.confirmTitle,
+    reject: editorText.rejectTitle,
+    emergency: editorText.emergencyTitle,
+  };
+  const reviewActive = !recordId || recordAction === 'confirm' || recordAction === 'emergency';
   const numbers = useFinancialFormatting(locale);
   const isRtl = locale === 'fa';
+  const canonicalQueue = Boolean(recordSearch);
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (recordId) heading.current?.focus({ preventScroll: true });
+  }, [recordId, recordAction]);
   const { view, setView } = useListView('staff-wallet-receipts-pending');
   const [items, setItems] = useState<BankReceiptReviewDto[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(recordId ?? null);
   const [selected, setSelected] = useState<BankReceiptReviewDto | null>(null);
   const rejection = useReceiptRejectionForm('wallet');
   const [reason, setReason] = rejection.field('reason');
@@ -235,11 +285,11 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const confirmationBusy =
     confirmation.invoice.form.formState.isSubmitting ||
     confirmation.emergency.form.formState.isSubmitting;
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!recordId);
   const [acting, setActing] = useState(false);
   const [queueError, setQueueError] = useState<string | null>(null);
   const [denied, setDenied] = useState(false);
-  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailLoading, setDetailLoading] = useState(!!recordId);
   const [detailError, setDetailError] = useState(false);
   const [detailRevision, setDetailRevision] = useState(0);
   const [reviewRevision, setReviewRevision] = useState(0);
@@ -291,7 +341,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const accessDenied = useRef(false);
   const accessGeneration = useRef(0);
   const rowsRef = useRef<BankReceiptReviewDto[]>([]);
-  const selectedIdRef = useRef<string | null>(null);
+  const selectedIdRef = useRef<string | null>(recordId ?? null);
   const selectedRef = useRef<BankReceiptReviewDto | null>(null);
   const financialReviewRef = useRef<BankReceiptConfirmationReview | null>(null);
   const reviewScopeRef = useRef('');
@@ -334,6 +384,13 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     setItems([]);
     selectReceipt(null);
   }
+  function refreshRecord() {
+    if (!recordId || writeOwner.current) return;
+    accessDenied.current = false;
+    setDenied(false);
+    if (selectedId !== recordId) selectReceipt(recordId);
+    setDetailRevision((v) => v + 1);
+  }
   useEffect(
     () => () => {
       ++workGeneration.current;
@@ -358,6 +415,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     setLoading(true);
   }, [queueParams]);
   const loadQueue = useCallback(async () => {
+    if (recordId) return;
     queueController.current?.abort();
     const controller = new AbortController();
     queueController.current = controller;
@@ -397,7 +455,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       setDenied(false);
       rowsRef.current = next;
       setItems(next);
-      if (!current || !fresh) selectReceipt(next[0]?.transactionId ?? null);
+      if (!canonicalQueue && (!current || !fresh)) selectReceipt(next[0]?.transactionId ?? null);
       else if (JSON.stringify(previous) !== JSON.stringify(fresh)) {
         invalidateDecision();
         setDetailLoading(true);
@@ -409,7 +467,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
     } finally {
       if (!controller.signal.aborted && accessOwner === accessGeneration.current) setLoading(false);
     }
-  }, [locale, queueParams, readQuery]);
+  }, [locale, queueParams, readQuery, recordId, canonicalQueue]);
   useEffect(() => {
     void loadQueue();
     return () => queueController.current?.abort();
@@ -445,6 +503,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
           !data ||
           data.transactionId !== selectedId ||
           typeof data.amount !== 'string' ||
+          (recordId && (typeof data.walletId !== 'string' || !isTransactionUuid(data.walletId))) ||
           typeof data.canDecide !== 'boolean'
         )
           throw new Error('Invalid receipt');
@@ -468,9 +527,13 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       }
     })();
     return () => controller.abort();
-  }, [selectedId, detailRevision, readQuery]);
+  }, [selectedId, detailRevision, recordId, readQuery]);
 
   useEffect(() => {
+    if (!reviewActive) {
+      setAllocationLoading(false);
+      return;
+    }
     const trimmed = invoiceId.trim().toLowerCase();
     setAllocationInputInvalid(false);
     const scope = JSON.stringify([
@@ -484,7 +547,10 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       invalidateDecision();
       setAllocation(null);
     }
-    if (!selected || !selected.canDecide) {
+    if (
+      !selected?.canDecide ||
+      (recordAction === 'emergency' && (!selected.dualApproval || !selected.canEmergencyOverride))
+    ) {
       setAllocation(null);
       setAllocationError(null);
       setAllocationLoading(false);
@@ -563,7 +629,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
       }
     })();
     return () => controller.abort();
-  }, [invoiceId, selected, locale, reviewRevision]);
+  }, [invoiceId, selected, locale, reviewRevision, reviewActive, recordAction]);
 
   useEffect(() => {
     if (!stepUpOpen) return;
@@ -721,9 +787,16 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
             ? copy('overpaymentConfirmed')
             : copy('confirmed')
         : copy('rejected');
-    rowsRef.current = rowsRef.current.filter((row) => row.transactionId !== dto.transactionId);
-    setItems(rowsRef.current);
-    selectReceipt(rowsRef.current[0]?.transactionId ?? null);
+    if (recordId) {
+      invalidateDecision();
+      selectedRef.current = dto;
+      setSelected(dto);
+      rejection.form.reset({ reason: '' });
+    } else {
+      rowsRef.current = rowsRef.current.filter((row) => row.transactionId !== dto.transactionId);
+      setItems(rowsRef.current);
+      selectReceipt(rowsRef.current[0]?.transactionId ?? null);
+    }
     setStatus(message);
     return 'ok';
   }
@@ -976,192 +1049,212 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
   const invoiceTarget = invoiceId.trim();
   const usesInvoice = isTransactionUuid(invoiceTarget);
   const allocationUnavailable = allocationLoading || !!allocationError || !allocation;
+  const canOverride = Boolean(selected?.dualApproval && selected.canEmergencyOverride);
+  const actionAvailable = selected?.canDecide && (recordAction !== 'emergency' || canOverride);
+  const [manualInvoice, setManualInvoice] = useState(false);
 
-  return (
-    <div
-      className="max-w-5xl space-y-6"
-      dir={isRtl ? 'rtl' : 'ltr'}
-      data-testid="admin-wallet-receipts-page"
+  const paymentReview = financialReview && (!recordAction || reviewReady) && (
+    <BankReceiptFinancialReview
+      review={financialReview}
+      formatDate={time.format}
+      formatPaymentDate={(value) => formatPaymentDate(value, locale)}
+    />
+  );
+  const paymentPreview =
+    recordAction && reviewReady && financialReview ? (
+      <div className="space-y-2">
+        <dl className="grid grid-cols-2 gap-3 rounded-lg bg-muted/40 p-3 text-sm">
+          {receiptDetail(
+            copy('invoiceAllocation'),
+            numbers.money(financialReview.data.allocation.invoiceAmount),
+            'font-semibold'
+          )}
+          {receiptDetail(
+            copy('review.walletCredit'),
+            numbers.money(financialReview.data.allocation.walletCredit),
+            'font-semibold'
+          )}
+        </dl>
+        <details className="rounded-lg border">
+          <summary className="cursor-pointer px-3 py-2.5 text-sm font-medium">
+            {editorText.fullPaymentReview}
+          </summary>
+          <div className="px-2 pb-2">{paymentReview}</div>
+        </details>
+      </div>
+    ) : (
+      paymentReview
+    );
+
+  const ReviewHeading = recordId ? 'h2' : 'h3';
+  const reviewPanel = selected && (
+    <section
+      aria-labelledby="receipt-review-heading"
+      className={recordAction ? 'min-w-0 space-y-4' : `${recordEditorSurface} space-y-4 p-4 sm:p-6`}
     >
-      {time.notice}
-      <header>
-        <h1 className="text-2xl font-bold">{copy('title')}</h1>
-        <p className="text-muted-foreground mt-2">{copy('description')}</p>
-      </header>
-
-      <WalletTopUpLimitConfigPanel />
-
-      {error && <Alert variant="destructive">{error}</Alert>}
-
-      {status && (
-        <p ref={statusRef} className="text-sm text-success" role="status" tabIndex={-1}>
-          {status}
-        </p>
+      {!recordId && (
+        <h2 id="receipt-review-heading" className="text-lg font-semibold">
+          {copy('reviewTitle')}
+        </h2>
       )}
 
-      <ListPage>
-        <ListPage.Toolbar filters={<ReceiptQueueControls binding={queueBinding} />}>
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="font-semibold">{copy('queueLabel')}</h2>
-            <ListViewToggle
-              value={view}
-              onChange={setView}
-              labels={{
-                group: appText('historyView.group', locale),
-                table: appText('historyView.table', locale),
-                card: appText('historyView.card', locale),
-              }}
-            />
-            <Button
-              variant="outline"
-              disabled={loading || acting || stepUpOpen}
-              onClick={() => void loadQueue()}
-            >
-              {copy('queue.refresh')}
-            </Button>
-          </div>
-        </ListPage.Toolbar>
-        {!denied && (
-          <ReceiptQueuePagination
-            binding={queueBinding}
-            nextCursor={queueError ? null : nextCursor}
-            loading={loading}
-          />
-        )}
-        <div
-          className={`grid min-w-0 gap-6 ${view === 'card' ? 'lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]' : ''}`}
+      {detailLoading && <LoadingStatus>{copy('detail.loading')}</LoadingStatus>}
+      {detailError && (
+        <div role="alert" className="space-y-2">
+          <p>{copy('detail.error')}</p>
+          <Button variant="outline" onClick={() => setDetailRevision((v) => v + 1)}>
+            {copy('detail.retry')}
+          </Button>
+        </div>
+      )}
+      {selected.dualApproval && selected.state === 'Pending' && (
+        <p
+          className="rounded border border-warning/20 bg-warning-soft p-3 text-sm text-foreground"
+          role="status"
         >
-          <ListPage.Content
-            loading={loading}
-            error={!!queueError || denied}
-            empty={!items.length}
-            retainContent={!!items.length && !denied}
-            loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
-            errorView={
-              <div role="alert" className="space-y-2">
-                <p>{denied ? copy('queue.forbidden') : queueError}</p>
-                {!denied && (
-                  <Button variant="outline" onClick={() => void loadQueue()}>
-                    {copy('queue.retry')}
-                  </Button>
-                )}
-              </div>
+          {copy('approvalPending')}
+        </p>
+      )}
+      {recordAction ? (
+        <dl className="grid grid-cols-2 gap-3 rounded-lg bg-muted/40 p-3 text-sm sm:p-4">
+          {receiptDetail(copy('amount'), numbers.money(selected.amount), 'font-semibold')}
+          {receiptDetail(
+            copy('payerReference'),
+            selected.payerReference ?? copy('none'),
+            'wrap-anywhere font-mono',
+            'ltr'
+          )}
+          {receiptDetail(copy('bankName'), selected.bankName ?? copy('none'))}
+          {receiptDetail(copy('paymentDate'), formatPaymentDate(selected.paymentDate, locale))}
+        </dl>
+      ) : (
+        <>
+          <dl
+            className={
+              recordId
+                ? 'grid grid-cols-2 gap-3 rounded-lg bg-muted/40 p-3 text-sm sm:p-4'
+                : 'grid grid-cols-1 gap-2 text-sm'
             }
-            emptyView={<p role="status">{copy('empty')}</p>}
           >
-            <nav
-              aria-label={copy('queueLabel')}
-              className="bg-card text-card-foreground rounded-lg border border-border p-3 space-y-1"
+            {receiptDetail(
+              copy('amount'),
+              `${numbers.irrDigits(selected.amount)} ${selected.currency}`,
+              'font-medium'
+            )}
+            {receiptDetail(copy('paymentDate'), formatPaymentDate(selected.paymentDate, locale))}
+            {receiptDetail(
+              copy('payerReference'),
+              selected.payerReference ?? copy('none'),
+              'font-mono text-sm',
+              'ltr'
+            )}
+            {receiptDetail(copy('bankName'), selected.bankName ?? copy('none'), 'break-words')}
+            {receiptDetail(
+              copy('walletId'),
+              selected.walletId,
+              'break-all font-mono text-sm',
+              'ltr'
+            )}
+            {receiptDetail(copy('submittedAt'), time.format(selected.submittedAt))}
+            {receiptDetail(copy('note'), selected.customerNote ?? copy('none'))}
+            {recordId &&
+              receiptDetail(
+                copy('recordState'),
+                appText(`wallet.history.state.${selected.state}`, locale)
+              )}
+          </dl>
+          {recordId && selected.canDecide && (
+            <div className="flex flex-wrap gap-2">
+              {walletReceiptActions
+                .filter((action) => action !== 'emergency' || canOverride)
+                .map((action) => (
+                  <Link
+                    key={action}
+                    to="/admin/wallet-receipts/$receiptId/{-$action}"
+                    params={{ receiptId: recordId, action }}
+                    search={recordSearch ?? {}}
+                    data-testid={`wallet-receipt-open-${action}`}
+                    disabled={detailLoading || detailError || controlsLocked}
+                    className={buttonVariants({
+                      variant: action === 'confirm' ? 'default' : 'outline',
+                    })}
+                  >
+                    {actionTitle[action]}
+                  </Link>
+                ))}
+            </div>
+          )}
+          {recordId && (
+            <Link
+              to="/admin/wallet-ledger/$profileId"
+              params={{ profileId: selected.walletId }}
+              className="touch-action text-sm text-primary underline underline-offset-4"
             >
-              <StaffWalletReceiptList
-                items={items}
-                view={view}
-                selectedId={selectedId}
-                disabled={
-                  loading ||
-                  !!queueError ||
-                  denied ||
-                  acting ||
-                  stepUpOpen ||
-                  rejectionBusy ||
-                  confirmationBusy
-                }
-                onSelect={(id) => {
-                  if (!loading && !queueError && !denied && id !== selectedIdRef.current)
-                    selectReceipt(id);
-                }}
+              {copy('walletHistoryLink')}
+            </Link>
+          )}
+
+          <div>
+            <ReviewHeading className="text-sm font-medium text-foreground mb-2">
+              {copy('attachment')}
+            </ReviewHeading>
+            {selected.attachmentUrl ? (
+              <StaffReceiptAttachmentPreview
+                key={selected.transactionId}
+                url={selected.attachmentUrl}
+                previewUrl={`/api/admin/wallet/bank-receipt-top-ups/${encodeURIComponent(selected.transactionId)}/attachment-preview`}
+                label={copy('attachmentAlt')}
+                openLabel={copy('openAttachment')}
               />
-            </nav>
-          </ListPage.Content>
+            ) : (
+              <p className="break-all text-sm text-muted-foreground" dir="ltr">
+                {selected.attachmentKey ?? copy('none')}
+              </p>
+            )}
+          </div>
 
-          {selected && (
-            <section
-              aria-labelledby="receipt-review-heading"
-              className="min-w-0 bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4"
-            >
-              <h2 id="receipt-review-heading" className="text-lg font-semibold">
-                {copy('reviewTitle')}
-              </h2>
-
-              {detailLoading && <LoadingStatus>{copy('detail.loading')}</LoadingStatus>}
-              {detailError && (
-                <div role="alert" className="space-y-2">
-                  <p>{copy('detail.error')}</p>
-                  <Button variant="outline" onClick={() => setDetailRevision((v) => v + 1)}>
-                    {copy('detail.retry')}
-                  </Button>
-                </div>
-              )}
-              {selected.dualApproval && selected.state === 'Pending' && (
-                <p
-                  className="rounded border border-warning/20 bg-warning-soft p-3 text-sm text-foreground"
-                  role="status"
-                >
-                  {copy('approvalPending')}
-                </p>
-              )}
-              <dl className="grid grid-cols-1 gap-2 text-sm">
-                {receiptDetail(
-                  copy('amount'),
-                  `${numbers.irrDigits(selected.amount)} ${selected.currency}`,
-                  'font-medium'
-                )}
-                {receiptDetail(
-                  copy('paymentDate'),
-                  formatPaymentDate(selected.paymentDate, locale)
-                )}
-                {receiptDetail(
-                  copy('payerReference'),
-                  selected.payerReference ?? copy('none'),
-                  'font-mono text-sm',
-                  'ltr'
-                )}
-                {receiptDetail(copy('bankName'), selected.bankName ?? copy('none'), 'break-words')}
-                {receiptDetail(copy('walletId'), selected.walletId, 'font-mono text-sm', 'ltr')}
-                {receiptDetail(copy('submittedAt'), time.format(selected.submittedAt))}
-                {receiptDetail(copy('note'), selected.customerNote ?? copy('none'))}
-              </dl>
-
-              <div>
-                <h3 className="text-sm font-medium text-foreground mb-2">{copy('attachment')}</h3>
-                {selected.attachmentUrl ? (
-                  <StaffReceiptAttachmentPreview
-                    key={selected.transactionId}
-                    url={selected.attachmentUrl}
-                    previewUrl={`/api/admin/wallet/bank-receipt-top-ups/${encodeURIComponent(selected.transactionId)}/attachment-preview`}
-                    label={copy('attachmentAlt')}
-                    openLabel={copy('openAttachment')}
+          {selected.verificationTimeline && (
+            <WalletReceiptTimeline
+              timeline={selected.verificationTimeline}
+              locale={locale}
+              formatTime={time.format}
+            />
+          )}
+        </>
+      )}
+      {actionAvailable && (!recordId || recordAction) ? (
+        <div className={recordEditorSurface}>
+          {(!recordId || recordAction === 'confirm') && (
+            <form onSubmit={handleConfirm} noValidate aria-busy={confirmationWorking || undefined}>
+              <RecordEditorSection title={receiptEditorMessages[locale].applyPayment}>
+                {recordAction && !selected.dualApproval && !manualInvoice ? (
+                  <WalletReceiptInvoicePicker
+                    profileId={selected.walletId}
+                    field={confirmation.invoice.bind('invoiceId')}
+                    value={invoiceId}
+                    onValueChange={setInvoiceId}
+                    onManualEntry={() => setManualInvoice(true)}
+                    disabled={controlsLocked}
+                    error={invoiceError}
                   />
                 ) : (
-                  <p className="break-all text-sm text-muted-foreground" dir="ltr">
-                    {selected.attachmentKey ?? copy('none')}
-                  </p>
-                )}
-              </div>
-
-              {selected.verificationTimeline && (
-                <WalletReceiptTimeline
-                  timeline={selected.verificationTimeline}
-                  locale={locale}
-                  formatTime={time.format}
-                />
-              )}
-              {selected.canDecide ? (
-                <div className="space-y-4 border-t border-border pt-4">
-                  <form
-                    onSubmit={handleConfirm}
-                    noValidate
-                    className="space-y-4"
-                    aria-busy={confirmationWorking || undefined}
-                  >
-                    <div>
-                      <label
-                        htmlFor="apply-invoice-id"
-                        className="block text-sm font-medium text-foreground mb-1"
-                      >
-                        {copy('invoiceId')}
-                      </label>
-                      <input
+                  (!recordAction || !selected.dualApproval) && (
+                    <div className={recordEditorField}>
+                      <div className="flex flex-wrap items-center justify-between gap-x-2">
+                        <Label htmlFor="apply-invoice-id">{copy('invoiceId')}</Label>
+                        {recordAction && (
+                          <Button
+                            variant="link"
+                            type="button"
+                            className="px-0"
+                            disabled={controlsLocked}
+                            onClick={() => setManualInvoice(false)}
+                          >
+                            {editorText.chooseInvoice}
+                          </Button>
+                        )}
+                      </div>
+                      <Input
                         id="apply-invoice-id"
                         {...confirmation.invoice.bind('invoiceId')}
                         readOnly={Boolean(selected.dualApproval)}
@@ -1176,7 +1269,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         placeholder={copy('invoiceIdPlaceholder')}
                         aria-invalid={Boolean(invoiceError) || undefined}
                         aria-describedby={`apply-invoice-hint${invoiceError ? ` ${confirmation.invoice.errorId('invoiceId')}` : ''}`}
-                        className="w-full border border-input rounded px-3 py-2 font-mono text-sm"
+                        className="font-mono text-sm"
                       />
                       <p id="apply-invoice-hint" className="text-xs text-muted-foreground mt-1">
                         {copy('invoiceIdHint')}
@@ -1192,179 +1285,378 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                         </p>
                       )}
                     </div>
+                  )
+                )}
 
-                    {allocationError && !invoiceError && (
+                {allocationError && !invoiceError && (
+                  <p className="text-sm text-destructive" role="alert">
+                    {allocationError}
+                  </p>
+                )}
+
+                {allocationLoading && <LoadingStatus>{copy('review.loading')}</LoadingStatus>}
+                {paymentPreview}
+              </RecordEditorSection>
+              <RecordEditorActions
+                secondary={
+                  <ListRefreshButton
+                    label={copy('review.refresh')}
+                    disabled={controlsLocked}
+                    refreshing={allocationLoading}
+                    onClick={() => setReviewRevision((v) => v + 1)}
+                  />
+                }
+              >
+                <Button
+                  ref={confirmButtonRef}
+                  type="submit"
+                  data-testid="wallet-receipt-confirm"
+                  disabled={
+                    decisionBlocked ||
+                    (!reviewReady &&
+                      (!invoiceTarget || usesInvoice || Boolean(selected.dualApproval))) ||
+                    (usesInvoice && allocationUnavailable)
+                  }
+                  aria-busy={confirmationWorking || allocationLoading || undefined}
+                  className="h-auto min-h-11 max-w-full whitespace-normal text-start"
+                >
+                  {confirmationWorking && receiptCommandSpinner}
+                  {confirmationWorking
+                    ? copy('saving')
+                    : allocation?.isOverpayment
+                      ? copy('confirmOverpayment')
+                      : copy('confirm')}
+                </Button>
+              </RecordEditorActions>
+            </form>
+          )}
+
+          {canOverride && (!recordId || recordAction === 'emergency') && (
+            <form
+              onSubmit={handleEmergencyConfirm}
+              noValidate
+              className={recordId ? undefined : 'border-t border-warning/30'}
+              aria-busy={confirmationWorking || undefined}
+            >
+              <RecordEditorSection title={copy('emergencyTitle')}>
+                <p id="receipt-emergency-hint" className="text-sm">
+                  {copy('emergencyHint')}
+                </p>
+                <div className={recordEditorField}>
+                  <Label htmlFor="receipt-emergency-reason">{copy('emergencyReason')}</Label>
+                  <Textarea
+                    id="receipt-emergency-reason"
+                    {...confirmation.emergency.bind('emergencyOverrideReason')}
+                    rows={2}
+                    placeholder={receiptEditorMessages[locale].emergencyReasonExample}
+                    required
+                    aria-required="true"
+                    aria-describedby={`receipt-emergency-hint${confirmation.emergency.errors.emergencyOverrideReason ? ` ${confirmation.emergency.errorId('emergencyOverrideReason')}` : ''}`}
+                    maxLength={APPROVAL_REVIEW_REASON_MAX_LENGTH}
+                    value={emergencyReason}
+                    onChange={(event) => setEmergencyReason(event.target.value)}
+                    disabled={controlsLocked}
+                    className="min-h-14 max-h-48"
+                  />
+                  <p
+                    id={confirmation.emergency.errorId('emergencyOverrideReason')}
+                    role={
+                      confirmation.emergency.errors.emergencyOverrideReason ? 'alert' : undefined
+                    }
+                    aria-hidden={
+                      !confirmation.emergency.errors.emergencyOverrideReason || undefined
+                    }
+                    className={`text-sm text-destructive${confirmation.emergency.errors.emergencyOverrideReason ? '' : ' invisible'}`}
+                  >
+                    {confirmation.emergency.errors.emergencyOverrideReason?.message ??
+                      copy('error.emergencyReason')}
+                  </p>
+                </div>
+                {recordAction && (
+                  <>
+                    {allocationError && (
                       <p className="text-sm text-destructive" role="alert">
                         {allocationError}
                       </p>
                     )}
-
                     {allocationLoading && <LoadingStatus>{copy('review.loading')}</LoadingStatus>}
-                    {financialReview && (
-                      <BankReceiptFinancialReview
-                        review={financialReview}
-                        formatDate={time.format}
-                        formatPaymentDate={(value) => formatPaymentDate(value, locale)}
-                      />
-                    )}
-                    <button
-                      type="button"
-                      disabled={controlsLocked || allocationLoading}
+                    {paymentPreview}
+                  </>
+                )}
+              </RecordEditorSection>
+              <RecordEditorActions
+                secondary={
+                  recordAction && (
+                    <ListRefreshButton
+                      label={copy('review.refresh')}
+                      disabled={controlsLocked}
+                      refreshing={allocationLoading}
                       onClick={() => setReviewRevision((v) => v + 1)}
-                      className="rounded border px-3 py-2"
-                    >
-                      {copy('review.refresh')}
-                    </button>
+                    />
+                  )
+                }
+              >
+                <Button
+                  type="submit"
+                  ref={emergencyButtonRef}
+                  data-testid="wallet-receipt-emergency-confirm"
+                  disabled={
+                    decisionBlocked || !reviewReady || (!!invoiceTarget && allocationUnavailable)
+                  }
+                  aria-busy={confirmationWorking || undefined}
+                  variant="outline"
+                  className="h-auto min-h-11 max-w-full whitespace-normal border-warning/40 text-start"
+                >
+                  {confirmationWorking && receiptCommandSpinner}
+                  {copy('emergencyConfirm')}
+                </Button>
+              </RecordEditorActions>
+            </form>
+          )}
 
-                    <button
-                      ref={confirmButtonRef}
-                      type="submit"
-                      data-testid="wallet-receipt-confirm"
-                      disabled={
-                        decisionBlocked ||
-                        (!reviewReady &&
-                          (!invoiceTarget || usesInvoice || Boolean(selected.dualApproval))) ||
-                        (usesInvoice && allocationUnavailable)
-                      }
-                      aria-busy={confirmationWorking || allocationLoading || undefined}
-                      className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 disabled:opacity-50"
+          {(!recordId || recordAction === 'reject') && (
+            <form onSubmit={handleReject} className={recordId ? undefined : 'border-t'} noValidate>
+              <RecordEditorSection title={receiptEditorMessages[locale].rejectionDetails}>
+                <div className={recordEditorField}>
+                  <Label htmlFor="reject-reason">
+                    {copy('reason')}{' '}
+                    <span className="text-destructive" aria-hidden="true">
+                      *
+                    </span>
+                  </Label>
+                  <Textarea
+                    id="reject-reason"
+                    {...rejection.bind('reason')}
+                    required
+                    aria-required="true"
+                    aria-describedby={
+                      rejection.errors.reason
+                        ? `${rejection.errorId('reason')} reject-reason-hint`
+                        : 'reject-reason-hint'
+                    }
+                    maxLength={BANK_RECEIPT_REJECT_REASON_MAX_LENGTH}
+                    rows={2}
+                    placeholder={receiptEditorMessages[locale].rejectionExample}
+                    value={reason}
+                    disabled={controlsLocked}
+                    onChange={(e) => setReason(e.target.value)}
+                    className="min-h-14 max-h-48"
+                  />
+                  {rejection.errors.reason && (
+                    <p
+                      id={rejection.errorId('reason')}
+                      className="text-sm text-destructive"
+                      role="alert"
                     >
-                      {confirmationWorking && receiptCommandSpinner}
-                      {confirmationWorking
-                        ? copy('saving')
-                        : allocation?.isOverpayment
-                          ? copy('confirmOverpayment')
-                          : copy('confirm')}
-                    </button>
-                  </form>
-
-                  {selected.dualApproval && selected.canEmergencyOverride && (
-                    <form
-                      onSubmit={handleEmergencyConfirm}
-                      noValidate
-                      aria-busy={confirmationWorking || undefined}
-                    >
-                      <fieldset className="space-y-3 rounded border border-amber-500 p-4">
-                        <legend className="px-1 font-medium">{copy('emergencyTitle')}</legend>
-                        <p id="receipt-emergency-hint" className="text-sm">
-                          {copy('emergencyHint')}
-                        </p>
-                        <label
-                          htmlFor="receipt-emergency-reason"
-                          className="block text-sm font-medium"
-                        >
-                          {copy('emergencyReason')}
-                        </label>
-                        <textarea
-                          id="receipt-emergency-reason"
-                          {...confirmation.emergency.bind('emergencyOverrideReason')}
-                          rows={3}
-                          required
-                          aria-required="true"
-                          aria-describedby={`receipt-emergency-hint${confirmation.emergency.errors.emergencyOverrideReason ? ` ${confirmation.emergency.errorId('emergencyOverrideReason')}` : ''}`}
-                          maxLength={APPROVAL_REVIEW_REASON_MAX_LENGTH}
-                          value={emergencyReason}
-                          onChange={(event) => setEmergencyReason(event.target.value)}
-                          disabled={controlsLocked}
-                          className="w-full rounded border border-input px-3 py-2"
-                        />
-                        <p
-                          id={confirmation.emergency.errorId('emergencyOverrideReason')}
-                          role={
-                            confirmation.emergency.errors.emergencyOverrideReason
-                              ? 'alert'
-                              : undefined
-                          }
-                          aria-hidden={
-                            !confirmation.emergency.errors.emergencyOverrideReason || undefined
-                          }
-                          className={`text-sm text-destructive${confirmation.emergency.errors.emergencyOverrideReason ? '' : ' invisible'}`}
-                        >
-                          {confirmation.emergency.errors.emergencyOverrideReason?.message ??
-                            copy('error.emergencyReason')}
-                        </p>
-                        <button
-                          type="submit"
-                          ref={emergencyButtonRef}
-                          data-testid="wallet-receipt-emergency-confirm"
-                          disabled={
-                            decisionBlocked ||
-                            !reviewReady ||
-                            (!!invoiceTarget && allocationUnavailable)
-                          }
-                          aria-busy={confirmationWorking || undefined}
-                          className="rounded bg-amber-900 px-4 py-2 text-white disabled:opacity-50"
-                        >
-                          {confirmationWorking && receiptCommandSpinner}
-                          {copy('emergencyConfirm')}
-                        </button>
-                      </fieldset>
-                    </form>
+                      {rejection.errors.reason.message}
+                    </p>
                   )}
-
-                  <form onSubmit={handleReject} className="space-y-3" noValidate>
-                    <div>
-                      <label
-                        htmlFor="reject-reason"
-                        className="block text-sm font-medium text-foreground mb-1"
-                      >
-                        {copy('reason')}{' '}
-                        <span className="text-destructive" aria-hidden="true">
-                          *
-                        </span>
-                      </label>
-                      <textarea
-                        id="reject-reason"
-                        {...rejection.bind('reason')}
-                        required
-                        aria-required="true"
-                        aria-describedby={
-                          rejection.errors.reason
-                            ? `${rejection.errorId('reason')} reject-reason-hint`
-                            : 'reject-reason-hint'
-                        }
-                        maxLength={BANK_RECEIPT_REJECT_REASON_MAX_LENGTH}
-                        rows={3}
-                        value={reason}
-                        disabled={controlsLocked}
-                        onChange={(e) => setReason(e.target.value)}
-                        className="w-full border border-input rounded px-3 py-2"
-                      />
-                      {rejection.errors.reason && (
-                        <p
-                          id={rejection.errorId('reason')}
-                          className="text-sm text-destructive"
-                          role="alert"
-                        >
-                          {rejection.errors.reason.message}
-                        </p>
-                      )}
-                      <p id="reject-reason-hint" className="text-xs text-muted-foreground mt-1">
-                        {copy('reasonHint')}
-                      </p>
-                    </div>
-                    <button
-                      ref={rejectButtonRef}
-                      type="submit"
-                      data-testid="wallet-receipt-reject"
-                      disabled={decisionBlocked || allocationLoading}
-                      aria-busy={rejectionWorking}
-                      className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800 disabled:opacity-50"
-                    >
-                      {rejectionWorking && receiptCommandSpinner}
-                      {rejectionWorking ? copy('saving') : copy('reject')}
-                    </button>
-                  </form>
+                  <p id="reject-reason-hint" className="text-xs text-muted-foreground mt-1">
+                    {copy('reasonHint')}
+                  </p>
                 </div>
-              ) : (
-                <p className="text-sm text-warning" role="status">
-                  {copy('alreadyDecided')}
-                </p>
-              )}
-            </section>
+              </RecordEditorSection>
+              <RecordEditorActions>
+                <Button
+                  ref={rejectButtonRef}
+                  type="submit"
+                  data-testid="wallet-receipt-reject"
+                  disabled={decisionBlocked || allocationLoading}
+                  aria-busy={rejectionWorking}
+                  variant="outline"
+                  className="border-destructive/25 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                >
+                  {rejectionWorking && receiptCommandSpinner}
+                  {rejectionWorking ? copy('saving') : copy('reject')}
+                </Button>
+              </RecordEditorActions>
+            </form>
           )}
         </div>
-      </ListPage>
+      ) : !actionAvailable ? (
+        <p className="text-sm text-warning" role="status">
+          {recordAction && selected.state === 'Pending'
+            ? editorText.actionUnavailable
+            : copy(recordId && selected.state === 'Pending' ? 'readOnlyReview' : 'alreadyDecided')}
+        </p>
+      ) : null}
+    </section>
+  );
+
+  return (
+    <div
+      className={recordId ? 'mx-auto max-w-3xl space-y-5' : 'max-w-5xl space-y-6'}
+      dir={isRtl ? 'rtl' : 'ltr'}
+      data-testid="admin-wallet-receipts-page"
+    >
+      {recordId && <ReceiptNavigationGuard locked={controlsLocked || Boolean(pendingAction)} />}
+      {time.notice}
+      <header className="space-y-3">
+        {recordId &&
+          (recordAction ? (
+            <Link
+              to="/admin/wallet-receipts/$receiptId/{-$action}"
+              params={{ receiptId: recordId, action: undefined }}
+              search={recordSearch ?? {}}
+              disabled={controlsLocked || Boolean(pendingAction)}
+              data-testid="wallet-receipt-back-to-review"
+              className="touch-action text-sm text-primary underline underline-offset-4 aria-disabled:opacity-60"
+            >
+              {editorText.backToReceipt}
+            </Link>
+          ) : (
+            <Link
+              to="/admin/wallet-receipts"
+              search={recordSearch ?? {}}
+              className="touch-action text-sm text-primary underline underline-offset-4"
+            >
+              {copy('backToQueue')}
+            </Link>
+          ))}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h1
+            id={recordId ? 'receipt-review-heading' : undefined}
+            ref={heading}
+            tabIndex={recordId ? -1 : undefined}
+            className="text-2xl font-semibold outline-none"
+          >
+            {recordAction ? actionTitle[recordAction] : copy(recordId ? 'reviewTitle' : 'title')}
+          </h1>
+          {recordId ? (
+            <ListRefreshButton
+              label={editorText.refreshReceipt}
+              disabled={detailLoading || controlsLocked}
+              refreshing={detailLoading}
+              onClick={refreshRecord}
+            />
+          ) : (
+            canonicalQueue && (
+              <Link
+                to="/admin/wallet-receipts/settings/{-$view}"
+                params={{ view: undefined }}
+                search={recordSearch ?? {}}
+                className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+              >
+                {copy('limitSettings')}
+              </Link>
+            )
+          )}
+        </div>
+        {!recordId && <p className="text-sm text-muted-foreground">{copy('description')}</p>}
+        {recordId && selected && !recordAction && (
+          <p className="break-all text-sm text-muted-foreground">
+            <bdi className="font-mono">{selected.transactionId}</bdi>
+          </p>
+        )}
+      </header>
+
+      {error && <Alert variant="destructive">{error}</Alert>}
+
+      {status && (
+        <p ref={statusRef} className="text-sm text-success" role="status" tabIndex={-1}>
+          {status}
+        </p>
+      )}
+
+      {recordId && (
+        <>
+          {!selected && detailLoading && <LoadingStatus>{copy('detail.loading')}</LoadingStatus>}
+          {!selected && (denied || detailError) && (
+            <div role="alert" className="space-y-2">
+              <p>{copy(denied ? 'queue.forbidden' : 'detail.error')}</p>
+              {!denied && (
+                <Button variant="outline" onClick={refreshRecord}>
+                  {copy('detail.retry')}
+                </Button>
+              )}
+            </div>
+          )}
+          {reviewPanel}
+        </>
+      )}
+      {!recordId && (
+        <ListPage>
+          <h2 className="font-semibold">{copy('queueLabel')}</h2>
+          <ReceiptQueueControls
+            binding={queueBinding}
+            actions={
+              <ListViewToggle
+                value={view}
+                onChange={setView}
+                labels={{
+                  group: appText('historyView.group', locale),
+                  table: appText('historyView.table', locale),
+                  card: appText('historyView.card', locale),
+                }}
+              />
+            }
+            refresh={
+              <ListRefreshButton
+                label={copy('queue.refresh')}
+                refreshing={loading}
+                disabled={acting || stepUpOpen}
+                onClick={() => void loadQueue()}
+              />
+            }
+          />
+          {!denied && (
+            <ReceiptQueuePagination
+              binding={queueBinding}
+              nextCursor={queueError ? null : nextCursor}
+              loading={loading}
+            />
+          )}
+          <div
+            className={`grid min-w-0 gap-6 ${view === 'card' && !canonicalQueue ? 'lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]' : ''}`}
+          >
+            <ListPage.Content
+              loading={loading}
+              error={!!queueError || denied}
+              empty={!items.length}
+              retainContent={!!items.length && !denied}
+              loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+              errorView={
+                <div role="alert" className="space-y-2">
+                  <p>{denied ? copy('queue.forbidden') : queueError}</p>
+                  {!denied && (
+                    <Button variant="outline" onClick={() => void loadQueue()}>
+                      {copy('queue.retry')}
+                    </Button>
+                  )}
+                </div>
+              }
+              emptyView={<p role="status">{copy('empty')}</p>}
+            >
+              <nav
+                aria-label={copy('queueLabel')}
+                className="bg-card text-card-foreground rounded-lg border border-border p-3 space-y-1"
+              >
+                <StaffWalletReceiptList
+                  items={items}
+                  view={view}
+                  selectedId={selectedId}
+                  disabled={
+                    loading ||
+                    !!queueError ||
+                    denied ||
+                    acting ||
+                    stepUpOpen ||
+                    rejectionBusy ||
+                    confirmationBusy
+                  }
+                  onSelect={(id) => {
+                    if (!loading && !queueError && !denied && id !== selectedIdRef.current)
+                      selectReceipt(id);
+                  }}
+                  {...(recordSearch ? { receiptSearch: recordSearch } : {})}
+                />
+              </nav>
+            </ListPage.Content>
+
+            {!canonicalQueue && reviewPanel}
+          </div>
+        </ListPage>
+      )}
 
       {stepUpOpen &&
         createPortal(

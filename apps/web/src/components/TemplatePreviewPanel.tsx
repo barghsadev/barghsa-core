@@ -1,9 +1,11 @@
-import { LoadingStatus } from '@barghsa/ui';
+import { Badge, Button, Label, LoadingStatus, NativeSelect } from '@barghsa/ui';
+import { t } from '@barghsa/i18n/admin-ui';
+import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useState, useEffect } from 'react';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
-import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import type { Locale } from '@barghsa/i18n/app';
+import { recordEditorField, recordEditorSurface } from './RecordEditorLayout.js';
 import BrandedEmailPreview from './BrandedEmailPreview.js';
 import {
   renderTemplatePreview,
@@ -56,21 +58,9 @@ export interface NotificationTemplateForPreview {
 type TemplateChannel = 'email' | 'sms' | 'in_app';
 type TemplateLocale = 'fa' | 'en';
 
-const CHANNEL_LABELS: Record<TemplateChannel, string> = {
-  email: 'Email',
-  sms: 'SMS',
-  in_app: 'In-App',
-};
-
 const LOCALE_LABELS: Record<TemplateLocale, string> = {
   fa: 'فارسی',
   en: 'English',
-};
-
-const STATUS_LABELS: Record<string, string> = {
-  draft: 'Draft',
-  active: 'Active',
-  archived: 'Archived',
 };
 
 interface TemplatePreviewPanelProps {
@@ -79,6 +69,7 @@ interface TemplatePreviewPanelProps {
   loading?: boolean;
   ready?: boolean;
   queries?: ListQueryBinding | undefined;
+  exact?: boolean;
 }
 
 export default function TemplatePreviewPanel({
@@ -87,8 +78,15 @@ export default function TemplatePreviewPanel({
   loading,
   ready = !loading,
   queries,
+  exact = false,
 }: TemplatePreviewPanelProps) {
   const numbers = useNumberFormatting(uiLocale);
+  const channelLabels: Record<TemplateChannel, string> = {
+    email: t('admin.notifications.channelEmail', uiLocale),
+    sms: t('admin.notifications.channelSms', uiLocale),
+    in_app: t('admin.notifications.channelInApp', uiLocale),
+  };
+  const statusLabel = (value: string) => t(`admin.notifications.${value}`, uiLocale);
   // Selection state (filters)
   const [localEvent, setEventKey] = useState<string>('');
   const [localChannel, setChannel] = useState<TemplateChannel | ''>('');
@@ -180,145 +178,135 @@ export default function TemplatePreviewPanel({
   const problems = new Set([...undeclared, ...missingRequired]);
 
   return (
-    <div className="bg-card text-card-foreground rounded-lg border border-border p-6 space-y-4">
-      <div className="flex items-center justify-between">
+    <div className={recordEditorSurface}>
+      <div className="flex flex-wrap items-start justify-between gap-3 px-4 pt-4 sm:px-6">
         <div>
           <h2 className="text-lg font-semibold">
-            {t('admin.notifications.preview.title', uiLocale)}
+            {notificationFormText(exact ? 'sampleTitle' : 'selectVersion', uiLocale)}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            {t('admin.notifications.preview.description', uiLocale)}
+            {exact
+              ? notificationFormText('sampleHelp', uiLocale)
+              : t('admin.notifications.preview.description', uiLocale)}
           </p>
         </div>
-        {(eventKey || channel || locale || versionId) && (
-          <button
-            onClick={reset}
-            className="px-3 py-1.5 text-sm border border-input rounded hover:bg-muted"
-          >
+        {!exact && (eventKey || channel || locale || versionId) && (
+          <Button type="button" variant="ghost" size="sm" onClick={reset}>
             {t('admin.notifications.preview.reset', uiLocale)}
-          </button>
+          </Button>
         )}
       </div>
 
       {loading && templates.length === 0 ? (
-        <LoadingStatus className="text-muted-foreground">
+        <LoadingStatus className="mx-4 mb-4 text-muted-foreground sm:mx-6">
           {t('admin.notifications.loading', uiLocale)}
         </LoadingStatus>
       ) : (
         <>
-          {/* Selection controls: event / language / channel / version */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <label
-                htmlFor="tpl-preview-event"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {t('admin.notifications.eventKey', uiLocale)}
-              </label>
-              <select
-                id="tpl-preview-event"
-                value={eventKey}
-                onChange={(e) => {
-                  update({ event: e.target.value, channel: '', locale: '', version: '' });
-                }}
-                className="w-full border border-input rounded px-3 py-2"
-              >
-                <option value="">—</option>
-                {eventKeys.map((k) => (
-                  <option key={k} value={k}>
-                    {k}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {!exact && (
+            <div className="grid min-w-0 gap-3 px-4 py-4 sm:grid-cols-2 sm:px-6 xl:grid-cols-4">
+              <div className={recordEditorField}>
+                <Label htmlFor="tpl-preview-event">
+                  {t('admin.notifications.eventKey', uiLocale)}
+                </Label>
+                <NativeSelect
+                  id="tpl-preview-event"
+                  dir="ltr"
+                  value={eventKey}
+                  onChange={(e) => {
+                    update({ event: e.target.value, channel: '', locale: '', version: '' });
+                  }}
+                  className="w-full [direction:ltr]"
+                >
+                  <option value="">—</option>
+                  {eventKeys.map((k) => (
+                    <option key={k} value={k}>
+                      {k}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </div>
 
-            <div>
-              <label
-                htmlFor="tpl-preview-channel"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {t('admin.notifications.channel', uiLocale)}
-              </label>
-              <select
-                id="tpl-preview-channel"
-                value={channel}
-                onChange={(e) => {
-                  update({ channel: e.target.value, locale: '', version: '' });
-                }}
-                className="w-full border border-input rounded px-3 py-2"
-              >
-                <option value="">—</option>
-                {channels.map((c) => (
-                  <option key={c} value={c}>
-                    {CHANNEL_LABELS[c]}
-                  </option>
-                ))}
-              </select>
-            </div>
+              <div className={recordEditorField}>
+                <Label htmlFor="tpl-preview-channel">
+                  {t('admin.notifications.channel', uiLocale)}
+                </Label>
+                <NativeSelect
+                  id="tpl-preview-channel"
+                  value={channel}
+                  onChange={(e) => {
+                    update({ channel: e.target.value, locale: '', version: '' });
+                  }}
+                  className="w-full"
+                >
+                  <option value="">—</option>
+                  {channels.map((c) => (
+                    <option key={c} value={c}>
+                      {channelLabels[c]}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </div>
 
-            <div>
-              <label
-                htmlFor="tpl-preview-locale"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {t('admin.notifications.locale', uiLocale)}
-              </label>
-              <select
-                id="tpl-preview-locale"
-                value={locale}
-                onChange={(e) => {
-                  update({ locale: e.target.value, version: '' });
-                }}
-                className="w-full border border-input rounded px-3 py-2"
-              >
-                <option value="">—</option>
-                {locales.map((l) => (
-                  <option key={l} value={l}>
-                    {LOCALE_LABELS[l]}
-                  </option>
-                ))}
-              </select>
-            </div>
+              <div className={recordEditorField}>
+                <Label htmlFor="tpl-preview-locale">
+                  {t('admin.notifications.locale', uiLocale)}
+                </Label>
+                <NativeSelect
+                  id="tpl-preview-locale"
+                  value={locale}
+                  onChange={(e) => {
+                    update({ locale: e.target.value, version: '' });
+                  }}
+                  className="w-full"
+                >
+                  <option value="">—</option>
+                  {locales.map((l) => (
+                    <option key={l} value={l}>
+                      {LOCALE_LABELS[l]}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </div>
 
-            <div>
-              <label
-                htmlFor="tpl-preview-version"
-                className="block text-sm font-medium text-foreground mb-1"
-              >
-                {t('admin.notifications.preview.version', uiLocale)}
-              </label>
-              <select
-                id="tpl-preview-version"
-                value={selected?.id ?? ''}
-                onChange={(e) => update({ version: e.target.value })}
-                className="w-full border border-input rounded px-3 py-2"
-                disabled={versions.length === 0}
-              >
-                {versions.length === 0 && <option value="">—</option>}
-                {versions.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    v{numbers.number(v.version)} · {STATUS_LABELS[v.status] ?? v.status}
-                    {v.isActive ? ' ✓' : ''}
-                  </option>
-                ))}
-              </select>
+              <div className={recordEditorField}>
+                <Label htmlFor="tpl-preview-version">
+                  {t('admin.notifications.preview.version', uiLocale)}
+                </Label>
+                <NativeSelect
+                  id="tpl-preview-version"
+                  value={selected?.id ?? ''}
+                  onChange={(e) => update({ version: e.target.value })}
+                  className="w-full"
+                  disabled={versions.length === 0}
+                >
+                  {versions.length === 0 && <option value="">—</option>}
+                  {versions.map((v) => (
+                    <option key={v.id} value={v.id}>
+                      v{numbers.number(v.version)} · {statusLabel(v.status)}
+                      {v.isActive ? ' ✓' : ''}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Preview results */}
           {!selected ? (
-            <p className="text-sm text-muted-foreground">
+            <p className="px-4 py-4 text-sm text-muted-foreground sm:px-6">
               {t('admin.notifications.preview.empty', uiLocale)}
             </p>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3 border-t px-4 py-4 sm:px-6">
               {/* Emphasize version metadata + selected identity */}
-              <div className="text-xs text-muted-foreground space-y-0.5">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                 <p>
-                  {selected.eventKey} · {CHANNEL_LABELS[selected.channel]} ·{' '}
-                  {LOCALE_LABELS[selected.locale]} · v{numbers.number(selected.version)} ·{' '}
-                  {STATUS_LABELS[selected.status]}
+                  <bdi className="[overflow-wrap:anywhere]">{selected.eventKey}</bdi> ·{' '}
+                  {channelLabels[selected.channel]} · {LOCALE_LABELS[selected.locale]} · v
+                  {numbers.number(selected.version)}
                 </p>
+                <Badge variant="outline">{statusLabel(selected.status)}</Badge>
               </div>
 
               {/* Rendered subject (email only) */}
@@ -339,21 +327,34 @@ export default function TemplatePreviewPanel({
               {/* Rendered body */}
               <div className="border border-border rounded-lg p-4 bg-muted/40">
                 <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
-                  {t('admin.notifications.bodyTemplate', uiLocale)}
+                  {selected.channel === 'in_app'
+                    ? channelLabels.in_app
+                    : t('admin.notifications.bodyTemplate', uiLocale)}
                 </h3>
                 {selected.channel === 'email' ? (
                   <BrandedEmailPreview
                     body={bodyPreview?.output ?? ''}
                     locale={selected.locale}
+                    uiLocale={uiLocale}
                     title={t('admin.notifications.preview', uiLocale)}
                   />
                 ) : (
-                  <pre
-                    dir={selected.locale === 'fa' ? 'rtl' : 'ltr'}
-                    className="text-sm whitespace-pre-wrap font-sans text-foreground"
-                  >
-                    {bodyPreview?.output}
-                  </pre>
+                  <div className="space-y-1.5">
+                    {selected.channel === 'in_app' && subjectPreview != null && (
+                      <p
+                        className="text-sm font-semibold [overflow-wrap:anywhere]"
+                        dir={selected.locale === 'fa' ? 'rtl' : 'ltr'}
+                      >
+                        {subjectPreview.output}
+                      </p>
+                    )}
+                    <pre
+                      className="whitespace-pre-wrap font-sans text-sm text-foreground [overflow-wrap:anywhere]"
+                      dir={selected.locale === 'fa' ? 'rtl' : 'ltr'}
+                    >
+                      {bodyPreview?.output}
+                    </pre>
+                  </div>
                 )}
               </div>
 
@@ -379,13 +380,13 @@ export default function TemplatePreviewPanel({
                               : 'bg-muted/40 border-border text-foreground'
                           }`}
                         >
-                          <span className="font-mono">
+                          <bdi className="font-mono [overflow-wrap:anywhere]">
                             {'{{'}
                             {v.name}
                             {'}}'}
-                          </span>
+                          </bdi>
                           {v.description && (
-                            <span className="ml-2 text-muted-foreground">{v.description}</span>
+                            <span className="ms-2 text-muted-foreground">{v.description}</span>
                           )}
                         </li>
                       );

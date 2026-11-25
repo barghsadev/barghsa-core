@@ -12,26 +12,30 @@ import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { CrmLegalEditor } from '../components/CrmLegalEditor.js';
 import { CrmAddressEditor } from '../components/CrmAddressEditor.js';
 import { CrmLegalDocuments } from '../components/CrmLegalDocuments.js';
+import {
+  RecordEditorSection,
+  RecordEditorActions,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
+import {
+  StickyRecordEditorActions,
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+} from '../components/StickyRecordEditorActions.js';
 import { formatDate } from '@barghsa/i18n/date-time';
 import { CrmProfileRecords } from '../components/CrmProfileRecords.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
-import {
-  LoadingStatus,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  Button,
-  Label,
-} from '@barghsa/ui';
-import { useState, useCallback, useEffect, useId, useRef, type ComponentProps } from 'react';
-import { useParams, Link } from '@tanstack/react-router';
+import { LoadingStatus, Button, Label, Textarea, buttonVariants, inputVariants } from '@barghsa/ui';
+import { useState, useCallback, useEffect, useId, useRef, type ReactNode } from 'react';
+import { useBlocker, useParams, useNavigate, Link } from '@tanstack/react-router';
 import { Lock } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/crm';
+import { tCrmForm } from '@barghsa/i18n/crm-forms';
+import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import { useLocale } from '../hooks/useLocale.js';
 
 interface Profile {
@@ -164,6 +168,11 @@ interface EditableFields {
   email: string;
   mobile: string;
 }
+const editableProfileFields = [
+  ['title', 'crm.profile.field.title', 'title'],
+  ['email', 'crm.profile.label.email', 'contactEmail'],
+  ['mobile', 'crm.profile.label.mobile', 'contactMobile'],
+] as const;
 
 function referenceName(name: LocalizedName | null | undefined, locale: Locale): string {
   return (locale === 'fa' ? name?.nameFa : name?.nameEn) || t('crm.records.unknown', locale);
@@ -212,18 +221,80 @@ const TAB_DEFS: TabDef[] = [
   { id: 'profiles', labelKey: 'crm.profile.tab.otherProfiles' },
 ];
 
-export default function CrmProfileDetail() {
+export type CrmProfileAction = 'archive' | 'force-password-change' | 'expire-sessions';
+const profileActions = {
+  'force-password-change': { kind: 'password', title: 'crm.profile.admin.forcePasswordChange' },
+  'expire-sessions': { kind: 'sessions', title: 'crm.profile.admin.expireSessions' },
+  archive: { kind: 'archive', title: 'crm.profile.archive.title' },
+} as const;
+type ProfileEditEntry =
+  | { kind: 'contact' | 'legal' }
+  | { kind: 'address'; addressId: string }
+  | { kind: 'action'; action: CrmProfileAction }
+  | { kind: 'verification' };
+
+export default function CrmProfileDetail({
+  initialTab = 'overview',
+}: { initialTab?: string } = {}) {
   const { profileId } = useParams({ from: '/admin/crm/profiles/$profileId' });
-  const actor = useAccountUser();
-  const revision = useProfileContextRevision();
-  return <CrmProfileDetailContent key={JSON.stringify([profileId, actor, revision])} />;
+  return <CrmProfileWorkspace profileId={profileId} initialTab={initialTab} />;
 }
 
-function CrmProfileDetailContent() {
+export function CrmProfileEditor({
+  profileId,
+  editor,
+}: {
+  profileId: string;
+  editor: ProfileEditEntry;
+}) {
+  return <CrmProfileWorkspace profileId={profileId} editor={editor} />;
+}
+
+function CrmProfileWorkspace({
+  profileId,
+  initialTab,
+  editor,
+}: {
+  profileId: string;
+  initialTab?: string;
+  editor?: ProfileEditEntry;
+}) {
+  const actor = useAccountUser();
+  const revision = useProfileContextRevision();
+  return (
+    <CrmProfileDetailContent
+      key={JSON.stringify([profileId, actor, revision, editor, initialTab])}
+      profileId={profileId}
+      initialTab={initialTab ?? 'overview'}
+      editor={editor}
+    />
+  );
+}
+
+function CrmProfileDetailContent({
+  profileId,
+  initialTab,
+  editor,
+}: {
+  profileId: string;
+  initialTab: string;
+  editor: ProfileEditEntry | undefined;
+}) {
   const time = useAccountTime();
   const locale: Locale = useLocale();
   const numbers = useNumberFormatting(locale);
-  const { profileId } = useParams({ from: '/admin/crm/profiles/$profileId' });
+  const navigate = useNavigate();
+  const writePending = useRef(false);
+  const focusVerificationHeading = useCallback((heading: HTMLHeadingElement | null) => {
+    heading?.focus({ preventScroll: true });
+  }, []);
+  const onPendingChange = (pending: boolean) => {
+    writePending.current = pending;
+  };
+  useBlocker({
+    shouldBlockFn: () => !!editor && writePending.current,
+    enableBeforeUnload: () => !!editor && writePending.current,
+  });
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
   const reader = useId();
@@ -288,17 +359,6 @@ function CrmProfileDetailContent() {
   const [data, setData] = useState<ProfileDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const withdrawProfile = useCallback(
-    (status: 401 | 403 | 404) => {
-      activeRead.current?.cancel();
-      setData(null);
-      setError(
-        t(status === 404 ? 'crm.profile.error.notFound' : 'crm.profile.error.accessDenied', locale)
-      );
-      setLoading(false);
-    },
-    [locale]
-  );
   const [reloadKey, setReloadKey] = useState(0);
   const reloadProfile = useCallback(() => {
     activeRead.current?.cancel();
@@ -307,16 +367,9 @@ function CrmProfileDetailContent() {
     setLoading(true);
     setReloadKey((key) => key + 1);
   }, []);
-  const [activeTab, setActiveTab] = useState('overview');
-  const [editingAddress, setEditingAddress] = useState<string | null>(null);
-  const [editingLegal, setEditingLegal] = useState(false);
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [legalSaved, setLegalSaved] = useState(false);
-  const legalEditButton = useRef<HTMLButtonElement>(null);
-  const wasEditingLegal = useRef(false);
-  useEffect(() => {
-    if (wasEditingLegal.current && !editingLegal) legalEditButton.current?.focus();
-    wasEditingLegal.current = editingLegal;
-  }, [editingLegal]);
+  const legalReturnFocus = useRef<HTMLButtonElement>(null);
   const [addressSaved, setAddressSaved] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const editMessages = {
@@ -349,23 +402,42 @@ function CrmProfileDetailContent() {
     editMessages,
     t('crm.profile.error.generic', locale)
   );
-  const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [pendingAction, setPendingAction] = useState<{
     action: TeamAction;
     kind: 'edit' | 'password' | 'sessions' | 'verification' | 'archive';
+    summary?: ReactNode;
   } | null>(null);
-  const [showArchive, setShowArchive] = useState(false);
-  const [archiveReason, setArchiveReason] = useState('');
-  const archiveButton = useRef<HTMLButtonElement>(null);
-  const [showForcePwChange, setShowForcePwChange] = useState(false);
-  const [showExpireSessions, setShowExpireSessions] = useState(false);
-  const [forcePwChangeReason, setForcePwChangeReason] = useState('');
-  const [expireSessionsReason, setExpireSessionsReason] = useState('');
-  const actionLoading = false;
+  const [profileActionReason, setProfileActionReason] = useState('');
   const saving = pendingAction?.kind === 'edit';
-  const actionError: string | null = null;
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
+  const withdrawProfile = useCallback(
+    (status: 401 | 403 | 404) => {
+      writePending.current = false;
+      setPendingAction(null);
+      setIsEditing(false);
+      setSaveSuccess(false);
+      setLegalSaved(false);
+      setAddressSaved(false);
+      setProfileActionReason('');
+      editDraft.form.reset({ title: '', email: '', mobile: '' });
+      activeRead.current?.cancel();
+      setData(null);
+      setError(
+        t(status === 404 ? 'crm.profile.error.notFound' : 'crm.profile.error.accessDenied', locale)
+      );
+      setLoading(false);
+    },
+    [locale, editDraft.form]
+  );
+  const viewingSection = editor?.kind === 'address' ? 'addresses' : 'details';
+  const returnToProfile = () => {
+    void navigate({
+      to: '/admin/crm/profiles/$profileId',
+      params: { profileId },
+      search: { section: viewingSection },
+    });
+  };
 
   useEffect(() => {
     const abort = new AbortController();
@@ -377,14 +449,16 @@ function CrmProfileDetailContent() {
       .then((res) => {
         if (!owned.current() || abort.signal.aborted) throw new Error('Abandoned CRM read');
         if (!res.value) {
-          if (res.status === 404) throw new Error(t('crm.profile.error.notFound', locale));
-          if (res.status === 403) throw new Error(t('crm.profile.error.accessDenied', locale));
+          if (res.status === 401 || res.status === 403 || res.status === 404) {
+            withdrawProfile(res.status);
+            return null;
+          }
           throw new Error(t('crm.profile.error.generic', locale));
         }
         return res.value;
       })
-      .then((json: ProfileDetail) => {
-        if (abort.signal.aborted || !owned.current()) return;
+      .then((json) => {
+        if (!json || abort.signal.aborted || !owned.current()) return;
         setData(json);
         setLoading(false);
       })
@@ -414,21 +488,19 @@ function CrmProfileDetailContent() {
       mobile: data.profile.contactMobile ?? '',
     });
     setIsEditing(true);
-    setActiveTab('details');
-    setSaveError(null);
     setSaveSuccess(false);
   }
 
-  /** Cancel editing without saving */
-  function handleCancelEdit() {
-    setIsEditing(false);
-    setSaveError(null);
-    setSaveSuccess(false);
-  }
+  useEffect(() => {
+    if (editor?.kind !== 'contact' || !data || saveSuccess || isEditing) return;
+    if (!data.viewerPermissions?.canEdit || data.profile.archived) return;
+    handleStartEdit();
+  }, [editor?.kind, data, isEditing, saveSuccess]);
 
   function queueAction(
     action: TeamAction,
-    kind: 'edit' | 'password' | 'sessions' | 'verification' | 'archive'
+    kind: 'edit' | 'password' | 'sessions' | 'verification' | 'archive',
+    summary?: ReactNode
   ) {
     setActionSuccess(null);
     setPendingAction({
@@ -438,6 +510,7 @@ function CrmProfileDetailContent() {
         conflictMessage: t('crm.profile.conflict', locale),
       },
       kind,
+      summary,
     });
   }
   const handleConfirmSave = editDraft.form.handleSubmit((values) => {
@@ -445,7 +518,7 @@ function CrmProfileDetailContent() {
     queueAction(
       {
         title: t('crm.profile.edit.confirm.title', locale),
-        description: `${t('crm.profile.edit.confirm.message', locale)} ${profileId}`,
+        description: data?.profile.title || data?.user.username || profileId,
         path: `/api/crm/profiles/${profileId}`,
         method: 'PUT',
         body: {
@@ -457,37 +530,8 @@ function CrmProfileDetailContent() {
       'edit'
     );
   });
-  function handleForcePasswordChange() {
-    if (!data || !forcePwChangeReason.trim()) return;
-    setShowForcePwChange(false);
-    queueAction(
-      {
-        risk: 'destructive',
-        title: t('crm.profile.admin.forcePasswordChange', locale),
-        description: `${data.user.username} · ${forcePwChangeReason.trim()}`,
-        path: `/api/crm/users/${encodeURIComponent(data.user.userId)}/force-password-change`,
-        method: 'POST',
-        body: { reason: forcePwChangeReason.trim() },
-      },
-      'password'
-    );
-  }
-  function handleExpireSessions() {
-    if (!data || !expireSessionsReason.trim()) return;
-    setShowExpireSessions(false);
-    queueAction(
-      {
-        risk: 'destructive',
-        title: t('crm.profile.admin.expireSessions', locale),
-        description: `${data.user.username} · ${expireSessionsReason.trim()}`,
-        path: `/api/crm/users/${encodeURIComponent(data.user.userId)}/expire-sessions`,
-        method: 'POST',
-        body: { reason: expireSessionsReason.trim() },
-      },
-      'sessions'
-    );
-  }
   async function actionSucceeded(response: unknown) {
+    if (!alive.current) return;
     const kind = pendingAction?.kind;
     if (!kind || !response || typeof response !== 'object') {
       throw new Error('Missing CRM action acknowledgement');
@@ -517,7 +561,11 @@ function CrmProfileDetailContent() {
         throw new Error('Invalid CRM profile update acknowledgement');
       }
     } else {
-      if (result.success !== true || !targetMatches) {
+      if (
+        result.success !== true ||
+        !targetMatches ||
+        ((kind === 'password' || kind === 'sessions') && result.reason !== body.reason)
+      ) {
         throw new Error('Invalid CRM action acknowledgement');
       }
       if (kind === 'verification') {
@@ -541,6 +589,7 @@ function CrmProfileDetailContent() {
       ) {
         throw new Error('Invalid CRM archival timestamp');
       }
+      writePending.current = false;
       window.location.assign('/admin/crm');
       return;
     }
@@ -558,8 +607,7 @@ function CrmProfileDetailContent() {
           locale
         )
       );
-      setForcePwChangeReason('');
-      setExpireSessionsReason('');
+      setProfileActionReason('');
     }
     // A committed mutation stays successful even when the subsequent read fails.
     const owned = readProfile();
@@ -567,7 +615,9 @@ function CrmProfileDetailContent() {
       const response = await owned.result;
       if (!owned.current()) return;
       if (response.value) setData(response.value);
-      else setError(t('crm.profile.error.generic', locale));
+      else if (response.status === 401 || response.status === 403 || response.status === 404) {
+        withdrawProfile(response.status);
+      } else setError(t('crm.profile.error.generic', locale));
     } catch {
       if (owned.current()) setError(t('crm.profile.error.generic', locale));
     } finally {
@@ -615,6 +665,351 @@ function CrmProfileDetailContent() {
   }
 
   const { profile, user, legalInfo, addresses, sessions, siblingProfiles } = data;
+  const displayName =
+    profile.title?.trim() ||
+    legalInfo?.legalName ||
+    [profile.firstName, profile.lastName].filter(Boolean).join(' ') ||
+    user.username;
+  const profileType = (['INDIVIDUAL', 'LEGAL'] as const).find(
+    (type) => type === profile.profileType
+  );
+  const verificationAllowed =
+    !!data.viewerPermissions?.canVerify &&
+    !profile.archived &&
+    ['DRAFT', 'ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED'].includes(profile.status);
+
+  if (editor?.kind === 'verification') {
+    const heading = verificationConfigText('identityReview', locale);
+    return (
+      <section className="mx-auto max-w-2xl space-y-3" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+        <Link
+          to="/admin/crm/profiles/$profileId"
+          params={{ profileId }}
+          activeOptions={{ exact: true }}
+          className="touch-action inline-flex items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
+        >
+          {tCrmForm('crm.profile.action.back', locale)}
+        </Link>
+        <h1
+          ref={focusVerificationHeading}
+          tabIndex={-1}
+          className="w-fit text-xl font-semibold focus:outline-none"
+        >
+          {heading}
+        </h1>
+        {!verificationAllowed || !profileType ? (
+          <p role="alert" className="text-destructive">
+            {t('crm.profile.error.accessDenied', locale)}
+          </p>
+        ) : actionSuccess ? (
+          <CommandFeedback message={actionSuccess} />
+        ) : (
+          <ProfileVerificationReview
+            key={JSON.stringify([profileId, profile.updatedAt])}
+            profileId={profileId}
+            profileType={profileType}
+            status={profile.status}
+            title={displayName}
+            current={data.verificationCurrent ?? profile.status === 'VERIFIED'}
+            policy={{
+              ...(data.verificationPolicy ?? DEFAULT_VERIFICATION_POLICY)[profileType],
+              allowManualOverride: data.verificationPolicy?.allowManualOverride ?? false,
+            }}
+            canOverride={data.viewerPermissions?.canOverrideVerification === true}
+            disabled={!!pendingAction}
+            onPendingChange={onPendingChange}
+            onReview={(action, summary) => queueAction(action, 'verification', summary)}
+          />
+        )}
+        {verificationAllowed && pendingAction?.kind === 'verification' && (
+          <TeamActionDialog
+            action={pendingAction.action}
+            summary={pendingAction.summary}
+            onPendingChange={onPendingChange}
+            onClose={() => {
+              onPendingChange(false);
+              setPendingAction(null);
+            }}
+            onDenied={(status) => withdrawProfile(status ?? 403)}
+            onSuccess={actionSucceeded}
+          />
+        )}
+      </section>
+    );
+  }
+
+  if (editor?.kind === 'action') {
+    const { action } = editor;
+    const definition = profileActions[action];
+    const archive = action === 'archive';
+    const title = t(definition.title, locale);
+    const effect = tCrmForm(`crm.profile.action.${action}.effect`, locale);
+    const allowed = !!data.viewerPermissions?.canManageUser && (!archive || !profile.archived);
+    const accountLabel = tCrmForm('crm.profile.action.account', locale);
+    const reasonLabel = archive
+      ? t('crm.profile.archivedReason', locale)
+      : tCrmForm('crm.profile.action.reason', locale);
+    return (
+      <CrmProfileActionForm
+        action={action}
+        locale={locale}
+        profileId={profileId}
+        title={title}
+        effect={effect}
+        name={displayName}
+        account={archive ? undefined : user.username}
+        accountLabel={accountLabel}
+        reason={profileActionReason}
+        reasonLabel={reasonLabel}
+        onReasonChange={setProfileActionReason}
+        allowed={allowed}
+        result={actionSuccess}
+        disabled={!!pendingAction}
+        onReview={() => {
+          const reason = profileActionReason.trim();
+          if (!allowed || !reason || pendingAction || actionSuccess) return;
+          queueAction(
+            {
+              risk: 'destructive',
+              title,
+              description: effect,
+              path: archive
+                ? `/api/crm/profiles/${profileId}`
+                : `/api/crm/users/${encodeURIComponent(user.userId)}/${action}`,
+              method: archive ? 'DELETE' : 'POST',
+              body: { reason },
+              ...(archive && { errorMessages: archiveErrorMessages(locale) }),
+            },
+            definition.kind
+          );
+        }}
+        review={
+          pendingAction && allowed ? (
+            <TeamActionDialog
+              action={pendingAction.action}
+              onPendingChange={onPendingChange}
+              onClose={() => {
+                onPendingChange(false);
+                setPendingAction(null);
+              }}
+              onDenied={(status) => withdrawProfile(status ?? 403)}
+              onSuccess={actionSucceeded}
+              summary={
+                <dl className="space-y-2 break-words text-sm">
+                  <div>
+                    <dt className="text-muted-foreground">
+                      {archive ? t('crm.profile.title', locale) : accountLabel}
+                    </dt>
+                    <dd className="font-medium">
+                      <bdi>{archive ? displayName : user.username}</bdi>
+                    </dd>
+                    {archive && <dd className="text-muted-foreground">{profileId}</dd>}
+                  </div>
+                  <div>
+                    <dt className="text-muted-foreground">{reasonLabel}</dt>
+                    <dd className="whitespace-pre-wrap">
+                      <bdi>{(pendingAction.action.body as { reason: string }).reason}</bdi>
+                    </dd>
+                  </div>
+                </dl>
+              }
+            />
+          ) : null
+        }
+      />
+    );
+  }
+
+  if (editor) {
+    const address =
+      editor.kind === 'address' ? addresses.find((row) => row.id === editor.addressId) : null;
+    const available = editor.kind === 'contact' || (editor.kind === 'legal' ? legalInfo : address);
+    const editable = data.viewerPermissions?.canEdit && !profile.archived;
+    const title = t(
+      editor.kind === 'legal'
+        ? 'crm.legal.edit'
+        : editor.kind === 'address'
+          ? 'crm.address.edit'
+          : 'crm.profile.edit.title',
+      locale
+    );
+    const saved =
+      editor.kind === 'legal' ? legalSaved : editor.kind === 'address' ? addressSaved : saveSuccess;
+    const proposed =
+      pendingAction?.kind === 'edit' ? (pendingAction.action.body as EditableFields) : null;
+    return (
+      <section
+        dir={locale === 'fa' ? 'rtl' : 'ltr'}
+        className="mx-auto min-w-0 max-w-3xl space-y-3"
+      >
+        <Link
+          to="/admin/crm/profiles/$profileId"
+          params={{ profileId }}
+          search={{ section: viewingSection }}
+          className="text-sm text-primary underline underline-offset-4"
+        >
+          <bdi>{displayName}</bdi>
+        </Link>
+        <h1 className="text-xl font-semibold">{title}</h1>
+        {!editable || !available ? (
+          <p role="alert" className="text-destructive">
+            {t(editable ? 'crm.profile.error.notFound' : 'crm.profile.error.accessDenied', locale)}
+          </p>
+        ) : saved ? (
+          <div className="space-y-3 rounded-lg border bg-card p-4">
+            <CommandFeedback
+              message={t(
+                editor.kind === 'address' ? 'crm.address.saved' : 'crm.profile.edit.saved',
+                locale
+              )}
+            />
+            <Link
+              to="/admin/crm/profiles/$profileId"
+              params={{ profileId }}
+              search={{ section: viewingSection }}
+              className={buttonVariants()}
+            >
+              {t('crm.profile.returnToProfile', locale)}
+            </Link>
+          </div>
+        ) : (
+          <>
+            {editor.kind === 'legal' && legalInfo && (
+              <CrmLegalEditor
+                key={profile.id}
+                profileId={profile.id}
+                legalInfo={legalInfo}
+                returnFocus={legalReturnFocus}
+                onCancel={returnToProfile}
+                onDenied={() => withdrawProfile(403)}
+                onPendingChange={onPendingChange}
+                onSaved={(value, updatedAt) => {
+                  onPendingChange(false);
+                  setData((current) =>
+                    current
+                      ? { ...current, legalInfo: value, profile: { ...current.profile, updatedAt } }
+                      : null
+                  );
+                  setLegalSaved(true);
+                }}
+              />
+            )}
+            {editor.kind === 'address' && address && (
+              <CrmAddressEditor
+                profileId={profile.id}
+                address={address}
+                onCancel={returnToProfile}
+                onDenied={() => withdrawProfile(403)}
+                onPendingChange={onPendingChange}
+                onSaved={(value, updatedAt) => {
+                  onPendingChange(false);
+                  setData((current) =>
+                    current
+                      ? {
+                          ...current,
+                          profile: { ...current.profile, updatedAt },
+                          addresses: current.addresses.map((row) =>
+                            row.id === value.id ? value : row
+                          ),
+                        }
+                      : null
+                  );
+                  setAddressSaved(true);
+                }}
+              />
+            )}
+            {editor.kind === 'contact' && isEditing && (
+              <form
+                noValidate
+                onSubmit={(event) => void handleConfirmSave(event)}
+                className={recordEditorFormSurface}
+                onFocus={keepRecordFieldVisible}
+              >
+                <RecordEditorSection
+                  title={tCrmForm('crm.profile.edit.contactDetails', locale)}
+                  description={t('crm.profile.contacts.explanation', locale)}
+                >
+                  <div className={recordEditorGrid}>
+                    {editableProfileFields.map(([field, labelKey]) => (
+                      <EditRow
+                        key={field}
+                        field={field}
+                        label={t(labelKey, locale)}
+                        value={editFields[field]}
+                        onChange={editDraft.field(field)[1]}
+                        binding={editDraft.bind(field)}
+                        error={editDraft.errors[field]?.message}
+                        errorId={editDraft.errorId(field)}
+                        validationMessage={editMessages[field]}
+                        disabled={saving || editDraft.form.formState.isSubmitting}
+                      />
+                    ))}
+                  </div>
+                </RecordEditorSection>
+                <StickyRecordEditorActions>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={returnToProfile}
+                    disabled={saving}
+                  >
+                    {t('crm.profile.edit.cancel', locale)}
+                  </Button>
+                  <Button type="submit" disabled={saving || editDraft.form.formState.isSubmitting}>
+                    {t('crm.profile.edit.save', locale)}
+                  </Button>
+                </StickyRecordEditorActions>
+              </form>
+            )}
+          </>
+        )}
+        {pendingAction?.kind === 'edit' && (
+          <TeamActionDialog
+            action={pendingAction.action}
+            onPendingChange={onPendingChange}
+            onClose={() => {
+              onPendingChange(false);
+              setPendingAction(null);
+            }}
+            onDenied={() => withdrawProfile(403)}
+            onSuccess={actionSucceeded}
+            onValidationError={editValidationError}
+            summary={
+              <div className="space-y-3 text-sm [overflow-wrap:anywhere]">
+                {editableProfileFields
+                  .filter(
+                    ([field, , original]) => (profile[original] || null) !== proposed?.[field]
+                  )
+                  .map(([field, labelKey, original]) => (
+                    <div key={field}>
+                      <p className="font-medium">{t(labelKey, locale)}</p>
+                      <dl className="grid gap-2 sm:grid-cols-2">
+                        <div>
+                          <dt className="text-muted-foreground">
+                            {t('crm.profile.edit.current', locale)}
+                          </dt>
+                          <dd>
+                            <bdi>{profile[original] || '—'}</bdi>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-muted-foreground">
+                            {t('crm.profile.edit.proposed', locale)}
+                          </dt>
+                          <dd>
+                            <bdi>{proposed?.[field] || '—'}</bdi>
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                  ))}
+              </div>
+            }
+          />
+        )}
+      </section>
+    );
+  }
 
   const tabs = TAB_DEFS.map((td) => ({ id: td.id, label: t(td.labelKey, locale) }));
 
@@ -629,8 +1024,10 @@ function CrmProfileDetailContent() {
         >
           {t('crm.profile.backToUsers', locale)}
         </Link>
-        <h1 className="text-2xl font-bold mt-1 flex flex-wrap items-center gap-3">
-          {t('crm.profile.title', locale)}
+        <div className="mt-2 flex flex-wrap items-center gap-3">
+          <h1 className="text-2xl font-bold [overflow-wrap:anywhere]">
+            <bdi>{displayName}</bdi>
+          </h1>
           <span
             className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusBadgeClass(profile.archived ? 'ARCHIVED' : profile.status)}`}
           >
@@ -641,187 +1038,55 @@ function CrmProfileDetailContent() {
           <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-foreground">
             {getProfileTypeLabel(profile.profileType, locale)}
           </span>
-          <span className="flex w-full flex-wrap gap-2 lg:ms-auto lg:w-auto">
-            {!isEditing ? (
-              <>
-                {data.viewerPermissions?.canEdit && !profile.archived && (
-                  <button
-                    onClick={handleStartEdit}
-                    disabled={editingAddress !== null || editingLegal}
-                    className="text-sm px-3 py-1 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-                  >
-                    {t('crm.profile.edit', locale)}
-                  </button>
-                )}
-                {data.viewerPermissions?.canManageUser && (
-                  <>
-                    <button
-                      onClick={() => setShowForcePwChange(true)}
-                      className="text-sm px-3 py-1 rounded bg-orange-700 text-white hover:bg-orange-800 transition-colors"
-                    >
-                      {t('crm.profile.admin.forcePasswordChange', locale)}
-                    </button>
-                    <button
-                      onClick={() => setShowExpireSessions(true)}
-                      className="text-sm px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 transition-colors"
-                    >
-                      {t('crm.profile.admin.expireSessions', locale)}
-                    </button>
-                  </>
-                )}
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={(event) => {
-                    setActiveTab('details');
-                    void handleConfirmSave(event);
-                  }}
-                  disabled={saving || editDraft.form.formState.isSubmitting}
-                  className="text-sm px-3 py-1 rounded bg-success-soft text-success hover:underline disabled:opacity-50"
-                >
-                  {saving ? '...' : t('crm.profile.edit.save', locale)}
-                </button>
-                <button
-                  onClick={handleCancelEdit}
-                  disabled={saving || editDraft.form.formState.isSubmitting}
-                  className="text-sm px-3 py-1 rounded bg-muted text-foreground hover:bg-accent transition-colors disabled:opacity-50"
-                >
-                  {t('crm.profile.edit.cancel', locale)}
-                </button>
-              </>
-            )}
-          </span>
-        </h1>
-        <p className="text-muted-foreground text-sm mt-1 break-words">
-          {profile.firstName && profile.lastName
-            ? `${profile.firstName} ${profile.lastName}`
-            : (legalInfo?.legalName ?? profileId)}
-          {' — '}
-          {user.username}
+        </div>
+        <p className="mt-1 text-sm text-muted-foreground [overflow-wrap:anywhere]">
+          <bdi dir="ltr">{user.username}</bdi>
         </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {data.viewerPermissions?.canEdit && !profile.archived && (
+            <Link
+              to="/admin/crm/profiles/$profileId/$operation"
+              params={{ profileId, operation: 'edit' }}
+              className={buttonVariants()}
+            >
+              {t('crm.profile.edit', locale)}
+            </Link>
+          )}
+          {verificationAllowed && profileType && (
+            <Link
+              to="/admin/crm/profiles/$profileId/$operation"
+              params={{ profileId, operation: 'verification' }}
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              {verificationConfigText('identityReview', locale)}
+            </Link>
+          )}
+          {data.viewerPermissions?.canManageUser &&
+            (Object.keys(profileActions) as CrmProfileAction[]).map((action) =>
+              action === 'archive' && profile.archived ? null : (
+                <Link
+                  key={action}
+                  to="/admin/crm/profiles/$profileId/$operation"
+                  params={{ profileId, operation: action }}
+                  className={buttonVariants({ variant: 'outline' })}
+                >
+                  {t(profileActions[action].title, locale)}
+                </Link>
+              )
+            )}
+        </div>
       </div>
 
-      {data.viewerPermissions?.canVerify &&
-        !profile.archived &&
-        ['DRAFT', 'ACTIVE', 'PENDING_VERIFICATION', 'VERIFIED'].includes(profile.status) && (
-          <ProfileVerificationReview
-            key={JSON.stringify([profileId, profile.updatedAt])}
-            profileId={profileId}
-            status={profile.status}
-            title={profile.title || profileId}
-            current={data.verificationCurrent ?? profile.status === 'VERIFIED'}
-            policy={{
-              ...(data.verificationPolicy ?? DEFAULT_VERIFICATION_POLICY)[
-                profile.profileType as 'INDIVIDUAL' | 'LEGAL'
-              ],
-              allowManualOverride: data.verificationPolicy?.allowManualOverride ?? false,
-            }}
-            canOverride={data.viewerPermissions?.canOverrideVerification === true}
-            disabled={!!pendingAction}
-            onReview={(action) => queueAction(action, 'verification')}
-          />
-        )}
-      {data.viewerPermissions?.canManageUser && !profile.archived && (
-        <Button
-          ref={archiveButton}
-          variant="outline"
-          className="mb-4"
-          onClick={() => setShowArchive(true)}
-        >
-          {t('crm.profile.archive.title', locale)}
-        </Button>
-      )}
-      {showArchive && (
-        <AdminActionConfirmModal
-          title={t('crm.profile.archive.title', locale)}
-          message={`${t('crm.profile.archive.warning', locale)} ${profile.title ?? profileId}`}
-          checklist={['availability', 'history', 'account'].map((item) =>
-            t(`crm.profile.archive.checklist.${item}`, locale)
-          )}
-          reasonLabel={t('crm.profile.archivedReason', locale)}
-          finalFocus={archiveButton}
-          reason={archiveReason}
-          onReasonChange={setArchiveReason}
-          onCancel={() => setShowArchive(false)}
-          cancelLabel={t('team.cancel', locale)}
-          confirmLabel={t('crm.profile.archive.title', locale)}
-          loading={false}
-          onConfirm={() => {
-            setShowArchive(false);
-            queueAction(
-              {
-                title: t('crm.profile.archive.title', locale),
-                description: `${t('crm.profile.archive.warning', locale)} ${profileId} · ${archiveReason.trim()}`,
-                path: `/api/crm/profiles/${profileId}`,
-                method: 'DELETE',
-                errorMessages: {
-                  ...Object.fromEntries(
-                    [
-                      'CRM:PROFILE:DELETION_BLOCKED',
-                      'CRM:PROFILE:LAST_OWNER',
-                      'CRM:PROFILE:ALREADY_ARCHIVED',
-                    ].map((code) => [
-                      code,
-                      (response: unknown) => {
-                        const message = (response as { error?: { message?: unknown } } | null)
-                          ?.error?.message;
-                        return typeof message === 'string' && message.trim()
-                          ? message
-                          : t('crm.profile.archive.warning', locale);
-                      },
-                    ])
-                  ),
-                },
-                body: { reason: archiveReason.trim() },
-              },
-              'archive'
-            );
-          }}
-        />
-      )}
       {data.viewerPermissions?.canEditIdentity && !profile.archived && (
         <p className="mb-4">
           <a
             className="touch-action text-foreground underline"
-            href={`/admin/crm/corrections?profileId=${encodeURIComponent(profileId)}`}
+            href={`/admin/crm/profiles/${encodeURIComponent(profileId)}/corrections/new`}
           >
             {t('crm.corrections.request', locale)}
           </a>
         </p>
       )}
-      {/* Save success / error flash messages */}
-      {saveSuccess && (
-        <div
-          className="mb-4 p-3 bg-success-soft border border-success/20 text-success rounded-md text-sm"
-          role="alert"
-        >
-          {t('crm.profile.edit.saved', locale)}
-        </div>
-      )}
-      {saveError && (
-        <div
-          className="mb-4 p-3 bg-danger-soft border border-destructive/20 text-destructive rounded-md text-sm"
-          role="alert"
-        >
-          {saveError}
-        </div>
-      )}
-
-      {/* Action success / error flash messages */}
-      <CommandFeedback
-        className="mb-4 p-3 bg-success-soft border border-success/20 text-success rounded-md text-sm"
-        message={actionSuccess}
-      />
-      {actionError && (
-        <div
-          className="mb-4 p-3 bg-danger-soft border border-destructive/20 text-destructive rounded-md text-sm"
-          role="alert"
-        >
-          {actionError}
-        </div>
-      )}
-
       {/* Tabs */}
       <div className="border-b border-border mb-6">
         <div
@@ -920,7 +1185,7 @@ function CrmProfileDetailContent() {
       )}
 
       {/* Tab: Profile Details */}
-      {(activeTab === 'details' || editingLegal || isEditing) && (
+      {activeTab === 'details' && (
         <div
           id="panel-details"
           role="tabpanel"
@@ -955,39 +1220,14 @@ function CrmProfileDetailContent() {
             <p className="text-sm text-muted-foreground">
               {t('crm.profile.contacts.explanation', locale)}
             </p>
-            {isEditing ? (
-              <>
-                <EditRow
-                  label={t('crm.profile.label.email', locale)}
-                  value={editFields.email}
-                  onChange={editDraft.field('email')[1]}
-                  binding={editDraft.bind('email')}
-                  error={editDraft.errors.email?.message}
-                  disabled={saving || editDraft.form.formState.isSubmitting}
-                  placeholder={profile.contactEmail ?? t('crm.profile.edit.noChanges', locale)}
-                />
-                <EditRow
-                  label={t('crm.profile.label.mobile', locale)}
-                  value={editFields.mobile}
-                  onChange={editDraft.field('mobile')[1]}
-                  binding={editDraft.bind('mobile')}
-                  error={editDraft.errors.mobile?.message}
-                  disabled={saving || editDraft.form.formState.isSubmitting}
-                  placeholder={profile.contactMobile ?? t('crm.profile.edit.noChanges', locale)}
-                />
-              </>
-            ) : (
-              <>
-                <DetailRow
-                  label={t('crm.profile.label.email', locale)}
-                  value={profile.contactEmail ?? '—'}
-                />
-                <DetailRow
-                  label={t('crm.profile.label.mobile', locale)}
-                  value={profile.contactMobile ?? '—'}
-                />
-              </>
-            )}
+            <DetailRow
+              label={t('crm.profile.label.email', locale)}
+              value={profile.contactEmail ?? '—'}
+            />
+            <DetailRow
+              label={t('crm.profile.label.mobile', locale)}
+              value={profile.contactMobile ?? '—'}
+            />
           </Section>
 
           <Section title={t('crm.profile.section.profile', locale)}>
@@ -1023,23 +1263,7 @@ function CrmProfileDetailContent() {
                 />
               </>
             )}
-            {isEditing ? (
-              <EditRow
-                label={t('crm.profile.field.title', locale)}
-                value={editFields.title}
-                onChange={editDraft.field('title')[1]}
-                binding={editDraft.bind('title')}
-                error={editDraft.errors.title?.message}
-                disabled={saving || editDraft.form.formState.isSubmitting}
-                placeholder={profile.title ?? t('crm.profile.edit.noChanges', locale)}
-              />
-            ) : (
-              <DetailRow
-                label={t('crm.profile.field.title', locale)}
-                value={profile.title ?? '—'}
-              />
-            )}
-            {/* Identity fields — always read-only with lock icon */}
+            <DetailRow label={t('crm.profile.field.title', locale)} value={profile.title ?? '—'} />
             <DetailRow
               label={t('crm.profile.field.firstName', locale)}
               value={profile.firstName ?? '—'}
@@ -1049,7 +1273,7 @@ function CrmProfileDetailContent() {
                 profile.profileType === 'INDIVIDUAL' &&
                 data.viewerPermissions?.canEditIdentity &&
                 !profile.archived
-                  ? `/admin/crm/corrections?profileId=${encodeURIComponent(profile.id)}&fieldName=first_name`
+                  ? `/admin/crm/profiles/${encodeURIComponent(profile.id)}/corrections/new?fieldName=first_name`
                   : undefined
               }
               correctionLabel={t('crm.corrections.request', locale)}
@@ -1063,7 +1287,7 @@ function CrmProfileDetailContent() {
                 profile.profileType === 'INDIVIDUAL' &&
                 data.viewerPermissions?.canEditIdentity &&
                 !profile.archived
-                  ? `/admin/crm/corrections?profileId=${encodeURIComponent(profile.id)}&fieldName=last_name`
+                  ? `/admin/crm/profiles/${encodeURIComponent(profile.id)}/corrections/new?fieldName=last_name`
                   : undefined
               }
               correctionLabel={t('crm.corrections.request', locale)}
@@ -1077,16 +1301,11 @@ function CrmProfileDetailContent() {
                 profile.profileType === 'INDIVIDUAL' &&
                 data.viewerPermissions?.canEditIdentity &&
                 !profile.archived
-                  ? `/admin/crm/corrections?profileId=${encodeURIComponent(profile.id)}&fieldName=national_id`
+                  ? `/admin/crm/profiles/${encodeURIComponent(profile.id)}/corrections/new?fieldName=national_id`
                   : undefined
               }
               correctionLabel={t('crm.corrections.request', locale)}
             />
-            {isEditing && (
-              <p className="text-xs text-muted-foreground mt-1">
-                {t('crm.profile.edit.identityLocked', locale)}
-              </p>
-            )}
             <DetailRow
               label={t('crm.profile.label.created', locale)}
               value={time.format(profile.createdAt)}
@@ -1099,43 +1318,15 @@ function CrmProfileDetailContent() {
 
           {legalInfo && (
             <Section title={t('crm.profile.section.legalEntity', locale)}>
-              <CommandFeedback message={legalSaved ? t('crm.profile.edit.saved', locale) : null} />
-              {data.viewerPermissions?.canEdit &&
-                !profile.archived &&
-                !isEditing &&
-                !editingLegal && (
-                  <Button
-                    ref={legalEditButton}
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setEditingLegal(true);
-                      setLegalSaved(false);
-                    }}
-                    disabled={editingAddress !== null}
-                  >
-                    {t('crm.legal.edit', locale)}
-                  </Button>
-                )}
-              {editingLegal && data.viewerPermissions?.canEdit && !profile.archived && (
-                <CrmLegalEditor
-                  key={profile.id}
-                  profileId={profile.id}
-                  legalInfo={legalInfo}
-                  returnFocus={legalEditButton}
-                  onCancel={() => setEditingLegal(false)}
-                  onSaved={(legalInfo, updatedAt) => {
-                    setData((current) =>
-                      current
-                        ? { ...current, legalInfo, profile: { ...current.profile, updatedAt } }
-                        : current
-                    );
-                    setEditingLegal(false);
-                    setLegalSaved(true);
-                  }}
-                />
+              {data.viewerPermissions?.canEdit && !profile.archived && (
+                <Link
+                  to="/admin/crm/profiles/$profileId/legal/edit"
+                  params={{ profileId }}
+                  className={buttonVariants({ variant: 'outline' })}
+                >
+                  {t('crm.legal.edit', locale)}
+                </Link>
               )}
-
               {[
                 ['legalName', legalInfo.legalName],
                 ['nationalIdentifier', legalInfo.nationalIdentifier],
@@ -1164,31 +1355,23 @@ function CrmProfileDetailContent() {
                 ['representativePostalCode', legalInfo.representativePostalCode],
                 ['createdAt', time.format(legalInfo.createdAt)],
                 ['updatedAt', time.format(legalInfo.updatedAt)],
-              ]
-                .filter(
-                  ([field]) =>
-                    !editingLegal ||
-                    ['legalName', 'nationalIdentifier', 'createdAt', 'updatedAt'].includes(
-                      field ?? ''
-                    )
-                )
-                .map(([field, value]) => (
-                  <DetailRow
-                    key={field}
-                    label={t('crm.profile.field.' + field, locale)}
-                    value={value ?? '—'}
-                    locked={['legalName', 'nationalIdentifier'].includes(field ?? '')}
-                    iconTooltip={t('crm.profile.edit.identityLocked', locale)}
-                    correctionHref={
-                      data.viewerPermissions?.canEditIdentity &&
-                      !profile.archived &&
-                      ['legalName', 'nationalIdentifier'].includes(field ?? '')
-                        ? `/admin/crm/corrections?profileId=${encodeURIComponent(profile.id)}&fieldName=${field === 'legalName' ? 'legal_name' : 'national_identifier'}`
-                        : undefined
-                    }
-                    correctionLabel={t('crm.corrections.request', locale)}
-                  />
-                ))}
+              ].map(([field, value]) => (
+                <DetailRow
+                  key={field}
+                  label={t('crm.profile.field.' + field, locale)}
+                  value={value ?? '—'}
+                  locked={['legalName', 'nationalIdentifier'].includes(field ?? '')}
+                  iconTooltip={t('crm.profile.edit.identityLocked', locale)}
+                  correctionHref={
+                    data.viewerPermissions?.canEditIdentity &&
+                    !profile.archived &&
+                    ['legalName', 'nationalIdentifier'].includes(field ?? '')
+                      ? `/admin/crm/profiles/${encodeURIComponent(profile.id)}/corrections/new?fieldName=${field === 'legalName' ? 'legal_name' : 'national_identifier'}`
+                      : undefined
+                  }
+                  correctionLabel={t('crm.corrections.request', locale)}
+                />
+              ))}
             </Section>
           )}
           {legalInfo && (
@@ -1210,11 +1393,6 @@ function CrmProfileDetailContent() {
         aria-labelledby="tab-addresses"
         hidden={activeTab !== 'addresses'}
       >
-        {addressSaved && (
-          <p role="status" className="mb-3 text-sm">
-            {t('crm.address.saved', locale)}
-          </p>
-        )}
         {addresses.length === 0 ? (
           <p className="text-muted-foreground text-center py-8">
             {t('crm.profile.noAddresses', locale)}
@@ -1236,60 +1414,30 @@ function CrmProfileDetailContent() {
                     </span>
                   )}
                 </div>
-                {editingAddress === addr.id ? (
-                  <CrmAddressEditor
-                    profileId={profile.id}
-                    address={addr}
-                    onCancel={() => setEditingAddress(null)}
-                    onSaved={(saved, updatedAt) => {
-                      setData((current) =>
-                        current
-                          ? {
-                              ...current,
-                              profile: { ...current.profile, updatedAt },
-                              addresses: current.addresses.map((item) =>
-                                item.id === saved.id ? saved : item
-                              ),
-                            }
-                          : current
-                      );
-                      setEditingAddress(null);
-                      setAddressSaved(true);
-                    }}
-                  />
-                ) : (
-                  <>
-                    <p className="text-foreground">{addr.fullAddress}</p>
-                    <DetailRow
-                      label={t('crm.profile.field.postalCode', locale)}
-                      value={addr.postalCode}
-                    />
-                    <DetailRow
-                      label={t('crm.profile.field.province', locale)}
-                      value={referenceName(addr.provinceName, locale)}
-                    />
-                    <DetailRow
-                      label={t('crm.profile.field.city', locale)}
-                      value={referenceName(addr.cityName, locale)}
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {t('crm.profile.label.created', locale)}: {time.format(addr.createdAt)}
-                    </p>
-                    {data.viewerPermissions?.canEdit && !profile.archived && !isEditing && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="mt-3"
-                        disabled={editingAddress !== null || editingLegal}
-                        onClick={() => {
-                          setEditingAddress(addr.id);
-                          setAddressSaved(false);
-                        }}
-                      >
-                        {t('crm.address.edit', locale)}
-                      </Button>
-                    )}
-                  </>
+                <p className="text-foreground">{addr.fullAddress}</p>
+                <DetailRow
+                  label={t('crm.profile.field.postalCode', locale)}
+                  value={addr.postalCode}
+                />
+                <DetailRow
+                  label={t('crm.profile.field.province', locale)}
+                  value={referenceName(addr.provinceName, locale)}
+                />
+                <DetailRow
+                  label={t('crm.profile.field.city', locale)}
+                  value={referenceName(addr.cityName, locale)}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('crm.profile.label.created', locale)}: {time.format(addr.createdAt)}
+                </p>
+                {data.viewerPermissions?.canEdit && !profile.archived && (
+                  <Link
+                    to="/admin/crm/profiles/$profileId/addresses/$addressId/edit"
+                    params={{ profileId, addressId: addr.id }}
+                    className={buttonVariants({ variant: 'outline', className: 'mt-3' })}
+                  >
+                    {t('crm.address.edit', locale)}
+                  </Link>
                 )}
               </div>
             ))}
@@ -1458,47 +1606,6 @@ function CrmProfileDetailContent() {
           )}
         </div>
       )}
-      {pendingAction && (
-        <TeamActionDialog
-          action={pendingAction.action}
-          finalFocus={pendingAction.kind === 'archive' ? archiveButton : undefined}
-          onClose={() => setPendingAction(null)}
-          onSuccess={actionSucceeded}
-          {...(pendingAction.kind === 'edit' ? { onValidationError: editValidationError } : {})}
-        />
-      )}
-      {showForcePwChange && (
-        <AdminActionConfirmModal
-          title={t('crm.profile.admin.forcePasswordChange', locale)}
-          message={t('crm.profile.admin.forcePwChangeReason', locale)}
-          reason={forcePwChangeReason}
-          onReasonChange={setForcePwChangeReason}
-          onConfirm={handleForcePasswordChange}
-          onCancel={() => {
-            setShowForcePwChange(false);
-            setForcePwChangeReason('');
-          }}
-          cancelLabel={t('crm.profile.edit.cancel', locale)}
-          confirmLabel={t('crm.profile.admin.forcePasswordChange', locale)}
-          loading={actionLoading}
-        />
-      )}
-      {showExpireSessions && (
-        <AdminActionConfirmModal
-          title={t('crm.profile.admin.expireSessions', locale)}
-          message={t('crm.profile.admin.expireSessionsReason', locale)}
-          reason={expireSessionsReason}
-          onReasonChange={setExpireSessionsReason}
-          onConfirm={handleExpireSessions}
-          onCancel={() => {
-            setShowExpireSessions(false);
-            setExpireSessionsReason('');
-          }}
-          cancelLabel={t('crm.profile.edit.cancel', locale)}
-          confirmLabel={t('crm.profile.admin.expireSessions', locale)}
-          loading={actionLoading}
-        />
-      )}
     </div>
   );
 }
@@ -1581,146 +1688,205 @@ function DetailRow({
 
 /** Editable text input row used in edit mode */
 function EditRow({
+  field,
   label,
   value,
   onChange,
-  placeholder,
   binding,
   error,
+  errorId,
+  validationMessage,
   disabled,
 }: {
+  field: keyof EditableFields;
   label: string;
   value: string;
   onChange: (v: string) => void;
-  placeholder?: string;
   binding: WizardFieldBinding;
   error: string | undefined;
+  errorId: string;
+  validationMessage: string;
   disabled: boolean;
 }) {
   const inputId = useId();
   return (
-    <div className="flex flex-col">
-      <label htmlFor={inputId} className="text-xs text-muted-foreground font-medium">
-        {label}
-      </label>
+    <div className={field === 'title' ? 'min-w-0 space-y-1 sm:col-span-2' : recordEditorField}>
+      <Label htmlFor={inputId}>{label}</Label>
       <input
         {...binding}
         disabled={disabled}
         id={inputId}
         type="text"
+        inputMode={field === 'email' ? 'email' : field === 'mobile' ? 'tel' : undefined}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder ?? ''}
-        dir="auto"
-        className="mt-1 w-full border border-input rounded px-2 py-1 text-sm text-foreground focus:border-ring focus:ring-1 focus:ring-ring outline-none"
+        autoComplete="off"
+        dir={field === 'title' ? 'auto' : 'ltr'}
+        className={inputVariants()}
       />
-      {error && (
-        <p id={binding['aria-describedby']} role="alert" className="text-sm text-destructive">
-          {error}
-        </p>
-      )}
+      {/* Keep Save in place when blur reveals a validation error. */}
+      <p
+        id={errorId}
+        role={error ? 'alert' : undefined}
+        aria-hidden={!error || undefined}
+        className={error ? 'text-sm text-destructive' : 'invisible text-sm'}
+      >
+        {error ?? validationMessage}
+      </p>
     </div>
   );
 }
 
-/** Confirm modal with a reason text input for admin actions */
-function AdminActionConfirmModal({
+function archiveErrorMessages(locale: Locale) {
+  return Object.fromEntries(
+    ['CRM:PROFILE:DELETION_BLOCKED', 'CRM:PROFILE:LAST_OWNER', 'CRM:PROFILE:ALREADY_ARCHIVED'].map(
+      (code) => [
+        code,
+        (response: unknown) => {
+          const message = (response as { error?: { message?: unknown } } | null)?.error?.message;
+          return typeof message === 'string' && message.trim()
+            ? message
+            : t('crm.profile.archive.warning', locale);
+        },
+      ]
+    )
+  );
+}
+
+function CrmProfileActionForm({
+  action,
+  locale,
+  profileId,
   title,
-  message,
+  effect,
+  name,
+  account,
+  accountLabel,
   reason,
-  onReasonChange,
-  onConfirm,
-  onCancel,
-  cancelLabel,
-  confirmLabel,
-  loading,
-  checklist,
   reasonLabel,
-  finalFocus,
+  onReasonChange,
+  allowed,
+  result,
+  disabled,
+  onReview,
+  review,
 }: {
+  action: CrmProfileAction;
+  locale: Locale;
+  profileId: string;
   title: string;
-  message: string;
+  effect: string;
+  name: string;
+  account: string | undefined;
+  accountLabel: string;
   reason: string;
-  onReasonChange: (v: string) => void;
-  onConfirm: () => void;
-  onCancel: () => void;
-  cancelLabel: string;
-  confirmLabel: string;
-  loading: boolean;
-  checklist?: string[];
-  reasonLabel?: string;
-  finalFocus?: ComponentProps<typeof DialogContent>['finalFocus'];
+  reasonLabel: string;
+  onReasonChange: (reason: string) => void;
+  allowed: boolean;
+  result: string | null;
+  disabled: boolean;
+  onReview: () => void;
+  review: ReactNode;
 }) {
-  const [checked, setChecked] = useState<string[]>([]);
-  const confirmed = checklist?.every((item) => checked.includes(item)) ?? true;
+  const heading = useRef<HTMLHeadingElement>(null);
+  const [acknowledged, setAcknowledged] = useState<string[]>([]);
+  const checks = action === 'archive' ? ['availability', 'history', 'account'] : [];
+  const canReview = !!reason.trim() && checks.every((key) => acknowledged.includes(key));
+  useEffect(() => heading.current?.focus({ preventScroll: true }), [result]);
   return (
-    <Dialog
-      open
-      onOpenChange={(open) => {
-        if (!open && !loading) onCancel();
-      }}
-    >
-      <DialogContent
-        finalFocus={finalFocus}
-        className="max-h-[calc(100dvh-2rem)] overflow-y-auto transition-none"
+    <section className="mx-auto max-w-xl space-y-3" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <Link
+        to="/admin/crm/profiles/$profileId"
+        params={{ profileId }}
+        className="touch-action inline-flex items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
       >
+        {tCrmForm('crm.profile.action.back', locale)}
+      </Link>
+      <h1 ref={heading} tabIndex={-1} className="w-fit text-xl font-semibold focus:outline-none">
+        {title}
+      </h1>
+      {!allowed ? (
+        <p role="alert" className="text-destructive">
+          {t('crm.profile.error.accessDenied', locale)}
+        </p>
+      ) : result ? (
+        <CommandFeedback message={result} />
+      ) : (
         <form
+          aria-label={title}
+          className={recordEditorSurface}
           onSubmit={(event) => {
             event.preventDefault();
-            if (!loading && reason.trim() && confirmed) onConfirm();
+            if (canReview && !disabled) onReview();
           }}
-          className="space-y-4"
         >
-          <DialogHeader className="pe-12">
-            <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>{message}</DialogDescription>
-          </DialogHeader>
-          {checklist && (
-            <div className="space-y-3">
-              {checklist.map((item) => (
-                <label key={item} className="touch-label flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    required
-                    aria-required="true"
-                    checked={checked.includes(item)}
-                    disabled={loading}
-                    className="shrink-0"
-                    onChange={(event) =>
-                      setChecked((current) =>
-                        event.target.checked
-                          ? [...current, item]
-                          : current.filter((value) => value !== item)
-                      )
-                    }
-                  />
-                  <span>{item}</span>
-                </label>
-              ))}
+          <div className="space-y-4 p-4 sm:p-5">
+            <div className="space-y-2 rounded-lg bg-muted/50 px-3 py-2.5">
+              <dl>
+                <dt className="text-xs text-muted-foreground">
+                  {account ? accountLabel : t('crm.profile.title', locale)}
+                </dt>
+                <dd className="wrap-anywhere text-sm font-semibold">
+                  <bdi>{account ?? name}</bdi>
+                </dd>
+              </dl>
+              <p className="text-sm text-muted-foreground">{effect}</p>
             </div>
-          )}
-          <Label htmlFor="crm-action-reason">{reasonLabel ?? message}</Label>
-          <textarea
-            id="crm-action-reason"
-            required
-            aria-required="true"
-            maxLength={1000}
-            value={reason}
-            onChange={(event) => onReasonChange(event.target.value)}
-            disabled={loading}
-            className="w-full rounded border p-2"
-            dir="auto"
-          />
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onCancel} disabled={loading}>
-              {cancelLabel}
+            {checks.length > 0 && (
+              <fieldset className="min-w-0 divide-y rounded-lg border px-3">
+                <legend className="px-1 text-sm font-medium">
+                  {tCrmForm('crm.profile.action.archiveChecks', locale)}
+                </legend>
+                {checks.map((key) => (
+                  <label
+                    key={key}
+                    className="flex min-h-11 cursor-pointer items-center gap-2.5 py-2 text-sm"
+                  >
+                    <input
+                      type="checkbox"
+                      required
+                      aria-required="true"
+                      disabled={disabled}
+                      className="size-4 shrink-0 accent-primary"
+                      checked={acknowledged.includes(key)}
+                      onChange={(event) =>
+                        setAcknowledged((current) =>
+                          event.target.checked
+                            ? [...current, key]
+                            : current.filter((item) => item !== key)
+                        )
+                      }
+                    />
+                    <span>{t(`crm.profile.archive.checklist.${key}`, locale)}</span>
+                  </label>
+                ))}
+              </fieldset>
+            )}
+            <div className={recordEditorField}>
+              <Label htmlFor="crm-action-reason">{reasonLabel}</Label>
+              <Textarea
+                id="crm-action-reason"
+                rows={2}
+                maxLength={1000}
+                required
+                aria-required="true"
+                value={reason}
+                onChange={(event) => onReasonChange(event.target.value)}
+                disabled={disabled}
+                className="min-h-14 resize-y placeholder-shown:[direction:inherit]"
+                dir="auto"
+                placeholder={tCrmForm(`crm.profile.action.${action}.example`, locale)}
+              />
+            </div>
+          </div>
+          <RecordEditorActions>
+            <Button type="submit" variant="destructive" disabled={!canReview || disabled}>
+              {tCrmForm('crm.profile.action.review', locale)}
             </Button>
-            <Button type="submit" disabled={loading || !reason.trim() || !confirmed}>
-              {confirmLabel}
-            </Button>
-          </DialogFooter>
+          </RecordEditorActions>
         </form>
-      </DialogContent>
-    </Dialog>
+      )}
+      {review}
+    </section>
   );
 }

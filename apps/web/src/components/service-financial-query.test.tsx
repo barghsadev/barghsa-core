@@ -245,10 +245,10 @@ async function prepare() {
     await approveVisibleConfirmation();
     await act(async () => button.click());
   } else {
-    const input = host.querySelector<HTMLInputElement>('form input')!;
+    const input = host.querySelector<HTMLTextAreaElement>('form textarea')!;
     expect(input).not.toBeNull();
     await act(async () => {
-      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
         input,
         'Captured reason'
       );

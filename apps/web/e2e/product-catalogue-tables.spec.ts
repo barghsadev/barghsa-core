@@ -150,7 +150,8 @@ for (const type of catalogueTypes)
       expect(
         await records
           .nth(0)
-          .getByRole('button')
+          .getByRole('link')
+          .last()
           .evaluate((button) => button.getBoundingClientRect().height)
       ).toBeGreaterThanOrEqual(44);
       if (
@@ -166,7 +167,7 @@ for (const type of catalogueTypes)
         });
         await page.setViewportSize({ width: 390, height: 844 });
       }
-      await records.nth(0).getByRole('button').click();
+      await records.nth(0).getByRole('link').last().click();
       const editor = page
         .locator('form[aria-label]')
         .filter({ has: page.locator('#catalogue-titleEn') });
@@ -174,9 +175,7 @@ for (const type of catalogueTypes)
       const input = editor.locator('#catalogue-titleEn');
       await expect(input).toHaveValue(rows[0]!.title.en);
       await input.fill('  Preserved raw product draft  ');
-      await page.getByRole('button', { name: label('addPrice'), exact: true }).click();
-      const price = page.locator('#catalogue-price');
-      await price.fill('  19000  ');
+      await expect(page.locator('#catalogue-price')).toHaveCount(0);
       await editor.getByRole('button', { name: label('save'), exact: true }).click();
       const dialog = page.getByRole('dialog');
       await expect(dialog).toBeVisible();
@@ -189,7 +188,6 @@ for (const type of catalogueTypes)
       await expect(dialog.locator('input[type=password]')).toHaveValue('synthetic-only-password');
       await expect(editor).toHaveCount(1);
       await expect(input).toHaveValue('  Preserved raw product draft  ');
-      await expect(price).toHaveValue('  19000  ');
       expect(listReads).toBe(reads);
       expect(detailReads).toBe(selectedReads);
       expect(writes).toHaveLength(1);
@@ -198,6 +196,11 @@ for (const type of catalogueTypes)
         .click();
       await expect(dialog).toHaveCount(0);
       await expect(input).toHaveValue('  Preserved raw product draft  ');
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: label(type), exact: true })
+        .click();
+      await expect(records).toHaveCount(3);
       failed = true;
       await page
         .getByRole('button', { name: label('refresh'), exact: true })
@@ -206,12 +209,12 @@ for (const type of catalogueTypes)
       const retry = content.getByRole('button', { name: label('retry'), exact: true });
       await expect(retry).toBeVisible();
       await expect(records).toHaveCount(3);
-      await expect(records.nth(0).getByRole('button')).toBeEnabled();
-      await expect(input).toHaveValue('  Preserved raw product draft  ');
+      await expect(records.nth(0).getByRole('link').last()).toBeVisible();
+      await expect(editor).toHaveCount(0);
       failed = false;
       await retry.click();
       await expect(retry).toHaveCount(0);
-      await expect(input).toHaveValue('  Preserved raw product draft  ');
+      await expect(editor).toHaveCount(0);
       denied = true;
       await page
         .getByRole('button', { name: label('refresh'), exact: true })
@@ -220,7 +223,6 @@ for (const type of catalogueTypes)
       await expect(content.getByText(label('denied'))).toBeVisible();
       await expect(records).toHaveCount(0);
       await expect(editor).toHaveCount(0);
-      await expect(price).toHaveCount(0);
       expect(writes).toHaveLength(1);
     });
   }

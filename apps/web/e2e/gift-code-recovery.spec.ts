@@ -36,7 +36,7 @@ for (const locale of ['en', 'fa'] as const)
       const text = (key: string) => tGift(`admin.gifts.${key}`, locale);
       let olderFailed = true,
         short = false,
-        listFailed = false,
+        refreshFailed = false,
         detailFailed = false,
         changed = false,
         denied = false;
@@ -52,7 +52,7 @@ for (const locale of ['en', 'fa'] as const)
           return route.fulfill({ status: 403, json: { requiresStepUp: true } });
         if (path.pathname.endsWith('/stats'))
           return route.fulfill({
-            status: denied ? 403 : detailFailed ? 503 : 200,
+            status: denied ? 403 : detailFailed || refreshFailed ? 503 : 200,
             json: { code: row(), perProfile: [], recentRedemptions: [] },
           });
         if (path.searchParams.has('before')) {
@@ -63,29 +63,29 @@ for (const locale of ['en', 'fa'] as const)
           });
         }
         return route.fulfill({
-          status: denied ? 403 : listFailed ? 503 : 200,
+          status: denied ? 403 : 200,
           json: short ? [row()] : Array.from({ length: 50 }, (_, i) => giftCode(i)),
         });
       });
       await page.goto('/admin/gift-codes');
       await expect(
-        page.getByRole('button', { name: `${text('edit')} CODE00`, exact: true })
+        page.getByRole('link', { name: `${text('edit')} CODE00`, exact: true })
       ).toBeVisible();
       await page.getByRole('button', { name: text('loadMore'), exact: true }).click();
       await expect(page.getByRole('alert')).toContainText(text('moreError'));
       olderFailed = false;
       await page.getByRole('button', { name: text('loadMore'), exact: true }).click();
       await expect(
-        page.getByRole('button', { name: `${text('edit')} CODE50`, exact: true })
+        page.getByRole('link', { name: `${text('edit')} CODE50`, exact: true })
       ).toBeVisible();
       expect(cursors).toHaveLength(2);
       expect(cursors[0]).toBe(cursors[1]);
       short = true;
       await page.getByRole('button', { name: text('refresh'), exact: true }).click();
       await expect(
-        page.getByRole('button', { name: `${text('edit')} CODE50`, exact: true })
+        page.getByRole('link', { name: `${text('edit')} CODE50`, exact: true })
       ).toHaveCount(0);
-      await page.getByRole('button', { name: `${text('edit')} CODE00`, exact: true }).click();
+      await page.getByRole('link', { name: `${text('edit')} CODE00`, exact: true }).click();
       const input = page.locator('#gift-value'),
         form = page.getByRole('form', { name: text('editor') });
       await input.fill('2222');
@@ -100,12 +100,12 @@ for (const locale of ['en', 'fa'] as const)
         confirm = dialog.locator('button[type=submit]');
       await confirm.click();
       await dialog.locator('input[type=password]').fill('synthetic-password');
-      listFailed = true;
-      await dialog.getByRole('button', { name: text('refresh'), exact: true }).click();
+      refreshFailed = true;
+      await dialog.getByRole('button', { name: text('refreshStats'), exact: true }).click();
       await expect(confirm).toBeDisabled();
       await expect(dialog.locator('input[type=password]')).toHaveValue('synthetic-password');
-      listFailed = false;
-      await dialog.getByRole('button', { name: text('refresh'), exact: true }).click();
+      refreshFailed = false;
+      await dialog.getByRole('button', { name: text('refreshStats'), exact: true }).click();
       await expect(confirm).toBeEnabled();
       expect(
         (await new AxeBuilder({ page }).include('[role=dialog]').analyze()).violations
@@ -116,10 +116,12 @@ for (const locale of ['en', 'fa'] as const)
         dialog.getByRole('button', { name: t('team.cancel', locale), exact: true })
       ).toBeFocused();
       changed = true;
-      await dialog.getByRole('button', { name: text('refresh'), exact: true }).click();
+      await dialog.getByRole('button', { name: text('refreshStats'), exact: true }).click();
       await expect(dialog).toHaveCount(0);
       await expect(input).toHaveValue('2222');
-      await expect(page.getByRole('button', { name: text('refresh'), exact: true })).toBeFocused();
+      await expect(
+        page.getByRole('button', { name: text('refreshStats'), exact: true })
+      ).toBeFocused();
       await page.getByRole('button', { name: text('reset'), exact: true }).click();
       await expect(input).toHaveValue('3000');
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
@@ -139,9 +141,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(form).toHaveCount(0);
       await expect(page.getByRole('alert')).toContainText(text('denied'));
       denied = false;
-      await page.getByRole('button', { name: text('refresh'), exact: true }).click();
-      await expect(
-        page.getByRole('button', { name: `${text('edit')} CODE00`, exact: true })
-      ).toBeVisible();
+      await page.getByRole('button', { name: text('refreshStats'), exact: true }).click();
+      await expect(input).toHaveValue('3000');
     });
   }

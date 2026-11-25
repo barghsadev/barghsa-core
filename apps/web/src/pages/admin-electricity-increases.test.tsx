@@ -77,7 +77,7 @@ it('shows expired finance cases in the staff queue without review actions', asyn
     );
     expect(container.textContent).toContain('Finance must resolve this payment or receipt.');
     expect(container.textContent).toContain('Paid');
-    expect(container.querySelector('a[href="/admin/invoices?invoiceId=invoice-1"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/admin/invoices/invoice-1"]')).not.toBeNull();
     expect(container.textContent).not.toContain('Approve increase');
   } finally {
     await act(async () => root.unmount());
@@ -200,18 +200,18 @@ it('shows each staff increase decision review and submits its exact hash', async
         </QueryProvider>
       )
     );
-    const approvalReason = container.querySelector<HTMLInputElement>(
-      `input[id^="increase-approval-reason-${requestId}"]`
+    const approvalReason = container.querySelector<HTMLTextAreaElement>(
+      `textarea[id^="increase-approval-reason-${requestId}"]`
     )!;
     expect(approvalReason).not.toBeNull();
     await act(async () => {
-      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
         approvalReason,
         'Capacity reviewed'
       );
       approvalReason.dispatchEvent(new Event('input', { bubbles: true }));
     });
-    await click('Approve and issue amendment');
+    await click('Preview approval');
     expect(document.body.textContent).toContain('Publish amendment for customer signature');
     expect(fetchMock.mock.calls.some(([path]) => path.endsWith('/approve'))).toBe(false);
     await confirm();
@@ -220,15 +220,15 @@ it('shows each staff increase decision review and submits its exact hash', async
       effectiveFrom,
       expectedReviewHash: 'a'.repeat(64),
     });
-    const reason = container.querySelector<HTMLInputElement>(`#increase-reason-${requestId}`)!;
+    const reason = container.querySelector<HTMLTextAreaElement>(`#increase-reason-${requestId}`)!;
     await act(async () => {
-      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+      Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
         reason,
         'Outside capacity plan'
       );
       reason.dispatchEvent(new Event('input', { bubbles: true }));
     });
-    await click('Decline request');
+    await click('Preview rejection');
     expect(document.body.textContent).toContain('Decline request; no invoice or quantity change');
     await confirm();
     const rejection = fetchMock.mock.calls.find(([path]) => path.endsWith('/reject'))!;

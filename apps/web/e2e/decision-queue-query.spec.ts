@@ -101,10 +101,10 @@ for (const locale of ['en', 'fa'] as const)
         offset: '25',
       });
       const reason = page.getByRole('textbox', { name: word('rejectReason'), exact: true }).first();
-      await reason.fill('LOCAL-DRAFT');
+      await expect(reason).toHaveCount(0);
       await page.getByRole('button', { name: word('next'), exact: true }).click();
       await expect(page.getByRole('button', { name: word('retry'), exact: true })).toBeVisible();
-      await expect(reason).toHaveValue('LOCAL-DRAFT');
+      await expect(reason).toHaveCount(0);
       await expect(page.getByText('Queue evidence 25', { exact: true })).toBeVisible();
       expect(params(page).get('page')).toBe('3');
       expect(page.url()).not.toContain('LOCAL-DRAFT');
@@ -132,6 +132,8 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto(`/admin/approval-requests?status=approved&page=2&requestId=${id}`);
       await expect(page.getByText(word('linkedRequest'), { exact: false })).toBeVisible();
       expect(reads.at(-1)!.pathname).toBe(`/api/admin/approval-requests/${id}`);
+      expect(new URL(page.url()).pathname).toBe(`/admin/approval-requests/${id}`);
+      expect(params(page).has('requestId')).toBe(false);
       await page.getByRole('link', { name: word('backToQueue'), exact: true }).click();
       await expect(page.locator('#approval-status')).toHaveValue('approved');
       await expect(page.getByText('Queue evidence 25', { exact: true })).toBeVisible();
@@ -139,8 +141,15 @@ for (const locale of ['en', 'fa'] as const)
       await page.goBack();
       await page.getByRole('button', { name: word('approve'), exact: true }).click();
       await expect(page.getByRole('dialog')).toBeVisible();
-      await page.goForward();
+      await page
+        .locator('main a[href^="/admin/approval-requests?"]')
+        .evaluate((element: HTMLAnchorElement) => element.click());
+      await expect(page).toHaveURL(new RegExp(`/admin/approval-requests/${id}\\?`));
+      await expect(page.getByRole('dialog')).toBeVisible();
+      await page.keyboard.press('Escape');
       await expect(page.getByRole('dialog')).toHaveCount(0);
+      await page.goForward();
+      await expect(page.locator('#approval-status')).toHaveValue('approved');
       expect(writes).toEqual([]);
       denied = true;
       await page.getByRole('button', { name: word('refresh'), exact: true }).click();
@@ -168,6 +177,10 @@ for (const locale of ['en', 'fa'] as const)
           return r.fulfill({ status: 500, json: {} });
         }
         reads.push(url);
+        if (url.pathname !== '/api/admin/reconciliation/items') {
+          const id = url.pathname.split('/').at(-1)!;
+          return r.fulfill({ json: { ...reconciliationItem, id, description: 'Exception 0' } });
+        }
         const offset = Number(url.searchParams.get('offset'));
         if (offset === 50 && fail) return r.fulfill({ status: 503, json: {} });
         return r.fulfill({
@@ -185,7 +198,7 @@ for (const locale of ['en', 'fa'] as const)
         page: '2',
       });
       await page.goto(`/admin/reconciliation?${query}`);
-      await expect(page.getByRole('button', { name: 'Exception 25', exact: true })).toBeVisible();
+      await expect(page.getByRole('link', { name: 'Exception 25', exact: true })).toBeVisible();
       await expect(page.locator('#rex-from')).toHaveValue('2026-09-01T00:00');
       expect(Object.fromEntries(reads.at(-1)!.searchParams)).toEqual({
         status: 'open',
@@ -201,31 +214,31 @@ for (const locale of ['en', 'fa'] as const)
       expect(params(page).get('severity')).toBe('high');
       await page.getByRole('button', { name: word('next'), exact: true }).click();
       await expect(page.getByRole('button', { name: word('retry'), exact: true })).toBeVisible();
-      await expect(page.getByRole('button', { name: 'Exception 25', exact: true })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Exception 25', exact: true })).toBeDisabled();
       await expect(page.locator('#rex-severity')).toHaveValue('critical');
       const failed = reads.at(-1)!.search;
       fail = false;
       await page.getByRole('button', { name: word('retry'), exact: true }).click();
-      await expect(page.getByRole('button', { name: 'Exception 50', exact: true })).toBeVisible();
+      await expect(page.getByRole('link', { name: 'Exception 50', exact: true })).toBeVisible();
       expect(reads.at(-1)!.search).toBe(failed);
       await page.reload();
       await expect(page.locator('#rex-severity')).toHaveValue('high');
       await expect(page.locator('#rex-from')).toHaveValue('2026-09-01T00:00');
       await page.getByRole('button', { name: word('apply'), exact: true }).click();
-      await expect(page.getByRole('button', { name: 'Exception 0', exact: true })).toBeVisible();
+      await expect(page.getByRole('link', { name: 'Exception 0', exact: true })).toBeVisible();
       expect(params(page).has('page')).toBe(false);
       expect(reads.at(-1)!.searchParams.get('createdFrom')).toBe(from);
       await page.goBack();
-      await expect(page.getByRole('button', { name: 'Exception 50', exact: true })).toBeVisible();
+      await expect(page.getByRole('link', { name: 'Exception 50', exact: true })).toBeVisible();
       await page.goForward();
-      await expect(page.getByRole('button', { name: 'Exception 0', exact: true })).toBeVisible();
+      await expect(page.getByRole('link', { name: 'Exception 0', exact: true })).toBeVisible();
       await page.locator('#rex-status').selectOption('');
       await page.locator('#rex-severity').selectOption('');
       await page.locator('#rex-from').fill('');
       await page.locator('#rex-before').fill('');
       await page.getByRole('button', { name: word('apply'), exact: true }).click();
       await expect.poll(() => params(page).get('status')).toBe('all');
-      await expect(page.getByRole('button', { name: 'Exception 0', exact: true })).toBeVisible();
+      await expect(page.getByRole('link', { name: 'Exception 0', exact: true })).toBeVisible();
       await expect
         .poll(() => Object.fromEntries(reads.at(-1)!.searchParams))
         .toEqual({
@@ -234,17 +247,31 @@ for (const locale of ['en', 'fa'] as const)
         });
       await page.goBack();
       await expect(page.locator('#rex-from')).toHaveValue('2026-09-01T00:00');
-      await expect(page.getByRole('button', { name: 'Exception 0', exact: true })).toBeVisible();
+      await expect(page.getByRole('link', { name: 'Exception 0', exact: true })).toBeVisible();
       await inspect(page, locale, info.project.name, 'reconciliation', dark);
-      await page.getByRole('button', { name: 'Exception 0', exact: true }).click();
+      await page.getByRole('link', { name: 'Exception 0', exact: true }).click();
+      const recordId = '10000000-0000-4000-8000-000000000001';
+      await expect(page).toHaveURL(new RegExp(`/admin/reconciliation/${recordId}\\?`));
+      await page.getByRole('link', { name: word('resolve'), exact: true }).click();
+      const resolutionUrl = new RegExp(`/admin/reconciliation/${recordId}/resolve[?]`);
+      await expect(page).toHaveURL(resolutionUrl);
       await page.locator('#rex-note').fill('LOCAL-DRAFT');
       expect(page.url()).not.toContain('LOCAL-DRAFT');
+      expect(reads.at(-1)!.pathname).toBe(`/api/admin/reconciliation/items/${recordId}`);
       await page.getByRole('button', { name: word('resolve'), exact: true }).click();
       await expect(page.getByRole('dialog')).toBeVisible();
-      await page.goBack();
+      const backToCase = page.locator('main').getByText(word('backToCase'), { exact: true });
+      await expect(backToCase).toHaveAttribute('aria-disabled', 'true');
+      await backToCase.evaluate((el: HTMLElement) => el.click());
+      await expect(page).toHaveURL(resolutionUrl);
+      await page.keyboard.press('Escape');
       await expect(page.getByRole('dialog')).toHaveCount(0);
+      await expect(page.locator('#rex-note')).toHaveValue('LOCAL-DRAFT');
+      await backToCase.click();
+      await page.getByRole('link', { name: word('backToQueue'), exact: true }).click();
       await expect(page.locator('#rex-note')).toHaveCount(0);
-      await expect(page.getByRole('button', { name: 'Exception 50', exact: true })).toBeVisible();
+      await expect(page.getByRole('link', { name: 'Exception 0', exact: true })).toBeVisible();
+      expect(params(page).get('createdFrom')).toBe(from);
       expect(writes).toEqual([]);
       denied = true;
       await page.getByRole('button', { name: word('refresh'), exact: true }).click();

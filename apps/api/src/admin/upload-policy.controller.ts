@@ -29,6 +29,7 @@ import {
   getDeploymentMaxSizeBytes,
 } from '../upload/upload.config.js';
 import { UploadPolicyService } from './upload-policy.service.js';
+import { recheckStaffAuthorityAfter } from './staff-read-authority.js';
 
 // ─── Validation schemas ────────────────────────────────────────────────────
 
@@ -168,6 +169,25 @@ export class UploadPolicyController {
     this.assertUploadsPermission(req);
     const filter = assertCategoryFilter(category);
     return this.service.list(filter);
+  }
+
+  @Get(':category/versions/:id')
+  @ApiOperation({ summary: 'Read one version of an upload policy in its category' })
+  @ApiResponse({ status: 200, description: 'The requested upload policy version.' })
+  @ApiResponse({ status: 400, description: 'Invalid category or policy ID.' })
+  @ApiResponse({ status: 403, description: 'Upload policy permission required.' })
+  @ApiResponse({ status: 404, description: 'No matching policy version in this category.' })
+  getVersion(
+    @Req() req: AuthenticatedRequest,
+    @Param('category') category: string,
+    @Param('id') id: string
+  ): Promise<UploadPolicyDto> {
+    this.assertUploadsPermission(req);
+    assertCategoryFilter(category);
+    assertUuid(id);
+    return recheckStaffAuthorityAfter(req.session, 'admin:uploads:edit', () =>
+      this.service.getVersion(category, id)
+    );
   }
 
   @Post()

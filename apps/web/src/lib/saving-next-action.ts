@@ -30,7 +30,7 @@ export function savingNextAction(order: SavingActionContext): {
 } {
   const invoiceHref = order.invoice_id ? `/invoices/${encodeURIComponent(order.invoice_id)}` : null;
   const contractHref = order.contract_id
-    ? `/contracts?contractId=${encodeURIComponent(order.contract_id)}`
+    ? `/contracts/${encodeURIComponent(order.contract_id)}`
     : null;
   const refundHref = `/savings/orders/${encodeURIComponent(order.id)}${order.status === 'cancelled' ? '#saving-cancellation' : ''}`;
   if (order.status === 'cancelled' || order.status === 'rejected')

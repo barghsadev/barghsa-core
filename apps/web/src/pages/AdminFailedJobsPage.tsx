@@ -1,15 +1,36 @@
+import { Check as TableCheckIcon, RotateCw as TableRotateCwIcon } from 'lucide-react';
+import { TableActionIcon } from '../components/TableActionIcon.js';
+import { Link } from '@tanstack/react-router';
+import { HistoryIcon } from 'lucide-react';
+import { t as workspaceText } from '@barghsa/i18n/workspace';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { OperationalQueueTable, QueueRecordDetails } from '../components/OperationalQueueTable.js';
-import { OperationalCommandReview } from '../components/OperationalCommandReview.js';
+import {
+  OperationalCommandChecks,
+  OperationalCommandRecords,
+  OperationalCommandReview,
+} from '../components/OperationalCommandReview.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { BACKGROUND_JOB_TYPES } from '@barghsa/shared/admin';
-import { LoadingStatus, Button, Label, DateCell, TextCell, ListPage } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  Badge,
+  Label,
+  NativeSelect,
+  NativeSelectOption,
+  DateCell,
+  TextCell,
+  ListPage,
+  ListRefreshButton,
+} from '@barghsa/ui';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useOperationalQueue } from '../hooks/useOperationalQueue.js';
+import { QueueEmptyState, statusAlternatives } from '../components/QueueEmptyState.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 interface Job {
   id: string;
@@ -63,7 +84,15 @@ const jobBasis = (row: Job) =>
 const jobIdentity = (row: Job) => JSON.stringify([row.id, row.jobType]);
 const statuses = ['failed', 'retrying', 'dead_letter', 'resolved', 'all'];
 const pageSize = 25;
-export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBinding } = {}) {
+export default function AdminFailedJobsPage({
+  queries,
+  recordId,
+  historySearch,
+}: {
+  queries?: ListQueryBinding;
+  recordId?: string;
+  historySearch?: Record<string, unknown>;
+} = {}) {
   const time = useAccountTime();
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
@@ -125,11 +154,21 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
     criteria,
     offset,
     isJob,
-    clearPrivate
+    clearPrivate,
+    recordId
   );
   const { access, loading, error } = queue;
   const jobs = queue.data?.rows ?? [],
     hasMore = queue.data?.hasMore ?? false;
+  function changeStatus(value: string) {
+    if (locked) return;
+    if (queries) queries.setQuery({ filters: { status: value } });
+    else {
+      setStatus(value);
+      setOffset(0);
+    }
+    setNotice(null);
+  }
   useEffect(() => {
     if (reviewReload && queue.ready && queue.data !== reloadBase.current) {
       reloadBase.current = null;
@@ -139,6 +178,7 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
   }, [reviewReload, queue.ready, queue.data]);
   function returnToQueue() {
     ++actionGeneration.current;
+    savedTrigger.current = unconfirmed?.trigger ?? refreshButton.current;
     setUnconfirmed(null);
     setAction(null);
     reloadBase.current = queue.data;
@@ -223,20 +263,26 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
     return () => cancelAnimationFrame(frame);
   }, [queue.ready, action]);
   const recovery = (
-    <div className="space-y-2">
-      <Button type="button" variant="outline" disabled={access.loading} onClick={access.retry}>
-        {label('accessRetry')}
-      </Button>
-      <Button
-        type="button"
-        variant="outline"
-        disabled={loading || !queue.canView}
-        onClick={queue.retry}
-      >
-        {label('queueRetry')}
-      </Button>
-      {(error || access.error) && <p role="alert">{label('error')}</p>}
-    </div>
+    <>
+      {(error || access.error) && (
+        <p role="alert" className="text-sm">
+          {label('error')}
+        </p>
+      )}
+      <OperationalCommandChecks locale={locale}>
+        <Button type="button" variant="outline" disabled={access.loading} onClick={access.retry}>
+          {label('accessRetry')}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={loading || !queue.canView}
+          onClick={queue.retry}
+        >
+          {label('queueRetry')}
+        </Button>
+      </OperationalCommandChecks>
+    </>
   );
   const jobName = (type: string) => {
     const key = `admin.jobs.type.${type}`,
@@ -245,6 +291,35 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
   };
   const date = (value: string | null) =>
     value ? <DateCell value={value} format={(stamp) => time.format(stamp)} /> : label('none');
+  const renderJob = (row: Job, available: boolean) => (
+    <>
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <p className="font-semibold">{jobName(row.jobType)}</p>
+        {available && <Badge variant="outline">{label(`status.${row.status}`)}</Badge>}
+      </div>
+      <p className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+        {available && (
+          <span>
+            {label('attempts')}{' '}
+            <bdi dir="ltr">
+              {numbers.number(row.attempts)} / {numbers.number(row.maxAttempts)}
+            </bdi>
+          </span>
+        )}
+        {date(row.lastRunAt)}
+        {available && (
+          <span title={row.id} className="font-mono tabular-nums">
+            <bdi dir="ltr" aria-hidden="true">
+              …{row.id.slice(-8)}
+            </bdi>
+            <span className="sr-only">
+              {label('id')} <bdi>{row.id}</bdi>
+            </span>
+          </span>
+        )}
+      </p>
+    </>
+  );
   function act(kind: 'retry' | 'resolve', ids: string[]) {
     if (!queue.canRetry || owned.current) return;
     const rows = jobs.filter((row) => ids.includes(row.id));
@@ -268,13 +343,10 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
       trigger: document.activeElement instanceof HTMLElement ? document.activeElement : null,
       count: ids.length,
       title: label(kind === 'resolve' ? 'resolve' : bulk ? 'bulk' : 'retry'),
-      description:
-        label(kind === 'resolve' ? 'resolveConfirm' : 'retryConfirm').replace(
-          '{count}',
-          numbers.number(ids.length)
-        ) +
-        ' ' +
-        ids.map((id) => jobName(jobs.find((job) => job.id === id)!.jobType)).join(', '),
+      description: label(kind === 'resolve' ? 'resolveConfirm' : 'retryConfirm').replace(
+        '{count}',
+        numbers.number(ids.length)
+      ),
       path: bulk ? '/api/admin/failed-jobs/retry-bulk' : `/api/admin/failed-jobs/${ids[0]}/${kind}`,
       method: 'POST',
       responseDeadline: true,
@@ -284,22 +356,63 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
       forbiddenMessage: label('forbidden'),
     });
   }
+  const jobActions = (job: Job) => (
+    <>
+      <div className="flex flex-wrap gap-2">
+        {access.data?.canRetry && ['failed', 'dead_letter'].includes(job.status) && (
+          <Button
+            size="sm"
+            disabled={!!action || locked || !queue.canRetry}
+            variant="outline"
+            onClick={() => act('retry', [job.id])}
+            data-table-action-tooltip={label('retry')}
+          >
+            <TableActionIcon icon={TableRotateCwIcon}>{label('retry')}</TableActionIcon>
+          </Button>
+        )}
+        {access.data?.canRetry && job.status !== 'resolved' && (
+          <Button
+            size="sm"
+            disabled={!!action || locked || !queue.canRetry}
+            variant="outline"
+            onClick={() => act('resolve', [job.id])}
+            data-table-action-tooltip={label('resolve')}
+          >
+            <TableActionIcon icon={TableCheckIcon}>{label('resolve')}</TableActionIcon>
+          </Button>
+        )}
+      </div>
+    </>
+  );
+  const record = recordId ? jobs[0] : undefined;
   return (
     <section className="space-y-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       {time.notice}
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold">{label('title')}</h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{label('description')}</p>
+      <header className="flex items-start justify-between gap-3">
+        <div className="min-w-0 space-y-2">
+          {recordId && !locked && !action && (
+            <Link
+              to="/admin/failed-jobs"
+              search={historySearch}
+              className="touch-action text-sm text-primary underline underline-offset-4"
+            >
+              {label('title')}
+            </Link>
+          )}
+          <h1 className="text-2xl font-semibold [overflow-wrap:anywhere]">
+            {record ? jobName(record.jobType) : label(recordId ? 'recordTitle' : 'title')}
+          </h1>
+          {!recordId && (
+            <p className="max-w-2xl text-sm text-muted-foreground">{label('description')}</p>
+          )}
         </div>
-        <Button
-          variant="outline"
-          disabled={pending || !!unconfirmed || loading || access.loading}
+        <ListRefreshButton
+          label={label('refresh')}
+          refreshing={loading || access.loading}
+          disabled={pending || !!unconfirmed}
           ref={refreshButton}
           onClick={queue.refresh}
-        >
-          {label('refresh')}
-        </Button>
+        />
       </header>
       {notice && (
         <p role="status" className="rounded-lg border p-3">
@@ -312,79 +425,177 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
       )}
       {queue.denied && <p role="alert">{label('forbidden')}</p>}
       <ListPage>
-        <ListPage.Toolbar>
-          <div className="flex flex-wrap items-end gap-4">
-            <div role="group" aria-label={label('status')} className="flex flex-wrap gap-2">
-              {statuses.map((value) => (
-                <Button
-                  key={value}
-                  variant={status === value ? 'default' : 'outline'}
-                  aria-pressed={status === value}
-                  disabled={locked}
-                  onClick={() => {
-                    if (queries) queries.setQuery({ filters: { status: value } });
+        {!recordId && !queue.denied && (
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 items-end gap-2 sm:max-w-lg sm:gap-3">
+              <div className="min-w-0 space-y-1">
+                <Label htmlFor="job-status">{label('status')}</Label>
+                <NativeSelect
+                  id="job-status"
+                  className="w-full"
+                  value={status}
+                  disabled={locked || !!action}
+                  onChange={(event) => changeStatus(event.target.value)}
+                >
+                  {statuses.map((value) => (
+                    <NativeSelectOption key={value} value={value}>
+                      {label(`status.${value}`)}
+                    </NativeSelectOption>
+                  ))}
+                </NativeSelect>
+              </div>
+              <div className="min-w-0 space-y-1">
+                <Label htmlFor="job-type">{label('type')}</Label>
+                <NativeSelect
+                  id="job-type"
+                  className="w-full"
+                  value={jobType}
+                  disabled={locked || !!action}
+                  onChange={(event) => {
+                    if (queries) queries.setQuery({ filters: { jobType: event.target.value } });
                     else {
-                      setStatus(value);
+                      setJobType(event.target.value);
                       setOffset(0);
                     }
                     setNotice(null);
                   }}
                 >
-                  {label(`status.${value}`)}
-                </Button>
-              ))}
+                  <NativeSelectOption value="">{label('allTypes')}</NativeSelectOption>
+                  {BACKGROUND_JOB_TYPES.map((type) => (
+                    <NativeSelectOption key={type.key} value={type.key}>
+                      {jobName(type.key)}
+                    </NativeSelectOption>
+                  ))}
+                </NativeSelect>
+              </div>
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="job-type">{label('type')}</Label>
-              <select
-                id="job-type"
-                value={jobType}
-                onChange={(event) => {
-                  if (queries) queries.setQuery({ filters: { jobType: event.target.value } });
-                  else {
-                    setJobType(event.target.value);
-                    setOffset(0);
-                  }
-                  setNotice(null);
+            <p className="text-xs text-muted-foreground">
+              {time.status === 'ready' && label('timezone').replace('{zone}', time.timezone)}
+            </p>
+          </div>
+        )}
+        {!recordId && access.data?.canRetry && selected.length > 0 && (
+          <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-2 rounded-lg border bg-card px-3 py-2 shadow-sm">
+            <span role="status" className="text-sm font-medium">
+              {label('selectedCount').replace('{count}', numbers.number(selected.length))}
+            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                disabled={!!action || locked}
+                onClick={() => {
+                  setSelected([]);
+                  refreshButton.current?.focus();
                 }}
-                className="block h-9 rounded-md border bg-card text-card-foreground px-3 text-sm"
               >
-                <option value="">{label('allTypes')}</option>
-                {BACKGROUND_JOB_TYPES.map((type) => (
-                  <option key={type.key} value={type.key}>
-                    {jobName(type.key)}
-                  </option>
-                ))}
-              </select>
+                {label('clearSelection')}
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                disabled={!!action || locked || !queue.canRetry}
+                onClick={() => act('retry', selected)}
+              >
+                {label('bulk')}
+              </Button>
             </div>
           </div>
-          <p className="text-xs text-muted-foreground">
-            {time.status === 'ready' && label('timezone').replace('{zone}', time.timezone)}
-          </p>
-          {access.data?.canRetry && (
-            <Button
-              disabled={!!action || locked || !queue.canRetry || !selected.length}
-              onClick={() => act('retry', selected)}
-            >
-              {label('bulk')} ({numbers.number(selected.length)})
-            </Button>
-          )}
-        </ListPage.Toolbar>
+        )}
         <ListPage.Content
           loading={loading || access.loading}
           error={error || access.error}
           retainContent={queue.data !== null && jobs.length > 0}
           empty={queue.ready && !jobs.length}
-          emptyView={<p>{label('empty')}</p>}
+          emptyView={
+            !recordId && offset === 0 && status && status !== 'all' ? (
+              <QueueEmptyState
+                locale={locale}
+                message={label('empty')}
+                status={label(`status.${status}`)}
+                alternatives={statusAlternatives(
+                  statuses,
+                  status,
+                  (value) => label(`status.${value}`),
+                  '/api/admin/failed-jobs',
+                  criteria
+                )}
+                hasResults={(body, value) =>
+                  Array.isArray(body) && body.some((row) => isJob(row) && row.status === value)
+                }
+                select={changeStatus}
+                all={() => changeStatus('all')}
+                disabled={locked}
+              />
+            ) : (
+              <p>{label('empty')}</p>
+            )
+          }
           loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
           errorView={
             <div role="alert">
-              <p>{label('error')}</p>
+              <p>{label(queue.missing ? 'recordUnavailable' : 'error')}</p>
               <Button onClick={queue.refresh}>{label('reload')}</Button>
             </div>
           }
         >
-          {queue.data && (
+          {record && (
+            <section className="space-y-5 rounded-xl border bg-card p-4 sm:p-6">
+              <div className="flex flex-wrap items-center gap-3">
+                <Badge variant="outline">{label(`status.${record.status}`)}</Badge>
+                <span className="text-sm text-muted-foreground">
+                  {label('attempts')}{' '}
+                  <bdi>
+                    {numbers.number(record.attempts)} / {numbers.number(record.maxAttempts)}
+                  </bdi>
+                </span>
+              </div>
+              <dl className="grid gap-4 text-sm sm:grid-cols-2">
+                <div className="sm:col-span-2">
+                  <dt className="text-muted-foreground">{label('id')}</dt>
+                  <dd>
+                    <bdi className="break-all font-mono">{record.id}</bdi>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">{label('firstFailed')}</dt>
+                  <dd>{date(record.firstFailedAt)}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">{label('lastRun')}</dt>
+                  <dd>{date(record.lastRunAt)}</dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">{label('nextRun')}</dt>
+                  <dd>{date(record.nextRunAt)}</dd>
+                </div>
+                {record.resolvedAt && (
+                  <div>
+                    <dt className="text-muted-foreground">{label('resolvedAt')}</dt>
+                    <dd>
+                      {date(record.resolvedAt)}
+                      {record.resolvedByUsername && (
+                        <bdi className="ms-2 [overflow-wrap:anywhere]">
+                          {record.resolvedByUsername}
+                        </bdi>
+                      )}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+              <section aria-labelledby="job-error">
+                <h2 id="job-error" className="mb-2 font-semibold">
+                  {label('errorMessage')}
+                </h2>
+                <p className="rounded-lg bg-muted p-3 text-sm whitespace-pre-wrap [overflow-wrap:anywhere]">
+                  {record.error ?? label('noError')}
+                </p>
+              </section>
+              {jobActions(record)}
+            </section>
+          )}
+          {!recordId && queue.data && (
             <OperationalQueueTable
               locale={locale}
               cardHeading="h2"
@@ -394,11 +605,28 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
               loading={loading}
               emptyMessage={label('empty')}
               nameHeader={label('type')}
+              tableClassName="min-w-[48rem]"
+              fieldGroups={[
+                {
+                  label: workspaceText('recordTable.activity', locale),
+                  fields: ['firstFailed', 'lastRun'],
+                  icon: HistoryIcon,
+                },
+              ]}
               renderName={(job) => (
                 <>
-                  <span>
+                  {queries && !locked && !action ? (
+                    <Link
+                      to="/admin/failed-jobs/$jobId"
+                      params={{ jobId: job.id }}
+                      search={historySearch}
+                      className="touch-action font-medium text-primary underline underline-offset-4"
+                    >
+                      {jobName(job.jobType)}
+                    </Link>
+                  ) : (
                     <TextCell value={jobName(job.jobType)} />
-                  </span>
+                  )}
                   <span className="mt-1 block text-xs text-muted-foreground">
                     {label(`status.${job.status}`)}
                   </span>
@@ -432,45 +660,53 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
                   label: label('errorMessage'),
                   render: (job) => (
                     <div className="max-w-md [overflow-wrap:anywhere]">
-                      <p className="whitespace-pre-wrap break-words">
+                      <p
+                        className={
+                          queries
+                            ? 'line-clamp-2 whitespace-pre-wrap break-words'
+                            : 'whitespace-pre-wrap break-words'
+                        }
+                      >
                         <TextCell value={job.error ?? label('noError')} />
                       </p>
-                      <QueueRecordDetails
-                        open={!!expanded[job.id]}
-                        onToggle={() => toggleDetails(job.id)}
-                        label={label('details')}
-                      >
-                        <dl className="mt-2 space-y-2">
-                          <div>
-                            <dt>{label('id')}</dt>
-                            <dd>
-                              <bdi className="break-all font-mono text-xs">{job.id}</bdi>
-                            </dd>
-                          </div>
-                          <div>
-                            <dt>{label('firstFailed')}</dt>
-                            <dd>{date(job.firstFailedAt)}</dd>
-                          </div>
-                          <div>
-                            <dt>{label('nextRun')}</dt>
-                            <dd>{date(job.nextRunAt)}</dd>
-                          </div>
-                          {job.resolvedAt && (
+                      {!queries && (
+                        <QueueRecordDetails
+                          open={!!expanded[job.id]}
+                          onToggle={() => toggleDetails(job.id)}
+                          label={label('details')}
+                        >
+                          <dl className="mt-2 space-y-2">
                             <div>
-                              <dt>{label('resolvedAt')}</dt>
+                              <dt>{label('id')}</dt>
                               <dd>
-                                {date(job.resolvedAt)}
-                                {job.resolvedByUsername && (
-                                  <>
-                                    {' '}
-                                    / <bdi>{job.resolvedByUsername}</bdi>
-                                  </>
-                                )}
+                                <bdi className="break-all font-mono text-xs">{job.id}</bdi>
                               </dd>
                             </div>
-                          )}
-                        </dl>
-                      </QueueRecordDetails>
+                            <div>
+                              <dt>{label('firstFailed')}</dt>
+                              <dd>{date(job.firstFailedAt)}</dd>
+                            </div>
+                            <div>
+                              <dt>{label('nextRun')}</dt>
+                              <dd>{date(job.nextRunAt)}</dd>
+                            </div>
+                            {job.resolvedAt && (
+                              <div>
+                                <dt>{label('resolvedAt')}</dt>
+                                <dd>
+                                  {date(job.resolvedAt)}
+                                  {job.resolvedByUsername && (
+                                    <>
+                                      {' '}
+                                      / <bdi>{job.resolvedByUsername}</bdi>
+                                    </>
+                                  )}
+                                </dd>
+                              </div>
+                            )}
+                          </dl>
+                        </QueueRecordDetails>
+                      )}
                     </div>
                   ),
                 },
@@ -484,73 +720,55 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
                   ),
                 },
                 {
+                  id: 'firstFailed',
+                  label: label('firstFailed'),
+                  render: (job) => date(job.firstFailedAt),
+                },
+                {
                   id: 'lastRun',
                   label: label('lastRun'),
                   render: (job) => <>{date(job.lastRunAt)}</>,
                 },
               ]}
               actionHeader={label('actions')}
-              renderActions={(job) => (
-                <>
-                  <div className="flex flex-wrap gap-2">
-                    {access.data?.canRetry && ['failed', 'dead_letter'].includes(job.status) && (
-                      <Button
-                        size="sm"
-                        disabled={!!action || locked || !queue.canRetry}
-                        variant="outline"
-                        onClick={() => act('retry', [job.id])}
-                      >
-                        {label('retry')}
-                      </Button>
-                    )}
-                    {access.data?.canRetry && job.status !== 'resolved' && (
-                      <Button
-                        size="sm"
-                        disabled={!!action || locked || !queue.canRetry}
-                        variant="outline"
-                        onClick={() => act('resolve', [job.id])}
-                      >
-                        {label('resolve')}
-                      </Button>
-                    )}
-                  </div>
-                </>
-              )}
+              renderActions={jobActions}
             />
           )}
         </ListPage.Content>
-        <nav aria-label={label('pagination')} className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            disabled={locked || !queue.canView || loading || error || !offset}
-            onClick={() =>
-              queries
-                ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
-                : setOffset((v) => Math.max(0, v - pageSize))
-            }
-          >
-            {label('previous')}
-          </Button>
-          <span>
-            {label('page').replace(
-              '{page}',
-              numbers.number((queue.data?.offset ?? offset) / pageSize + 1)
-            )}
-          </span>
-          <Button
-            variant="outline"
-            disabled={
-              locked || !queue.canView || loading || error || !hasMore || offset >= 1_000_000
-            }
-            onClick={() =>
-              queries
-                ? queries.setQuery({ page: queries.query.page + 1 })
-                : setOffset((v) => v + pageSize)
-            }
-          >
-            {label('next')}
-          </Button>
-        </nav>
+        {!recordId && (
+          <nav aria-label={label('pagination')} className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              disabled={locked || !queue.canView || loading || error || !offset}
+              onClick={() =>
+                queries
+                  ? queries.setQuery({ page: Math.max(1, queries.query.page - 1) })
+                  : setOffset((v) => Math.max(0, v - pageSize))
+              }
+            >
+              {label('previous')}
+            </Button>
+            <span>
+              {label('page').replace(
+                '{page}',
+                numbers.number((queue.data?.offset ?? offset) / pageSize + 1)
+              )}
+            </span>
+            <Button
+              variant="outline"
+              disabled={
+                locked || !queue.canView || loading || error || !hasMore || offset >= 1_000_000
+              }
+              onClick={() =>
+                queries
+                  ? queries.setQuery({ page: queries.query.page + 1 })
+                  : setOffset((v) => v + pageSize)
+              }
+            >
+              {label('next')}
+            </Button>
+          </nav>
+        )}
       </ListPage>
       {unconfirmed && !queue.denied && (
         <OperationalCommandReview
@@ -561,28 +779,25 @@ export default function AdminFailedJobsPage({ queries }: { queries?: ListQueryBi
           identity={jobIdentity}
           onDenied={queue.deny}
           onReviewed={returnToQueue}
-          renderRecord={(row, available) => (
-            <>
-              <p className="font-semibold">{jobName(row.jobType)}</p>
-              {available && (
-                <p>
-                  {label(`status.${row.status}`)} ·{' '}
-                  <bdi dir="ltr">
-                    {numbers.number(row.attempts)} / {numbers.number(row.maxAttempts)}
-                  </bdi>
-                </p>
-              )}
-              <p className="text-muted-foreground">{date(row.lastRunAt)}</p>
-            </>
-          )}
+          renderRecord={renderJob}
         />
       )}
       {action && !queue.denied && (
         <TeamActionDialog
           action={action}
+          focusSummary
           onDenied={queue.deny}
           confirmationDisabled={!queue.canRetry}
-          summary={recovery}
+          summary={
+            <>
+              <OperationalCommandRecords
+                locale={locale}
+                rows={action.rows}
+                render={(row) => renderJob(row, true)}
+              />
+              {recovery}
+            </>
+          }
           finalFocus={() =>
             action.trigger?.isConnected &&
             action.trigger.getClientRects().length > 0 &&

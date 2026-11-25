@@ -1,4 +1,7 @@
+import { routePostalRecords } from './solar-postal-record-fixture';
 import { tSolar as solarCopy } from '@barghsa/i18n/solar';
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
+import { solarIntakeText } from '@barghsa/i18n/solar-intake';
 import { t as appCopy } from '@barghsa/i18n/app';
 import { t as workspaceCopy } from '@barghsa/i18n/workspace';
 import { tSolar } from '@barghsa/i18n/solar';
@@ -374,27 +377,27 @@ for (const locale of ['en', 'fa'] as const)
       requestStatus = 'waiting_for_postal_submission';
       return route.fulfill({ json: { status: requestStatus } });
     });
+    const postalRecord = () => ({
+      id: requestId,
+      profile_id: profileId,
+      profile_name: 'Buyer',
+      request_status: requestStatus,
+      postal_status: postalStatus,
+      courier: shipment?.courier,
+      tracking_number: shipment?.trackingNumber,
+      send_date: shipment?.sendDate,
+      receipt_image_id: null,
+      staff_notes: null,
+      created_at: submittedAt,
+    });
+    await routePostalRecords(page, () => [postalRecord()]);
     await page.route('**/api/admin/solar/postal-queue?*', (route) =>
       route.fulfill({
         json: {
           requests:
             (postalStatus === 'shipped' || postalStatus === 'received') &&
             requestStatus !== 'contract_created'
-              ? [
-                  {
-                    id: requestId,
-                    profile_id: profileId,
-                    profile_name: 'Buyer',
-                    request_status: requestStatus,
-                    postal_status: postalStatus,
-                    courier: shipment?.courier,
-                    tracking_number: shipment?.trackingNumber,
-                    send_date: shipment?.sendDate,
-                    receipt_image_id: null,
-                    staff_notes: null,
-                    created_at: submittedAt,
-                  },
-                ]
+              ? [postalRecord()]
               : [],
           nextBefore: null,
         },
@@ -558,7 +561,30 @@ for (const locale of ['en', 'fa'] as const)
       );
     await page.getByLabel(solarCopy('propertyForm', locale)).selectOption('villa');
     await expect(page.getByLabel(solarCopy('totalUnits', locale), { exact: true })).toHaveCount(0);
-    await page.getByLabel(solarCopy('completionDate', locale)).fill('2020-01-01');
+    const completion = page.getByLabel(solarCopy('completionDate', locale));
+    await expect(completion).toHaveAccessibleDescription(
+      solarIntakeText('completionDateCalendar', locale)
+    );
+    await completion.click();
+    const calendar = page.getByRole('dialog', { name: solarCopy('completionDate', locale) });
+    await calendar
+      .locator('select[class*="years_dropdown"]')
+      .selectOption(locale === 'fa' ? '1398' : '2020');
+    await calendar
+      .locator('select[class*="months_dropdown"]')
+      .selectOption(locale === 'fa' ? '9' : '0');
+    await calendar
+      .locator('[role=gridcell]:not([data-outside]) button')
+      .filter({ hasText: locale === 'fa' ? /^۱۱$/ : /^1$/ })
+      .click();
+    await expect(completion).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.locator('#solar-completion-hint time')).toHaveAttribute(
+      'datetime',
+      '2020-01-01'
+    );
+    if (locale === 'fa') {
+      await expect(page.locator('#solar-completion-hint time')).toHaveText('۱۱ دی ۱۳۹۸');
+    }
     await checkRoutePresentation(page, info, locale);
     await page
       .getByRole('button', { name: appCopy('onboarding.type.continue', locale), exact: true })
@@ -571,7 +597,7 @@ for (const locale of ['en', 'fa'] as const)
     await bill.focus();
     await bill.blur();
     await expect(bill).toHaveAccessibleDescription(
-      `${solarCopy('billIdentifier', locale)}: ${appCopy('formWizard.invalidField', locale)}`
+      `${solarCopy('billIdentifier', locale)}: ${solarIntakeText('billFormat', locale)}`
     );
     await page.getByLabel(solarCopy('offGrid', locale)).check();
     await expect(bill).toHaveCount(0);
@@ -588,23 +614,35 @@ for (const locale of ['en', 'fa'] as const)
       .getByRole('button', { name: appCopy('electricity.order.back', locale), exact: true })
       .click();
     await expect(page.getByLabel(solarCopy('propertyForm', locale))).toHaveValue('villa');
-    await expect(page.getByLabel(solarCopy('completionDate', locale))).toHaveValue('2020-01-01');
-    await page
-      .getByRole('button', { name: appCopy('onboarding.type.continue', locale), exact: true })
-      .click();
+    await expect(page.locator('#solar-completion-hint time')).toHaveAttribute(
+      'datetime',
+      '2020-01-01'
+    );
     await page
       .getByRole('button', { name: appCopy('onboarding.type.continue', locale), exact: true })
       .click();
     const agreement = page.getByLabel(solarCopy('agreement', locale));
     await expect(agreement).toHaveAttribute('aria-required', 'true');
+    const reviewRequest = page.getByRole('button', {
+      name: solarCopy('reviewTitle', locale),
+      exact: true,
+    });
+    await expect(reviewRequest).toBeDisabled();
     await checkChoiceTarget(agreement);
-    await page
-      .getByRole('button', { name: appCopy('onboarding.type.continue', locale), exact: true })
-      .click();
+    await reviewRequest.click();
+    await expect(page).toHaveURL(/step=3$/);
     await expect(
       page.getByRole('heading', { name: solarCopy('reviewTitle', locale) })
     ).toBeVisible();
     await expect(page.getByText(solarCopy('reviewNoContractInvoice', locale))).toBeVisible();
+    const propertyReview = page.locator('[data-review-section=property]');
+    const reviewedCompletionDate = propertyReview.locator('time[datetime="2020-01-01"]');
+    await expect(reviewedCompletionDate).toBeHidden();
+    await propertyReview
+      .getByText(solarCopy('wizardProperty', locale), { exact: true })
+      .press('Enter');
+    await expect(reviewedCompletionDate).toBeVisible();
+    await expect(reviewedCompletionDate).toHaveText(locale === 'fa' ? '۱۱ دی ۱۳۹۸' : '2020-01-01');
     await checkRoutePresentation(page, info, locale);
     const submit = page.getByRole('button', { name: solarCopy('submit', locale), exact: true });
     await expect(submit).toBeDisabled();
@@ -673,11 +711,34 @@ for (const locale of ['en', 'fa'] as const)
       expectedReviewHash: 'a'.repeat(64),
     });
 
-    const documents = page.getByRole('region', { name: solarCopy('documentGuidance', locale) });
-    await documents
-      .getByRole('button', { name: documentCopy('upload', locale), exact: true })
+    await expect(
+      page.getByRole('heading', {
+        name: solarCopy('details', locale),
+        exact: true,
+      })
+    ).toBeVisible();
+    await page.goto(`/solar/requests/${requestId}/shipment`);
+    await expect(
+      page.getByText(solarCopy('shipmentPageUnavailable', locale), { exact: true })
+    ).toBeVisible();
+    await page
+      .getByRole('link', { name: solarCopy('backToSolarRequest', locale), exact: true })
       .click();
-    const upload = page.getByRole('region', { name: documentCopy('upload', locale) });
+    await expect(page).toHaveURL(`/solar/requests/${requestId}`);
+    const documents = page.getByRole('region', { name: solarCopy('documentGuidance', locale) });
+    await expect(documents).toHaveCount(0);
+    const documentsEntry = page.getByRole('link', {
+      name: solarCopy('workflowNextUpload', locale),
+      exact: true,
+    });
+    await expect(documentsEntry).toHaveAttribute('href', `/solar/requests/${requestId}/documents`);
+    await documentsEntry.click();
+    await expect(page).toHaveURL(`/solar/requests/${requestId}/documents`);
+    await documents
+      .getByRole('link', { name: documentCopy('upload', locale), exact: true })
+      .click();
+    await expect(page).toHaveURL(`/solar/requests/${requestId}/documents/new`);
+    const upload = page.getByRole('region', { name: solarCopy('siteDocumentNew', locale) });
     await expect(upload.getByLabel(documentCopy('file', locale), { exact: true })).toBeEnabled();
     await upload.getByLabel(documentCopy('file', locale), { exact: true }).setInputFiles({
       name: 'site-plan.pdf',
@@ -689,13 +750,20 @@ for (const locale of ['en', 'fa'] as const)
       .getByRole('dialog')
       .getByRole('button', { name: appCopy('team.confirm', locale), exact: true })
       .click();
+    await expect(page).toHaveURL(`/solar/requests/${requestId}/documents`);
     await expect(
       documents.getByRole('status').filter({ hasText: documentCopy('uploadComplete', locale) })
     ).toBeVisible();
-    await documents.getByLabel(solarCopy('allUploaded', locale)).check();
-    await documents.getByRole('button', { name: solarCopy('sendReview', locale) }).click();
+    await documents.getByRole('link', { name: solarCopy('reviewDocumentSet', locale) }).click();
+    await expect(page).toHaveURL(`/solar/requests/${requestId}/documents/review`);
+    await page.getByLabel(solarCopy('allUploaded', locale)).check();
+    await page.getByRole('button', { name: solarCopy('sendReview', locale) }).click();
     await expect(
-      documents.getByRole('status').filter({ hasText: solarCopy('reviewSent', locale) })
+      page
+        .getByRole('main')
+        .last()
+        .getByRole('status')
+        .filter({ hasText: solarCopy('reviewSent', locale) })
     ).toBeVisible();
 
     isStaff = true;
@@ -704,14 +772,21 @@ for (const locale of ['en', 'fa'] as const)
     await expect(
       page.getByRole('heading', { name: solarCopy('staffTitle', locale) })
     ).toBeVisible();
-    await page.getByRole('button', { name: /site-plan\.pdf.*Buyer/ }).click();
-    await page.getByRole('button', { name: solarCopy('approve', locale) }).click();
+    await page.getByRole('link', { name: /site-plan\.pdf.*Buyer/ }).click();
+    await page.getByRole('link', { name: solarCopy('approve', locale) }).click();
+    await expect(page).toHaveURL(new RegExp(`/admin/solar-requests/${requestId}/approve/`));
+    await page.locator('main form button[type="submit"]').click();
     await page
       .getByRole('dialog')
       .getByRole('button', { name: appCopy('team.confirm', locale) })
       .click();
     await expect.poll(() => staffDocumentStatus).toBe('approved');
-    await page.getByRole('button', { name: solarCopy('advancePostal', locale) }).click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('backToDocumentReview', locale) })
+      .click();
+    await page.getByRole('link', { name: solarCopy('advancePostal', locale) }).click();
+    await expect(page).toHaveURL(`/admin/solar-requests/${requestId}/advance-postal`);
+    await page.locator('main form button[type="submit"]').click();
     await expect(
       page.getByRole('dialog').getByText(solarCopy('documentSetReviewTitle', locale))
     ).toBeVisible();
@@ -723,8 +798,21 @@ for (const locale of ['en', 'fa'] as const)
     await expect.poll(() => requestStatus).toBe('waiting_for_postal_submission');
 
     operatingContext = 'customer';
-    await page.goto(`/solar/requests/${requestId}`);
+    await page.goto(`/solar/requests/${requestId}/documents`);
+    await expect(
+      page.getByText(solarCopy('documentStageUnavailable', locale), { exact: true })
+    ).toBeVisible();
+    await expect(documents).toHaveCount(0);
+    await page
+      .getByRole('link', { name: solarCopy('backToSolarRequest', locale), exact: true })
+      .click();
+    await expect(page).toHaveURL(`/solar/requests/${requestId}`);
     const postal = page.getByRole('region', { name: solarCopy('postalStage', locale) });
+    await expect(postal).toHaveCount(0);
+    const shipmentEntry = page.getByRole('link', { name: solarCopy('workflowNextPostal', locale) });
+    await expect(shipmentEntry).toHaveAttribute('href', `/solar/requests/${requestId}/shipment`);
+    await shipmentEntry.click();
+    await expect(page).toHaveURL(`/solar/requests/${requestId}/shipment`);
     await expect(
       postal.getByText(locale === 'fa' ? 'اصل مدارک را پست کنید.' : 'Mail the originals.')
     ).toBeVisible();
@@ -745,10 +833,13 @@ for (const locale of ['en', 'fa'] as const)
       page.getByRole('heading', { name: solarCopy('postalStaffTitle', locale) })
     ).toBeVisible();
     await page
-      .getByRole('button', { name: new RegExp(`Buyer.*${solarCopy('postal_shipped', locale)}`) })
+      .getByRole('link', { name: new RegExp(`Buyer.*${solarCopy('postal_shipped', locale)}`) })
       .click();
     await expect(page.getByText('TRACK-123')).toBeVisible();
-    await page.getByRole('button', { name: solarCopy('postal_confirm-received', locale) }).click();
+    await page
+      .getByRole('link', { name: solarCopy('postal_confirm-received', locale), exact: true })
+      .click();
+    await page.locator('main form button[type=submit]').click();
     await expect(
       page.getByRole('dialog').getByText(solarCopy('postalReviewTitle', locale))
     ).toBeVisible();
@@ -768,7 +859,7 @@ for (const locale of ['en', 'fa'] as const)
     operatingContext = 'staff';
     await page.goto('/admin/solar-postal');
     await page
-      .getByRole('button', { name: new RegExp(`Buyer.*${solarCopy('postal_received', locale)}`) })
+      .getByRole('link', { name: new RegExp(`Buyer.*${solarCopy('postal_received', locale)}`) })
       .click();
     const contractSource = page.getByLabel(solarCopy('solarContractSource', locale), {
       exact: true,
@@ -778,22 +869,38 @@ for (const locale of ['en', 'fa'] as const)
       exact: true,
     });
     await expect(contractSource).toHaveCount(0);
-    await page.getByRole('button', { name: solarCopy('solarStartFinalReview', locale) }).click();
+    await page
+      .getByRole('link', { name: solarCopy('solarStartFinalReview', locale), exact: true })
+      .click();
+    await page.locator('main form button[type=submit]').click();
     await confirm.click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('backToShipmentReview', locale), exact: true })
+      .click();
     await expect(
-      page.getByRole('button', { name: solarCopy('solarFinalApprove', locale) })
+      page.getByRole('link', { name: solarCopy('solarFinalApprove', locale), exact: true })
     ).toBeVisible();
     await expect(contractSource).toHaveCount(0);
-    await page.getByRole('button', { name: solarCopy('solarFinalApprove', locale) }).click();
+    await page
+      .getByRole('link', { name: solarCopy('solarFinalApprove', locale), exact: true })
+      .click();
+    await page.locator('main form button[type=submit]').click();
     await expect(page.getByRole('dialog')).toContainText('TRACK-123');
     await confirm.click();
+    await page
+      .getByRole('link', { name: tSolarStaffRecord('backToShipmentReview', locale), exact: true })
+      .click();
 
+    await page
+      .getByRole('link', { name: solarCopy('solarCreateContract', locale), exact: true })
+      .click();
+    await expect(page).toHaveURL(`/admin/solar-requests/${requestId}/postal/create-contract`);
     await contractSource.selectOption(`template:${templateVersionId}`);
     await page
       .getByLabel(solarCopy('solarContractTitle', locale), { exact: true })
       .fill('Solar agreement');
     await page
-      .getByLabel(solarCopy('solarContractText', locale), { exact: true })
+      .getByRole('textbox', { name: solarCopy('solarContractText', locale), exact: true })
       .fill('Build the station.');
     await page
       .getByLabel(solarCopy('solarContractReason', locale), { exact: true })
@@ -813,9 +920,7 @@ for (const locale of ['en', 'fa'] as const)
       .addCookies([
         { name: 'barghsa_csrf', value: 'solar-contract-csrf', url: new URL(page.url()).origin },
       ]);
-    await page
-      .getByRole('button', { name: solarCopy('solarCreateContract', locale), exact: true })
-      .click();
+    await page.getByTestId('solar-contract-form').locator('button[type=submit]').click();
     const review = page.getByRole('dialog').getByRole('region', {
       name: solarCopy('solarContractReviewTitle', locale),
       exact: true,
@@ -913,6 +1018,9 @@ for (const locale of ['en', 'fa'] as const)
         await page.route('**/api/user/settings/timezone', (route) =>
           route.fulfill({ json: { timezone: 'Asia/Tehran' } })
         );
+        await page.route(`**/api/profiles/${profileId}/addresses/access`, (route) =>
+          route.fulfill({ json: { profileId, canEdit: true } })
+        );
         await page.route(`**/api/profiles/${profileId}/addresses`, (route) => {
           if (route.request().method() === 'POST') {
             addresses.push(siteAddress);
@@ -1008,12 +1116,20 @@ for (const locale of ['en', 'fa'] as const)
         if (buildingType === 'non_household') await page.locator('#solar-area').fill('250');
         else {
           await page.getByLabel(tSolar('propertyForm', locale)).selectOption('villa');
-          await page.locator('#solar-completion').fill('2020-01-01');
+          await page
+            .getByRole('button', {
+              name: solarIntakeText('completionDateManual', locale),
+              exact: true,
+            })
+            .click();
+          const manualDate = page.locator('#solar-completion');
+          await expect(manualDate).toBeFocused();
+          await manualDate.fill('2020-01-01');
         }
         await page
           .getByRole('link', { name: tSolar(existing ? 'addAddress' : 'noAddresses', locale) })
           .click();
-        await expect(page).toHaveURL(/\/settings\/addresses\?/);
+        await expect(page).toHaveURL(/\/settings\/addresses\/new\?/);
         expect(draft?.data).toMatchObject({
           buildingType,
           ...(buildingType === 'non_household'
@@ -1021,20 +1137,12 @@ for (const locale of ['en', 'fa'] as const)
             : { propertyForm: 'villa', buildingCompletionDate: '2020-01-01' }),
         });
 
-        await page.getByRole('button', { name: t('settings.addresses.add', locale) }).click();
         await page.locator('#addresses-field-1').selectOption(siteAddress.provinceId);
         await page.locator('#addresses-field-2').selectOption(siteAddress.cityId);
         await page.locator('#addresses-field-3').fill(siteAddress.fullAddress);
         await page.locator('#addresses-field-4').fill(siteAddress.postalCode);
         await page
           .getByRole('button', { name: t('settings.addresses.form.save', locale), exact: true })
-          .click();
-        await expect(
-          page.getByRole('dialog', { name: t('settings.addresses.form.title', locale) })
-        ).toBeHidden();
-        await expect(page.getByText(siteAddress.fullAddress, { exact: true })).toBeVisible();
-        await page
-          .getByRole('link', { name: t('settings.addresses.returnToSolarRequest', locale) })
           .click();
         await expect(page).toHaveURL(/\/solar\/requests\/new\?step=1$/);
         if (buildingType === 'non_household') {
@@ -1047,8 +1155,11 @@ for (const locale of ['en', 'fa'] as const)
           await expect(
             page.getByLabel(tSolar('description', locale), { exact: true })
           ).not.toHaveAttribute('aria-required', 'true');
-        } else await expect(page.locator('#solar-completion')).toHaveValue('2020-01-01');
-        await page.getByLabel(tSolar('address', locale)).selectOption(siteAddress.id);
+        } else
+          await expect(page.locator('#solar-completion-hint time')).toHaveAttribute(
+            'datetime',
+            '2020-01-01'
+          );
         await expect(page.getByLabel(tSolar('address', locale))).toHaveValue(siteAddress.id);
         expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
@@ -1067,12 +1178,9 @@ for (const locale of ['en', 'fa'] as const)
           .getByRole('button', { name: t('electricity.order.next', locale), exact: true })
           .click();
         await page.getByLabel(tSolar('offGrid', locale)).check();
-        await page
-          .getByRole('button', { name: t('electricity.order.next', locale), exact: true })
-          .click();
         await page.getByLabel(tSolar('agreement', locale)).check();
         await page
-          .getByRole('button', { name: t('electricity.order.next', locale), exact: true })
+          .getByRole('button', { name: tSolar('reviewTitle', locale), exact: true })
           .click();
         await expect(
           page.getByRole('heading', { name: tSolar('reviewTitle', locale) })
@@ -1122,27 +1230,22 @@ test('staff confirms the reviewed solar contract and exact initial invoice', asy
   await page.route('**/api/user/settings/timezone', (route) =>
     route.fulfill({ json: { timezone: 'Asia/Tehran' } })
   );
+  const postalRecord = {
+    id: requestId,
+    profile_id: profileId,
+    profile_name: 'Buyer',
+    request_status: 'approved',
+    postal_status: 'received',
+    courier: null,
+    tracking_number: null,
+    send_date: null,
+    receipt_image_id: null,
+    staff_notes: null,
+    created_at: submittedAt,
+  };
+  await routePostalRecords(page, () => [postalRecord]);
   await page.route('**/api/admin/solar/postal-queue?*', (route) =>
-    route.fulfill({
-      json: {
-        requests: [
-          {
-            id: requestId,
-            profile_id: profileId,
-            profile_name: 'Buyer',
-            request_status: 'approved',
-            postal_status: 'received',
-            courier: null,
-            tracking_number: null,
-            send_date: null,
-            receipt_image_id: null,
-            staff_notes: null,
-            created_at: submittedAt,
-          },
-        ],
-        nextBefore: null,
-      },
-    })
+    route.fulfill({ json: { requests: [postalRecord], nextBefore: null } })
   );
   await page.route('**/api/admin/solar/postal-guidance', (route) =>
     route.fulfill({
@@ -1180,16 +1283,19 @@ test('staff confirms the reviewed solar contract and exact initial invoice', asy
 
   await page.goto('/admin/solar-postal');
 
-  await page.getByRole('button', { name: /Buyer/ }).click();
+  await page.getByRole('link', { name: /Buyer/ }).click();
+  await page.getByRole('link', { name: 'Create solar contract and invoice', exact: true }).click();
   await page.getByLabel('Contract source').selectOption(`template:${templateVersionId}`);
   await page.getByLabel('Contract title').fill('Solar agreement');
-  await page.getByLabel('Contract terms').fill('Build the station.');
+  await page
+    .getByRole('textbox', { name: 'Contract terms', exact: true })
+    .fill('Build the station.');
   await page.getByLabel('Draft description').fill('Initial draft');
   await page.getByLabel('Stated contract value').selectOption('fixed');
   await page.getByLabel('Fixed amount (IRR)').fill('900000');
   await page.getByLabel('Description').last().fill('Deposit');
   await page.getByLabel('Unit price (IRR)').fill('100000');
-  await page.getByRole('button', { name: 'Create solar contract and invoice' }).click();
+  await page.getByRole('button', { name: 'Review contract and invoice', exact: true }).click();
   const dialog = page.getByRole('dialog');
   await expect(
     dialog.getByRole('region', { name: 'Review contract and initial invoice' })
@@ -1418,11 +1524,14 @@ for (const locale of ['en', 'fa'] as const)
         json: { status: requestStatus, requestId, idempotencyKey: input.idempotencyKey },
       });
     });
-    await page.goto(`/solar/requests/${requestId}`);
+    await page.goto(`/solar/requests/${requestId}/documents/review`);
     const main = page.getByRole('main').last();
     const retry = main.getByRole('button', { name: solarCopy('retry', locale), exact: true });
+    const back = main.getByRole('link', {
+      name: solarCopy('backToSolarDocuments', locale),
+      exact: true,
+    });
     if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
-      const back = main.getByRole('link', { name: solarCopy('back', locale), exact: true });
       await expect(back).toBeVisible();
       const bounds = (await back.boundingBox())!;
       expect(bounds.width).toBeGreaterThanOrEqual(44);
@@ -1456,7 +1565,7 @@ for (const locale of ['en', 'fa'] as const)
     await retry.focus();
     await page.keyboard.press('Enter');
     await expect(connectionNotice).toBeVisible();
-    const documents = main.getByRole('region', { name: solarCopy('documentGuidance', locale) });
+    const documents = main.getByRole('region', { name: solarCopy('reviewDocumentSet', locale) });
     try {
       await expect(
         documents.getByText(solarCopy('loading', locale), { exact: true })
@@ -1466,6 +1575,7 @@ for (const locale of ['en', 'fa'] as const)
     } finally {
       releaseGuidance();
     }
+    await main.getByText(solarCopy('documentGuidance', locale), { exact: true }).click();
     await expect(
       main.getByText(locale === 'fa' ? 'مدارک محل را بارگذاری کنید' : 'Upload site evidence', {
         exact: true,
@@ -1529,6 +1639,7 @@ for (const locale of ['en', 'fa'] as const)
     await expect(checkbox).toBeChecked();
     await expect(checkbox).toBeDisabled();
     await expect(send).toBeDisabled();
+    await expect(back).toHaveAttribute('aria-disabled', 'true');
     const retryCompletion = main.getByRole('button', {
       name: solarCopy('retryDocumentSubmission', locale),
       exact: true,
@@ -1547,7 +1658,9 @@ for (const locale of ['en', 'fa'] as const)
     await expect(
       main.getByRole('status').filter({ hasText: solarCopy('reviewSent', locale) })
     ).toBeVisible();
-    await expect(checkbox).not.toBeChecked();
+    await expect(checkbox).toHaveCount(0);
+    await expect(send).toHaveCount(0);
+    await expect(back).toBeEnabled();
     expect(writes).toBe(4);
     expect(completionKeys[0]).not.toBe(completionKeys[1]);
     expect(completionKeys.slice(1)).toEqual(Array(3).fill(completionKeys[1]));

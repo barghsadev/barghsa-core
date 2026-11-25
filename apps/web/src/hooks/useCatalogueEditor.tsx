@@ -37,7 +37,7 @@ type CatalogueEditor<Data, Draft extends FieldValues> = ReturnType<typeof useWiz
   onPendingChange: (pending: boolean) => void;
   onUnconfirmed: () => void;
   onValidationError: (fields: unknown[]) => boolean;
-  feedback: (field: FieldPath<Draft>) => ReactNode;
+  feedback: (field: FieldPath<Draft>, compact?: boolean) => ReactNode;
 };
 
 /** Catalogue and configuration editors share draft, permission and captured-action ownership. */
@@ -349,14 +349,14 @@ export function useCatalogueEditor<Data, Draft extends FieldValues>(
     },
     onUnconfirmed: unconfirmed,
     onValidationError: (fields: unknown[]) => current() && fieldErrors(fields),
-    feedback: (field: FieldPath<Draft>) => {
+    feedback: (field: FieldPath<Draft>, compact = false) => {
       const message = editor.form.getFieldState(field).error?.message;
       return (
         <p
           id={editor.errorId(field)}
           role={message ? 'alert' : undefined}
           aria-hidden={message ? undefined : true}
-          className={`text-sm text-destructive ${message ? '' : 'invisible'}`}
+          className={`text-sm text-destructive ${message ? '' : compact ? 'invisible line-clamp-1' : 'invisible'}`}
         >
           {typeof message === 'string' ? message : messages[field]}
         </p>

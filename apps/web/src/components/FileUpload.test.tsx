@@ -69,7 +69,7 @@ async function drop(files: File[]) {
 for (const locale of ['en', 'fa'] as const)
   it(`provides localized browse/drop rules and removable selected metadata (${locale})`, async () => {
     await act(async () => root.render(<Picker locale={locale} />));
-    expect(host.textContent).toContain(documentText('dropFiles', locale));
+    expect(host.querySelector('button')?.textContent).toContain(documentText('chooseFile', locale));
     expect(host.textContent).toContain('.pdf');
     const input = host.querySelector<HTMLInputElement>('input')!;
     expect(input.accept).toBe('.pdf');
@@ -78,6 +78,9 @@ for (const locale of ['en', 'fa'] as const)
     expect(open).toHaveBeenCalledOnce();
     await drop([file]);
     expect(host.textContent).toContain('proof.pdf');
+    expect(host.querySelector('button')?.textContent).toContain(
+      documentText('changeSelectedFile', locale)
+    );
     expect(changed).toHaveBeenLastCalledWith([file]);
     await act(async () => host.querySelectorAll('button')[1]!.click());
     expect(host.textContent).not.toContain('proof.pdf');

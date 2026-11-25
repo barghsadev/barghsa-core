@@ -37,7 +37,7 @@ for (const locale of ['en', 'fa'] as const) {
       }
       return route.fulfill({ json: view });
     });
-    await page.goto('/admin/verification');
+    await page.goto('/admin/verification/requirements');
     const section = page.getByRole('region', { name: text('policyTitle'), exact: true });
     await section.getByRole('button', { name: text('policyHistory') }).click();
     await section.getByRole('button', { name: text('policyRestore') }).click();
@@ -102,27 +102,29 @@ for (const locale of ['en', 'fa'] as const) {
       const ttl = main.locator('#otp-lifetime');
       const expiry = main.locator('#verification-expiry-INDIVIDUAL');
       await expect(mode).toBeChecked();
+      expect(reads).toEqual({ mode: 1, otp: 0, policy: 0 });
+      await main.getByRole('link', { name: text('codesSection'), exact: true }).click();
       await expect(ttl).toHaveValue('300');
-      await expect(expiry).toBeEnabled();
+      await expect(mode).toHaveCount(0);
       await ttl.fill('360');
       await main.getByRole('button', { name: text('otpReload'), exact: true }).click();
       await expect.poll(() => reads.otp).toBe(2);
       phase = 'denied';
-      await main.getByRole('button', { name: text('policyReload'), exact: true }).click();
+      await main.getByRole('link', { name: text('requirementsSection'), exact: true }).click();
       const denied = main.getByRole('alert').filter({ hasText: text('forbidden') });
       await expect(denied).toBeVisible();
-      await expect(mode).toHaveCount(0);
       await expect(ttl).toHaveCount(0);
       await expect(expiry).toHaveCount(0);
-      expect(reads).toEqual({ mode: 1, otp: 2, policy: 2 });
+      expect(reads).toEqual({ mode: 1, otp: 2, policy: 1 });
       finish();
       phase = 'recovered';
       await denied.getByRole('button', { name: text('reload'), exact: true }).press('Enter');
-      await expect(ttl).toHaveValue('420');
       await expect(expiry).toBeEnabled();
-      await expect(mode).toBeChecked();
       await expect(denied).toHaveCount(0);
-      expect(reads).toEqual({ mode: 2, otp: 3, policy: 3 });
+      await main.getByRole('link', { name: text('codesSection'), exact: true }).click();
+      await expect(ttl).toHaveValue('420');
+      await expect(expiry).toHaveCount(0);
+      expect(reads).toEqual({ mode: 1, otp: 3, policy: 2 });
     } finally {
       finish();
     }
@@ -163,7 +165,7 @@ for (const width of [390, 1440])
         await page.route('**/api/auth/step-up', (route) =>
           route.fulfill({ json: { verified: true } })
         );
-        await page.goto('/admin/verification');
+        await page.goto('/admin/verification/requirements');
         const section = page.getByRole('region', {
           name: text('policyTitle'),
           exact: true,
@@ -172,8 +174,11 @@ for (const width of [390, 1440])
         const individual = section.getByRole('group', { name: text('INDIVIDUAL'), exact: true });
         const expiry = section.locator('#verification-expiry-INDIVIDUAL');
         const save = section.getByRole('button', { name: text('save'), exact: true });
+        const comparison = section.getByTestId('config-preview');
         await expect(expiry).toBeEnabled();
+        await expect(comparison).toBeHidden();
         await expiry.fill('1e3');
+        await expect(comparison).toHaveCount(0);
         await save.click();
         await expect(expiry).toBeFocused();
         await expect(expiry).toHaveAttribute('aria-invalid', 'true');
@@ -181,6 +186,17 @@ for (const width of [390, 1440])
         await expiry.fill('۳۰');
         await individual.getByRole('checkbox', { name: text('national_id'), exact: true }).check();
         await section.getByRole('checkbox', { name: text('policyStaff'), exact: true }).uncheck();
+        const compare = section.locator('summary').filter({ hasText: text('policyCompare') });
+        await compare.press('Space');
+        await expect(comparison).toBeVisible();
+        await expect(
+          comparison.getByRole('group', { name: t('admin.settings.current', locale), exact: true })
+        ).toContainText(text('noExpiry'));
+        await expect(
+          comparison.getByRole('group', { name: t('admin.settings.draft', locale), exact: true })
+        ).toContainText(/30|۳۰/);
+        await compare.press('Space');
+        await expect(comparison).toBeHidden();
         await save.click();
         const dialog = page.getByRole('dialog'),
           confirm = dialog.getByRole('button', { name: t('team.confirm', locale), exact: true });
@@ -243,12 +259,15 @@ for (const locale of ['en', 'fa'] as const)
     await setupCatalogueForms(page, locale, locale === 'fa');
     const id = '11111111-1111-4111-8111-111111111111';
     const policy = structuredClone(DEFAULT_VERIFICATION_POLICY);
-    policy.INDIVIDUAL.documents = ['national_id'];
+    const profileType = locale === 'fa' ? 'LEGAL' : 'INDIVIDUAL';
+    const documentType = profileType === 'LEGAL' ? 'registration_notice' : 'national_id';
+    policy[profileType].documents = [documentType];
+    policy.allowManualOverride = true;
     let status = 'PENDING_VERIFICATION';
     const detail = () => ({
       profile: {
         id,
-        profileType: 'INDIVIDUAL',
+        profileType,
         status,
         isDefault: true,
         archived: false,
@@ -277,7 +296,7 @@ for (const locale of ['en', 'fa'] as const)
         canVerify: true,
         canEdit: false,
         canManageUser: false,
-        canOverrideVerification: false,
+        canOverrideVerification: true,
       },
       verificationPolicy: policy,
       verificationCurrent: status === 'VERIFIED',
@@ -316,21 +335,38 @@ for (const locale of ['en', 'fa'] as const)
         },
       });
     });
-    await page.goto(`/admin/crm/profiles/${id}`);
+    await page.goto(`/admin/crm/profiles/${id}/verification`);
     const review = page.getByRole('button', {
       name: crmText('crm.profile.verification.review', locale),
       exact: true,
     });
-    await review.click();
-    await expect(page.getByRole('alert')).toContainText(copy('national_id', locale));
-    await expect(page.locator('#verification-file-national_id')).toBeFocused();
-    await expect(page.locator('#verification-file-national_id')).toHaveAttribute(
-      'aria-invalid',
-      'true'
+    await expect(page.locator('#crm-verify-reason')).toHaveAttribute(
+      'placeholder',
+      copy(
+        profileType === 'LEGAL' ? 'legalVerificationNoteExample' : 'verificationNoteExample',
+        locale
+      )
     );
+    const override = page.getByRole('checkbox', { name: copy('useEvidenceOverride', locale) });
+    const overrideReason = page.getByLabel(copy('overrideReason', locale), { exact: true });
+    const dialog = page.getByRole('dialog');
+    await override.check();
+    await overrideReason.fill('I checked the original papers in person.');
+    await review.click();
+    await expect(dialog).toContainText('I checked the original papers in person.');
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+    await expect(overrideReason).toHaveValue('I checked the original papers in person.');
+    await override.uncheck();
+
+    const evidence = page.locator(`#verification-file-${documentType}`);
+    await review.click();
+    await expect(page.getByRole('alert')).toContainText(copy(documentType, locale));
+    await expect(evidence).toBeFocused();
+    await expect(evidence).toHaveAttribute('aria-invalid', 'true');
     expect(uploads).toEqual([]);
     expect(writes).toEqual([]);
-    await page.locator('#verification-file-national_id').setInputFiles({
+    await evidence.setInputFiles({
       name: 'identity.pdf',
       mimeType: 'application/pdf',
       buffer: Buffer.from('%PDF-1.4\n'),
@@ -340,13 +376,14 @@ for (const locale of ['en', 'fa'] as const)
       true
     );
     await review.click();
-    const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
+    await expect(dialog).toContainText('identity.pdf');
+    await expect(dialog).toContainText(copy(documentType, locale));
     expect(writes).toEqual([]);
     expect(uploads).toEqual([
       expect.objectContaining({ profileId: id, purpose: 'verification_evidence' }),
     ]);
     await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
     await expect(dialog).toHaveCount(0);
-    expect(writes).toEqual([{ action: 'verify', evidence: [{ type: 'national_id', key }] }]);
+    expect(writes).toEqual([{ action: 'verify', evidence: [{ type: documentType, key }] }]);
   });

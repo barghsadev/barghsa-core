@@ -120,3 +120,35 @@ it('keeps invalid range drafts open and removes an invoice chip without changing
     queue_q: 'pending',
   });
 });
+it('keeps an invalid invoice in the drawer and applies the corrected ID and outcome together', async () => {
+  const before = current;
+  const nextInvoice = '22222222-2222-4222-8222-222222222222';
+  await click('Filters');
+  await type('Search', 'Another bank');
+  await type('Invoice ID', 'invalid');
+  const outcome = document.querySelector<HTMLSelectElement>(
+    'select:has(option[value="Rejected"])'
+  )!;
+  await act(async () => {
+    outcome.value = 'Rejected';
+    outcome.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await click('Apply filters');
+  expect(current).toBe(before);
+  const invalid = document.querySelector('[role="dialog"] input[aria-invalid="true"]');
+  expect(invalid).not.toBeNull();
+  expect(document.activeElement).toBe(invalid);
+  await type('Invoice ID', `  ${nextInvoice}  `);
+  await click('Apply filters');
+  expect(current).toMatchObject({
+    receipt_invoiceId: nextInvoice,
+    receipt_q: 'Another bank',
+    receipt_state: 'Rejected',
+    receipt_min: amount,
+    receipt_max: amount,
+    queue_q: 'pending',
+    queue_cursor: 'queue',
+    cursor: 'ledger',
+  });
+  expect(document.querySelector('[role="dialog"]')).toBeNull();
+});

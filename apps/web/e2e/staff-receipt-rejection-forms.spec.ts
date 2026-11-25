@@ -198,7 +198,9 @@ for (const locale of ['en', 'fa'] as const)
             },
           });
         });
-        await page.goto(kind === 'wallet' ? '/admin/wallet-receipts' : '/admin/invoices');
+        await page.goto(
+          kind === 'wallet' ? `/admin/wallet-receipts/${receiptId}/reject` : '/admin/invoices'
+        );
         const word = (key: string) =>
           kind === 'wallet'
             ? walletText(`admin.walletReceipts.${key}`, locale)
@@ -209,6 +211,7 @@ for (const locale of ['en', 'fa'] as const)
             .getByRole('button', { name: word('title'), exact: true })
             .click();
           await page.getByRole('button', { name: word('open'), exact: true }).click();
+          await page.getByTestId('invoice-receipt-open-reject').click();
         }
         const region =
           kind === 'wallet'

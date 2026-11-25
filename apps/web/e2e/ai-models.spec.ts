@@ -41,6 +41,9 @@ for (const locale of ['en', 'fa'] as const)
         },
       });
     });
+    await page.route(`**/api/admin/ai-models/${aiModel.id}`, (route) =>
+      route.fulfill({ status: 403, json: {} })
+    );
     await page.route('**/api/auth/step-up', (route) => {
       verified = route.request().postDataJSON().password === 'correct';
       return cookieResponse(route, {
@@ -55,7 +58,7 @@ for (const locale of ['en', 'fa'] as const)
     await expect(page.getByRole('alert')).toBeVisible();
     failed = false;
     await page.getByRole('button', { name: fa ? 'تلاش مجدد' : 'Retry', exact: true }).click();
-    await page.getByRole('button', { name: fa ? 'افزودن مدل' : 'Add model', exact: true }).click();
+    await page.getByRole('link', { name: fa ? 'افزودن مدل' : 'Add model', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان مدل' : 'Model title', { exact: true }).fill('Local draft');
     await page
       .getByLabel(fa ? 'نشانی پایه' : 'Base URL', { exact: true })
@@ -128,6 +131,8 @@ for (const locale of ['en', 'fa'] as const)
       route.fulfill({ json: present ? [model] : [] })
     );
     await page.route(`**/api/admin/ai-models/${model.id}`, (route) => {
+      if (route.request().method() === 'GET')
+        return route.fulfill(present ? { json: model } : { status: 404, json: {} });
       if (route.request().method() === 'PUT') {
         edits.push(route.request().postDataJSON());
         if (invalid)
@@ -157,7 +162,7 @@ for (const locale of ['en', 'fa'] as const)
     await page.goto('/admin/ai-models');
     await expect(page.getByRole('heading', { name: model.title, exact: true })).toBeVisible();
     await readable();
-    await page.getByRole('button', { name: label('edit'), exact: true }).click();
+    await page.getByRole('link', { name: label('edit'), exact: true }).click();
     await expect(page.getByLabel(label('tokenChoice'), { exact: true })).toHaveValue('keep');
     await readable();
     await page.getByRole('button', { name: label('save'), exact: true }).click();
@@ -179,6 +184,7 @@ for (const locale of ['en', 'fa'] as const)
         config: { max_tokens: 256, temperature: 0 },
       })
     );
+    await expect(page).toHaveURL(`/admin/ai-models/${model.id}`);
     await page.getByRole('button', { name: label('test'), exact: true }).click();
     await confirm().click();
     await expect(page.getByText('<script>provider reply</script>', { exact: true })).toBeVisible();
@@ -224,6 +230,9 @@ for (const locale of ['en', 'fa'] as const)
       route.fulfill({ json: { timezone: 'UTC' } })
     );
     await page.route('**/api/admin/ai-models', (route) => route.fulfill({ json: [model] }));
+    await page.route(`**/api/admin/ai-models/${model.id}`, (route) =>
+      route.fulfill({ json: model })
+    );
     await page.route(`**/api/admin/ai-models/${model.id}/budget`, (route) => {
       saved = route.request().postDataJSON();
       model.budget = {
@@ -237,9 +246,9 @@ for (const locale of ['en', 'fa'] as const)
       return route.fulfill({ json: model });
     });
     await page.goto('/admin/ai-models');
-    await page.getByRole('button', { name: label('budgetEdit') }).click();
-    await page.getByLabel(label('budgetTokens'), { exact: true }).fill('10000');
-    await page.getByLabel(label('budgetCost'), { exact: true }).fill('2.5');
+    await page.getByRole('link', { name: label('budgetEdit'), exact: true }).click();
+    await page.getByLabel(aiModelFormText('tokenLimit', locale), { exact: true }).fill('10000');
+    await page.getByLabel(aiModelFormText('costLimit', locale), { exact: true }).fill('2.5');
     await page.getByLabel(label('budgetInputPrice'), { exact: true }).fill('0.3');
     await page.getByLabel(label('budgetOutputPrice'), { exact: true }).fill('0.9');
     await page.getByRole('button', { name: label('budgetSave'), exact: true }).click();
@@ -254,12 +263,10 @@ for (const locale of ['en', 'fa'] as const)
       inputPricePerMillionMicros: 300_000,
       outputPricePerMillionMicros: 900_000,
     });
-    const title = page.getByRole('heading', { name: model.title, exact: true });
-    const record = page
-      .getByRole('row')
-      .filter({ has: title })
-      .or(page.getByRole('listitem').filter({ has: title }));
-    await expect(record).toContainText(new Intl.NumberFormat(locale).format(10_000));
+    await expect(page).toHaveURL(`/admin/ai-models/${model.id}`);
+    await expect(page.getByRole('main')).toContainText(
+      new Intl.NumberFormat(locale).format(10_000)
+    );
   });
 
 test('model test allows the worker budget and recovers a stalled reply without resending', async ({

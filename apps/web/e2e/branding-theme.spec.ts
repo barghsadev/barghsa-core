@@ -1,5 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { brandingText } from '@barghsa/i18n/branding';
+import { t as authText } from '@barghsa/i18n/auth';
+import { dashboardText } from '@barghsa/i18n/dashboard';
 import { crmShell } from './crm-shell-fixture';
 import { t as settingsText } from '@barghsa/i18n/admin-ui';
 import { shellText } from '@barghsa/i18n/shell';
@@ -105,6 +107,7 @@ for (const locale of ['fa', 'en'] as const)
       await page
         .getByRole('button', { name: settingsText('admin.settings.edit', locale), exact: true })
         .click();
+      await expect(page).toHaveURL('/admin/branding/edit');
       expect
         .soft(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
         .toBe(true);
@@ -117,7 +120,7 @@ for (const locale of ['fa', 'en'] as const)
       await expect(
         preview
           .getByRole('group', { name: settingsText('admin.settings.draft', locale), exact: true })
-          .getByText(brandingText('primary', locale), { exact: true })
+          .getByText(dashboardText('home.start', locale), { exact: true })
       ).toHaveCSS('background-color', 'rgb(119, 119, 119)');
       await scan();
       // Preview follows the draft without changing the active application theme.
@@ -169,6 +172,28 @@ for (const locale of ['fa', 'en'] as const)
         }
         await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
       }
+      const screen = preview.getByRole('combobox', {
+        name: brandingText('previewSurface', locale),
+      });
+      const language = preview.getByRole('combobox', {
+        name: brandingText('previewLanguage', locale),
+      });
+      const previewLocale = locale === 'fa' ? 'en' : 'fa';
+      await screen.selectOption('signin');
+      await language.selectOption(previewLocale);
+      const signIn = preview
+        .getByRole('group', { name: settingsText('admin.settings.draft', locale), exact: true })
+        .locator(':scope > div');
+      await expect(signIn).toHaveAttribute('lang', previewLocale);
+      await expect(signIn).toHaveAttribute('dir', previewLocale === 'fa' ? 'rtl' : 'ltr');
+      await expect(signIn).toContainText(authText('auth.login.title', previewLocale));
+      await expect(signIn).toContainText(
+        previewLocale === 'fa' ? config.appTitleFa : config.appTitle
+      );
+      await expect(page.locator('html')).toHaveAttribute('lang', locale);
+      await scan();
+      await screen.selectOption('workspace');
+      await language.selectOption(locale);
       await previewMode.selectOption('auto');
       await scan();
       const accountMenu = page.getByRole('button', {

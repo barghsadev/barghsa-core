@@ -2,7 +2,8 @@ import { expect, it } from 'vitest';
 import {
   emptyNotificationDraft,
   notificationInvalidFields,
-  parseVariablesText,
+  normalizeNotificationVariables,
+  notificationVariableIssues,
   windowInvalidFields,
   windowBody,
   windowValues,
@@ -14,14 +15,27 @@ const draft = {
   eventKey: 'invoice.issued',
   bodyTemplate: 'Hello {{user.name}}',
   subject: 'For {{user.name}}',
-  variables: 'user.name: Recipient',
+  variables: [{ rowId: 0, name: 'user.name', description: 'Recipient' }],
 };
-it('validates declared subject/body paths and preserves variable descriptions/deduplication', () => {
+it('validates declared subject and body paths', () => {
   expect(notificationInvalidFields(draft)).toEqual([]);
-  expect(parseVariablesText('name: First, name: Second\nlink')).toEqual([
-    { name: 'name', description: 'First' },
+});
+it('preserves punctuation and line breaks while omitting duplicates and blank rows', () => {
+  const description = 'First, as printed: name\nUse the original spelling.';
+  const rows = [
+    { rowId: 0, name: ' name ', description: ` ${description} ` },
+    { rowId: 1, name: 'name', description: 'Second' },
+    { rowId: 2, name: 'link', description: null },
+    { rowId: 3, name: '', description: '' },
+  ];
+  expect(normalizeNotificationVariables(rows)).toEqual([
+    { name: 'name', description },
     { name: 'link', description: null },
   ]);
+  expect(notificationVariableIssues(rows)).toEqual([null, 'variableDuplicate', null, null]);
+  expect(notificationInvalidFields({ ...draft, variables: [...draft.variables, ...rows] })).toEqual(
+    ['variables']
+  );
 });
 it.each(['{{unknown}}', '{{user.__proto__}}', '{{user.name', '{{}}'])(
   'rejects unsafe/unknown/malformed placeholders %s',
@@ -35,7 +49,10 @@ it('rejects blank content, event whitespace and overlong variable metadata witho
     ...draft,
     eventKey: 'two words',
     bodyTemplate: '  ',
-    variables: ': missing, ' + 'x'.repeat(101) + ': description',
+    variables: [
+      { rowId: 0, name: '', description: 'missing name' },
+      { rowId: 1, name: 'x'.repeat(101), description: 'description' },
+    ],
     subject: 's'.repeat(201),
   };
   expect(notificationInvalidFields(value)).toEqual([

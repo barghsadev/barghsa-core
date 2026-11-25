@@ -1,8 +1,20 @@
+import { lazy, Suspense } from 'react';
 import { Alert, AlertDescription, Button, buttonVariants, LoadingSkeleton } from '@barghsa/ui';
 import { shellText } from '@barghsa/i18n/shell';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { dashboardText } from '@barghsa/i18n/dashboard';
-import { Zap, Wallet, Gauge, ReceiptText, Package, FileCheck2, LifeBuoy } from 'lucide-react';
+import {
+  Zap,
+  Wallet,
+  Gauge,
+  ReceiptText,
+  Package,
+  FileCheck2,
+  Sprout,
+  Sun,
+  MessagesSquare,
+  ArrowUpRight,
+} from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/workspace';
@@ -13,8 +25,8 @@ import {
   type UpcomingInvoice,
 } from '../components/UpcomingInvoicesWidget.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { LatestOrdersWidget, type RecentOrder } from '../components/LatestOrdersWidget.js';
-import { ActiveContractsWidget, type ActiveContract } from '../components/ActiveContractsWidget.js';
+import type { RecentOrder } from '../components/LatestOrdersWidget.js';
+import type { ActiveContract } from '../components/ActiveContractsWidget.js';
 import { DashboardLayout } from '../components/dashboard/DashboardLayout.js';
 import { DashboardWidget, retryDashboardRead } from '../components/dashboard/DashboardWidget.js';
 import {
@@ -29,7 +41,18 @@ import { ServerQueryError } from '../lib/server-query-client.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useNavigation } from '../hooks/useNavigation.js';
-import './dashboard-intro.css';
+import { electricityDraftPath } from '../lib/electricity-draft.js';
+
+const LatestOrdersWidget = lazy(() =>
+  import('../components/LatestOrdersWidget.js').then(({ LatestOrdersWidget }) => ({
+    default: LatestOrdersWidget,
+  }))
+);
+const ActiveContractsWidget = lazy(() =>
+  import('../components/ActiveContractsWidget.js').then(({ ActiveContractsWidget }) => ({
+    default: ActiveContractsWidget,
+  }))
+);
 
 interface DashboardContext {
   profile: { id: string; name: string };
@@ -196,7 +219,7 @@ function StatusWidget({ profileId, locale }: { profileId: string; locale: Locale
       resource={resource}
       locale={locale}
     >
-      {(counts) => <QuickStatusCards {...counts} embedded locale={locale} />}
+      {(counts) => <QuickStatusCards {...counts} locale={locale} />}
     </DashboardWidget>
   );
 }
@@ -217,13 +240,12 @@ function InvoicesWidget({
       icon={ReceiptText}
       resource={resource}
       locale={locale}
-      wide
       empty={(invoices) => invoices.length === 0}
       emptyMessage={dashboardText('invoice.empty', locale)}
       viewAll={
         <Link
           to="/invoices"
-          search={{ status: 'unpaid' }}
+          search={{}}
           className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline underline-offset-4"
         >
           {dashboardText('invoice.viewAll', locale)}
@@ -254,7 +276,13 @@ function OrdersWidget({
       resource={resource}
       locale={locale}
     >
-      {(orders) => <LatestOrdersWidget orders={orders} embedded locale={locale} time={time} />}
+      {(orders) => (
+        <Suspense
+          fallback={<LoadingSkeleton label={loadingText('loading', locale)} variant="detail" />}
+        >
+          <LatestOrdersWidget orders={orders} embedded locale={locale} time={time} />
+        </Suspense>
+      )}
     </DashboardWidget>
   );
 }
@@ -280,7 +308,7 @@ function ContractsWidget({
       viewAll={
         <Link
           to="/contracts"
-          search={{ state: 'Active' }}
+          search={{}}
           className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline underline-offset-4"
         >
           {dashboardText('invoice.viewAll', locale)}
@@ -288,9 +316,50 @@ function ContractsWidget({
       }
     >
       {(contracts) => (
-        <ActiveContractsWidget contracts={contracts} embedded locale={locale} time={time} />
+        <Suspense
+          fallback={<LoadingSkeleton label={loadingText('loading', locale)} variant="detail" />}
+        >
+          <ActiveContractsWidget contracts={contracts} embedded locale={locale} time={time} />
+        </Suspense>
       )}
     </DashboardWidget>
+  );
+}
+
+function ElectricityHomeAction({
+  locale,
+  profileId,
+}: {
+  locale: Locale;
+  profileId: string | undefined;
+}) {
+  const accountId = useAccountUser();
+  const revision = useProfileContextRevision();
+  const draft = useServerDetailQuery<unknown>({
+    queryKey:
+      profileId && accountId
+        ? queryKeys.orders.detail(
+            { context: 'customer', ownerId: profileId, accountId, revision },
+            'home-electricity-draft'
+          )
+        : null,
+    manual: true,
+    read: async (signal) => {
+      const response = await readAsyncResponse(electricityDraftPath('simple', profileId), signal);
+      if (!response.ok) throw new ServerQueryError(response.status);
+      return response.json();
+    },
+  });
+  const resumable =
+    draft.isSuccess &&
+    record(draft.data) &&
+    record(draft.data.data) &&
+    nonempty(draft.data.revision);
+  return (
+    <Link to="/electricity/orders/new" className={buttonVariants({ className: 'min-h-11' })}>
+      <Zap data-icon="inline-start" aria-hidden="true" />
+      {dashboardText(resumable ? 'home.resume' : 'home.start', locale)}
+    </Link>
   );
 }
 
@@ -301,55 +370,97 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
   const navigation = useNavigation();
   const context = useAsyncData<unknown>('/api/dashboard/context');
   const dashboard = context.status === 'ready' && validContext(context.data) ? context.data : null;
-  const profileName = dashboard?.profile.name;
-  const actions = (
+  const services = (
     [
-      { label: shellText('buyElectricity', locale), href: '/electricity', icon: Zap },
-      { label: t('dashboard.overview.topUpWallet', locale), href: '/wallet', icon: Wallet },
-      { label: t('dashboard.overview.supportTicket', locale), href: '/tickets', icon: LifeBuoy },
+      {
+        name: shellText('buyElectricity', locale),
+        description: 'electricity',
+        to: '/electricity',
+        accessPath: '/electricity',
+        icon: Zap,
+      },
+      {
+        name: shellText('energySavings', locale),
+        description: 'savings',
+        to: '/savings',
+        accessPath: '/savings',
+        icon: Sprout,
+      },
+      {
+        name: t('dashboard.nav.solarRequests', locale),
+        description: 'solar',
+        to: '/solar/requests/new',
+        accessPath: '/solar/requests',
+        icon: Sun,
+      },
+      {
+        name: t('dashboard.nav.consultations', locale),
+        description: 'consultation',
+        to: '/consultations/new',
+        accessPath: '/consultations',
+        icon: MessagesSquare,
+      },
     ] as const
-  ).filter(({ href }) => navigation?.area === 'customer' && navigation.paths.includes(href));
+  ).filter(
+    ({ accessPath }) => navigation?.area === 'customer' && navigation.paths.includes(accessPath)
+  );
+  const canOrder = services.some(({ to }) => to === '/electricity');
 
   return (
-    <div className="flex flex-col gap-5 lg:gap-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header className="overflow-hidden rounded-2xl border bg-card xl:grid xl:grid-cols-[minmax(0,1fr)_auto]">
-        <div className="dashboard-intro bg-brand-panel px-5 py-5 text-brand-panel-foreground sm:px-7 sm:py-6">
-          <h1 className="max-w-3xl text-[clamp(1.625rem,3.2vw,2.625rem)] font-bold leading-tight wrap-anywhere">
-            {profileName
-              ? t('dashboard.overview.welcome', locale).replace('{name}', profileName)
-              : t('dashboard.nav.overview', locale)}
+    <div
+      className="mx-auto flex w-full max-w-7xl flex-col gap-5 sm:gap-6"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      <header className="flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-border/70 pb-4">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            {shellText('home', locale)}
           </h1>
-          <p className="mt-2 max-w-xl text-sm text-brand-panel-muted sm:text-base">
-            {shellText('dashboardDescription', locale)}
-          </p>
+          {dashboard?.profile.name && (
+            <p className="mt-1 text-sm font-medium wrap-anywhere text-muted-foreground">
+              {dashboard.profile.name}
+            </p>
+          )}
         </div>
-        {actions.length > 0 && (
-          <div
-            role="group"
-            aria-label={t('dashboard.overview.quickActions', locale)}
-            className="flex flex-wrap items-center gap-2 px-4 py-3 sm:px-6 xl:flex-nowrap"
-          >
-            {actions.map(({ href, label, icon: Icon }) => (
+        {canOrder && (
+          <ElectricityHomeAction
+            locale={locale}
+            profileId={
+              dashboard?.profile.id === navigation?.profileId ? dashboard?.profile.id : undefined
+            }
+          />
+        )}
+      </header>
+      {services.length > 0 && (
+        <section aria-labelledby="home-services">
+          <h2 id="home-services" className="mb-3 text-lg font-semibold">
+            {dashboardText('home.services', locale)}
+          </h2>
+          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+            {services.map(({ name, description, to, icon: Icon }) => (
               <Link
-                key={href}
-                to={href}
-                className={buttonVariants({
-                  variant: href === '/electricity' ? 'default' : 'ghost',
-                  size: 'sm',
-                  className: 'min-h-11',
-                })}
+                key={to}
+                to={to}
+                className="group flex min-h-20 min-w-0 items-start gap-3 rounded-xl border bg-card p-3 hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
-                <Icon
-                  data-icon="inline-start"
+                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+                  <Icon aria-hidden="true" className="size-4" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-semibold">{name}</span>
+                  <span className="mt-1 block text-sm leading-snug text-muted-foreground">
+                    {dashboardText(`home.service.${description}`, locale)}
+                  </span>
+                </span>
+                <ArrowUpRight
                   aria-hidden="true"
-                  className={href === '/electricity' ? undefined : 'hidden sm:block'}
+                  className="mt-1 size-4 shrink-0 text-muted-foreground group-hover:text-primary rtl:-scale-x-100"
                 />
-                {label}
               </Link>
             ))}
           </div>
-        )}
-      </header>
+        </section>
+      )}
       {context.status === 'loading' ? (
         <LoadingSkeleton label={loadingText('loading', locale)} variant="cards" />
       ) : !dashboard ? (
@@ -361,25 +472,46 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
             </Button>
           </AlertDescription>
         </Alert>
-      ) : (
+      ) : dashboard.access.invoices ? (
         <>
-          {(dashboard.access.invoices || dashboard.access.orders || dashboard.access.contracts) &&
+          {time.notice}
+          <InvoicesWidget profileId={dashboard.profile.id} locale={locale} time={time} />
+        </>
+      ) : null}
+      {dashboard && (
+        <>
+          {!dashboard.access.invoices &&
+            (dashboard.access.orders || dashboard.access.contracts) &&
             time.notice}
-          <DashboardLayout key={dashboard.profile.id}>
-            {dashboard.access.wallet && (
-              <WalletWidget profileId={dashboard.profile.id} locale={locale} />
-            )}
-            {dashboard.access.invoices && (
-              <InvoicesWidget profileId={dashboard.profile.id} locale={locale} time={time} />
-            )}
-            <StatusWidget profileId={dashboard.profile.id} locale={locale} />
-            {dashboard.access.orders && (
-              <OrdersWidget profileId={dashboard.profile.id} locale={locale} time={time} />
-            )}
-            {dashboard.access.contracts && (
-              <ContractsWidget profileId={dashboard.profile.id} locale={locale} time={time} />
-            )}
-          </DashboardLayout>
+          {(dashboard.access.orders || dashboard.access.contracts) && (
+            <section aria-labelledby="home-work">
+              <h2 id="home-work" className="mb-3 text-lg font-semibold">
+                {dashboardText('home.actions', locale)}
+              </h2>
+              <DashboardLayout
+                key={dashboard.profile.id}
+                tracks={dashboard.access.orders && dashboard.access.contracts ? 2 : 1}
+              >
+                {dashboard.access.orders && (
+                  <OrdersWidget profileId={dashboard.profile.id} locale={locale} time={time} />
+                )}
+                {dashboard.access.contracts && (
+                  <ContractsWidget profileId={dashboard.profile.id} locale={locale} time={time} />
+                )}
+              </DashboardLayout>
+            </section>
+          )}
+          <section aria-labelledby="home-overview">
+            <h2 id="home-overview" className="mb-3 text-lg font-semibold">
+              {dashboardText('home.overview', locale)}
+            </h2>
+            <DashboardLayout key={dashboard.profile.id} tracks={dashboard.access.wallet ? 2 : 1}>
+              {dashboard.access.wallet && (
+                <WalletWidget profileId={dashboard.profile.id} locale={locale} />
+              )}
+              <StatusWidget profileId={dashboard.profile.id} locale={locale} />
+            </DashboardLayout>
+          </section>
         </>
       )}
     </div>

@@ -85,7 +85,7 @@ test('VAT delayed validation locks duplicate submits and rejects a changed finan
     });
   });
   await page.goto('/admin/vat');
-  await page.getByRole('button', { name: 'Add rate', exact: true }).click();
+  await page.getByRole('link', { name: 'Add rate', exact: true }).click();
   await page.locator('#vat-percent').fill(' 7.25 ');
   await page.getByRole('button', { name: 'Save rate', exact: true }).click();
   await expect(page.locator('#vat-percent')).toBeDisabled();
@@ -96,9 +96,7 @@ test('VAT delayed validation locks duplicate submits and rejects a changed finan
   });
   changed = true;
   await page.getByRole('button', { name: 'Refresh', exact: true }).click();
-  await expect(
-    page.locator('table:visible,ol[role=list]:visible').filter({ hasText: 'Electricity' })
-  ).toContainText('7%');
+  await expect(page.getByTestId('config-preview')).toContainText('7%');
   release();
   await expect(page.locator('#vat-percent')).toBeEnabled();
   await expect(page.getByRole('dialog')).toHaveCount(0);
@@ -117,6 +115,7 @@ for (const locale of ['en', 'fa'] as const)
       await catalogue(page);
       let phase: 'stepup' | 'mismatch' | 'success' = 'stepup';
       let verified = false;
+      let published = false;
       const writes: unknown[] = [];
       await page.route('**/api/auth/step-up', (route) => {
         verified = true;
@@ -124,7 +123,15 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.route('**/api/admin/finance/vat', (route) => {
         if (route.request().method() === 'GET')
-          return route.fulfill({ json: [vatRate, electricityVatRate] });
+          return route.fulfill({
+            json: [
+              vatRate,
+              electricityVatRate,
+              ...(published
+                ? [{ ...electricityVatRate, id: 'new-rate', rateBasisPoints: 725 }]
+                : []),
+            ],
+          });
         const body = route.request().postDataJSON();
         writes.push(body);
         if (phase === 'stepup' && !verified)
@@ -140,6 +147,7 @@ for (const locale of ['en', 'fa'] as const)
               },
             },
           });
+        if (phase === 'success') published = true;
         return route.fulfill({
           status: 201,
           json: {
@@ -151,7 +159,7 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.goto('/admin/vat');
       await expect(page.locator('html')).toHaveClass(dark ? /dark/ : /^(?!.*dark)/);
-      await page.getByRole('button', { name: label('addRate'), exact: true }).click();
+      await page.getByRole('link', { name: label('addRate'), exact: true }).click();
       const percent = page.locator('#vat-percent');
       await expect(percent).toHaveAttribute('aria-required', 'true');
       await expect(page.locator('#vat-category')).toHaveAttribute('aria-required', 'true');
@@ -202,8 +210,15 @@ for (const locale of ['en', 'fa'] as const)
       await page.getByRole('button', { name: label('save'), exact: true }).click();
       await confirm().click();
       await expect(dialog).toBeHidden();
-      await expect(page.getByRole('status').filter({ hasText: label('saved') })).toBeVisible();
-      await page.getByRole('button', { name: label('addOverride'), exact: true }).click();
+      await expect(page.getByText(label('saved'), { exact: true })).toBeVisible();
+      await expect(
+        page.getByRole('heading', { name: label('category.electricity'), level: 1 })
+      ).toBeVisible();
+      await page
+        .getByRole('main')
+        .getByRole('link', { name: label('title'), exact: true })
+        .click();
+      await page.getByRole('link', { name: label('addOverride'), exact: true }).click();
       await page.getByRole('button', { name: label('save'), exact: true }).click();
       await expect(page.locator('#vat-product')).toBeFocused();
       await expect(page.locator('#vat-rate')).toHaveAttribute('aria-invalid', 'true');
@@ -247,7 +262,7 @@ for (const locale of ['en', 'fa'] as const)
       return route.fulfill({ json: [vatRate, electricityVatRate] });
     });
     await page.goto('/admin/vat');
-    await page.getByRole('button', { name: label('addRate'), exact: true }).click();
+    await page.getByRole('link', { name: label('addRate'), exact: true }).click();
     await page.locator('#vat-percent').fill(' 7.25 ');
     await page.getByRole('button', { name: label('save'), exact: true }).click();
     await expect(page.getByRole('alert')).toContainText(label('validationUnavailable'));

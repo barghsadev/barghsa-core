@@ -1,6 +1,3 @@
-/**
- * Admin dashboard page — heavy module, lazy-loaded.
- */
 import { Link } from '@tanstack/react-router';
 import { AlertTriangle, ShieldCheck } from 'lucide-react';
 import { t } from '@barghsa/i18n/workspace';
@@ -11,10 +8,12 @@ import { AdminMaintenanceSummary } from '../components/AdminMaintenanceSummary.j
 import { DashboardLayout } from '../components/dashboard/DashboardLayout.js';
 import { DashboardWidget } from '../components/dashboard/DashboardWidget.js';
 import { dashboardText } from '@barghsa/i18n/dashboard';
+import { staffWorkText } from '@barghsa/i18n/staff-work-preview';
 import { Button, PageHeader } from '@barghsa/ui';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { staffDashboardReader, useStaffDashboardData } from '../hooks/useStaffDashboardData.js';
 import { localizedAsyncReadError } from '../hooks/useAsyncData.js';
+import { StaffWorkPreview } from '../components/StaffWorkPreview.js';
 
 interface PendingVerificationProfile {
   id: string;
@@ -136,10 +135,12 @@ function PendingVerification() {
       icon={ShieldCheck}
       locale={locale}
       resource={resource}
-      tall
+      className="min-h-48 [&_[data-slot=card-header]]:flex-nowrap"
+      empty={(data) => data.profiles.length === 0}
+      emptyMessage={dashboardText('verification.empty', locale)}
       viewAll={
         resource.status === 'ready' ? (
-          <div className="flex flex-wrap items-center gap-x-2">
+          <div className="flex shrink-0 items-center gap-x-2">
             <p
               className="rounded-md bg-muted px-2 py-0.5 text-sm font-semibold tabular-nums"
               aria-label={t('dashboard.admin.pendingVerification.aria.count', locale)}
@@ -149,7 +150,7 @@ function PendingVerification() {
             <Link
               to="/admin/crm"
               search={{ verification: 'PENDING' }}
-              className="text-sm font-medium text-primary hover:underline"
+              className="inline-flex min-h-11 items-center text-sm font-medium text-primary hover:underline"
               aria-label={t('dashboard.admin.pendingVerification.aria.showAll', locale)}
             >
               {t('dashboard.admin.pendingVerification.showAll', locale)}
@@ -159,35 +160,27 @@ function PendingVerification() {
       }
     >
       {(data) => (
-        <>
-          {data.profiles.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              {dashboardText('verification.empty', locale)}
-            </p>
-          ) : (
-            <ul
-              className="divide-y"
-              aria-label={t('dashboard.admin.pendingVerification.recent', locale)}
-            >
-              {data.profiles.map((profile) => (
-                <li key={profile.id}>
-                  <Link
-                    to="/admin/crm/profiles/$profileId"
-                    params={{ profileId: profile.id }}
-                    className="block min-h-11 px-2 py-1 text-sm hover:bg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
-                  >
-                    <span className="block break-words font-medium" dir="auto">
-                      {pendingProfileName(profile, locale)}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {tCrm(`crm.list.${profile.profileType}`, locale)}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </>
+        <ul
+          className="divide-y"
+          aria-label={t('dashboard.admin.pendingVerification.recent', locale)}
+        >
+          {data.profiles.map((profile) => (
+            <li key={profile.id}>
+              <Link
+                to="/admin/crm/profiles/$profileId"
+                params={{ profileId: profile.id }}
+                className="block min-h-11 px-2 py-1 text-sm hover:bg-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring"
+              >
+                <span className="block break-words font-medium" dir="auto">
+                  {pendingProfileName(profile, locale)}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {tCrm(`crm.list.${profile.profileType}`, locale)}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       )}
     </DashboardWidget>
   );
@@ -274,11 +267,9 @@ export default function AdminDashboard() {
   return (
     <div className="flex flex-col gap-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <div className="border-b pb-5">
-        <PageHeader
-          title={t('dashboard.admin.title', locale)}
-          description={t('dashboard.admin.description', locale)}
-        />
+        <PageHeader title={staffWorkText('heading', locale)} />
       </div>
+      <StaffWorkPreview locale={locale} />
       <DashboardLayout>
         <AdminBusinessWorkCounts />
         <PendingVerification />

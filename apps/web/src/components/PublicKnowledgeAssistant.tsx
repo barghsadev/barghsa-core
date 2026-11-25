@@ -3,7 +3,9 @@ import { queryKeys } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { BookOpenText } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/app';
+import { assistantChatFormText } from '@barghsa/i18n/assistant-chat-forms';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { Button } from '@barghsa/ui';
 import { ChatInput, ChatMessage } from './AssistantChatComponents.js';
@@ -198,112 +200,131 @@ function OwnedKnowledgeQuestionAssistant({ locale, staff }: { locale: Locale; st
       }
     }
   }
+  const quotaNotice =
+    cooldown.seconds > 0
+      ? copy('cooldown').replace('{seconds}', numbers.number(cooldown.seconds))
+      : answer
+        ? copy('quota').replace('{count}', numbers.number(answer.remainingQuota))
+        : null;
   return (
     <section
       data-slot={staff ? 'staff-knowledge' : 'public-knowledge'}
       aria-labelledby={staff ? 'staff-knowledge-title' : 'public-knowledge-title'}
-      className="space-y-5 border-t border-border pt-6"
+      className="overflow-hidden rounded-xl border bg-card"
     >
-      <div className="space-y-2">
+      <header className="space-y-1 border-b bg-muted/25 px-4 py-3 sm:px-5">
         <h2
           id={staff ? 'staff-knowledge-title' : 'public-knowledge-title'}
-          className="text-lg font-semibold"
+          className="flex items-center gap-2 font-semibold"
         >
+          <BookOpenText className="size-4 shrink-0 text-primary" aria-hidden="true" />
           {scopeCopy('title')}
         </h2>
-        <p className="text-sm leading-6 text-muted-foreground">{scopeCopy('description')}</p>
-        <p id="public-knowledge-scope" className="text-xs leading-5 text-muted-foreground">
+        <p className="text-sm leading-relaxed text-muted-foreground">{scopeCopy('description')}</p>
+        <p id="public-knowledge-scope" className="text-xs leading-relaxed text-muted-foreground">
           {scopeCopy('scope')}
         </p>
-      </div>
-      {availability === 'loading' ? (
-        <p role="status" className="text-sm text-muted-foreground">
-          {copy('loading')}
-        </p>
-      ) : availability !== 'ready' ? (
-        <div className="space-y-3">
-          <p
-            role={availability === 'error' ? 'alert' : 'status'}
-            className="text-sm text-muted-foreground"
-          >
-            {availability === 'error' ? t('assistant.page.error', locale) : copy('unavailable')}
+      </header>
+      <div className="space-y-3 px-4 py-3 sm:px-5">
+        {availability === 'loading' ? (
+          <p role="status" className="text-sm text-muted-foreground">
+            {copy('loading')}
           </p>
-          <Button variant="outline" onClick={() => setAttempt((value) => value + 1)}>
-            {copy('refresh')}
-          </Button>
-        </div>
-      ) : (
-        <>
-          <div role="log" aria-live="polite" aria-busy={busy || undefined} className="space-y-4">
-            {question && (
-              <ChatMessage
-                sender="user"
-                message={question.text}
-                locale={locale}
-                timestamp={question.at}
-                timestampLabel={t('assistant.sentAt', locale)}
-                formatTimestamp={timestamp}
-              />
-            )}
-            {answer && (
-              <ChatMessage
-                sender="assistant"
-                message={answer.reply}
-                knowledge={answer}
-                locale={locale}
-                timestamp={answer.answeredAt}
-                timestampLabel={t('assistant.answeredAt', locale)}
-                formatTimestamp={timestamp}
-              />
-            )}
-          </div>
-          {error && (
-            <p role="alert" className="text-sm text-destructive">
-              {error}
+        ) : availability !== 'ready' ? (
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+            <p
+              role={availability === 'error' ? 'alert' : 'status'}
+              className="text-sm text-muted-foreground"
+            >
+              {availability === 'error' ? t('assistant.page.error', locale) : copy('unavailable')}
             </p>
-          )}
-          <form onSubmit={(event) => void submit(event)}>
-            <ChatInput
-              label={copy('question')}
-              sendLabel={copy('send')}
-              busy={busy}
-              disabled={cooldown.seconds > 0}
-              textareaProps={{
-                id: 'public-knowledge-question',
-                value: draft,
-                ref: input,
-                required: true,
-                'aria-required': true,
-                maxLength: 1000,
-                placeholder: copy('placeholder'),
-                'aria-invalid': fieldError || undefined,
-                'aria-describedby':
-                  'public-knowledge-scope' + (fieldError ? ' public-knowledge-error' : ''),
-                onChange: (event) => {
-                  setDraft(event.target.value);
-                  setFieldError(false);
-                },
-              }}
-              feedback={
-                fieldError && (
-                  <p id="public-knowledge-error" role="alert" className="text-sm text-destructive">
-                    {copy('invalid')}
-                  </p>
-                )
-              }
-              footer={
-                <p role="status" className="text-xs text-muted-foreground">
-                  {cooldown.seconds > 0
-                    ? copy('cooldown').replace('{seconds}', numbers.number(cooldown.seconds))
-                    : answer
-                      ? copy('quota').replace('{count}', numbers.number(answer.remainingQuota))
-                      : ''}
-                </p>
-              }
-            />
-          </form>
-        </>
-      )}
+            <Button variant="outline" size="sm" onClick={() => setAttempt((value) => value + 1)}>
+              {copy('refresh')}
+            </Button>
+          </div>
+        ) : (
+          <>
+            <div
+              role="log"
+              aria-live="polite"
+              aria-busy={busy || undefined}
+              className="space-y-3 empty:hidden"
+            >
+              {question && (
+                <ChatMessage
+                  sender="user"
+                  message={question.text}
+                  locale={locale}
+                  timestamp={question.at}
+                  timestampLabel={t('assistant.sentAt', locale)}
+                  formatTimestamp={timestamp}
+                />
+              )}
+              {answer && (
+                <ChatMessage
+                  sender="assistant"
+                  message={answer.reply}
+                  knowledge={answer}
+                  locale={locale}
+                  timestamp={answer.answeredAt}
+                  timestampLabel={t('assistant.answeredAt', locale)}
+                  formatTimestamp={timestamp}
+                />
+              )}
+            </div>
+            {error && (
+              <p
+                role="alert"
+                className="rounded-lg border border-destructive/30 px-3 py-2 text-sm text-destructive"
+              >
+                {error}
+              </p>
+            )}
+            <form onSubmit={(event) => void submit(event)}>
+              <ChatInput
+                label={copy('question')}
+                sendLabel={copy('send')}
+                busy={busy}
+                disabled={cooldown.seconds > 0}
+                textareaProps={{
+                  id: 'public-knowledge-question',
+                  value: draft,
+                  ref: input,
+                  required: true,
+                  'aria-required': true,
+                  maxLength: 1000,
+                  placeholder: assistantChatFormText('questionExample', locale),
+                  'aria-invalid': fieldError || undefined,
+                  'aria-describedby':
+                    'public-knowledge-scope' + (fieldError ? ' public-knowledge-error' : ''),
+                  onChange: (event) => {
+                    setDraft(event.target.value);
+                    setFieldError(false);
+                  },
+                }}
+                feedback={
+                  fieldError && (
+                    <p
+                      id="public-knowledge-error"
+                      role="alert"
+                      className="text-sm text-destructive"
+                    >
+                      {copy('invalid')}
+                    </p>
+                  )
+                }
+                footer={
+                  quotaNotice && (
+                    <p role="status" className="text-xs text-muted-foreground">
+                      {quotaNotice}
+                    </p>
+                  )
+                }
+              />
+            </form>
+          </>
+        )}
+      </div>
     </section>
   );
 }

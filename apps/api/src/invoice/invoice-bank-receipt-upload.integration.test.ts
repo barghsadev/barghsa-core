@@ -322,6 +322,24 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
       })
     ).toBe('https://storage.example.test/receipt.pdf');
     expect(sign).toHaveBeenCalledWith(sealed, 300, 'attachment');
+    const actor = { userId: ACTOR_ID, sessionId: SESSION_ID, csrfToken: CSRF_TOKEN };
+    const receipt = await reader.receiptForUser(ACTOR_ID, INVOICE_A, result.receiptId, actor);
+    expect(receipt).toMatchObject({
+      invoiceId: INVOICE_A,
+      receipt: {
+        id: result.receiptId,
+        state: 'Submitted',
+        bankName: 'Bank Mellat',
+        statusHistory: [expect.objectContaining({ state: 'Submitted' })],
+      },
+    });
+    expect(receipt.receipt).not.toHaveProperty('attachmentKey');
+    await expect(
+      reader.receiptForUser(ACTOR_ID, INVOICE_B, result.receiptId, actor)
+    ).rejects.toMatchObject({ status: 404 });
+    await expect(
+      reader.receiptForUser(ACTOR_ID, INVOICE_A, INVOICE_B, actor)
+    ).rejects.toMatchObject({ status: 404 });
   });
 
   it('rejects a zero amount before insert', async () => {

@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { t } from '@barghsa/i18n/workspace';
+import { staffWorkText } from '@barghsa/i18n/staff-work-preview';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { DashboardMetricRow, dashboardMetricLink } from './dashboard/DashboardMetricRow.js';
@@ -40,14 +40,14 @@ export function StaffWorkQueueWidget({
   return (
     <div className="space-y-3">
       {!embedded && (
-        <h3 className="text-base font-semibold">{t('dashboard.admin.work.queueTitle', locale)}</h3>
+        <h3 className="text-base font-semibold">{staffWorkText('queueTotals', locale)}</h3>
       )}
       <div className="grid divide-y">
         {counts.pendingTickets !== null && (
           <Link to="/admin/tickets" search={{ status: 'active' }} className={dashboardMetricLink}>
             <DashboardMetricRow
               count={numbers.number(counts.pendingTickets)}
-              label={t('dashboard.admin.work.pendingTickets', locale)}
+              label={staffWorkText('pendingTickets', locale)}
             />
           </Link>
         )}
@@ -56,7 +56,7 @@ export function StaffWorkQueueWidget({
             <Link key={label} to={to} className={dashboardMetricLink}>
               <DashboardMetricRow
                 count={numbers.number(count)}
-                label={t(`dashboard.admin.work.${label}`, locale)}
+                label={staffWorkText(label, locale)}
               />
             </Link>
           )
@@ -69,7 +69,7 @@ export function StaffWorkQueueWidget({
           >
             <DashboardMetricRow
               count={numbers.number(counts.unassignedConsultations)}
-              label={t('dashboard.admin.work.unassignedConsultations', locale)}
+              label={staffWorkText('unassignedConsultations', locale)}
             />
           </Link>
         )}

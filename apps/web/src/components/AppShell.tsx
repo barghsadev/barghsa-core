@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import { Link, useLocation, useRouter } from '@tanstack/react-router';
 import { Animated } from '@barghsa/ui';
-import type { LucideIcon } from 'lucide-react';
+import { ChevronDown, type LucideIcon } from 'lucide-react';
+import './app-shell.css';
 import { BrandMark } from './BrandMark.js';
 import { Topbar } from './Topbar.js';
 import { shellText } from '@barghsa/i18n/shell';
 import { BreadcrumbBar } from './BreadcrumbBar.js';
+import { TableActionTooltips } from './TableActionTooltips.js';
 import { InsideRouteMain } from './RouteFallbackLandmark.js';
 import type { FileRoutesByTo } from '../routeTree.gen.js';
 import { currentNavigation } from '../lib/shell-navigation.js';
@@ -16,7 +18,8 @@ import {
 
 export interface NavigationGroup {
   label: string;
-  items: { to: keyof FileRoutesByTo; label: string; icon: LucideIcon }[];
+  disclosure?: { id: string; icon: LucideIcon };
+  items: { to: keyof FileRoutesByTo; label: string; icon: LucideIcon; activePath?: RegExp }[];
 }
 
 function subscribeCompactNavigation(listener: () => void) {
@@ -34,31 +37,39 @@ export function AppShell({
   groups,
   children,
   banners,
+  floating,
   profile,
   profileBadge,
   actions,
   navigationUnavailable = false,
+  focused = false,
 }: {
   area: 'dashboard' | 'admin';
   locale: 'fa' | 'en';
   groups: NavigationGroup[];
   children: ReactNode;
   banners?: ReactNode;
+  floating?: ReactNode;
   profile?: ReactNode;
   profileBadge?: ReactNode;
   actions?: ReactNode;
   navigationUnavailable?: boolean;
+  focused?: boolean;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
   const sidebar = useRef<HTMLElement>(null);
   const pathname = useLocation({ select: (location) => location.pathname });
+  const [disclosures, setDisclosures] = useState({
+    pathname,
+    expanded: {} as Record<string, boolean>,
+  });
   const router = useRouter();
   const compact = useSyncExternalStore(subscribeCompactNavigation, compactNavigation, () => false);
   const [CompactBar, setCompactBar] = useState<CompactBarComponent | null>(null);
   const [compactError, setCompactError] = useState(false);
   useEffect(() => {
-    if (!compact || CompactBar) return;
+    if (!compact || focused || CompactBar) return;
     let cancelled = false;
     setCompactError(false);
     void import('./BottomTabBar.js')
@@ -71,7 +82,7 @@ export function AppShell({
     return () => {
       cancelled = true;
     };
-  }, [compact, CompactBar]);
+  }, [compact, focused, CompactBar]);
   useEffect(() => {
     if (!menuOpen) return;
     const close = (event: KeyboardEvent) => {
@@ -85,9 +96,31 @@ export function AppShell({
   }, [menuOpen]);
   const current = currentNavigation(groups, pathname);
   const currentPath = current?.to;
+  const currentGroup = groups.find((group) => group.items.some((item) => item.to === currentPath));
+  if (area === 'admin' && pathname !== disclosures.pathname) {
+    const expanded = { ...disclosures.expanded };
+    if (currentGroup?.disclosure && expanded[currentGroup.disclosure.id] === false)
+      delete expanded[currentGroup.disclosure.id];
+    setDisclosures({ pathname, expanded });
+  }
   useEffect(() => {
-    if (area === 'admin')
-      sidebar.current?.querySelector('[aria-current="page"]')?.scrollIntoView({ block: 'nearest' });
+    if (area !== 'admin') return;
+    const link = sidebar.current?.querySelector('[aria-current="page"]');
+    const group = link?.closest<HTMLElement>('.shell-sidebar-group-items');
+    if (!link || group?.inert) return;
+    const scrollToCurrent = () => link.scrollIntoView({ block: 'nearest' });
+    const transitions = group?.getAnimations() ?? [];
+    if (!transitions.length) {
+      scrollToCurrent();
+      return;
+    }
+    let cancelled = false;
+    void Promise.allSettled(transitions.map((transition) => transition.finished)).then(() => {
+      if (!cancelled && !group?.inert) scrollToCurrent();
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [area, compact, currentPath, locale, menuOpen]);
   const closeMenu = () => setMenuOpen(false);
   const openMenu = () => {
@@ -98,7 +131,8 @@ export function AppShell({
     <div
       className="app-shell"
       data-area={area}
-      data-no-navigation={groups.length === 0 || undefined}
+      data-no-navigation={groups.length === 0 || focused || undefined}
+      data-focused={focused || undefined}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {banners}
@@ -109,7 +143,9 @@ export function AppShell({
           locale={locale}
           isWide={!compact}
           breadcrumbs={
-            <BreadcrumbBar groups={groups} pathname={pathname} area={area} locale={locale} />
+            focused ? null : (
+              <BreadcrumbBar groups={groups} pathname={pathname} area={area} locale={locale} />
+            )
           }
           actions={actions}
           profileBadge={profileBadge}
@@ -148,9 +184,14 @@ export function AppShell({
                 </button>
               </div>
             )}
-            {groups.map((group) => (
-              <div key={group.label} className="shell-sidebar-group">
-                <p className="shell-sidebar-detail">{group.label}</p>
+            {groups.map((group) => {
+              const disclosure = group.disclosure;
+              const listId = disclosure ? `${area}-navigation-${disclosure.id}` : undefined;
+              const isCurrent = group === currentGroup;
+              const expanded = disclosure
+                ? (disclosures.expanded[disclosure.id] ?? isCurrent)
+                : true;
+              const links = (
                 <ul>
                   {group.items.map(({ to, label, icon: Icon }) => (
                     <li key={to}>
@@ -168,8 +209,50 @@ export function AppShell({
                     </li>
                   ))}
                 </ul>
-              </div>
-            ))}
+              );
+              return (
+                <div
+                  key={disclosure?.id ?? group.label}
+                  className="shell-sidebar-group"
+                  data-disclosure={disclosure ? '' : undefined}
+                >
+                  {disclosure ? (
+                    <button
+                      type="button"
+                      className="shell-sidebar-group-toggle"
+                      aria-label={group.label}
+                      aria-expanded={expanded}
+                      aria-controls={listId}
+                      data-current={isCurrent || undefined}
+                      onClick={() =>
+                        setDisclosures((value) => ({
+                          ...value,
+                          expanded: { ...value.expanded, [disclosure.id]: !expanded },
+                        }))
+                      }
+                    >
+                      <disclosure.icon strokeWidth={1.7} aria-hidden="true" />
+                      <span className="shell-sidebar-detail">{group.label}</span>
+                      <ChevronDown className="shell-sidebar-detail" aria-hidden="true" />
+                    </button>
+                  ) : (
+                    <p className="shell-sidebar-detail">{group.label}</p>
+                  )}
+                  {disclosure ? (
+                    <div
+                      id={listId}
+                      className="shell-sidebar-group-items"
+                      data-open={expanded || undefined}
+                      inert={!expanded}
+                    >
+                      {links}
+                    </div>
+                  ) : (
+                    links
+                  )}
+                </div>
+              );
+            })}
           </nav>
         </aside>
         {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
@@ -177,7 +260,7 @@ export function AppShell({
           id="main-content"
           data-area={area}
           tabIndex={-1}
-          className="app-content"
+          className={focused ? 'app-content max-lg:scroll-pb-24' : 'app-content'}
           onKeyDown={(event) => {
             if (
               event.target !== event.currentTarget ||
@@ -198,6 +281,7 @@ export function AppShell({
         </main>
       </div>
       {compact &&
+        !focused &&
         groups.length > 0 &&
         (CompactBar ? (
           <CompactBar
@@ -228,6 +312,8 @@ export function AppShell({
             )}
           </div>
         ))}
+      {floating}
+      <TableActionTooltips key={pathname} />
     </div>
   );
   return (

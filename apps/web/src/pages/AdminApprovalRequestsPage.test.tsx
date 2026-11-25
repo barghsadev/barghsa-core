@@ -80,10 +80,11 @@ afterEach(async () => {
 function field(id = first) {
   return container.querySelector<HTMLTextAreaElement>(`#reason-${id}`)!;
 }
+function form(id = first) {
+  return container.querySelector<HTMLFormElement>(`#decision-${id}`)!;
+}
 function button(label: string, id = first) {
-  return [...field(id).closest('form')!.querySelectorAll('button')].find(
-    (node) => node.textContent === label
-  )!;
+  return [...form(id).querySelectorAll('button')].find((node) => node.textContent === label)!;
 }
 async function render(requestId?: string) {
   await act(async () =>
@@ -93,9 +94,14 @@ async function render(requestId?: string) {
       </QueryProvider>
     )
   );
-  await vi.waitFor(() => expect(field()).toBeTruthy());
+  await vi.waitFor(() => expect(form()).toBeTruthy());
+}
+async function openRejection(id = first) {
+  if (!field(id))
+    await act(async () => button(t('admin.approvals.reject', state.locale), id).click());
 }
 async function edit(value: string, id = first) {
+  await openRejection(id);
   await act(async () => {
     Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
       field(id),
@@ -143,6 +149,8 @@ for (const locale of ['en', 'fa'] as const) {
   it(`corrects touched reasons and captures the exact trimmed command (${locale})`, async () => {
     state.locale = locale;
     await render();
+    await openRejection(second);
+    await openRejection();
     await act(async () => {
       field().focus();
       field().blur();
@@ -164,6 +172,7 @@ for (const locale of ['en', 'fa'] as const) {
 }
 it('approval remains available without a rejection reason and captures no reason body', async () => {
   await render();
+  expect(field()).toBeNull();
   await act(async () => button('Approve').click());
   expect(state.confirmation?.action.path).toBe(`/api/admin/approval-requests/${first}/approve`);
   expect(state.confirmation?.action.body).toBeUndefined();
@@ -259,7 +268,9 @@ it('denial clears all private work and obsolete field/success callbacks cannot a
   expect(field()).toBeNull();
   expect(container.querySelector('[role="dialog"]')).toBeNull();
   await click('Refresh');
-  await vi.waitFor(() => expect(field()?.value).toBe(''));
+  await vi.waitFor(() => expect(form()).toBeTruthy());
+  await openRejection();
+  expect(field().value).toBe('');
   await edit('New private work');
   const reads = vi.mocked(fetch).mock.calls.length;
   await act(async () => {
@@ -384,18 +395,20 @@ for (const locale of ['en', 'fa'] as const)
         expect(container.textContent).toContain(t('admin.approvals.error', locale))
       );
       expect(field().disabled).toBe(false);
-      expect(button(t('admin.approvals.approve', locale)).disabled).toBe(true);
       expect(button(t('admin.approvals.reject', locale)).disabled).toBe(true);
       await edit('Edited during recovery');
       const calls = vi.mocked(fetch).mock.calls.length;
       await reject();
       expect(state.confirmation).toBeNull();
       expect(fetch).toHaveBeenCalledTimes(calls);
+      await click(t('admin.approvals.cancelRejection', locale));
+      expect(button(t('admin.approvals.approve', locale)).disabled).toBe(true);
       status = 200;
       await click(t('admin.approvals.retry', locale));
       await vi.waitFor(() =>
         expect(button(t('admin.approvals.reject', locale)).disabled).toBe(false)
       );
+      await openRejection();
       expect(field().value).toBe('Edited during recovery');
       status = 401;
       await click(t('admin.approvals.refresh', locale));

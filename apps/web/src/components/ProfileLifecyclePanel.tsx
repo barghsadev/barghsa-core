@@ -4,16 +4,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { useEffect, useId, useRef, useState } from 'react';
-import {
-  Alert,
-  AlertDescription,
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  LoadingStatus,
-  PageHeader,
-} from '@barghsa/ui';
+import { ArrowDownToLine, CheckCircle2, TriangleAlert } from 'lucide-react';
+import { Alert, AlertDescription, Badge, Button, LoadingStatus, PageHeader } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { lifecycleFormText } from '@barghsa/i18n/profile-lifecycle-forms';
 import { useLocale } from '../hooks/useLocale.js';
@@ -29,6 +21,11 @@ import {
   type LifecycleType,
 } from '../lib/profile-lifecycle-form.js';
 import { JobProgress } from './jobs/JobProgress.js';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorSurface,
+} from './RecordEditorLayout.js';
 export function ProfileLifecyclePanel() {
   const actor = useAccountUser(),
     revision = useProfileContextRevision(),
@@ -258,7 +255,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
   return (
     <div
       data-slot="profile-lifecycle"
-      className="mx-auto flex max-w-5xl flex-col gap-6"
+      className="mx-auto flex max-w-5xl flex-col gap-4 sm:gap-5"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <PageHeader
@@ -302,7 +299,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
       {state === 'ready' && preview && (
         <>
           {pending && (
-            <div className="space-y-3 rounded-lg border bg-card p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-warning/25 bg-warning-soft px-4 py-3">
               {submitError && (
                 <p role="alert" className="text-sm text-destructive">
                   {lifecycleFormText('uncertain', locale)}
@@ -319,38 +316,36 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
               </Button>
             </div>
           )}
-          <div className="grid items-start gap-5 lg:grid-cols-2">
-            <div className="min-w-0 space-y-5">
-              <Card>
-                <CardContent className="space-y-3">
-                  <h2 className="text-lg font-semibold">
-                    {t('settings.privacy.export.title', locale)}
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.privacy.export.description', locale)}
-                  </p>
+          <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+            <div className="min-w-0 space-y-4">
+              <div className={recordEditorSurface}>
+                <div>
+                  <RecordEditorSection
+                    title={t('settings.privacy.export.title', locale)}
+                    description={t('settings.privacy.export.description', locale)}
+                  />
+                </div>
+                <RecordEditorActions>
                   <Button
                     type="button"
                     disabled={submitting !== null || pending}
                     loading={submitting === 'export' && !pending && !!command.current?.body}
-                    onClick={() => void request('export')}
+                    onClick={() => request('export')}
                   >
+                    <ArrowDownToLine aria-hidden="true" />
                     {t('settings.privacy.export.action', locale)}
                   </Button>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="space-y-3">
-                  <h2 id="profile-lifecycle-requests" className="text-lg font-semibold">
-                    {t('settings.privacy.requests', locale)}
-                  </h2>
+                </RecordEditorActions>
+              </div>
+              <div className={recordEditorSurface}>
+                <RecordEditorSection title={t('settings.privacy.requests', locale)}>
                   {preview.requests.length ? (
-                    <ul className="space-y-2" aria-labelledby="profile-lifecycle-requests">
+                    <ul className="divide-y">
                       {preview.requests.map((item) => (
-                        <li key={item.ticketId} className="space-y-3 rounded-lg border p-3">
+                        <li key={item.ticketId} className="space-y-2 py-2 first:pt-0 last:pb-0">
                           <a
                             className="flex min-h-11 flex-wrap items-center justify-between gap-2 rounded-sm"
-                            href={`/tickets?ticketId=${item.ticketId}`}
+                            href={`/tickets/${encodeURIComponent(item.ticketId)}`}
                           >
                             <span className="text-sm text-primary underline underline-offset-4">
                               {t(`settings.privacy.${item.type}.title`, locale)}
@@ -370,6 +365,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
                           {item.type === 'export' && !item.exportJobId && (
                             <Button
                               type="button"
+                              variant="outline"
                               disabled={submitting !== null || pending}
                               loading={
                                 submitting === 'export' &&
@@ -377,9 +373,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
                                 command.current?.body === null &&
                                 command.current.ticketId === item.ticketId
                               }
-                              onClick={() => {
-                                startExport(item.ticketId);
-                              }}
+                              onClick={() => startExport(item.ticketId)}
                             >
                               {t('settings.privacy.export.prepare', locale)}
                             </Button>
@@ -392,70 +386,87 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
                       {lifecycleFormText('noRequests', locale)}
                     </p>
                   )}
-                </CardContent>
-              </Card>
+                </RecordEditorSection>
+              </div>
             </div>
-            <Card>
-              <CardContent className="space-y-4">
-                <h2 className="text-lg font-semibold">
-                  {t('settings.privacy.closure.title', locale)}
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  {t('settings.privacy.closure.description', locale)}
-                </p>
-                {blockers.length > 0 ? (
-                  <ul className="space-y-2">
-                    {blockers.map((blocker) => (
-                      <li key={blocker.code} className="space-y-2 rounded-lg border p-3 text-sm">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <strong>{t(`settings.privacy.blocker.${blocker.code}`, locale)}</strong>
-                          <Badge variant="warning">
-                            {t('settings.privacy.blocked', locale).replace(
-                              '{count}',
-                              numbers.number(blocker.count)
-                            )}
-                          </Badge>
-                        </div>
-                        <p className="text-muted-foreground">
-                          {t(`settings.privacy.owner.${blocker.owner}`, locale)}
-                        </p>
-                        <p>{t(`settings.privacy.step.${blocker.nextStep}`, locale)}</p>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings.privacy.clear', locale)}
-                  </p>
-                )}
+            <div className={recordEditorSurface}>
+              <div>
+                <RecordEditorSection
+                  title={t('settings.privacy.closure.title', locale)}
+                  description={
+                    blockers.length > 0
+                      ? t('settings.privacy.closure.description', locale)
+                      : lifecycleFormText('closureReady', locale)
+                  }
+                >
+                  {blockers.length > 0 ? (
+                    <ul className="divide-y rounded-lg border bg-muted/25 px-3">
+                      {blockers.map((blocker) => (
+                        <li key={blocker.code} className="flex items-start gap-2.5 py-2.5 text-sm">
+                          <TriangleAlert
+                            aria-hidden="true"
+                            className="mt-0.5 size-4 shrink-0 text-warning"
+                          />
+                          <div className="min-w-0 flex-1 space-y-0.5">
+                            <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+                              <strong className="font-semibold">
+                                {t(`settings.privacy.blocker.${blocker.code}`, locale)}
+                              </strong>
+                              <Badge variant="warning" className="tabular-nums">
+                                <span className="sr-only">
+                                  {t('settings.privacy.blocked', locale).replace(
+                                    '{count}',
+                                    numbers.number(blocker.count)
+                                  )}
+                                </span>
+                                <span aria-hidden="true">{numbers.number(blocker.count)}</span>
+                              </Badge>
+                            </div>
+                            <p>{t(`settings.privacy.step.${blocker.nextStep}`, locale)}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {t(`settings.privacy.owner.${blocker.owner}`, locale)}
+                            </p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="flex items-center gap-2 rounded-lg bg-success-soft px-3 py-2 text-sm text-success">
+                      <CheckCircle2 aria-hidden="true" className="size-4 shrink-0" />
+                      {t('settings.privacy.clear', locale)}
+                    </p>
+                  )}
+                  {clearChecks.length > 0 && (
+                    <details className="text-sm">
+                      <summary className="min-h-11 cursor-pointer rounded-md px-2 py-2.5 font-medium hover:bg-muted/45">
+                        {lifecycleFormText('clearChecks', locale).replace(
+                          '{count}',
+                          numbers.number(clearChecks.length)
+                        )}
+                      </summary>
+                      <ul className="divide-y border-t px-2">
+                        {clearChecks.map((blocker) => (
+                          <li key={blocker.code} className="py-2 text-muted-foreground">
+                            {t(`settings.privacy.blocker.${blocker.code}`, locale)}
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                </RecordEditorSection>
+              </div>
+              <RecordEditorActions>
                 <Button
                   type="button"
                   variant="outline"
                   disabled={submitting !== null || pending}
                   loading={submitting === 'closure' && !pending}
-                  onClick={() => void request('closure')}
+                  onClick={() => request('closure')}
                 >
                   {t('settings.privacy.closure.action', locale)}
                 </Button>
-                {clearChecks.length > 0 && (
-                  <details className="rounded-lg border text-sm">
-                    <summary className="min-h-11 cursor-pointer px-3 py-2.5 font-medium">
-                      {lifecycleFormText('clearChecks', locale).replace(
-                        '{count}',
-                        numbers.number(clearChecks.length)
-                      )}
-                    </summary>
-                    <ul className="divide-y border-t px-3">
-                      {clearChecks.map((blocker) => (
-                        <li key={blocker.code} className="py-2 text-muted-foreground">
-                          {t(`settings.privacy.blocker.${blocker.code}`, locale)}
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                )}
-              </CardContent>
-            </Card>
+              </RecordEditorActions>
+            </div>
           </div>
         </>
       )}

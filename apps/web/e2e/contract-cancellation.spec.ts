@@ -195,7 +195,7 @@ for (const locale of ['en', 'fa'] as const)
       });
       const open = async () => {
         await page
-          .getByRole('button', {
+          .getByRole('link', {
             name: `${w.electricity} · ${w.version} ${(1).toLocaleString(locale)}`,
             exact: true,
           })
@@ -204,7 +204,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/contracts');
       await open();
       const panel = page.getByRole('region', { name: w.cancellationTitle, exact: true });
-      await panel.getByRole('button', { name: w.cancellationReview, exact: true }).click();
+      await panel.getByRole('link', { name: w.cancellationReview, exact: true }).click();
       await expect(panel.getByText(w.cancellationElectricity, { exact: true })).toBeVisible();
       await panel
         .getByLabel(w.cancellationReason, { exact: true })
@@ -227,8 +227,7 @@ for (const locale of ['en', 'fa'] as const)
       expect(attempts).toHaveLength(2);
       expect(attempts[0]).toEqual(attempts[1]);
       await page.reload();
-      await open();
-      await panel.getByRole('button', { name: w.cancellationReview, exact: true }).click();
+      await expect(page).toHaveURL(`/admin/contracts/${id}/cancel`);
       await expect(panel.getByText(w.cancellationApprovalNotice, { exact: true })).toBeVisible();
       await expect(
         panel.getByRole('button', { name: w.cancellationConfirm, exact: true })

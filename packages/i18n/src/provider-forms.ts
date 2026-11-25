@@ -1,5 +1,15 @@
 import type { Locale } from './app.js';
 const en = {
+  providerDetails: 'Provider details',
+  connection: 'Server connection',
+  credentials: 'Credentials',
+  keepCredential: 'Leave blank to keep the current credential.',
+  senderDetails: 'Sender identity',
+  limits: 'Delivery limits',
+  timeouts: 'Connection timeouts',
+  mappingTitle: 'Template mapping',
+  noMappings: 'Add a mapping to connect an application event to a provider template.',
+  variablePairs: 'Template variables',
   label: 'Enter a name between 1 and 120 characters.',
   host: 'Enter an SMTP host up to 253 characters.',
   port: 'Enter a whole port number from 1 to 65535.',
@@ -35,6 +45,16 @@ const en = {
   reviewTest: 'I checked the saved state and test recipient',
 };
 const fa: Record<keyof typeof en, string> = {
+  providerDetails: 'مشخصات ارائه‌دهنده',
+  connection: 'اتصال به سرور',
+  credentials: 'اطلاعات احراز هویت',
+  keepCredential: 'برای حفظ اطلاعات فعلی، این فیلد را خالی بگذارید.',
+  senderDetails: 'هویت فرستنده',
+  limits: 'محدودیت‌های ارسال',
+  timeouts: 'مهلت‌های اتصال',
+  mappingTitle: 'نگاشت قالب',
+  noMappings: 'برای اتصال یک رویداد به قالب ارائه‌دهنده، نگاشت اضافه کنید.',
+  variablePairs: 'متغیرهای قالب',
   label: 'نام را با ۱ تا ۱۲۰ نویسه وارد کنید.',
   host: 'میزبان SMTP را حداکثر با ۲۵۳ نویسه وارد کنید.',
   port: 'شماره درگاه را به صورت عدد صحیح از ۱ تا ۶۵۵۳۵ وارد کنید.',

@@ -16,6 +16,13 @@ export function intakeSchema(messages: Record<keyof ConsultationIntakeDraft, str
         path: ['productId'],
         message: messages.productId,
       });
+    if (typeof ctx.value?.brief !== 'string' || ctx.value.brief.trim().length > 2000)
+      ctx.issues.push({
+        code: 'custom',
+        input: ctx.value?.brief,
+        path: ['brief'],
+        message: messages.brief,
+      });
     if (ctx.value?.confirm !== true)
       ctx.issues.push({
         code: 'custom',

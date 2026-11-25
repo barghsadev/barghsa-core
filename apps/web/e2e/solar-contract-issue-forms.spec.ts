@@ -1,3 +1,4 @@
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import { productionManifest } from './production-manifest';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import AxeBuilder from '@axe-core/playwright';
@@ -97,16 +98,28 @@ for (const [locale, theme] of [
       const confirm = () => dialog.locator('button[type=submit]');
       const cancel = () =>
         dialog.getByRole('button', { name: t('team.cancel', locale), exact: true });
-      const guidance = page.locator('#solar-postal-guidance-en');
-      const guidanceForm = guidance.locator('xpath=ancestor::form');
+      const back = page.getByRole('link', {
+        name: tSolarStaffRecord('backToPostal', locale),
+        exact: true,
+      });
+      const shipmentBack = page.getByRole('link', {
+        name: tSolarStaffRecord('backToShipmentReview', locale),
+        exact: true,
+      });
+      const openEditor = () =>
+        page.getByRole('link', { name: copy('solarCreateContract'), exact: true }).click();
       await page.goto('/admin/solar-postal');
       if (kind === 'document') {
         state.optionsMode = 'held';
-        await page.getByRole('button', { name: /First solar buyer/ }).click();
+        await page.getByRole('link', { name: /First solar buyer/ }).click();
+        await openEditor();
         await expect.poll(() => !!state.heldOptions).toBe(true);
         const old = state.heldOptions!;
         state.optionsMode = 'success';
-        await page.getByRole('button', { name: /Older solar buyer/ }).click();
+        await shipmentBack.click();
+        await back.click();
+        await page.getByRole('link', { name: /Older solar buyer/ }).click();
+        await openEditor();
         await expect(field('source')).toBeEnabled();
         await expect(
           field('source').locator('option', { hasText: 'signed-solar-terms.pdf' })
@@ -114,8 +127,11 @@ for (const [locale, theme] of [
         await field('title').fill('Fresh selected private contract');
         await error(old, 403, ErrorCodes.AUTHZ_FORBIDDEN.code);
         await expect(field('title')).toHaveValue('Fresh selected private contract');
+        await shipmentBack.click();
+        await back.click();
       }
-      await page.getByRole('button', { name: /First solar buyer/ }).click();
+      await page.getByRole('link', { name: /First solar buyer/ }).click();
+      await openEditor();
       await expect(field('source')).toBeEnabled();
       for (const name of ['source', 'title', 'text', 'reason', 'value-kind'])
         await expect(field(name)).toHaveAttribute('aria-required', 'true');
@@ -167,8 +183,15 @@ for (const [locale, theme] of [
         await line(2, 'vat-rate').fill('900');
         await line(2, 'taxable').check();
       }
-      await guidance.fill('  Independent postal guidance draft  ');
-      await page.locator('#solar-postal-reason').fill('  Independent final review draft  ');
+      const draftTotal = form.locator('dl').getByRole('definition').last();
+      await line(0, 'taxable').check();
+      await expect(draftTotal).toHaveText(
+        formatCurrencyIrr(kind === 'template' ? '272500' : '146', locale)
+      );
+      await line(0, 'unit-price').fill('invalid');
+      await expect(draftTotal).toHaveCount(0);
+      await line(0, 'unit-price').fill(kind === 'template' ? '125000' : '00005');
+      await expect(page.locator('#solar-postal-reason')).toHaveCount(0);
       await form.dispatchEvent('submit');
       await expect(submit).toBeDisabled();
       await form.dispatchEvent('submit');
@@ -177,7 +200,6 @@ for (const [locale, theme] of [
       await focusedError(field('title'));
       await expect(field('text')).toHaveValue('  ' + terms + '  ');
       await expect(line(0, 'unit-price')).toHaveValue(kind === 'template' ? '125000' : '00005');
-      await expect(guidance).toHaveValue('  Independent postal guidance draft  ');
       await field('title').fill('  Solar installation agreement  ');
       state.previewMode = 'owned';
       await submit.click();
@@ -345,33 +367,20 @@ for (const [locale, theme] of [
       const readCount = state.reads.length,
         optionCount = state.optionsReads.length,
         previewCount = state.previews.length;
-      const other = page.getByRole('button', { name: /Older solar buyer/ });
-      const close = page.getByRole('button', { name: copy('solarCloseNoContract'), exact: true });
-      const saveGuidance = guidanceForm.getByRole('button', {
-        name: copy('postalSaveGuidance'),
-        exact: true,
-      });
-      await expect(other).toBeDisabled();
-      await expect(page.locator('#solar-postal-lane')).toBeDisabled();
-      await expect(close).toBeDisabled();
-      await expect(saveGuidance).toBeDisabled();
-      await other.dispatchEvent('click');
-      await page.locator('#solar-postal-lane').evaluate((node) => {
-        (node as HTMLSelectElement).value = 'waiting_customer';
-        node.dispatchEvent(new Event('change', { bubbles: true }));
-      });
-      await close.dispatchEvent('click');
-      await guidanceForm.dispatchEvent('submit');
+      const close = page.getByRole('link', { name: copy('solarCloseNoContract'), exact: true });
+      await expect(shipmentBack).toHaveAttribute('aria-disabled', 'true');
+      await expect(page.locator('#solar-postal-lane')).toHaveCount(0);
+      await expect(page.locator('#solar-postal-guidance-en')).toHaveCount(0);
+      await expect(close).toHaveCount(0);
+      await shipmentBack.dispatchEvent('click');
       await form.dispatchEvent('submit');
       expect(state.reads).toHaveLength(readCount);
       expect(state.optionsReads).toHaveLength(optionCount);
       expect(state.previews).toHaveLength(previewCount);
       expect(state.guidanceWrites).toEqual([]);
       expect(state.siblingWrites).toEqual([]);
-      await expect(guidance).toHaveValue('  Independent postal guidance draft  ');
-      await expect(page.locator('#solar-postal-reason')).toHaveValue(
-        '  Independent final review draft  '
-      );
+      await expect(page.locator('#solar-postal-reason')).toHaveCount(0);
+      await expect(page).toHaveURL(/\/postal\/create-contract$/);
       for (const malformed of [
         { ...receipt, status: 'published' },
         { ...receipt, invoiceIds: [] },
@@ -402,8 +411,7 @@ for (const [locale, theme] of [
       await expect(page.getByText(copy('solarContractCreated'), { exact: false })).toBeVisible();
       await expect(
         page.getByRole('link', { name: copy('solarViewContract'), exact: true })
-      ).toHaveAttribute('href', `/admin/contracts?contractId=${receipt.contractId}`);
-      await expect(guidance).toHaveValue('  Independent postal guidance draft  ');
+      ).toHaveAttribute('href', `/admin/contracts/${receipt.contractId}`);
       expect(state.writes.every((call) => call.raw === command.raw)).toBe(true);
       expect(state.writes.slice(1).every((call) => call.csrf === 'solar-contract-rotated')).toBe(
         true
@@ -411,7 +419,9 @@ for (const [locale, theme] of [
       expect(state.previews).toHaveLength(previewCount);
       expect(state.effects).toBe(1);
       // Current contract authority withdrawal removes the selected private editor.
-      await page.getByRole('button', { name: /Older solar buyer/ }).click();
+      await back.click();
+      await page.getByRole('link', { name: /Older solar buyer/ }).click();
+      await openEditor();
       await expect(field('source')).toBeEnabled();
       await field('title').fill('PRIVATE_CURRENT_SOLAR_DRAFT');
       state.previewMode = 'denied';

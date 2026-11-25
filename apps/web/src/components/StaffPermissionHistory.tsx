@@ -2,9 +2,14 @@ import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.j
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useEffect, useRef, useState } from 'react';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
-import { LoadingStatus, Button, DatePicker, datePickerDayBounds, Label } from '@barghsa/ui';
+import { t as appText } from '@barghsa/i18n/workspace';
+import { LoadingStatus, Button, type DateRangeValue } from '@barghsa/ui';
+import { XIcon } from 'lucide-react';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useHistoryFilterDraft } from '../hooks/useHistoryFilterDraft.js';
+import { HistoryDateFilter } from './HistoryDateFilter.js';
+import { HistoryFilterPanel } from './HistoryFilterPanel.js';
 
 interface Event {
   id: string;
@@ -61,9 +66,7 @@ export function StaffPermissionHistory({
   const locale = useLocale();
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`admin.staff.audit.${key}`, locale);
-  const [from, setFrom] = useState<Date>(),
-    [to, setTo] = useState<Date>();
-  const [filters, setFilters] = useState<{ from?: string; to?: string }>({});
+  const [filters, setFilters] = useState<DateRangeValue>({});
   const [offset, setOffset] = useState(0),
     [revision, setRevision] = useState(0);
   const [loading, setLoading] = useState(true),
@@ -71,17 +74,26 @@ export function StaffPermissionHistory({
   const [data, setData] = useState<{ items: Event[]; total: number }>({ items: [], total: 0 });
   const notifyDenied = useRef(onDenied);
   notifyDenied.current = onDenied;
-  const invalid = !!from && !!to && from.getTime() > to.getTime();
+  const applyRange = (range: DateRangeValue) => {
+    setFilters(range);
+    setOffset(0);
+  };
+  const applied = { query: { q: '' }, statuses: [], dateRange: filters };
+  const draft = useHistoryFilterDraft(applied, ({ dateRange }) => {
+    if (zone.status === 'ready') applyRange(dateRange);
+  });
   useEffect(() => {
     const controller = new AbortController();
     setLoading(true);
     setError(false);
     const query = new URLSearchParams({
-      ...filters,
       limit: '25',
       offset: String(offset),
       ...(target ? { userId: target.userId } : {}),
     });
+    if (filters.from) query.set('from', filters.from);
+    // The audit endpoint uses an inclusive upper bound.
+    if (filters.to) query.set('to', new Date(Date.parse(filters.to) - 1).toISOString());
     void readWithDeadline(controller.signal, async (signal) => {
       const response = await fetch(`/api/admin/staff/audit?${query}`, { signal });
       if (!response.ok) throw new ServerQueryError(response.status);
@@ -110,87 +122,55 @@ export function StaffPermissionHistory({
       value = t(key, locale);
     return value === key ? role.roleName : value;
   };
+  const dateLabel = appText('historyDates.preset', locale);
+  const dateFormat = new Intl.DateTimeFormat(locale, {
+    timeZone: zone.timezone,
+    dateStyle: 'medium',
+  });
   return (
     <section className="space-y-4 rounded-lg border bg-card p-4" aria-label={label('title')}>
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold">
-          {label('title')}
+      <header className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h2 className="font-semibold">{label('title')}</h2>
           {target && (
-            <>
-              : <bdi>{target.username}</bdi>
-            </>
+            <p className="mt-1 text-sm break-words text-muted-foreground">
+              <bdi>{target.username}</bdi>
+            </p>
           )}
-        </h2>
-        <Button variant="outline" onClick={onClose}>
-          {label('close')}
+        </div>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          aria-label={label('close')}
+          title={label('close')}
+          onClick={onClose}
+        >
+          <XIcon aria-hidden="true" />
         </Button>
       </header>
-      <form
-        className="space-y-3"
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (invalid || zone.status !== 'ready') return;
-          const next: { from?: string; to?: string } = {};
-          if (from) {
-            const { start } = datePickerDayBounds(from, zone.timezone);
-            next.from = start.toISOString();
-          }
-          if (to) {
-            const { end } = datePickerDayBounds(to, zone.timezone);
-            next.to = end.toISOString();
-          }
-          setOffset(0);
-          setFilters(next);
-        }}
+      <HistoryFilterPanel
+        {...applied}
+        dateLabel={dateLabel}
+        formatDate={(value) => dateFormat.format(new Date(value))}
+        onOpen={draft.begin}
+        onApply={draft.apply}
+        onClear={() => applyRange({})}
+        onRemoveFilter={() => applyRange({})}
       >
-        <div className="flex flex-wrap items-end gap-3">
-          <div>
-            <Label htmlFor="staff-audit-from">{label('from')}</Label>
-            <DatePicker
-              id="staff-audit-from"
-              label={label('from')}
-              placeholder={label('from')}
-              locale={locale}
-              timezone={zone.timezone}
-              disabled={zone.status !== 'ready'}
-              {...(from ? { value: from } : {})}
-              onChange={setFrom}
-            />
-          </div>
-          <div>
-            <Label htmlFor="staff-audit-to">{label('to')}</Label>
-            <DatePicker
-              id="staff-audit-to"
-              label={label('to')}
-              placeholder={label('to')}
-              locale={locale}
-              timezone={zone.timezone}
-              disabled={zone.status !== 'ready'}
-              {...(to ? { value: to } : {})}
-              onChange={setTo}
-            />
-          </div>
-          <Button type="submit" disabled={invalid || zone.status !== 'ready'}>
-            {label('apply')}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              setFrom(undefined);
-              setTo(undefined);
-              setFilters({});
-              setOffset(0);
-            }}
-          >
-            {label('clear')}
-          </Button>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          {zone.status === 'ready' && label('timezone').replace('{timezone}', zone.timezone)}
-        </p>
-        {invalid && <p role="alert">{label('invalidRange')}</p>}
-      </form>
+        <HistoryDateFilter
+          value={draft.draft.dateRange}
+          onChange={draft.setDateRange}
+          locale={locale}
+          time={zone}
+          inline
+        />
+        {zone.status === 'ready' && (
+          <p className="text-sm text-muted-foreground">
+            {label('timezone').replace('{timezone}', zone.timezone)}
+          </p>
+        )}
+      </HistoryFilterPanel>
       {loading || zone.status === 'loading' ? (
         <LoadingStatus>{label('loading')}</LoadingStatus>
       ) : error || zone.status === 'error' ? (
@@ -248,7 +228,7 @@ export function StaffPermissionHistory({
               </li>
             ))}
           </ol>
-          <nav className="flex items-center gap-3" aria-label={label('pages')}>
+          <nav className="flex flex-wrap items-center gap-3" aria-label={label('pages')}>
             <Button
               variant="outline"
               disabled={offset === 0}

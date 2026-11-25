@@ -24,10 +24,11 @@ for (const [locale, theme] of [
     state.staffWriteMode = 'held';
     const copy = (key: string) => adminText(`admin.electricityOrders.${key}`, locale);
     await page.goto(`/admin/electricity-orders?orderId=${correctionOrder}`);
-    await expect(page.getByRole('button', { name: copy('approve'), exact: true })).toBeDisabled();
+    await expect(page.getByRole('button', { name: copy('approve'), exact: true })).toHaveCount(0);
     await expect(
-      page.getByRole('button', { name: copy('request-changes'), exact: true })
-    ).toBeDisabled();
+      page.getByRole('link', { name: copy('request-changes'), exact: true })
+    ).toHaveCount(0);
+    await page.getByRole('link', { name: copy('reject'), exact: true }).click();
     const form = page.getByTestId('electricity-staff-reason-form');
     const reason = page.locator('#electricity-review-reason');
     await expect(reason).toHaveAttribute('aria-required', 'true');

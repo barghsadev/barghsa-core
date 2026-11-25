@@ -215,7 +215,10 @@ for (const kind of ['staff', 'customer'] as const) {
       expect(view.host.querySelector('[data-slot="list-content"]')!.textContent).toContain(
         'Another.pdf'
       );
-      expect(view.host.querySelector('[aria-label="View details"]')).not.toBeNull();
+      await vi.waitFor(async () => {
+        await act(async () => {});
+        expect(view.host.querySelector('[aria-label="View details"]')).not.toBeNull();
+      });
       const queue = calls.find((url) => url.includes('businessRecordType='))!;
       expect(Object.fromEntries(new URL(queue, 'https://local').searchParams)).toMatchObject({
         q: 'Review',

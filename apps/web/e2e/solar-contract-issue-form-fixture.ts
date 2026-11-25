@@ -1,3 +1,4 @@
+import { routePostalRecords } from './solar-postal-record-fixture';
 import { createHash } from 'node:crypto';
 import type { Page, Route } from '@playwright/test';
 import { ErrorCodes } from '@barghsa/shared/errors';
@@ -249,6 +250,7 @@ export async function setupSolarContractIssue(page: Page, locale: 'en' | 'fa') {
     tracking_revision: 0,
     tracking_recorded_at: '2026-09-23T10:00:00.000Z',
   });
+  await routePostalRecords(page, () => [firstSolar, olderSolar].map(queueRow));
   await page.route(/\/api\/admin\/solar\/postal-queue(?:\?[^/]*)?$/, (route) => {
     state.reads.push(route.request().url());
     const lane = new URL(route.request().url()).searchParams.get('lane') ?? 'all';

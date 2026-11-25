@@ -9,18 +9,9 @@ export interface DeadlineBasis {
   issuedAt: string | null;
   timezone: string;
 }
-export function deadlineSchema(
-  source: DeadlineBasis,
-  messages: DeadlineDraft,
-  resolve: (value: string) => string | null
-) {
+export function deadlineSchema(messages: DeadlineDraft, resolve: (value: string) => string | null) {
   return custom<DeadlineDraft>().check((ctx) => {
-    const iso = resolve(ctx.value.dueAt);
-    if (
-      !iso ||
-      (source.issuedAt && Date.parse(iso) < Date.parse(source.issuedAt)) ||
-      iso === source.dueAt
-    )
+    if (!resolve(ctx.value.dueAt))
       ctx.issues.push({
         code: 'custom',
         input: ctx.value,

@@ -4,6 +4,12 @@ import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { tWalletReceipts as walletText } from '@barghsa/i18n/wallet-receipts';
 import { bankReceiptReview } from '../src/test/bank-receipt-review-fixture';
 import { confirmFinancialReview } from './confirmation-fixture';
+import { receiptEditorMessages } from '@barghsa/i18n/receipt-editor';
+import type { ReconciliationItem } from '../src/lib/reconciliation-form';
+import {
+  enterWalletReceiptInvoiceId,
+  openWalletReceiptAction,
+} from './wallet-receipt-action-navigation';
 import {
   receiptId,
   paymentInvoiceId,
@@ -72,34 +78,29 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.goto('/admin/wallet-receipts');
-    const confirm = page.getByTestId('wallet-receipt-confirm');
-    await expect(confirm).toBeEnabled();
-    await page.locator('input[name="invoiceId"]').fill(paymentInvoiceId);
-    await expect(confirm).toBeEnabled();
-    await page.locator('#reject-reason').fill('Keep bank review');
-    const reads = [detailReads, reviewReads];
+    const row = page.locator(`main a[href="/admin/wallet-receipts/${receiptId}"]`);
+    await expect(row).toBeVisible();
+    expect([detailReads, reviewReads]).toEqual([0, 0]);
     queueStatus = 503;
     await page.getByRole('button', { name: w('queue.refresh'), exact: true }).click();
-    await expect(page.getByRole('button', { name: w('queue.retry'), exact: true })).toBeVisible();
-    await expect(confirm).toBeDisabled();
-    await expect(page.locator('#reject-reason')).toHaveValue('Keep bank review');
+    const retry = page.getByRole('button', { name: w('queue.retry'), exact: true });
+    await expect(retry).toBeVisible();
+    await expect(page.locator('#reject-reason')).toHaveCount(0);
     queueStatus = 200;
-    await page.getByRole('button', { name: w('queue.retry'), exact: true }).click();
-    await expect(confirm).toBeEnabled();
-    await expect(page.locator('input[name="invoiceId"]')).toHaveValue(paymentInvoiceId);
-    expect([detailReads, reviewReads]).toEqual(reads);
-    await page.locator('#reject-reason').scrollIntoViewIfNeeded();
+    await retry.click();
+    await expect(row).toBeVisible();
+    expect([detailReads, reviewReads]).toEqual([0, 0]);
     await inspect(page, 'receipt-queue', locale, info.project.name);
     queueStatus = 403;
     await page.getByRole('button', { name: w('queue.refresh'), exact: true }).click();
     await expect(page.getByRole('alert')).toContainText(w('queue.forbidden'));
-    await expect(page.locator('#reject-reason')).toHaveCount(0);
+    await expect(row).toHaveCount(0);
   });
   test(`receipt detail and financial retries preserve draft and confirm the recovered review (${locale})`, async ({
     page,
   }) => {
     await shell(page, locale);
-    let detailStatus = 503,
+    let detailStatus = 200,
       reviewStatus = 200;
     await page.route(`**${base}`, (route) => route.fulfill({ json: { items: [paymentReceipt] } }));
     await page.route(`**${base}/${receiptId}`, (route) =>
@@ -129,10 +130,18 @@ for (const locale of ['en', 'fa'] as const) {
         },
       });
     });
-    await page.goto('/admin/wallet-receipts');
-    const confirm = page.getByTestId('wallet-receipt-confirm');
-    await expect(page.getByRole('button', { name: w('detail.retry'), exact: true })).toBeVisible();
+    await page.goto(`/admin/wallet-receipts/${receiptId}`);
+    await openWalletReceiptAction(page, 'reject');
     await page.locator('#reject-reason').fill('Keep detail review');
+    await openWalletReceiptAction(page, 'confirm');
+    await enterWalletReceiptInvoiceId(page, locale);
+    const confirm = page.getByTestId('wallet-receipt-confirm');
+    await expect(confirm).toBeEnabled();
+    detailStatus = 503;
+    await page
+      .getByRole('button', { name: receiptEditorMessages[locale].refreshReceipt, exact: true })
+      .click();
+    await expect(page.getByRole('button', { name: w('detail.retry'), exact: true })).toBeVisible();
     await expect(confirm).toBeDisabled();
     detailStatus = 200;
     await page.getByRole('button', { name: w('detail.retry'), exact: true }).click();
@@ -143,9 +152,12 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: w('review.refresh'), exact: true }).click();
     await expect(page.getByRole('alert')).toContainText(w('error.allocation'));
     await expect(confirm).toBeDisabled();
-    await expect(page.locator('#reject-reason')).toHaveValue('Keep detail review');
     reviewStatus = 200;
     await page.getByRole('button', { name: w('review.refresh'), exact: true }).click();
+    await expect(confirm).toBeEnabled();
+    await openWalletReceiptAction(page, 'reject');
+    await expect(page.locator('#reject-reason')).toHaveValue('Keep detail review');
+    await openWalletReceiptAction(page, 'confirm');
     await expect(confirm).toBeEnabled();
     await confirm.click();
     await confirmFinancialReview(page, locale);
@@ -159,29 +171,31 @@ for (const locale of ['en', 'fa'] as const) {
     let hold = false,
       malformed = false,
       held: Route | undefined;
+    let currentItem: ReconciliationItem = reconciliationItem;
     const queries: string[] = [];
     let accessReads = 0;
     await page.route('**/api/admin/reconciliation/items/access', (route) => {
       ++accessReads;
       return route.fulfill({ json: { canView: true, canResolve: true } });
     });
+    let queueReads = 0;
     await page.route('**/api/admin/reconciliation/items?*', (route) => {
-      queries.push(new URL(route.request().url()).search);
+      queueReads++;
+      return route.fulfill({ json: [reconciliationItem] });
+    });
+    await page.route(`**/api/admin/reconciliation/items/${reconciliationItem.id}`, (route) => {
+      queries.push(new URL(route.request().url()).pathname);
       if (hold) {
         held = route;
         return;
       }
       return route.fulfill({
-        json: [
-          malformed
-            ? { ...reconciliationItem, description: { invalid: true } }
-            : reconciliationItem,
-        ],
+        json: malformed ? { ...reconciliationItem, description: { invalid: true } } : currentItem,
       });
     });
     await page.goto('/admin/reconciliation');
     await expect(
-      page.getByRole('button', { name: reconciliationItem.description, exact: true })
+      page.getByRole('link', { name: reconciliationItem.description, exact: true })
     ).toBeVisible();
     await page.setViewportSize({ width: 900, height: 844 });
     const tableViewport = page.getByRole('region', { name: r('tableTitle'), exact: true });
@@ -190,39 +204,43 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(tableViewport).toBeFocused();
     await page.setViewportSize({ width: 390, height: 844 });
     await inspect(page, 'reconciliation', locale, info.project.name);
+    const queueBefore = queueReads;
+    await page.getByRole('link', { name: reconciliationItem.description, exact: true }).click();
+    const record = page.getByTestId('reconciliation-record');
+    await record.getByRole('link', { name: r('resolve'), exact: true }).click();
+    const note = page.locator('#rex-note');
+    await note.fill('Keep ledger review');
     hold = true;
-    await page.getByRole('button', { name: r('refresh'), exact: true }).click();
+    await record.getByRole('button', { name: r('refresh'), exact: true }).click();
     await expect.poll(() => !!held).toBe(true);
-    await page.getByRole('button', { name: reconciliationItem.description, exact: true }).click();
-    await page.locator('#rex-note').fill('Keep ledger review');
     await held!.fulfill({ status: 503, json: {} });
-    const dialog = page.getByRole('dialog');
-    await expect(dialog.getByRole('alert')).toBeVisible();
+    await expect(record.getByRole('alert')).toBeVisible();
     const failedQuery = queries.at(-1),
       permissionReads = accessReads;
     hold = false;
     malformed = true;
-    await dialog.getByRole('button', { name: r('retry'), exact: true }).click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
-    await expect(page.locator('#rex-note')).toHaveValue('Keep ledger review');
+    await record.getByRole('button', { name: r('retry'), exact: true }).click();
+    await expect(record.getByRole('alert')).toBeVisible();
+    await expect(note).toHaveValue('Keep ledger review');
     expect(queries.at(-1)).toBe(failedQuery);
     malformed = false;
-    await dialog.getByRole('button', { name: r('retry'), exact: true }).click();
-    await expect(dialog.getByRole('alert')).toHaveCount(0);
-    await expect(page.locator('#rex-note')).toHaveValue('Keep ledger review');
+    await record.getByRole('button', { name: r('retry'), exact: true }).click();
+    await expect(record.getByRole('alert')).toHaveCount(0);
+    await expect(note).toHaveValue('Keep ledger review');
     expect(queries.at(-1)).toBe(failedQuery);
     expect(accessReads).toBe(permissionReads);
-    await dialog.getByRole('button', { name: r('dismiss'), exact: true }).click();
+    expect(queueReads).toBe(queueBefore);
     held = undefined;
     hold = true;
-    await page.getByRole('button', { name: r('refresh'), exact: true }).click();
+    await record.getByRole('button', { name: r('refresh'), exact: true }).click();
     await expect.poll(() => !!held).toBe(true);
-    await page.getByRole('button', { name: reconciliationItem.description, exact: true }).click();
-    await page.locator('#rex-note').fill('Old state');
-    await held!.fulfill({
-      json: [{ ...reconciliationItem, status: 'resolved', resolutionNote: 'Handled' }],
-    });
-    await expect(dialog).toHaveCount(0);
+    currentItem = { ...reconciliationItem, status: 'resolved', resolutionNote: 'Handled' };
+    await held!.fulfill({ json: currentItem });
+    await expect(record.getByText('Handled', { exact: true })).toBeVisible();
+    await expect(note).toHaveCount(0);
+    hold = false;
+    await record.getByRole('link', { name: r('close'), exact: true }).click();
+    await expect(page.locator('#rex-note')).toHaveValue('');
   });
   test(`reconciliation access failure preserves note until permission denial (${locale})`, async ({
     page,
@@ -243,26 +261,25 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/reconciliation/items?*', (route) =>
       route.fulfill({ json: [reconciliationItem] })
     );
+    await page.route(`**/api/admin/reconciliation/items/${reconciliationItem.id}`, (route) =>
+      route.fulfill({ json: reconciliationItem })
+    );
     await page.goto('/admin/reconciliation');
-    await expect(
-      page.getByRole('button', { name: reconciliationItem.description, exact: true })
-    ).toBeVisible();
-    hold = true;
-    await page.getByRole('button', { name: r('refresh'), exact: true }).click();
-    await expect.poll(() => !!held).toBe(true);
-    await page.getByRole('button', { name: reconciliationItem.description, exact: true }).click();
+    await page.getByRole('link', { name: reconciliationItem.description, exact: true }).click();
+    const record = page.getByTestId('reconciliation-record');
+    await record.getByRole('link', { name: r('resolve'), exact: true }).click();
     await page.locator('#rex-note').fill('Retained permission draft');
+    hold = true;
+    await record.getByRole('button', { name: r('refresh'), exact: true }).click();
+    await expect.poll(() => !!held).toBe(true);
     await held!.fulfill({ status: 503, json: {} });
-    await expect(page.getByRole('dialog').getByRole('alert')).toContainText(r('accessError'));
+    await expect(record.getByRole('alert')).toContainText(r('accessError'));
     await expect(page.locator('#rex-note')).toHaveValue('Retained permission draft');
     hold = false;
     denied = true;
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: r('accessRetry'), exact: true })
-      .click();
-    await expect(page.getByRole('dialog')).toHaveCount(0);
-    await expect(page.getByRole('table')).toHaveCount(0);
+    await record.getByRole('button', { name: r('accessRetry'), exact: true }).click();
+    await expect(record).toHaveCount(0);
+    await expect(page.locator('#rex-note')).toHaveCount(0);
     await expect(page.getByRole('alert')).toContainText(r('forbidden'));
   });
 }

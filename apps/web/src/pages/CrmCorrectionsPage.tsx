@@ -1,18 +1,42 @@
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import { useNavigate, useSearch } from '@tanstack/react-router';
+import { Link, useBlocker, useNavigate, useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/crm';
+import { tCrmForm } from '@barghsa/i18n/crm-forms';
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { LoadingStatus, Button, Input, Label, ListPage, NativeSelect } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  Input,
+  Label,
+  ListPage,
+  ListRefreshButton,
+  NativeSelect,
+  StatusBadge,
+  Textarea,
+  buttonVariants,
+} from '@barghsa/ui';
+import {
+  RecordEditorActions,
+  RecordEditorSection,
+  recordEditorField,
+  recordEditorGrid,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
+import { VerificationEvidencePicker } from '../components/VerificationEvidencePicker.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
+import { formatRelativeTime } from '../lib/relative-time.js';
 import { useManualServerRead } from '../hooks/useServerQuery.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
+import { QueueEmptyState, statusAlternatives } from '../components/QueueEmptyState.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { useListQuery, type ListQueryBinding } from '../hooks/useListQuery.js';
 import { crmCorrectionQueryOptions, crmCorrectionSearch } from '../lib/crm-correction-query.js';
+import { isInvoiceUuid } from '../lib/invoice-uuid.js';
 import {
   uploadVerificationEvidence,
   isAllowedInvoiceReceiptFile,
@@ -30,12 +54,14 @@ interface Case {
   reason: string;
   status: Status;
   createdBy: string;
+  createdAt?: string;
 }
 interface Detail extends Case {
   currentValue: string | null;
   evidenceUrls: string[];
   evidenceDownloadUrls?: string[];
   reviewerNotes: string | null;
+  viewer?: { userId: string; canReview: boolean };
 }
 interface Queue {
   cases: Case[];
@@ -64,6 +90,7 @@ const detailBasis = (item: Detail) =>
     item.evidenceUrls,
     !!item.evidenceUrls.length && item.evidenceDownloadUrls?.length === item.evidenceUrls.length,
     item.reviewerNotes,
+    item.viewer,
   ]);
 function validCase(item: Case) {
   return (
@@ -99,8 +126,8 @@ const profileBasis = (data: CorrectionProfile) =>
     data.viewerPermissions.canEditIdentity,
   ]);
 export function CrmCorrectionsRoutePage() {
-  const search = useSearch({ from: '/admin/crm/corrections' });
-  const navigate = useNavigate({ from: '/admin/crm/corrections' });
+  const search = useSearch({ from: '/admin/crm/corrections/' });
+  const navigate = useNavigate({ from: '/admin/crm/corrections/' });
   const queries = useListQuery(crmCorrectionQueryOptions, search, (update, options) => {
     void navigate({
       search: (raw) => crmCorrectionSearch(update(raw)),
@@ -108,31 +135,68 @@ export function CrmCorrectionsRoutePage() {
       resetScroll: false,
     });
   });
-  return <CrmCorrectionsPage queries={queries} />;
+  return <CrmCorrectionsPage queries={queries} recordSearch={search} />;
 }
-export default function CrmCorrectionsPage({ queries }: { queries?: ListQueryBinding } = {}) {
-  const { profileId, fieldName } = useSearch({ from: '/admin/crm/corrections' });
+export default function CrmCorrectionsPage({
+  queries,
+  caseId,
+  recordSearch,
+  expectedProfileId,
+  newProfileId,
+}: {
+  queries?: ListQueryBinding;
+  caseId?: string;
+  recordSearch?: Record<string, unknown>;
+  expectedProfileId?: string;
+  newProfileId?: string;
+} = {}) {
+  const { profileId, fieldName } = crmCorrectionSearch(useSearch({ strict: false }));
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
   return (
     <Corrections
-      key={JSON.stringify([actor, revision, profileId, fieldName])}
-      profileId={profileId}
+      key={JSON.stringify([
+        actor,
+        revision,
+        profileId,
+        fieldName,
+        caseId,
+        expectedProfileId,
+        newProfileId,
+      ])}
+      profileId={caseId ? undefined : (newProfileId ?? profileId)}
       initialField={fieldName}
       {...(queries ? { queries } : {})}
+      {...(caseId ? { caseId } : {})}
+      {...(recordSearch ? { recordSearch } : {})}
+      {...(expectedProfileId ? { expectedProfileId } : {})}
+      creating={Boolean(newProfileId)}
     />
   );
+}
+function CorrectionNavigationGuard({ locked }: { locked: boolean }) {
+  useBlocker({ shouldBlockFn: () => locked, enableBeforeUnload: () => locked });
+  return null;
 }
 function Corrections({
   profileId,
   initialField,
   queries,
+  caseId,
+  recordSearch,
+  expectedProfileId,
+  creating,
 }: {
   profileId: string | undefined;
   initialField: string | undefined;
   queries?: ListQueryBinding;
+  caseId?: string;
+  recordSearch?: Record<string, unknown>;
+  expectedProfileId?: string;
+  creating: boolean;
 }) {
   const locale = useLocale();
+  const time = useAccountTime(locale);
   const accountId = useAccountUser();
   const profileRevision = useProfileContextRevision();
   const read = useManualServerRead();
@@ -166,12 +230,13 @@ function Corrections({
   const [selected, setSelected] = useState<{ criteria: string; offset: number; item: Case } | null>(
     null
   );
-  const [loading, setLoading] = useState(true),
+  const [loading, setLoading] = useState(!caseId && !creating),
     [busy, setBusy] = useState(false);
   const [queueError, setQueueError] = useState(false),
     [error, setError] = useState(false),
     [saved, setSaved] = useState(false);
   const [queueForbidden, setQueueForbidden] = useState(false);
+  const [createdCaseId, setCreatedCaseId] = useState<string | null>(null);
   const [field, setField] = useState('first_name'),
     [value, setValue] = useState(''),
     [reason, setReason] = useState('');
@@ -237,6 +302,7 @@ function Corrections({
     clearReview();
     clearCreation();
     setAccepted(null);
+    setCreatedCaseId(null);
     setSaved(false);
     setError(false);
     setLoading(false);
@@ -263,7 +329,9 @@ function Corrections({
   );
   const profileRead = useCatalogueResource(
     scope,
-    profileId ? `/api/crm/profiles/${encodeURIComponent(profileId)}` : null,
+    profileId && (creating || !recordSearch)
+      ? `/api/crm/profiles/${encodeURIComponent(profileId)}`
+      : null,
     validateProfile
   );
   const profileType = profileRead.data?.profile.profileType ?? null;
@@ -279,13 +347,20 @@ function Corrections({
       const data = value as Detail | null;
       return (
         !!data &&
-        !!selectedItem &&
         validCase(data) &&
-        data.id === selectedItem.id &&
-        data.profileId === selectedItem.profileId &&
-        data.fieldName === selectedItem.fieldName &&
-        data.requestedValue === selectedItem.requestedValue &&
-        data.createdBy === selectedItem.createdBy &&
+        (caseId
+          ? data.id === caseId &&
+            isInvoiceUuid(data.profileId) &&
+            (!expectedProfileId || data.profileId === expectedProfileId) &&
+            typeof data.viewer?.userId === 'string' &&
+            (!accountId || data.viewer.userId === accountId) &&
+            typeof data.viewer.canReview === 'boolean'
+          : !!selectedItem &&
+            data.id === selectedItem.id &&
+            data.profileId === selectedItem.profileId &&
+            data.fieldName === selectedItem.fieldName &&
+            data.requestedValue === selectedItem.requestedValue &&
+            data.createdBy === selectedItem.createdBy) &&
         (data.currentValue === null || typeof data.currentValue === 'string') &&
         (data.reviewerNotes === null || typeof data.reviewerNotes === 'string') &&
         Array.isArray(data.evidenceUrls) &&
@@ -295,15 +370,18 @@ function Corrections({
             data.evidenceDownloadUrls.every((url) => typeof url === 'string')))
       );
     },
-    [selectedItem]
+    [caseId, accountId, expectedProfileId, selectedItem]
   );
+  const selectedCaseId = caseId ?? selectedItem?.id;
   const detailRead = useCatalogueResource(
     scope,
-    selectedItem ? `/api/crm/verification-cases/${selectedItem.id}` : null,
+    selectedCaseId ? `/api/crm/verification-cases/${encodeURIComponent(selectedCaseId)}` : null,
     validateDetail
   );
   const detail = detailRead.data;
+  const reviewer = caseId ? detail?.viewer : queue?.viewer;
   const load = useCallback(async () => {
+    if (caseId || creating) return;
     const current = ++generation.current;
     queueController.current?.abort();
     const controller = new AbortController();
@@ -376,6 +454,8 @@ function Corrections({
       if (isCurrent()) setLoading(false);
     }
   }, [
+    caseId,
+    creating,
     profileId,
     status,
     offset,
@@ -442,7 +522,10 @@ function Corrections({
     const frame = requestAnimationFrame(() => {
       if (actionRef.current || completionFocus.current !== target) return;
       completionFocus.current = null;
-      (target === 'review' ? statusSelect.current : fieldSelect.current)?.focus();
+      (target === 'review'
+        ? (statusSelect.current ?? heading.current)
+        : fieldSelect.current
+      )?.focus();
     });
     return () => cancelAnimationFrame(frame);
   }, [action]);
@@ -483,11 +566,25 @@ function Corrections({
       creationRecovery.profileAttempt === profileRead.readAttempt);
   const canRetryReview =
     !reviewRecovery ||
-    (reviewRecovery.queueAttempt !== null &&
+    ((caseId ||
+      (reviewRecovery.queueAttempt !== null &&
+        reviewRecovery.queueAttempt === accepted?.readAttempt)) &&
       reviewRecovery.detailAttempt !== null &&
-      reviewRecovery.queueAttempt === accepted?.readAttempt &&
       reviewRecovery.detailAttempt === detailRead.readAttempt);
+  function changeQueueStatus(value: string) {
+    if (busy || action || !canRetryReview) return;
+    if (queries) queries.setQuery({ filters: { status: value } });
+    else {
+      setLocalStatus(value as Status);
+      setLocalOffset(0);
+    }
+  }
   function refreshCorrection() {
+    if (caseId) {
+      const detailAttempt = detailRead.retry();
+      setReviewRecovery((current) => current && { ...current, detailAttempt });
+      return;
+    }
     refreshProfile();
     const detailAttempt = selectedItem ? detailRead.retry() : null;
     const queueAttempt = generation.current + 1;
@@ -561,18 +658,91 @@ function Corrections({
   const hasEvidence =
     !!detail?.evidenceUrls.length && evidence.length === detail.evidenceUrls.length;
   const actionGeneration = workGeneration.current;
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (caseId || creating) heading.current?.focus({ preventScroll: true });
+  }, [caseId, creating]);
   return (
-    <section className="space-y-5 max-w-5xl mx-auto" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header>
-        <a href="/admin/crm/recovery" className="underline">
-          {t('crm.corrections.recovery', locale)}
-        </a>
-        <h1 className="text-2xl font-semibold">{t('crm.corrections.title', locale)}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {t('crm.corrections.description', locale)}
-        </p>
+    <section
+      data-testid="crm-corrections-workspace"
+      className={caseId || creating ? 'mx-auto max-w-3xl space-y-3' : 'mx-auto max-w-5xl space-y-5'}
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {(caseId || creating) && (
+        <CorrectionNavigationGuard
+          locked={busy || !!action || !!reviewRecovery || !!creationRecovery}
+        />
+      )}
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          {caseId ? (
+            <Link
+              to="/admin/crm/corrections"
+              search={recordSearch ?? {}}
+              className="touch-action text-sm text-primary underline underline-offset-4"
+            >
+              {t('crm.corrections.backToQueue', locale)}
+            </Link>
+          ) : creating && profileId ? (
+            <Link
+              to="/admin/crm/profiles/$profileId"
+              params={{ profileId }}
+              className="touch-action text-sm text-primary underline underline-offset-4"
+            >
+              {t('crm.corrections.backToProfile', locale)}
+            </Link>
+          ) : (
+            <Link
+              to="/admin/crm/recovery"
+              className="touch-action text-sm text-primary underline underline-offset-4"
+            >
+              {t('crm.corrections.recovery', locale)}
+            </Link>
+          )}
+          <h1
+            ref={heading}
+            tabIndex={caseId || creating ? -1 : undefined}
+            className={
+              caseId || creating ? 'text-xl font-semibold outline-none' : 'text-2xl font-semibold'
+            }
+          >
+            {t(
+              caseId
+                ? 'crm.corrections.details'
+                : creating
+                  ? 'crm.corrections.request'
+                  : 'crm.corrections.title',
+              locale
+            )}
+          </h1>
+          {!caseId && !creating && (
+            <p className="text-sm text-muted-foreground">
+              {t('crm.corrections.description', locale)}
+            </p>
+          )}
+        </div>
+        {creating && !denied && (
+          <ListRefreshButton
+            label={t('crm.list.refresh', locale)}
+            refreshing={profileRead.loading}
+            disabled={busy || !!action}
+            onClick={refreshProfile}
+          />
+        )}
       </header>
-      {!profileId && (
+      {recordSearch && profileId && !creating && (
+        <Link
+          to="/admin/crm/profiles/$profileId/corrections/new"
+          params={{ profileId }}
+          className={buttonVariants({ className: 'min-h-11' })}
+        >
+          {t('crm.corrections.request', locale)}
+        </Link>
+      )}
+      {creating && profileRead.data && !canCreate && (
+        <p role="alert">{t('crm.profile.error.accessDenied', locale)}</p>
+      )}
+      {!profileId && !caseId && (
         <p>
           <a className="text-foreground underline" href="/admin/crm">
             {t('crm.corrections.chooseProfile', locale)}
@@ -592,126 +762,104 @@ function Corrections({
             <LoadingStatus>{t('crm.profile.loading', locale)}</LoadingStatus>
           )}
           {profileId && profileType && canCreate && (
-            <form
-              onSubmit={(event) => void create(event)}
-              className="space-y-3 rounded border bg-card text-card-foreground p-4"
-            >
-              <h2 className="font-semibold">{t('crm.corrections.request', locale)}</h2>
-              <fieldset disabled={busy || !!action || !!creationRecovery} className="space-y-3">
-                <div>
-                  <Label htmlFor="correction-field">{t('crm.corrections.field', locale)}</Label>
-                  <NativeSelect
-                    ref={fieldSelect}
-                    id="correction-field"
-                    aria-required="true"
-                    value={field}
-                    onChange={(event) => setField(event.target.value)}
-                    className="max-w-full rounded-lg bg-background text-foreground"
-                  >
-                    {(profileType === 'LEGAL'
-                      ? ['legal_name', 'national_identifier']
-                      : ['first_name', 'last_name', 'national_id']
-                    ).map((key) => (
-                      <option key={key} value={key}>
-                        {t(`crm.corrections.${key}`, locale)}
-                      </option>
-                    ))}
-                  </NativeSelect>
-                </div>
-                <div>
-                  <Label htmlFor="correction-value">{t('crm.corrections.newValue', locale)}</Label>
-                  <Input
-                    id="correction-value"
-                    required
-                    aria-required="true"
-                    maxLength={512}
-                    value={value}
-                    onChange={(event) => setValue(event.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="correction-reason">{t('crm.corrections.reason', locale)}</Label>
-                  <textarea
-                    id="correction-reason"
-                    required
-                    aria-required="true"
-                    maxLength={1000}
-                    value={reason}
-                    onChange={(event) => setReason(event.target.value)}
-                    className="block w-full rounded border bg-background text-foreground p-2"
-                  />
-                </div>
-                <div>
-                  <Label id="correction-files-rules" htmlFor="correction-file-picker">
-                    {t('crm.corrections.files', locale)}
-                  </Label>
-                  <Input
+            <form onSubmit={(event) => void create(event)} className={recordEditorSurface}>
+              <fieldset disabled={busy || !!action || !!creationRecovery}>
+                <RecordEditorSection title={tCrmForm('crm.corrections.changeDetails', locale)}>
+                  <div className={recordEditorGrid}>
+                    <div className={recordEditorField}>
+                      <Label htmlFor="correction-field">{t('crm.corrections.field', locale)}</Label>
+                      <NativeSelect
+                        ref={fieldSelect}
+                        id="correction-field"
+                        aria-required="true"
+                        value={field}
+                        onChange={(event) => setField(event.target.value)}
+                        className="w-full"
+                      >
+                        {fieldsFor(profileType).map((key) => (
+                          <option key={key} value={key}>
+                            {t(`crm.corrections.${key}`, locale)}
+                          </option>
+                        ))}
+                      </NativeSelect>
+                    </div>
+                    <div className={recordEditorField}>
+                      <Label htmlFor="correction-value">
+                        {t('crm.corrections.newValue', locale)}
+                      </Label>
+                      <Input
+                        id="correction-value"
+                        required
+                        aria-required="true"
+                        maxLength={512}
+                        inputMode={
+                          field === 'national_id' || field === 'national_identifier'
+                            ? 'numeric'
+                            : undefined
+                        }
+                        dir={
+                          field === 'national_id' || field === 'national_identifier'
+                            ? 'ltr'
+                            : 'auto'
+                        }
+                        value={value}
+                        onChange={(event) => setValue(event.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className={recordEditorField}>
+                    <Label htmlFor="correction-reason">{t('crm.corrections.reason', locale)}</Label>
+                    <Textarea
+                      id="correction-reason"
+                      required
+                      aria-required="true"
+                      maxLength={1000}
+                      value={reason}
+                      onChange={(event) => setReason(event.target.value)}
+                      rows={2}
+                      placeholder={tCrmForm('crm.corrections.reasonExample', locale)}
+                      className="min-h-14 resize-y"
+                    />
+                  </div>
+                </RecordEditorSection>
+                <RecordEditorSection title={tCrmForm('crm.corrections.attachments', locale)}>
+                  <VerificationEvidencePicker
                     key={fileVersion}
-                    ref={fileInput}
-                    hidden
                     id="correction-files"
-                    type="file"
-                    aria-required="true"
-                    multiple
+                    pickerId="correction-file-picker"
+                    locale={locale}
+                    inputRef={fileInput}
                     accept="application/pdf,image/jpeg,image/png"
-                    onChange={(event) => {
-                      const next = Array.from(event.target.files ?? []);
-                      setFiles(next);
+                    instructions={t('crm.corrections.files', locale)}
+                    chooseLabel={t('crm.corrections.chooseFiles', locale)}
+                    emptyLabel={t('crm.corrections.noFiles', locale)}
+                    files={files}
+                    error={invalidEvidence ? t('crm.corrections.invalidFiles', locale) : undefined}
+                    onChange={(files) => {
+                      setFiles(files);
                       setError(false);
                     }}
                   />
+                </RecordEditorSection>
+                <RecordEditorActions>
                   <Button
-                    id="correction-file-picker"
-                    type="button"
-                    variant="outline"
-                    aria-label={t('crm.corrections.chooseFiles', locale)}
-                    aria-invalid={invalidEvidence || undefined}
-                    onClick={() => fileInput.current?.click()}
-                    aria-describedby={`correction-files-rules correction-files-selected${invalidEvidence ? ' correction-files-error' : ''}`}
+                    ref={createButton}
+                    type="submit"
+                    disabled={
+                      profileRead.loading ||
+                      profileRead.error ||
+                      !value.trim() ||
+                      !reason.trim() ||
+                      !files.length ||
+                      invalidEvidence
+                    }
                   >
-                    {t('crm.corrections.chooseFiles', locale)}
+                    {t(busy ? 'crm.corrections.uploading' : 'crm.corrections.upload', locale)}
                   </Button>
-                  <p
-                    id="correction-files-selected"
-                    className="mt-2 break-all text-sm text-muted-foreground"
-                    aria-live="polite"
-                  >
-                    {files.length
-                      ? files.map((file, index) => (
-                          <span key={index}>
-                            {index > 0 && ' · '}
-                            <bdi>{file.name}</bdi>
-                          </span>
-                        ))
-                      : t('crm.corrections.noFiles', locale)}
-                  </p>
-                  {invalidEvidence && (
-                    <p
-                      id="correction-files-error"
-                      role="alert"
-                      className="text-sm text-destructive"
-                    >
-                      {t('crm.corrections.invalidFiles', locale)}
-                    </p>
-                  )}
-                </div>
-                <Button
-                  ref={createButton}
-                  type="submit"
-                  disabled={
-                    profileRead.loading ||
-                    profileRead.error ||
-                    !value.trim() ||
-                    !reason.trim() ||
-                    !files.length ||
-                    invalidEvidence
-                  }
-                >
-                  {t(busy ? 'crm.corrections.uploading' : 'crm.corrections.upload', locale)}
-                </Button>
+                </RecordEditorActions>
               </fieldset>
               {creationRecovery && !action && (
-                <div className="space-y-2">
+                <div className="space-y-2 px-4 py-3 sm:px-6">
                   <p role="alert">{confirmationText('unconfirmed', locale)}</p>
                   <Button
                     type="button"
@@ -731,91 +879,165 @@ function Corrections({
               )}
             </form>
           )}
-          <div className="flex flex-wrap items-center gap-3">
-            {!queueForbidden && (
-              <>
-                <Label htmlFor="case-status">{t('crm.corrections.status', locale)}</Label>
-                <NativeSelect
-                  ref={statusSelect}
-                  id="case-status"
-                  disabled={busy || !!action || !canRetryReview}
-                  value={status}
-                  onChange={(event) => {
-                    if (queries) queries.setQuery({ filters: { status: event.target.value } });
-                    else {
-                      setLocalStatus(event.target.value as Status);
-                      setLocalOffset(0);
-                    }
-                  }}
-                  className="max-w-full rounded-lg bg-background text-foreground"
-                >
-                  {(['Open', 'Under Review', 'Approved', 'Rejected'] as const).map((value) => (
-                    <option key={value} value={value}>
-                      {t(`crm.corrections.${value}`, locale)}
-                    </option>
-                  ))}
-                </NativeSelect>
-              </>
-            )}
-            <Button variant="outline" disabled={loading || busy} onClick={refreshCorrection}>
-              {t('crm.list.refresh', locale)}
-            </Button>
-          </div>
+          {!creating && (
+            <div className="flex flex-wrap items-center gap-3">
+              {!caseId && !queueForbidden && (
+                <>
+                  <Label htmlFor="case-status">{t('crm.corrections.status', locale)}</Label>
+                  <NativeSelect
+                    ref={statusSelect}
+                    id="case-status"
+                    disabled={busy || !!action || !canRetryReview}
+                    value={status}
+                    onChange={(event) => changeQueueStatus(event.target.value)}
+                    className="max-w-full rounded-lg bg-background text-foreground"
+                  >
+                    {(['Open', 'Under Review', 'Approved', 'Rejected'] as const).map((value) => (
+                      <option key={value} value={value}>
+                        {t(`crm.corrections.${value}`, locale)}
+                      </option>
+                    ))}
+                  </NativeSelect>
+                </>
+              )}
+              <Button
+                variant="outline"
+                disabled={
+                  loading || busy || Boolean(recordSearch && (action || detailRead.loading))
+                }
+                onClick={refreshCorrection}
+              >
+                {t('crm.list.refresh', locale)}
+              </Button>
+            </div>
+          )}
           <CommandFeedback message={saved ? t('crm.corrections.saved', locale) : null} />
+          {createdCaseId && profileId && (
+            <Link
+              to="/admin/crm/corrections/$caseId"
+              params={{ caseId: createdCaseId }}
+              search={{ profileId }}
+              state={{ crmCorrectionProfileId: profileId }}
+              className={buttonVariants({ variant: 'outline' })}
+            >
+              {t('crm.corrections.details', locale)}
+            </Link>
+          )}
           {reviewRecovery && <p role="alert">{confirmationText('unconfirmed', locale)}</p>}
           {error && <p role="alert">{t('crm.corrections.error', locale)}</p>}
-          {queueForbidden ? (
-            <p>{t('crm.corrections.queueForbidden', locale)}</p>
-          ) : (
-            <ListPage>
-              <ListPage.Content
-                loading={loading}
-                error={queueError}
-                empty={!queue?.cases.length}
-                retainContent={!!queue?.cases.length}
-                loadingView={<LoadingStatus>{t('crm.list.loading', locale)}</LoadingStatus>}
-                emptyView={<p>{t('crm.corrections.empty', locale)}</p>}
-                errorView={
-                  <div role="alert">
-                    <p>{t('crm.corrections.error', locale)}</p>
-                    <Button onClick={() => void load()}>
-                      {t('crm.corrections.queueRetry', locale)}
-                    </Button>
-                  </div>
-                }
-              >
-                {!!queue?.cases.length && (
-                  <ul className="space-y-2">
-                    {queue.cases.map((item) => (
-                      <li
-                        key={item.id}
-                        className="rounded border bg-card text-card-foreground p-3 flex flex-wrap items-center justify-between gap-3"
-                      >
-                        <span className="min-w-0 break-words">
-                          {t(`crm.corrections.${item.fieldName}`, locale)} ·{' '}
-                          <bdi>{item.requestedValue}</bdi>
-                        </span>
-                        <Button
-                          variant="outline"
-                          disabled={
-                            !!action ||
-                            busy ||
-                            loading ||
-                            queueError ||
-                            !canRetryReview ||
-                            accepted?.offset !== offset
-                          }
-                          onClick={() => select(item)}
+          {!caseId &&
+            !creating &&
+            (queueForbidden ? (
+              <p>{t('crm.corrections.queueForbidden', locale)}</p>
+            ) : (
+              <ListPage>
+                <ListPage.Content
+                  loading={loading}
+                  error={queueError}
+                  empty={!queue?.cases.length}
+                  retainContent={!!queue?.cases.length}
+                  loadingView={<LoadingStatus>{t('crm.list.loading', locale)}</LoadingStatus>}
+                  emptyView={
+                    offset === 0 ? (
+                      <QueueEmptyState
+                        locale={locale}
+                        message={t('crm.corrections.empty', locale)}
+                        status={t(`crm.corrections.${status}`, locale)}
+                        alternatives={statusAlternatives(
+                          statuses,
+                          status,
+                          (value) => t(`crm.corrections.${value}`, locale),
+                          '/api/crm/verification-cases',
+                          profileId ? { profileId } : {}
+                        )}
+                        hasResults={(body, value) =>
+                          validQueue(body as Queue) &&
+                          (body as Queue).cases.some(
+                            (item) =>
+                              item.status === value && (!profileId || item.profileId === profileId)
+                          )
+                        }
+                        select={changeQueueStatus}
+                        disabled={busy || !!action || !canRetryReview}
+                      />
+                    ) : (
+                      <p>{t('crm.corrections.empty', locale)}</p>
+                    )
+                  }
+                  errorView={
+                    <div role="alert">
+                      <p>{t('crm.corrections.error', locale)}</p>
+                      <Button onClick={() => void load()}>
+                        {t('crm.corrections.queueRetry', locale)}
+                      </Button>
+                    </div>
+                  }
+                >
+                  {!!queue?.cases.length && (
+                    <ul className="space-y-2">
+                      {queue.cases.map((item) => (
+                        <li
+                          key={item.id}
+                          className="rounded border bg-card text-card-foreground p-3 flex flex-wrap items-center justify-between gap-3"
                         >
-                          {t('crm.corrections.details', locale)}
-                        </Button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </ListPage.Content>
-            </ListPage>
-          )}
+                          <div className="grid min-w-0 gap-1 break-words">
+                            <span className="font-medium">
+                              {t(`crm.corrections.${item.fieldName}`, locale)} ·{' '}
+                              <bdi>{item.requestedValue}</bdi>
+                            </span>
+                            {recordSearch && (
+                              <span className="text-sm text-muted-foreground">
+                                {item.assignedName ?? t('tickets.unassigned', locale)}
+                                {item.createdAt && (
+                                  <>
+                                    {' '}
+                                    ·{' '}
+                                    {formatRelativeTime(item.createdAt, locale) ||
+                                      time.format(item.createdAt)}
+                                  </>
+                                )}
+                              </span>
+                            )}
+                          </div>
+                          {recordSearch &&
+                          !queueError &&
+                          !loading &&
+                          accepted?.offset === offset ? (
+                            <Link
+                              to="/admin/crm/corrections/$caseId"
+                              params={{ caseId: item.id }}
+                              search={recordSearch}
+                              state={{ crmCorrectionProfileId: item.profileId }}
+                              className={buttonVariants({
+                                variant: 'outline',
+                                className: 'min-h-11',
+                              })}
+                            >
+                              {t('crm.corrections.details', locale)}
+                            </Link>
+                          ) : (
+                            <Button
+                              variant="outline"
+                              disabled={
+                                !!action ||
+                                busy ||
+                                loading ||
+                                queueError ||
+                                !canRetryReview ||
+                                accepted?.offset !== offset
+                              }
+                              onClick={() => select(item)}
+                            >
+                              {t('crm.corrections.details', locale)}
+                            </Button>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </ListPage.Content>
+              </ListPage>
+            ))}
           {queue && (
             <nav className="flex gap-2" aria-label={t('crm.corrections.title', locale)}>
               <Button
@@ -846,28 +1068,77 @@ function Corrections({
           {detailRead.error && (
             <div role="alert">
               <p>{t('crm.corrections.error', locale)}</p>
-              <Button onClick={detailRead.retry}>{t('crm.corrections.detailRetry', locale)}</Button>
+              <Button onClick={caseId ? refreshCorrection : detailRead.retry}>
+                {t('crm.corrections.detailRetry', locale)}
+              </Button>
             </div>
           )}
           {detail && (
-            <article className="space-y-3 rounded border bg-card text-card-foreground p-4 break-words">
-              <h2 className="font-semibold">{t(`crm.corrections.${detail.fieldName}`, locale)}</h2>
-              <dl className="grid gap-3 sm:grid-cols-2">
+            <article className="space-y-4 rounded-xl border bg-card text-card-foreground p-4 break-words sm:p-6">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h2 className="text-lg font-semibold">
+                  {t(`crm.corrections.${detail.fieldName}`, locale)}
+                </h2>
+                {caseId && (
+                  <StatusBadge
+                    state={detail.status}
+                    label={t(`crm.corrections.${detail.status}`, locale)}
+                  />
+                )}
+              </div>
+              {caseId && (
+                <dl className="grid gap-3 rounded-lg bg-muted/60 p-4 sm:grid-cols-2">
+                  <div>
+                    <dt className="text-sm text-muted-foreground">
+                      {t('crm.corrections.currentValue', locale)}
+                    </dt>
+                    <dd className="mt-1 break-words">
+                      <bdi>{detail.currentValue ?? '—'}</bdi>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm text-muted-foreground">
+                      {t('crm.corrections.newValue', locale)}
+                    </dt>
+                    <dd className="mt-1 break-words font-semibold">
+                      <bdi>{detail.requestedValue}</bdi>
+                    </dd>
+                  </div>
+                </dl>
+              )}
+              <dl className="grid gap-3 text-sm sm:grid-cols-2">
                 {[
                   ['profile', detail.profileId],
                   ['creator', detail.createdBy],
                   ['assignee', detail.assignedName ?? t('tickets.unassigned', locale)],
-                  ['currentValue', detail.currentValue ?? '—'],
-                  ['newValue', detail.requestedValue],
+                  ...(!caseId
+                    ? [
+                        ['currentValue', detail.currentValue ?? '—'],
+                        ['newValue', detail.requestedValue],
+                        ['status', t(`crm.corrections.${detail.status}`, locale)],
+                      ]
+                    : []),
+                  ...(caseId && detail.createdAt
+                    ? [['createdAt', time.format(detail.createdAt)]]
+                    : []),
                   ['reason', detail.reason],
-                  ['status', t(`crm.corrections.${detail.status}`, locale)],
                 ].map(([key, value]) => (
                   <div key={key}>
                     <dt className="text-sm text-muted-foreground">
                       {t(`crm.corrections.${key}`, locale)}
                     </dt>
                     <dd className="whitespace-pre-wrap">
-                      <bdi>{value}</bdi>
+                      {caseId && key === 'profile' ? (
+                        <Link
+                          to="/admin/crm/profiles/$profileId"
+                          params={{ profileId: detail.profileId }}
+                          className="touch-action break-all text-primary underline underline-offset-4"
+                        >
+                          <bdi>{value}</bdi>
+                        </Link>
+                      ) : (
+                        <bdi>{value}</bdi>
+                      )}
                     </dd>
                   </div>
                 ))}
@@ -885,73 +1156,85 @@ function Corrections({
               ))}
               {!hasEvidence && <p role="status">{t('crm.corrections.legacy', locale)}</p>}
               {detail.reviewerNotes && <p>{detail.reviewerNotes}</p>}
-              {queue?.viewer.userId === detail.createdBy ? (
+              {reviewer?.userId === detail.createdBy ? (
                 <p>{t('crm.corrections.self', locale)}</p>
               ) : (
-                queue?.viewer.canReview &&
+                reviewer?.canReview &&
                 ['Open', 'Under Review'].includes(detail.status) && (
-                  <div className="space-y-3">
-                    <Label htmlFor="case-decision">{t('crm.corrections.save', locale)}</Label>
-                    <NativeSelect
-                      disabled={busy || !!action}
-                      id="case-decision"
-                      aria-required="true"
-                      value={decision}
-                      onChange={(event) => setDecision(event.target.value as Status)}
-                      className="max-w-full rounded-lg bg-background text-foreground"
-                    >
-                      {(detail.status === 'Open'
-                        ? ['Under Review', 'Rejected']
-                        : ['Approved', 'Rejected']
-                      ).map((value) => (
-                        <option key={value} value={value}>
-                          {t(`crm.corrections.${value}`, locale)}
-                        </option>
-                      ))}
-                    </NativeSelect>
-                    <Label htmlFor="case-notes">{t('crm.corrections.notes', locale)}</Label>
-                    <textarea
-                      disabled={busy || !!action}
-                      id="case-notes"
-                      aria-required={decision === 'Rejected' || undefined}
-                      maxLength={1000}
-                      value={notes}
-                      onChange={(event) => setNotes(event.target.value)}
-                      className="block rounded border bg-background text-foreground p-2 w-full"
-                    />
-                    <Button
-                      ref={reviewButton}
-                      disabled={
-                        loading ||
-                        queueError ||
-                        detailRead.loading ||
-                        detailRead.error ||
-                        !canRetryReview ||
-                        busy ||
-                        !!action ||
-                        (decision === 'Rejected' && !notes.trim()) ||
-                        (decision === 'Approved' && !hasEvidence)
-                      }
-                      onClick={() =>
-                        captured({
-                          title: t(`crm.corrections.${decision}`, locale),
-                          description: `${detail.id} · ${detail.requestedValue} · ${notes.trim()}`,
-                          path: `/api/crm/verification-cases/${detail.id}/status`,
-                          method: 'PUT',
-                          expected: {
-                            id: detail.id,
-                            profileId: detail.profileId,
-                            status: decision,
-                          },
-                          body: {
-                            decision,
-                            ...(notes.trim() ? { reviewerNotes: notes.trim() } : {}),
-                          },
-                        })
-                      }
-                    >
-                      {t('crm.corrections.save', locale)}
-                    </Button>
+                  <div className={recordEditorSurface}>
+                    <RecordEditorSection title={tCrmForm('crm.corrections.reviewDecision', locale)}>
+                      <div className={recordEditorField}>
+                        <Label htmlFor="case-decision">
+                          {tCrmForm('crm.corrections.decision', locale)}
+                        </Label>
+                        <NativeSelect
+                          disabled={busy || !!action}
+                          id="case-decision"
+                          aria-required="true"
+                          value={decision}
+                          onChange={(event) => setDecision(event.target.value as Status)}
+                          className="w-full max-w-xs"
+                        >
+                          {(detail.status === 'Open'
+                            ? ['Under Review', 'Rejected']
+                            : ['Approved', 'Rejected']
+                          ).map((value) => (
+                            <option key={value} value={value}>
+                              {t(`crm.corrections.${value}`, locale)}
+                            </option>
+                          ))}
+                        </NativeSelect>
+                      </div>
+                      <div className={recordEditorField}>
+                        <Label htmlFor="case-notes">{t('crm.corrections.notes', locale)}</Label>
+                        <Textarea
+                          disabled={busy || !!action}
+                          id="case-notes"
+                          aria-required={decision === 'Rejected' || undefined}
+                          maxLength={1000}
+                          value={notes}
+                          onChange={(event) => setNotes(event.target.value)}
+                          rows={2}
+                          placeholder={tCrmForm('crm.corrections.noteExample', locale)}
+                          className="min-h-14 resize-y"
+                        />
+                      </div>
+                    </RecordEditorSection>
+                    <RecordEditorActions>
+                      <Button
+                        ref={reviewButton}
+                        disabled={
+                          loading ||
+                          queueError ||
+                          detailRead.loading ||
+                          detailRead.error ||
+                          !canRetryReview ||
+                          busy ||
+                          !!action ||
+                          (decision === 'Rejected' && !notes.trim()) ||
+                          (decision === 'Approved' && !hasEvidence)
+                        }
+                        onClick={() =>
+                          captured({
+                            title: t(`crm.corrections.${decision}`, locale),
+                            description: `${detail.id} · ${detail.requestedValue} · ${notes.trim()}`,
+                            path: `/api/crm/verification-cases/${detail.id}/status`,
+                            method: 'PUT',
+                            expected: {
+                              id: detail.id,
+                              profileId: detail.profileId,
+                              status: decision,
+                            },
+                            body: {
+                              decision,
+                              ...(notes.trim() ? { reviewerNotes: notes.trim() } : {}),
+                            },
+                          })
+                        }
+                      >
+                        {t('crm.corrections.save', locale)}
+                      </Button>
+                    </RecordEditorActions>
                   </div>
                 )
               )}
@@ -977,8 +1260,8 @@ function Corrections({
                 !detail ||
                 detailRead.loading ||
                 detailRead.error ||
-                !queue?.viewer.canReview ||
-                queue.viewer.userId === detail.createdBy ||
+                !reviewer?.canReview ||
+                reviewer.userId === detail.createdBy ||
                 (action.expected.status === 'Approved' && !hasEvidence)
               : !canCreate || profileRead.loading || profileRead.error || !canRetryCreation)
           }
@@ -986,9 +1269,11 @@ function Corrections({
             <div className="space-y-2">
               {action.expected.id ? (
                 <>
-                  <Button variant="outline" disabled={loading} onClick={() => void load()}>
-                    {t('crm.corrections.queueRetry', locale)}
-                  </Button>
+                  {!caseId && (
+                    <Button variant="outline" disabled={loading} onClick={() => void load()}>
+                      {t('crm.corrections.queueRetry', locale)}
+                    </Button>
+                  )}
                   <Button
                     variant="outline"
                     disabled={detailRead.loading}
@@ -1006,7 +1291,7 @@ function Corrections({
           }
           finalFocus={() =>
             action.expected.id
-              ? (reviewButton.current ?? statusSelect.current)
+              ? (reviewButton.current ?? statusSelect.current ?? heading.current)
               : createButton.current?.disabled
                 ? fieldSelect.current
                 : createButton.current
@@ -1018,6 +1303,7 @@ function Corrections({
             setAction(null);
             frozenBasis.current = null;
           }}
+          {...(caseId || creating ? { onDenied: deny } : {})}
           onUnconfirmed={() => {
             if (actionGeneration !== workGeneration.current || actionRef.current !== action) return;
             setSaved(false);
@@ -1053,9 +1339,13 @@ function Corrections({
               throw new Error('Invalid correction acknowledgement');
             completionFocus.current = action.expected.id ? 'review' : 'create';
             if (action.expected.id) clearReview();
-            else clearCreation();
+            else {
+              clearCreation();
+              if (creating) setCreatedCaseId(result.id);
+            }
             setSaved(true);
-            await queueRead.current();
+            if (caseId) detailRead.retry();
+            else await queueRead.current();
           })(workGeneration.current)}
         />
       )}

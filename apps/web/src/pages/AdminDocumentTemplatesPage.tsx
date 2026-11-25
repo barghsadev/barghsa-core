@@ -1,17 +1,36 @@
+import {
+  RecordEditorActions,
+  RecordEditorDisclosure,
+  RecordEditorSection,
+  recordEditorGrid,
+  recordEditorSurface,
+  recordFilePicker,
+  recordFilePickerAction,
+  recordFilePickerHelp,
+} from '../components/RecordEditorLayout.js';
+import {
+  StickyRecordEditorActions,
+  keepRecordFieldVisible,
+  recordEditorFormSurface,
+} from '../components/StickyRecordEditorActions.js';
+import { FileUp } from 'lucide-react';
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import { Link } from '@tanstack/react-router';
+import { documentTemplateRequiredPlaceholders } from '@barghsa/shared/admin';
 import { useOwnedDocumentRead } from '../hooks/useOwnedDocumentRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   LoadingStatus,
   Button,
   DateCell,
   TextCell,
-  Input,
-  Label,
   ListPage,
+  ListRefreshButton,
+  ListSearchInput,
   NativeSelect,
+  buttonVariants,
 } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -28,13 +47,16 @@ import {
   useZodForm,
 } from '@barghsa/ui/form';
 import { ConfigPreviewCard } from '../components/ConfigPreviewCard.js';
-import { t as settingsText } from '@barghsa/i18n/admin-ui';
 import { documentTemplateText } from '@barghsa/i18n/document-templates';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { DocumentRequestError, documentUrl } from '../lib/documents.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
+import {
+  documentTemplateRoutes as routes,
+  type DocumentTemplateView,
+} from '../lib/template-catalogue-routes.js';
 import {
   emptyTemplateMetadata as blank,
   emptyTemplateVersion,
@@ -60,12 +82,13 @@ function templateAccessDenied(error: unknown) {
   return error instanceof DocumentRequestError && [401, 403].includes(error.status);
 }
 
-type WorkspaceAddress = { id: string | null; edit: boolean };
 type DocumentTemplatesProps = {
   queries?: ListQueryBinding;
-  selection?: WorkspaceAddress & {
-    set: (id: string | null, edit: boolean, replace?: boolean) => void;
-  };
+  view?: DocumentTemplateView;
+  templateId?: string;
+  versionId?: string;
+  routeSearch?: Record<string, unknown>;
+  onSettled?: (id?: string, versionId?: string) => void;
 };
 
 export default function AdminDocumentTemplatesPage(props: DocumentTemplatesProps = {}) {
@@ -75,13 +98,25 @@ export default function AdminDocumentTemplatesPage(props: DocumentTemplatesProps
     <OwnedAdminDocumentTemplatesPage key={JSON.stringify([actor, contextRevision])} {...props} />
   );
 }
-function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplatesProps) {
+function OwnedAdminDocumentTemplatesPage({
+  queries,
+  view,
+  templateId,
+  versionId,
+  routeSearch,
+  onSettled,
+}: DocumentTemplatesProps) {
+  const listView = !view || view === 'list';
+  const catalogueNeeded = listView || view === 'new';
+  const metadataView = !view || view === 'new' || view === 'edit';
+  const publishView = !view || view === 'publish';
+  const historyView = !view || view === 'detail' || view === 'version';
   const actor = useAccountUser();
   const contextRevision = useProfileContextRevision();
   const locale = useLocale();
   const word = (key: Parameters<typeof documentTemplateText>[0]) =>
     documentTemplateText(key, locale);
-  const time = useAccountTime();
+  const time = useAccountTime(undefined, listView || historyView);
   const numbers = useNumberFormatting(locale);
   const [searchInput, setSearchInput] = useState(queries?.query.search || '');
   const [localSearch, setSearch] = useState('');
@@ -91,15 +126,12 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
   useEffect(() => {
     if (queries) setSearchInput(search);
   }, [search]);
-  const [selected, setSelected] = useState<string | null>(null);
-  const address = useRef<WorkspaceAddress>({ id: null, edit: false });
-  const editAfterRead = useRef(false);
+  const [selected, setSelected] = useState<string | null>(templateId ?? null);
+  const editAfterRead = useRef(view === 'edit');
   const workspace = useRef<HTMLDivElement>(null);
-  const routeId = selection?.id;
-  const routeEdit = selection?.edit;
   const [rows, setRows] = useState<Template[] | null>(null);
   const [detail, setDetail] = useState<Template | null>(null);
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(view === 'new');
   const owner = useRef<'metadata' | 'version' | null>(null);
   const [validating, setValidating] = useState(false);
   const [uncertain, setUncertain] = useState(false);
@@ -134,15 +166,19 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
       validationUnavailableMessage: word('validationUnavailable'),
     }
   );
-  const draft = editing && (selected !== null || rows !== null) ? metadata.watch() : null;
+  const draft =
+    metadataView && editing && (selected !== null || rows !== null) ? metadata.watch() : null;
   const { retainedFileIds: retained, files } = version.watch();
   const [linkError, setLinkError] = useState(false);
   const [links, setLinks] = useState<Record<string, string>>({});
   const [pendingLinks, setPendingLinks] = useState<string[]>([]);
-  const [state, setState] = useState<'loading' | 'ready' | 'denied' | 'error'>('loading');
+  const [state, setState] = useState<'loading' | 'ready' | 'denied' | 'error'>(
+    catalogueNeeded ? 'loading' : 'ready'
+  );
   const [revision, setRevision] = useState(0);
   const [detailRevision, setDetailRevision] = useState(0);
   const [detailState, setDetailState] = useState<'loading' | 'ready' | 'error'>('ready');
+  const [missing, setMissing] = useState(false);
   const [acceptedCriteria, setAcceptedCriteria] = useState('');
   const [versionChanged, setVersionChanged] = useState(false);
   const criteria = JSON.stringify([search, category]);
@@ -188,15 +224,13 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
       captured.current = null;
     }
   }
-  function editMetadata(value: Draft, id = selected) {
+  function editMetadata(value: Draft) {
     if (owner.current) return;
     metadata.reset(value);
     setEditing(true);
-    address.current = { id, edit: true };
-    selection?.set(id, true);
   }
 
-  function resetWorkspace(id: string | null) {
+  function resetWorkspace(id: string | null, reread = true) {
     retireLinks();
     ++linkGeneration.current;
     acceptedDetail.current = null;
@@ -215,30 +249,22 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
     setPendingLinks([]);
     setLinkError(false);
     setVersionChanged(false);
+    setMissing(false);
     setAction(null);
     setSaved(false);
-    setDetailRevision((value) => value + 1);
+    if (reread) setDetailRevision((value) => value + 1);
   }
   function choose(id: string | null, force = false) {
     if (owner.current && !force) return;
     resetWorkspace(id);
-    address.current = { id, edit: false };
-    selection?.set(id, false, force);
   }
-  useLayoutEffect(() => {
-    if (routeId === undefined || routeEdit === undefined) return;
-    if (address.current.id === routeId && address.current.edit === routeEdit) return;
-    resetWorkspace(routeId);
-    address.current = { id: routeId, edit: routeEdit };
-    if (routeEdit && routeId) editAfterRead.current = true;
-    if (routeEdit && !routeId) setEditing(true);
-  }, [routeId, routeEdit]);
   function denyAccess() {
     accessDenied.current = true;
     listRequest.current?.abort();
     setRows(null);
     setState('denied');
-    choose(null, true);
+    resetWorkspace(templateId ?? null, false);
+    editAfterRead.current = view === 'edit';
   }
   useEffect(
     () => () => {
@@ -248,6 +274,7 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
     []
   );
   useEffect(() => {
+    if (!catalogueNeeded) return;
     const controller = new AbortController();
     listRequest.current = controller;
     setState('loading');
@@ -267,6 +294,7 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
         setRows(data);
         setAcceptedCriteria(criteria);
         setState('ready');
+        if (view === 'new') setEditing(true);
       })
       .catch((reason: unknown) => {
         if (controller.signal.aborted) return;
@@ -274,8 +302,9 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
         else setState('error');
       });
     return () => controller.abort();
-  }, [category, revision, search, criteria, readList]);
+  }, [category, revision, search, criteria, readList, catalogueNeeded, view]);
   useEffect(() => {
+    if (accessDenied.current) return;
     if (!selected) {
       setDetailState('ready');
       return;
@@ -317,6 +346,7 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
           setVersionChanged(true);
         }
         acceptedDetail.current = next;
+        setMissing(false);
         setDetail(next);
         if (editAfterRead.current) {
           editAfterRead.current = false;
@@ -333,14 +363,27 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
         if (controller.signal.aborted || accessDenied.current || current !== linkGeneration.current)
           return;
         if (templateAccessDenied(reason)) denyAccess();
-        else setDetailState('error');
+        else {
+          if (view && reason instanceof DocumentRequestError && reason.status === 404) {
+            resetWorkspace(selected, false);
+            editAfterRead.current = view === 'edit';
+            setMissing(true);
+          }
+          setDetailState('error');
+        }
       });
     return () => controller.abort();
-  }, [selected, detailRevision, readDetail]);
+  }, [selected, detailRevision, readDetail, view]);
 
   async function save(event: FormEvent) {
     event.preventDefault();
-    if (!draft || owner.current || accessDenied.current || (selected && detailState !== 'ready'))
+    if (
+      !draft ||
+      owner.current ||
+      accessDenied.current ||
+      state !== 'ready' ||
+      (selected && detailState !== 'ready')
+    )
       return;
     owner.current = 'metadata';
     setValidating(true);
@@ -453,30 +496,74 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
     }
   }
 
+  const changedMetadata =
+    detail && draft ? templateMetadataFields.filter((key) => draft[key] !== detail[key]) : [];
   const latest = detail?.versions?.[0];
+  const requestedVersion = versionId
+    ? detail?.versions?.find((item) => item.id === versionId)
+    : undefined;
+  const visibleVersions = versionId
+    ? requestedVersion
+      ? [requestedVersion]
+      : []
+    : (detail?.versions ?? []);
+  const VersionHeading = view === 'version' ? 'h2' : 'h3';
+  const VersionTitle = view === 'version' ? 'h3' : 'h4';
+  const heading =
+    view === 'new'
+      ? word('add')
+      : view === 'edit'
+        ? word('edit')
+        : view === 'publish'
+          ? word('publishVersion')
+          : view === 'version' && requestedVersion
+            ? word('version') + ' ' + numbers.number(requestedVersion.versionNumber)
+            : (detail?.title ?? word('title'));
+  function refreshWorkspace() {
+    if (owner.current && !uncertain) return;
+    if (accessDenied.current && selected) {
+      accessDenied.current = false;
+      setState('ready');
+    }
+    if (catalogueNeeded) setRevision((value) => value + 1);
+    if (selected) setDetailRevision((value) => value + 1);
+  }
+  const taskView = view === 'new' || view === 'edit' || view === 'publish';
   return (
     <section
-      className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-4 md:p-8"
+      className={`mx-auto flex w-full min-w-0 flex-col gap-4 ${taskView ? 'max-w-3xl' : 'max-w-6xl'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {time.notice}
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">{word('title')}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">{word('description')}</p>
+      <header className="flex min-w-0 flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          {view && !listView && (
+            <Link
+              to={templateId && view !== 'detail' ? routes.detail : routes.list}
+              params={templateId ? { templateId } : {}}
+              search={routeSearch}
+              className="touch-action self-start text-sm text-primary underline underline-offset-4"
+            >
+              {templateId && view !== 'detail' ? (detail?.title ?? word('open')) : word('title')}
+            </Link>
+          )}
+          <h1 className="text-2xl font-semibold [overflow-wrap:anywhere]" dir="auto">
+            {heading}
+          </h1>
+          {listView && <p className="mt-1 text-sm text-muted-foreground">{word('description')}</p>}
         </div>
-        <Button
-          variant="outline"
-          disabled={validating || !!action || state === 'loading' || detailState === 'loading'}
-          onClick={() => {
-            if (owner.current && !uncertain) return;
-            setRevision((value) => value + 1);
-            setDetailRevision((value) => value + 1);
-          }}
-        >
-          {word('refresh')}
-        </Button>
+        {!listView && (
+          <ListRefreshButton
+            label={word('refresh')}
+            refreshing={state === 'loading' || detailState === 'loading'}
+            disabled={validating || !!action}
+            onClick={refreshWorkspace}
+          />
+        )}
       </header>
+      {!listView && state === 'denied' && <p role="alert">{word('denied')}</p>}
+      {view === 'new' && state === 'error' && <p role="alert">{word('error')}</p>}
+      {view === 'new' && state === 'loading' && <LoadingStatus>{word('loading')}</LoadingStatus>}
       <CommandFeedback message={saved ? word('saved') : null} />
       {linkError ? <p role="alert">{word('linkError')}</p> : null}
       {uncertain && (
@@ -498,9 +585,8 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
         </div>
       )}
       <ListPage>
-        <ListPage.Toolbar>
+        {listView && (
           <form
-            className="flex min-w-0 flex-wrap items-end gap-3"
             onSubmit={(event) => {
               event.preventDefault();
               if (owner.current) return;
@@ -508,301 +594,266 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
               else setSearch(searchInput.trim());
             }}
           >
-            <div className="min-w-52 flex-1 space-y-1">
-              <Label htmlFor="document-template-search">{word('search')}</Label>
-              <Input
-                id="document-template-search"
-                value={searchInput}
-                maxLength={100}
-                disabled={locked}
-                onChange={(event) => setSearchInput(event.target.value)}
-              />
-            </div>
-            <div className="min-w-44 space-y-1">
-              <Label htmlFor="document-template-category">{word('category')}</Label>
-              <NativeSelect
-                id="document-template-category"
-                className="w-full"
-                value={category}
-                disabled={locked}
-                onChange={(event) => {
-                  if (owner.current) return;
-                  if (queries) queries.setQuery({ filters: { category: event.target.value } });
-                  else setCategory(event.target.value as Category | '');
-                }}
-              >
-                <option value="">{word('allCategories')}</option>
-                {(['general', 'contract', 'invoice'] as const).map((value) => (
-                  <option key={value} value={value}>
-                    {word(value)}
-                  </option>
-                ))}
-              </NativeSelect>
-            </div>
-            <Button type="submit" variant="outline" disabled={locked}>
-              {word('search')}
-            </Button>
-          </form>
-        </ListPage.Toolbar>
-        <div className="flex min-w-0 flex-col gap-8">
-          <div className="min-w-0 space-y-3">
-            <div role="region" aria-label={word('listTitle')}>
-              <ListPage.Toolbar>
-                <Button
-                  disabled={locked || rows === null || state === 'denied'}
-                  onClick={() => {
+            <ListPage.Toolbar
+              search={
+                <ListSearchInput
+                  label={word('search')}
+                  id="document-template-search"
+                  value={searchInput}
+                  maxLength={100}
+                  disabled={locked}
+                  onChange={(event) => setSearchInput(event.target.value)}
+                />
+              }
+              sort={
+                <NativeSelect
+                  aria-label={word('category')}
+                  id="document-template-category"
+                  className="w-full"
+                  value={category}
+                  disabled={locked}
+                  onChange={(event) => {
                     if (owner.current) return;
-                    resetWorkspace(null);
-                    editMetadata(blank(), null);
-                    workspace.current?.focus();
+                    if (queries) queries.setQuery({ filters: { category: event.target.value } });
+                    else setCategory(event.target.value as Category | '');
                   }}
                 >
-                  {word('add')}
+                  <option value="">{word('allCategories')}</option>
+                  {(['general', 'contract', 'invoice'] as const).map((value) => (
+                    <option key={value} value={value}>
+                      {word(value)}
+                    </option>
+                  ))}
+                </NativeSelect>
+              }
+              actions={
+                <Button type="submit" variant="secondary" disabled={locked}>
+                  {word('search')}
                 </Button>
-              </ListPage.Toolbar>
-              <ListPage.Content
-                loading={state === 'loading'}
-                error={state === 'error' || state === 'denied'}
-                empty={!visibleRows?.length}
-                retainContent={!!visibleRows?.length && state !== 'denied'}
-                loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
-                errorView={
-                  <div role="alert" className="space-y-2">
-                    <p>{word(state === 'denied' ? 'denied' : 'error')}</p>
-                    {state !== 'denied' && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        disabled={validating || !!action}
-                        onClick={() => {
-                          if (!owner.current || uncertain) setRevision((value) => value + 1);
-                        }}
-                      >
-                        {word('retry')}
-                      </Button>
-                    )}
-                  </div>
-                }
-                emptyView={<p className="text-sm text-muted-foreground">{word('empty')}</p>}
-              >
-                <OperationalQueueTable
-                  locale={locale}
-                  cardHeading="h2"
-                  rows={visibleRows ?? []}
-                  caption={word('listTitle')}
-                  scrollLabel={word('tableTitle')}
-                  nameHeader={word('name')}
-                  loading={state === 'loading'}
-                  emptyMessage={word('empty')}
-                  renderName={(row) => (
+              }
+              refresh={
+                <ListRefreshButton
+                  label={word('refresh')}
+                  refreshing={state === 'loading' || detailState === 'loading'}
+                  disabled={validating || !!action}
+                  onClick={refreshWorkspace}
+                />
+              }
+            />
+          </form>
+        )}
+        <div className="flex min-w-0 flex-col gap-8">
+          {listView && (
+            <div className="min-w-0 space-y-3">
+              <div role="region" aria-label={word('listTitle')}>
+                <ListPage.Toolbar>
+                  {view ? (
+                    state === 'ready' && (
+                      <Link to={routes.new} search={routeSearch} className={buttonVariants()}>
+                        {word('add')}
+                      </Link>
+                    )
+                  ) : (
                     <Button
-                      type="button"
-                      variant="link"
-                      className="h-auto max-w-full whitespace-normal text-start"
-                      aria-label={`${word('open')} ${row.title}`}
-                      aria-current={selected === row.id ? 'page' : undefined}
-                      disabled={locked}
+                      disabled={locked || rows === null || state === 'denied'}
                       onClick={() => {
-                        if (owner.current && !uncertain) return;
-                        choose(row.id);
+                        if (owner.current) return;
+                        resetWorkspace(null);
+                        editMetadata(blank());
                         workspace.current?.focus();
                       }}
                     >
-                      <TextCell value={row.title} />
+                      {word('add')}
                     </Button>
                   )}
-                  fields={[
-                    {
-                      id: 'category',
-                      label: word('category'),
-                      render: (row) => <>{word(row.category)}</>,
-                    },
-                    {
-                      id: 'description',
-                      label: word('details'),
-                      render: (row) => (
-                        <span className="whitespace-pre-wrap">
-                          <TextCell value={row.description} />
-                        </span>
-                      ),
-                    },
-                    {
-                      id: 'versions',
-                      label: word('versionCount'),
-                      render: (row) => (
-                        <bdi className="tabular-nums">{numbers.number(row.versionCount)}</bdi>
-                      ),
-                    },
-                    {
-                      id: 'updated',
-                      label: word('updated'),
-                      render: (row) => (
-                        <DateCell value={row.updatedAt} format={(stamp) => time.format(stamp)} />
-                      ),
-                    },
-                  ]}
-                />
-              </ListPage.Content>
-            </div>
-          </div>
-          <div
-            ref={workspace}
-            className="min-w-0 scroll-mt-20 space-y-7 focus-visible:rounded-lg focus-visible:outline-2 focus-visible:outline-ring"
-            role="region"
-            aria-label={word('workspaceTitle')}
-            tabIndex={-1}
-          >
-            {detailState === 'loading' && <LoadingStatus>{word('loadingDetail')}</LoadingStatus>}
-            {detailState === 'error' && (
-              <div role="alert" className="space-y-2">
-                <p>{word('detailError')}</p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={validating || !!action}
-                  onClick={() => {
-                    if (!owner.current || uncertain) setDetailRevision((value) => value + 1);
-                  }}
-                >
-                  {word('retry')}
-                </Button>
-              </div>
-            )}
-            {versionChanged && <p role="status">{word('versionChanged')}</p>}
-            {detail && !draft ? (
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <h2 className="text-xl font-semibold" dir="auto">
-                    {detail.title}
-                  </h2>
-                  {detail.description ? (
-                    <p
-                      className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground"
-                      dir="auto"
-                    >
-                      {detail.description}
-                    </p>
-                  ) : null}
-                </div>
-                <Button
-                  variant="outline"
-                  disabled={locked || detailState !== 'ready'}
-                  onClick={() =>
-                    editMetadata({
-                      title: detail.title,
-                      description: detail.description,
-                      category: detail.category,
-                    })
+                </ListPage.Toolbar>
+                <ListPage.Content
+                  loading={state === 'loading'}
+                  error={state === 'error' || state === 'denied'}
+                  empty={!visibleRows?.length}
+                  retainContent={!!visibleRows?.length && state !== 'denied'}
+                  loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
+                  errorView={
+                    <div role="alert" className="space-y-2">
+                      <p>{word(state === 'denied' ? 'denied' : 'error')}</p>
+                      {state !== 'denied' && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={validating || !!action}
+                          onClick={() => {
+                            if (!owner.current || uncertain) setRevision((value) => value + 1);
+                          }}
+                        >
+                          {word('retry')}
+                        </Button>
+                      )}
+                    </div>
                   }
+                  emptyView={<p className="text-sm text-muted-foreground">{word('empty')}</p>}
                 >
-                  {word('edit')}
-                </Button>
-              </div>
-            ) : null}
-            {draft ? (
-              <Form {...metadata}>
-                <form
-                  key={`metadata-${linkGeneration.current}`}
-                  noValidate
-                  className="space-y-4 border-y py-5"
-                  onSubmit={save}
-                  aria-label={word('edit')}
-                  onChangeCapture={(event) => {
-                    if (owner.current) {
-                      event.preventDefault();
-                      event.stopPropagation();
-                    }
-                  }}
-                >
-                  <h2 className="text-xl font-semibold">{word(selected ? 'edit' : 'add')}</h2>
-                  {metadata.formState.errors.root?.validation?.message && (
-                    <p role="alert">{metadata.formState.errors.root.validation.message}</p>
-                  )}
-                  <FormInput
-                    control={metadata.control}
-                    name="title"
-                    label={word('name')}
-                    id="document-template-title"
-                    disabled={locked}
-                    inputProps={{ autoFocus: true, maxLength: 200, 'aria-required': true }}
-                  />
-                  <FormTextarea
-                    control={metadata.control}
-                    name="description"
-                    label={word('details')}
-                    id="document-template-description"
-                    disabled={locked}
-                    inputProps={{ className: 'min-h-24', maxLength: 2000 }}
-                  />
-                  <FormField
-                    control={metadata.control}
-                    name="category"
-                    render={({ field }) => (
-                      <FormItem id="document-template-kind">
-                        <FormLabel>{word('category')}</FormLabel>
-                        <FormControl>
-                          <select
-                            {...field}
-                            id="document-template-kind"
-                            aria-required="true"
-                            className="h-10 w-full rounded-md border bg-background px-3"
-                            disabled={locked}
-                          >
-                            {(['general', 'contract', 'invoice'] as const).map((value) => (
-                              <option key={value} value={value}>
-                                {word(value)}
-                              </option>
-                            ))}
-                          </select>
-                        </FormControl>
-                        <FormMessage reserveSpace />
-                      </FormItem>
-                    )}
-                  />
-                  <ConfigPreviewCard
-                    title={`${settingsText('admin.settings.comparison', locale)}: ${word('edit')}`}
-                    current={
-                      detail ? (
-                        <TemplateSummary value={detail} locale={locale} />
+                  <OperationalQueueTable
+                    locale={locale}
+                    cardHeading="h2"
+                    rows={visibleRows ?? []}
+                    caption={word('listTitle')}
+                    scrollLabel={word('tableTitle')}
+                    nameHeader={word('name')}
+                    loading={state === 'loading'}
+                    emptyMessage={word('empty')}
+                    renderName={(row) =>
+                      view ? (
+                        <Link
+                          to={routes.detail}
+                          params={{ templateId: row.id }}
+                          search={routeSearch}
+                          className="touch-action text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
+                          dir="auto"
+                        >
+                          {row.title}
+                        </Link>
                       ) : (
-                        <p>{settingsText('admin.settings.none', locale)}</p>
+                        <Button
+                          type="button"
+                          variant="link"
+                          className="h-auto max-w-full whitespace-normal text-start"
+                          aria-label={`${word('open')} ${row.title}`}
+                          aria-current={selected === row.id ? 'page' : undefined}
+                          disabled={locked}
+                          onClick={() => {
+                            if (owner.current && !uncertain) return;
+                            choose(row.id);
+                            workspace.current?.focus();
+                          }}
+                        >
+                          <TextCell value={row.title} />
+                        </Button>
                       )
                     }
-                    draft={<TemplateSummary value={draft} locale={locale} />}
+                    fields={[
+                      {
+                        id: 'category',
+                        label: word('category'),
+                        render: (row) => <>{word(row.category)}</>,
+                      },
+                      {
+                        id: 'description',
+                        label: word('details'),
+                        render: (row) => (
+                          <span className="whitespace-pre-wrap">
+                            <TextCell value={row.description} />
+                          </span>
+                        ),
+                      },
+                      {
+                        id: 'versions',
+                        label: word('versionCount'),
+                        render: (row) => (
+                          <bdi className="tabular-nums">{numbers.number(row.versionCount)}</bdi>
+                        ),
+                      },
+                      {
+                        id: 'updated',
+                        label: word('updated'),
+                        render: (row) => (
+                          <DateCell value={row.updatedAt} format={(stamp) => time.format(stamp)} />
+                        ),
+                      },
+                    ]}
                   />
-                  <div className="flex gap-2">
-                    <FormSubmit
-                      loading={validating && owner.current === 'metadata'}
-                      disabled={locked || (!!selected && detailState !== 'ready')}
-                    >
-                      {word('save')}
-                    </FormSubmit>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={locked}
-                      onClick={() => {
-                        if (owner.current) return;
-                        setEditing(false);
-                        address.current = { id: selected, edit: false };
-                        selection?.set(selected, false);
-                      }}
-                    >
-                      {word('cancel')}
-                    </Button>
+                </ListPage.Content>
+              </div>
+            </div>
+          )}
+          {view !== 'list' && (
+            <div
+              ref={workspace}
+              className="min-w-0 scroll-mt-20 space-y-7 focus-visible:rounded-lg focus-visible:outline-2 focus-visible:outline-ring"
+              role="region"
+              aria-label={word('workspaceTitle')}
+              tabIndex={-1}
+            >
+              {detailState === 'loading' && <LoadingStatus>{word('loadingDetail')}</LoadingStatus>}
+              {detailState === 'error' && (
+                <div role="alert" className="space-y-2">
+                  <p>{word(missing ? 'missingTemplate' : 'detailError')}</p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={validating || !!action}
+                    onClick={() => {
+                      if (!owner.current || uncertain) setDetailRevision((value) => value + 1);
+                    }}
+                  >
+                    {word('retry')}
+                  </Button>
+                </div>
+              )}
+              {versionChanged && <p role="status">{word('versionChanged')}</p>}
+              {detail && !draft && (!view || view === 'detail' || view === 'publish') ? (
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    {!view && (
+                      <h2 className="text-xl font-semibold" dir="auto">
+                        {detail.title}
+                      </h2>
+                    )}
+                    {detail.description ? (
+                      <p
+                        className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground"
+                        dir="auto"
+                      >
+                        {detail.description}
+                      </p>
+                    ) : null}
+                    {view && <p className="mt-1 text-sm font-medium">{word(detail.category)}</p>}
                   </div>
-                </form>
-              </Form>
-            ) : null}
-            {detail ? (
-              <div className="grid items-start gap-6 xl:grid-cols-2">
-                <Form {...version}>
+                  {view === 'detail' ? (
+                    <div className="flex flex-wrap gap-2">
+                      <Link
+                        to={routes.edit}
+                        params={{ templateId: detail.id }}
+                        search={routeSearch}
+                        className={buttonVariants({ variant: 'outline' })}
+                      >
+                        {word('edit')}
+                      </Link>
+                      <Link
+                        to={routes.version}
+                        params={{ templateId: detail.id, version: 'new' }}
+                        search={routeSearch}
+                        className={buttonVariants()}
+                      >
+                        {word('publishVersion')}
+                      </Link>
+                    </div>
+                  ) : (
+                    !view && (
+                      <Button
+                        variant="outline"
+                        disabled={locked || detailState !== 'ready'}
+                        onClick={() =>
+                          editMetadata({
+                            title: detail.title,
+                            description: detail.description,
+                            category: detail.category,
+                          })
+                        }
+                      >
+                        {word('edit')}
+                      </Button>
+                    )
+                  )}
+                </div>
+              ) : null}
+              {draft ? (
+                <Form {...metadata}>
                   <form
-                    key={`version-${linkGeneration.current}`}
+                    key={`metadata-${linkGeneration.current}`}
                     noValidate
-                    className="min-w-0 space-y-4 rounded-lg border bg-card p-4"
-                    onSubmit={createVersion}
-                    aria-label={word('publishVersion')}
+                    className={`${recordEditorSurface} [&_[data-slot=form-message]]:min-h-4`}
+                    onSubmit={save}
+                    aria-label={word('edit')}
                     onChangeCapture={(event) => {
                       if (owner.current) {
                         event.preventDefault();
@@ -810,254 +861,460 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
                       }
                     }}
                   >
-                    <h3 className="text-lg font-semibold">{word('publishVersion')}</h3>
-                    {version.formState.errors.root?.validation?.message && (
-                      <p role="alert">{version.formState.errors.root.validation.message}</p>
+                    {metadata.formState.errors.root?.validation?.message && (
+                      <p role="alert" className="mx-4 mt-4 text-sm text-destructive">
+                        {metadata.formState.errors.root.validation.message}
+                      </p>
                     )}
-                    <p className="text-sm text-muted-foreground">{word('versionHelp')}</p>
-                    <ConfigPreviewCard
-                      title={`${settingsText('admin.settings.comparison', locale)}: ${word('publishVersion')}`}
-                      current={
-                        <ul className="flex flex-col gap-2">
-                          {latest?.files.map((file) => (
-                            <li key={file.id} dir="auto">
-                              {file.originalName}
-                            </li>
-                          ))}
-                        </ul>
-                      }
-                      draft={
-                        <ul className="flex flex-col gap-2">
-                          {latest?.files
-                            .filter((file) => retained.includes(file.id))
-                            .map((file) => (
-                              <li key={file.id} dir="auto">
-                                {file.originalName}
-                              </li>
-                            ))}
-                          {files.map((file, index) => (
-                            <li key={index} dir="auto">
-                              {file.name}
-                            </li>
-                          ))}
-                        </ul>
-                      }
-                    />
-
-                    {latest?.files.length ? (
-                      <FormField
-                        control={version.control}
-                        name="retainedFileIds"
-                        render={({ field }) => (
-                          <FormItem id="document-template-retained">
-                            <FormControl>
-                              <fieldset
-                                className="space-y-2"
-                                ref={field.ref}
-                                tabIndex={-1}
-                                onBlur={field.onBlur}
-                                disabled={locked}
-                              >
-                                <legend className="font-medium">{word('currentFiles')}</legend>
-                                {latest.files.map((file) => (
-                                  <label
-                                    key={file.id}
-                                    className="touch-label flex items-center gap-2 text-sm"
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      checked={retained.includes(file.id)}
-                                      disabled={locked}
-                                      onChange={(event) =>
-                                        field.onChange(
-                                          event.target.checked
-                                            ? [...retained, file.id]
-                                            : retained.filter((id) => id !== file.id)
-                                        )
-                                      }
-                                    />
-                                    <span dir="auto">{file.originalName}</span>
-                                    <span className="text-muted-foreground">
-                                      ({word('retain')})
-                                    </span>
-                                  </label>
-                                ))}
-                              </fieldset>
-                            </FormControl>
-                            <FormMessage reserveSpace />
-                          </FormItem>
-                        )}
+                    <RecordEditorSection title={word('templateDetails')}>
+                      <div className={recordEditorGrid}>
+                        <FormInput
+                          control={metadata.control}
+                          name="title"
+                          label={word('name')}
+                          id="document-template-title"
+                          disabled={locked}
+                          inputProps={{ dir: 'auto', maxLength: 200, 'aria-required': true }}
+                        />
+                        <FormField
+                          control={metadata.control}
+                          name="category"
+                          render={({ field }) => (
+                            <FormItem id="document-template-kind">
+                              <FormLabel>{word('category')}</FormLabel>
+                              <FormControl>
+                                <NativeSelect
+                                  {...field}
+                                  id="document-template-kind"
+                                  aria-required="true"
+                                  className="w-full"
+                                  disabled={locked}
+                                >
+                                  {(['general', 'contract', 'invoice'] as const).map((value) => (
+                                    <option key={value} value={value}>
+                                      {word(value)}
+                                    </option>
+                                  ))}
+                                </NativeSelect>
+                              </FormControl>
+                              <FormMessage reserveSpace />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <FormTextarea
+                        control={metadata.control}
+                        name="description"
+                        label={word('details')}
+                        id="document-template-description"
+                        disabled={locked}
+                        inputProps={{
+                          className:
+                            'max-h-40 min-h-14 resize-y placeholder-shown:[direction:inherit]',
+                          maxLength: 2000,
+                          dir: 'auto',
+                          rows: 2,
+                          placeholder: word('descriptionExample'),
+                        }}
                       />
-                    ) : null}
-                    <FormField
-                      control={version.control}
-                      name="files"
-                      render={({ field }) => (
-                        <FormItem id="document-template-files">
-                          <div
-                            className="space-y-1 rounded-md border border-dashed p-4"
-                            onDragOver={(event) => event.preventDefault()}
-                            onDrop={(event) => {
-                              event.preventDefault();
-                              selectFiles([...event.dataTransfer.files]);
-                            }}
-                          >
-                            <FormLabel>{word('newFiles')}</FormLabel>
-                            <FormControl>
-                              <input
-                                id="document-template-files"
-                                type="file"
-                                accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                multiple
-                                name={field.name}
-                                ref={field.ref}
-                                onBlur={field.onBlur}
-                                aria-required={!retained.length || undefined}
-                                aria-describedby="document-template-file-help"
-                                disabled={locked}
-                                className="block w-full text-sm"
-                                onChange={(event) => selectFiles([...(event.target.files ?? [])])}
-                              />
-                            </FormControl>
-                            <p
-                              id="document-template-file-help"
-                              className="text-xs text-muted-foreground"
-                            >
-                              {word('fileHelp')}
-                            </p>
-                            {files.length ? (
-                              <p className="text-sm" dir="auto">
-                                {files.map((file) => file.name).join(', ')}
-                              </p>
-                            ) : null}
-                            <FormMessage reserveSpace />
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                    <FormInput
-                      control={version.control}
-                      name="changeSummary"
-                      label={word('changeSummary')}
-                      id="document-template-summary"
-                      disabled={locked}
-                      inputProps={{ maxLength: 500 }}
-                    />
-                    <FormSubmit
-                      loading={validating && owner.current === 'version'}
-                      disabled={locked || detailState !== 'ready'}
-                    >
-                      {word('publishVersion')}
-                    </FormSubmit>
+                    </RecordEditorSection>
+                    {detail && changedMetadata.length > 0 && (
+                      <RecordEditorDisclosure label={word('compareChanges')}>
+                        <ConfigPreviewCard
+                          title={word('templateDetails')}
+                          current={
+                            <TemplateSummary
+                              value={detail}
+                              locale={locale}
+                              fields={changedMetadata}
+                            />
+                          }
+                          draft={
+                            <TemplateSummary
+                              value={draft}
+                              locale={locale}
+                              fields={changedMetadata}
+                            />
+                          }
+                        />
+                      </RecordEditorDisclosure>
+                    )}
+                    <RecordEditorActions>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={locked}
+                        onClick={() => {
+                          if (owner.current) return;
+                          setEditing(false);
+                          onSettled?.(templateId);
+                        }}
+                      >
+                        {word('cancel')}
+                      </Button>
+                      <FormSubmit
+                        loading={validating && owner.current === 'metadata'}
+                        disabled={
+                          locked || state !== 'ready' || (!!selected && detailState !== 'ready')
+                        }
+                      >
+                        {word('save')}
+                      </FormSubmit>
+                    </RecordEditorActions>
                   </form>
                 </Form>
-                <section
-                  className="min-w-0 space-y-4 rounded-lg border bg-card p-4"
-                  aria-label={word('history')}
-                >
-                  <h3 className="text-lg font-semibold">{word('history')}</h3>
-                  {detail.versions?.length ? (
-                    detail.versions.map((version) => (
-                      <div key={version.id} className="space-y-3 border-b pb-5 last:border-0">
-                        <div className="flex flex-wrap items-baseline gap-3">
-                          <h4 className="font-semibold">
-                            {word('version')} {version.versionNumber}
-                          </h4>
-                          <time
-                            className="text-xs text-muted-foreground"
-                            dateTime={version.createdAt}
-                          >
-                            {time.format(version.createdAt)}
-                          </time>
-                        </div>
-                        {version.changeSummary ? (
-                          <p className="text-sm" dir="auto">
-                            {version.changeSummary}
+              ) : null}
+              {detail && (publishView || historyView) ? (
+                <div className={view ? 'max-w-4xl' : 'grid items-start gap-6 xl:grid-cols-2'}>
+                  {publishView && (
+                    <Form {...version}>
+                      <form
+                        key={`version-${linkGeneration.current}`}
+                        noValidate
+                        className={`${recordEditorFormSurface} [&_[data-slot=form-message]]:min-h-4`}
+                        onSubmit={createVersion}
+                        onFocus={keepRecordFieldVisible}
+                        aria-label={word('publishVersion')}
+                        onChangeCapture={(event) => {
+                          if (owner.current) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                          }
+                        }}
+                      >
+                        {version.formState.errors.root?.validation?.message && (
+                          <p role="alert" className="mx-4 mt-4 text-sm text-destructive">
+                            {version.formState.errors.root.validation.message}
                           </p>
-                        ) : null}
-                        <ul className="space-y-2 text-sm">
-                          {version.files.map((file) => {
-                            const key = `${version.id}:${file.id}`;
-                            const pending = pendingLinks.includes(key);
-                            return (
-                              <li key={file.id} className="flex flex-wrap items-center gap-2">
-                                <span dir="auto">{file.originalName}</span>
-                                <Button
-                                  type="button"
-                                  variant="outline"
-                                  loading={pending}
-                                  onClick={() => void getLink(version.id, file.id)}
+                        )}
+                        <RecordEditorSection
+                          title={word('fileSelection')}
+                          description={word('versionHelp')}
+                        >
+                          {latest?.files.length ? (
+                            <FormField
+                              control={version.control}
+                              name="retainedFileIds"
+                              render={({ field }) => (
+                                <FormItem id="document-template-retained">
+                                  <FormControl>
+                                    <fieldset
+                                      className="space-y-2"
+                                      ref={field.ref}
+                                      tabIndex={-1}
+                                      onBlur={field.onBlur}
+                                      disabled={locked}
+                                    >
+                                      <legend className="font-medium">
+                                        {word('currentFiles')}
+                                      </legend>
+                                      {latest.files.map((file) => (
+                                        <label
+                                          key={file.id}
+                                          className="touch-label flex flex-wrap items-center gap-2 text-sm [overflow-wrap:anywhere]"
+                                        >
+                                          <input
+                                            type="checkbox"
+                                            checked={retained.includes(file.id)}
+                                            disabled={locked}
+                                            onChange={(event) =>
+                                              field.onChange(
+                                                event.target.checked
+                                                  ? [...retained, file.id]
+                                                  : retained.filter((id) => id !== file.id)
+                                              )
+                                            }
+                                          />
+                                          <span dir="auto">{file.originalName}</span>
+                                          <span className="text-muted-foreground">
+                                            ({word('retain')})
+                                          </span>
+                                        </label>
+                                      ))}
+                                    </fieldset>
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          ) : null}
+                          <FormField
+                            control={version.control}
+                            name="files"
+                            render={({ field }) => (
+                              <FormItem id="document-template-files">
+                                <div
+                                  className={recordFilePicker}
+                                  onDragOver={(event) => event.preventDefault()}
+                                  onDrop={(event) => {
+                                    event.preventDefault();
+                                    selectFiles([...event.dataTransfer.files]);
+                                  }}
                                 >
-                                  {word('download')}
-                                </Button>
-                                {pending && (
-                                  <LoadingStatus className="sr-only">
-                                    {word('linkLoading')}
-                                  </LoadingStatus>
+                                  <div className="relative min-w-0 max-w-full rounded-lg focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 has-[:disabled]:opacity-60">
+                                    <FormLabel
+                                      className={buttonVariants({
+                                        variant: 'outline',
+                                        className: recordFilePickerAction,
+                                      })}
+                                    >
+                                      <FileUp aria-hidden="true" className="size-4 shrink-0" />
+                                      {word(files.length ? 'changeFiles' : 'chooseFiles')}
+                                    </FormLabel>
+                                    <FormControl>
+                                      <input
+                                        type="file"
+                                        accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                        multiple
+                                        name={field.name}
+                                        ref={field.ref}
+                                        onBlur={field.onBlur}
+                                        aria-required={!retained.length || undefined}
+                                        aria-describedby="document-template-file-help"
+                                        disabled={locked}
+                                        className="absolute inset-0 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
+                                        onChange={(event) =>
+                                          selectFiles([...(event.target.files ?? [])])
+                                        }
+                                      />
+                                    </FormControl>
+                                  </div>
+                                  <div className={recordFilePickerHelp}>
+                                    <p className="hidden [@media(pointer:fine)]:block">
+                                      {word('dropHint')}
+                                    </p>
+                                    <p id="document-template-file-help">{word('fileHelp')}</p>
+                                  </div>
+                                </div>
+                                <FormMessage />
+                                {!!files.length && (
+                                  <ul className="list-disc space-y-1 ps-5 text-sm [overflow-wrap:anywhere]">
+                                    {files.map((file, index) => (
+                                      <li key={index}>
+                                        <bdi>{file.name}</bdi>
+                                      </li>
+                                    ))}
+                                  </ul>
                                 )}
-                                {links[key] ? (
-                                  <a
-                                    href={links[key]}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    referrerPolicy="no-referrer"
-                                    className="text-primary underline"
-                                  >
-                                    {word('openFile')}
-                                  </a>
-                                ) : null}
-                              </li>
-                            );
-                          })}
-                        </ul>
-                        <div className="text-sm">
-                          <span className="font-medium">{word('placeholders')}: </span>
-                          {version.placeholders.length ? (
-                            <span dir="ltr">
-                              {version.placeholders.map((name) => `{{${name}}}`).join(', ')}
-                            </span>
-                          ) : (
-                            word('noPlaceholders')
-                          )}
-                        </div>
-                        {version.missingRequired.length ? (
-                          <p className="text-sm text-amber-700 dark:text-amber-300">
-                            {word('missingRequired')}:{' '}
-                            <span dir="ltr">
-                              {version.missingRequired.map((name) => `{{${name}}}`).join(', ')}
-                            </span>
-                          </p>
-                        ) : null}
-                        {version.conflicts.length ? (
-                          <details className="text-sm">
-                            <summary className="cursor-pointer font-medium">
-                              {word('conflicts')} ({version.conflicts.length})
-                            </summary>
-                            <p className="my-2 text-muted-foreground">{word('conflictsHelp')}</p>
-                            {version.conflicts.map((conflict) => (
-                              <div key={conflict.name} className="my-2">
-                                <strong dir="ltr">{`{{${conflict.name}}}`}</strong>
-                                <ul className="ms-4 list-disc">
-                                  {conflict.files.map((file, index) => (
-                                    <li key={`${file.fileName}-${index}`}>
-                                      <span dir="auto">{file.fileName}</span>:{' '}
-                                      <span dir="auto">{file.context}</span>
+                              </FormItem>
+                            )}
+                          />
+                          <FormInput
+                            control={version.control}
+                            name="changeSummary"
+                            label={word('changeSummary')}
+                            id="document-template-summary"
+                            disabled={locked}
+                            inputProps={{ maxLength: 500, dir: 'auto' }}
+                          />
+                        </RecordEditorSection>
+                        {view === 'publish' && (
+                          <div className="px-4 py-3 sm:px-6">
+                            <dl className="space-y-1 rounded-lg border bg-muted p-3 text-sm">
+                              <dt className="font-medium">{word('fieldsChecked')}</dt>
+                              <dd className="[overflow-wrap:anywhere]" dir="ltr">
+                                {documentTemplateRequiredPlaceholders
+                                  .map((key) => '{{' + key + '}}')
+                                  .join(', ')}
+                              </dd>
+                              {!!latest?.missingRequired.length && (
+                                <>
+                                  <dt className="pt-2 font-medium">
+                                    {word('currentMissingRequired')}
+                                  </dt>
+                                  <dd className="[overflow-wrap:anywhere]" dir="ltr">
+                                    {latest.missingRequired
+                                      .map((key) => '{{' + key + '}}')
+                                      .join(', ')}
+                                  </dd>
+                                </>
+                              )}
+                            </dl>
+                          </div>
+                        )}
+                        <RecordEditorDisclosure label={word('compareFiles')}>
+                          <ConfigPreviewCard
+                            title={word('compareFiles')}
+                            hideTitle
+                            current={
+                              <ul className="flex flex-col gap-2">
+                                {latest?.files.map((file) => (
+                                  <li key={file.id} dir="auto">
+                                    {file.originalName}
+                                  </li>
+                                ))}
+                              </ul>
+                            }
+                            draft={
+                              <ul className="flex flex-col gap-2">
+                                {latest?.files
+                                  .filter((file) => retained.includes(file.id))
+                                  .map((file) => (
+                                    <li key={file.id} dir="auto">
+                                      {file.originalName}
                                     </li>
                                   ))}
-                                </ul>
-                              </div>
-                            ))}
-                          </details>
-                        ) : null}
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-sm text-muted-foreground">{word('noVersions')}</p>
+                                {files.map((file, index) => (
+                                  <li key={index} dir="auto">
+                                    {file.name}
+                                  </li>
+                                ))}
+                              </ul>
+                            }
+                          />
+                        </RecordEditorDisclosure>
+                        <StickyRecordEditorActions>
+                          <FormSubmit
+                            loading={validating && owner.current === 'version'}
+                            disabled={locked || detailState !== 'ready'}
+                          >
+                            {word('publishVersion')}
+                          </FormSubmit>
+                        </StickyRecordEditorActions>
+                      </form>
+                    </Form>
                   )}
-                </section>
-              </div>
-            ) : null}
-          </div>
+                  {historyView && (
+                    <section
+                      className="min-w-0 space-y-4 rounded-lg border bg-card p-4"
+                      aria-label={word('history')}
+                    >
+                      {view === 'version' ? (
+                        <VersionHeading className="text-lg font-semibold">
+                          {word('versionFiles')}
+                        </VersionHeading>
+                      ) : view ? (
+                        <h2 className="text-lg font-semibold">{word('history')}</h2>
+                      ) : (
+                        <VersionHeading className="text-lg font-semibold">
+                          {word('history')}
+                        </VersionHeading>
+                      )}
+                      {visibleVersions.length ? (
+                        visibleVersions.map((version) => (
+                          <div key={version.id} className="space-y-3 border-b pb-5 last:border-0">
+                            <div className="flex flex-wrap items-baseline gap-3">
+                              {view === 'detail' ? (
+                                <h3 className="font-semibold">
+                                  <Link
+                                    to={routes.version}
+                                    params={{ templateId: detail.id, version: version.id }}
+                                    search={routeSearch}
+                                    className="touch-action text-primary underline underline-offset-4"
+                                  >
+                                    {word('version')} {numbers.number(version.versionNumber)}
+                                  </Link>
+                                </h3>
+                              ) : (
+                                !view && (
+                                  <VersionTitle className="font-semibold">
+                                    {word('version')} {version.versionNumber}
+                                  </VersionTitle>
+                                )
+                              )}
+                              <time
+                                className="text-xs text-muted-foreground"
+                                dateTime={version.createdAt}
+                              >
+                                {time.format(version.createdAt)}
+                              </time>
+                            </div>
+                            {version.changeSummary ? (
+                              <p className="text-sm" dir="auto">
+                                {version.changeSummary}
+                              </p>
+                            ) : null}
+                            <ul className="space-y-2 text-sm">
+                              {version.files.map((file) => {
+                                const key = `${version.id}:${file.id}`;
+                                const pending = pendingLinks.includes(key);
+                                return (
+                                  <li key={file.id} className="flex flex-wrap items-center gap-2">
+                                    <span dir="auto">{file.originalName}</span>
+                                    {view !== 'detail' && (
+                                      <Button
+                                        type="button"
+                                        variant="outline"
+                                        loading={pending}
+                                        onClick={() => void getLink(version.id, file.id)}
+                                      >
+                                        {word('download')}
+                                      </Button>
+                                    )}
+                                    {pending && (
+                                      <LoadingStatus className="sr-only">
+                                        {word('linkLoading')}
+                                      </LoadingStatus>
+                                    )}
+                                    {links[key] ? (
+                                      <a
+                                        href={links[key]}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        referrerPolicy="no-referrer"
+                                        className="text-primary underline"
+                                      >
+                                        {word('openFile')}
+                                      </a>
+                                    ) : null}
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                            <div className="text-sm">
+                              <span className="font-medium">{word('placeholders')}: </span>
+                              {version.placeholders.length ? (
+                                <span dir="ltr">
+                                  {version.placeholders.map((name) => `{{${name}}}`).join(', ')}
+                                </span>
+                              ) : (
+                                word('noPlaceholders')
+                              )}
+                            </div>
+                            {version.missingRequired.length ? (
+                              <p className="text-sm text-amber-700 dark:text-amber-300">
+                                {word('missingRequired')}:{' '}
+                                <span dir="ltr">
+                                  {version.missingRequired.map((name) => `{{${name}}}`).join(', ')}
+                                </span>
+                              </p>
+                            ) : null}
+                            {version.conflicts.length ? (
+                              <details className="text-sm">
+                                <summary className="cursor-pointer font-medium">
+                                  {word('conflicts')} ({version.conflicts.length})
+                                </summary>
+                                <p className="my-2 text-muted-foreground">
+                                  {word('conflictsHelp')}
+                                </p>
+                                {version.conflicts.map((conflict) => (
+                                  <div key={conflict.name} className="my-2">
+                                    <strong dir="ltr">{`{{${conflict.name}}}`}</strong>
+                                    <ul className="ms-4 list-disc">
+                                      {conflict.files.map((file, index) => (
+                                        <li key={`${file.fileName}-${index}`}>
+                                          <span dir="auto">{file.fileName}</span>:{' '}
+                                          <span dir="auto">{file.context}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                ))}
+                              </details>
+                            ) : null}
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-sm text-muted-foreground">
+                          {word(versionId ? 'missingVersion' : 'noVersions')}
+                        </p>
+                      )}
+                    </section>
+                  )}
+                </div>
+              ) : null}
+            </div>
+          )}
         </div>
       </ListPage>
       {action ? (
@@ -1099,8 +1356,10 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
           onUnconfirmed={() => {
             setUncertain(true);
             setAction(null);
-            setState('loading');
-            setRevision((value) => value + 1);
+            if (catalogueNeeded) {
+              setState('loading');
+              setRevision((value) => value + 1);
+            }
             if (selected) {
               setDetailState('loading');
               setDetailRevision((value) => value + 1);
@@ -1149,9 +1408,14 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
             )
               throw new Error('Unconfirmed document template receipt');
             const next = result as Template;
+            if (onSettled) {
+              onSettled(next.id, pending.kind === 'version' ? next.versions?.[0]?.id : undefined);
+              return word('saved');
+            }
             choose(next.id, true);
             setSaved(true);
             setRevision((value) => value + 1);
+            return undefined;
           }}
         />
       ) : null}
@@ -1159,10 +1423,20 @@ function OwnedAdminDocumentTemplatesPage({ queries, selection }: DocumentTemplat
   );
 }
 
-function TemplateSummary({ value, locale }: { value: Draft; locale: 'fa' | 'en' }) {
+const templateMetadataFields = ['title', 'description', 'category'] as const;
+
+function TemplateSummary({
+  value,
+  locale,
+  fields = templateMetadataFields,
+}: {
+  value: Draft;
+  locale: 'fa' | 'en';
+  fields?: readonly (typeof templateMetadataFields)[number][];
+}) {
   return (
     <dl className="flex min-w-0 flex-col gap-3">
-      {(['title', 'description', 'category'] as const).map((key) => (
+      {fields.map((key) => (
         <div key={key}>
           <dt className="text-muted-foreground">
             {documentTemplateText(
@@ -1171,7 +1445,7 @@ function TemplateSummary({ value, locale }: { value: Draft; locale: 'fa' | 'en' 
             )}
           </dt>
           <dd className="whitespace-pre-wrap break-words" dir="auto">
-            {key === 'category' ? documentTemplateText(value.category, locale) : value[key]}
+            {key === 'category' ? documentTemplateText(value.category, locale) : value[key] || '—'}
           </dd>
         </div>
       ))}

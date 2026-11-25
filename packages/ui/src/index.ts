@@ -74,6 +74,7 @@ export * from './components/ui/number-filter';
 export * from './components/ui/select-filter';
 export * from './components/ui/multi-select-filter';
 export * from './components/ui/list-filter-panel';
+export { useFilterApply } from './components/ui/filter-apply-context';
 export * from './components/ui/list-sort-dropdown';
 export * from './components/ui/list-view-toggle';
 

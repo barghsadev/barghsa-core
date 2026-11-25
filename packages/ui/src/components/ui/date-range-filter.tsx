@@ -48,6 +48,7 @@ export function DateRangeFilter({
   locale,
   timezone,
   disabled = false,
+  inline = false,
   labels,
 }: {
   value: DateRangeValue;
@@ -55,6 +56,7 @@ export function DateRangeFilter({
   locale: 'en' | 'fa';
   timezone: string;
   disabled?: boolean;
+  inline?: boolean;
   labels: Record<
     | 'label'
     | 'preset'
@@ -100,78 +102,71 @@ export function DateRangeFilter({
   const deferred = useFilterApply(() =>
     disabled || unchanged ? () => {} : invalid ? null : () => onChange({ from: start, to: end })
   );
-  return (
-    <details className="rounded-lg border bg-card p-3">
-      <summary className="cursor-pointer text-sm font-medium">
-        {labels.label}
-        {active && (
-          <Badge variant="secondary" className="ms-2">
-            {locale === 'fa' ? '۱' : '1'}
-          </Badge>
-        )}
-      </summary>
-      <FieldGroup className="mt-3">
-        <Field>
-          <FieldLabel htmlFor={`${id}-preset`}>{labels.preset}</FieldLabel>
-          <NativeSelect
-            id={`${id}-preset`}
+  const showClear = active && (!inline || !deferred);
+  const fields = (
+    <FieldGroup className={inline ? undefined : 'mt-3'}>
+      <Field>
+        <FieldLabel htmlFor={`${id}-preset`}>{labels.preset}</FieldLabel>
+        <NativeSelect
+          id={`${id}-preset`}
+          disabled={disabled}
+          value={draft.custom ? 'custom' : (matchingPreset ?? 'custom')}
+          onChange={(event) => {
+            const preset = event.target.value;
+            if (preset === 'custom') {
+              setDraft((current) => ({ ...current, custom: true }));
+            } else {
+              const range = dateRangePreset(preset as DateRangePreset, locale, timezone);
+              setDraft({
+                key: `${range.from ?? ''}:${range.to ?? ''}:${timezone}`,
+                custom: false,
+                from: range.from ? new Date(range.from) : undefined,
+                to: range.to ? new Date(new Date(range.to).getTime() - 1) : undefined,
+              });
+              onChange(range);
+            }
+          }}
+        >
+          <NativeSelectOption value="custom">{labels.custom}</NativeSelectOption>
+          {presets.map((preset) => (
+            <NativeSelectOption key={preset} value={preset}>
+              {labels[preset]}
+            </NativeSelectOption>
+          ))}
+        </NativeSelect>
+      </Field>
+      <FieldGroup className="grid gap-3 sm:grid-cols-2">
+        <Field data-invalid={invalid}>
+          <FieldLabel htmlFor={`${id}-start`}>{labels.start}</FieldLabel>
+          <DatePicker
+            id={`${id}-start`}
+            label={labels.start}
+            locale={locale}
+            timezone={timezone}
             disabled={disabled}
-            value={draft.custom ? 'custom' : (matchingPreset ?? 'custom')}
-            onChange={(event) => {
-              const preset = event.target.value;
-              if (preset === 'custom') {
-                setDraft((current) => ({ ...current, custom: true }));
-              } else {
-                const range = dateRangePreset(preset as DateRangePreset, locale, timezone);
-                setDraft({
-                  key: `${range.from ?? ''}:${range.to ?? ''}:${timezone}`,
-                  custom: false,
-                  from: range.from ? new Date(range.from) : undefined,
-                  to: range.to ? new Date(new Date(range.to).getTime() - 1) : undefined,
-                });
-                onChange(range);
-              }
+            value={draft.from}
+            onChange={(from) => {
+              setDraft((current) => ({ ...current, from, custom: true }));
             }}
-          >
-            <NativeSelectOption value="custom">{labels.custom}</NativeSelectOption>
-            {presets.map((preset) => (
-              <NativeSelectOption key={preset} value={preset}>
-                {labels[preset]}
-              </NativeSelectOption>
-            ))}
-          </NativeSelect>
+          />
         </Field>
-        <FieldGroup className="grid gap-3 sm:grid-cols-2">
-          <Field data-invalid={invalid}>
-            <FieldLabel htmlFor={`${id}-start`}>{labels.start}</FieldLabel>
-            <DatePicker
-              id={`${id}-start`}
-              label={labels.start}
-              locale={locale}
-              timezone={timezone}
-              disabled={disabled}
-              value={draft.from}
-              onChange={(from) => {
-                setDraft((current) => ({ ...current, from, custom: true }));
-              }}
-            />
-          </Field>
-          <Field data-invalid={invalid}>
-            <FieldLabel htmlFor={`${id}-end`}>{labels.end}</FieldLabel>
-            <DatePicker
-              id={`${id}-end`}
-              label={labels.end}
-              locale={locale}
-              timezone={timezone}
-              disabled={disabled}
-              value={draft.to}
-              onChange={(to) => {
-                setDraft((current) => ({ ...current, to, custom: true }));
-              }}
-              {...(invalid ? { error: labels.invalid } : {})}
-            />
-          </Field>
-        </FieldGroup>
+        <Field data-invalid={invalid}>
+          <FieldLabel htmlFor={`${id}-end`}>{labels.end}</FieldLabel>
+          <DatePicker
+            id={`${id}-end`}
+            label={labels.end}
+            locale={locale}
+            timezone={timezone}
+            disabled={disabled}
+            value={draft.to}
+            onChange={(to) => {
+              setDraft((current) => ({ ...current, to, custom: true }));
+            }}
+            {...(invalid ? { error: labels.invalid } : {})}
+          />
+        </Field>
+      </FieldGroup>
+      {(!deferred || showClear) && (
         <div className="flex flex-wrap gap-3">
           {!deferred && (
             <Button
@@ -183,7 +178,7 @@ export function DateRangeFilter({
               {labels.apply}
             </Button>
           )}
-          {active && (
+          {showClear && (
             <Button
               type="button"
               variant="ghost"
@@ -196,7 +191,21 @@ export function DateRangeFilter({
             </Button>
           )}
         </div>
-      </FieldGroup>
+      )}
+    </FieldGroup>
+  );
+  if (inline) return fields;
+  return (
+    <details className="rounded-lg border bg-card p-3">
+      <summary className="cursor-pointer text-sm font-medium">
+        {labels.label}
+        {active && (
+          <Badge variant="secondary" className="ms-2">
+            {locale === 'fa' ? '۱' : '1'}
+          </Badge>
+        )}
+      </summary>
+      {fields}
     </details>
   );
 }

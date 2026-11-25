@@ -1,10 +1,11 @@
 import { brandingText } from '@barghsa/i18n/branding';
+import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { tWorkspace } from '@barghsa/i18n/workspace-admin';
 import type { APIRequestContext, APIResponse, Page, Route } from '@playwright/test';
-import { test, expect } from './coverage-fixture';
+import { expandListFilters, test, expect } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { isLoopbackUrl } from './local-network';
 import { fork, type ChildProcess } from 'node:child_process';
@@ -179,7 +180,7 @@ for (const locale of ['en', 'fa'])
     });
     const fa = locale === 'fa',
       name = `Team live ${locale}`;
-    await page.goto('/admin/staff-teams');
+    await page.goto('/admin/staff-teams/new');
     await page.getByLabel(fa ? 'نام تیم' : 'Team name', { exact: true }).fill(name);
     await page.getByLabel('Member UI', { exact: true }).check();
     await page
@@ -205,6 +206,9 @@ for (const locale of ['en', 'fa'])
     expect(team).toBeTruthy();
     expect(team.leadUserId).toBe('team-ui-member');
     expect(team.memberUserIds).toEqual(['team-ui-member']);
+    await page.getByRole('link', { name, exact: true }).click();
+    await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
+    await page.goto('/admin/staff-teams/assignment');
     await page
       .getByLabel(fa ? 'تیم مسئول' : 'Assigned team', { exact: true })
       .first()
@@ -234,7 +238,8 @@ for (const locale of ['en', 'fa'])
     await expect(
       page.getByLabel(fa ? 'تیم مسئول' : 'Assigned team', { exact: true }).first()
     ).toHaveValue(team.id);
-    await page.getByRole('button', { name: fa ? 'ویرایش تیم' : 'Edit team', exact: true }).click();
+    await page.goto(`/admin/staff-teams/${team.id}`);
+    await page.getByRole('link', { name: fa ? 'ویرایش تیم' : 'Edit team', exact: true }).click();
     await page.getByLabel(fa ? 'نام تیم' : 'Team name', { exact: true }).fill(`${name} revised`);
     await page.getByRole('button', { name: fa ? 'ذخیره تیم' : 'Save team', exact: true }).click();
     await page
@@ -242,13 +247,8 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
       .click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
-    await expect(
-      page
-        .locator(
-          'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h3)'
-        )
-        .filter({ hasText: `${name} revised` })
-    ).toBeVisible();
+    await page.getByRole('link', { name: `${name} revised`, exact: true }).click();
+    await expect(page.getByRole('heading', { name: `${name} revised`, exact: true })).toBeVisible();
     await page.screenshot({ path: `/tmp/barghsa-staff-teams-${locale}.png`, fullPage: true });
     await page.getByRole('button', { name: fa ? 'حذف تیم' : 'Delete team', exact: true }).click();
     await confirmDestructiveAction(page, fa ? 'fa' : 'en');
@@ -283,7 +283,7 @@ for (const locale of ['en', 'fa'])
       hours = fa ? 'ساعت — تیکت‌ها' : 'Hours — Tickets';
     const save = fa ? 'ذخیره زمان‌های هدف' : 'Save response targets',
       confirm = fa ? 'تأیید' : 'Confirm';
-    await page.goto('/admin/service-targets');
+    await page.goto('/admin/service-targets/response-times');
     await page.getByLabel(enabled, { exact: true }).check();
     await page.getByLabel(hours, { exact: true }).fill('48');
     await page.getByRole('button', { name: save, exact: true }).click();
@@ -340,10 +340,7 @@ for (const locale of ['en', 'fa'])
     });
     const fa = locale === 'fa',
       username = `new-staff-${locale}@example.test`;
-    await page.goto('/admin/users');
-    await page
-      .getByRole('button', { name: fa ? 'ایجاد حساب کارمند' : 'Create staff user', exact: true })
-      .click();
+    await page.goto('/admin/users/new');
     await page.locator('#staff-username').fill(username);
     await page.locator('#staff-firstName').fill('New');
     await page.locator('#staff-lastName').fill(`Staff ${locale}`);
@@ -368,13 +365,19 @@ for (const locale of ['en', 'fa'])
       await page.evaluate(() => JSON.stringify({ local: localStorage, session: sessionStorage }))
     ).not.toContain(password);
     await page
-      .getByRole('button', { name: fa ? 'بستن نتیجه' : 'Dismiss result', exact: true })
+      .getByRole('link', { name: fa ? 'بستن نتیجه' : 'Dismiss result', exact: true })
       .click();
     await expect(page.locator('#staff-created-password')).toHaveCount(0);
     const row = page.getByRole('row').or(page.getByRole('listitem')).filter({ hasText: username });
     await expect(row).toContainText(fa ? 'بدون نقش' : 'No roles');
-    await row
-      .getByRole('button', { name: fa ? 'ویرایش نقش‌ها' : 'Edit roles', exact: true })
+    await row.locator('a').click();
+    const accountUrl = page.url();
+    const account = page.getByRole('region', {
+      name: adminText('admin.staff.accountTitle', locale),
+      exact: true,
+    });
+    await account
+      .getByRole('link', { name: fa ? 'ویرایش نقش‌ها' : 'Edit roles', exact: true })
       .click();
     await page.locator('form summary').click();
     await page.getByRole('checkbox', { name: fa ? /مالی/ : /Finance/ }).check();
@@ -401,8 +404,9 @@ for (const locale of ['en', 'fa'])
     await dialog.getByRole('button', { name: stepUp('verify'), exact: true }).click();
     expect((await verified).status()).toBe(200);
     await expect(dialog).toHaveCount(0);
-    await expect(row).toContainText(fa ? 'مالی' : 'Finance');
-    await row
+    await page.goto(accountUrl);
+    await expect(account).toContainText(fa ? 'مالی' : 'Finance');
+    await account
       .getByRole('button', { name: fa ? 'تاریخچه مجوزها' : 'Permission history', exact: true })
       .click();
     const history = page.getByRole('region', {
@@ -415,13 +419,13 @@ for (const locale of ['en', 'fa'])
     await history
       .getByRole('button', { name: fa ? 'بستن تاریخچه' : 'Close history', exact: true })
       .click();
-    await row
+    await account
       .getByRole('button', { name: fa ? 'غیرفعال‌سازی حساب' : 'Disable account', exact: true })
       .click();
     await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await settleLiveRequests();
     await page.reload();
-    await expect(row).toContainText(fa ? 'غیرفعال' : 'Disabled');
+    await expect(account).toContainText(fa ? 'غیرفعال' : 'Disabled');
     await expect(page.locator('#staff-created-password')).toHaveCount(0);
     const response = await page.request.get(`${http.base}/api/admin/staff`, {
       headers: { cookie: `barghsa_session=${actor.session}` },
@@ -456,7 +460,8 @@ for (const locale of ['en', 'fa'])
     await page.goto('/admin/users');
     const row = page.getByRole('row').or(page.getByRole('listitem')).filter({ hasText: username });
     await expect(row).toContainText(fa ? 'در انتظار فعال‌سازی' : 'Awaiting activation');
-    await row
+    await row.locator('a').click();
+    await page
       .getByRole('button', {
         name: fa ? 'ارسال دوباره فعال‌سازی' : 'Resend activation',
         exact: true,
@@ -508,6 +513,10 @@ for (const locale of ['en', 'fa'])
     const fa = locale === 'fa',
       ids = http.jobs[locale]!;
     await page.goto('/admin/failed-jobs');
+    const status = page.getByRole('combobox', {
+      name: adminText('admin.jobs.status', locale),
+      exact: true,
+    });
     const savedJobs = await page.request.get(`${http.base}/api/admin/failed-jobs`, {
       headers: { cookie: `barghsa_session=${http.session}` },
     });
@@ -540,9 +549,7 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
       .click();
     await expect(row(ids.first)).toHaveCount(0);
-    await page
-      .getByRole('button', { name: fa ? 'در انتظار اجرای دوباره' : 'Retrying', exact: true })
-      .click();
+    await status.selectOption('retrying');
     await expect(row(ids.first)).toBeVisible();
     await expect(row(ids.second)).toBeVisible();
     await row(ids.first)
@@ -556,14 +563,21 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
       .click();
     await expect(row(ids.first)).toHaveCount(0);
-    await page.getByRole('button', { name: fa ? 'حل‌شده' : 'Resolved', exact: true }).click();
-    await row(ids.first)
-      .getByText(fa ? 'جزئیات' : 'Details', { exact: true })
-      .click();
-    await expect(row(ids.first)).toContainText('admin-ui@example.test');
+    await status.selectOption('resolved');
+    await expect(page).toHaveURL((url) => url.searchParams.get('status') === 'resolved');
+    await row(ids.first).getByRole('link').click();
+    await expect(page).toHaveURL(
+      (url) =>
+        url.pathname === `/admin/failed-jobs/${ids.first}` &&
+        url.searchParams.get('status') === 'resolved'
+    );
+    await expect(page.getByRole('main')).toContainText('admin-ui@example.test');
     await page
-      .getByRole('button', { name: fa ? 'تلاش‌های پایان‌یافته' : 'Dead letter', exact: true })
+      .getByRole('main')
+      .getByRole('link', { name: tWorkspace('admin.jobs.title', locale), exact: true })
       .click();
+    await expect(status).toHaveValue('resolved');
+    await status.selectOption('dead_letter');
     await row(ids.dead)
       .getByRole('button', { name: fa ? 'اجرای دوباره' : 'Retry', exact: true })
       .click();
@@ -574,9 +588,7 @@ for (const locale of ['en', 'fa'])
     await expect(row(ids.dead)).toHaveCount(0);
     await settleLiveRequests();
     await page.reload();
-    await page
-      .getByRole('button', { name: fa ? 'در انتظار اجرای دوباره' : 'Retrying', exact: true })
-      .click();
+    await status.selectOption('retrying');
     await expect(row(ids.dead)).toBeVisible();
     await expect(row(ids.second)).toBeVisible();
   });
@@ -692,39 +704,52 @@ for (const locale of ['en', 'fa'])
           .filter({ has: page.getByRole('heading', { name, exact: true }) })
       );
     await expect(row).toContainText(fa ? 'پیش‌فرض استقرار' : 'Deployment defaults');
+    await row
+      .getByRole('link', { name: `${fa ? 'ایجاد سیاست' : 'Create policy'} ${name}`, exact: true })
+      .click();
+    const main = page.getByRole('main');
+    const detail = `/admin/upload-policies/${category}`;
     for (const value of ['1', '2']) {
-      await row
-        .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
-        .click();
-      let dialog = page.getByRole('dialog');
-      await expect(dialog).toContainText(
+      await expect(main).toContainText(
         fa ? 'بارگذاری‌های در حال انجام' : 'uploads already in progress'
       );
-      for (const checkbox of await dialog.getByRole('checkbox').all()) await checkbox.uncheck();
-      await dialog.getByLabel(fa ? '.png' : '.pdf', { exact: true }).check();
-      await dialog.locator('#upload-policy-size').fill(value);
-      await dialog
+      for (const checkbox of await main.getByRole('checkbox').all()) {
+        if (await checkbox.isVisible()) await checkbox.uncheck();
+      }
+      await main.getByLabel(fa ? '.png' : '.pdf', { exact: true }).check();
+      await main.locator('#upload-policy-size').fill(value);
+      await main
         .getByRole('button', { name: fa ? 'ذخیره سیاست' : 'Save policy', exact: true })
         .click();
-      dialog = page.getByRole('dialog');
+      const dialog = page.getByRole('dialog');
       await expect(dialog).toHaveCount(1);
       await dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true }).click();
       await expect(dialog).toHaveCount(0);
-      await expect(row).toContainText(fa ? 'سیاست ثبت‌شده' : 'Configured policy');
+      await expect(page).toHaveURL((url) => url.pathname.startsWith(`${detail}/versions/`));
+      if (value === '1') {
+        await main.getByRole('link', { name: fa ? 'ویرایش' : 'Edit', exact: true }).click();
+        await expect(page).toHaveURL(`${detail}/edit`);
+      }
     }
-    await row.locator('summary').click();
-    await expect(row.locator('ol li')).toHaveCount(2);
-    await expect(row.locator('ol')).toContainText(fa ? 'پایان‌یافته' : 'Ended');
+    const version = page.url();
+    await main
+      .getByRole('link', { name: fa ? 'تاریخچه نسخه‌ها' : 'Version history', exact: true })
+      .click();
+    const history = main.getByRole('list', {
+      name: fa ? 'تاریخچه نسخه‌ها' : 'Version history',
+      exact: true,
+    });
+    await expect(history.getByRole('listitem')).toHaveCount(2);
+    await expect(history).toContainText(fa ? 'پایان‌یافته' : 'Ended');
     await settleLiveRequests();
-    await page.reload();
-    await expect(row).toContainText(fa ? 'سیاست ثبت‌شده' : 'Configured policy');
-    await row
-      .getByRole('button', { name: `${fa ? 'پایان سیاست' : 'End policy'} ${name}`, exact: true })
+    await page.goto(version);
+    await main
+      .getByRole('button', { name: fa ? 'پایان سیاست' : 'End policy', exact: true })
       .click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(fa ? 'ممکن است فایل‌های بیشتری' : 'may allow more files');
     await confirmDestructiveAction(page, fa ? 'fa' : 'en');
-    await expect(row).toContainText(fa ? 'پیش‌فرض استقرار' : 'Deployment defaults');
+    await expect(main).toContainText(fa ? 'پایان‌یافته' : 'Ended');
     const response = await page.request.get(
       `${http.base}/api/admin/upload-policies?category=${category}`,
       { headers: { cookie: `barghsa_session=${http.session}` } }
@@ -762,7 +787,7 @@ for (const locale of ['en', 'fa'] as const)
         },
       });
     });
-    await page.goto('/admin/storage');
+    await page.goto('/admin/storage/edit');
     await expect(page.getByLabel(fa ? 'مخزن' : 'Bucket', { exact: true })).toHaveValue(
       'test-evidence'
     );
@@ -787,7 +812,7 @@ for (const locale of ['en', 'fa'] as const)
     expect((await testedResponse).status()).toBe(200);
     await expect(page.getByRole('dialog')).toHaveCount(0);
     const tested = adminText('admin.storage.tested', locale);
-    await expect(status.filter({ hasText: tested })).toHaveText(tested);
+    await expect(status.filter({ hasText: tested })).toContainText(tested);
     await page
       .getByRole('button', { name: fa ? 'ذخیره و فعال‌سازی' : 'Save and activate', exact: true })
       .click();
@@ -814,6 +839,9 @@ for (const locale of ['en', 'fa'] as const)
       hasSecretKey: true,
     });
     expect(await saved.text()).not.toContain(`browser-secret-${locale}`);
+    await page
+      .getByRole('link', { name: adminText('admin.storage.cleanupTitle', locale), exact: true })
+      .click();
     await page.locator('#storage-cleanup-hours').fill('48');
     await page
       .getByRole('button', {
@@ -879,8 +907,8 @@ for (const locale of ['en', 'fa'])
       );
     }
     await page.goto('/admin/reconciliation');
-    await page.getByRole('button', { name: description, exact: true }).click();
-    await expect(page.getByRole('dialog')).toContainText('9007199254740993');
+    await page.getByRole('link', { name: description, exact: true }).click();
+    await expect(page.getByRole('main')).toContainText('9007199254740993');
     await page
       .getByRole('button', { name: fa ? 'شروع بررسی' : 'Investigate', exact: true })
       .click();
@@ -889,8 +917,9 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
       .click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
+    await page.goto('/admin/reconciliation');
     await applyStatus('investigating');
-    await page.getByRole('button', { name: description, exact: true }).click();
+    await page.getByRole('link', { name: description, exact: true }).click();
     await page.getByLabel(fa ? 'توضیح' : 'Explanation', { exact: true }).fill(`Reviewed ${locale}`);
     await page.getByRole('button', { name: fa ? 'رفع مغایرت' : 'Resolve', exact: true }).click();
     await page
@@ -899,10 +928,10 @@ for (const locale of ['en', 'fa'])
       .click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await settleLiveRequests();
-    await page.reload();
+    await page.goto('/admin/reconciliation');
     await applyStatus('resolved');
-    await page.getByRole('button', { name: description, exact: true }).click();
-    await expect(page.getByRole('dialog')).toContainText(`Reviewed ${locale}`);
+    await page.getByRole('link', { name: description, exact: true }).click();
+    await expect(page.getByRole('main')).toContainText(`Reviewed ${locale}`);
     await page.screenshot({ path: `/tmp/reconciliation-${locale}.png`, fullPage: true });
     await page.getByLabel(fa ? 'توضیح' : 'Explanation', { exact: true }).fill(`Closed ${locale}`);
     await page
@@ -993,7 +1022,7 @@ for (const locale of ['en', 'fa'])
       ).status()
     ).toBe(200);
     await publishNumericPreference(page.request, fa ? 'western' : 'persian');
-    await page.goto('/admin/electricity-rules');
+    await page.goto('/admin/electricity-rules/rules/edit');
     const simple = page.getByRole('group', {
         name: fa ? 'سفارش ساده' : 'Simple orders',
         exact: true,
@@ -1004,13 +1033,12 @@ for (const locale of ['en', 'fa'])
       });
     await simple.getByRole('checkbox').check();
     await advanced.getByRole('checkbox').check();
-    await simple.getByRole('textbox').fill('1500');
-    await advanced.getByRole('textbox').fill('2100');
-    await simple.getByRole('slider').focus();
-    await page.keyboard.press('Home');
-    await page.keyboard.press('ArrowUp');
-    await advanced.getByRole('slider').focus();
-    await page.keyboard.press('End');
+    const simpleShare = simple.locator('#simpleOrder-share');
+    const advancedShare = advanced.locator('#advancedOrder-share');
+    await simple.locator('#simpleOrder-threshold').fill('1500');
+    await advanced.locator('#advancedOrder-threshold').fill('2100');
+    await simpleShare.fill(fa ? '۰٫۱' : '0.1');
+    await advancedShare.fill('100');
     const readRules = async () => {
       const response = await page.request.get(
         `${http.base}/api/admin/config/green-electricity-rules`,
@@ -1040,8 +1068,8 @@ for (const locale of ['en', 'fa'])
     );
     expect(incompatible.status()).toBe(400);
     expect(await readRules()).toEqual(beforeIncompatible);
-    await expect(advanced.getByRole('slider')).toHaveValue('100');
-    await page.keyboard.press('ArrowDown');
+    await expect(advancedShare).toHaveValue('100');
+    await advancedShare.fill(fa ? '۹۹٫۹' : '99.9');
     await page
       .getByRole('button', { name: fa ? 'ذخیره قواعد' : 'Save rules', exact: true })
       .click();
@@ -1049,14 +1077,12 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await settleLiveRequests();
     await page.reload();
-    await expect(simple.getByRole('textbox')).toHaveValue('1500');
-    await expect(advanced.getByRole('textbox')).toHaveValue('2100');
-    await expect(simple.getByRole('slider')).toHaveAccessibleName(
-      new RegExp(fa ? '0\\.1%' : '۰٫۱٪')
-    );
-    await expect(advanced.getByRole('slider')).toHaveAccessibleName(
-      new RegExp(fa ? '99\\.9%' : '۹۹٫۹٪')
-    );
+    await expect(simple.locator('#simpleOrder-threshold')).toHaveValue('1500');
+    await expect(advanced.locator('#advancedOrder-threshold')).toHaveValue('2100');
+    await expect(simpleShare).toHaveValue('0.1');
+    await expect(advancedShare).toHaveValue('99.9');
+    await expect(simple).toContainText(fa ? '0.1%' : '۰٫۱٪');
+    await expect(advanced).toContainText(fa ? '99.9%' : '۹۹٫۹٪');
     const config = await (
       await page.request.get(`${http.base}/api/admin/config/green-electricity-rules`, { headers })
     ).json();
@@ -1119,19 +1145,19 @@ for (const locale of ['en', 'fa'])
       });
     });
     const fa = locale === 'fa';
-    await page.goto('/admin/contract-limits');
+    await page.goto('/admin/contract-limits/edit');
     await page
-      .getByLabel(fa ? 'حداکثر افزایش مقدار (درصد)' : 'Maximum quantity increase (%)', {
+      .getByLabel(tWorkspace('admin.contractLimits.maxQuantityIncreasePercent', locale), {
         exact: true,
       })
       .fill('0');
     await page
-      .getByLabel(fa ? 'حداکثر مدت (ماه شمسی)' : 'Maximum duration (Jalali months)', {
+      .getByLabel(tWorkspace('admin.contractLimits.maxContractDuration', locale), {
         exact: true,
       })
       .fill(fa ? '36' : '24');
     await page
-      .getByLabel(fa ? 'حداقل فاصله تا شروع (روز)' : 'Minimum lead time (days)', { exact: true })
+      .getByLabel(tWorkspace('admin.contractLimits.leadTimeDays', locale), { exact: true })
       .fill('7');
     await page
       .getByRole('button', { name: fa ? 'ذخیره محدودیت‌ها' : 'Save limits', exact: true })
@@ -1144,12 +1170,12 @@ for (const locale of ['en', 'fa'])
     await settleLiveRequests();
     await page.reload();
     await expect(
-      page.getByLabel(fa ? 'حداکثر افزایش مقدار (درصد)' : 'Maximum quantity increase (%)', {
+      page.getByLabel(tWorkspace('admin.contractLimits.maxQuantityIncreasePercent', locale), {
         exact: true,
       })
     ).toHaveValue('0');
     await expect(
-      page.getByLabel(fa ? 'حداکثر مدت (ماه شمسی)' : 'Maximum duration (Jalali months)', {
+      page.getByLabel(tWorkspace('admin.contractLimits.maxContractDuration', locale), {
         exact: true,
       })
     ).toHaveValue(fa ? '36' : '24');
@@ -1196,7 +1222,7 @@ for (const locale of ['en', 'fa'])
       await expect(page.getByRole('dialog')).toHaveCount(0);
     };
     await page.goto('/admin/ai-models');
-    await page.getByRole('button', { name: fa ? 'افزودن مدل' : 'Add model', exact: true }).click();
+    await page.getByRole('link', { name: fa ? 'افزودن مدل' : 'Add model', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان مدل' : 'Model title', { exact: true }).fill(title);
     await page
       .getByLabel(fa ? 'نشانی پایه' : 'Base URL', { exact: true })
@@ -1209,13 +1235,13 @@ for (const locale of ['en', 'fa'])
       .fill('browser-test-private-token');
     await page.getByRole('button', { name: fa ? 'ذخیره مدل' : 'Save model', exact: true }).click();
     await confirm();
-    const card = page
-      .getByRole('row')
-      .or(page.getByRole('listitem'))
-      .filter({ has: page.getByRole('heading', { name: title, exact: true }) });
-    await expect(card).toBeVisible();
+    const card = page.getByRole('main');
+    const heading = card.getByRole('heading', { name: title, exact: true });
+    await expect(heading).toBeVisible();
+    const recordUrl = page.url();
+    expect(new URL(recordUrl).pathname).toMatch(/^\/admin\/ai-models\/[a-z0-9-]+$/);
     await expect(card).not.toContainText('browser-test-private-token');
-    await card.getByRole('button', { name: fa ? 'ویرایش' : 'Edit', exact: true }).click();
+    await card.getByRole('link', { name: fa ? 'ویرایش' : 'Edit', exact: true }).click();
     await expect(page.locator('#ai-model-token')).toHaveCount(0);
     await page
       .getByLabel(fa ? 'نشانی پایه' : 'Base URL', { exact: true })
@@ -1257,6 +1283,7 @@ for (const locale of ['en', 'fa'])
       .selectOption('clear');
     await page.getByRole('button', { name: fa ? 'ذخیره مدل' : 'Save model', exact: true }).click();
     await confirm();
+    await expect(page).toHaveURL(recordUrl);
     await settleLiveRequests();
     await page.reload();
     await expect(card).toContainText('127.0.0.1:2');
@@ -1274,7 +1301,8 @@ for (const locale of ['en', 'fa'])
     await page.screenshot({ path: `/tmp/ai-models-mobile-${locale}.png`, fullPage: true });
     await card.getByRole('button', { name: fa ? 'حذف' : 'Delete', exact: true }).click();
     await confirmDestructiveAction(page, fa ? 'fa' : 'en');
-    await expect(card).toHaveCount(0);
+    await expect(page).toHaveURL('/admin/ai-models');
+    await expect(heading).toHaveCount(0);
   });
 
 for (const locale of ['en', 'fa'])
@@ -1307,14 +1335,14 @@ for (const locale of ['en', 'fa'])
       groupName = `KB group ${locale}`;
     await page.goto('/admin/knowledge-bases');
     await page
-      .getByRole('button', { name: fa ? 'افزودن پایگاه دانش' : 'Add knowledge base', exact: true })
+      .getByRole('link', { name: fa ? 'افزودن پایگاه دانش' : 'Add knowledge base', exact: true })
       .click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(name);
     await page.getByLabel(fa ? 'توضیحات' : 'Description', { exact: true }).fill('Meter guidance');
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
     await confirm();
     await page
-      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
+      .getByRole('link', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
       .click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(renamed);
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
@@ -1328,9 +1356,8 @@ for (const locale of ['en', 'fa'])
     ).json()) as Array<{ id: string; title: string; description: string }>;
     const kb = kbs.find((item) => item.title === renamed)!;
     expect(kb.description).toBe('Meter guidance');
-    await page
-      .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} ${renamed}`, exact: true })
-      .click();
+    await expect(page).toHaveURL(`/admin/knowledge-bases/${kb.id}`);
+    await page.getByRole('link', { name: fa ? 'اسناد' : 'Documents', exact: true }).click();
     await page
       .getByLabel(fa ? 'انتخاب سند' : 'Choose a document', { exact: true })
       .selectOption('uploads/document/kb-ui.pdf');
@@ -1372,19 +1399,14 @@ for (const locale of ['en', 'fa'])
         expect.objectContaining({ storageKey: 'uploads/document/kb-ui.pdf' }),
       ])
     );
-    await page
-      .getByRole('button', {
-        name: fa ? 'گروه‌های پایگاه دانش' : 'Knowledge-base groups',
-        exact: true,
-      })
-      .click();
-    await page.getByRole('button', { name: fa ? 'افزودن گروه' : 'Add group', exact: true }).click();
+    await page.goto('/admin/knowledge-bases?kind=kb-groups');
+    await page.getByRole('link', { name: fa ? 'افزودن گروه' : 'Add group', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(groupName);
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
     await confirm();
-    await page
-      .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} ${groupName}`, exact: true })
-      .click();
+    await expect(page).toHaveURL((url) =>
+      url.pathname.startsWith('/admin/knowledge-bases/groups/')
+    );
     await page
       .getByLabel(fa ? 'انتخاب پایگاه دانش' : 'Choose a knowledge base', { exact: true })
       .selectOption(kb.id);
@@ -1412,7 +1434,8 @@ for (const locale of ['en', 'fa'])
       ).members
     ).toEqual([]);
     await page
-      .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${groupName}`, exact: true })
+      .getByRole('main')
+      .getByRole('button', { name: fa ? 'حذف' : 'Delete', exact: true })
       .click();
     await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await expect(page.getByRole('heading', { name: groupName, exact: true })).toHaveCount(0);
@@ -1459,9 +1482,7 @@ for (const locale of ['en', 'fa'])
       renamed = `${name} edited`,
       groupName = `Policy group ${locale}`;
     await page.goto('/admin/policies');
-    await page
-      .getByRole('button', { name: fa ? 'افزودن سیاست' : 'Add policy', exact: true })
-      .click();
+    await page.getByRole('link', { name: fa ? 'افزودن سیاست' : 'Add policy', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(name);
     await page.getByLabel(fa ? 'توضیحات' : 'Description', { exact: true }).fill('Meter guidance');
     await page
@@ -1470,7 +1491,7 @@ for (const locale of ['en', 'fa'])
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
     await confirm();
     await page
-      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
+      .getByRole('link', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
       .click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(renamed);
     await page
@@ -1505,19 +1526,12 @@ for (const locale of ['en', 'fa'])
       true
     );
     await page.screenshot({ path: `/tmp/ai-policies-${locale}.png`, fullPage: true });
-    await page
-      .getByRole('button', {
-        name: fa ? 'گروه‌های سیاست' : 'Policy groups',
-        exact: true,
-      })
-      .click();
-    await page.getByRole('button', { name: fa ? 'افزودن گروه' : 'Add group', exact: true }).click();
+    await page.goto('/admin/policies?kind=policy-groups');
+    await page.getByRole('link', { name: fa ? 'افزودن گروه' : 'Add group', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(groupName);
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
     await confirm();
-    await page
-      .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} ${groupName}`, exact: true })
-      .click();
+    await expect(page).toHaveURL((url) => url.pathname.startsWith('/admin/policies/groups/'));
     await page
       .getByLabel(fa ? 'انتخاب سیاست' : 'Choose a policy', { exact: true })
       .selectOption(kb.id);
@@ -1545,7 +1559,8 @@ for (const locale of ['en', 'fa'])
       ).members
     ).toEqual([]);
     await page
-      .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${groupName}`, exact: true })
+      .getByRole('main')
+      .getByRole('button', { name: fa ? 'حذف' : 'Delete', exact: true })
       .click();
     await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await expect(page.getByRole('heading', { name: groupName, exact: true })).toHaveCount(0);
@@ -1607,7 +1622,7 @@ for (const locale of ['en', 'fa'])
         .click();
       await expect(page.getByRole('dialog')).toHaveCount(0);
     };
-    await page.goto('/admin/agent-slots');
+    await page.goto('/admin/agent-slots/individual_chatbot/edit');
     const individual = page.getByLabel(
       fa ? 'عامل · گفت‌وگوی شخص حقیقی' : 'Agent · Individual chatbot',
       { exact: true }
@@ -1620,9 +1635,11 @@ for (const locale of ['en', 'fa'])
       })
       .click();
     await confirm();
+    await expect(page).toHaveURL('/admin/agent-slots/individual_chatbot');
     await settleLiveRequests();
     await page.reload();
-    await expect(individual).toHaveValue(agent.id);
+    await expect(page.getByRole('main')).toContainText(agent.title);
+    await page.goto('/admin/agent-slots/staff_chatbot/edit');
     await page
       .getByLabel(fa ? 'عامل · گفت‌وگوی کارکنان' : 'Agent · Staff chatbot', { exact: true })
       .selectOption(agent.id);
@@ -1651,6 +1668,8 @@ for (const locale of ['en', 'fa'])
       true
     );
     await page.screenshot({ path: `/tmp/agent-slots-${locale}.png`, fullPage: true });
+    await page.goto('/admin/agent-slots/individual_chatbot/edit');
+    await expect(individual).toHaveValue(agent.id);
     await individual.selectOption('');
     await page
       .getByRole('button', {
@@ -1716,7 +1735,7 @@ for (const locale of ['en', 'fa'])
     const title = `Editor assistant ${locale}`,
       renamed = `${title} revised`;
     await page.goto('/admin/agents');
-    await page.getByRole('button', { name: fa ? 'افزودن عامل' : 'Add agent', exact: true }).click();
+    await page.getByRole('link', { name: fa ? 'افزودن عامل' : 'Add agent', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(title);
     await page.getByLabel(fa ? 'مدل' : 'Model', { exact: true }).selectOption(model.id);
     for (const item of [kb, policy, kbGroup, policyGroup])
@@ -1727,6 +1746,7 @@ for (const locale of ['en', 'fa'])
       await page.request.get(`${http.base}/api/admin/agents`, { headers })
     ).json()) as Array<{ id: string; title: string }>;
     const agent = agents.find((row) => row.title === title)!;
+    await expect(page).toHaveURL(`/admin/agents/${agent.id}`);
     const detail = async () =>
       await (
         await page.request.get(`${http.base}/api/admin/agents/${agent.id}`, { headers })
@@ -1742,7 +1762,7 @@ for (const locale of ['en', 'fa'])
     await settleLiveRequests();
     await page.reload();
     await page
-      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${title}`, exact: true })
+      .getByRole('link', { name: `${fa ? 'ویرایش' : 'Edit'} ${title}`, exact: true })
       .click();
     for (const item of [kb, policy, kbGroup, policyGroup])
       await expect(page.getByLabel(item.title, { exact: true })).toBeChecked();
@@ -1814,16 +1834,19 @@ for (const locale of ['en', 'fa'])
       renamed = `${name} revised`;
     await page.goto('/admin/contract-templates');
     await page
-      .getByRole('button', { name: fa ? 'افزودن قالب' : 'Add template', exact: true })
+      .getByRole('link', { name: fa ? 'افزودن قالب' : 'Add template', exact: true })
       .click();
     await page.getByLabel(fa ? 'نام' : 'Name', { exact: true }).fill(name);
     await page
       .getByRole('button', { name: fa ? 'ذخیره قالب' : 'Save template', exact: true })
       .click();
     await confirm();
-    await page
-      .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} ${name}`, exact: true })
-      .click();
+    const main = page.getByRole('main');
+    await expect(main.getByRole('heading', { name, exact: true })).toBeVisible();
+    const list = '/admin/contract-templates';
+    const detail = new URL(page.url()).pathname;
+    const upload = detail + '/versions/new';
+    await page.goto(upload);
     const input = page.getByLabel(fa ? 'فایل قالب' : 'Template file', { exact: true });
     await input.setInputFiles({
       name: 'bad.pdf',
@@ -1838,10 +1861,11 @@ for (const locale of ['en', 'fa'])
     await expect(
       page.getByRole('button', { name: fa ? 'بارگذاری نسخه' : 'Upload version', exact: true })
     ).toBeDisabled();
-    for (const [file, content] of [
+    for (const [index, [file, content]] of [
       ['first.txt', 'Hello {{customerName}}'],
       ['second.txt', '{{date}} {{amount}}'],
-    ]) {
+    ].entries()) {
+      if (index > 0) await page.goto(upload);
       await input.setInputFiles({
         name: file!,
         mimeType: 'text/plain',
@@ -1851,9 +1875,13 @@ for (const locale of ['en', 'fa'])
         .getByRole('button', { name: fa ? 'بارگذاری نسخه' : 'Upload version', exact: true })
         .click();
       await confirm();
+      await expect(page).toHaveURL(detail + '/versions/' + (index + 1));
+      await expect(main.locator('pre')).toHaveText(content!);
     }
+    await page.goto(detail);
     await expect(page.getByText('{{customerName}}', { exact: true })).toBeVisible();
     await expect(page.getByText('{{date}}, {{amount}}', { exact: true })).toBeVisible();
+    await page.goto(detail + '/edit');
     await page.getByLabel(fa ? 'نام' : 'Name', { exact: true }).fill(renamed);
     await page.getByLabel(fa ? 'فعال' : 'Active', { exact: true }).uncheck();
     await page
@@ -1861,19 +1889,14 @@ for (const locale of ['en', 'fa'])
       .click();
     await confirm();
     await settleLiveRequests();
+    await expect(page).toHaveURL(detail);
     await page.reload();
-    await page
-      .getByRole('button', { name: `${fa ? 'باز کردن' : 'Open'} ${renamed}`, exact: true })
-      .click();
-    await expect(page.getByLabel(fa ? 'فعال' : 'Active', { exact: true })).not.toBeChecked();
+    await expect(main.getByText(fa ? 'غیرفعال' : 'Inactive', { exact: true })).toBeVisible();
     const versionHistory = page.getByLabel(fa ? 'تاریخچه نسخه‌ها' : 'Version history', {
       exact: true,
     });
     await expect(versionHistory.getByText('first.txt', { exact: true })).toBeVisible();
     await expect(versionHistory.getByText('second.txt', { exact: true })).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${renamed}`, exact: true })
-    ).toBeDisabled();
     const rows = (await (
       await page.request.get(`${http.base}/api/admin/contract-templates`, { headers })
     ).json()) as Array<{ id: string; name: string }>;
@@ -1895,14 +1918,19 @@ for (const locale of ['en', 'fa'])
       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
       .toBe(true);
     await page.screenshot({ path: `/tmp/contract-templates-${locale}.png`, fullPage: true });
+    await page.goto(list);
+    await expect(
+      page.getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} ${renamed}`, exact: true })
+    ).toBeDisabled();
     await page
-      .getByRole('button', { name: fa ? 'افزودن قالب' : 'Add template', exact: true })
+      .getByRole('link', { name: fa ? 'افزودن قالب' : 'Add template', exact: true })
       .click();
     await page.getByLabel(fa ? 'نام' : 'Name', { exact: true }).fill(`Empty ${locale}`);
     await page
       .getByRole('button', { name: fa ? 'ذخیره قالب' : 'Save template', exact: true })
       .click();
     await confirm();
+    await page.goto(list);
     await page
       .getByRole('button', { name: `${fa ? 'حذف' : 'Delete'} Empty ${locale}`, exact: true })
       .click();
@@ -1957,7 +1985,7 @@ for (const locale of ['en', 'fa'])
     const category = fa ? 'saving_plan' : 'consultation';
     await publishNumericPreference(page.request, fa ? 'western' : 'persian');
     await page.goto('/admin/vat');
-    await page.getByRole('button', { name: fa ? 'افزودن نرخ' : 'Add rate', exact: true }).click();
+    await page.getByRole('link', { name: fa ? 'افزودن نرخ' : 'Add rate', exact: true }).click();
     await page.getByLabel(fa ? 'دسته' : 'Category', { exact: true }).selectOption(category);
     await page.getByLabel(fa ? 'نرخ (درصد)' : 'Rate (%)', { exact: true }).fill('7.25');
     await save();
@@ -1967,8 +1995,18 @@ for (const locale of ['en', 'fa'])
     const rate = rates.find((row) => row.category === category)!;
     expect(rate.rateBasisPoints).toBe(725);
     await expect(page.locator('main')).toContainText(fa ? '7.25%' : '۷٫۲۵٪');
+    await expect(page).toHaveURL(`/admin/vat/rates/${rate.id}`);
+    const catalogue = () =>
+      page
+        .getByRole('main')
+        .getByRole('link', {
+          name: fa ? 'تنظیمات مالیات بر ارزش افزوده' : 'VAT configuration',
+          exact: true,
+        })
+        .click();
+    await catalogue();
     await page
-      .getByRole('button', {
+      .getByRole('link', {
         name: fa ? 'افزودن نرخ اختصاصی محصول' : 'Add product override',
         exact: true,
       })
@@ -1989,19 +2027,18 @@ for (const locale of ['en', 'fa'])
     await settleLiveRequests();
     await page.reload();
     await page
-      .getByRole('button', {
-        name: `${fa ? 'پایان نرخ اختصاصی' : 'End override'} ${productName}`,
-        exact: true,
-      })
+      .getByRole('main')
+      .getByRole('link', { name: fa ? 'پایان نرخ اختصاصی' : 'End override', exact: true })
       .click();
     await page
       .getByRole('button', { name: fa ? 'پایان دادن به نرخ' : 'End rate', exact: true })
       .click();
     await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     expect(await resolve()).toMatchObject({ rateBasisPoints: 0 });
+    await catalogue();
     const categoryName = fa ? 'طرح صرفه‌جویی' : 'Consultation';
     await page
-      .getByRole('button', {
+      .getByRole('link', {
         name: `${fa ? 'پایان دادن به نرخ' : 'End rate'} ${categoryName}`,
         exact: true,
       })
@@ -2010,7 +2047,8 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'پایان دادن به نرخ' : 'End rate', exact: true })
       .click();
     await confirmDestructiveAction(page, fa ? 'fa' : 'en');
-    await page.getByRole('button', { name: fa ? 'افزودن نرخ' : 'Add rate', exact: true }).click();
+    await catalogue();
+    await page.getByRole('link', { name: fa ? 'افزودن نرخ' : 'Add rate', exact: true }).click();
     await page.getByLabel(fa ? 'دسته' : 'Category', { exact: true }).selectOption(category);
     await page.getByLabel(fa ? 'نرخ (درصد)' : 'Rate (%)', { exact: true }).fill('8');
     await page
@@ -2078,7 +2116,7 @@ for (const locale of ['en', 'fa'])
     };
     await publishNumericPreference(page.request, fa ? 'western' : 'persian');
     await page.goto('/admin/gift-codes');
-    await page.getByRole('button', { name: fa ? 'افزودن کد' : 'Add code', exact: true }).click();
+    await page.getByRole('link', { name: fa ? 'افزودن کد' : 'Add code', exact: true }).click();
     await form.getByLabel(fa ? 'کد' : 'Code', { exact: true }).fill(code.toLowerCase());
     await form
       .getByLabel(fa ? 'مبلغ تخفیف (ریال)' : 'Discount amount (IRR)', { exact: true })
@@ -2099,9 +2137,7 @@ for (const locale of ['en', 'fa'])
           headers,
         })
       ).json();
-    await page
-      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${code}`, exact: true })
-      .click();
+    await page.getByRole('link', { name: fa ? 'ویرایش' : 'Edit', exact: true }).click();
     await form
       .getByLabel(fa ? 'نوع تخفیف' : 'Discount type', { exact: true })
       .selectOption('percentage');
@@ -2140,9 +2176,7 @@ for (const locale of ['en', 'fa'])
     expect(updated.code.usage).toMatchObject({ consumed: 0, released: 0, totalDiscountIrr: '0' });
     await settleLiveRequests();
     await page.reload();
-    await page
-      .getByRole('button', { name: `${fa ? 'ویرایش' : 'Edit'} ${code}`, exact: true })
-      .click();
+    await page.getByRole('link', { name: fa ? 'ویرایش' : 'Edit', exact: true }).click();
     await expect(
       form.getByLabel(fa ? 'Gift recipient · حقیقی' : 'Gift recipient · Individual', {
         exact: true,
@@ -2161,17 +2195,23 @@ for (const locale of ['en', 'fa'])
       validUntil: updated.code.validUntil,
     });
     await page
-      .getByRole('button', { name: `${fa ? 'غیرفعال‌سازی' : 'Deactivate'} ${code}`, exact: true })
+      .getByRole('button', { name: fa ? 'غیرفعال‌سازی' : 'Deactivate', exact: true })
       .click();
     await confirmDestructiveAction(page, fa ? 'fa' : 'en');
+    await expect(page.getByText(fa ? 'غیرفعال' : 'Inactive', { exact: true })).toBeVisible();
+    await page
+      .getByRole('link', { name: fa ? 'کدهای تخفیف' : 'Gift codes', exact: true })
+      .last()
+      .click();
     const filters = page.getByRole('form', { name: fa ? 'فیلتر کدها' : 'Gift-code filters' });
     await filters.getByLabel(fa ? 'جست‌وجوی کد' : 'Search code', { exact: true }).fill(code);
+    await expandListFilters(filters, fa ? 'fa' : 'en', fa ? 'فیلتر کدها' : 'Gift-code filters');
     await filters.getByLabel(fa ? 'وضعیت' : 'Status', { exact: true }).selectOption('inactive');
     await filters.getByRole('button', { name: fa ? 'جست‌وجو' : 'Search', exact: true }).click();
     const savedRecord =
       (page.viewportSize()?.width ?? 1280) >= 768
         ? page.getByRole('row').filter({
-            has: page.getByRole('button', {
+            has: page.getByRole('link', {
               name: `${fa ? 'ویرایش' : 'Edit'} ${code}`,
               exact: true,
             }),
@@ -2617,10 +2657,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.reload();
     await expect(title).toHaveValue(savedTitle);
     await expect(style).toHaveValue(numberStyle);
-    const savedTime = page
-      .getByRole('heading', { name: brandingText('title', locale), exact: true, level: 1 })
-      .locator('..')
-      .locator('time');
+    const savedTime = page.getByTestId('branding-draft-saved-at');
     await expect(savedTime).toHaveCount(1);
     const instant = await savedTime.getAttribute('datetime');
     expect(instant).toBeTruthy();
@@ -2660,11 +2697,21 @@ for (const locale of ['en', 'fa'] as const) {
 
     await edit.click();
     await title.fill('Unsaved change');
-    await expect(
-      page.getByRole('button', { name: fa ? 'انتشار' : 'Activate', exact: true })
-    ).toBeDisabled();
-    await title.fill(savedTitle);
-    await page.getByRole('button', { name: fa ? 'انتشار' : 'Activate', exact: true }).click();
+    const activate = page.getByRole('button', {
+      name: brandingText('activate', locale),
+      exact: true,
+    });
+    await expect(activate).toHaveCount(0);
+    expect(await publicTitle()).toBe(before);
+    await page
+      .getByRole('button', {
+        name: adminText('admin.settings.cancelEdit', locale),
+        exact: true,
+      })
+      .click();
+    await expect(page).toHaveURL(/\/admin\/branding$/);
+    await expect(title).toHaveValue(savedTitle);
+    await activate.click();
     await page
       .getByRole('dialog')
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
@@ -2721,13 +2768,12 @@ for (const locale of ['en', 'fa'])
         },
       });
     });
-    const actor = await page.request.get(`${http.base}/api/auth/user`, {
-      headers: { cookie: `barghsa_session=${http.session}` },
-    });
-    expect(actor.status()).toBe(200);
-    const needsConsent = (await actor.json()).requiresTosAcceptance === true;
-    await page.goto('/admin/tos');
-    if (needsConsent) {
+    const acceptTermsIfRequired = async () => {
+      const actor = await page.request.get(`${http.base}/api/auth/user`, {
+        headers: { cookie: `barghsa_session=${http.session}` },
+      });
+      expect(actor.status()).toBe(200);
+      if ((await actor.json()).requiresTosAcceptance !== true) return;
       const consent = page.getByRole('dialog', {
         name: fa ? 'قوانین استفاده' : 'Terms of Service',
         exact: true,
@@ -2742,10 +2788,10 @@ for (const locale of ['en', 'fa'])
         .click();
       expect((await acceptance).status()).toBe(200);
       await expect(consent).toHaveCount(0);
-    }
-    await page
-      .getByRole('button', { name: fa ? 'پیش‌نویس جدید' : 'New Draft', exact: true })
-      .click();
+    };
+    await page.goto('/admin/tos');
+    await acceptTermsIfRequired();
+    await page.getByRole('link', { name: fa ? 'پیش‌نویس جدید' : 'New Draft', exact: true }).click();
     await page.getByLabel(fa ? 'شناسه نسخه' : 'Version ID').fill(versionId);
     await page
       .getByRole('textbox', { name: fa ? 'محتوای فارسی' : 'Persian content', exact: true })
@@ -2774,11 +2820,11 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'ایجاد پیش‌نویس' : 'Create Draft', exact: true })
       .click();
     await expect(
-      page.getByRole('button', { name: fa ? 'ویرایش' : 'Edit', exact: true })
+      page.getByRole('link', { name: fa ? 'ویرایش پیش‌نویس' : 'Edit Draft', exact: true })
     ).toBeVisible();
     await settleLiveRequests();
     await page.reload();
-    await page.getByRole('button', { name: fa ? 'انتشار' : 'Publish', exact: true }).click();
+    await page.getByRole('link', { name: fa ? 'انتشار' : 'Publish', exact: true }).click();
     const preview = page.getByRole('region', {
       name: fa ? 'انتشار نسخه شرایط' : 'Publish TOS Version',
       exact: true,
@@ -2799,20 +2845,22 @@ for (const locale of ['en', 'fa'])
       content: '**Published terms**',
     });
     await expect(
-      page.getByRole('button', { name: fa ? 'ویرایش' : 'Edit', exact: true })
+      page.getByRole('link', { name: fa ? 'ویرایش پیش‌نویس' : 'Edit Draft', exact: true })
     ).toHaveCount(0);
-    await page
-      .locator('table:visible > tbody > tr, ol[role=list]:visible > li')
-      .filter({ hasText: versionId })
-      .getByRole('button', { name: fa ? 'مشاهده' : 'View', exact: true })
+    await acceptTermsIfRequired();
+    const termsRecord = page.getByRole('main');
+    await expect(termsRecord.getByRole('heading', { level: 1 })).toContainText(versionId);
+    await settleLiveRequests();
+    await page.reload();
+    await termsRecord.getByRole('button', { name: 'English', exact: true }).click();
+    await expect(termsRecord.locator('strong')).toHaveText('Published terms');
+    await termsRecord
+      .getByRole('link', {
+        name: fa ? 'تاریخچه نسخه‌های شرایط' : 'Terms version history',
+        exact: true,
+      })
       .click();
-    await expect(page.getByRole('dialog')).toContainText(versionId);
-    await page.getByRole('dialog').getByRole('button', { name: 'English', exact: true }).click();
-    await expect(page.getByRole('dialog').locator('strong')).toHaveText('Published terms');
-    await page.keyboard.press('Escape');
-    await page
-      .getByRole('button', { name: fa ? 'پیش‌نویس جدید' : 'New Draft', exact: true })
-      .click();
+    await page.getByRole('link', { name: fa ? 'پیش‌نویس جدید' : 'New Draft', exact: true }).click();
     await page.getByLabel(fa ? 'شناسه نسخه' : 'Version ID').fill(versionId);
     await page
       .getByRole('textbox', { name: fa ? 'محتوای فارسی' : 'Persian content', exact: true })
@@ -2835,14 +2883,15 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('button', { name: fa ? 'ایجاد پیش‌نویس' : 'Create Draft', exact: true })
       .click();
-    const discarded = page
-      .locator('table:visible > tbody > tr, ol[role=list]:visible > li')
-      .filter({ hasText: `discard-${locale}` });
-    await discarded
+    await expect(termsRecord.getByRole('heading', { level: 1 })).toContainText(`discard-${locale}`);
+    await termsRecord
       .getByRole('button', { name: fa ? 'حذف پیش‌نویس' : 'Discard', exact: true })
       .click();
     await confirmDestructiveAction(page, fa ? 'fa' : 'en');
-    await expect(discarded).toHaveCount(0);
+    await expect(page).toHaveURL('/admin/tos');
+    await expect(
+      termsRecord.getByRole('link', { name: `discard-${locale}`, exact: true })
+    ).toHaveCount(0);
     await page.context().clearCookies();
     await page.goto(`/terms?lang=${locale}`);
     const document = page.getByRole('article');
@@ -2872,15 +2921,20 @@ for (const locale of ['en', 'fa'] as const)
       });
     });
     const text = (key: string) => adminText(`admin.notifications.${key}`, locale);
+    const channel = locale === 'fa' ? 'in_app' : 'email';
     const eventKey = `forms.live.${locale}.${info.project.name}.${Date.now()}`;
     await page.goto('/admin/notifications');
-    await page.getByRole('button', { name: text('newTemplate'), exact: true }).click();
+    await page.getByRole('link', { name: text('newTemplate'), exact: true }).click();
     const editor = page
       .locator('form')
       .filter({ has: page.locator('#notification-template-eventKey') });
     await editor.locator('#notification-template-eventKey').fill(eventKey);
+    await editor.locator('#notification-template-channel').selectOption(channel);
     await editor.locator('#notification-template-locale').selectOption(locale);
-    await editor.locator('#notification-template-variablesLabel').fill('name: Recipient');
+    const description = 'Recipient, as printed on the invoice.\nKeep the original spelling.';
+    await editor.getByRole('button', { name: notificationFormText('addVariable', locale) }).click();
+    await editor.locator('[data-variable-name]').fill('name');
+    await editor.locator('[data-variable-description]').fill(description);
     await editor.locator('#notification-template-subject').fill('For {{name}}');
     await editor.locator('#notification-template-bodyTemplate').fill('Hello {{name}}');
     await editor.locator('button[type=submit]').click();
@@ -2894,13 +2948,19 @@ for (const locale of ['en', 'fa'] as const)
     let saved = templates.find((item: { eventKey: string }) => item.eventKey === eventKey);
     expect(saved).toMatchObject({
       eventKey,
+      channel,
       locale,
       subject: 'For {{name}}',
       bodyTemplate: 'Hello {{name}}',
-      variables: [{ name: 'name', description: 'Recipient' }],
+      variables: [{ name: 'name', description }],
       status: 'draft',
       version: 1,
     });
+    await expect(page).toHaveURL(`/admin/notifications/${saved.id}`);
+    await page
+      .getByRole('main')
+      .getByRole('link', { name: text('title'), exact: true })
+      .click();
     await page.locator('#notification-event-filter').fill(eventKey);
     await page.getByRole('button', { name: text('applyEventFilter'), exact: true }).click();
     await expect.poll(() => new URL(page.url()).searchParams.get('eventKey')).toBe(eventKey);
@@ -2909,8 +2969,12 @@ for (const locale of ['en', 'fa'] as const)
         'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
       )
       .filter({ hasText: eventKey });
-    await row.getByRole('button', { name: text('edit'), exact: true }).click();
+    await row.getByRole('link', { name: text('edit'), exact: true }).click();
+    await expect(editor.locator('#notification-template-subject')).toHaveValue('For {{name}}');
+    await expect(editor.locator('[data-variable-description]')).toHaveValue(description);
     await editor.locator('#notification-template-bodyTemplate').fill('Updated {{name}}');
+    const editedDescription = `${description}\nUpdated spelling, if provided.`;
+    await editor.locator('[data-variable-description]').fill(editedDescription);
     await editor.locator('button[type=submit]').click();
     await expect(editor).toHaveCount(0);
     templates = await (
@@ -2920,6 +2984,7 @@ for (const locale of ['en', 'fa'] as const)
     ).json();
     saved = templates.find((item: { eventKey: string }) => item.eventKey === eventKey);
     expect(saved.bodyTemplate).toBe('Updated {{name}}');
+    expect(saved.variables).toEqual([{ name: 'name', description: editedDescription }]);
     expect(saved.version).toBe(1);
 
     const headers = {
@@ -2934,22 +2999,21 @@ for (const locale of ['en', 'fa'] as const)
       );
       expect(response.status()).toBe(200);
     }
-    await page.getByRole('button', { name: text('refresh'), exact: true }).click();
-    await expect(row.getByRole('button', { name: text('view'), exact: true })).toBeVisible();
-    await expect(row.getByRole('button', { name: text('edit'), exact: true })).toHaveCount(0);
+    const main = page.getByRole('main');
+    await main.getByRole('button', { name: text('refresh'), exact: true }).click();
+    await expect(main.getByText(text('archived'), { exact: true })).toBeVisible();
+    await expect(main.getByRole('link', { name: text('edit'), exact: true })).toHaveCount(0);
+    await expect(main.getByText('Updated {{name}}', { exact: true })).toBeVisible();
+    await main.getByRole('link', { name: text('title'), exact: true }).click();
+    await expandListFilters(page, locale);
     await page
       .getByRole('combobox', { name: text('allStatus'), exact: true })
       .selectOption('archived');
     await expect(row).toHaveCount(1);
-    await row.getByRole('button', { name: text('view'), exact: true }).click();
-    await expect(editor.locator('#notification-template-bodyTemplate')).toHaveAttribute(
-      'readonly',
-      ''
-    );
-    await expect(editor.locator('#notification-template-bodyTemplate')).toHaveValue(
-      'Updated {{name}}'
-    );
-    await editor.getByRole('button', { name: text('cancel'), exact: true }).click();
+    await row.getByRole('link', { name: text('view'), exact: true }).click();
+    await expect(main.getByText('Updated {{name}}', { exact: true })).toBeVisible();
+    await expect(editor).toHaveCount(0);
+    await page.goto('/admin/notifications/settings');
 
     const windowForm = page.locator('form').filter({ has: page.locator('#delivery-window-start') });
     await page.locator('#delivery-window-timezone').selectOption('UTC');
@@ -3011,7 +3075,7 @@ for (const locale of ['en', 'fa'] as const)
     });
     await page.goto('/admin/providers');
     const emailText = (key: string) => providerText(`admin.providers.${key}`, locale);
-    await page.getByRole('button', { name: emailText('new'), exact: true }).click();
+    await page.getByRole('link', { name: emailText('new'), exact: true }).click();
     await page.locator('#email-provider-label').fill(`Live SMTP ${locale}`);
     await page.locator('#email-provider-host').fill('smtp.example.test');
     await page.locator('#email-provider-fromEmail').fill('sender@example.test');
@@ -3027,12 +3091,9 @@ for (const locale of ['en', 'fa'] as const)
     expect(saved.maskedConfig.password).toMatch(/^\*+/);
     expect(JSON.stringify(saved)).not.toContain('fixture-smtp-write-only');
     const secret = saved.maskedConfig.password;
-    await page
-      .getByRole('row')
-      .or(page.getByRole('listitem'))
-      .filter({ hasText: `Live SMTP ${locale}` })
-      .getByRole('button', { name: emailText('update'), exact: true })
-      .click();
+    await expect(page).toHaveURL(`/admin/providers/email/${saved.id}`);
+    await page.getByRole('link', { name: emailText('update.title'), exact: true }).click();
+    await expect(page).toHaveURL(`/admin/providers/email/${saved.id}/edit`);
     await expect(page.locator('#email-provider-password')).toHaveValue('');
     await page.locator('#email-provider-replyTo').fill('');
     await page.locator('#email-provider-port').fill('465');
@@ -3043,9 +3104,12 @@ for (const locale of ['en', 'fa'] as const)
     expect(saved.maskedConfig).not.toHaveProperty('reply_to');
     expect(saved.maskedConfig.password).toBe(secret);
     expect(saved.lastTestStatus).toBe('pending');
-    await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
+    await page.getByRole('link', { name: emailText('backToList'), exact: true }).click();
+    await expect(page).toHaveURL('/admin/providers/email');
+    await page.getByRole('tab', { name: smsProviderText('sms', locale), exact: true }).click();
+    await expect(page).toHaveURL('/admin/providers/sms');
     const text = (key: Parameters<typeof smsProviderText>[0]) => smsProviderText(key, locale);
-    await page.getByRole('button', { name: text('new'), exact: true }).click();
+    await page.getByRole('link', { name: text('new'), exact: true }).click();
     await page.locator('#sms-label').fill(`Live SMS ${locale}`);
     await page.locator('#sms-key').fill('fixture-sms-write-only');
     await page.locator('#sms-sender').fill('3000');
@@ -3062,12 +3126,9 @@ for (const locale of ['en', 'fa'] as const)
     );
     expect(JSON.stringify(sms)).not.toContain('fixture-sms-write-only');
     const key = sms.maskedConfig.api_key;
-    await page
-      .getByRole('row')
-      .or(page.getByRole('listitem'))
-      .filter({ hasText: `Live SMS ${locale}` })
-      .getByRole('button', { name: text('edit'), exact: true })
-      .click();
+    await expect(page).toHaveURL(`/admin/providers/sms/${sms.id}`);
+    await page.getByRole('link', { name: text('edit'), exact: true }).click();
+    await expect(page).toHaveURL(`/admin/providers/sms/${sms.id}/edit`);
     await expect(page.locator('#sms-key')).toHaveValue('');
     await page.locator('#sms-timeout').fill('25');
     await page.locator('form button[type=submit]').click();
@@ -3079,13 +3140,13 @@ for (const locale of ['en', 'fa'] as const)
       { event_key: eventKey, template_id: '42', variables: { code: 'CODE' } },
     ]);
     await settleLiveRequests();
-    await page.reload();
-    await page.getByRole('tab', { name: 'SMS.ir', exact: true }).click();
     await expect(
-      page
-        .getByRole('row')
-        .or(page.getByRole('listitem'))
-        .filter({ hasText: `Live SMS ${locale}` })
+      page.getByRole('heading', { name: `Live SMS ${locale}`, exact: true })
+    ).toBeVisible();
+    await page.reload();
+    await expect(page).toHaveURL(`/admin/providers/sms/${sms.id}`);
+    await expect(
+      page.getByRole('heading', { name: `Live SMS ${locale}`, exact: true })
     ).toBeVisible();
   });
 
@@ -3202,5 +3263,50 @@ for (const locale of ['en', 'fa'] as const) {
     expect(published.headers()['content-type']).toBe('image/png');
     expect(await published.body()).toEqual(bytes);
     await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', draft.config.faviconUrl);
+  });
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`staff search opens the matching permissions through the real API (${locale})`, async ({
+    page,
+  }) => {
+    await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
+    await page.route('**/api/**', async (route) => {
+      const request = route.request();
+      const url = new URL(request.url());
+      await forwardLiveRequest(route, {
+        url: `${http.base}${url.pathname}${url.search}`,
+        headers: {
+          ...request.headers(),
+          host: new URL(http.base).host,
+          origin: 'https://app.example.test',
+          cookie: `barghsa_session=${http.session}`,
+          'x-csrf-token': http.csrf,
+        },
+      });
+    });
+    const { username } = http.staffReviewActors[locale]!;
+    await page.goto('/admin/roles/effective');
+    const search = page.getByRole('searchbox', {
+      name: adminText('admin.roles.lookup.searchLabel', locale),
+      exact: true,
+    });
+    const searched = page.waitForResponse((response) =>
+      new URL(response.url()).pathname.endsWith('/admin/staff/search')
+    );
+    await search.fill(username);
+    const staff = await searched;
+    expect(staff.status()).toBe(200);
+    const { items } = (await staff.json()) as { items: { userId: string; username: string }[] };
+    const account = items.find((item) => item.username === username)!;
+    expect(account.userId).toBeTruthy();
+    const permissions = page.waitForResponse(
+      (response) =>
+        new URL(response.url()).pathname ===
+        `/api/admin/users/${account.userId}/effective-permissions`
+    );
+    await page.getByRole('button').filter({ hasText: username }).click();
+    expect((await permissions).status()).toBe(200);
+    await expect(page.getByTestId('effective-permissions')).toContainText(account.userId);
   });
 }

@@ -61,13 +61,14 @@ for (const locale of ['en', 'fa'] as const) {
     u = (key: string) => t(`admin.uploadPolicies.${key}`, locale);
   const refresh = t('admin.jobs.refresh', locale),
     retry = t('admin.jobs.reload', locale);
-  test(`role list recovery keeps independent lookup work and denial clears private data (${locale})`, async ({
+  test(`role catalogue recovers and opens isolated staff permission lookup (${locale})`, async ({
     page,
   }, info) => {
     await shell(page, locale);
     let fail = false,
       deny = false,
-      lookups = 0;
+      lookups = 0,
+      lookupDenied = false;
     let initialRoles: Route | undefined;
     await page.route('**/api/admin/roles', (route) => {
       if (!initialRoles) {
@@ -84,7 +85,10 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.route('**/api/admin/users/*/effective-permissions', (route) => {
       lookups++;
-      return route.fulfill({ json: effectivePermissions });
+      return route.fulfill({
+        status: lookupDenied ? 403 : 200,
+        json: lookupDenied ? {} : effectivePermissions,
+      });
     });
     await page.goto('/admin/roles');
     await expect(page.getByRole('main').getByRole('status')).toHaveText(
@@ -92,32 +96,36 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await expect.poll(() => !!initialRoles).toBe(true);
     await initialRoles!.fulfill({ json: [catalogueRole] });
-    await expect(page.locator('tbody')).toContainText('finance:read');
-    await page.locator('#staffUserId').fill('staff-one');
-    await page.getByRole('button', { name: r('effective.lookup'), exact: true }).click();
-    await expect(page.locator('main')).toContainText('staff-one');
+    const roleLink = page.locator(`main a[href="/admin/roles/${catalogueRole.roleId}"]:visible`);
+    await expect(roleLink).toBeVisible();
     await inspect(page, r('catalogue'), locale, info.project.name, 'roles');
     fail = true;
     await page.getByRole('button', { name: refresh, exact: true }).click();
     await expect(page.getByRole('alert')).toContainText(r('load.failed'));
-    await expect(page.locator('tbody')).toContainText('finance:read');
-    await expect(page.locator('#staffUserId')).toHaveValue('staff-one');
-    await expect(
-      page.getByRole('button', { name: r('effective.lookup'), exact: true })
-    ).toBeDisabled();
-    await page.locator('#staffUserId').fill('staff-two');
+    await expect(roleLink).toHaveCount(0);
+    await expect(page.locator('#staffUserId')).toHaveCount(0);
     fail = false;
     await page.getByRole('button', { name: r('retry'), exact: true }).click();
-    await expect(page.locator('#staffUserId')).toHaveValue('staff-two');
-    expect(lookups).toBe(1);
+    await expect(roleLink).toBeVisible();
+    expect(lookups).toBe(0);
     deny = true;
     await page.getByRole('button', { name: refresh, exact: true }).click();
     await expect(page.getByRole('alert')).toHaveText(r('forbidden'));
-    await expect(page.locator('table')).toHaveCount(0);
-    await expect(page.locator('#staffUserId')).toHaveCount(0);
+    await expect(page.locator('table, [data-slot=card-list-view]')).toHaveCount(0);
     deny = false;
     await page.getByRole('button', { name: refresh, exact: true }).click();
-    await expect(page.locator('#staffUserId')).toHaveValue('');
+    await expect(roleLink).toBeVisible();
+    await page.getByRole('link', { name: r('effective.title'), exact: true }).click();
+    await page.locator('[data-permission-id-toggle]').click();
+    await page.locator('#staffUserId').fill('staff-one');
+    await page.getByRole('button', { name: r('effective.lookup'), exact: true }).click();
+    await expect(page.locator('main')).toContainText('staff-one');
+    lookupDenied = true;
+    await page.getByRole('button', { name: r('effective.lookup'), exact: true }).click();
+    await expect(page.getByRole('alert')).toHaveText(r('forbidden'));
+    await expect(page.locator('#staffUserId')).toHaveCount(0);
+    await expect(page.locator('main')).not.toContainText('staff-one');
+    expect(lookups).toBe(2);
   });
   test(`upload policy URLs reopen the category editor and its history (${locale})`, async ({
     page,
@@ -129,28 +137,31 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/upload-policies/limits', (route) =>
       route.fulfill({ json: [policyLimit] })
     );
-    await page.route('**/api/admin/upload-policies', (route) =>
-      route.fulfill({ json: [uploadPolicy] })
-    );
-    await page.goto('/admin/upload-policies');
-    const history = page
-      .locator('details:visible')
-      .filter({ has: page.getByText(u('history'), { exact: true }) });
-    await history.locator('summary').click();
-    await expect(page).toHaveURL((url) => url.searchParams.get('history') === 'document');
-    await page
-      .getByRole('button', { name: `${u('edit')} ${u('category.document')}`, exact: true })
-      .click();
-    await expect(page).toHaveURL((url) => url.searchParams.get('selected') === 'document');
-    const dialog = page.getByRole('dialog');
-    const size = dialog.locator('#upload-policy-size');
+    let categoryReads = 0;
+    await page.route('**/api/admin/upload-policies?category=document', (route) => {
+      categoryReads++;
+      return route.fulfill({ json: [uploadPolicy] });
+    });
+    const versionPath = `/admin/upload-policies/document/versions/${uploadPolicy.id}`;
+    await page.route(`**/api${versionPath}`, (route) => route.fulfill({ json: uploadPolicy }));
+    await page.goto('/admin/upload-policies?history=document');
+    await expect(page).toHaveURL('/admin/upload-policies/document/history');
+    await page.getByRole('link', { name: u('version'), exact: true }).click();
+    await expect(page).toHaveURL(versionPath);
+    await page.reload();
+    await expect(page.getByRole('main')).toContainText(uploadPolicy.createdBy);
+    expect(categoryReads).toBe(1);
+    await page.getByRole('link', { name: u('edit'), exact: true }).click();
+    await expect(page).toHaveURL('/admin/upload-policies/document/edit');
+    const size = page.locator('#upload-policy-size');
+    await expect(size).toBeVisible();
     const persistedSize = await size.inputValue();
     await size.fill('1.5');
     await page.reload();
     await expect(size).toHaveValue(persistedSize);
     await page.goBack();
-    await expect(dialog).toHaveCount(0);
-    await expect(history).toHaveAttribute('open', '');
+    await expect(page).toHaveURL(versionPath);
+    await expect(size).toHaveCount(0);
   });
 
   test(`upload policy editor and confirmation recover in place and discard changed or denied work (${locale})`, async ({
@@ -171,15 +182,18 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/upload-policies', (route) =>
       route.fulfill(fail ? { status: 503, json: {} } : { json: [uploadPolicy] })
     );
+    await page.route('**/api/admin/upload-policies?category=document', (route) =>
+      route.fulfill(fail ? { status: 503, json: {} } : { json: [uploadPolicy] })
+    );
     await page.goto('/admin/upload-policies');
     await expect(page.locator('tbody tr')).toHaveCount(1);
     await page.setViewportSize({ width: 900, height: 844 });
     await inspect(page, u('catalogue'), locale, info.project.name, 'uploads');
     await page.setViewportSize({ width: 390, height: 844 });
     await page
-      .getByRole('button', { name: `${u('edit')} ${u('category.document')}`, exact: true })
+      .getByRole('link', { name: `${u('edit')} ${u('category.document')}`, exact: true })
       .click();
-    const dialog = page.getByRole('dialog');
+    const dialog = page.getByRole('main');
     const size = dialog.getByRole('spinbutton', { name: /\S/ });
     const formats = dialog.getByRole('group', { name: u('formats'), exact: true });
     await expect(size).toHaveAttribute('aria-required', 'true');
@@ -201,9 +215,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog.locator('#upload-policy-size')).toHaveValue('1.5');
     await dialog.locator('#upload-policy-size').fill('1');
     await expect(dialog.locator('#upload-policy-size')).toHaveValue('1');
-    expect(
-      (await new AxeBuilder({ page }).include('[role="dialog"]').analyze()).violations
-    ).toEqual([]);
+    expect((await new AxeBuilder({ page }).include('form').analyze()).violations).toEqual([]);
     if (locale === 'fa' && info.project.name === 'mobile-safari')
       await page.screenshot({
         path: '/tmp/barghsa-policy-catalogue-editor-fa-mobile-safari.png',

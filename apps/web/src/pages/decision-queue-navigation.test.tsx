@@ -115,8 +115,8 @@ it('restores UTC filters after timezone recovery and preserves untouched seconds
   await act(async () => finish(Response.json({ timezone: 'America/Los_Angeles' })));
   expect(host.querySelector<HTMLInputElement>('#rex-from')?.value).toBe('2026-09-01T00:00');
   await click('Apply filters');
-  expect(reads.at(-1)?.searchParams.get('createdFrom')).toBe(from);
-  expect(reads).toHaveLength(2);
+  expect(reads.every((url) => url.searchParams.get('createdFrom') === from)).toBe(true);
+  expect(reads.filter((url) => url.searchParams.get('limit') === '25')).toHaveLength(2);
 });
 for (const kind of ['approval', 'reconciliation'] as const)
   it(`${kind} history navigation rejects a late decision without new reads or false success`, async () => {

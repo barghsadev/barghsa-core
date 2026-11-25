@@ -2,7 +2,8 @@ import { createHash } from 'node:crypto';
 import { test, expect, type Page } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { crmShell } from './crm-shell-fixture';
-import { t } from '@barghsa/i18n/admin-ui';
+import { adminText as increaseText } from '@barghsa/i18n/electricity-increase-decision-forms';
+import { adminText as priceText } from '@barghsa/i18n/electricity-price-forms';
 import {
   changeContractId,
   changeCursor,
@@ -53,7 +54,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }, info) => {
     await shell(page, locale);
-    const copy = (key: string) => t(`admin.electricityIncreases.${key}`, locale);
+    const copy = (key: string) => increaseText(`admin.electricityIncreases.${key}`, locale);
     let fail = true,
       deny = false;
     const reads: string[] = [],
@@ -73,6 +74,10 @@ for (const locale of ['en', 'fa'] as const) {
         });
       }
     );
+    await page.route(
+      `**/api/staff/electricity/increase-requests/${increaseRow.requestId}`,
+      (route) => route.fulfill({ json: { ...increaseRow, canReview: true } })
+    );
     await page.route('**/increase-requests/*/approve/review', (r) => {
       const review = increaseReview('approve');
       review.data.reason = r.request().postDataJSON().reason;
@@ -85,39 +90,50 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/electricity-increases');
     const list = page.getByRole('region', { name: copy('listTitle'), exact: true });
     const reason = page.locator('#increase-reason-' + increaseRow.requestId);
-    await reason.fill('PRIVATE-CAPACITY');
     await list.getByRole('button', { name: copy('more'), exact: true }).click();
     await expect(list.getByRole('alert')).toBeVisible();
     expect(params(page).get('cursor')).toBe(changeCursor);
-    await expect(reason).toHaveValue('PRIVATE-CAPACITY');
     const failed = reads.at(-1);
     fail = false;
     await list.getByRole('button', { name: copy('retry'), exact: true }).click();
     await expect(list.getByRole('alert')).toHaveCount(0);
     expect(reads.at(-1)).toBe(failed);
     expect(new URLSearchParams(failed).get('before')).toBe(changeCursor);
-    await expect(reason).toHaveValue('PRIVATE-CAPACITY');
+    const open = list.getByRole('link', { name: new RegExp(increaseRow.requestId) });
+    await open.click();
+    const approveLink = page.getByRole('link', { name: copy('prepareApproval'), exact: true });
+    await approveLink.click();
     const approvalReason = page.locator('#increase-approval-reason-' + increaseRow.requestId);
     await approvalReason.fill('PRIVATE-APPROVAL');
-    await page.getByRole('button', { name: copy('approve'), exact: true }).click();
+    await page.getByRole('button', { name: copy('previewApproval'), exact: true }).click();
     await expect(page.getByRole('dialog')).toBeVisible();
     await expect(page.getByRole('dialog')).toContainText('PRIVATE-APPROVAL');
     await page.goBack();
-    await expect.poll(() => params(page).get('cursor')).toBeNull();
-    await expect(page.getByRole('dialog')).toHaveCount(0);
-    await expect(reason).toHaveValue('');
-    await expect(approvalReason).toHaveValue('');
-    await page.goForward();
     await expect.poll(() => params(page).get('cursor')).toBe(changeCursor);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(reason).toHaveCount(0);
+    await expect(approvalReason).toHaveCount(0);
+    await page.goBack();
+    await expect(open).toBeVisible();
+    await page.goForward();
+    await page.goForward();
+    await expect(approvalReason).toHaveValue('');
+    expect(new URL(page.url()).pathname).toBe(
+      `/admin/electricity-increases/${increaseRow.requestId}/approve`
+    );
     await page.reload();
-    await expect(reason).toHaveValue('');
+    await expect(approvalReason).toHaveValue('');
+    await page.getByRole('link', { name: copy('backToRequest'), exact: true }).click();
+    await page.getByRole('link', { name: copy('backToQueue'), exact: true }).click();
+    await expect.poll(() => params(page).get('cursor')).toBe(changeCursor);
+    await expect(open).toBeVisible();
     expect(new URLSearchParams(reads.at(-1)).get('before')).toBe(changeCursor);
     await page.getByRole('button', { name: copy('expiredTab'), exact: true }).click();
     await expect.poll(() => params(page).get('status')).toBe('expired');
     expect(params(page).get('cursor')).toBeNull();
-    await expect(list.getByRole('button', { name: copy('approve'), exact: true })).toHaveCount(0);
+    await expect(page.getByTestId('electricity-increase-approve-form')).toHaveCount(0);
     await page.goBack();
-    await expect(reason).toHaveValue('');
+    await expect(open).toBeVisible();
     expect(page.url()).not.toContain('PRIVATE-');
     expect(writes).toEqual([]);
     await accessible(page, locale);
@@ -135,12 +151,15 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }, info) => {
     await shell(page, locale);
-    const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
+    const copy = (key: string) => priceText(`admin.electricityPrice.${key}`, locale);
     const reads: string[] = [],
       writes: string[] = [];
     let fail = false;
     await page.route(
-      (url) => /\/api\/staff\/electricity\/contracts\/[^/]+\/price-adjustments$/.test(url.pathname),
+      (url) =>
+        /\/api\/staff\/electricity\/contracts\/[^/]+\/price-adjustments(?:\/[^/]+)?$/.test(
+          url.pathname
+        ),
       (r) => {
         reads.push(r.request().url());
         const contractId = new URL(r.request().url()).pathname.split('/')[5];
@@ -174,24 +193,44 @@ for (const locale of ['en', 'fa'] as const) {
     const input = page.locator('#electricity-price-contract');
     const list = page.getByRole('region', { name: copy('listTitle'), exact: true });
     await expect(list).toContainText('Published tariff');
+    expect(new URL(page.url()).pathname).toBe(
+      `/admin/electricity-price-adjustments/${changeContractId}`
+    );
+    expect(params(page).has('contractId')).toBe(false);
+    await page.getByRole('link', { name: copy('backToLookup'), exact: true }).click();
     const count = reads.length;
     await input.fill(changeCursor);
-    expect(params(page).get('contractId')).toBe(changeContractId);
     expect(reads).toHaveLength(count);
     await page.getByRole('button', { name: copy('open'), exact: true }).click();
-    await expect.poll(() => params(page).get('contractId')).toBe(changeCursor);
-    await expect.poll(() => reads.at(-1)?.includes('/' + changeCursor + '/')).toBe(true);
-    await list.getByRole('button', { name: copy('finalize'), exact: true }).click();
-    await expect(page.getByRole('dialog')).toBeVisible();
-    await page.goBack();
-    await expect(input).toHaveValue(changeContractId);
-    await expect(page.getByRole('dialog')).toHaveCount(0);
-    await expect.poll(() => reads.at(-1)?.includes('/' + changeContractId + '/')).toBe(true);
-    await page.goForward();
-    await expect(input).toHaveValue(changeCursor);
-    await page.reload();
-    await expect(input).toHaveValue(changeCursor);
     await expect(list).toContainText('Published tariff');
+    expect(new URL(page.url()).pathname).toBe(
+      `/admin/electricity-price-adjustments/${changeCursor}`
+    );
+    await list.getByRole('link', { name: new RegExp(copy('viewCalculation')) }).click();
+    const record = page.locator('[data-slot=electricity-price-record]');
+    await expect(record).toContainText('Published tariff');
+    expect(new URL(page.url()).pathname).toBe(
+      `/admin/electricity-price-adjustments/${changeCursor}/${priceRow.adjustmentId}`
+    );
+    await record.getByRole('link', { name: copy('finalize'), exact: true }).click();
+    const decision = page.getByRole('form', { name: copy('finalize'), exact: true });
+    await expect(decision).toBeVisible();
+    expect(new URL(page.url()).pathname).toBe(
+      `/admin/electricity-price-adjustments/${changeCursor}/${priceRow.adjustmentId}/finalize`
+    );
+    await page.reload();
+    await expect(decision).toBeVisible();
+    await page.goBack();
+    await expect(decision).toHaveCount(0);
+    await expect(record).toContainText('Published tariff');
+    await page.goBack();
+    await expect(
+      list.getByRole('link', { name: new RegExp(copy('viewCalculation')) })
+    ).toBeVisible();
+    await page.goForward();
+    await expect(record).toContainText('Published tariff');
+    await page.reload();
+    await expect(record).toContainText('Published tariff');
     fail = true;
     await list.getByRole('button', { name: copy('refresh'), exact: true }).click();
     await expect(list.getByRole('alert')).toBeVisible();

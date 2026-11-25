@@ -21,20 +21,21 @@ import {
 } from '../src/test/saving-catalogue-fixtures';
 type Kind = 'agreement' | 'inventory';
 async function open(page: Page, kind: Kind, label: (key: string) => string) {
-  await page.goto('/admin/catalogue');
   const type = kind === 'agreement' ? 'saving_plan' : 'hardware';
-  await page.getByRole('tab', { name: label(type), exact: true }).click();
-  const panel = page.getByRole('tabpanel', { name: label(type), exact: true });
-  await panel
-    .getByRole('button', {
-      name: `${label('edit')} ${catalogueProduct(type).title[(await page.locator('html').getAttribute('lang')) === 'fa' ? 'fa' : 'en']}`,
-      exact: true,
-    })
-    .click();
-  const form = panel.getByRole('form', {
+  const route = `/admin/catalogue/${type}/${id}/configuration`;
+  await page.goto(route);
+  const form = page.getByRole('main').getByRole('form', {
     name: label(kind === 'agreement' ? 'agreement' : 'inventory'),
     exact: true,
   });
+  if (kind === 'agreement') {
+    await expect(form).toHaveCount(0);
+    await page
+      .getByRole('link', { name: label('createAgreementDraft'), exact: true })
+      .or(page.getByRole('link', { name: label('editAgreementDraft'), exact: true }))
+      .click();
+    await expect(page).toHaveURL(route + '/agreement');
+  }
   await expect(form).toBeVisible();
   return form;
 }
@@ -135,6 +136,18 @@ for (const kind of ['agreement', 'inventory'] as const)
         });
         const form = await open(page, kind, label);
         await expect(page.locator('html')).toHaveClass(dark ? /dark/ : /^(?!.*dark)/);
+        if (kind === 'inventory') {
+          const stock = form.getByRole('region', { name: label('currentInventory'), exact: true });
+          for (const [key, value] of [
+            ['savedStockCount', 10],
+            ['reservedCount', 2],
+            ['availableStockCount', 8],
+          ] as const) {
+            await expect(
+              stock.getByText(label(key), { exact: true }).locator('..').getByRole('definition')
+            ).toHaveText(new Intl.NumberFormat(locale).format(value));
+          }
+        }
         const field = page.locator(
           kind === 'agreement' ? '#saving-agreement-title' : '#saving-stock-count'
         );
@@ -170,7 +183,7 @@ for (const kind of ['agreement', 'inventory'] as const)
         const dialog = page.getByRole('dialog');
         await expect(dialog).toBeVisible();
         await expect(field).toBeDisabled();
-        await expect(page.locator('#catalogue-titleEn')).toBeDisabled();
+        await expect(page.locator('#catalogue-titleEn')).toHaveCount(0);
         await dialog.getByRole('button', { name: t('team.confirm', locale), exact: true }).click();
         await expect(dialog).toBeHidden();
         expect(writes).toHaveLength(1);
@@ -290,14 +303,12 @@ for (const kind of ['agreement', 'inventory'] as const) {
       })
       .click();
     await expect(field).toBeDisabled();
-    await expect(page.locator('#catalogue-titleEn')).toBeDisabled();
+    await expect(page.locator('#catalogue-titleEn')).toHaveCount(0);
     await form.evaluate((el) => {
       (el as HTMLFormElement).requestSubmit();
       (el as HTMLFormElement).requestSubmit();
     });
-    await page
-      .getByRole('form', { name: 'Product editor' })
-      .evaluate((el) => (el as HTMLFormElement).requestSubmit());
+    await expect(page.getByRole('form', { name: 'Product editor' })).toHaveCount(0);
     changed = true;
     await page.getByRole('button', { name: 'Refresh', exact: true }).first().click();
     await expect(field).toHaveValue(kind === 'agreement' ? 'Changed saved terms' : '20');
@@ -333,7 +344,7 @@ for (const kind of ['agreement', 'inventory'] as const) {
     await expect(form.getByRole('alert')).toContainText(label('validationUnavailable'));
     await expect(field).toHaveValue(raw);
     await expect(field).toBeEnabled();
-    await expect(page.locator('#catalogue-titleEn')).toBeEnabled();
+    await expect(page.locator('#catalogue-titleEn')).toHaveCount(0);
     await expect(page.getByRole('dialog')).toHaveCount(0);
   });
 }
@@ -368,11 +379,19 @@ test('saving activation reviews the persisted draft, rejects an incorrect versio
     }
   );
   const form = await open(page, 'agreement', (key) => tCatalogue(key, 'en'));
+  const openActivation = page.getByRole('link', {
+    name: 'Review saved draft for activation',
+    exact: true,
+  });
   await page.locator('#saving-agreement-title').fill('Unsaved edits');
-  await expect(
-    page.getByRole('button', { name: 'Activate agreement', exact: true })
-  ).toBeDisabled();
+  await expect(openActivation).toHaveCount(0);
   await page.locator('#saving-agreement-title').fill(savingAgreement.title);
+  await openActivation.click();
+  await expect(page).toHaveURL(
+    `/admin/catalogue/saving_plan/${id}/configuration/activate-agreement`
+  );
+  await expect(form).toHaveCount(0);
+  await expect(page.getByText(savingAgreement.body, { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Activate agreement', exact: true }).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toContainText(savingAgreement.body);
@@ -387,7 +406,7 @@ test('saving activation reviews the persisted draft, rejects an incorrect versio
   await page.getByRole('button', { name: 'Activate agreement', exact: true }).click();
   await dialog.getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(dialog).toBeHidden();
-  await expect(form).toBeVisible();
+  await expect(form).toHaveCount(0);
   await expect(
     page.getByText('Active agreement: ' + savingAgreement.title, { exact: true })
   ).toBeVisible();

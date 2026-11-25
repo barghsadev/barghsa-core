@@ -167,39 +167,31 @@ async function addressCompanions(
     writes: state.writes.length,
     companions: state.companionWrites.length,
   };
+  const owner = form(page, 'address');
   for (const key of ['add', 'edit', 'setMain', 'delete']) {
-    const buttons = page.getByRole('button', {
-      name: t(`settings.addresses.${key}`, locale),
-      exact: true,
-      includeHidden: true,
-    });
-    await expect(buttons).toHaveCount(
-      key === 'add'
-        ? 1
-        : key === 'setMain'
-          ? state.addresses.filter((item) => !item.mainAddress).length
-          : state.addresses.length
-    );
-    for (const button of await buttons.all()) {
-      await expect(button).toBeDisabled();
-      await button.dispatchEvent('click');
-    }
+    await expect(
+      page.getByRole('main').getByRole('button', {
+        name: t(`settings.addresses.${key}`, locale),
+        exact: true,
+      })
+    ).toHaveCount(0);
   }
-  const dialog = page.getByRole('dialog');
-  const cancel = dialog.getByRole('button', {
+  const cancel = owner.getByRole('button', {
     name: t('settings.addresses.form.cancel', locale),
     exact: true,
   });
-  await expect(cancel).toHaveCount(2);
-  for (const button of await cancel.all()) {
-    await expect(button).toBeDisabled();
-    await button.dispatchEvent('click');
-  }
-  await form(page, 'address').dispatchEvent('submit');
+  await expect(cancel).toBeDisabled();
+  await cancel.dispatchEvent('click');
+  await owner.dispatchEvent('submit');
   await page.keyboard.press('Escape');
-  await expect(dialog).toBeVisible();
-  const related = page.locator('a[href="/electricity/advanced"]');
-  await related.dispatchEvent('click');
+  await expect(owner).toBeVisible();
+  await page
+    .getByRole('main')
+    .getByRole('link', {
+      name: t('settings.addresses.title', locale),
+      exact: true,
+    })
+    .dispatchEvent('click');
   await expect(page).toHaveURL(before.location);
   expect({
     location: page.url(),
@@ -238,7 +230,7 @@ for (const locale of ['en', 'fa'] as const) {
           return route.fulfill({ status: 403, json: {} });
       }
     });
-    await page.goto('/settings/profile');
+    await page.goto('/settings/profile/edit');
     const panel = page.getByRole('region', {
       name: t('onboarding.documents.title', locale),
       exact: true,
@@ -273,7 +265,7 @@ for (const locale of ['en', 'fa'] as const) {
     const fixture = await setupSettingsForms(page, locale, 'profile');
     const { state } = fixture;
     const releaseSchema = await holdFirstSchema(page);
-    await page.goto('/settings/profile');
+    await page.goto('/settings/profile/edit');
     await expect.poll(() => state.shellProfileReads).toBe(2);
     await expect
       .poll(() => page.locator('html').evaluate((root) => root.classList.contains('dark')))
@@ -290,6 +282,9 @@ for (const locale of ['en', 'fa'] as const) {
       postal,
     ];
     await expect(legal).toHaveValue('Original Company');
+    await expect(
+      owner.getByRole('button', { name: crmText('settings.profile.save', locale), exact: true })
+    ).toBeInViewport({ ratio: 0.999 });
     await expect(page.locator('#profile-city')).toHaveValue(cityId);
     await expect(page.locator('#profile-city')).toBeEnabled();
     await title.fill('  Captured profile  ');
@@ -439,13 +434,13 @@ for (const locale of ['en', 'fa'] as const) {
       }
       heldRetry = route;
     });
-    await page.goto('/settings/addresses?returnTo=%2Felectricity%2Fadvanced');
+    await page.goto('/settings/addresses');
     // Wait for the guard and modal JSON reads. Later no-read checks count every request.
     await expect.poll(() => state.shellProfileReads).toBe(2);
     await expect
       .poll(() => page.locator('html').evaluate((root) => root.classList.contains('dark')))
       .toBe(locale === 'fa');
-    const add = page.getByRole('button', {
+    const add = page.getByRole('link', {
       name: t('settings.addresses.add', locale),
       exact: true,
     });
@@ -455,7 +450,7 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('alert')
       .filter({ hasText: t('settings.addresses.error.load', locale) });
     await expect(loadError).toBeVisible();
-    await expect(add).toBeDisabled();
+    await expect(add).toHaveCount(0);
     await expect(empty).toHaveCount(0);
     await loadError.getByRole('button', { name: t('settings.addresses.retry', locale) }).click();
     await expect.poll(() => Boolean(heldRetry)).toBe(true);
@@ -508,7 +503,7 @@ for (const locale of ['en', 'fa'] as const) {
     await linkedError(postal, t('settings.addresses.validation.postalCode', locale));
     await expect(commandToast(page, 'error', tSettingsForms('error', locale))).toHaveCount(1);
     await expect(full).toHaveValue('  First saved address  ');
-    await expect(page.getByRole('dialog')).not.toContainText(privateText);
+    await expect(owner).not.toContainText(privateText);
     state.modes.create = 'mixed';
     await submit(owner).click();
     await expect.poll(() => state.writes.length).toBe(2);
@@ -528,7 +523,7 @@ for (const locale of ['en', 'fa'] as const) {
     state.modes.create = 'success';
     await rotateCsrf(page, 'settings-address-retry-two');
     await action(page, locale, 'retryOriginal').click();
-    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(owner).toHaveCount(0);
     sameCapture(state.writes.slice(1, 4));
     expect(state.writes[2]!.csrf).toBe('settings-address-retry-one');
     expect(state.writes[3]!.csrf).toBe('settings-address-retry-two');
@@ -558,7 +553,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(active).toHaveCount(0);
     if (compact) await menu.click();
     await card
-      .getByRole('button', { name: t('settings.addresses.edit', locale), exact: true })
+      .getByRole('link', { name: t('settings.addresses.edit', locale), exact: true })
       .click();
     await expect(full).toHaveValue('First saved address');
     await full.fill('  Edited saved address  ');
@@ -575,7 +570,7 @@ for (const locale of ['en', 'fa'] as const) {
     state.modes.edit = 'success';
     await rotateCsrf(page, 'settings-address-edit-retry');
     await action(page, locale, 'retryOriginal').click();
-    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(owner).toHaveCount(0);
     sameCapture(state.writes.slice(4, 6));
     expect(state.writes[5]!.csrf).toBe('settings-address-edit-retry');
     expect(state.effects).toEqual({ profile: 0, create: 1, edit: 1, history: 0, audit: 2 });
@@ -584,14 +579,14 @@ for (const locale of ['en', 'fa'] as const) {
     await crop(page, outcome, test.info().outputPath(`settings-address-outcome-${locale}.png`));
 
     await outcome
-      .getByRole('button', { name: t('settings.addresses.edit', locale), exact: true })
+      .getByRole('link', { name: t('settings.addresses.edit', locale), exact: true })
       .click();
     await full.fill(privateText);
     state.modes.edit = 'success';
     state.denied = true;
     await submit(owner).click();
     await expect.poll(() => state.writes.length).toBe(7);
-    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(owner).toHaveCount(0);
     await expect(page.locator('body')).not.toContainText(privateText);
     await expect(page.locator('body')).not.toContainText('Edited saved address');
     await expect(action(page, locale, 'retryOriginal')).toHaveCount(0);
@@ -599,17 +594,18 @@ for (const locale of ['en', 'fa'] as const) {
       page.getByRole('alert').filter({ hasText: tSettingsForms('forbidden', locale) })
     ).toBeVisible();
     await expect(empty).toHaveCount(0);
-    await expect(add).toBeDisabled();
+    await expect(add).toHaveCount(0);
     state.denied = false;
     state.actor = 'settings/new-customer:opaque';
     state.activeProfileId = otherProfileId;
     await profileEpoch(page);
+    await page.goto('/settings/addresses');
     await expect(page.locator('body')).toContainText(t('settings.addresses.noAddresses', locale));
     state.activeProfileId = null;
     await profileEpoch(page);
     await expect(noProfile).toBeVisible();
     await expect(empty).toHaveCount(0);
-    await expect(add).toBeDisabled();
+    await expect(add).toHaveCount(0);
     await expect(
       page.getByRole('link', { name: addressesText('openDashboard', locale), exact: true })
     ).toHaveAttribute('href', '/app');

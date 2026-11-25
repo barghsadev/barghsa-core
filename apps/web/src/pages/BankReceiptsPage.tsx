@@ -1,5 +1,5 @@
 import { LoadingStatus, ListPage, ListToolbar } from '@barghsa/ui';
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
@@ -28,6 +28,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useListView } from '../hooks/useListView.js';
 import { HistoryTable } from '../components/HistoryTable.js';
+import { ReceiptDepositDate } from '../components/ReceiptDepositDate.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import {
   useHistoryFilterDraft,
@@ -44,10 +45,12 @@ import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
+import type { ReceiptHistorySearch } from '../lib/receipt-history-search.js';
 
 type ReceiptState = CustomerBankReceiptListItem['state'];
 
 interface BankReceiptsPageProps {
+  recordSearch?: ReceiptHistorySearch;
   statuses?: readonly ReceiptState[];
   onStatusesChange?: (statuses: ReceiptState[]) => void;
   query?: HistoryQuery;
@@ -75,6 +78,7 @@ export function BankReceiptsPage(props: BankReceiptsPageProps) {
 function ReceiptHistory({
   scope,
   profileRevision,
+  recordSearch,
   statuses = [],
   onStatusesChange,
   query = { q: '', sort: DEFAULT_HISTORY_SORT },
@@ -216,14 +220,6 @@ function ReceiptHistory({
     });
   }
   const label = (key: string) => t(`invoices.receipts.${key}`, locale);
-  const dateFormatter = useMemo(
-    () =>
-      new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR-u-ca-gregory' : 'en-US', {
-        dateStyle: 'medium',
-        timeZone: 'UTC',
-      }),
-    [locale]
-  );
 
   useEffect(() => {
     const request = new AbortController();
@@ -317,8 +313,6 @@ function ReceiptHistory({
           setResult((value) => (value.scope === scope ? { ...value, loadingMore: false } : value));
       });
   }
-
-  const paymentDate = (value: string) => dateFormatter.format(new Date(`${value}T00:00:00Z`));
 
   return (
     <div className="mx-auto max-w-7xl space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -489,9 +483,9 @@ function ReceiptHistory({
                     label: label('receipt'),
                     render: (item) => (
                       <Link
-                        to="/invoices/$invoiceId"
-                        params={{ invoiceId: item.invoiceId }}
-                        hash={`bank-receipt-${item.receiptId}`}
+                        to="/invoices/$invoiceId/receipts/$receiptId"
+                        params={{ invoiceId: item.invoiceId, receiptId: item.receiptId }}
+                        search={recordSearch}
                         className="touch-action text-primary underline underline-offset-4 pointer-coarse:min-h-[45px]!"
                       >
                         <bdi dir="ltr">{item.receiptId}</bdi>
@@ -517,7 +511,7 @@ function ReceiptHistory({
                     id: 'deposit',
                     label: label('depositDate'),
                     render: (item) => (
-                      <time dateTime={item.paymentDate}>{paymentDate(item.paymentDate)}</time>
+                      <ReceiptDepositDate value={item.paymentDate} locale={locale} />
                     ),
                   },
                   {
@@ -539,9 +533,9 @@ function ReceiptHistory({
                 {items.map((item) => (
                   <li key={item.receiptId} className="rounded-lg border border-border p-3">
                     <Link
-                      to="/invoices/$invoiceId"
-                      params={{ invoiceId: item.invoiceId }}
-                      hash={`bank-receipt-${item.receiptId}`}
+                      to="/invoices/$invoiceId/receipts/$receiptId"
+                      params={{ invoiceId: item.invoiceId, receiptId: item.receiptId }}
+                      search={recordSearch}
                       className="group block space-y-2 rounded-md p-2 hover:bg-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -567,7 +561,8 @@ function ReceiptHistory({
                           {label('bank')}: {item.bankName ?? label('bankUnknown')}
                         </span>
                         <span>
-                          {label('depositDate')}: {paymentDate(item.paymentDate)}
+                          {label('depositDate')}:{' '}
+                          <ReceiptDepositDate value={item.paymentDate} locale={locale} />
                         </span>
                         <span>
                           {label('submittedAt')}: {time.format(item.submittedAt)}

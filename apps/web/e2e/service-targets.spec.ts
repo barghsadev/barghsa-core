@@ -29,7 +29,7 @@ test('target validation and confirmation preserve settings through a failed save
   await page.route('**/api/admin/config/escalation-policy', (route) =>
     route.fulfill({ status: 403, json: {} })
   );
-  await page.goto('/admin/service-targets');
+  await page.goto('/admin/service-targets/response-times');
   const input = page.getByLabel('Hours — Tickets', { exact: true });
   for (const invalid of ['0', '1.5', '8761']) {
     await input.fill(invalid);
@@ -79,7 +79,7 @@ test('target settings deny controls when access is unavailable', async ({ page }
   await page.route('**/api/admin/config/escalation-policy', (route) =>
     route.fulfill({ status: 403, json: {} })
   );
-  await page.goto('/admin/service-targets');
+  await page.goto('/admin/service-targets/response-times');
   await expect(
     page.getByRole('group', { name: 'Response target hours', exact: true }).getByRole('alert')
   ).toBeVisible();

@@ -8,8 +8,6 @@ import {
   parseInvoiceListQuery,
   parseNumberRange,
 } from '@barghsa/shared/validation';
-import { RouteSkeleton } from '../../../components/RouteSkeleton.js';
-import { RouteErrorBoundary } from '../../../components/RouteErrorBoundary.js';
 
 const InvoicesPage = lazyRouteComponent(
   () => import('../../../pages/InvoicesPage.js'),
@@ -39,11 +37,17 @@ function InvoiceListRoute() {
       onRemoveFilter={(key, value) =>
         void navigate({ search: (current) => removeHistoryFilter(current, key, value) })
       }
+      onShowAllStatuses={() =>
+        void navigate({
+          search: (current) => ({ ...current, status: undefined, statuses: undefined }),
+        })
+      }
       onClearFilters={() =>
         void navigate({
           search: (current) => ({
             ...current,
             q: undefined,
+            status: undefined,
             statuses: undefined,
             from: undefined,
             to: undefined,
@@ -98,6 +102,4 @@ export const Route = createFileRoute('/_app/invoices/')({
     };
   },
   component: InvoiceListRoute,
-  pendingComponent: () => <RouteSkeleton />,
-  errorComponent: RouteErrorBoundary,
 });

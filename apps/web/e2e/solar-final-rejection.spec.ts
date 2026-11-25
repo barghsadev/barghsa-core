@@ -1,3 +1,4 @@
+import { routePostalRecords } from './solar-postal-record-fixture';
 import { expect, test } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 
@@ -38,29 +39,26 @@ test('staff can reject a postal-reviewed solar request with a reason', async ({ 
       },
     })
   );
+  const postalRecord = () => ({
+    id: requestId,
+    profile_id: profileId,
+    profile_name: 'Solar customer',
+    request_status: rejected
+      ? 'rejected'
+      : finalReview
+        ? 'final_review'
+        : 'postal_documents_received',
+    postal_status: 'received',
+    courier: 'Parcel Co',
+    tracking_number: 'TRACK-123',
+    send_date: '2026-09-23',
+    receipt_image_id: null,
+    staff_notes: null,
+    created_at: '2026-09-23T10:00:00.000Z',
+  });
+  await routePostalRecords(page, () => [postalRecord()]);
   await page.route('**/api/admin/solar/postal-queue?*', (route) =>
-    route.fulfill({
-      json: {
-        requests: rejected
-          ? []
-          : [
-              {
-                id: requestId,
-                profile_id: profileId,
-                profile_name: 'Solar customer',
-                request_status: finalReview ? 'final_review' : 'postal_documents_received',
-                postal_status: 'received',
-                courier: 'Parcel Co',
-                tracking_number: 'TRACK-123',
-                send_date: '2026-09-23',
-                receipt_image_id: null,
-                staff_notes: null,
-                created_at: '2026-09-23T10:00:00.000Z',
-              },
-            ],
-        nextBefore: null,
-      },
-    })
+    route.fulfill({ json: { requests: rejected ? [] : [postalRecord()], nextBefore: null } })
   );
   await page.route(`**/api/admin/solar/requests/${requestId}/start-final-review`, (route) => {
     finalReview = true;
@@ -93,26 +91,32 @@ test('staff can reject a postal-reviewed solar request with a reason', async ({ 
 
   await page.goto('/admin/solar-postal');
 
-  await page.getByRole('button', { name: /Solar customer/ }).click();
-  await expect(page.getByRole('button', { name: 'Reject request' })).toHaveCount(0);
-  await page.getByRole('button', { name: 'Start final review' }).click();
+  await page.getByRole('link', { name: /Solar customer/ }).click();
+  const submit = page.locator('main form button[type=submit]');
+  const back = page.getByRole('link', { name: 'Back to shipment review', exact: true });
+  const reject = page.getByRole('link', { name: 'Reject request', exact: true });
+  await expect(reject).toHaveCount(0);
+  await page.getByRole('link', { name: 'Start final review', exact: true }).click();
+  await submit.click();
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
-  await expect(page.getByRole('button', { name: 'Reject request' })).toBeVisible();
-  await page.getByRole('button', { name: 'Reject request' }).click();
+  await back.click();
+  await reject.click();
+  const reason = page.getByRole('textbox', { name: 'Reason for rejection', exact: true });
+  await submit.click();
+  await expect(reason).toHaveAttribute('aria-invalid', 'true');
   expect(decisions).toHaveLength(0);
-  await page
-    .getByRole('textbox', { name: 'Reason' })
-    .fill('Original documents failed final review');
-  await page.getByRole('button', { name: 'Reject request' }).click();
+  await reason.fill('Original documents failed final review');
+  await submit.click();
   await expect(page.getByRole('dialog')).toContainText('Original documents failed final review');
   await expect(page.getByRole('dialog')).toContainText('After confirmation');
   await expect(page.getByRole('dialog')).toContainText('Rejected');
   await approveRiskConfirmation(page, 'en', 'destructive');
-  await page.getByRole('dialog').getByRole('button', { name: 'Confirm' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect.poll(() => decisions.length).toBe(1);
   expect(decisions[0]).toEqual({
     reason: 'Original documents failed final review',
     expectedReviewHash: reviewHash,
   });
-  await expect(page.getByRole('button', { name: /Solar customer/ })).toHaveCount(0);
+  await page.getByRole('link', { name: 'Back to the postal queue', exact: true }).click();
+  await expect(page.getByRole('link', { name: /Solar customer/ })).toHaveCount(0);
 });

@@ -146,6 +146,44 @@ async function balances(f: Awaited<ReturnType<typeof invoice>>) {
   ).rows[0];
 }
 
+it('looks up an exact refund within its invoice and destination', async () => {
+  const f = await invoice('100');
+  const other = await invoice('100');
+  const target = await request(requestBody(f.id, '20'));
+  await request(requestBody(f.id, '20'));
+  const walletResponse = await post('wallet-refunds', requestBody(f.id, '10'));
+  expect(walletResponse.status).toBe(201);
+  const wallet = (await walletResponse.json()) as RefundDto;
+  const read = (
+    path: string,
+    invoiceId: string,
+    refundId: string,
+    user = 'refund-finance',
+    before = ''
+  ) =>
+    fetch(`${http.base}/api/admin/${path}?invoiceId=${invoiceId}&refundId=${refundId}${before}`, {
+      headers: headers[user]!,
+    });
+
+  const exact = await read('external-refunds', f.id, target.id);
+  expect(exact.status).toBe(200);
+  const data = await exact.json();
+  expect(data.invoice.availableAmount).toBe('50');
+  expect(data.refunds.map((refund: RefundDto) => refund.id)).toEqual([target.id]);
+  expect(data.nextBefore).toBeNull();
+  expect((await (await read('external-refunds', f.id, wallet.id)).json()).refunds).toEqual([]);
+  expect((await (await read('external-refunds', other.id, target.id)).json()).refunds).toEqual([]);
+  expect((await (await read('wallet-refunds', f.id, wallet.id)).json()).refunds).toMatchObject([
+    { id: wallet.id },
+  ]);
+  expect((await read('external-refunds', f.id, target.id, 'refund-support')).status).toBe(403);
+  expect((await read('external-refunds', f.id, 'invalid')).status).toBe(400);
+  expect(
+    (await read('external-refunds', f.id, target.id, 'refund-finance', `&before=${target.id}`))
+      .status
+  ).toBe(400);
+});
+
 it('shows external requests and the shared refundable balance to finance staff', async () => {
   const f = await invoice('100');
   const url = `${http.base}/api/admin/external-refunds?invoiceId=${f.id}`;

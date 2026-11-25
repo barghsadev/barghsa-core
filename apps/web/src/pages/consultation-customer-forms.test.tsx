@@ -4,11 +4,12 @@ import { act, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { tConsultation } from '@barghsa/i18n/consultation';
+import { tConsultationBrief } from '@barghsa/i18n/consultation-intake';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import type * as FormModule from '@barghsa/ui/form';
-import { ConsultationsPage } from './ConsultationsPage.js';
-import { ConsultationDetailPage } from './ConsultationDetailPage.js';
+import { ConsultationIntakePage, ConsultationsPage } from './ConsultationsPage.js';
+import { ConsultationDetailPage as ConsultationRequestPage } from './ConsultationDetailPage.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import {
   browseConsultation,
@@ -48,13 +49,14 @@ vi.mock('@barghsa/ui/form', async (importOriginal) => {
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ children, to }: { children: ReactNode; to: string }) => <a href={to}>{children}</a>,
   useNavigate: () => routing.navigate,
-  useParams: () => ({ requestId: routing.requestId }),
+  useBlocker: () => {},
 }));
 vi.mock('../hooks/useAccountTime.js', () => ({
   useAccountTime: () => ({ format: (value: string) => value, notice: null }),
 }));
 afterEach(() => {
   vi.unstubAllGlobals();
+  sessionStorage.clear();
   routing.navigate.mockReset();
   routing.requestId = browseRequestId;
   document.documentElement.lang = 'fa';
@@ -125,8 +127,19 @@ function button(host: ParentNode, text: string) {
   expect(found, text).toBeDefined();
   return found!;
 }
+function ConsultationDetailPage() {
+  return <ConsultationRequestPage requestId={routing.requestId} />;
+}
+function ConsultationReplyPage() {
+  return <ConsultationRequestPage requestId={routing.requestId} view="reply" />;
+}
+function ConsultationOfferPage() {
+  return <ConsultationRequestPage requestId={routing.requestId} view="offer" />;
+}
+
 async function mount(
-  Page: typeof ConsultationsPage | typeof ConsultationDetailPage,
+  Page:
+    typeof ConsultationIntakePage | typeof ConsultationDetailPage | typeof ConsultationReplyPage,
   handler: (url: string, options?: RequestInit) => Promise<Response>,
   locale: 'en' | 'fa' = 'en',
   Provider = QueryProvider
@@ -158,9 +171,9 @@ async function mount(
         .querySelector('form')!
         .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
     );
-  const fill = async (value: string) =>
+  const fill = async (value: string, selector = '#consultation-information') =>
     act(async () => {
-      const input = host.querySelector<HTMLTextAreaElement>('#consultation-information')!;
+      const input = host.querySelector<HTMLTextAreaElement>(selector)!;
       Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
         input,
         value
@@ -193,12 +206,71 @@ async function mount(
     },
   };
 }
+
+it('keeps the same submission key when recovery races the original request', async () => {
+  const submissionKey = '4a000000-0000-4000-8000-000000000001';
+  const pendingKey = `barghsa.consultation-offering:${JSON.stringify(['customer-one', browseProfileId])}:submission`;
+  sessionStorage.setItem(
+    pendingKey,
+    JSON.stringify({ productId: browseProductId, submissionKey, hasBrief: true })
+  );
+  let reads = 0;
+  const writes: unknown[] = [];
+  const view = await mount(ConsultationIntakePage, async (url, options) => {
+    if (url.includes(`/requests/submissions/${submissionKey}?`)) {
+      return Response.json({
+        receipt: ++reads === 1 ? null : { requestId: browseRequestId, status: 'submitted' },
+      });
+    }
+    if (options?.method === 'POST') {
+      writes.push(JSON.parse(String(options.body)));
+      return new Response(null, { status: 409 });
+    }
+    return Response.json(read(url));
+  });
+  try {
+    await vi.waitFor(() =>
+      expect(view.host.textContent).toContain(tConsultationBrief('checkHelp', 'en'))
+    );
+    await view.click(tConsultationBrief('check', 'en'));
+    await vi.waitFor(() =>
+      expect(view.host.textContent).toContain(tConsultationBrief('reenter', 'en'))
+    );
+    expect(writes).toHaveLength(0);
+    const brief = 'Assess the site for a mid-sized generator';
+    await view.fill(brief, 'textarea[name=brief]');
+    await view.click(copy('request'));
+    await vi.waitFor(() => expect(writes).toHaveLength(1));
+    expect(writes[0]).toEqual({
+      profileId: browseProfileId,
+      productId: browseProductId,
+      submissionKey,
+      brief,
+    });
+    expect(sessionStorage.getItem(pendingKey)).not.toContain(brief);
+    await vi.waitFor(() =>
+      expect(view.host.textContent).toContain(tConsultationBrief('checkHelp', 'en'))
+    );
+    await view.click(tConsultationBrief('check', 'en'));
+    await vi.waitFor(() => expect(routing.navigate).toHaveBeenCalled());
+    expect(reads).toBe(2);
+    expect(writes).toHaveLength(1);
+    expect(sessionStorage.getItem(pendingKey)).toBeNull();
+    expect(routing.navigate).toHaveBeenCalledWith({
+      to: '/consultations/$requestId',
+      params: { requestId: browseRequestId },
+    });
+  } finally {
+    await view.close();
+  }
+});
+
 it.each(['en', 'fa'] as const)(
   'intake gives linked product/confirmation feedback and first-field focus (%s)',
   async (locale) => {
     const writes: unknown[] = [];
     const view = await mount(
-      ConsultationsPage,
+      ConsultationIntakePage,
       async (url, options) => {
         if (options?.method === 'POST') {
           writes.push(JSON.parse(String(options.body)));
@@ -225,12 +297,13 @@ it.each(['en', 'fa'] as const)(
         false
       );
       expect(writes).toEqual([]);
-      for (const id of ['consultation-product', 'consultation-confirmation']) {
+      for (const [id, key] of [
+        ['consultation-product', 'productInvalid'],
+        ['consultation-confirmation', 'confirmationInvalid'],
+      ] as const) {
         const message = view.host.querySelector(`#${id}-message`)!;
-        expect(message.parentElement?.querySelector('[aria-hidden=true]')?.textContent).toBe(
-          message.textContent
-        );
-        expect(message.classList.contains('col-start-1')).toBe(true);
+        expect(message.textContent).toBe(copy(key, locale));
+        expect(message.getAttribute('role')).toBe('alert');
       }
       await act(async () =>
         view.host.querySelector<HTMLInputElement>('input[type=radio]')!.click()
@@ -263,7 +336,7 @@ it.each(['denied', 'replaced'] as const)(
     let refreshing = false,
       release: (() => void) | undefined,
       writes = 0;
-    const view = await mount(ConsultationsPage, async (url, options) => {
+    const view = await mount(ConsultationIntakePage, async (url, options) => {
       if (options?.method === 'POST') {
         writes++;
         return Response.json({ requestId: browseRequestId, status: 'submitted' });
@@ -313,7 +386,7 @@ it('information read started before the command cannot prove its later ambiguous
     reason: 'Captured reply',
     created_at: '2026-10-01T11:00:00Z',
   };
-  const view = await mount(ConsultationDetailPage, async (url, options) => {
+  const view = await mount(ConsultationReplyPage, async (url, options) => {
     if (options?.method === 'POST') {
       writes++;
       return new Response('{}', { status: 503 });
@@ -361,7 +434,7 @@ it('information read started before the command cannot prove its later ambiguous
 });
 it('intake projects only public server fields and preserves valid selection/confirmation drafts', async () => {
   let fields: unknown[] = ['productId'];
-  const view = await mount(ConsultationsPage, async (url, options) =>
+  const view = await mount(ConsultationIntakePage, async (url, options) =>
     options?.method === 'POST' ? validation(fields) : Response.json(read(url))
   );
   try {
@@ -387,7 +460,7 @@ it('intake projects only public server fields and preserves valid selection/conf
 it('intake blocks simultaneous submits and retries a malformed result using the exact captured actor-bound key', async () => {
   const writes: unknown[] = [];
   let finish: ((response: Response) => void) | undefined;
-  const view = await mount(ConsultationsPage, async (url, options) => {
+  const view = await mount(ConsultationIntakePage, async (url, options) => {
     if (options?.method === 'POST') {
       writes.push(JSON.parse(String(options.body)));
       return writes.length === 1
@@ -432,7 +505,7 @@ it('intake recovers a stalled acknowledgement with the original submission key',
       })
   );
   const receipt = { requestId: browseRequestId, status: 'submitted' };
-  const view = await mount(ConsultationsPage, async (url, options) => {
+  const view = await mount(ConsultationIntakePage, async (url, options) => {
     if (options?.method !== 'POST') return Response.json(read(url));
     writes.push(JSON.parse(String(options.body)));
     if (writes.length > 1) return Response.json(receipt);
@@ -467,7 +540,7 @@ it('intake recovers a stalled acknowledgement with the original submission key',
 it('intake discards old actor settlement and starts a distinct key for the newly authorized account', async () => {
   const writes: unknown[] = [];
   let finish: ((response: Response) => void) | undefined;
-  const view = await mount(ConsultationsPage, async (url, options) => {
+  const view = await mount(ConsultationIntakePage, async (url, options) => {
     if (options?.method === 'POST') {
       writes.push(JSON.parse(String(options.body)));
       return writes.length === 1
@@ -504,7 +577,7 @@ it.each(['en', 'fa'] as const)(
     const writes: unknown[] = [];
     let fields: unknown[] = ['reason'];
     const view = await mount(
-      ConsultationDetailPage,
+      ConsultationReplyPage,
       async (url, options) => {
         if (options?.method === 'POST') {
           writes.push(JSON.parse(String(options.body)));
@@ -530,9 +603,7 @@ it.each(['en', 'fa'] as const)(
       );
       expect(field.getAttribute('aria-describedby')).toContain('consultation-information-message');
       const message = view.host.querySelector('#consultation-information-message')!;
-      expect(message.parentElement?.querySelector('[aria-hidden=true]')?.textContent).toBe(
-        message.textContent
-      );
+      expect(message.getAttribute('role')).toBe('alert');
       await view.fill(' ' + 'x'.repeat(2000) + ' ');
       await view.submit();
       await vi.waitFor(() => expect(writes).toHaveLength(1));
@@ -554,7 +625,7 @@ it.each(['en', 'fa'] as const)(
 );
 it('information clears only on an exact request/outcome acknowledgement', async () => {
   let saved = false;
-  const view = await mount(ConsultationDetailPage, async (url, options) => {
+  const view = await mount(ConsultationReplyPage, async (url, options) => {
     if (options?.method === 'POST') {
       saved = true;
       return Response.json({ requestId: browseRequestId, status: 'under_review' });
@@ -579,7 +650,7 @@ it('uncertain information remains locked through older editable and unrelated hi
     reason: 'Captured reply',
     created_at: '2026-10-01T11:00:00Z',
   };
-  const view = await mount(ConsultationDetailPage, async (url, options) => {
+  const view = await mount(ConsultationReplyPage, async (url, options) => {
     if (options?.method === 'POST') {
       writes++;
       return new Response('{}', { status: 503 });
@@ -640,7 +711,7 @@ it('information keeps a stalled reply locked until saved history confirms it', a
     reason: 'Captured reply',
     created_at: '2026-10-01T11:00:00Z',
   };
-  const view = await mount(ConsultationDetailPage, async (url, options) => {
+  const view = await mount(ConsultationReplyPage, async (url, options) => {
     if (options?.method !== 'POST')
       return Response.json(saved ? detail('under_review', [...baseline, event]) : read(url));
     writes++;
@@ -718,7 +789,7 @@ it.each(['accept', 'decline'] as const)(
           finish = resolve;
         })
     );
-    const view = await mount(ConsultationDetailPage, async (url, options) => {
+    const view = await mount(ConsultationOfferPage, async (url, options) => {
       if (options?.method === 'POST') {
         if (url.endsWith('/offer-review')) return Response.json(review);
         writes.push(JSON.parse(String(options.body)));
@@ -804,9 +875,75 @@ it.each(['accept', 'decline'] as const)(
   }
 );
 
+it('offers acceptance without a payment action when the reviewed adjustment is already paid', async () => {
+  const result = detail('offer_pending');
+  const invoiceId = browseProductId;
+  const validUntil = '2099-01-01T00:00:00.000Z';
+  const scope = 'Offer scope';
+  const deliverables = 'Report';
+  const fee = '7500000';
+  const request = {
+    ...result.request,
+    fee,
+    scope,
+    deliverables,
+    offer_valid_until: validUntil,
+    invoice_id: invoiceId,
+    invoice_state: 'Paid',
+    has_paid_invoice: true,
+  };
+  const view = await mount(ConsultationOfferPage, async (url, options) => {
+    if (options?.method === 'POST') {
+      expect(url.endsWith('/offer-review')).toBe(true);
+      return Response.json({
+        schemaVersion: 1,
+        scope: {
+          action: 'consultation.offer-accept',
+          profileId: browseProfileId,
+          resourceId: routing.requestId,
+        },
+        hash: 'a'.repeat(64),
+        data: {
+          decision: 'accept',
+          serviceTitle: browseConsultation.title,
+          scope,
+          deliverables,
+          fee,
+          previousFee: '5000000',
+          validUntil,
+          acceptedAt: null,
+          invoice: {
+            id: invoiceId,
+            state: 'Paid',
+            totalAmount: '2500000',
+            paidAmount: '2500000',
+            adjustmentKind: 'charge',
+          },
+          outcome: 'accepted_paid',
+        },
+      });
+    }
+    if (url.startsWith('/api/wallet/')) return Response.json({ balance: '0', currency: 'IRR' });
+    return Response.json({ ...result, request });
+  });
+  try {
+    await view.click(copy('confirmAcceptance'));
+    const dialog = document.querySelector('[data-slot=dialog-content]')!;
+    expect(dialog.textContent).toContain(copy('decisionReviewPaidOutcome'));
+    expect(dialog.textContent).toContain(copy('decisionReviewPreviousFee'));
+    expect(dialog.textContent).toContain('2,500,000');
+    expect(button(dialog, copy('confirmAcceptance')).disabled).toBe(true);
+    expect([...dialog.querySelectorAll('button')].map((item) => item.textContent)).not.toContain(
+      copy('acceptOffer')
+    );
+  } finally {
+    await view.close();
+  }
+});
+
 it('information ignores late write settlement after request scope changes, preserving the newer draft', async () => {
   let finish: ((value: Response) => void) | undefined;
-  const view = await mount(ConsultationDetailPage, async (url, options) =>
+  const view = await mount(ConsultationReplyPage, async (url, options) =>
     options?.method === 'POST'
       ? new Promise((resolve) => {
           finish = resolve;
@@ -835,7 +972,7 @@ it.each(['denied-write', 'malformed-read'] as const)(
   'information withdraws accepted private details/history on %s',
   async (mode) => {
     let posted = false;
-    const view = await mount(ConsultationDetailPage, async (url, options) => {
+    const view = await mount(ConsultationReplyPage, async (url, options) => {
       if (options?.method === 'POST') {
         posted = true;
         return mode === 'denied-write'
@@ -875,10 +1012,19 @@ it.each(['denied-write', 'malformed-read'] as const)(
   }
 );
 
+function SeparateConsultationSurfaces() {
+  return (
+    <>
+      <ConsultationIntakePage />
+      <ConsultationsPage />
+    </>
+  );
+}
+
 it('history denial preserves an unconfirmed intake and its exact original retry body', async () => {
   const writes: unknown[] = [];
   let denied = false;
-  const view = await mount(ConsultationsPage, async (url, options) => {
+  const view = await mount(SeparateConsultationSurfaces, async (url, options) => {
     if (options?.method === 'POST') {
       writes.push(JSON.parse(String(options.body)));
       return Response.json(
@@ -980,7 +1126,7 @@ it('recovers locally from invalid consultation display and authority fields', as
     original,
   ];
   let reads = 0;
-  const view = await mount(ConsultationDetailPage, async () => Response.json(replies[reads++]));
+  const view = await mount(ConsultationReplyPage, async () => Response.json(replies[reads++]));
   try {
     for (let read = 1; read <= 3; read++) {
       expect(reads).toBe(read);
@@ -1002,7 +1148,7 @@ it('keeps consultation detail reads manual and cancels an explicit reload on unm
     finish!: (response: Response) => void,
     signal!: AbortSignal;
   const writes: unknown[] = [];
-  const view = await mount(ConsultationDetailPage, async (url, init) => {
+  const view = await mount(ConsultationReplyPage, async (url, init) => {
     if (init?.method) {
       writes.push(init.body);
       return validation(['reason']);
@@ -1037,7 +1183,7 @@ it('cancels an old consultation read after a profile revision without replacing 
     signal!: AbortSignal,
     finish!: (response: Response) => void;
   const view = await mount(
-    ConsultationDetailPage,
+    ConsultationReplyPage,
     async (url, init) => {
       if (phase === 'denied') return new Response('{}', { status: 403 });
       if (phase === 'pending') {
@@ -1092,7 +1238,7 @@ it.each([401, 403, 404])(
     const fetcher = vi.fn(async () =>
       denied ? Response.json({ message: 'Private API data' }, { status }) : Response.json(detail())
     );
-    const view = await mount(ConsultationDetailPage, fetcher);
+    const view = await mount(ConsultationReplyPage, fetcher);
     try {
       await view.fill('Private consultation draft');
       denied = true;
@@ -1119,7 +1265,7 @@ it.each([401, 403, 404])(
 it('keeps unsent consultation information through a rejected fresh read and authorized manual recovery', async () => {
   let valid = true,
     reads = 0;
-  const view = await mount(ConsultationDetailPage, async () => {
+  const view = await mount(ConsultationReplyPage, async () => {
     reads++;
     return Response.json(valid ? detail() : { request: { id: routing.requestId } });
   });
@@ -1154,99 +1300,108 @@ it('renders consultation fee and ledger amounts exactly from decimal strings', a
   const view = await mount(ConsultationDetailPage, async () => Response.json(value));
   try {
     expect(view.host.textContent).toContain(new Intl.NumberFormat('en').format(9007199254740993n));
-    expect(view.host.querySelector('form')).not.toBeNull();
+    expect(view.host.querySelector('form')).toBeNull();
+    expect(
+      view.host.querySelector(`a[href="/consultations/${routing.requestId}/reply"]`)
+    ).not.toBeNull();
   } finally {
     await view.close();
   }
 });
 
-it('keeps consultation intake reads manual and cancels catalogue/history when only the page is removed', async () => {
-  const signals: AbortSignal[] = [],
-    finish: ((response: Response) => void)[] = [],
-    paths: string[] = [];
-  const view = await mount(
-    ConsultationsPage,
-    async (url, init) => {
-      paths.push(url);
-      if (url.includes('/products?') || url.includes('/requests?')) {
-        signals.push(init?.signal as AbortSignal);
-        return new Promise<Response>((resolve) => {
-          finish.push(resolve);
-        });
-      }
-      return Response.json(read(url));
-    },
-    'en',
-    QueryComponentProvider
-  );
-  try {
-    expect(signals).toHaveLength(2);
-    expect(signals.every((signal) => !signal.aborted)).toBe(true);
-    const before = paths.length;
-    await act(async () => {
-      window.dispatchEvent(new Event('focus'));
-      window.dispatchEvent(new Event('online'));
-    });
-    expect(paths).toHaveLength(before);
-    await view.hide();
-    expect(signals.every((signal) => signal.aborted)).toBe(true);
-    await act(async () => {
-      for (let i = 0; i < finish.length; i++)
-        finish[i]!(
-          Response.json(
-            read(paths.filter((p) => p.includes('/products?') || p.includes('/requests?'))[i]!)
-          )
-        );
-    });
-    expect(view.host.textContent).toBe('');
-  } finally {
-    await view.close();
-  }
-});
-
-it('cancels catalogue/history on intake account replacement and ignores their old private replies', async () => {
-  let next = false;
-  const signals: AbortSignal[] = [],
-    finish: ((response: Response) => void)[] = [],
-    paths: string[] = [];
-  const view = await mount(
-    ConsultationsPage,
-    async (url, init) => {
-      if (next) return new Response('{}', { status: 403 });
-      if (url.includes('/products?') || url.includes('/requests?')) {
-        signals.push(init?.signal as AbortSignal);
+it.each([ConsultationIntakePage, ConsultationsPage])(
+  'keeps %p reads manual and cancels them on unmount',
+  async (Page) => {
+    const signals: AbortSignal[] = [],
+      finish: ((response: Response) => void)[] = [],
+      paths: string[] = [];
+    const view = await mount(
+      Page,
+      async (url, init) => {
         paths.push(url);
-        return new Promise<Response>((resolve) => {
-          finish.push(resolve);
-        });
-      }
-      return Response.json(read(url));
-    },
-    'en',
-    QueryComponentProvider
-  );
-  try {
-    expect(signals).toHaveLength(2);
-    next = true;
-    await view.render('customer-two');
-    expect(signals.every((signal) => signal.aborted)).toBe(true);
-    await act(async () => {
-      for (let i = 0; i < finish.length; i++) finish[i]!(Response.json(read(paths[i]!)));
-    });
-    expect(view.host.querySelector('input[type=radio]')).toBeNull();
-    expect(view.host.textContent).not.toContain(browseConsultation.title.en);
-    expect(view.host.textContent).toContain(
-      'This history is no longer available. Retry to check your current access.'
+        if (url.includes('/products?') || url.includes('/requests?')) {
+          signals.push(init?.signal as AbortSignal);
+          return new Promise<Response>((resolve) => {
+            finish.push(resolve);
+          });
+        }
+        return Response.json(read(url));
+      },
+      'en',
+      QueryComponentProvider
     );
-    expect(routing.navigate).not.toHaveBeenCalled();
-  } finally {
-    await view.close();
+    try {
+      expect(signals).toHaveLength(1);
+      expect(signals.every((signal) => !signal.aborted)).toBe(true);
+      const before = paths.length;
+      await act(async () => {
+        window.dispatchEvent(new Event('focus'));
+        window.dispatchEvent(new Event('online'));
+      });
+      expect(paths).toHaveLength(before);
+      await view.hide();
+      expect(signals.every((signal) => signal.aborted)).toBe(true);
+      await act(async () => {
+        for (let i = 0; i < finish.length; i++)
+          finish[i]!(
+            Response.json(
+              read(paths.filter((p) => p.includes('/products?') || p.includes('/requests?'))[i]!)
+            )
+          );
+      });
+      expect(view.host.textContent).toBe('');
+    } finally {
+      await view.close();
+    }
   }
-});
+);
+
+it.each([ConsultationIntakePage, ConsultationsPage])(
+  'cancels %p reads on account replacement and ignores old private replies',
+  async (Page) => {
+    let next = false;
+    const signals: AbortSignal[] = [],
+      finish: ((response: Response) => void)[] = [],
+      paths: string[] = [];
+    const view = await mount(
+      Page,
+      async (url, init) => {
+        if (next) return new Response('{}', { status: 403 });
+        if (url.includes('/products?') || url.includes('/requests?')) {
+          signals.push(init?.signal as AbortSignal);
+          paths.push(url);
+          return new Promise<Response>((resolve) => {
+            finish.push(resolve);
+          });
+        }
+        return Response.json(read(url));
+      },
+      'en',
+      QueryComponentProvider
+    );
+    try {
+      expect(signals).toHaveLength(1);
+      next = true;
+      await view.render('customer-two');
+      expect(signals.every((signal) => signal.aborted)).toBe(true);
+      await act(async () => {
+        for (let i = 0; i < finish.length; i++) finish[i]!(Response.json(read(paths[i]!)));
+      });
+      expect(view.host.querySelector('input[type=radio]')).toBeNull();
+      expect(view.host.textContent).not.toContain(browseConsultation.title.en);
+      expect(view.host.textContent).toContain(
+        'This history is no longer available. Retry to check your current access.'
+      );
+      expect(routing.navigate).not.toHaveBeenCalled();
+    } finally {
+      await view.close();
+    }
+  }
+);
 
 it('refuses a blank consultation profile owner before starting catalogue or history reads', async () => {
   const paths: string[] = [];
-  const view = await mount(ConsultationsPage, async (url) => {
+  const view = await mount(ConsultationIntakePage, async (url) => {
     paths.push(url);
     return Response.json({
       activeProfileId: ' ',

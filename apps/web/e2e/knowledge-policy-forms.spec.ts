@@ -52,7 +52,10 @@ for (const locale of ['en', 'fa'] as const)
       );
       await page.route(`**/api/admin/knowledge-bases/${knowledgeBase.id}`, (route) => {
         if (route.request().method() === 'GET')
-          return route.fulfill({ json: { ...kb, documents: [] } });
+          return route.fulfill({
+            status: kbStatus,
+            json: kbStatus === 200 ? { ...kb, documents: [] } : {},
+          });
         const body = route.request().postDataJSON();
         kbWrites.push(body);
         if (kbWrites.length === 1) return route.fulfill(invalid('chunkSize'));
@@ -79,7 +82,9 @@ for (const locale of ['en', 'fa'] as const)
         route.fulfill({ json: [knowledgeGroup] })
       );
       await page.goto('/admin/knowledge-bases');
-      await button(`${kbText('edit')} ${knowledgeBase.title}`).click();
+      await page
+        .getByRole('link', { name: `${kbText('edit')} ${knowledgeBase.title}`, exact: true })
+        .click();
       const kbTitle = page.locator('#kb-title'),
         size = page.locator('#kb-chunk-size'),
         overlap = page.locator('#kb-chunk-overlap'),
@@ -122,29 +127,36 @@ for (const locale of ['en', 'fa'] as const)
       await overlap.fill(locale === 'fa' ? '١٠٠' : '100');
       await page.locator('#kb-source-type').selectOption('api');
       await expect(source).toHaveAttribute('aria-required', 'true');
+      await expect(source).toHaveAccessibleDescription(copy('apiSourceHint'));
       await source.fill('https://one.example.test https://two.example.test');
       await button(kbText('save')).click();
       await expect(source).toBeFocused();
       await expect(source).toHaveAttribute('aria-invalid', 'true');
       await expect(source).toHaveAccessibleDescription(copy('sourceUrl'));
+      await page.screenshot({ path: info.outputPath('knowledge-source-url-feedback.png') });
       await page.locator('#kb-source-type').selectOption('document');
       await expect(source).toHaveCount(0);
       await page.locator('#kb-source-type').selectOption('url');
       await expect(source).toHaveAttribute('aria-required', 'true');
-      await expect(source).toHaveAccessibleDescription(kbText('sourceUrlsHelp'));
+      await expect(source).toHaveAccessibleDescription(copy('urlRowsHelp'));
       await source.fill('');
       await button(kbText('save')).click();
       await expect(source).toBeFocused();
       await expect(source).toHaveAccessibleDescription(
-        `${copy('sourceUrl')} ${kbText('sourceUrlsHelp')}`
+        `${copy('sourceUrl')} ${copy('urlRowsHelp')}`
       );
-      await source.fill('https://one.example.test\nhttps://two.example.test');
+      await source.fill('https://one.example.test');
+      await source.press('Enter');
+      const secondAddress = page.locator('#kb-source-url-2');
+      await expect(secondAddress).toBeFocused();
+      await secondAddress.fill('https://two.example.test');
       await button(kbText('save')).click();
       await confirm();
       await expect(size).toBeFocused();
       await expect(size).toHaveAttribute('aria-invalid', 'true');
       await expect(size).toHaveAccessibleDescription(copy('chunkSize'));
-      await expect(source).toHaveValue('https://one.example.test\nhttps://two.example.test');
+      await expect(source).toHaveValue('https://one.example.test');
+      await expect(secondAddress).toHaveValue('https://two.example.test');
       await expect(page.locator('main[data-area=admin]')).not.toContainText('private-server-value');
       expect(
         (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
@@ -164,7 +176,8 @@ for (const locale of ['en', 'fa'] as const)
       await expect(button(copy('reset'))).toBeDisabled();
       await expect(button(kbText('cancel'))).toBeDisabled();
       await expect(button(kbText('save'))).toBeDisabled();
-      await expect(source).toHaveValue('https://one.example.test\nhttps://two.example.test');
+      await expect(source).toHaveValue('https://one.example.test');
+      await expect(secondAddress).toHaveValue('https://two.example.test');
       kbStatus = 200;
       await button(kbText('refresh')).click();
       await expect(button(copy('reset'))).toBeEnabled();
@@ -188,6 +201,7 @@ for (const locale of ['en', 'fa'] as const)
       const policyWrites: Record<string, unknown>[] = [];
       await page.route('**/api/admin/policies', (route) => route.fulfill({ json: [policy] }));
       await page.route(`**/api/admin/policies/${policyEntry.id}`, (route) => {
+        if (route.request().method() === 'GET') return route.fulfill({ json: policy });
         const body = route.request().postDataJSON();
         policyWrites.push(body);
         if (policyWrites.length === 2) return route.fulfill(invalid('maxRequests'));
@@ -198,7 +212,9 @@ for (const locale of ['en', 'fa'] as const)
         route.fulfill({ json: [policyGroup] })
       );
       await page.goto('/admin/policies');
-      await button(`${policyText('edit')} ${policyEntry.title}`).click();
+      await page
+        .getByRole('link', { name: `${policyText('edit')} ${policyEntry.title}`, exact: true })
+        .click();
       const priority = page.locator('#policy-priority'),
         enabled = page.getByRole('checkbox', { name: policyText('enabled'), exact: true });
       for (const id of ['policy-title', 'policy-type', 'policy-priority', 'policy-items']) {
@@ -207,13 +223,11 @@ for (const locale of ['en', 'fa'] as const)
         await expect(field).toHaveAttribute('aria-required', 'true');
       }
       const items = page.locator('#policy-items');
-      await expect(items).toHaveAccessibleDescription(policyText('itemsHelp'));
+      await expect(items).toHaveAccessibleDescription(copy('policyRowsHelp'));
       await items.fill('');
       await button(policyText('save')).click();
       await expect(items).toBeFocused();
-      await expect(items).toHaveAccessibleDescription(
-        `${copy('items')} ${policyText('itemsHelp')}`
-      );
+      await expect(items).toHaveAccessibleDescription(`${copy('items')} ${copy('policyRowsHelp')}`);
       expect(policyWrites).toHaveLength(0);
       await items.fill('energy');
       await priority.fill('1.5');
@@ -245,7 +259,9 @@ for (const locale of ['en', 'fa'] as const)
         priority: -12,
         rules: { tone: 'Friendly', requireSources: true },
       });
-      await button(`${policyText('edit')} ${policyEntry.title}`).click();
+      await page
+        .getByRole('link', { name: `${policyText('edit')} ${policyEntry.title}`, exact: true })
+        .click();
       await expect(
         page.getByRole('checkbox', { name: policyText('requireSources'), exact: true })
       ).toBeChecked();
@@ -317,7 +333,7 @@ for (const locale of ['en', 'fa'] as const)
         });
         await page.goto(`/admin/${group.pagePath}`);
         await button(group.text(group.path)).click();
-        await button(group.text('addGroup')).click();
+        await page.getByRole('link', { name: group.text('addGroup'), exact: true }).click();
         const title = page.locator(`#${group.field}-title`);
         await expect(title).toHaveAttribute('aria-required', 'true');
         await button(group.text('save')).click();

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { z } from 'zod';
 import { FormField, type UseFormReturn } from '@barghsa/ui/form';
 import { Avatar, AvatarFallback, Button } from '@barghsa/ui';
@@ -117,13 +117,16 @@ export function TeamRoleFields({
   draft,
   locked,
   canCommand,
+  showEffects = false,
 }: {
   draft: ReturnType<typeof useTeamRoleDraft>;
   locked: boolean;
   canCommand: boolean;
+  showEffects?: boolean;
 }) {
   const locale = useLocale(),
     word = (key: string) => t(`team.${key}`, locale);
+  const roleId = useId();
   return (
     <>
       <FormField
@@ -132,26 +135,53 @@ export function TeamRoleFields({
         render={({ field }) => (
           <fieldset
             disabled={locked || draft.form.formState.isSubmitting}
-            className="flex flex-wrap gap-3"
+            className={showEffects ? 'grid min-w-0 gap-2' : 'flex flex-wrap gap-3'}
             aria-invalid={!!draft.errors.roles || undefined}
             aria-describedby={draft.errors.roles ? draft.errorId('roles') : undefined}
           >
             <legend className="mb-1 text-sm font-medium">{word('rolesRequired')}</legend>
             {TEAM_ROLES.map((role, index) => (
-              <label key={role} className="touch-label flex items-center gap-2">
+              <label
+                key={role}
+                className={
+                  showEffects
+                    ? 'flex min-w-0 cursor-pointer items-start gap-3 rounded-lg border bg-background px-3 py-2.5 has-checked:border-primary/40 has-checked:bg-primary/5 has-disabled:cursor-default'
+                    : 'touch-label flex items-center gap-2'
+                }
+              >
                 <input
                   ref={index === 0 ? field.ref : undefined}
                   name={field.name}
                   onBlur={field.onBlur}
                   aria-invalid={!!draft.errors.roles || undefined}
-                  aria-describedby={draft.errors.roles ? draft.errorId('roles') : undefined}
+                  aria-labelledby={showEffects ? `${roleId}-${role}` : undefined}
+                  aria-describedby={
+                    [
+                      showEffects ? `${roleId}-${role}-effect` : null,
+                      draft.errors.roles ? draft.errorId('roles') : null,
+                    ]
+                      .filter(Boolean)
+                      .join(' ') || undefined
+                  }
                   type="checkbox"
+                  className={showEffects ? 'mt-0.5 size-4 shrink-0 accent-primary' : undefined}
                   value={role}
                   tabIndex={0}
                   checked={draft.selected.includes(role)}
                   onChange={(event) => draft.toggle(role, event.target.checked)}
                 />
-                {word(role)}
+                {showEffects ? (
+                  <span className="grid min-w-0 gap-0.5">
+                    <span id={`${roleId}-${role}`} className="text-sm font-medium">
+                      {word(role)}
+                    </span>
+                    <span id={`${roleId}-${role}-effect`} className="text-sm text-muted-foreground">
+                      {word(`roleEffect.${role}`)}
+                    </span>
+                  </span>
+                ) : (
+                  word(role)
+                )}
               </label>
             ))}
           </fieldset>

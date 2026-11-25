@@ -1,7 +1,9 @@
+import { routePostalRecords } from './solar-postal-record-fixture';
 import { test, expect, type Page } from './coverage-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { crmShell } from './crm-shell-fixture';
 import { tSolar } from '@barghsa/i18n/solar';
+import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import {
   firstSolar,
   olderSolar,
@@ -82,7 +84,7 @@ for (const locale of ['en', 'fa'] as const)
           return r.fulfill({ json: solarGuidance });
         });
         await page.route('**/api/admin/solar/requests/*/documents', (r) =>
-          r.fulfill({ json: solarDocuments() })
+          r.fulfill({ json: solarDocuments(new URL(r.request().url()).pathname.split('/').at(-2)) })
         );
         const reads: URL[] = [],
           siblingReads: string[] = [],
@@ -145,89 +147,66 @@ for (const locale of ['en', 'fa'] as const)
             url.pathname.startsWith('/api/admin/solar/') &&
             !cases.some((q) => q.base === url.pathname) &&
             !url.pathname.includes('guidance') &&
-            !url.pathname.endsWith('/documents'),
+            !url.pathname.endsWith('/documents') &&
+            !url.pathname.endsWith('/postal'),
           (r) => {
-            writes.push(r.request().url());
+            if (r.request().method() !== 'GET') writes.push(r.request().url());
             return r.fulfill({ status: 500, json: {} });
           }
         );
+        await routePostalRecords(page, () => [firstSolar, olderSolar, oldest].map(solarPostal));
         await page.goto(item.path);
         const list = page.locator('[data-slot="list-page"]').nth(item.slot);
         const content = list.locator('[data-slot="list-content"]');
         const first = item.name === 'files' ? /first.pdf/ : /First solar buyer/;
         const older = item.name === 'files' ? /older.pdf/ : /Older solar buyer/;
         const last = item.name === 'files' ? /oldest.pdf/ : /Oldest solar buyer/;
-        await expect(content.getByRole('button', { name: first })).toBeVisible();
-        await page
-          .getByRole('button', { name: /First solar buyer/ })
-          .first()
-          .click();
+        const row = (name: RegExp) => content.getByRole('link', { name });
+        await expect(row(first)).toBeVisible();
         const note =
           item.name === 'postal'
             ? page.getByRole('textbox', { name: copy('reason'), exact: true })
             : page.locator('#solar-review-reason');
-        await note.fill('LOCAL-REASON');
-        const guidance = page.locator('form textarea').first();
-        await guidance.fill('LOCAL-GUIDANCE');
+        const guidance = page.locator('#solar-guidance-fa, #solar-postal-guidance-fa');
+        await expect(guidance).toHaveCount(0);
         const siblings = siblingReads.length;
         const more = list.getByRole('button', { name: copy(item.more), exact: true });
         await more.click();
         const retry = content.getByRole('button', { name: copy('retry'), exact: true });
         await expect(retry).toBeVisible();
-        await expect(note).toHaveValue('LOCAL-REASON');
-        await expect(guidance).toHaveValue('LOCAL-GUIDANCE');
+        await expect(guidance).toHaveCount(0);
         expect(params(page).get(item.cursor)).toBe(firstSolar);
         expect(page.url()).not.toContain('LOCAL-');
         const failed = reads.at(-1)!.search;
         fail = false;
         await retry.click();
-        await expect(content.getByRole('button', { name: older })).toBeVisible();
+        await expect(row(older)).toBeVisible();
         expect(reads.at(-1)!.search).toBe(failed);
         expect(siblingReads).toHaveLength(siblings);
-        await expect(content.getByRole('button', { name: first })).toBeVisible();
-        await expect(note).toHaveValue('LOCAL-REASON');
+        await expect(row(first)).toBeVisible();
         await page.reload();
-        await expect(content.getByRole('button', { name: older })).toBeVisible();
-        await expect(content.getByRole('button', { name: first })).toHaveCount(0);
+        await expect(row(older)).toBeVisible();
+        await expect(row(first)).toHaveCount(0);
         expect(params(page).get(item.cursor)).toBe(firstSolar);
         expect(reads.at(-1)!.searchParams.get('before')).toBe(firstSolar);
-        await guidance.fill('LOCAL-GUIDANCE');
+        await expect(guidance).toHaveCount(0);
         const fixedGuidanceReads = guidanceReads;
         await page.goBack();
-        await expect(content.getByRole('button', { name: first })).toBeVisible();
-        await expect(content.getByRole('button', { name: older })).toHaveCount(0);
+        await expect(row(first)).toBeVisible();
+        await expect(row(older)).toHaveCount(0);
         await page.goForward();
-        await expect(content.getByRole('button', { name: older })).toBeVisible();
-        await page
-          .getByRole('button', { name: /First solar buyer/ })
-          .first()
-          .click();
-        await note.fill('LOCAL-REASON');
-        await page
-          .locator('form')
-          .getByRole('button', {
-            name: copy(item.name === 'postal' ? 'postalSaveGuidance' : 'saveGuidance'),
-            exact: true,
-          })
-          .click();
-        await expect(page.getByRole('dialog')).toBeVisible();
-        await page.goBack();
-        await expect(page.getByRole('dialog')).toHaveCount(0);
-        await expect(note).toHaveCount(0);
-        await expect(guidance).toHaveValue('LOCAL-GUIDANCE');
-        await page.goForward();
-        await expect(content.getByRole('button', { name: older })).toBeVisible();
+        await expect(row(older)).toBeVisible();
         await more.click();
-        await expect(content.getByRole('button', { name: last })).toBeVisible();
-        await expect(content.getByRole('button', { name: older })).toHaveCount(1);
+        await expect(row(last)).toBeVisible();
+        await expect(row(older)).toHaveCount(1);
         expect(params(page).get(item.cursor)).toBe(olderSolar);
         if (item.name !== 'postal') {
           const otherCursor = item.name === 'files' ? 'requests_cursor' : 'files_cursor';
           expect(params(page).has(otherCursor)).toBe(false);
         } else {
           await page.locator('#solar-postal-lane').selectOption('waiting_customer');
-          await expect(content.getByRole('button', { name: first })).toBeVisible();
-          await expect(content.getByRole('button', { name: older })).toHaveCount(0);
+          await expect(row(first)).toBeVisible();
+          await expect(row(older)).toHaveCount(0);
           expect(params(page).get('lane')).toBe('waiting_customer');
           expect(params(page).has('cursor')).toBe(false);
           expect(Object.fromEntries(reads.at(-1)!.searchParams)).toEqual({
@@ -235,7 +214,7 @@ for (const locale of ['en', 'fa'] as const)
           });
           await page.goBack();
           await expect(page.locator('#solar-postal-lane')).toHaveValue('needs_staff');
-          await expect(content.getByRole('button', { name: last })).toBeVisible();
+          await expect(row(last)).toBeVisible();
           expect(params(page).get('cursor')).toBe(olderSolar);
         }
         expect(guidanceReads).toBe(fixedGuidanceReads);
@@ -253,11 +232,74 @@ for (const locale of ['en', 'fa'] as const)
             path: `/tmp/barghsa-solar-query-${item.name}-${dark ? 'dark' : 'light'}.png`,
           });
         }
-        await content.getByRole('button', { name: last }).click();
+        const beforeOpen = new URL(page.url());
+        const readsBeforeOpen = reads.length;
+        const siblingsBeforeOpen = siblingReads.length;
+        await row(last).click();
+        const record = page.locator(
+          item.name === 'postal'
+            ? '[data-slot="solar-staff-postal"]'
+            : '[data-slot="solar-staff-request"]'
+        );
+        if (item.name === 'postal') {
+          await expect(note).toHaveCount(0);
+          await expect(
+            record.getByRole('link', { name: copy('postal_mark-incomplete'), exact: true })
+          ).toBeVisible();
+        } else
+          await expect(
+            record.getByRole('link', { name: copy('requestAdditional'), exact: true })
+          ).toBeVisible();
+        await expect(record).toBeVisible();
+        expect(new URL(page.url()).pathname).toBe(
+          '/admin/solar-requests/' + oldest + (item.name === 'postal' ? '/postal' : '')
+        );
+        expect(params(page).get(item.cursor)).toBe(olderSolar);
+        expect(reads).toHaveLength(readsBeforeOpen);
+        expect(siblingReads).toHaveLength(siblingsBeforeOpen);
+        await expect(guidance).toHaveCount(0);
+        if (item.name === 'files')
+          expect(new URL(page.url()).hash).toBe('#solar-document-' + oldest);
+        await record
+          .getByRole('link', {
+            name: tSolarStaffRecord(
+              item.name === 'postal' ? 'backToPostal' : 'backToRequests',
+              locale
+            ),
+            exact: true,
+          })
+          .click();
+        await expect.poll(() => new URL(page.url()).search).toBe(beforeOpen.search);
+        await expect(row(last)).toBeVisible();
+        const readsBeforeGuidance = reads.length;
+        await page
+          .getByRole('link', {
+            name: tSolarStaffRecord(
+              item.name === 'postal' ? 'editPostalGuidance' : 'editDocumentGuidance',
+              locale
+            ),
+            exact: true,
+          })
+          .click();
+        await expect(guidance).toBeVisible();
+        expect(reads).toHaveLength(readsBeforeGuidance);
+        expect(guidanceReads).toBe(fixedGuidanceReads + 1);
+        await guidance.fill('LOCAL-GUIDANCE');
+        expect(page.url()).not.toContain('LOCAL-');
+        await page
+          .getByRole('link', {
+            name: tSolarStaffRecord(
+              item.name === 'postal' ? 'backToPostal' : 'backToRequests',
+              locale
+            ),
+            exact: true,
+          })
+          .click();
+        await expect.poll(() => new URL(page.url()).search).toBe(beforeOpen.search);
+        await expect(row(last)).toBeVisible();
         denied = true;
         await more.click();
         await expect(content.getByRole('alert')).toHaveText(copy('staffQueueForbidden'));
-        await expect(content.getByRole('button')).toHaveCount(0);
+        await expect(content.getByRole('link')).toHaveCount(0);
         await expect(note).toHaveCount(0);
-        await expect(guidance).toHaveValue('LOCAL-GUIDANCE');
       });

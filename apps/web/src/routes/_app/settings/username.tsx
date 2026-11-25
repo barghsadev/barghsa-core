@@ -1,18 +1,9 @@
 import { Skeleton } from '@barghsa/ui';
+import { useEffect, useRef } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
-import {
-  MailIcon,
-  PhoneIcon,
-  AlertCircleIcon,
-  Loader2Icon,
-  KeyIcon,
-  PlusIcon,
-  SendIcon,
-  CheckIcon,
-  XIcon,
-} from 'lucide-react';
-import { Button, Input, Alert, AlertTitle, AlertDescription } from '@barghsa/ui';
+import { MailIcon, PhoneIcon, AlertCircleIcon, KeyIcon } from 'lucide-react';
+import { Button, Input, Alert, AlertTitle, AlertDescription, ListRefreshButton } from '@barghsa/ui';
 import {
   Form,
   FormField,
@@ -26,6 +17,11 @@ import {
 } from '@barghsa/ui/form';
 import { useLocale } from '../../../hooks/useLocale.js';
 import { useAccountSettingsEditor } from '../../../hooks/useAccountSettingsEditor.js';
+import { maskDestination } from '../../../lib/mask-destination.js';
+import {
+  RecordEditorActions,
+  recordEditorSurface,
+} from '../../../components/RecordEditorLayout.js';
 
 export const Route = createFileRoute('/_app/settings/username')({
   component: SettingsUsernamePage,
@@ -41,6 +37,7 @@ function AccountField<Values extends FieldValues>({
   locked,
   canEdit,
   otp = false,
+  focusOnOpen = false,
   type = 'text',
   placeholder,
 }: {
@@ -51,18 +48,24 @@ function AccountField<Values extends FieldValues>({
   locked: boolean;
   canEdit: () => boolean;
   otp?: boolean;
+  focusOnOpen?: boolean;
   type?: 'text' | 'email' | 'tel';
   placeholder?: string;
 }) {
+  const focusPending = useRef(focusOnOpen);
+  const setFocus = form.setFocus;
+  useEffect(() => {
+    if (!focusPending.current || locked) return;
+    focusPending.current = false;
+    setFocus(name);
+  }, [locked, name, setFocus]);
   return (
     <FormField
       control={form.control}
       name={name}
       render={({ field }) => (
         <FormItem id={id} className="space-y-1.5">
-          <FormLabel htmlFor={id} className="text-xs">
-            {label}
-          </FormLabel>
+          <FormLabel htmlFor={id}>{label}</FormLabel>
           <FormControl>
             <Input
               {...field}
@@ -70,19 +73,21 @@ function AccountField<Values extends FieldValues>({
               aria-required="true"
               type={type === 'email' ? 'text' : type}
               inputMode={type === 'email' ? 'email' : undefined}
-              placeholder={placeholder}
+              placeholder={otp ? '000000' : placeholder}
               disabled={locked}
+              autoCapitalize="none"
+              spellCheck={false}
               onChange={(event) => {
                 if (canEdit()) field.onChange(event);
               }}
               {...(otp
                 ? { inputMode: 'numeric' as const, autoComplete: 'one-time-code', maxLength: 6 }
                 : {})}
-              className={otp ? 'text-sm font-mono w-40' : 'text-sm'}
+              className={otp ? 'max-w-40 text-center font-mono tracking-widest' : 'max-w-sm'}
               dir="ltr"
             />
           </FormControl>
-          <FormMessage />
+          <FormMessage reserveSpace className="min-h-8 text-xs leading-4" />
         </FormItem>
       )}
     />
@@ -107,57 +112,54 @@ function SettingsUsernamePage() {
     contactType,
     showUsername,
   } = editor;
+  const usernameTrigger = useRef<HTMLButtonElement>(null);
+  const emailTrigger = useRef<HTMLButtonElement>(null);
+  const mobileTrigger = useRef<HTMLButtonElement>(null);
+  const contactHeading = useRef<HTMLHeadingElement>(null);
+  const previousEditor = useRef({ showUsername, contactType });
+  useEffect(() => {
+    const previous = previousEditor.current;
+    previousEditor.current = { showUsername, contactType };
+    if (!user) return;
+    if (previous.showUsername && !showUsername) usernameTrigger.current?.focus();
+    if (previous.contactType && !contactType) {
+      const trigger = previous.contactType === 'email' ? emailTrigger : mobileTrigger;
+      (trigger.current ?? contactHeading.current)?.focus();
+    }
+  }, [showUsername, contactType, user]);
   function cancel(family: 'username' | 'contact') {
     return (
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        disabled={locked}
-        onClick={() => editor.cancel(family)}
-        className="gap-1"
-      >
-        <XIcon aria-hidden="true" className="h-3.5 w-3.5" />
+      <Button type="button" variant="ghost" disabled={locked} onClick={() => editor.cancel(family)}>
         {t('settings.contact.cancel', locale)}
       </Button>
     );
   }
   function submit(verify: boolean, disabled: boolean) {
     return (
-      <Button type="submit" size="sm" disabled={locked || disabled} className="gap-1">
-        {busy ? (
-          <Loader2Icon aria-hidden="true" className="h-3.5 w-3.5 animate-spin" />
-        ) : verify ? (
-          <CheckIcon aria-hidden="true" className="h-3.5 w-3.5" />
-        ) : (
-          <SendIcon aria-hidden="true" className="h-3.5 w-3.5" />
-        )}
+      <Button type="submit" loading={busy} disabled={locked || disabled}>
         {t(verify ? 'settings.contact.verify' : 'settings.contact.sendOtp', locale)}
       </Button>
     );
   }
   return (
-    <div className="container mx-auto max-w-2xl py-8 px-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <h1 className="text-2xl font-bold">{t('settings.username.title', locale)}</h1>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          disabled={loading || locked || !editor.canRead()}
+    <div className="mx-auto max-w-4xl min-w-0 space-y-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <header className="flex items-center justify-between gap-3">
+        <h1 className="text-2xl font-semibold">{t('settings.username.title', locale)}</h1>
+        <ListRefreshButton
+          label={copy('refresh')}
+          refreshing={loading}
+          disabled={locked || !editor.canRead()}
           onClick={() => void editor.refresh()}
-        >
-          {copy('refresh')}
-        </Button>
-      </div>
+        />
+      </header>
       {loading && (
-        <div className="text-center py-8 text-muted-foreground">
+        <div className="space-y-2 py-5 text-muted-foreground" role="status">
           <Skeleton className="h-6 w-20 shrink-0" />
           <p className="text-sm">{t('settings.profile.loading', locale)}</p>
         </div>
       )}
       {!loading && error && (
-        <Alert variant="destructive" className="mb-6" data-slot="account-settings-feedback">
+        <Alert variant="destructive" data-slot="account-settings-feedback">
           <AlertCircleIcon aria-hidden="true" className="h-4 w-4" />
           <AlertTitle>{t('settings.security.error.title', locale)}</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
@@ -191,35 +193,33 @@ function SettingsUsernamePage() {
         </Alert>
       )}
       {!loading && user && (
-        <div className="space-y-8">
-          <section
-            className="rounded-lg border p-4 space-y-4"
-            aria-labelledby="username-section-title"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <KeyIcon aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
-                <h2 id="username-section-title" className="text-base font-semibold">
+        <div className="grid min-w-0 items-start gap-4 lg:grid-cols-2">
+          <section className={recordEditorSurface} aria-labelledby="username-section-title">
+            <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
+              <div className="min-w-0 space-y-1.5">
+                <h2
+                  id="username-section-title"
+                  className="flex items-center gap-2 text-base font-semibold"
+                >
+                  <KeyIcon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
                   {t('settings.username.current', locale)}
                 </h2>
+                <p className="text-sm font-mono text-muted-foreground">
+                  <bdi dir="ltr">{maskUsername(user.username)}</bdi>
+                </p>
               </div>
               {!showUsername && (
                 <Button
+                  ref={usernameTrigger}
                   type="button"
                   variant="outline"
-                  size="sm"
                   disabled={locked}
                   onClick={editor.openUsername}
-                  className="gap-1"
                 >
-                  <KeyIcon aria-hidden="true" className="h-3.5 w-3.5" />
                   {t('settings.username.change', locale)}
                 </Button>
               )}
             </div>
-            <p className="text-sm font-mono text-muted-foreground" dir="ltr">
-              {maskUsername(user.username)}
-            </p>
             {showUsername && (
               <Form {...usernameForm}>
                 <form
@@ -227,193 +227,222 @@ function SettingsUsernamePage() {
                   data-slot="account-username-form"
                   ref={editor.usernameFeedback.element}
                   onSubmit={(event) => void editor.prepareUsername(event)}
+                  aria-label={t('settings.username.change', locale)}
                   aria-busy={busy || usernameForm.formState.isSubmitting}
-                  className="space-y-3 pt-2 border-t"
+                  className="border-t"
                 >
-                  {!usernameChallenge ? (
-                    <AccountField
-                      form={usernameForm}
-                      name="newUsername"
-                      id="new-username"
-                      label={t('settings.username.newLabel', locale)}
-                      placeholder={t('settings.username.newPlaceholder', locale)}
-                      locked={locked}
-                      canEdit={editor.canEdit}
-                    />
-                  ) : (
-                    <>
-                      <p className="text-xs text-muted-foreground">
-                        {t('settings.username.pairSent', locale)}
+                  <div className="space-y-2.5 px-4 py-3 sm:px-6">
+                    {!usernameChallenge ? (
+                      <>
+                        <p className="text-sm text-muted-foreground">{copy('usernameHelp')}</p>
+                        <AccountField
+                          form={usernameForm}
+                          name="newUsername"
+                          id="new-username"
+                          label={t('settings.username.newLabel', locale)}
+                          placeholder={t('settings.username.newPlaceholder', locale)}
+                          locked={locked}
+                          canEdit={editor.canEdit}
+                          focusOnOpen
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <div className="space-y-1">
+                          <h3 className="text-sm font-semibold">{copy('usernameCodes')}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            {t('settings.username.pairSent', locale)}
+                          </p>
+                        </div>
+                        <div className="grid min-w-0 gap-x-4 gap-y-1 min-[380px]:grid-cols-2">
+                          <AccountField
+                            form={usernameForm}
+                            name="previousOtp"
+                            id="previous-otp"
+                            otp
+                            focusOnOpen
+                            label={t('settings.username.previousOtp', locale).replace(
+                              '{destination}',
+                              maskUsername(usernameChallenge.previousDestination!)
+                            )}
+                            locked={locked}
+                            canEdit={editor.canEdit}
+                          />
+                          <AccountField
+                            form={usernameForm}
+                            name="otp"
+                            id="change-otp"
+                            otp
+                            label={t('settings.username.newOtp', locale).replace(
+                              '{destination}',
+                              maskUsername(usernameChallenge.destination)
+                            )}
+                            locked={locked}
+                            canEdit={editor.canEdit}
+                          />
+                        </div>
+                      </>
+                    )}
+                    {usernameForm.formState.errors.root && (
+                      <p role="alert" className="text-sm text-destructive">
+                        {copy('validationUnavailable')}
                       </p>
-                      <AccountField
-                        form={usernameForm}
-                        name="previousOtp"
-                        id="previous-otp"
-                        otp
-                        label={t('settings.username.previousOtp', locale).replace(
-                          '{destination}',
-                          maskUsername(usernameChallenge.previousDestination!)
-                        )}
-                        locked={locked}
-                        canEdit={editor.canEdit}
-                      />
-                      <AccountField
-                        form={usernameForm}
-                        name="otp"
-                        id="change-otp"
-                        otp
-                        label={t('settings.username.newOtp', locale).replace(
-                          '{destination}',
-                          maskUsername(usernameChallenge.destination)
-                        )}
-                        placeholder={t('settings.username.otpPlaceholder', locale)}
-                        locked={locked}
-                        canEdit={editor.canEdit}
-                      />
-                    </>
-                  )}
-                  {usernameForm.formState.errors.root && (
-                    <p role="alert" className="text-sm text-destructive">
-                      {copy('validationUnavailable')}
-                    </p>
-                  )}
-                  <div className="flex gap-2">
+                    )}
+                  </div>
+                  <RecordEditorActions>
                     {cancel('username')}
                     {submit(
                       !!usernameChallenge,
                       !!usernameChallenge &&
                         (usernameValues.otp.length !== 6 || usernameValues.previousOtp.length !== 6)
                     )}
-                  </div>
+                  </RecordEditorActions>
                 </form>
               </Form>
             )}
           </section>
-          <section
-            className="rounded-lg border p-4 space-y-4"
-            aria-labelledby="contact-section-title"
-          >
-            <div className="flex items-center gap-2">
-              <MailIcon aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
-              <h2 id="contact-section-title" className="text-base font-semibold">
+          <section className={recordEditorSurface} aria-labelledby="contact-section-title">
+            <header className="space-y-1.5 px-4 py-4 sm:px-6">
+              <h2
+                ref={contactHeading}
+                id="contact-section-title"
+                tabIndex={-1}
+                className="flex items-center gap-2 text-base font-semibold focus-visible:shadow-none! focus-visible:outline-hidden!"
+              >
+                <MailIcon aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
                 {t('settings.contact.title', locale)}
               </h2>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {t('settings.contact.loginHelp', locale)}
-            </p>
+              <p className="text-sm text-muted-foreground">
+                {t('settings.contact.loginHelp', locale)}
+              </p>
+            </header>
             {(['email', 'mobile'] as const).map((type) => {
               const value = user[type],
                 verified = type === 'email' ? user.emailVerified : user.mobileVerified;
               const Icon = type === 'email' ? MailIcon : PhoneIcon;
+              const actionLabel = t(
+                value
+                  ? type === 'email'
+                    ? 'settings.contact.verifyEmail'
+                    : 'settings.contact.verifyMobile'
+                  : type === 'email'
+                    ? 'settings.contact.addEmail'
+                    : 'settings.contact.addMobile',
+                locale
+              );
               return (
-                <div key={type} className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <Icon aria-hidden="true" className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span className="text-sm">{t('settings.contact.' + type, locale)}</span>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span
-                      className="text-sm font-mono text-muted-foreground"
-                      dir={value ? 'ltr' : undefined}
-                    >
-                      {value ?? (locale === 'fa' ? 'ثبت نشده' : 'Not set')}
-                    </span>
-                    {value && (
-                      <span className="text-xs text-muted-foreground">
-                        {t(
-                          verified ? 'settings.contact.verified' : 'settings.contact.unverified',
-                          locale
+                <div key={type} className="border-t">
+                  <div className="flex min-w-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 px-4 py-3 sm:px-6">
+                    <div className="min-w-0 space-y-1">
+                      <p className="flex flex-wrap items-center gap-2 text-sm font-medium">
+                        <Icon
+                          aria-hidden="true"
+                          className="size-3.5 shrink-0 text-muted-foreground"
+                        />
+                        {t('settings.contact.' + type, locale)}
+                        {value && (
+                          <span
+                            className={
+                              verified
+                                ? 'rounded-full bg-success-soft px-2 py-0.5 text-xs font-normal text-success'
+                                : 'rounded-full bg-muted px-2 py-0.5 text-xs font-normal text-muted-foreground'
+                            }
+                          >
+                            {t(
+                              verified
+                                ? 'settings.contact.verified'
+                                : 'settings.contact.unverified',
+                              locale
+                            )}
+                          </span>
                         )}
-                      </span>
-                    )}
-                    {!verified && (
+                      </p>
+                      <p className="text-sm text-muted-foreground [overflow-wrap:anywhere]">
+                        {value ? <bdi dir="ltr">{value}</bdi> : copy('notSet')}
+                      </p>
+                    </div>
+                    {!verified && contactType !== type && (
                       <Button
+                        ref={type === 'email' ? emailTrigger : mobileTrigger}
                         type="button"
-                        variant="ghost"
-                        size="sm"
+                        variant="outline"
                         disabled={locked || contactType !== null}
                         onClick={() => editor.openContact(type)}
-                        className="gap-1 text-xs"
                       >
-                        <PlusIcon aria-hidden="true" className="h-3 w-3" />
-                        {t(
-                          value
-                            ? type === 'email'
-                              ? 'settings.contact.verifyEmail'
-                              : 'settings.contact.verifyMobile'
-                            : type === 'email'
-                              ? 'settings.contact.addEmail'
-                              : 'settings.contact.addMobile',
-                          locale
-                        )}
+                        {actionLabel}
                       </Button>
                     )}
                   </div>
+                  {contactType === type && (
+                    <Form {...contactForm}>
+                      <form
+                        noValidate
+                        data-slot="account-contact-form"
+                        ref={editor.contactFeedback.element}
+                        onSubmit={(event) => void editor.prepareContact(event)}
+                        aria-label={actionLabel}
+                        aria-busy={busy || contactForm.formState.isSubmitting}
+                      >
+                        <div className="space-y-2.5 border-t bg-muted/20 px-4 py-3 sm:px-6">
+                          {!contactChallenge ? (
+                            <AccountField
+                              form={contactForm}
+                              name="contactValue"
+                              id="new-contact"
+                              type={type === 'email' ? 'email' : 'tel'}
+                              label={t('settings.contact.' + type, locale)}
+                              placeholder={t(
+                                type === 'email'
+                                  ? 'settings.contact.newEmailPlaceholder'
+                                  : 'settings.contact.newMobilePlaceholder',
+                                locale
+                              )}
+                              locked={locked}
+                              canEdit={editor.canEdit}
+                              focusOnOpen
+                            />
+                          ) : (
+                            <>
+                              <div className="space-y-1">
+                                <h3 className="text-sm font-semibold">{copy('contactCode')}</h3>
+                                <p className="text-sm text-muted-foreground [overflow-wrap:anywhere]">
+                                  {t('settings.contact.otpSent', locale).replace(
+                                    '{destination}',
+                                    maskDestination(contactChallenge.destination)
+                                  )}
+                                </p>
+                              </div>
+                              <AccountField
+                                form={contactForm}
+                                name="otp"
+                                id="contact-otp"
+                                otp
+                                label={t('settings.contact.otpLabel', locale)}
+                                locked={locked}
+                                canEdit={editor.canEdit}
+                                focusOnOpen
+                              />
+                            </>
+                          )}
+                          {contactForm.formState.errors.root && (
+                            <p role="alert" className="text-sm text-destructive">
+                              {copy('validationUnavailable')}
+                            </p>
+                          )}
+                        </div>
+                        <RecordEditorActions>
+                          {cancel('contact')}
+                          {submit(
+                            !!contactChallenge,
+                            !!contactChallenge && contactValues.otp.length !== 6
+                          )}
+                        </RecordEditorActions>
+                      </form>
+                    </Form>
+                  )}
                 </div>
               );
             })}
-            {contactType && (
-              <Form {...contactForm}>
-                <form
-                  noValidate
-                  data-slot="account-contact-form"
-                  ref={editor.contactFeedback.element}
-                  onSubmit={(event) => void editor.prepareContact(event)}
-                  aria-busy={busy || contactForm.formState.isSubmitting}
-                  className="space-y-3 pt-2 border-t"
-                >
-                  {!contactChallenge ? (
-                    <AccountField
-                      form={contactForm}
-                      name="contactValue"
-                      id="new-contact"
-                      type={contactType === 'email' ? 'email' : 'tel'}
-                      label={t('settings.contact.' + contactType, locale)}
-                      placeholder={t(
-                        contactType === 'email'
-                          ? 'settings.contact.newEmailPlaceholder'
-                          : 'settings.contact.newMobilePlaceholder',
-                        locale
-                      )}
-                      locked={locked}
-                      canEdit={editor.canEdit}
-                    />
-                  ) : (
-                    <>
-                      <p className="text-xs text-muted-foreground">
-                        {t('settings.contact.otpSent', locale).replace(
-                          '{destination}',
-                          contactChallenge.destination
-                        )}
-                      </p>
-                      <AccountField
-                        form={contactForm}
-                        name="otp"
-                        id="contact-otp"
-                        otp
-                        label={t('settings.contact.otpLabel', locale)}
-                        placeholder={t('settings.contact.otpPlaceholder', locale)}
-                        locked={locked}
-                        canEdit={editor.canEdit}
-                      />
-                    </>
-                  )}
-                  {contactForm.formState.errors.root && (
-                    <p role="alert" className="text-sm text-destructive">
-                      {copy('validationUnavailable')}
-                    </p>
-                  )}
-                  <div className="flex gap-2">
-                    {cancel('contact')}
-                    {submit(
-                      !!contactChallenge,
-                      !!contactChallenge && contactValues.otp.length !== 6
-                    )}
-                  </div>
-                </form>
-              </Form>
-            )}
           </section>
         </div>
       )}

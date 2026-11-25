@@ -1,4 +1,4 @@
-import { t } from '@barghsa/i18n/workspace';
+import { staffWorkText } from '@barghsa/i18n/staff-work-preview';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { DashboardMetricRow, dashboardMetricLink } from './dashboard/DashboardMetricRow.js';
@@ -18,7 +18,7 @@ const failures = [
   },
   {
     key: 'failedRefundObligations',
-    href: '/admin/contracts#refund-obligations',
+    href: '/admin/contracts/refunds',
     label: 'failedRefundObligations',
   },
 ] as const;
@@ -39,10 +39,10 @@ export function FailedJobsWidget({
   return (
     <Frame
       className="space-y-3"
-      aria-label={embedded ? undefined : t('dashboard.admin.failures.title', locale)}
+      aria-label={embedded ? undefined : staffWorkText('failures', locale)}
     >
       {!embedded && (
-        <h3 className="text-base font-semibold">{t('dashboard.admin.failures.title', locale)}</h3>
+        <h3 className="text-base font-semibold">{staffWorkText('failures', locale)}</h3>
       )}
       <div className="grid divide-y">
         {visible.map(({ key, href, label }) => {
@@ -51,10 +51,8 @@ export function FailedJobsWidget({
             <a key={key} href={href} className={dashboardMetricLink}>
               <DashboardMetricRow
                 count={numbers.number(count)}
-                label={t(`dashboard.admin.failures.${label}`, locale)}
-                attention={
-                  count > 0 ? t('dashboard.admin.failures.needsAttention', locale) : undefined
-                }
+                label={staffWorkText(label, locale)}
+                attention={count > 0 ? staffWorkText('needsAttention', locale) : undefined}
               />
             </a>
           );
