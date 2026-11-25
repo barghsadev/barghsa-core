@@ -2,7 +2,7 @@ import { expect, it } from 'vitest';
 import { writeListQuery } from '../hooks/useListQuery.js';
 import { giftListSearch, giftQueryOptions, giftFilter } from './gift-list-query.js';
 const id = 'ABCDEF00-0000-4000-8000-000000000001';
-it('restores all applied promotion criteria and scoped usage selection', () => {
+it('restores all applied promotion criteria and the page cursor', () => {
   expect(
     giftListSearch({
       search: ' CODE ',
@@ -20,10 +20,9 @@ it('restores all applied promotion criteria and scoped usage selection', () => {
     eligibility: 'profile',
     expiry: 'expired',
     cursor: id.toLowerCase(),
-    selected: id.toLowerCase(),
   });
 });
-it('excludes private edits, receipts and unsupported query fields', () => {
+it('excludes private edits, record selection and unsupported query fields', () => {
   expect(
     giftListSearch({
       selected: 'new',
@@ -35,14 +34,11 @@ it('excludes private edits, receipts and unsupported query fields', () => {
       sort: 'code',
       page: 8,
     })
-  ).toEqual({ selected: 'new' });
+  ).toEqual({});
 });
-it.each([['array'], 'invalid', ' ' + id, id + ' ', 7])(
-  'rejects malformed cursor and record scope: %s',
-  (value) => {
-    expect(giftListSearch({ cursor: value, selected: value })).toEqual({});
-  }
-);
+it.each([['array'], 'invalid', ' ' + id, id + ' ', 7])('rejects malformed cursors: %s', (value) => {
+  expect(giftListSearch({ cursor: value, selected: value })).toEqual({});
+});
 it('rejects invalid choices and oversized searches instead of broadening a draft silently', () => {
   expect(
     giftListSearch({
@@ -54,11 +50,11 @@ it('rejects invalid choices and oversized searches instead of broadening a draft
     })
   ).toEqual({});
 });
-it('criteria changes reset cursors while selection remains independent of pagination', () => {
+it('criteria changes reset cursors and discard legacy record selection', () => {
   const raw = { search: 'CODE', cursor: id, selected: id };
   expect(
     giftListSearch(writeListQuery(raw, giftQueryOptions, { filters: { status: 'inactive' } }))
-  ).toEqual({ search: 'CODE', status: 'inactive', selected: id.toLowerCase() });
+  ).toEqual({ search: 'CODE', status: 'inactive' });
 });
 it('sends only applied filters with escaped text and leaves selection out of the API query', () => {
   expect(

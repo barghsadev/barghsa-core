@@ -8,7 +8,10 @@ import {
   notificationPage as page,
 } from '../test/notification-inbox-fixtures.js';
 const { navigate } = vi.hoisted(() => ({ navigate: vi.fn() }));
-vi.mock('@tanstack/react-router', () => ({ useNavigate: () => navigate }));
+vi.mock('@tanstack/react-router', async () => ({
+  useNavigate: () => navigate,
+  Link: (await import('../test/notification-inbox-fixtures.js')).FixtureNotificationLink,
+}));
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
   document.documentElement.lang = 'en';
@@ -88,7 +91,7 @@ it('failed next-page retry retains accepted rows and repeats the exact cursor, w
   await render();
   await click('Load more');
   expect(host.textContent).toContain('Current notice');
-  expect(host.querySelector('ul button')?.hasAttribute('disabled')).toBe(true);
+  expect(host.querySelector('ul button')).toBeNull();
   failed = false;
   await click('Retry');
   expect(host.querySelectorAll('ul li')).toHaveLength(2);
@@ -105,10 +108,10 @@ it('fresh page refresh failure retains accepted rows until successful recovery',
   failed = true;
   await click('Refresh notifications');
   expect(host.textContent).toContain('Current notice');
-  expect(host.querySelector('ul button')?.hasAttribute('disabled')).toBe(true);
+  expect(host.querySelector('ul button')).toBeNull();
   failed = false;
   await click('Retry');
-  expect(host.querySelector('ul button')?.hasAttribute('disabled')).toBe(false);
+  expect(host.querySelector('ul button[aria-label]')).not.toBeNull();
 });
 it.each(['failure', 'malformed'])(
   'read marking %s restores rows and prevents false navigation',
@@ -125,14 +128,19 @@ it.each(['failure', 'malformed'])(
             : reply({ unread_count: -1 })
     );
     await render();
-    await click('Current notice');
+    await click('Mark as read');
     expect(navigate).not.toHaveBeenCalled();
     expect(host.textContent).toContain('Current notice');
     expect(host.textContent).toContain('not confirmed');
     good = true;
     await click('Retry');
-    await click('Current notice');
-    expect(navigate).toHaveBeenCalledWith({ to: '/wallet', search: undefined });
+    await click('Mark as read');
+    expect(navigate).not.toHaveBeenCalled();
+    expect(host.querySelector('ul button[aria-label]')).toBeNull();
+    expect(host.querySelector('ul a[aria-label="Current notice"]')?.getAttribute('href')).toBe(
+      `/notifications/${linked.id}`
+    );
+    expect(host.querySelector('ul a[href="/wallet"]')).not.toBeNull();
   }
 );
 for (const context of ['customer', 'staff'] as const) {
@@ -159,7 +167,7 @@ for (const context of ['customer', 'staff'] as const) {
         () => reply({}, status)
       );
       await render(context);
-      await click('Current notice');
+      await click('Mark as read');
       expect(host.querySelector('ul')).toBeNull();
       expect(navigate).not.toHaveBeenCalled();
     }
@@ -190,11 +198,12 @@ it('changing operating context discards an obsolete command and prevents navigat
       })
   );
   await render();
-  await click('Current notice');
+  await click('Mark as read');
   await render('staff');
   await act(async () => resolve(reply({ unread_count: 0 })));
   expect(navigate).not.toHaveBeenCalled();
   expect(host.textContent).toContain('Current notice');
+  expect(host.querySelector('ul button[aria-label]')).not.toBeNull();
 });
 it('repeating a pagination cursor pauses the list instead of looping', async () => {
   arrange((url) => reply({ ...page(), next_cursor: url.searchParams.get('cursor') ?? 'older' }));

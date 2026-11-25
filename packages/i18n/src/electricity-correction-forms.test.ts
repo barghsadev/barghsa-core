@@ -12,15 +12,18 @@ it('localizes electricity corrections and staff decision ownership in both dicti
   );
   expect(keys).toEqual([
     'electricity.correctionForm.addressInvalid',
+    'electricity.correctionForm.addressOnly',
     'electricity.correctionForm.busy',
     'electricity.correctionForm.giftInvalid',
     'electricity.correctionForm.help',
     'electricity.correctionForm.loading',
     'electricity.correctionForm.loadingRevision',
     'electricity.correctionForm.locationInvalid',
+    'electricity.correctionForm.noLongerEditable',
     'electricity.correctionForm.noteInvalid',
     'electricity.correctionForm.postalInvalid',
     'electricity.correctionForm.quantitiesHelp',
+    'electricity.correctionForm.responseHelp',
     'electricity.correctionForm.retry',
     'electricity.correctionForm.uncertain',
     'electricity.correctionForm.validationUnavailable',

@@ -86,6 +86,12 @@ it.each(['table', 'card'] as const)(
     expect(host.querySelector(`a[href="/invoices/${invoice}"]`)?.textContent).toContain(
       'View invoice'
     );
+    if (view === 'table') {
+      const receiptAction = host.querySelector<HTMLButtonElement>('td[data-table-actions] button')!;
+      expect(receiptAction.getAttribute('aria-expanded')).toBe('false');
+      await act(async () => receiptAction.click());
+      expect(receiptAction.getAttribute('aria-expanded')).toBe('true');
+    }
     expect(host.querySelectorAll('[data-slot=wallet-receipt-details]')).toHaveLength(1);
     expect(host.querySelector('script')).toBeNull();
     expect(host.querySelector('img')).toBeNull();

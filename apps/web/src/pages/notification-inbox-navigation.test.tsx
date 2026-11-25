@@ -11,7 +11,10 @@ import {
   notificationCursor,
 } from '../test/notification-inbox-fixtures.js';
 const { destination } = vi.hoisted(() => ({ destination: vi.fn() }));
-vi.mock('@tanstack/react-router', () => ({ useNavigate: () => destination }));
+vi.mock('@tanstack/react-router', async () => ({
+  useNavigate: () => destination,
+  Link: (await import('../test/notification-inbox-fixtures.js')).FixtureNotificationLink,
+}));
 let host: HTMLDivElement, root: Root, navigate: (raw: Record<string, unknown>) => void;
 function Bound({ context = 'customer' }: { context?: 'customer' | 'staff' }) {
   const [raw, setRaw] = useState<Record<string, unknown>>({});
@@ -65,11 +68,17 @@ it.each([
   );
   await act(async () => root.render(<QueryProvider>{<Bound context={context} />}</QueryProvider>));
   expect(host.textContent).toContain('Overdue refund');
-  const links = [...host.querySelectorAll('ul li a')];
-  expect(host.querySelector('ul button a')).toBeNull();
+  const row = host.querySelector('ul li');
+  const notificationLink = row?.querySelector(':scope > a');
+  expect(notificationLink?.getAttribute('href')).toBe(
+    `${context === 'staff' ? '/admin/inbox' : '/notifications'}/${item().id}`
+  );
+  expect(notificationLink?.querySelector('a, button')).toBeNull();
+  const links = [...host.querySelectorAll('ul li > div a')];
   expect(links.map((link) => [link.textContent, link.getAttribute('href')])).toEqual(
     context === 'staff'
       ? [
+          [locale === 'fa' ? 'مشاهده مورد مرتبط' : 'Open linked record', '/admin'],
           [
             locale === 'fa' ? 'داشبورد پایش' : 'Monitoring dashboard',
             'https://monitoring.example.test/d/barghsa-finance-safety',
@@ -155,12 +164,12 @@ for (const context of ['customer', 'staff'] as const) {
     await act(async () =>
       root.render(<QueryProvider>{<Bound context={context} />}</QueryProvider>)
     );
-    await click('Linked notice');
+    await click('Mark as read');
     await act(async () => navigate({ cursor }));
     await act(async () => finish(Response.json({ unread_count: 0 })));
     expect(destination).not.toHaveBeenCalled();
     expect(host.textContent).toContain('Older notice');
-    expect(host.querySelector('ul button')?.hasAttribute('disabled')).toBe(false);
+    expect(host.querySelector('ul button[aria-label]')).not.toBeNull();
   });
 }
 it('refreshing a restored page retains accepted rows on failure but returns its URL to the first page', async () => {

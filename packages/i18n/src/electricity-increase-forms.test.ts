@@ -11,7 +11,7 @@ it('localizes the independent increase editors and captured retries in both lang
       .filter((key) => /electricity\.(increaseForm|increaseDecisionForm)\./.test(key))
       .sort()
   );
-  expect(keys).toHaveLength(14);
+  expect(keys).toHaveLength(18);
   for (const key of keys) {
     expect(t(key, 'en')).not.toBe(key);
     expect(t(key, 'fa')).not.toBe(key);

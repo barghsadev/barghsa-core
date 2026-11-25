@@ -3,7 +3,7 @@ import { act, type ComponentType, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { t } from '@barghsa/i18n/workspace';
-import { Route } from '../routes/_app/electricity/index.js';
+import ElectricityIndexPage from './ElectricityIndexPage.js';
 import { SavingsPage } from './SavingsPage.js';
 import { ConsultationIntakePage, ConsultationsPage } from './ConsultationsPage.js';
 import {
@@ -18,7 +18,6 @@ import {
 
 const navigate = vi.hoisted(() => vi.fn());
 vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (options: unknown) => ({ options }),
   Link: ({ children, to, className }: { children: ReactNode; to: string; className?: string }) => (
     <a href={to} className={className}>
       {children}
@@ -34,10 +33,9 @@ afterEach(() => {
   navigate.mockReset();
   document.documentElement.lang = 'fa';
 });
-const Electricity = Route.options.component as ComponentType;
 const cases = [
   {
-    Page: Electricity,
+    Page: ElectricityIndexPage,
     api: '/api/products/electricity',
     refresh: t('electricity.catalogue.refresh', 'en'),
     title: 'thermal electricity',
@@ -185,7 +183,7 @@ it('malformed electricity refresh retains validated cards and reports the failur
     'fetch',
     vi.fn(async () => Response.json(malformed ? [] : browseElectricity))
   );
-  const { host, close } = await mount(Electricity);
+  const { host, close } = await mount(ElectricityIndexPage);
   try {
     malformed = true;
     await act(async () => button(host, t('electricity.catalogue.refresh', 'en')).click());
@@ -331,14 +329,14 @@ it('a refreshed catalogue without the selected product clears confirmation befor
     expect(host.querySelector<HTMLButtonElement>('form button[type="submit"]')?.disabled).toBe(
       false
     );
-    await act(async () => {
+    await act(async () =>
       host
         .querySelector('form')!
-        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-      await vi.waitFor(() =>
-        expect(host.textContent).toContain('Choose an available consultation for this profile.')
-      );
-    });
+        .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    );
+    await vi.waitFor(() =>
+      expect(host.textContent).toContain('Choose an available consultation for this profile.')
+    );
     expect(host.textContent).toContain('Confirm that this request is for the displayed profile.');
     expect(vi.mocked(fetch).mock.calls.some(([, options]) => options?.method === 'POST')).toBe(
       false

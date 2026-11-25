@@ -264,7 +264,7 @@ it('validates explicit custom refunds before opening the confirmation', async ()
       refunds: [{ invoiceId: 'invoice', amount: '40', destination: 'wallet' }],
     },
   });
-  expect(container.textContent).toContain('IRR\u00a040 · 4 toman');
+  expect(container.textContent).toContain('IRR\u00a040 · 4\u00a0toman');
   expect(container.textContent).toContain(en.cancellationFinancialReview);
 });
 it('shows failed customer returns separately from cancelled service', async () => {

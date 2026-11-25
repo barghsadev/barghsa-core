@@ -1,3 +1,4 @@
+import { createElement, type ReactNode } from 'react';
 import type { NotificationItem } from '../lib/notifications.js';
 export const notificationItem = (
   title = 'Current notice',
@@ -28,3 +29,24 @@ export const notificationCursor = (
   timestamp = '2026-10-01T00:00:00.123456Z',
   id = '10000000-0000-4000-8000-000000000001'
 ) => btoa(`${timestamp}|${id}`).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+export function FixtureNotificationLink({
+  children,
+  to,
+  params,
+  'aria-label': label,
+}: {
+  children: ReactNode;
+  to: string;
+  params?: { notificationId: string };
+  'aria-label'?: string;
+}) {
+  return createElement(
+    'a',
+    {
+      href: params ? to.replace('$notificationId', encodeURIComponent(params.notificationId)) : to,
+      'aria-label': label,
+    },
+    children
+  );
+}

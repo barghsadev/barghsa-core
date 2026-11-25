@@ -138,7 +138,9 @@ for (const Page of [CustomerTicketsPage, StaffTicketsPage]) {
       expect(host.querySelector('[data-slot="ticket-queue-records"]')?.textContent).toContain(
         supportTicket.subject
       );
-      expect(host.querySelector('h2')?.textContent).toBe(supportTicket.subject);
+      expect(host.querySelector('[data-slot="ticket-detail"] header h2')?.textContent).toBe(
+        supportTicket.subject
+      );
       expect(host.querySelector<HTMLTextAreaElement>('#ticket-reply')?.value).toBe(
         'Unsaved response'
       );
@@ -218,7 +220,9 @@ it('detail failure retries only the selected ticket and comments, without reload
       `/api/tickets/${supportTicket.id}`,
       `/api/tickets/${supportTicket.id}/comments`,
     ]);
-    expect(host.querySelector('h2')?.textContent).toBe(supportTicket.subject);
+    expect(host.querySelector('[data-slot="ticket-detail"] header h2')?.textContent).toBe(
+      supportTicket.subject
+    );
     expect(host.textContent).toContain('Public answer');
     expect(host.textContent).not.toContain('Private staff reasoning');
   } finally {
@@ -336,7 +340,9 @@ it('active-profile deep links still load their selected ticket when the queue is
   );
   const { host, close } = await mount(CustomerTicketsPage);
   try {
-    expect(host.querySelector('h2')?.textContent).toBe(supportTicket.subject);
+    expect(host.querySelector('[data-slot="ticket-detail"] header h2')?.textContent).toBe(
+      supportTicket.subject
+    );
     expect(host.textContent).toContain('No tickets');
     expect(
       new URL(

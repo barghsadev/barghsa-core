@@ -292,32 +292,32 @@ it.each(['confirmed', 'retry', 'already-cancelled', 'step-up required'] as const
   exerciseCancellation
 );
 
-vi.mock('@tanstack/react-router', () => ({
-  useBlocker: vi.fn(),
-  Link: ({
-    children,
-    to,
-    params,
-    search,
-    ...rest
-  }: {
-    children: ReactNode;
-    to: string;
-    params?: Record<string, string>;
-    search?: Record<string, string>;
-  }) => {
-    const path = Object.entries(params ?? {}).reduce(
-      (value, [key, param]) => value.replace(`$${key}`, encodeURIComponent(param)),
-      to
-    );
-    const query = search ? `?${new URLSearchParams(search)}` : '';
-    return (
-      <a href={`${path}${query}`} {...rest}>
-        {children}
-      </a>
-    );
-  },
-}));
+vi.mock('@tanstack/react-router', async (importOriginal) => {
+  const { interpolatePath } = await importOriginal<typeof import('@tanstack/react-router')>();
+  return {
+    useBlocker: vi.fn(),
+    Link: ({
+      children,
+      to,
+      params,
+      search,
+      ...rest
+    }: {
+      children: ReactNode;
+      to: string;
+      params?: Record<string, string>;
+      search?: Record<string, string>;
+    }) => {
+      const { interpolatedPath: path } = interpolatePath({ path: to, params: params ?? {} });
+      const query = search ? `?${new URLSearchParams(search)}` : '';
+      return (
+        <a href={`${path}${query}`} {...rest}>
+          {children}
+        </a>
+      );
+    },
+  };
+});
 
 vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: String, irrDigits: String }),

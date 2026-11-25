@@ -1,11 +1,10 @@
-import { act, type ComponentType, type ReactNode } from 'react';
+import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { Route } from '../routes/_app/electricity/index.js';
+import Catalogue from './ElectricityIndexPage.js';
 import { t } from '@barghsa/i18n/workspace';
 
 vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (options: unknown) => ({ options }),
   Link: ({ to, children, ...props }: { to: string; children: ReactNode }) => (
     <a href={to} {...props}>
       {children}
@@ -16,7 +15,6 @@ vi.mock('../hooks/useNumberFormatting.js', () => ({
   useNumberFormatting: () => ({ money: (value: string) => `${value} IRR`, irrDigits: String }),
 }));
 
-const Catalogue = Route.options.component as ComponentType;
 const products = [
   {
     id: 'thermal',

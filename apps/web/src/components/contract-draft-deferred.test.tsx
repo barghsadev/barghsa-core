@@ -1,5 +1,5 @@
 import { QueryProvider } from '../test/query-provider.js';
-import { act, type ComponentProps } from 'react';
+import { act, type ComponentProps, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { en } from '@barghsa/i18n/contracts';
@@ -29,6 +29,25 @@ const harness = vi.hoisted(() => ({
   cancellation: null as ComponentProps<typeof ContractCancellationPanel> | null,
   activation: null as ComponentProps<typeof ContractActivationPanel> | null,
 }));
+vi.mock('@tanstack/react-router', async (importOriginal) => {
+  const router = await importOriginal<typeof import('@tanstack/react-router')>();
+  return {
+    ...router,
+    Link: ({
+      children,
+      to,
+      params,
+    }: {
+      children: ReactNode;
+      to: string;
+      params?: Record<string, string>;
+    }) => (
+      <a href={router.interpolatePath({ path: to, params: params ?? {} }).interpolatedPath}>
+        {children}
+      </a>
+    ),
+  };
+});
 vi.mock('../hooks/useLocale.js', () => ({ useLocale: () => 'en' }));
 vi.mock('./ContractDraftForm.js', async (importOriginal) => {
   await new Promise<void>((resolve) => {

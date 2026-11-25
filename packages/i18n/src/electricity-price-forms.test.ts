@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest';
 import { en, fa, t } from './app.js';
+import { editorText } from './electricity-price-forms.js';
 it('localizes the price workspace and exact retry in both dictionaries', () => {
   const keys = Object.keys(en).filter((key) => key.startsWith('electricity.priceForm.'));
   expect(keys.sort()).toEqual(
@@ -7,14 +8,19 @@ it('localizes the price workspace and exact retry in both dictionaries', () => {
       .filter((key) => key.startsWith('electricity.priceForm.'))
       .sort()
   );
-  expect(keys).toHaveLength(13);
+  expect(keys).toHaveLength(12);
   for (const key of keys) {
     expect(t(key, 'en')).not.toBe(key);
     expect(t(key, 'fa')).not.toBe(key);
     expect(t(key, 'en')).not.toBe(t(key, 'fa'));
   }
   expect(t('electricity.priceForm.percentageInvalid', 'en')).toContain('two decimals');
-  expect(t('electricity.priceForm.reasonHelp', 'en')).toContain('disclosed');
+  expect(editorText('customerDisclosure', 'en')).toBe(
+    'The customer can see both fields after you publish.'
+  );
+  expect(editorText('customerDisclosure', 'fa')).toContain(
+    'پس از انتشار، مشتری هر دو مورد را می‌بیند'
+  );
 });
 
 import { t as priceText } from './electricity-price-forms.js';
