@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 275 | Accepted with unchanged source bindings. |
-| verify | 997 | Existing work may be complete; inspect evidence before building. |
+| done | 267 | Accepted with unchanged source bindings. |
+| verify | 1005 | Existing work may be complete; inspect evidence before building. |
 | partial | 91 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1014,7 +1014,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-03.02.03` | verify | Earlier acceptance_verified | Create root `pnpm dev` script for hot-reload local development across all apps |
 | `01-platform-infrastructure.md#T-03.02.04` | done | Earlier acceptance_verified | Configure file-watch with proper polling for Docker-for-Mac compatibility |
 | `01-platform-infrastructure.md#T-03.03.01` | done | Earlier acceptance_verified | Implement liveness and readiness controllers in NestJS API |
-| `01-platform-infrastructure.md#T-03.03.02` | done | Earlier acceptance_verified | Implement graceful `SIGTERM` handler for NestJS API and worker |
+| `01-platform-infrastructure.md#T-03.03.02` | verify | Earlier acceptance_verified | Implement graceful `SIGTERM` handler for NestJS API and worker |
 | `01-platform-infrastructure.md#T-03.03.03` | done | Earlier acceptance_verified | Implement graceful shutdown for web frontend server |
 | `01-platform-infrastructure.md#T-03.03.04` | verify | Earlier partial | Add readiness check that excludes non-critical dependencies |
 | `01-platform-infrastructure.md#T-04.01.01` | partial | Earlier partial | Configure PostgreSQL connection pooling strategy |
@@ -1237,7 +1237,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.02.03` | done | Recorded batch work | Configure container vulnerability scanning (e.g. Trivy, Grype) on Docker images |
 | `06-security-testing-observability.md#T-06.07.02.04` | done | Recorded batch work | Configure secret scanning on every PR (e.g. gitLeaks, truffleHog) |
 | `06-security-testing-observability.md#T-06.07.02.05` | done | Recorded batch work | Define triage policy: critical/high with credible production path → block release |
-| `06-security-testing-observability.md#T-06.07.02.06` | done | Recorded batch work | Set up license compliance check (e.g. license-checker) for dependency licenses |
+| `06-security-testing-observability.md#T-06.07.02.06` | verify | Recorded batch work | Set up license compliance check (e.g. license-checker) for dependency licenses |
 | `06-security-testing-observability.md#T-06.07.02.07` | done | Recorded batch work | Generate SBOM (Software Bill of Materials) for each production build |
 | `06-security-testing-observability.md#T-06.07.02.08` | done | Recorded batch work | Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main |
 | `06-security-testing-observability.md#T-06.07.03.01` | done | Recorded batch work | Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation` |
@@ -1331,7 +1331,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.11.03.05` | verify | Recorded batch work | Set up CI performance budget: route JS size, Core Web Vitals regression check for primary mobile flows |
 | `06-security-testing-observability.md#T-06.11.03.06` | verify | Recorded batch work | Schedule weekly performance regression run in staging |
 | `06-security-testing-observability.md#T-06.11.04.01` | done | Recorded batch work | Write failure-injection tests: provider timeout → circuit breaker → queue; Redis unavailable → fallback to PG |
-| `06-security-testing-observability.md#T-06.11.04.02` | done | Recorded batch work | Write worker reliability tests: crash during job → reprocess or dead-letter; duplicate delivery → idempotency |
+| `06-security-testing-observability.md#T-06.11.04.02` | verify | Recorded batch work | Write worker reliability tests: crash during job → reprocess or dead-letter; duplicate delivery → idempotency |
 | `06-security-testing-observability.md#T-06.11.04.03` | done | Recorded batch work | Write DB connection exhaustion test: pool full → queue/backpressure → graceful degradation |
 | `06-security-testing-observability.md#T-06.11.04.04` | partial | Recorded batch work | Schedule quarterly PostgreSQL restore test: measure RPO/RTO, document in runbook |
 | `06-security-testing-observability.md#T-06.11.04.05` | done | Recorded batch work | Schedule quarterly object storage recovery test: version retrieval, policy enforcement, orphan detection |
@@ -1379,10 +1379,10 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.14.01.01` | done | Recorded batch work | Implement Prometheus metrics endpoint in API and worker processes |
 | `06-security-testing-observability.md#T-06.14.01.02` | done | Recorded batch work | Instrument RED metrics: request rate, error count (by status/route), latency (p50/p95/p99) |
 | `06-security-testing-observability.md#T-06.14.01.03` | done | Recorded batch work | Instrument database metrics: pool size, active/idle/waiting connections, query duration, slow queries |
-| `06-security-testing-observability.md#T-06.14.01.04` | done | Recorded batch work | Instrument queue metrics: queue depth, oldest-unprocessed age, processing time, failure rate, dead-letter count |
+| `06-security-testing-observability.md#T-06.14.01.04` | verify | Recorded batch work | Instrument queue metrics: queue depth, oldest-unprocessed age, processing time, failure rate, dead-letter count |
 | `06-security-testing-observability.md#T-06.14.01.05` | verify | Recorded batch work | Instrument external provider metrics: call latency, success/error count, circuit-breaker state |
-| `06-security-testing-observability.md#T-06.14.01.06` | done | Recorded batch work | Instrument business safety metrics: unresolved refund count, reconciliation mismatch count, outbox backlog age |
-| `06-security-testing-observability.md#T-06.14.01.07` | done | Recorded batch work | Instrument worker metrics: job processing rate, lease expiry, retry count, dead-letter count |
+| `06-security-testing-observability.md#T-06.14.01.06` | verify | Recorded batch work | Instrument business safety metrics: unresolved refund count, reconciliation mismatch count, outbox backlog age |
+| `06-security-testing-observability.md#T-06.14.01.07` | verify | Recorded batch work | Instrument worker metrics: job processing rate, lease expiry, retry count, dead-letter count |
 | `06-security-testing-observability.md#T-06.14.01.08` | done | Recorded batch work | Instrument AI metrics: request count, token usage, latency, cost per model, concurrency |
 | `06-security-testing-observability.md#T-06.14.02.01` | done | Recorded batch work | Create Executive SLO dashboard: availability, latency (p95/p99), error budget, burn rate |
 | `06-security-testing-observability.md#T-06.14.02.02` | done | Recorded batch work | Create API Health dashboard: RED metrics, top slow routes, error breakdown by status, correlation with deploys |
@@ -1411,8 +1411,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.15.02.03` | partial | Recorded batch work | Implement error budget tracking dashboard with consumption rate and burn-down |
 | `06-security-testing-observability.md#T-06.15.02.04` | partial | Recorded batch work | Configure multi-window, multi-burn-rate alert (MWMBR) for accurate detection |
 | `06-security-testing-observability.md#T-06.15.02.05` | partial | Recorded batch work | Ensure outbox backlog, refund mismatch, and provider health alerts have SLO-linked burn budgets |
-| `06-security-testing-observability.md#T-06.15.03.01` | done | Recorded batch work | Configure unresolved refund obligation alert: count > 0 for > 1 hour → P2 |
-| `06-security-testing-observability.md#T-06.15.03.02` | done | Recorded batch work | Configure reconciliation mismatch alert: wallet/cached balance drift > threshold → P1 |
+| `06-security-testing-observability.md#T-06.15.03.01` | verify | Recorded batch work | Configure unresolved refund obligation alert: count > 0 for > 1 hour → P2 |
+| `06-security-testing-observability.md#T-06.15.03.02` | verify | Recorded batch work | Configure reconciliation mismatch alert: wallet/cached balance drift > threshold → P1 |
 | `06-security-testing-observability.md#T-06.15.03.03` | done | Recorded batch work | Configure outbox backlog age alert: oldest-unprocessed > 5 min → P2, > 15 min → P1 |
 | `06-security-testing-observability.md#T-06.15.03.04` | done | Recorded batch work | Configure duplicate payment detection: same idempotency key with different payload → P1 |
 | `06-security-testing-observability.md#T-06.15.03.05` | done | Recorded batch work | Configure provider callback anomaly alert: unexpected signature, replay, stale timestamp → P1 |

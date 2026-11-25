@@ -4751,5 +4751,133 @@
     "approvedBy": "Majid Najafi (owner)",
     "reference": "docs/security/storage-license-review.md#owner-confirmation-on-2026-11-19",
     "conditions": "Make the exact module source and retained notices available to recipients of the packaged binary. Verify the access path."
+  },
+  {
+    "scope": "app",
+    "purl": "pkg:apk/alpine/zstd-libs@1.6.0-r1?arch=x86_64&distro=3.24.4",
+    "licenses": ["BSD-3-Clause", "GPL-2.0-or-later"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
+    "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution. Resolve the license choice or exception for shipped files. Confirm notices and applicable source or replacement duties."
+  },
+  {
+    "scope": "postgres",
+    "purl": "pkg:apk/alpine/pyc@3.14.10-r2?arch=x86_64&distro=3.24.3",
+    "licenses": ["PSF-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
+    "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution. Confirm the exact shipped package files and keep the copyright and license notices listed in the packet or versioned package."
+  },
+  {
+    "scope": "postgres",
+    "purl": "pkg:apk/alpine/python3-ndbm@3.14.10-r3?arch=x86_64&distro=3.24.3",
+    "licenses": ["PSF-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
+    "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution."
+  },
+  {
+    "scope": "postgres",
+    "purl": "pkg:apk/alpine/python3-pyc@3.14.10-r2?arch=x86_64&distro=3.24.3",
+    "licenses": ["PSF-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
+    "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution. Confirm the exact shipped package files and keep the copyright and license notices listed in the packet or versioned package."
+  },
+  {
+    "scope": "postgres",
+    "purl": "pkg:apk/alpine/python3-pycache-pyc0@3.14.10-r2?arch=x86_64&distro=3.24.3",
+    "licenses": ["PSF-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
+    "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution. Confirm the exact shipped package files and keep the copyright and license notices listed in the packet or versioned package."
+  },
+  {
+    "scope": "postgres",
+    "purl": "pkg:apk/alpine/python3@3.14.10-r2?arch=x86_64&distro=3.24.3",
+    "licenses": ["PSF-2.0"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
+    "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution. Confirm the exact shipped package files and keep the copyright and license notices listed in the packet or versioned package."
+  },
+  {
+    "scope": "postgres",
+    "purl": "pkg:apk/alpine/zstd-libs@1.6.0-r1?arch=x86_64&distro=3.24.3",
+    "licenses": ["BSD-3-Clause", "GPL-2.0-or-later"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
+    "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution. Resolve the license choice or exception for shipped files. Confirm notices and applicable source or replacement duties."
+  },
+  {
+    "scope": "postgres",
+    "purl": "pkg:apk/alpine/zstd@1.6.0-r1?arch=x86_64&distro=3.24.3",
+    "licenses": ["BSD-3-Clause", "GPL-2.0-or-later"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
+    "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution. Resolve the license choice or exception for shipped files. Confirm notices and applicable source or replacement duties."
+  },
+  {
+    "scope": "postgres-staging",
+    "purl": "pkg:deb/ubuntu/libheif-plugin-aomdec@1.17.6-1ubuntu4.10?arch=amd64&distro=ubuntu-24.04",
+    "licenses": [
+      "BSD-3-Clause",
+      "BSD-4-Clause",
+      "BSL-1.0",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "LGPL-3.0-only",
+      "LGPL-3.0-or-later",
+      "MIT"
+    ],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
+    "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution. Map the applicable terms to shipped files. Confirm notices, scoped source and any library replacement or relinking duties."
+  },
+  {
+    "scope": "postgres-staging",
+    "purl": "pkg:deb/ubuntu/libheif1@1.17.6-1ubuntu4.10?arch=amd64&distro=ubuntu-24.04",
+    "licenses": [
+      "BSD-3-Clause",
+      "BSD-4-Clause",
+      "BSL-1.0",
+      "GPL-3.0-only",
+      "GPL-3.0-or-later",
+      "LGPL-3.0-only",
+      "LGPL-3.0-or-later",
+      "MIT"
+    ],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
+    "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution. Map the applicable terms to shipped files. Confirm notices, scoped source and any library replacement or relinking duties."
+  },
+  {
+    "scope": "postgres-staging",
+    "purl": "pkg:deb/ubuntu/libsqlite3-0@3.45.1-1ubuntu2.11?arch=amd64&distro=ubuntu-24.04",
+    "licenses": ["GPL-2.0-only", "GPL-2.0-or-later", "public-domain"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
+    "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution. Map the copyleft terms to shipped files. Verify notices and the exact corresponding source, including package patches where required."
+  },
+  {
+    "scope": "postgres-staging",
+    "purl": "pkg:deb/ubuntu/libssh-4@0.10.6-2ubuntu0.6?arch=amd64&distro=ubuntu-24.04",
+    "licenses": [
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "LGPL-2.1--OpenSSL",
+      "LGPL-2.1-only",
+      "public-domain"
+    ],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
+    "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution. Map the applicable terms to shipped files. Confirm notices, scoped source and any library replacement or relinking duties."
+  },
+  {
+    "scope": "postgres-staging",
+    "purl": "pkg:deb/ubuntu/tzdata@2026f-0ubuntu0.24.04.1?arch=all&distro=ubuntu-24.04",
+    "licenses": ["ICU", "public-domain"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
+    "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution. Resolve the nonstandard or mixed terms in the original notice. Map the grant and conditions to the files actually shipped."
   }
 ]

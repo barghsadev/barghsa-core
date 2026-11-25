@@ -4,7 +4,7 @@ import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueRe
 import { lazy, Suspense, useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/workspace';
-import { LoadingStatus, Button } from '@barghsa/ui';
+import { Button } from '@barghsa/ui';
 import { refreshProfileContext } from '../lib/profile-context.js';
 import {
   isPendingInvitations,
@@ -97,6 +97,19 @@ function AccountInvitations({ locale }: { locale: Locale }) {
   }
 
   if (
+    resource.loading &&
+    !scope.denied &&
+    !resource.error &&
+    !invitations.length &&
+    !completed.length
+  )
+    return (
+      <p role="status" className="sr-only">
+        {t('invitation.banner.loading', locale)}
+      </p>
+    );
+
+  if (
     !scope.denied &&
     !resource.loading &&
     !resource.error &&
@@ -117,9 +130,9 @@ function AccountInvitations({ locale }: { locale: Locale }) {
       {(scope.denied || resource.error || failed) && (
         <div
           role="alert"
-          className="rounded-lg border bg-card p-4 text-card-foreground flex flex-col items-start gap-3"
+          className="flex min-h-11 items-center gap-2 rounded-lg border bg-card px-3 text-card-foreground"
         >
-          <p className="text-sm">
+          <p className="min-w-0 flex-1 text-sm leading-snug">
             {t(
               scope.denied
                 ? 'invitation.banner.denied'
@@ -133,8 +146,9 @@ function AccountInvitations({ locale }: { locale: Locale }) {
           </p>
           <Button
             type="button"
-            variant="outline"
+            variant="ghost"
             size="sm"
+            className="min-h-11 shrink-0"
             disabled={operation !== null || resource.loading}
             onClick={() => (scope.denied ? scope.recover() : resource.retry())}
           >
@@ -143,9 +157,9 @@ function AccountInvitations({ locale }: { locale: Locale }) {
         </div>
       )}
       {resource.loading && (
-        <LoadingStatus className="text-sm text-muted-foreground">
+        <p role="status" className="text-sm text-muted-foreground">
           {t('invitation.banner.loading', locale)}
-        </LoadingStatus>
+        </p>
       )}
       {(!!invitations.length || !!completed.length) && (
         <Suspense fallback={<p role="status">{t('invitation.banner.loading', locale)}</p>}>

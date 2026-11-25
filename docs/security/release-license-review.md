@@ -1,6 +1,6 @@
 # v0.6.0 package-specific license review
 
-This is the owner-requested review packet. It records specific dispositions against the existing MIT, Apache-2.0, ISC, BSD-2-Clause and BSD-3-Clause allowlist. The GeoLite2 fallback is owner approved. The owner approved 388 exact exceptions on November 19, 2026, and two additional Ubuntu package versions on November 20.
+This is the owner-requested review packet. It records specific dispositions against the existing MIT, Apache-2.0, ISC, BSD-2-Clause and BSD-3-Clause allowlist. The GeoLite2 fallback is owner approved. The owner approved 388 exact exceptions on November 19, 2026, two additional Ubuntu package versions on November 20, and 13 updated runtime package entries on November 25.
 
 ## Owner approval on 2026-11-19
 
@@ -40,6 +40,29 @@ retains the applicable notices, license-choice, corresponding-source and
 replacement conditions from the earlier approval. Verify these conditions
 against the files distributed with the final image. [Ubuntu source publication](https://lists.ubuntu.com/archives/noble-changes/2026-November/060633.html)
 and [reviewed hosted inventory](https://github.com/barghsadev/barghsa-core/actions/runs/44704600452/job/136180949728).
+
+## November 25 runtime package refresh
+
+On November 25, 2026, Majid Najafi approved the 13 exact runtime package
+and license entries matched by both preflight image inventories. The
+approval policy records each package URL, scope and observed license set.
+
+- Application, Alpine 3.24.4 x86_64. `zstd-libs` 1.6.0-r1.
+- PostgreSQL, Alpine 3.24.3 x86_64. `pyc`, `python3`, `python3-pyc` and
+  `python3-pycache-pyc0` 3.14.10-r2, `python3-ndbm` 3.14.10-r3, and `zstd`
+  and `zstd-libs` 1.6.0-r1.
+- Staging PostgreSQL, Ubuntu 24.04 amd64. `libheif-plugin-aomdec` and
+  `libheif1` 1.17.6-1ubuntu4.10, `libsqlite3-0` 3.45.1-1ubuntu2.11, and
+  `libssh-4` 0.10.6-2ubuntu0.6. The architecture-independent package is
+  `tzdata` 2026f-0ubuntu0.24.04.1.
+
+The decision retains the notice, corresponding-source, license-choice and
+applicable replacement or relinking obligations. Verify the notices and
+corresponding source for the actual distributed images. The strict gate
+still checks the exact inventory of every candidate.
+
+[First preflight image report](https://github.com/barghsadev/barghsa-core/actions/runs/45682591020)
+and [matching runtime image inventory](https://github.com/barghsadev/barghsa-core/actions/runs/45683565791/artifacts/15056560067).
 
 ## Staging PostgreSQL supplement
 

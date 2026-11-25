@@ -10673,10 +10673,12 @@
         "story": "01-platform-infrastructure.md#spec-fa9c8259e872"
       },
       "requirement": "- **T-03.03.02:** Implement graceful `SIGTERM` handler for NestJS API and worker\n  - **Notes:** Use NestJS `@nestjs/platform-express` shutdown hooks. `app.enableShutdownHooks()`. Register handler: signal → start grace period (30s). Stop accepting requests (close HTTP server). For worker: stop job leasing, await current job with timeout. Close all connections. Use `httpServer.close()` and await `pool.end()`. If grace period expires, `process.exit(1)`.\n  - **Dependencies:** T-03.03.01\n  - **Complexity:** M",
-      "status": "done",
+      "status": "verify",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [],
+      "remaining": [
+        "Renew acceptance against the changed sources in the previous evidence."
+      ],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -396940,10 +396942,12 @@
         "story": "06-security-testing-observability.md#spec-78eef3232c99"
       },
       "requirement": "| T-06.07.02.06 | Set up license compliance check (e.g. license-checker) for dependency licenses | S |",
-      "status": "done",
+      "status": "verify",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [],
+      "remaining": [
+        "Renew acceptance against the changed sources in the previous evidence."
+      ],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -404935,10 +404939,12 @@
         "story": "06-security-testing-observability.md#spec-9df3f15eb1bf"
       },
       "requirement": "| T-06.11.04.02 | Write worker reliability tests: crash during job → reprocess or dead-letter; duplicate delivery → idempotency | M |",
-      "status": "done",
+      "status": "verify",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [],
+      "remaining": [
+        "Renew acceptance against the changed sources in the previous evidence."
+      ],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -410002,10 +410008,12 @@
         "story": "06-security-testing-observability.md#spec-ec4f15075ffa"
       },
       "requirement": "| T-06.14.01.04 | Instrument queue metrics: queue depth, oldest-unprocessed age, processing time, failure rate, dead-letter count | M |",
-      "status": "done",
+      "status": "verify",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [],
+      "remaining": [
+        "Renew acceptance against the changed sources in the previous evidence."
+      ],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -410248,10 +410256,12 @@
         "story": "06-security-testing-observability.md#spec-ec4f15075ffa"
       },
       "requirement": "| T-06.14.01.06 | Instrument business safety metrics: unresolved refund count, reconciliation mismatch count, outbox backlog age | M |",
-      "status": "done",
+      "status": "verify",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [],
+      "remaining": [
+        "Renew acceptance against the changed sources in the previous evidence."
+      ],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -410389,10 +410399,12 @@
         "story": "06-security-testing-observability.md#spec-ec4f15075ffa"
       },
       "requirement": "| T-06.14.01.07 | Instrument worker metrics: job processing rate, lease expiry, retry count, dead-letter count | M |",
-      "status": "done",
+      "status": "verify",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [],
+      "remaining": [
+        "Renew acceptance against the changed sources in the previous evidence."
+      ],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -412665,10 +412677,12 @@
         "story": "06-security-testing-observability.md#spec-a791d496e45e"
       },
       "requirement": "| T-06.15.03.01 | Configure unresolved refund obligation alert: count > 0 for > 1 hour → P2 | S |",
-      "status": "done",
+      "status": "verify",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [],
+      "remaining": [
+        "Renew acceptance against the changed sources in the previous evidence."
+      ],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -412802,10 +412816,12 @@
         "story": "06-security-testing-observability.md#spec-a791d496e45e"
       },
       "requirement": "| T-06.15.03.02 | Configure reconciliation mismatch alert: wallet/cached balance drift > threshold → P1 | S |",
-      "status": "done",
+      "status": "verify",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [],
+      "remaining": [
+        "Renew acceptance against the changed sources in the previous evidence."
+      ],
       "owner": null,
       "depends_on": [],
       "evidence": {

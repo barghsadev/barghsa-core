@@ -479,6 +479,11 @@
       "import": "./dist/recovery.js",
       "default": "./dist/recovery.js"
     },
+    "./staff-recovery": {
+      "types": "./dist/staff-recovery.d.ts",
+      "import": "./dist/staff-recovery.js",
+      "default": "./dist/staff-recovery.js"
+    },
     "./password-strength-feedback": {
       "types": "./dist/password-strength-feedback.d.ts",
       "import": "./dist/password-strength-feedback.js",

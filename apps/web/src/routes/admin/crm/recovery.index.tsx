@@ -10,7 +10,10 @@ function LookupRecoveryRoute() {
       entry={{
         mode: 'lookup',
         openCase: (caseId) =>
-          void navigate({ to: '/admin/crm/recovery/$caseId', params: { caseId } }),
+          void navigate({
+            to: '/admin/crm/recovery/$caseId/{-$section}',
+            params: { caseId, section: undefined },
+          }),
       }}
     />
   );

@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { createServer, type IncomingHttpHeaders } from 'node:http';
 import { t } from '@barghsa/i18n/recovery';
+import { staffRecoveryText } from '@barghsa/i18n/staff-recovery';
 import { t as authText } from '@barghsa/i18n/auth';
 import { t as appText } from '@barghsa/i18n/app';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
@@ -166,9 +167,13 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await crmShell(page, locale);
-    let state = 'approved',
+    const word = (key: string) => staffRecoveryText(`auth.recovery.${key}`, locale);
+    const casePath = `/admin/crm/recovery/${id}`;
+    let state = 'open',
       denied = false;
     const writes: unknown[] = [];
+    const reviews: unknown[] = [];
+    const receipts: unknown[] = [];
     await page.route(`**/api/crm/account-recovery/${id}`, (route) =>
       route.fulfill({
         status: denied ? 403 : 200,
@@ -182,12 +187,12 @@ for (const locale of ['en', 'fa'] as const) {
               newLogin: 'new@example.test',
               supportReference: 'support-1',
               reason: 'Identity documents checked',
-              reviewerNotes: 'Independent review',
+              reviewerNotes: state === 'open' ? null : 'Independent review',
               state,
               createdBy: 'collector',
               reviewedBy: 'reviewer',
-              challengeId,
-              contactVerified: true,
+              challengeId: state === 'open' ? null : challengeId,
+              contactVerified: state !== 'open',
               evidenceDownloadUrls: [],
               history: [
                 {
@@ -201,6 +206,16 @@ for (const locale of ['en', 'fa'] as const) {
             },
       })
     );
+    await page.route(`**/api/crm/account-recovery/${id}/review`, (route) => {
+      reviews.push(route.request().postDataJSON());
+      state = 'approved';
+      return route.fulfill({ json: { id, state } });
+    });
+    await page.route(`**/api/crm/account-recovery/${id}/complete`, (route) => {
+      receipts.push(route.request().postDataJSON());
+      state = 'completed';
+      return route.fulfill({ json: { id, state } });
+    });
     await page.route(`**/api/crm/account-recovery/${id}/apply`, (route) => {
       writes.push(route.request().postDataJSON());
       state = 'applied';
@@ -209,6 +224,25 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/crm/recovery');
     await page.getByRole('link', { name: t('auth.recovery.newCase', locale), exact: true }).click();
     await expect(page).toHaveURL(/\/admin\/crm\/recovery\/new$/);
+    await page.route('**/api/crm/users?*', (route) => route.fulfill({ status: 403, json: {} }));
+    await page
+      .getByLabel(staffRecoveryText('auth.recovery.searchProfile', locale), { exact: true })
+      .fill('Owner');
+    await page
+      .getByRole('button', {
+        name: staffRecoveryText('auth.recovery.findProfile', locale),
+        exact: true,
+      })
+      .click();
+    await expect(page.getByRole('alert')).toContainText(
+      staffRecoveryText('auth.recovery.profileSearchDenied', locale)
+    );
+    await page
+      .getByRole('button', {
+        name: staffRecoveryText('auth.recovery.enterProfileId', locale),
+        exact: true,
+      })
+      .click();
     for (const key of ['profileId', 'newLogin', 'supportReference', 'reason', 'evidence'] as const)
       await expect(
         page.getByLabel(t(`auth.recovery.${key}`, locale), { exact: true })
@@ -231,10 +265,32 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByText('new@example.test', { exact: true })).toBeVisible();
     await expect(page.locator('#recovery-case-id')).toHaveCount(0);
     const notes = page.getByLabel(t('auth.recovery.notes', locale), { exact: true });
+    await expect(notes).toHaveCount(0);
+    const reviewLink = page.getByRole('link', { name: word('reviewCaseAction'), exact: true });
+    await reviewLink.click();
+    await expect(page).toHaveURL(`${casePath}/review`);
+    await page.reload();
     await expect(notes).toHaveAttribute('aria-required', 'true');
+    const approve = page.getByRole('button', { name: word('approve'), exact: true });
+    await expect(approve).toBeDisabled();
+    await notes.fill('  Independent review  ');
+    await approve.click();
+    const dialog = page.getByRole('dialog');
+    const confirm = dialog.getByRole('button', {
+      name: locale === 'fa' ? 'تأیید' : 'Confirm',
+      exact: true,
+    });
+    await expect(dialog).toContainText('Independent review');
+    expect(reviews).toEqual([]);
+    await confirm.click();
+    await expect(page).toHaveURL(casePath);
+    expect(reviews).toEqual([{ decision: 'approved', notes: 'Independent review' }]);
+    await reviewLink.click();
+    await expect(page.getByRole('button', { name: word('reject'), exact: true })).toBeVisible();
+    await expect(approve).toHaveCount(0);
+    await page.getByRole('link', { name: word('backToRecoveryCase'), exact: true }).click();
     const apply = page.getByRole('button', { name: t('auth.recovery.apply', locale), exact: true });
     await apply.click();
-    const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText('old@example.test → new@example.test');
     await expect(dialog).toContainText(id);
     await expect(dialog).toHaveCSS('opacity', '1');
@@ -254,10 +310,29 @@ for (const locale of ['en', 'fa'] as const) {
     });
     state = 'applied';
     await reload.click();
-    for (const key of ['oldNotice', 'newNotice'] as const)
-      await expect(
-        page.getByLabel(t(`auth.recovery.${key}`, locale), { exact: true })
-      ).toHaveAttribute('aria-required', 'true');
+    const oldNotice = page.getByLabel(word('oldNotice'), { exact: true });
+    const newNotice = page.getByLabel(word('newNotice'), { exact: true });
+    await expect(oldNotice).toHaveCount(0);
+    await page.getByRole('link', { name: word('recordReceiptsAction'), exact: true }).click();
+    await expect(page).toHaveURL(`${casePath}/complete`);
+    await expect(oldNotice).toHaveAttribute('aria-required', 'true');
+    await expect(newNotice).toHaveAttribute('aria-required', 'true');
+    await expect(oldNotice).toHaveAccessibleDescription('o•••@example.test');
+    await expect(newNotice).toHaveAccessibleDescription('n•••@example.test');
+    const complete = page.getByRole('button', { name: word('completeCaseAction'), exact: true });
+    await oldNotice.fill('  old-notice-ref  ');
+    await expect(complete).toBeDisabled();
+    await newNotice.fill('new-notice-ref');
+    await complete.click();
+    await expect(dialog).toContainText('old-notice-ref');
+    await expect(dialog).toContainText('new-notice-ref');
+    expect(receipts).toEqual([]);
+    await confirm.click();
+    await expect(page).toHaveURL(casePath);
+    expect(receipts).toEqual([{ oldContact: 'old-notice-ref', newContact: 'new-notice-ref' }]);
+    await page.goto(`${casePath}/complete`);
+    await expect(page.getByText(word('receiptsUnavailable'), { exact: true })).toBeVisible();
+    await expect(oldNotice).toHaveCount(0);
     await expect(notes).toHaveCount(0);
     denied = true;
     await reload.click();
@@ -270,7 +345,8 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await crmShell(page, locale);
-    const word = (key: string) => t('auth.recovery.' + key, locale);
+    const word = (key: string) => staffRecoveryText('auth.recovery.' + key, locale);
+    const replacement = locale === 'fa' ? '+989121234567' : 'new@example.test';
     const evidenceKey = `uploads/document/${profileId}.pdf`;
     const submissions: unknown[] = [],
       sends: unknown[] = [];
@@ -319,7 +395,7 @@ for (const locale of ['en', 'fa'] as const) {
                 profileId,
                 targetUserId: 'claimant',
                 oldLogin: 'old@example.test',
-                newLogin: 'new@example.test',
+                newLogin: replacement,
                 state: approved ? 'approved' : 'open',
                 createdBy: 'collector',
                 reviewedBy: null,
@@ -341,9 +417,37 @@ for (const locale of ['en', 'fa'] as const) {
       return route.fulfill({ status: 503, json: {} });
     });
     await page.goto('/admin/crm/recovery/new');
+    let searches = 0;
+    await page.route('**/api/crm/users?*', (route) => {
+      searches++;
+      expect(new URL(route.request().url()).searchParams.get('search')).toBe('Recovery customer');
+      return searches === 1
+        ? route.fulfill({ status: 503, json: {} })
+        : route.fulfill({
+            json: {
+              users: [
+                {
+                  username: 'old@example.test',
+                  profiles: [
+                    { id: profileId, profileType: 'INDIVIDUAL', title: 'Recovery customer' },
+                  ],
+                },
+              ],
+              hasMore: false,
+            },
+          });
+    });
+    const search = page.getByLabel(word('searchProfile'), { exact: true });
+    await search.fill('Recovery customer');
+    expect(searches).toBe(0);
+    await search.press('Enter');
+    await expect(page.getByRole('alert')).toContainText(word('profileSearchFailed'));
+    await page.getByRole('button', { name: word('findProfile'), exact: true }).click();
+    await page.getByRole('button', { name: /Recovery customer/ }).click();
+    const contact = page.getByLabel(word('newLogin'), { exact: true });
+    await expect(contact).toBeFocused();
+    expect(searches).toBe(2);
     for (const [key, value] of Object.entries({
-      profileId,
-      newLogin: 'new@example.test',
       supportReference: 'support-1',
       reason: 'Identity checked',
     }))
@@ -354,6 +458,12 @@ for (const locale of ['en', 'fa'] as const) {
       buffer: Buffer.from('%PDF-1.7\n'),
     });
     const create = page.getByRole('button', { name: word('create'), exact: true });
+    await contact.fill('invalid contact');
+    await create.click();
+    await expect(contact).toHaveAccessibleDescription(word('invalidNewLogin'));
+    expect(uploads).toBe(0);
+    expect(submissions).toEqual([]);
+    await contact.fill(locale === 'fa' ? '۰۹۱۲۱۲۳۴۵۶۷' : replacement);
     await create.click();
     const dialog = page.getByRole('dialog');
     const confirm = dialog.getByRole('button', {
@@ -361,6 +471,8 @@ for (const locale of ['en', 'fa'] as const) {
       exact: true,
     });
     await expect(dialog).toContainText('support-1');
+    await expect(dialog).toContainText(replacement);
+    await expect(dialog).toContainText(word('staffReviewNext'));
     await page.clock.install();
     await confirm.click();
     await expect.poll(() => submissions.length).toBe(1);
@@ -387,6 +499,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect(submissions).toHaveLength(2);
     expect(submissions[0]).toMatchObject({
       profileId,
+      newLogin: replacement,
       evidenceKeys: [evidenceKey],
       submissionKey: expect.any(String),
     });

@@ -1,5 +1,6 @@
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { normalizeUsername } from '@barghsa/shared/username-normalization';
+import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useBlocker } from '@tanstack/react-router';
 import {
   Alert,
@@ -13,6 +14,7 @@ import {
   buttonVariants,
 } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/recovery';
+import { staffRecoveryText } from '@barghsa/i18n/staff-recovery';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -33,17 +35,23 @@ import {
   recordEditorSurface,
 } from '../components/RecordEditorLayout.js';
 import { VerificationEvidencePicker } from '../components/VerificationEvidencePicker.js';
+import { RecoveryProfileField } from '../components/RecoveryProfileField.js';
+import { normalizeProfileDigits } from '../lib/profile-digits.js';
 interface RecoveryAction extends TeamAction {
   expectedState?: string;
   caseId?: string;
   submissionKey?: string;
   previousChallengeId?: string | null;
+  summary?: ReactNode;
 }
 const emptyDraft = { profileId: '', newLogin: '', supportReference: '', reason: '' };
 const emptyNotices = { oldContact: '', newContact: '' };
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+type RecoverySection = 'review' | 'complete';
 type RecoveryEntry =
-  { mode: 'lookup' | 'create'; openCase: (id: string) => void } | { mode: 'record'; id: string };
+  | { mode: 'lookup' | 'create'; openCase: (id: string) => void }
+  | { mode: 'record'; id: string; section: RecoverySection | undefined; openDetails: () => void };
+const recoveryCaseRoute = '/admin/crm/recovery/$caseId/{-$section}';
 
 function maskedContact(login: string) {
   const at = login.lastIndexOf('@');
@@ -112,7 +120,12 @@ export default function AccountRecoveryPage({ entry }: { entry: RecoveryEntry })
     revision = useProfileContextRevision();
   return (
     <RecoveryWorkflow
-      key={JSON.stringify([actor, revision, entry.mode, entry.mode === 'record' ? entry.id : null])}
+      key={JSON.stringify([
+        actor,
+        revision,
+        entry.mode,
+        ...(entry.mode === 'record' ? [entry.id, entry.section] : []),
+      ])}
       actor={actor}
       entry={entry}
     />
@@ -120,13 +133,18 @@ export default function AccountRecoveryPage({ entry }: { entry: RecoveryEntry })
 }
 function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: RecoveryEntry }) {
   const locale = useLocale();
-  const text = (key: string) => t(`auth.recovery.${key}`, locale);
+  const text = (key: string) => staffRecoveryText(`auth.recovery.${key}`, locale);
   const time = useAccountTime();
   const { number } = useNumberFormatting(locale);
   const [draft, setDraft] = useState(emptyDraft);
+  const [profileName, setProfileName] = useState('');
+  const [draftChecked, setDraftChecked] = useState(false);
+  const [contactTouched, setContactTouched] = useState(false);
   const [caseId, setCaseId] = useState('');
   const [invalidCaseId, setInvalidCaseId] = useState(false);
   const selectedId = entry.mode === 'record' ? entry.id : null;
+  const section = entry.mode === 'record' ? entry.section : undefined;
+  const heading = useRef<HTMLHeadingElement>(null);
   const [files, setFiles] = useState<File[]>([]),
     [notes, setNotes] = useState('');
   const invalidEvidence =
@@ -141,6 +159,7 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
     inFlight = useRef(false);
   const upload = useRef<AbortController | null>(null);
   const fileInput = useRef<HTMLInputElement | null>(null);
+  const contactInput = useRef<HTMLInputElement | null>(null);
   const writePending = useRef(false);
   useBlocker({
     shouldBlockFn: () => inFlight.current || writePending.current,
@@ -153,6 +172,9 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
       upload.current?.abort();
     };
   }, []);
+  useEffect(() => {
+    if (section) heading.current?.focus({ preventScroll: true });
+  }, [section]);
   const denied = useCallback(() => {
     upload.current?.abort();
     writePending.current = false;
@@ -161,6 +183,9 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
     setCaseRecovery(null);
     setCaseId('');
     setDraft(emptyDraft);
+    setProfileName('');
+    setDraftChecked(false);
+    setContactTouched(false);
     setFiles([]);
     setNotes('');
     setNotices(emptyNotices);
@@ -185,7 +210,23 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
     scope.denied ||
     read.error ||
     (caseRecovery !== null && (read.readAttempt ?? -1) < caseRecovery);
-  async function create(event: FormEvent) {
+  const contact = draft.newLogin.trim();
+  const normalizedContact = normalizeUsername(
+    /^[+\d۰-۹٠-٩]+$/.test(contact) ? normalizeProfileDigits(contact) : contact
+  );
+  const invalidContact = (draftChecked || (contactTouched && !!contact)) && !normalizedContact;
+  const profileId = draft.profileId.trim().toLowerCase();
+  const editorDisabled = busy || !!action || !!heldCreation || scope.denied;
+  function changeProfile(id: string, title?: string) {
+    if (uuidPattern.test(profileId) && profileId !== id.trim().toLowerCase()) {
+      setFiles([]);
+      if (fileInput.current) fileInput.current.value = '';
+    }
+    setDraft((current) => ({ ...current, profileId: id }));
+    setProfileName(title ?? '');
+    if (title) contactInput.current?.focus();
+  }
+  async function create(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (
       entry.mode !== 'create' ||
@@ -198,10 +239,26 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
       !files.length
     )
       return;
+    setDraftChecked(true);
+    const supportReference = draft.supportReference.trim();
+    const reason = draft.reason.trim();
+    const invalidField = !uuidPattern.test(profileId)
+      ? '#recovery-profileId, #recovery-profile-search'
+      : !normalizedContact
+        ? '#recovery-newLogin'
+        : !supportReference
+          ? '#recovery-supportReference'
+          : !reason
+            ? '#recovery-reason'
+            : null;
+    if (invalidField || !normalizedContact) {
+      if (invalidField) event.currentTarget.querySelector<HTMLElement>(invalidField)?.focus();
+      return;
+    }
     inFlight.current = true;
     setBusy(true);
     setError(false);
-    const input = { ...draft };
+    const input = { profileId, newLogin: normalizedContact, supportReference, reason };
     const controller = new AbortController();
     upload.current = controller;
     const keys: string[] = [];
@@ -215,7 +272,9 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
       const submissionKey = crypto.randomUUID();
       setAction({
         title: t('auth.recovery.create', locale),
-        description: `${input.profileId} · ${input.newLogin} · ${input.supportReference}`,
+        description: [profileName, input.profileId, input.newLogin, input.supportReference]
+          .filter(Boolean)
+          .join(' · '),
         path: '/api/crm/account-recovery',
         method: 'POST',
         successStatus: 201,
@@ -231,7 +290,11 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
       if (mounted.current) setBusy(false);
     }
   }
-  function command(kind: 'approve' | 'reject' | 'sendCode' | 'apply' | 'complete', body?: unknown) {
+  function command(
+    kind: 'approve' | 'reject' | 'sendCode' | 'apply' | 'complete',
+    body?: unknown,
+    summary?: ReactNode
+  ) {
     if (!data || blocked) return;
     setError(false);
     setCaseRecovery(null);
@@ -254,62 +317,169 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
                     : 'completed',
           }),
       ...(body === undefined ? {} : { body }),
+      ...(summary === undefined ? {} : { summary }),
     });
   }
-  const canReview = data && ['open', 'approved'].includes(data.state) && data.createdBy !== actor;
+  const canReview = !!(
+    data &&
+    actor &&
+    ['open', 'approved'].includes(data.state) &&
+    data.createdBy !== actor
+  );
+  function review(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!data || !canReview || !notes.trim()) return;
+    const decision = (event.nativeEvent as SubmitEvent).submitter?.getAttribute('value');
+    if (decision !== 'reject' && !(decision === 'approve' && data.state === 'open')) return;
+    command(
+      decision,
+      { decision: decision === 'approve' ? 'approved' : 'rejected', notes: notes.trim() },
+      <dl className="space-y-1 text-sm">
+        <dt className="text-muted-foreground">{text('notes')}</dt>
+        <dd className="whitespace-pre-wrap wrap-anywhere" dir="auto">
+          {notes.trim()}
+        </dd>
+      </dl>
+    );
+  }
+  function complete(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const oldContact = notices.oldContact.trim(),
+      newContact = notices.newContact.trim();
+    if (data?.state !== 'applied' || !oldContact || !newContact) return;
+    command(
+      'complete',
+      { oldContact, newContact },
+      <dl className="grid gap-3 text-sm sm:grid-cols-2">
+        {(
+          [
+            ['oldNotice', oldContact],
+            ['newNotice', newContact],
+          ] as const
+        ).map(([key, value]) => (
+          <div key={key} className="min-w-0">
+            <dt className="text-muted-foreground">{text(key)}</dt>
+            <dd className="wrap-anywhere">
+              <bdi>{value}</bdi>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    );
+  }
   return (
     <section className="mx-auto min-w-0 max-w-3xl space-y-3" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      {entry.mode !== 'lookup' && (
+      {section && selectedId ? (
         <Link
-          to="/admin/crm/recovery"
-          className="text-sm text-primary underline underline-offset-4"
+          to={recoveryCaseRoute}
+          params={{ caseId: selectedId, section: undefined }}
+          className="touch-action text-sm text-primary underline underline-offset-4"
         >
-          {text('title')}
+          {text('backToRecoveryCase')}
         </Link>
+      ) : (
+        entry.mode !== 'lookup' && (
+          <Link
+            to="/admin/crm/recovery"
+            className="text-sm text-primary underline underline-offset-4"
+          >
+            {text('title')}
+          </Link>
+        )
       )}
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold">
+          <h1
+            ref={heading}
+            tabIndex={section ? -1 : undefined}
+            className="text-xl font-semibold outline-none"
+          >
             {text(
-              entry.mode === 'create' ? 'newCase' : entry.mode === 'record' ? 'record' : 'title'
+              section === 'review'
+                ? 'reviewCaseAction'
+                : section === 'complete'
+                  ? 'recordReceiptsAction'
+                  : entry.mode === 'create'
+                    ? 'newCase'
+                    : entry.mode === 'record'
+                      ? 'record'
+                      : 'title'
             )}
           </h1>
         </div>
         {entry.mode === 'lookup' && (
-          <Link to="/admin/crm/recovery/new" className={buttonVariants()}>
+          <Link
+            to="/admin/crm/recovery/$caseId/{-$section}"
+            params={{ caseId: 'new', section: undefined }}
+            className={buttonVariants()}
+          >
             {text('newCase')}
           </Link>
         )}
       </header>
       {entry.mode === 'create' && (
         <form onSubmit={(event) => void create(event)} className={recordEditorSurface}>
-          <fieldset disabled={busy || !!action || !!heldCreation || scope.denied}>
+          <fieldset disabled={editorDisabled}>
+            {!scope.denied && (
+              <RecordEditorSection title={text('customerProfile')}>
+                <RecoveryProfileField
+                  label={text}
+                  profileId={draft.profileId}
+                  invalid={draftChecked && !uuidPattern.test(profileId)}
+                  disabled={editorDisabled}
+                  onChange={changeProfile}
+                  onSessionExpired={scope.deny}
+                />
+              </RecordEditorSection>
+            )}
             <RecordEditorSection title={text('contactDetails')}>
               <div className={recordEditorGrid}>
-                {(['profileId', 'newLogin', 'supportReference'] as const).map((key) => (
-                  <div key={key} className={recordEditorField}>
-                    <Label htmlFor={`recovery-${key}`}>{text(key)}</Label>
-                    <Input
-                      id={`recovery-${key}`}
-                      required
-                      aria-required="true"
-                      value={draft[key]}
-                      dir={key === 'supportReference' ? 'auto' : 'ltr'}
-                      maxLength={key === 'profileId' ? 36 : key === 'newLogin' ? 255 : 200}
-                      autoComplete="off"
-                      spellCheck={false}
-                      aria-describedby={key === 'profileId' ? 'recovery-profile-hint' : undefined}
-                      onChange={(event) =>
-                        setDraft((old) => ({ ...old, [key]: event.target.value }))
-                      }
-                    />
-                    {key === 'profileId' && (
-                      <p id="recovery-profile-hint" className="text-sm text-muted-foreground">
-                        {text('profileIdHint')}
-                      </p>
-                    )}
-                  </div>
-                ))}
+                <div className={recordEditorField}>
+                  <Label htmlFor="recovery-newLogin">{text('newLogin')}</Label>
+                  <Input
+                    ref={contactInput}
+                    id="recovery-newLogin"
+                    required
+                    aria-required="true"
+                    aria-invalid={invalidContact || undefined}
+                    aria-describedby="recovery-new-login-help"
+                    dir="ltr"
+                    maxLength={255}
+                    autoComplete="off"
+                    spellCheck={false}
+                    value={draft.newLogin}
+                    onBlur={() => setContactTouched(true)}
+                    onChange={(event) =>
+                      setDraft((old) => ({ ...old, newLogin: event.target.value }))
+                    }
+                  />
+                  <p
+                    id="recovery-new-login-help"
+                    className={`text-xs ${invalidContact ? 'text-destructive' : 'text-muted-foreground'}`}
+                  >
+                    {text(invalidContact ? 'invalidNewLogin' : 'newLoginHelp')}
+                  </p>
+                </div>
+                <div className={recordEditorField}>
+                  <Label htmlFor="recovery-supportReference">{text('supportReference')}</Label>
+                  <Input
+                    id="recovery-supportReference"
+                    required
+                    aria-required="true"
+                    aria-invalid={(draftChecked && !draft.supportReference.trim()) || undefined}
+                    aria-describedby="recovery-support-reference-help"
+                    dir="auto"
+                    maxLength={200}
+                    autoComplete="off"
+                    value={draft.supportReference}
+                    onChange={(event) =>
+                      setDraft((old) => ({ ...old, supportReference: event.target.value }))
+                    }
+                  />
+                  <p id="recovery-support-reference-help" className="text-xs text-muted-foreground">
+                    {text('supportReferenceHelp')}
+                  </p>
+                </div>
               </div>
             </RecordEditorSection>
             <RecordEditorSection title={text('evidenceTitle')}>
@@ -319,13 +489,17 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
                   id="recovery-reason"
                   required
                   aria-required="true"
+                  aria-invalid={(draftChecked && !draft.reason.trim()) || undefined}
+                  aria-describedby="recovery-reason-help"
                   maxLength={2000}
                   rows={2}
                   className="min-h-14 resize-y"
-                  placeholder={text('reasonExample')}
                   value={draft.reason}
                   onChange={(event) => setDraft((old) => ({ ...old, reason: event.target.value }))}
                 />
+                <p id="recovery-reason-help" className="text-xs text-muted-foreground">
+                  {text('reasonExample')}
+                </p>
               </div>
               <VerificationEvidencePicker
                 id="recovery-evidence"
@@ -340,7 +514,6 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
                 onChange={setFiles}
               />
             </RecordEditorSection>
-            <RecordEditorSection title={text('reviewProcess')} description={text('instructions')} />
             <RecordEditorActions>
               <Button type="submit" disabled={!files.length || invalidEvidence}>
                 {text('create')}
@@ -440,33 +613,40 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
               onClick={read.retry}
             />
           </header>
-          <dl className="grid gap-x-6 gap-y-4 text-sm sm:grid-cols-2">
-            {(['oldLogin', 'newLogin', 'supportReference'] as const).map((key) => (
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+            {(section === 'complete'
+              ? (['supportReference'] as const)
+              : (['oldLogin', 'newLogin', 'supportReference'] as const)
+            ).map((key) => (
               <div key={key}>
                 <dt className="text-muted-foreground">{text(key)}</dt>
-                <dd>
+                <dd className={key === 'newLogin' ? 'font-medium' : undefined}>
                   <bdi>{key === 'supportReference' ? data[key] : maskedContact(data[key])}</bdi>
                 </dd>
               </div>
             ))}
-            <div>
-              <dt className="text-muted-foreground">{text('profileId')}</dt>
-              <dd>
-                <Link
-                  to="/admin/crm/profiles/$profileId"
-                  params={{ profileId: data.profileId }}
-                  className="text-primary underline underline-offset-4"
-                >
-                  <bdi dir="ltr">{data.profileId}</bdi>
-                </Link>
-              </dd>
-            </div>
-            <div className="sm:col-span-2">
-              <dt className="font-medium">{text('reason')}</dt>
-              <dd className="whitespace-pre-wrap">{data.reason}</dd>
-            </div>
-            {data.reviewerNotes && (
-              <div className="sm:col-span-2">
+            {!section && (
+              <div>
+                <dt className="text-muted-foreground">{text('profileId')}</dt>
+                <dd>
+                  <Link
+                    to="/admin/crm/profiles/$profileId"
+                    params={{ profileId: data.profileId }}
+                    className="text-primary underline underline-offset-4"
+                  >
+                    <bdi dir="ltr">{data.profileId}</bdi>
+                  </Link>
+                </dd>
+              </div>
+            )}
+            {section !== 'complete' && (
+              <div className="col-span-2">
+                <dt className="font-medium">{text('reason')}</dt>
+                <dd className="whitespace-pre-wrap">{data.reason}</dd>
+              </div>
+            )}
+            {!section && data.reviewerNotes && (
+              <div className="col-span-2">
                 <dt className="font-medium">{text('reviewerNotes')}</dt>
                 <dd className="whitespace-pre-wrap">{data.reviewerNotes}</dd>
               </div>
@@ -502,7 +682,7 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
               )}
             </dl>
           </details>
-          {data.evidenceDownloadUrls.length > 0 && (
+          {section !== 'complete' && data.evidenceDownloadUrls.length > 0 && (
             <section className="space-y-2">
               <h2 className="font-semibold">{text('evidenceTitle')}</h2>
               {data.evidenceDownloadUrls.map((url, index) => {
@@ -517,7 +697,7 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block underline"
+                    className={buttonVariants({ variant: 'outline' })}
                   >
                     {text('evidenceFile')} {number(index + 1)}
                   </a>
@@ -525,7 +705,7 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
               })}
             </section>
           )}
-          {['open', 'approved', 'applied'].includes(data.state) && (
+          {!section && ['open', 'approved', 'applied'].includes(data.state) && (
             <div className={recordEditorSurface}>
               {data.state === 'open' && !canReview && (
                 <RecordEditorSection
@@ -534,40 +714,18 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
                 />
               )}
               {canReview && (
-                <>
-                  <RecordEditorSection title={text('reviewDecision')}>
-                    <div className={recordEditorField}>
-                      <Label htmlFor="recovery-notes">{text('notes')}</Label>
-                      <Textarea
-                        id="recovery-notes"
-                        aria-required="true"
-                        className="min-h-14 resize-y"
-                        rows={2}
-                        placeholder={text('noteExample')}
-                        value={notes}
-                        disabled={blocked}
-                        onChange={(event) => setNotes(event.target.value)}
-                      />
-                    </div>
-                  </RecordEditorSection>
-                  <RecordEditorActions>
-                    {data.state === 'open' && (
-                      <Button
-                        disabled={blocked || !notes.trim()}
-                        onClick={() => command('approve', { decision: 'approved', notes })}
-                      >
-                        {text('approve')}
-                      </Button>
-                    )}
-                    <Button
-                      variant="outline"
-                      disabled={blocked || !notes.trim()}
-                      onClick={() => command('reject', { decision: 'rejected', notes })}
-                    >
-                      {text('reject')}
-                    </Button>
-                  </RecordEditorActions>
-                </>
+                <RecordEditorSection title={text('reviewDecision')}>
+                  <Link
+                    to={recoveryCaseRoute}
+                    params={{ caseId: data.id, section: 'review' }}
+                    className={buttonVariants({
+                      variant: data.state === 'open' ? 'default' : 'outline',
+                    })}
+                    disabled={blocked}
+                  >
+                    {text('reviewCaseAction')}
+                  </Link>
+                </RecordEditorSection>
               )}
               {data.state === 'approved' && (
                 <>
@@ -596,77 +754,180 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
                 </>
               )}
               {data.state === 'applied' && (
-                <>
-                  <RecordEditorSection
-                    title={text('noticeReceipts')}
-                    description={text('noticeHelp')}
+                <RecordEditorSection
+                  title={text('noticeReceipts')}
+                  description={text('noticeHelp')}
+                >
+                  <Link
+                    to={recoveryCaseRoute}
+                    params={{ caseId: data.id, section: 'complete' }}
+                    className={buttonVariants()}
+                    disabled={blocked}
                   >
-                    <div className={recordEditorGrid}>
-                      {(['oldContact', 'newContact'] as const).map((key) => (
-                        <div key={key} className={recordEditorField}>
-                          <Label htmlFor={`recovery-notice-${key}`}>
-                            {text(key === 'oldContact' ? 'oldNotice' : 'newNotice')}
-                          </Label>
-                          <Input
-                            id={`recovery-notice-${key}`}
-                            aria-required="true"
-                            disabled={blocked}
-                            value={notices[key]}
-                            onChange={(event) =>
-                              setNotices((old) => ({ ...old, [key]: event.target.value }))
-                            }
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </RecordEditorSection>
-                  <RecordEditorActions>
-                    <Button
-                      disabled={blocked || !notices.oldContact.trim() || !notices.newContact.trim()}
-                      onClick={() => command('complete', notices)}
-                    >
-                      {text('complete')}
-                    </Button>
-                  </RecordEditorActions>
-                </>
+                    {text('recordReceiptsAction')}
+                  </Link>
+                </RecordEditorSection>
               )}
             </div>
           )}
-          <section className="space-y-3 border-t pt-4">
-            <h2 className="font-semibold">{text('history')}</h2>
-            {time.notice}
-            {data.history.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{text('emptyHistory')}</p>
-            ) : (
-              <ol className="space-y-2">
-                {data.history.map((item, index) => (
-                  <li key={index}>
-                    <details>
-                      <summary className="cursor-pointer pointer-coarse:min-h-11 pointer-coarse:py-2">
-                        <bdi>
-                          {time.format(item.created_at)} ·{' '}
-                          {text(`event.${item.event}`) === `auth.recovery.event.${item.event}`
-                            ? item.event
-                            : text(`event.${item.event}`)}
-                        </bdi>
-                      </summary>
-                      <p>
-                        <bdi>
-                          {item.user_id} · {item.correlation_id}
-                        </bdi>
-                      </p>
-                      <pre className="whitespace-pre-wrap break-words text-sm">{item.metadata}</pre>
-                    </details>
-                  </li>
-                ))}
-              </ol>
-            )}
-          </section>
+          {!section && (
+            <section className="space-y-3 border-t pt-4">
+              <h2 className="font-semibold">{text('history')}</h2>
+              {time.notice}
+              {data.history.length === 0 ? (
+                <p className="text-sm text-muted-foreground">{text('emptyHistory')}</p>
+              ) : (
+                <ol className="space-y-2">
+                  {data.history.map((item, index) => (
+                    <li key={index}>
+                      <details>
+                        <summary className="cursor-pointer pointer-coarse:min-h-11 pointer-coarse:py-2">
+                          <bdi>
+                            {time.format(item.created_at)} ·{' '}
+                            {text(`event.${item.event}`) === `auth.recovery.event.${item.event}`
+                              ? item.event
+                              : text(`event.${item.event}`)}
+                          </bdi>
+                        </summary>
+                        <p>
+                          <bdi>
+                            {item.user_id} · {item.correlation_id}
+                          </bdi>
+                        </p>
+                        <pre className="whitespace-pre-wrap break-words text-sm">
+                          {item.metadata}
+                        </pre>
+                      </details>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </section>
+          )}
         </article>
       )}
+      {data &&
+        section === 'review' &&
+        (canReview ? (
+          <form
+            className={recordEditorSurface}
+            aria-labelledby="recovery-review-notes-title"
+            onSubmit={review}
+          >
+            <RecordEditorSection
+              title={text('reviewNotesTitle')}
+              anchorId="recovery-review-notes-title"
+            >
+              <div className={recordEditorField}>
+                <Label htmlFor="recovery-notes">{text('notes')}</Label>
+                <Textarea
+                  id="recovery-notes"
+                  required
+                  aria-required="true"
+                  aria-describedby="recovery-review-notes-help"
+                  className="min-h-14 resize-y"
+                  dir="auto"
+                  rows={2}
+                  maxLength={2000}
+                  value={notes}
+                  disabled={blocked}
+                  onChange={(event) => setNotes(event.target.value)}
+                />
+                <p id="recovery-review-notes-help" className="text-xs text-muted-foreground">
+                  {text('noteExample')}
+                </p>
+              </div>
+            </RecordEditorSection>
+            <RecordEditorActions>
+              {data.state === 'open' && (
+                <Button type="submit" value="approve" disabled={blocked || !notes.trim()}>
+                  {text('approve')}
+                </Button>
+              )}
+              <Button
+                type="submit"
+                value="reject"
+                variant="outline"
+                disabled={blocked || !notes.trim()}
+              >
+                {text('reject')}
+              </Button>
+            </RecordEditorActions>
+          </form>
+        ) : (
+          <p role="status" className="text-sm text-muted-foreground">
+            {text(data.createdBy === actor ? 'independentReview' : 'reviewUnavailable')}
+          </p>
+        ))}
+      {data &&
+        section === 'complete' &&
+        (data.state === 'applied' ? (
+          <form
+            className={recordEditorSurface}
+            aria-labelledby="recovery-receipts-title"
+            onSubmit={complete}
+          >
+            <RecordEditorSection
+              title={text('noticeReceipts')}
+              anchorId="recovery-receipts-title"
+              description={text('noticeHelp')}
+            >
+              <div className={recordEditorGrid}>
+                {(['oldContact', 'newContact'] as const).map((key) => (
+                  <div key={key} className={recordEditorField}>
+                    <Label htmlFor={`recovery-notice-${key}`}>
+                      {text(key === 'oldContact' ? 'oldNotice' : 'newNotice')}
+                    </Label>
+                    <Input
+                      id={`recovery-notice-${key}`}
+                      required
+                      aria-required="true"
+                      aria-describedby={`recovery-notice-${key}-contact`}
+                      disabled={blocked}
+                      maxLength={200}
+                      dir="auto"
+                      autoComplete="off"
+                      spellCheck={false}
+                      value={notices[key]}
+                      onChange={(event) =>
+                        setNotices((old) => ({ ...old, [key]: event.target.value }))
+                      }
+                    />
+                    <p
+                      id={`recovery-notice-${key}-contact`}
+                      className="text-xs text-muted-foreground"
+                    >
+                      <bdi dir="ltr">
+                        {maskedContact(key === 'oldContact' ? data.oldLogin : data.newLogin)}
+                      </bdi>
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </RecordEditorSection>
+            <RecordEditorActions>
+              <Button
+                type="submit"
+                disabled={blocked || !notices.oldContact.trim() || !notices.newContact.trim()}
+              >
+                {text('completeCaseAction')}
+              </Button>
+            </RecordEditorActions>
+          </form>
+        ) : (
+          <p role="status" className="text-sm text-muted-foreground">
+            {text('receiptsUnavailable')}
+          </p>
+        ))}
       {action && (
         <TeamActionDialog
           action={action}
+          summary={
+            action.summary ??
+            (action.submissionKey && (
+              <p className="text-sm text-muted-foreground">{text('staffReviewNext')}</p>
+            ))
+          }
           onPendingChange={(pending) => {
             writePending.current = pending;
           }}
@@ -724,6 +985,7 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
             writePending.current = false;
             setAction(null);
             if (entry.mode === 'create') entry.openCase(result.id);
+            else if (entry.mode === 'record' && section) entry.openDetails();
             else read.retry();
             return confirmationText('recorded', locale);
           }}

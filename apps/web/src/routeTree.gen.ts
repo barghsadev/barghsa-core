@@ -175,8 +175,6 @@ import { Route as AdminContractTemplatesTemplateIdEditRouteImport } from './rout
 import { Route as AdminCrmCorrectionsIndexRouteImport } from './routes/admin/crm/corrections.index'
 import { Route as AdminCrmProfilesProfileIdRouteImport } from './routes/admin/crm/profiles.$profileId'
 import { Route as AdminCrmRecoveryIndexRouteImport } from './routes/admin/crm/recovery.index'
-import { Route as AdminCrmRecoveryCaseIdRouteImport } from './routes/admin/crm/recovery.$caseId'
-import { Route as AdminCrmRecoveryNewRouteImport } from './routes/admin/crm/recovery.new'
 import { Route as AdminDocumentTemplatesTemplateIdIndexRouteImport } from './routes/admin/document-templates.$templateId.index'
 import { Route as AdminDocumentTemplatesTemplateIdEditRouteImport } from './routes/admin/document-templates.$templateId.edit'
 import { Route as AdminElectricityIncreasesRequestIdChar123DecisionChar125RouteImport } from './routes/admin/electricity-increases.$requestId.{-$decision}'
@@ -222,6 +220,7 @@ import { Route as AdminContractTemplatesTemplateIdVersionsVersionRouteImport } f
 import { Route as AdminContractsContractIdChar123ActionChar125Char123ItemChar125RouteImport } from './routes/admin/contracts.$contractId.{-$action}.{-$item}'
 import { Route as AdminCrmCorrectionsCaseIdChar123SectionChar125RouteImport } from './routes/admin/crm/corrections.$caseId.{-$section}'
 import { Route as AdminCrmProfilesProfileIdOperationRouteImport } from './routes/admin/crm/profiles.$profileId_.$operation'
+import { Route as AdminCrmRecoveryCaseIdChar123SectionChar125RouteImport } from './routes/admin/crm/recovery.$caseId.{-$section}'
 import { Route as AdminDocumentTemplatesTemplateIdVersionsVersionRouteImport } from './routes/admin/document-templates.$templateId.versions.$version'
 import { Route as AdminElectricityOrdersOrderIdDecisionsDecisionRouteImport } from './routes/admin/electricity-orders.$orderId.decisions.$decision'
 import { Route as AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125RouteImport } from './routes/admin/electricity-price-adjustments.$contractId.$adjustmentId.{-$decision}'
@@ -1140,16 +1139,6 @@ const AdminCrmRecoveryIndexRoute = AdminCrmRecoveryIndexRouteImport.update({
   path: '/recovery/',
   getParentRoute: () => AdminCrmRoute,
 } as any)
-const AdminCrmRecoveryCaseIdRoute = AdminCrmRecoveryCaseIdRouteImport.update({
-  id: '/recovery/$caseId',
-  path: '/recovery/$caseId',
-  getParentRoute: () => AdminCrmRoute,
-} as any)
-const AdminCrmRecoveryNewRoute = AdminCrmRecoveryNewRouteImport.update({
-  id: '/recovery/new',
-  path: '/recovery/new',
-  getParentRoute: () => AdminCrmRoute,
-} as any)
 const AdminDocumentTemplatesTemplateIdIndexRoute =
   AdminDocumentTemplatesTemplateIdIndexRouteImport.update({
     id: '/document-templates/$templateId/',
@@ -1417,6 +1406,12 @@ const AdminCrmProfilesProfileIdOperationRoute =
   AdminCrmProfilesProfileIdOperationRouteImport.update({
     id: '/profiles/$profileId_/$operation',
     path: '/profiles/$profileId/$operation',
+    getParentRoute: () => AdminCrmRoute,
+  } as any)
+const AdminCrmRecoveryCaseIdChar123SectionChar125Route =
+  AdminCrmRecoveryCaseIdChar123SectionChar125RouteImport.update({
+    id: '/recovery/$caseId/{-$section}',
+    path: '/recovery/$caseId/{-$section}',
     getParentRoute: () => AdminCrmRoute,
   } as any)
 const AdminDocumentTemplatesTemplateIdVersionsVersionRoute =
@@ -1832,8 +1827,6 @@ export interface FileRoutesByFullPath {
   '/admin/consultations/$requestId/fee': typeof AdminConsultationsRequestIdFeeRoute
   '/admin/contract-templates/$templateId/edit': typeof AdminContractTemplatesTemplateIdEditRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
-  '/admin/crm/recovery/$caseId': typeof AdminCrmRecoveryCaseIdRoute
-  '/admin/crm/recovery/new': typeof AdminCrmRecoveryNewRoute
   '/admin/document-templates/$templateId/edit': typeof AdminDocumentTemplatesTemplateIdEditRoute
   '/admin/electricity-increases/$requestId/{-$decision}': typeof AdminElectricityIncreasesRequestIdChar123DecisionChar125Route
   '/admin/electricity-price-adjustments/$contractId/new': typeof AdminElectricityPriceAdjustmentsContractIdNewRoute
@@ -1885,6 +1878,7 @@ export interface FileRoutesByFullPath {
   '/admin/contracts/$contractId/{-$action}/{-$item}': typeof AdminContractsContractIdChar123ActionChar125Char123ItemChar125Route
   '/admin/crm/corrections/$caseId/{-$section}': typeof AdminCrmCorrectionsCaseIdChar123SectionChar125Route
   '/admin/crm/profiles/$profileId/$operation': typeof AdminCrmProfilesProfileIdOperationRoute
+  '/admin/crm/recovery/$caseId/{-$section}': typeof AdminCrmRecoveryCaseIdChar123SectionChar125Route
   '/admin/document-templates/$templateId/versions/$version': typeof AdminDocumentTemplatesTemplateIdVersionsVersionRoute
   '/admin/electricity-orders/$orderId/decisions/$decision': typeof AdminElectricityOrdersOrderIdDecisionsDecisionRoute
   '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}': typeof AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125Route
@@ -2073,8 +2067,6 @@ export interface FileRoutesByTo {
   '/admin/consultations/$requestId/fee': typeof AdminConsultationsRequestIdFeeRoute
   '/admin/contract-templates/$templateId/edit': typeof AdminContractTemplatesTemplateIdEditRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
-  '/admin/crm/recovery/$caseId': typeof AdminCrmRecoveryCaseIdRoute
-  '/admin/crm/recovery/new': typeof AdminCrmRecoveryNewRoute
   '/admin/document-templates/$templateId/edit': typeof AdminDocumentTemplatesTemplateIdEditRoute
   '/admin/electricity-increases/$requestId/{-$decision}': typeof AdminElectricityIncreasesRequestIdChar123DecisionChar125Route
   '/admin/electricity-price-adjustments/$contractId/new': typeof AdminElectricityPriceAdjustmentsContractIdNewRoute
@@ -2126,6 +2118,7 @@ export interface FileRoutesByTo {
   '/admin/contracts/$contractId/{-$action}/{-$item}': typeof AdminContractsContractIdChar123ActionChar125Char123ItemChar125Route
   '/admin/crm/corrections/$caseId/{-$section}': typeof AdminCrmCorrectionsCaseIdChar123SectionChar125Route
   '/admin/crm/profiles/$profileId/$operation': typeof AdminCrmProfilesProfileIdOperationRoute
+  '/admin/crm/recovery/$caseId/{-$section}': typeof AdminCrmRecoveryCaseIdChar123SectionChar125Route
   '/admin/document-templates/$templateId/versions/$version': typeof AdminDocumentTemplatesTemplateIdVersionsVersionRoute
   '/admin/electricity-orders/$orderId/decisions/$decision': typeof AdminElectricityOrdersOrderIdDecisionsDecisionRoute
   '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}': typeof AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125Route
@@ -2326,8 +2319,6 @@ export interface FileRoutesById {
   '/admin/consultations/$requestId/fee': typeof AdminConsultationsRequestIdFeeRoute
   '/admin/contract-templates/$templateId/edit': typeof AdminContractTemplatesTemplateIdEditRoute
   '/admin/crm/profiles/$profileId': typeof AdminCrmProfilesProfileIdRoute
-  '/admin/crm/recovery/$caseId': typeof AdminCrmRecoveryCaseIdRoute
-  '/admin/crm/recovery/new': typeof AdminCrmRecoveryNewRoute
   '/admin/document-templates/$templateId/edit': typeof AdminDocumentTemplatesTemplateIdEditRoute
   '/admin/electricity-increases/$requestId/{-$decision}': typeof AdminElectricityIncreasesRequestIdChar123DecisionChar125Route
   '/admin/electricity-price-adjustments/$contractId/new': typeof AdminElectricityPriceAdjustmentsContractIdNewRoute
@@ -2379,6 +2370,7 @@ export interface FileRoutesById {
   '/admin/contracts/$contractId/{-$action}/{-$item}': typeof AdminContractsContractIdChar123ActionChar125Char123ItemChar125Route
   '/admin/crm/corrections/$caseId/{-$section}': typeof AdminCrmCorrectionsCaseIdChar123SectionChar125Route
   '/admin/crm/profiles/$profileId_/$operation': typeof AdminCrmProfilesProfileIdOperationRoute
+  '/admin/crm/recovery/$caseId/{-$section}': typeof AdminCrmRecoveryCaseIdChar123SectionChar125Route
   '/admin/document-templates/$templateId/versions/$version': typeof AdminDocumentTemplatesTemplateIdVersionsVersionRoute
   '/admin/electricity-orders/$orderId/decisions/$decision': typeof AdminElectricityOrdersOrderIdDecisionsDecisionRoute
   '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}': typeof AdminElectricityPriceAdjustmentsContractIdAdjustmentIdChar123DecisionChar125Route
@@ -2579,8 +2571,6 @@ export interface FileRouteTypes {
     | '/admin/consultations/$requestId/fee'
     | '/admin/contract-templates/$templateId/edit'
     | '/admin/crm/profiles/$profileId'
-    | '/admin/crm/recovery/$caseId'
-    | '/admin/crm/recovery/new'
     | '/admin/document-templates/$templateId/edit'
     | '/admin/electricity-increases/$requestId/{-$decision}'
     | '/admin/electricity-price-adjustments/$contractId/new'
@@ -2632,6 +2622,7 @@ export interface FileRouteTypes {
     | '/admin/contracts/$contractId/{-$action}/{-$item}'
     | '/admin/crm/corrections/$caseId/{-$section}'
     | '/admin/crm/profiles/$profileId/$operation'
+    | '/admin/crm/recovery/$caseId/{-$section}'
     | '/admin/document-templates/$templateId/versions/$version'
     | '/admin/electricity-orders/$orderId/decisions/$decision'
     | '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}'
@@ -2820,8 +2811,6 @@ export interface FileRouteTypes {
     | '/admin/consultations/$requestId/fee'
     | '/admin/contract-templates/$templateId/edit'
     | '/admin/crm/profiles/$profileId'
-    | '/admin/crm/recovery/$caseId'
-    | '/admin/crm/recovery/new'
     | '/admin/document-templates/$templateId/edit'
     | '/admin/electricity-increases/$requestId/{-$decision}'
     | '/admin/electricity-price-adjustments/$contractId/new'
@@ -2873,6 +2862,7 @@ export interface FileRouteTypes {
     | '/admin/contracts/$contractId/{-$action}/{-$item}'
     | '/admin/crm/corrections/$caseId/{-$section}'
     | '/admin/crm/profiles/$profileId/$operation'
+    | '/admin/crm/recovery/$caseId/{-$section}'
     | '/admin/document-templates/$templateId/versions/$version'
     | '/admin/electricity-orders/$orderId/decisions/$decision'
     | '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}'
@@ -3072,8 +3062,6 @@ export interface FileRouteTypes {
     | '/admin/consultations/$requestId/fee'
     | '/admin/contract-templates/$templateId/edit'
     | '/admin/crm/profiles/$profileId'
-    | '/admin/crm/recovery/$caseId'
-    | '/admin/crm/recovery/new'
     | '/admin/document-templates/$templateId/edit'
     | '/admin/electricity-increases/$requestId/{-$decision}'
     | '/admin/electricity-price-adjustments/$contractId/new'
@@ -3125,6 +3113,7 @@ export interface FileRouteTypes {
     | '/admin/contracts/$contractId/{-$action}/{-$item}'
     | '/admin/crm/corrections/$caseId/{-$section}'
     | '/admin/crm/profiles/$profileId_/$operation'
+    | '/admin/crm/recovery/$caseId/{-$section}'
     | '/admin/document-templates/$templateId/versions/$version'
     | '/admin/electricity-orders/$orderId/decisions/$decision'
     | '/admin/electricity-price-adjustments/$contractId/$adjustmentId/{-$decision}'
@@ -4344,20 +4333,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCrmRecoveryIndexRouteImport
       parentRoute: typeof AdminCrmRoute
     }
-    '/admin/crm/recovery/$caseId': {
-      id: '/admin/crm/recovery/$caseId'
-      path: '/recovery/$caseId'
-      fullPath: '/admin/crm/recovery/$caseId'
-      preLoaderRoute: typeof AdminCrmRecoveryCaseIdRouteImport
-      parentRoute: typeof AdminCrmRoute
-    }
-    '/admin/crm/recovery/new': {
-      id: '/admin/crm/recovery/new'
-      path: '/recovery/new'
-      fullPath: '/admin/crm/recovery/new'
-      preLoaderRoute: typeof AdminCrmRecoveryNewRouteImport
-      parentRoute: typeof AdminCrmRoute
-    }
     '/admin/document-templates/$templateId/': {
       id: '/admin/document-templates/$templateId/'
       path: '/document-templates/$templateId'
@@ -4671,6 +4646,13 @@ declare module '@tanstack/react-router' {
       path: '/profiles/$profileId/$operation'
       fullPath: '/admin/crm/profiles/$profileId/$operation'
       preLoaderRoute: typeof AdminCrmProfilesProfileIdOperationRouteImport
+      parentRoute: typeof AdminCrmRoute
+    }
+    '/admin/crm/recovery/$caseId/{-$section}': {
+      id: '/admin/crm/recovery/$caseId/{-$section}'
+      path: '/recovery/$caseId/{-$section}'
+      fullPath: '/admin/crm/recovery/$caseId/{-$section}'
+      preLoaderRoute: typeof AdminCrmRecoveryCaseIdChar123SectionChar125RouteImport
       parentRoute: typeof AdminCrmRoute
     }
     '/admin/document-templates/$templateId/versions/$version': {
@@ -5193,12 +5175,11 @@ const AdminBrandingRouteWithChildren = AdminBrandingRoute._addFileChildren(
 interface AdminCrmRouteChildren {
   AdminCrmIndexRoute: typeof AdminCrmIndexRoute
   AdminCrmProfilesProfileIdRoute: typeof AdminCrmProfilesProfileIdRoute
-  AdminCrmRecoveryCaseIdRoute: typeof AdminCrmRecoveryCaseIdRoute
-  AdminCrmRecoveryNewRoute: typeof AdminCrmRecoveryNewRoute
   AdminCrmCorrectionsIndexRoute: typeof AdminCrmCorrectionsIndexRoute
   AdminCrmRecoveryIndexRoute: typeof AdminCrmRecoveryIndexRoute
   AdminCrmCorrectionsCaseIdChar123SectionChar125Route: typeof AdminCrmCorrectionsCaseIdChar123SectionChar125Route
   AdminCrmProfilesProfileIdOperationRoute: typeof AdminCrmProfilesProfileIdOperationRoute
+  AdminCrmRecoveryCaseIdChar123SectionChar125Route: typeof AdminCrmRecoveryCaseIdChar123SectionChar125Route
   AdminCrmProfilesProfileIdCorrectionsNewRoute: typeof AdminCrmProfilesProfileIdCorrectionsNewRoute
   AdminCrmProfilesProfileIdLegalEditRoute: typeof AdminCrmProfilesProfileIdLegalEditRoute
   AdminCrmProfilesProfileIdAddressesAddressIdEditRoute: typeof AdminCrmProfilesProfileIdAddressesAddressIdEditRoute
@@ -5207,14 +5188,14 @@ interface AdminCrmRouteChildren {
 const AdminCrmRouteChildren: AdminCrmRouteChildren = {
   AdminCrmIndexRoute: AdminCrmIndexRoute,
   AdminCrmProfilesProfileIdRoute: AdminCrmProfilesProfileIdRoute,
-  AdminCrmRecoveryCaseIdRoute: AdminCrmRecoveryCaseIdRoute,
-  AdminCrmRecoveryNewRoute: AdminCrmRecoveryNewRoute,
   AdminCrmCorrectionsIndexRoute: AdminCrmCorrectionsIndexRoute,
   AdminCrmRecoveryIndexRoute: AdminCrmRecoveryIndexRoute,
   AdminCrmCorrectionsCaseIdChar123SectionChar125Route:
     AdminCrmCorrectionsCaseIdChar123SectionChar125Route,
   AdminCrmProfilesProfileIdOperationRoute:
     AdminCrmProfilesProfileIdOperationRoute,
+  AdminCrmRecoveryCaseIdChar123SectionChar125Route:
+    AdminCrmRecoveryCaseIdChar123SectionChar125Route,
   AdminCrmProfilesProfileIdCorrectionsNewRoute:
     AdminCrmProfilesProfileIdCorrectionsNewRoute,
   AdminCrmProfilesProfileIdLegalEditRoute:

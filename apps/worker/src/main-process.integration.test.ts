@@ -230,7 +230,8 @@ it('compiled worker automatically delivers expanded workflow breach and escalati
         async () =>
           (
             await worker.pool.query(
-              "SELECT count(*)::int AS n FROM in_app_notifications WHERE recipient_user_id='worker-process-actor' AND link_route='/admin/tickets'"
+              "SELECT count(*)::int AS n FROM in_app_notifications WHERE recipient_user_id='worker-process-actor' AND link_route=$1",
+              [`/admin/tickets/${id}`]
             )
           ).rows[0].n,
         { timeout: 10000 }
