@@ -1,6 +1,9 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
+// Keep lazy module loading outside the account-isolation test.
+import './DefaultProfileChoiceDialog.js';
+import '../lib/default-profile-command.js';
 import { DefaultProfileModal } from './DefaultProfileModal.js';
 import { QueryComponentProvider } from '../test/query-provider.js';
 import { refreshProfileContext } from '../lib/profile-context.js';
@@ -60,7 +63,6 @@ it('does not refresh a new account or show a toast for an obsolete default-profi
       </QueryComponentProvider>
     );
   try {
-    await import('./DefaultProfileChoiceDialog.js');
     await act(async () => render());
     const submit = await vi.waitFor(() => {
       const button = [...document.querySelectorAll('button')].find(
