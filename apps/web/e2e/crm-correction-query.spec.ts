@@ -106,7 +106,7 @@ for (const profile of [false, true])
       expect(requests.at(-1)).toBe(retryQuery);
       expect(profileReads).toBe(0);
       await main.getByRole('link', { name: copy('details'), exact: true }).click();
-      await expect(page).toHaveURL(new RegExp(`/admin/crm/corrections/${crmCaseId}\\?`));
+      await expect.poll(() => new URL(page.url()).pathname).toBe(`${path}/${crmCaseId}/review`);
       await expect(page.locator('#case-status')).toHaveCount(0);
       await page.locator('#case-notes').fill('PRIVATE NOTES');
       await main.getByRole('button', { name: copy('save'), exact: true }).click();

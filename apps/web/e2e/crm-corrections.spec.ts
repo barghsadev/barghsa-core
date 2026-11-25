@@ -354,6 +354,7 @@ for (const [locale, darkMode] of [
       })
     );
     let legacy = false;
+    let closed = false;
     await page.route('**/api/crm/verification-cases?*', (route) =>
       route.fulfill({
         json: {
@@ -370,6 +371,7 @@ for (const [locale, darkMode] of [
       route.fulfill({
         json: {
           ...item,
+          status: closed ? 'Rejected' : item.status,
           currentValue: 'Original',
           evidenceUrls: ['verification-evidence/fixed'],
           evidenceDownloadUrls: legacy ? [] : ['https://storage.example.test/fixed?signature=test'],
@@ -427,6 +429,18 @@ for (const [locale, darkMode] of [
     await checkPage();
     await open.focus();
     await page.keyboard.press('Enter');
+    const casePath = `/admin/crm/corrections/${caseId}`;
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${casePath}/review`);
+    await page
+      .getByRole('link', {
+        name: locale === 'fa' ? 'جزئیات درخواست' : 'Case details',
+        exact: true,
+      })
+      .click();
+    await expect.poll(() => new URL(page.url()).pathname).toBe(casePath);
+    await expect(page.locator('#case-notes')).toHaveCount(0);
+    await open.click();
+    await expect.poll(() => new URL(page.url()).pathname).toBe(`${casePath}/review`);
     await expect(page.getByText('Original', { exact: true })).toBeVisible();
     await expect(evidence).toHaveAttribute(
       'href',
@@ -437,15 +451,28 @@ for (const [locale, darkMode] of [
     await checkPage();
     await evidence.focus();
     await page.keyboard.press('Tab');
-    await expect(page.locator('#case-decision')).toBeFocused();
-    await expect(page.locator('#case-decision')).toHaveAttribute('aria-required', 'true');
+    const approve = page.locator('input[name="case-decision"][value="Approved"]');
+    await expect(approve).toBeFocused();
+    await expect(approve).toBeChecked();
+    await expect(approve).toHaveAttribute('required', '');
     await page.keyboard.press('Tab');
     await expect(page.locator('#case-notes')).toBeFocused();
     await expect(page.locator('#case-notes')).not.toHaveAttribute('aria-required', 'true');
     await page.keyboard.type('Evidence checked');
+    await review.scrollIntoViewIfNeeded();
     await page.screenshot({
+      scale: 'css',
       path: `/tmp/barghsa-crm-correction-review-${locale}-${darkMode ? 'dark' : 'light'}-${testInfo.project.name}.png`,
     });
+    if (locale === 'fa' && !darkMode && testInfo.project.name === 'chromium') {
+      await page.setViewportSize({ width: 1280, height: 900 });
+      await page.getByRole('heading', { level: 1 }).scrollIntoViewIfNeeded();
+      await page.screenshot({
+        scale: 'css',
+        path: '/tmp/barghsa-form-review/crm-review-route-desktop-after.png',
+      });
+      await page.setViewportSize({ width: 390, height: 844 });
+    }
     await page.keyboard.press('Tab');
     await expect(review).toBeFocused();
     await page.keyboard.press('Enter');
@@ -476,7 +503,7 @@ for (const [locale, darkMode] of [
       )
     ).toBeVisible();
     await expect(evidence).toHaveCount(0);
-    await page.locator('#case-decision').selectOption('Rejected');
+    await page.locator('input[name="case-decision"][value="Rejected"]').check();
     await expect(page.locator('#case-notes')).toHaveAttribute('aria-required', 'true');
     await expect(review).toBeDisabled();
     await page.locator('#case-notes').fill('Resubmit evidence');
@@ -488,6 +515,10 @@ for (const [locale, darkMode] of [
     await expect(dialog).toHaveCount(0);
     expect(decisions).toHaveLength(2);
     await expect(heading).toBeFocused();
+    closed = true;
+    await page.getByRole('button', { name: crmText('crm.list.refresh', locale), exact: true }).click();
+    await expect(page.locator('#case-decision')).toHaveCount(0);
+    expect(decisions).toHaveLength(2);
   });
 
 for (const locale of ['en', 'fa'] as const)

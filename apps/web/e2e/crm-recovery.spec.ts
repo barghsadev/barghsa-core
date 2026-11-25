@@ -141,7 +141,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toHaveCount(0);
     await expect(page.locator('#case-notes')).toHaveValue('Keep explanation');
     expect(bodies).toEqual([]);
-    await page.locator('#case-decision').selectOption('Rejected');
+    await page.locator('input[name="case-decision"][value="Rejected"]').check();
     await page.getByRole('button', { name: label('crm.corrections.save'), exact: true }).click();
     await confirm.click();
     await expect(dialog).toHaveCount(0);

@@ -42,6 +42,12 @@ import {
   isAllowedInvoiceReceiptFile,
 } from '../lib/invoice-bank-receipt-upload.js';
 type Status = 'Open' | 'Under Review' | 'Approved' | 'Rejected';
+type ReviewDecision = Exclude<Status, 'Open'>;
+const correctionRoute = '/admin/crm/corrections/$caseId/{-$section}';
+function reviewChoices(status: Status): readonly ReviewDecision[] {
+  if (status === 'Open') return ['Under Review', 'Rejected'];
+  return status === 'Under Review' ? ['Approved', 'Rejected'] : [];
+}
 interface CorrectionAction extends TeamAction {
   expected: { profileId: string; status: Status; id?: string };
 }
@@ -143,12 +149,14 @@ export default function CrmCorrectionsPage({
   recordSearch,
   expectedProfileId,
   newProfileId,
+  reviewing = false,
 }: {
   queries?: ListQueryBinding;
   caseId?: string;
   recordSearch?: Record<string, unknown>;
   expectedProfileId?: string;
   newProfileId?: string;
+  reviewing?: boolean;
 } = {}) {
   const { profileId, fieldName } = crmCorrectionSearch(useSearch({ strict: false }));
   const actor = useAccountUser();
@@ -163,6 +171,7 @@ export default function CrmCorrectionsPage({
         caseId,
         expectedProfileId,
         newProfileId,
+        reviewing,
       ])}
       profileId={caseId ? undefined : (newProfileId ?? profileId)}
       initialField={fieldName}
@@ -171,6 +180,7 @@ export default function CrmCorrectionsPage({
       {...(recordSearch ? { recordSearch } : {})}
       {...(expectedProfileId ? { expectedProfileId } : {})}
       creating={Boolean(newProfileId)}
+      reviewing={reviewing}
     />
   );
 }
@@ -186,6 +196,7 @@ function Corrections({
   recordSearch,
   expectedProfileId,
   creating,
+  reviewing,
 }: {
   profileId: string | undefined;
   initialField: string | undefined;
@@ -194,6 +205,7 @@ function Corrections({
   recordSearch?: Record<string, unknown>;
   expectedProfileId?: string;
   creating: boolean;
+  reviewing: boolean;
 }) {
   const locale = useLocale();
   const time = useAccountTime(locale);
@@ -243,7 +255,7 @@ function Corrections({
   const [fileVersion, setFileVersion] = useState(0),
     [files, setFiles] = useState<File[]>([]);
   const [notes, setNotes] = useState(''),
-    [decision, setDecision] = useState<Status>('Under Review');
+    [decision, setDecision] = useState<ReviewDecision>('Under Review');
   const [action, setAction] = useState<CorrectionAction | null>(null);
   const [creationRecovery, setCreationRecovery] = useState<{
     action: CorrectionAction;
@@ -500,15 +512,8 @@ function Corrections({
   }, [profileRead.data, initialField, clearCreation]);
   useEffect(() => {
     if (!detail) return;
-    setDecision((current) =>
-      (detail.status === 'Open' ? ['Under Review', 'Rejected'] : ['Approved', 'Rejected']).includes(
-        current
-      )
-        ? current
-        : detail.status === 'Open'
-          ? 'Under Review'
-          : 'Approved'
-    );
+    const choices = reviewChoices(detail.status);
+    setDecision((current) => (choices.includes(current) ? current : (choices[0] ?? current)));
     if (actionRef.current?.expected.id && frozenBasis.current !== detailBasis(detail)) {
       ++workGeneration.current;
       setAction(null);
@@ -657,6 +662,36 @@ function Corrections({
   });
   const hasEvidence =
     !!detail?.evidenceUrls.length && evidence.length === detail.evidenceUrls.length;
+  const choices = detail ? reviewChoices(detail.status) : [];
+  const canReview = Boolean(
+    detail && reviewer?.canReview && reviewer.userId !== detail.createdBy && choices.length
+  );
+  const reviewBlocked =
+    denied ||
+    !canReview ||
+    !choices.includes(decision) ||
+    loading ||
+    queueError ||
+    detailRead.loading ||
+    detailRead.error ||
+    !canRetryReview ||
+    busy ||
+    !!action ||
+    (decision === 'Rejected' && !notes.trim()) ||
+    (decision === 'Approved' && !hasEvidence);
+  function submitReview(event: FormEvent) {
+    event.preventDefault();
+    if (!detail || reviewBlocked || actionRef.current) return;
+    const reviewerNotes = notes.trim();
+    captured({
+      title: t(`crm.corrections.${decision}`, locale),
+      description: `${detail.id} · ${detail.requestedValue}${reviewerNotes ? ` · ${reviewerNotes}` : ''}`,
+      path: `/api/crm/verification-cases/${detail.id}/status`,
+      method: 'PUT',
+      expected: { id: detail.id, profileId: detail.profileId, status: decision },
+      body: { decision, ...(reviewerNotes ? { reviewerNotes } : {}) },
+    });
+  }
   const actionGeneration = workGeneration.current;
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
@@ -706,14 +741,16 @@ function Corrections({
               caseId || creating ? 'text-xl font-semibold outline-none' : 'text-2xl font-semibold'
             }
           >
-            {t(
-              caseId
-                ? 'crm.corrections.details'
-                : creating
-                  ? 'crm.corrections.request'
-                  : 'crm.corrections.title',
-              locale
-            )}
+            {caseId && !reviewing
+              ? tCrmForm('crm.corrections.caseDetails', locale)
+              : t(
+                  caseId
+                    ? 'crm.corrections.details'
+                    : creating
+                      ? 'crm.corrections.request'
+                      : 'crm.corrections.title',
+                  locale
+                )}
           </h1>
           {!caseId && !creating && (
             <p className="text-sm text-muted-foreground">
@@ -721,6 +758,18 @@ function Corrections({
             </p>
           )}
         </div>
+        {caseId && reviewing && detail && (
+          <Link
+            to={correctionRoute}
+            params={{ caseId, section: undefined }}
+            search={recordSearch ?? {}}
+            state={{ crmCorrectionProfileId: detail.profileId }}
+            className={buttonVariants({ variant: 'ghost' })}
+            disabled={busy || !!action || !!reviewRecovery}
+          >
+            {tCrmForm('crm.corrections.caseDetails', locale)}
+          </Link>
+        )}
         {creating && !denied && (
           <ListRefreshButton
             label={t('crm.list.refresh', locale)}
@@ -914,8 +963,8 @@ function Corrections({
           <CommandFeedback message={saved ? t('crm.corrections.saved', locale) : null} />
           {createdCaseId && profileId && (
             <Link
-              to="/admin/crm/corrections/$caseId"
-              params={{ caseId: createdCaseId }}
+              to={correctionRoute}
+              params={{ caseId: createdCaseId, section: undefined }}
               search={{ profileId }}
               state={{ crmCorrectionProfileId: profileId }}
               className={buttonVariants({ variant: 'outline' })}
@@ -1004,8 +1053,16 @@ function Corrections({
                           !loading &&
                           accepted?.offset === offset ? (
                             <Link
-                              to="/admin/crm/corrections/$caseId"
-                              params={{ caseId: item.id }}
+                              to={correctionRoute}
+                              params={{
+                                caseId: item.id,
+                                section:
+                                  queue.viewer.canReview &&
+                                  queue.viewer.userId !== item.createdBy &&
+                                  reviewChoices(item.status).length
+                                    ? 'review'
+                                    : undefined,
+                              }}
                               search={recordSearch}
                               state={{ crmCorrectionProfileId: item.profileId }}
                               className={buttonVariants({
@@ -1074,171 +1131,187 @@ function Corrections({
             </div>
           )}
           {detail && (
-            <article className="space-y-4 rounded-xl border bg-card text-card-foreground p-4 break-words sm:p-6">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <h2 className="text-lg font-semibold">
-                  {t(`crm.corrections.${detail.fieldName}`, locale)}
-                </h2>
+            <>
+              <article className="space-y-4 rounded-xl border bg-card text-card-foreground p-4 break-words sm:p-6">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="text-lg font-semibold">
+                    {t(`crm.corrections.${detail.fieldName}`, locale)}
+                  </h2>
+                  {caseId && (
+                    <StatusBadge
+                      state={detail.status}
+                      label={t(`crm.corrections.${detail.status}`, locale)}
+                    />
+                  )}
+                </div>
                 {caseId && (
-                  <StatusBadge
-                    state={detail.status}
-                    label={t(`crm.corrections.${detail.status}`, locale)}
-                  />
+                  <dl className="grid grid-cols-2 gap-3 rounded-lg bg-muted/60 p-3 sm:p-4">
+                    <div className="min-w-0">
+                      <dt className="text-sm text-muted-foreground">
+                        {t('crm.corrections.currentValue', locale)}
+                      </dt>
+                      <dd className="mt-1 wrap-anywhere">
+                        <bdi>{detail.currentValue ?? '—'}</bdi>
+                      </dd>
+                    </div>
+                    <div className="min-w-0">
+                      <dt className="text-sm text-muted-foreground">
+                        {t('crm.corrections.newValue', locale)}
+                      </dt>
+                      <dd className="mt-1 wrap-anywhere font-semibold">
+                        <bdi>{detail.requestedValue}</bdi>
+                      </dd>
+                    </div>
+                  </dl>
                 )}
-              </div>
-              {caseId && (
-                <dl className="grid gap-3 rounded-lg bg-muted/60 p-4 sm:grid-cols-2">
-                  <div>
-                    <dt className="text-sm text-muted-foreground">
-                      {t('crm.corrections.currentValue', locale)}
-                    </dt>
-                    <dd className="mt-1 break-words">
-                      <bdi>{detail.currentValue ?? '—'}</bdi>
-                    </dd>
-                  </div>
-                  <div>
-                    <dt className="text-sm text-muted-foreground">
-                      {t('crm.corrections.newValue', locale)}
-                    </dt>
-                    <dd className="mt-1 break-words font-semibold">
-                      <bdi>{detail.requestedValue}</bdi>
-                    </dd>
-                  </div>
-                </dl>
-              )}
-              <dl className="grid gap-3 text-sm sm:grid-cols-2">
-                {[
-                  ['profile', detail.profileId],
-                  ['creator', detail.createdBy],
-                  ['assignee', detail.assignedName ?? t('tickets.unassigned', locale)],
-                  ...(!caseId
-                    ? [
-                        ['currentValue', detail.currentValue ?? '—'],
-                        ['newValue', detail.requestedValue],
-                        ['status', t(`crm.corrections.${detail.status}`, locale)],
-                      ]
-                    : []),
-                  ...(caseId && detail.createdAt
-                    ? [['createdAt', time.format(detail.createdAt)]]
-                    : []),
-                  ['reason', detail.reason],
-                ].map(([key, value]) => (
-                  <div key={key}>
-                    <dt className="text-sm text-muted-foreground">
-                      {t(`crm.corrections.${key}`, locale)}
-                    </dt>
-                    <dd className="whitespace-pre-wrap">
-                      {caseId && key === 'profile' ? (
-                        <Link
-                          to="/admin/crm/profiles/$profileId"
-                          params={{ profileId: detail.profileId }}
-                          className="touch-action break-all text-primary underline underline-offset-4"
-                        >
+                <dl className="grid gap-3 text-sm sm:grid-cols-2">
+                  {[
+                    ...(!reviewing
+                      ? [
+                          ['profile', detail.profileId],
+                          ['creator', detail.createdBy],
+                          ['assignee', detail.assignedName ?? t('tickets.unassigned', locale)],
+                        ]
+                      : []),
+                    ...(!caseId
+                      ? [
+                          ['currentValue', detail.currentValue ?? '—'],
+                          ['newValue', detail.requestedValue],
+                          ['status', t(`crm.corrections.${detail.status}`, locale)],
+                        ]
+                      : []),
+                    ...(caseId && !reviewing && detail.createdAt
+                      ? [['createdAt', time.format(detail.createdAt)]]
+                      : []),
+                    ['reason', detail.reason],
+                  ].map(([key, value]) => (
+                    <div key={key}>
+                      <dt className="text-sm text-muted-foreground">
+                        {t(`crm.corrections.${key}`, locale)}
+                      </dt>
+                      <dd className="whitespace-pre-wrap">
+                        {caseId && key === 'profile' ? (
+                          <Link
+                            to="/admin/crm/profiles/$profileId"
+                            params={{ profileId: detail.profileId }}
+                            className="touch-action break-all text-primary underline underline-offset-4"
+                          >
+                            <bdi>{value}</bdi>
+                          </Link>
+                        ) : (
                           <bdi>{value}</bdi>
-                        </Link>
-                      ) : (
-                        <bdi>{value}</bdi>
-                      )}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-              {evidence.map((url, index) => (
-                <a
-                  key={url}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-foreground underline"
-                >
-                  {t('crm.corrections.evidence', locale)} {index + 1}
-                </a>
-              ))}
-              {!hasEvidence && <p role="status">{t('crm.corrections.legacy', locale)}</p>}
-              {detail.reviewerNotes && <p>{detail.reviewerNotes}</p>}
-              {reviewer?.userId === detail.createdBy ? (
-                <p>{t('crm.corrections.self', locale)}</p>
-              ) : (
-                reviewer?.canReview &&
-                ['Open', 'Under Review'].includes(detail.status) && (
-                  <div className={recordEditorSurface}>
-                    <RecordEditorSection title={tCrmForm('crm.corrections.reviewDecision', locale)}>
-                      <div className={recordEditorField}>
-                        <Label htmlFor="case-decision">
-                          {tCrmForm('crm.corrections.decision', locale)}
-                        </Label>
-                        <NativeSelect
-                          disabled={busy || !!action}
-                          id="case-decision"
-                          aria-required="true"
-                          value={decision}
-                          onChange={(event) => setDecision(event.target.value as Status)}
-                          className="w-full max-w-xs"
-                        >
-                          {(detail.status === 'Open'
-                            ? ['Under Review', 'Rejected']
-                            : ['Approved', 'Rejected']
-                          ).map((value) => (
-                            <option key={value} value={value}>
-                              {t(`crm.corrections.${value}`, locale)}
-                            </option>
-                          ))}
-                        </NativeSelect>
-                      </div>
-                      <div className={recordEditorField}>
-                        <Label htmlFor="case-notes">{t('crm.corrections.notes', locale)}</Label>
-                        <Textarea
-                          disabled={busy || !!action}
-                          id="case-notes"
-                          aria-required={decision === 'Rejected' || undefined}
-                          maxLength={1000}
-                          value={notes}
-                          onChange={(event) => setNotes(event.target.value)}
-                          rows={2}
-                          placeholder={tCrmForm('crm.corrections.noteExample', locale)}
-                          className="min-h-14 resize-y"
-                        />
-                      </div>
-                    </RecordEditorSection>
-                    <RecordEditorActions>
-                      <Button
-                        ref={reviewButton}
-                        disabled={
-                          loading ||
-                          queueError ||
-                          detailRead.loading ||
-                          detailRead.error ||
-                          !canRetryReview ||
-                          busy ||
-                          !!action ||
-                          (decision === 'Rejected' && !notes.trim()) ||
-                          (decision === 'Approved' && !hasEvidence)
-                        }
-                        onClick={() =>
-                          captured({
-                            title: t(`crm.corrections.${decision}`, locale),
-                            description: `${detail.id} · ${detail.requestedValue} · ${notes.trim()}`,
-                            path: `/api/crm/verification-cases/${detail.id}/status`,
-                            method: 'PUT',
-                            expected: {
-                              id: detail.id,
-                              profileId: detail.profileId,
-                              status: decision,
-                            },
-                            body: {
-                              decision,
-                              ...(notes.trim() ? { reviewerNotes: notes.trim() } : {}),
-                            },
-                          })
-                        }
+                        )}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                {evidence.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {evidence.map((url, index) => (
+                      <a
+                        key={url}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={buttonVariants({ variant: 'outline' })}
                       >
-                        {t('crm.corrections.save', locale)}
-                      </Button>
-                    </RecordEditorActions>
+                        {t('crm.corrections.evidence', locale)} {index + 1}
+                      </a>
+                    ))}
                   </div>
-                )
+                )}
+                {!hasEvidence && <p role="status">{t('crm.corrections.legacy', locale)}</p>}
+                {detail.reviewerNotes && <p>{detail.reviewerNotes}</p>}
+                {reviewer?.userId === detail.createdBy && (
+                  <p>{t('crm.corrections.self', locale)}</p>
+                )}
+                {reviewing && !canReview && reviewer?.userId !== detail.createdBy && (
+                  <p role="status">{tCrmForm('crm.corrections.reviewUnavailable', locale)}</p>
+                )}
+                {caseId && !reviewing && canReview && (
+                  <Link
+                    to={correctionRoute}
+                    params={{ caseId, section: 'review' }}
+                    search={recordSearch ?? {}}
+                    state={{ crmCorrectionProfileId: detail.profileId }}
+                    className={buttonVariants()}
+                    disabled={detailRead.loading || detailRead.error}
+                  >
+                    {t('crm.corrections.details', locale)}
+                  </Link>
+                )}
+              </article>
+              {canReview && (reviewing || !caseId) && (
+                <form className={recordEditorSurface} onSubmit={submitReview}>
+                  <RecordEditorSection title={tCrmForm('crm.corrections.reviewDecision', locale)}>
+                    <fieldset id="case-decision" disabled={busy || !!action}>
+                      <legend className="mb-1 text-sm font-medium">
+                        {tCrmForm('crm.corrections.decision', locale)}
+                      </legend>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        {choices.map((value) => (
+                          <label
+                            key={value}
+                            className="flex min-w-0 cursor-pointer items-start gap-2 rounded-lg border p-3 text-sm hover:bg-muted/35 has-checked:border-primary has-checked:bg-primary/5"
+                          >
+                            <input
+                              type="radio"
+                              name="case-decision"
+                              value={value}
+                              checked={decision === value}
+                              onChange={() => setDecision(value)}
+                              required
+                              className="mt-0.5 size-4 shrink-0 accent-primary"
+                            />
+                            <span>
+                              <span className="block font-medium">
+                                {tCrmForm(`crm.corrections.decision.${value}`, locale)}
+                              </span>
+                              <span className="block text-xs text-muted-foreground">
+                                {tCrmForm(`crm.corrections.decisionHelp.${value}`, locale)}
+                              </span>
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                    <div className={recordEditorField}>
+                      <Label htmlFor="case-notes">
+                        {tCrmForm(
+                          decision === 'Rejected'
+                            ? 'crm.corrections.rejectionNote'
+                            : 'crm.corrections.optionalNote',
+                          locale
+                        )}
+                      </Label>
+                      <Textarea
+                        disabled={busy || !!action}
+                        id="case-notes"
+                        aria-required={decision === 'Rejected' || undefined}
+                        required={decision === 'Rejected'}
+                        maxLength={1000}
+                        value={notes}
+                        onChange={(event) => setNotes(event.target.value)}
+                        rows={2}
+                        placeholder={tCrmForm(
+                          decision === 'Rejected'
+                            ? 'crm.corrections.rejectionExample'
+                            : 'crm.corrections.noteExample',
+                          locale
+                        )}
+                        dir="auto"
+                        className="min-h-14 resize-y"
+                      />
+                    </div>
+                  </RecordEditorSection>
+                  <RecordEditorActions>
+                    <Button type="submit" ref={reviewButton} disabled={reviewBlocked}>
+                      {t('crm.corrections.save', locale)}
+                    </Button>
+                  </RecordEditorActions>
+                </form>
               )}
-            </article>
+            </>
           )}
         </>
       )}
