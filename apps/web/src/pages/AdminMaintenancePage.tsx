@@ -3,15 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { standardMaintenanceNotice } from '@barghsa/i18n/maintenance-public';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import {
-  Badge,
-  LoadingStatus,
-  Button,
-  DatePicker,
-  Label,
-  ListRefreshButton,
-  buttonVariants,
-} from '@barghsa/ui';
+import { Badge, Button, DatePicker, Label, ListRefreshButton, buttonVariants } from '@barghsa/ui';
 import {
   Form,
   FormInput,
@@ -39,6 +31,8 @@ import {
   recordEditorGrid,
   recordEditorSurface,
 } from '../components/RecordEditorLayout.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { tWorkspace } from '@barghsa/i18n/workspace-admin';
 import {
   isMaintenanceList,
@@ -336,18 +330,21 @@ export default function AdminMaintenancePage({ workspace }: { workspace?: Worksp
   });
   const statusDetails = (setting: MaintenanceSetting) => (
     <>
-      <Badge variant={setting.active ? 'outline' : 'secondary'}>
+      <Badge
+        variant={setting.active ? 'outline' : 'secondary'}
+        className={setting.active ? 'bg-warning-soft text-warning' : undefined}
+      >
         {copy(setting.active ? 'active' : 'inactive')}
       </Badge>
+      {setting.active && setting.reason && (
+        <p className="mt-2 whitespace-pre-wrap wrap-anywhere text-sm font-medium">
+          {setting.reason[locale]}
+        </p>
+      )}
       {setting.active && setting.estimatedUntil && (
         <p className="mt-2 text-sm text-muted-foreground">
           {copy('estimatedUntil')} ·{' '}
           <time dateTime={setting.estimatedUntil}>{time.format(setting.estimatedUntil)}</time>
-        </p>
-      )}
-      {setting.active && setting.reason && (
-        <p className="mt-2 whitespace-pre-wrap [overflow-wrap:anywhere] text-sm">
-          {setting.reason[locale]}
         </p>
       )}
     </>
@@ -410,7 +407,12 @@ export default function AdminMaintenancePage({ workspace }: { workspace?: Worksp
       </header>
       {time.notice}
       <CommandFeedback message={saved ? copy('saved') : null} />
-      {state === 'loading' && <LoadingStatus>{copy('loading')}</LoadingStatus>}
+      {state === 'loading' &&
+        (workspace?.view === 'list' ? (
+          <RecordListSkeleton label={copy('loading')} view="card" headings={[]} />
+        ) : (
+          <RecordDetailSkeleton label={copy('loading')} layout="payment" />
+        ))}
       {state === 'denied' && <p role="alert">{copy('denied')}</p>}
       {state === 'error' && <p role="alert">{copy('loadError')}</p>}
       {state === 'ready' && workspace?.view === 'list' && (
@@ -439,7 +441,7 @@ export default function AdminMaintenancePage({ workspace }: { workspace?: Worksp
       )}
       {state === 'ready' && workspace?.view === 'detail' && currentSetting && (
         <div className="max-w-3xl space-y-4 rounded-xl border bg-card p-4 sm:p-6">
-          {statusDetails(currentSetting)}
+          <div className="rounded-lg bg-muted/45 p-3">{statusDetails(currentSetting)}</div>
           <dl className="grid gap-3 border-t pt-4 text-sm sm:grid-cols-2">
             <div>
               <dt className="text-muted-foreground">{copy('savedSetting')}</dt>

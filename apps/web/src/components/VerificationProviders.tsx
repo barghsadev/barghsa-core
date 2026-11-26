@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Alert, Badge, Button, LoadingStatus, buttonVariants } from '@barghsa/ui';
+import { Alert, Badge, Button, buttonVariants } from '@barghsa/ui';
+import { RecordDetailSkeleton } from './RecordSkeleton.js';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -91,7 +93,12 @@ export default function VerificationProviders({
           </Button>
         )}
       </div>
-      {resource.loading && <LoadingStatus>{t('loading')}</LoadingStatus>}
+      {resource.loading &&
+        (providerId ? (
+          <RecordDetailSkeleton label={t('loading')} layout="payment" />
+        ) : (
+          <RecordListSkeleton label={t('loading')} view="card" headings={[]} />
+        ))}
       {resource.error && (
         <Alert variant="destructive">
           {t(resource.missing ? 'providerMissing' : 'loadFailed')}
@@ -107,7 +114,7 @@ export default function VerificationProviders({
               <bdi>{record.data.providerId}</bdi>
             </p>
           </div>
-          <dl className="grid gap-4 text-sm sm:grid-cols-2">
+          <dl className="grid gap-4 rounded-lg bg-muted/45 p-3 text-sm sm:grid-cols-2">
             <div>
               <dt className="text-muted-foreground">{t('providerEnabled')}</dt>
               <dd className="mt-1 font-medium">{t(record.data.config.enabled ? 'yes' : 'no')}</dd>
@@ -125,11 +132,11 @@ export default function VerificationProviders({
         <p className="rounded-xl border bg-card p-4">{t('providerEmpty')}</p>
       )}
       {!!collection.data?.length && (
-        <ul className="divide-y rounded-xl border bg-card">
+        <ul className="space-y-3">
           {collection.data.map((provider) => (
             <li
               key={provider.providerId}
-              className="flex min-w-0 flex-wrap items-center justify-between gap-3 p-4"
+              className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-xl border bg-card p-4"
             >
               <div className="min-w-0 space-y-1">
                 <p className="font-medium [overflow-wrap:anywhere]">

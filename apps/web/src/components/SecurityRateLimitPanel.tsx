@@ -1,3 +1,4 @@
+import { SettingsValueSkeleton } from './CatalogueEditorFeedback.js';
 import { lazy, Suspense, useCallback, useRef, useState, type FormEvent } from 'react';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import {
@@ -246,7 +247,12 @@ export default function SecurityRateLimitPanel({
         </>
       }
     >
-      {state.resource.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
+      {state.resource.loading &&
+        (state.current ? (
+          <LoadingStatus>{text('loading')}</LoadingStatus>
+        ) : (
+          <SettingsValueSkeleton label={text('loading')} count={3} />
+        ))}
       {state.scope.denied && <Alert variant="destructive">{text('forbidden')}</Alert>}
       {state.resource.error && <Alert variant="destructive">{text('loadFailed')}</Alert>}
       {invalid && <Alert variant="destructive">{text('invalid')}</Alert>}

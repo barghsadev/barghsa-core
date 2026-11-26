@@ -27,6 +27,7 @@ import {
 } from '../lib/verification-settings-form.js';
 import {
   CatalogueFieldFeedback,
+  SettingsValueSkeleton,
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
@@ -34,6 +35,7 @@ import { RecordEditorActions, recordEditorSurface } from '../components/RecordEd
 import { OtpConfigPanel } from '../components/OtpConfigPanel.js';
 import { VerificationPolicySettings } from '../components/VerificationPolicySettings.js';
 import { verificationSections, type VerificationSection } from '../lib/verification-location.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 const VerificationProviders = lazy(() => import('../components/VerificationProviders.js'));
 const SecurityRateLimitPanel = lazy(() => import('../components/SecurityRateLimitPanel.js'));
 const TeamActionDialog = lazy(() =>
@@ -415,7 +417,12 @@ function VerificationSettings({
         </p>
       )}
       {state.scope.denied && <Alert variant="destructive">{text('forbidden')}</Alert>}
-      {state.resource.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
+      {state.resource.loading &&
+        (state.current ? (
+          <LoadingStatus>{text('loading')}</LoadingStatus>
+        ) : (
+          <SettingsValueSkeleton label={text('loading')} count={2} />
+        ))}
       {state.resource.error && (
         <Alert variant="destructive">
           {text('loadFailed')}{' '}
@@ -452,7 +459,7 @@ function VerificationSettings({
             <dl className="grid grid-cols-2 gap-3 rounded-lg bg-muted/40 px-3 py-2.5 text-sm">
               <div>
                 <dt className="text-muted-foreground">{text('activeMode')}</dt>
-                <dd className="mt-1 font-medium">{text(current.mode)}</dd>
+                <dd className="mt-1 text-lg font-semibold">{text(current.mode)}</dd>
                 <dd className="mt-1 text-muted-foreground">
                   {text('rateRecoveryVersion').replace(
                     '{version}',
@@ -569,7 +576,9 @@ function VerificationSettings({
       )}
       {showHistory && current && (
         <section aria-label={text('modeHistory')} className="max-w-xl space-y-3 border-t pt-4">
-          {history.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
+          {history.loading && (
+            <RecordListSkeleton label={text('loading')} view="card" headings={[]} />
+          )}
           {history.error && (
             <Alert variant="destructive">
               {text('loadFailed')}{' '}

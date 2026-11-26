@@ -1,6 +1,8 @@
+import { SettingsValueSkeleton } from './CatalogueEditorFeedback.js';
 import { CommandFeedback } from './CommandFeedback.js';
 import { useCallback, useRef, useState } from 'react';
 import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import {
   DEFAULT_VERIFICATION_POLICY,
   VERIFICATION_DOCUMENT_TYPES,
@@ -214,7 +216,12 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
     >
       <h2 className="text-xl font-semibold">{text('policyTitle')}</h2>
       <p className="text-sm text-muted-foreground">{text('policyWarning')}</p>
-      {state.resource.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
+      {state.resource.loading &&
+        (state.current ? (
+          <LoadingStatus>{text('loading')}</LoadingStatus>
+        ) : (
+          <SettingsValueSkeleton label={text('loading')} count={2} />
+        ))}
       {state.resource.error && <Alert variant="destructive">{text('loadFailed')}</Alert>}
       {state.scope.denied && <Alert variant="destructive">{text('forbidden')}</Alert>}
       <CommandFeedback message={saved ? text('policySaved') : null} />
@@ -247,7 +254,10 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
           >
             <div className={`${recordEditorGrid} gap-y-3`}>
               {VERIFICATION_PROFILE_TYPES.map((type) => (
-                <fieldset key={type} className="m-0 min-w-0 space-y-2 rounded-lg border px-3 pb-3">
+                <fieldset
+                  key={type}
+                  className="m-0 min-w-0 space-y-2 rounded-lg border bg-muted/30 px-3 pb-3"
+                >
                   <legend className="px-1 text-sm font-semibold">{text(type)}</legend>
                   <label className="touch-label flex cursor-pointer items-center gap-2 text-sm">
                     <input
@@ -370,7 +380,9 @@ export function VerificationPolicySettings({ onReadDenied }: { onReadDenied?: ()
       )}
       {showHistory && state.current && !state.scope.denied && (
         <section aria-label={text('policyHistory')} className="space-y-3 border-t pt-4">
-          {history.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
+          {history.loading && (
+            <RecordListSkeleton label={text('loading')} view="card" headings={[]} />
+          )}
           {history.error && <Alert variant="destructive">{text('loadFailed')}</Alert>}
           {history.error && (
             <Button type="button" variant="outline" onClick={history.retry}>

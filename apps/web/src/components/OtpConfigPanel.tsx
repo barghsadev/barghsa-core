@@ -1,3 +1,4 @@
+import { SettingsValueSkeleton } from './CatalogueEditorFeedback.js';
 import { CommandFeedback } from './CommandFeedback.js';
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import type { TeamAction } from './TeamActionDialog.js';
@@ -131,7 +132,12 @@ export function OtpConfigPanel({ onReadDenied }: { onReadDenied?: () => void }) 
   const feedback = (
     <>
       {state.scope.denied && <Alert variant="destructive">{text('forbidden')}</Alert>}
-      {state.resource.loading && <LoadingStatus>{text('otpLoading')}</LoadingStatus>}
+      {state.resource.loading &&
+        (state.current ? (
+          <LoadingStatus>{text('otpLoading')}</LoadingStatus>
+        ) : (
+          <SettingsValueSkeleton label={text('otpLoading')} count={1} />
+        ))}
       {state.resource.error && <Alert variant="destructive">{text('otpLoadFailed')}</Alert>}
       {(state.changed || state.uncertain) && (
         <Alert variant="destructive">{text(state.uncertain ? 'unverified' : 'changedDraft')}</Alert>

@@ -19,6 +19,7 @@ import {
 } from '../components/RecordEditorLayout.js';
 import {
   CatalogueEditorStatus,
+  SettingsValueSkeleton,
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
@@ -169,6 +170,11 @@ function GreenEditor({
       <CatalogueEditorStatus
         {...editor}
         loading={editor.resource.loading}
+        loadingView={
+          setting ? undefined : (
+            <SettingsValueSkeleton label={label('loading')} count={overview ? 2 : 1} />
+          )
+        }
         error={editor.resource.error}
         label={label}
       />
@@ -185,13 +191,13 @@ function GreenEditor({
                       {label(current.mandatoryGreenEnabled ? 'enabledState' : 'disabledState')}
                     </span>
                   </div>
-                  <dl className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-2 text-sm">
+                  <dl className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-2 rounded-lg bg-muted/45 p-3 text-sm">
                     <dt className="text-muted-foreground">{label('threshold')}</dt>
-                    <dd>
+                    <dd className="font-semibold tabular-nums">
                       <bdi>{numbers.number(current.averagePowerThresholdKw)}</bdi>
                     </dd>
                     <dt className="text-muted-foreground">{label('share')}</dt>
-                    <dd>
+                    <dd className="font-semibold tabular-nums">
                       <bdi>{formatShare(current.mandatoryGreenSharePercent)}</bdi>
                     </dd>
                   </dl>
@@ -439,6 +445,9 @@ function RetentionEditor({
       <CatalogueEditorStatus
         {...editor}
         loading={editor.resource.loading}
+        loadingView={
+          setting ? undefined : <SettingsValueSkeleton label={label('loading')} count={1} />
+        }
         error={editor.resource.error}
         label={label}
       />
@@ -652,6 +661,9 @@ function TemplateEditor({
       <CatalogueEditorStatus
         {...editor}
         loading={editor.resource.loading}
+        loadingView={
+          setting ? undefined : <SettingsValueSkeleton label={label('loading')} count={1} />
+        }
         error={editor.resource.error}
         label={label}
       />

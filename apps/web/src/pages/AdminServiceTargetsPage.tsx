@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Alert, Button, buttonVariants } from '@barghsa/ui';
+import { Alert, Button } from '@barghsa/ui';
 import { loginFormText } from '@barghsa/i18n/login-forms';
 import type { ServiceWorkflowKey } from '@barghsa/shared/admin';
 import type { ServiceSettingsKind } from '../lib/service-settings-form.js';
@@ -116,19 +116,17 @@ function OwnedServiceTargets({
       {view === 'overview' && (
         <ul className="grid gap-4 lg:grid-cols-3">
           {sections.map((section) => (
-            <li
-              key={section.key}
-              className="flex min-w-0 flex-col items-start gap-3 rounded-xl border bg-card p-4 sm:p-6"
-            >
-              <h2 className="text-lg font-semibold">{t(section.title, locale)}</h2>
-              <p className="grow text-sm text-muted-foreground">{t(section.description, locale)}</p>
+            <li key={section.key} className="min-w-0">
               <Link
                 to="/admin/service-targets/$section/{-$workflow}"
                 params={{ section: section.key }}
-                className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+                className="block h-full space-y-2 rounded-xl border bg-card p-4 hover:border-primary sm:p-5"
                 aria-label={`${t('admin.targets.openSettings', locale)} · ${t(section.title, locale)}`}
               >
-                {t('admin.targets.openSettings', locale)}
+                <h2 className="text-lg font-semibold text-primary underline underline-offset-4">
+                  {t(section.title, locale)}
+                </h2>
+                <p className="text-sm text-muted-foreground">{t(section.description, locale)}</p>
               </Link>
             </li>
           ))}

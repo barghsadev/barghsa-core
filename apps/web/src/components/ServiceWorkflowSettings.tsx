@@ -1,4 +1,6 @@
 import { CommandFeedback } from './CommandFeedback.js';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
+import { SettingsValueSkeleton } from './CatalogueEditorFeedback.js';
 import { RecordCommandGuard } from './RecordCommandGuard.js';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from '@tanstack/react-router';
@@ -436,7 +438,14 @@ export function ServiceWorkflowSettings({
           {text('savedVersion').replace('{version}', numbers.number(version))}
         </Badge>
       )}
-      {state.resource.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
+      {state.resource.loading &&
+        (state.current ? (
+          <LoadingStatus>{text('loading')}</LoadingStatus>
+        ) : overview ? (
+          <RecordListSkeleton label={text('loading')} view="card" headings={[]} />
+        ) : (
+          <SettingsValueSkeleton label={text('loading')} count={2} />
+        ))}
       {state.resource.error && <Alert variant="destructive">{text('error')}</Alert>}
       {state.scope.denied && <Alert variant="destructive">{text('forbidden')}</Alert>}
       <CommandFeedback message={saved ? text('saved') : null} />
@@ -483,7 +492,13 @@ export function ServiceWorkflowSettings({
                         className="touch-action flex min-h-12 min-w-0 items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted/45 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring sm:px-5"
                       >
                         <span className="min-w-0 flex-1 font-medium">{text(key)}</span>
-                        <span className="shrink-0 text-xs text-muted-foreground">
+                        <span
+                          className={
+                            limit
+                              ? 'shrink-0 rounded-md bg-muted px-2 py-1 text-xs font-semibold tabular-nums'
+                              : 'shrink-0 text-xs text-muted-foreground'
+                          }
+                        >
                           {limit
                             ? numbers.number(Number(limit.value)) + ' ' + text(limit.unit)
                             : text('noCustomTarget')}
@@ -753,7 +768,9 @@ export function ServiceWorkflowSettings({
           </Button>
           {historyOpen && (
             <>
-              {history.loading && <LoadingStatus>{text('loading')}</LoadingStatus>}
+              {history.loading && (
+                <RecordListSkeleton label={text('loading')} view="card" headings={[]} />
+              )}
               {history.error && (
                 <Alert variant="destructive">
                   {text('historyError')}{' '}

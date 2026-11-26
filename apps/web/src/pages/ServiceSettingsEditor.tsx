@@ -9,6 +9,7 @@ import { AuditLogViewer } from '../components/AuditLogViewer.js';
 import { ConfigPreviewCard } from '../components/ConfigPreviewCard.js';
 import {
   CatalogueEditorStatus,
+  SettingsValueSkeleton,
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
@@ -139,6 +140,7 @@ export function ServiceSettingsEditor({
         {...editor}
         label={label}
         loading={editor.resource.loading}
+        loadingView={currentValues ? undefined : <SettingsValueSkeleton label={label('loading')} />}
         error={editor.resource.error}
         refresh={refresh}
         busy={editor.pending}
