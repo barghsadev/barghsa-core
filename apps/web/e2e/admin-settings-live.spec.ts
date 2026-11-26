@@ -4,6 +4,7 @@ import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { tStaffTeams } from '@barghsa/i18n/staff-team-forms';
+import { contractTemplatesText } from '@barghsa/i18n/contract-templates';
 import { tWorkspace } from '@barghsa/i18n/workspace-admin';
 import type { APIRequestContext, APIResponse, Page, Route } from '@playwright/test';
 import { expandListFilters, test, expect } from './coverage-fixture';
@@ -1827,6 +1828,8 @@ for (const locale of ['en', 'fa'])
     page,
   }) => {
     const fa = locale === 'fa';
+    const templateText = (key: string) =>
+      contractTemplatesText(`admin.templates.${key}`, fa ? 'fa' : 'en');
     await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     const headers = {
       cookie: `barghsa_session=${http.session}`,
@@ -1864,8 +1867,18 @@ for (const locale of ['en', 'fa'])
     const list = '/admin/contract-templates';
     const detail = new URL(page.url()).pathname;
     const upload = detail + '/versions/new';
-    await page.goto(upload);
-    const input = page.getByLabel(fa ? 'فایل قالب' : 'Template file', { exact: true });
+    await main.getByRole('link', { name: templateText('editor'), exact: true }).click();
+    const status = page.locator('#template-status');
+    await expect(status).toHaveAccessibleDescription(templateText('needsVersion'));
+    await status.selectOption('inactive');
+    await expect(status).toHaveAccessibleDescription(templateText('firstVersionActivates'));
+    await main.getByRole('link', { name: templateText('open'), exact: true }).click();
+    await main.getByRole('link', { name: templateText('upload'), exact: true }).click();
+    await expect(page).toHaveURL(upload);
+    const input = main.locator('#template-file');
+    await expect(
+      main.getByRole('button', { name: templateText('chooseFile'), exact: true })
+    ).toHaveAccessibleDescription(templateText('fileHelp'));
     await input.setInputFiles({
       name: 'bad.pdf',
       mimeType: 'application/pdf',
@@ -1901,7 +1914,8 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByText('{{date}}, {{amount}}', { exact: true })).toBeVisible();
     await page.goto(detail + '/edit');
     await page.getByLabel(fa ? 'نام' : 'Name', { exact: true }).fill(renamed);
-    await page.getByLabel(fa ? 'فعال' : 'Active', { exact: true }).uncheck();
+    await status.selectOption('inactive');
+    await expect(status).toHaveAccessibleDescription(templateText('inactiveUse'));
     await page
       .getByRole('button', { name: fa ? 'ذخیره قالب' : 'Save template', exact: true })
       .click();

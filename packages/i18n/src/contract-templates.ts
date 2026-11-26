@@ -21,7 +21,18 @@ const fa = {
   'admin.templates.name': 'نام',
   'admin.templates.description': 'توضیحات',
   'admin.templates.details': 'مشخصات قالب',
-  'admin.templates.descriptionExample': 'توضیح دهید این قالب برای چه قراردادهایی استفاده می‌شود.',
+  'admin.templates.nameExample': 'قرارداد مشاوره انرژی',
+  'admin.templates.descriptionExample': 'برای قراردادهای سالانه مشاوره انرژی.',
+  'admin.templates.descriptionHelp': 'اختیاری. کاربرد قالب را توضیح دهید.',
+  'admin.templates.firstVersionAfterSave':
+    'پس از ذخیره مشخصات، یک فایل متنی UTF-8 برای نسخه اول بارگذاری کنید.',
+  'admin.templates.availability': 'استفاده در قراردادهای جدید',
+  'admin.templates.activeUse': 'این قالب برای قراردادهای جدید قابل انتخاب است.',
+  'admin.templates.inactiveUse':
+    'قالب از انتخاب‌های قرارداد جدید کنار می‌رود و تاریخچه نسخه‌ها حفظ می‌شود.',
+  'admin.templates.needsVersion':
+    'برای استفاده از قالب در قرارداد جدید، ابتدا یک نسخه بارگذاری کنید.',
+  'admin.templates.firstVersionActivates': 'بارگذاری اولین نسخه، قالب را فعال می‌کند.',
   'admin.templates.active': 'فعال',
   'admin.templates.inactive': 'غیرفعال',
   'admin.templates.save': 'ذخیره قالب',
@@ -77,7 +88,18 @@ const en: Record<keyof typeof fa, string> = {
   'admin.templates.name': 'Name',
   'admin.templates.description': 'Description',
   'admin.templates.details': 'Template details',
-  'admin.templates.descriptionExample': 'Describe the contracts this template is used for.',
+  'admin.templates.nameExample': 'Energy advisory agreement',
+  'admin.templates.descriptionExample': 'For annual energy advisory agreements.',
+  'admin.templates.descriptionHelp': 'Optional. Explain when to use this template.',
+  'admin.templates.firstVersionAfterSave':
+    'After saving, upload a UTF-8 text file as the first version.',
+  'admin.templates.availability': 'Use in new contracts',
+  'admin.templates.activeUse': 'This template can be selected for new contracts.',
+  'admin.templates.inactiveUse':
+    'Removes this template from new-contract selection and keeps the version history.',
+  'admin.templates.needsVersion':
+    'Upload a version to make this template available for new contracts.',
+  'admin.templates.firstVersionActivates': 'Uploading the first version activates this template.',
   'admin.templates.active': 'Active',
   'admin.templates.inactive': 'Inactive',
   'admin.templates.save': 'Save template',

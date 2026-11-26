@@ -32,6 +32,7 @@ import {
   Label,
   ListPage,
   ListRefreshButton,
+  NativeSelect,
   Textarea,
   buttonVariants,
 } from '@barghsa/ui';
@@ -160,13 +161,6 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
     formText('validationUnavailable')
   );
   const resetTemplate = editor.form.reset;
-  const registerTemplate = editor.form.register;
-  const statusRef = useCallback(
-    (node: HTMLInputElement | null) => {
-      registerTemplate('status').ref(node ? { focus: () => node.focus() } : null);
-    },
-    [registerTemplate]
-  );
   const draft = selected && showEditor ? editor.values : null;
   const setDraft = (value: Draft) => {
     for (const field of ['name', 'description', 'status'] as const)
@@ -247,6 +241,10 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
   );
   const rows = catalogue.data ?? [],
     detail = history.data;
+  const statusHelp = (status: Draft['status']) => {
+    if (detail?.versionCount) return label(status === 'active' ? 'activeUse' : 'inactiveUse');
+    return label(status === 'active' ? 'needsVersion' : 'firstVersionActivates');
+  };
   const listReady =
     !scope.denied &&
     (!catalogueNeeded || (!catalogue.loading && !catalogue.error && catalogue.data !== null));
@@ -492,6 +490,10 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
     }
   }
   const completionGeneration = workGeneration.current;
+  const metadataReview =
+    action && action.method !== 'DELETE' && !action.path.endsWith('/versions')
+      ? (action.body as Pick<Draft, 'name' | 'description'> & Partial<Pick<Draft, 'status'>>)
+      : null;
   const heading =
     view === 'new'
       ? label('add')
@@ -600,7 +602,7 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
                 <form
                   noValidate
                   aria-busy={editor.pending || undefined}
-                  aria-label={label('editor')}
+                  aria-label={label(selected === 'new' ? 'add' : 'editor')}
                   onSubmit={save}
                   className={recordEditorSurface}
                 >
@@ -610,8 +612,15 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
                     </Alert>
                   )}
                   <fieldset disabled={!!action || editor.pending || !ready} className="min-w-0">
-                    <legend className="sr-only">{label('editor')}</legend>
-                    <RecordEditorSection title={label('details')}>
+                    <legend className="sr-only">
+                      {label(selected === 'new' ? 'add' : 'editor')}
+                    </legend>
+                    <RecordEditorSection
+                      title={label('details')}
+                      {...(selected === 'new'
+                        ? { description: label('firstVersionAfterSave') }
+                        : {})}
+                    >
                       <div className={recordEditorField}>
                         <Label htmlFor="template-name">{label('name')}</Label>
                         <Input
@@ -621,6 +630,8 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
                           required
                           aria-required="true"
                           maxLength={200}
+                          placeholder={label('nameExample')}
+                          className="placeholder-shown:[direction:inherit]"
                           value={draft.name}
                           onChange={(event) => setDraft({ ...draft, name: event.target.value })}
                         />
@@ -640,6 +651,7 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
                           className="max-h-40 min-h-14 resize-y placeholder-shown:[direction:inherit]"
                           rows={2}
                           placeholder={label('descriptionExample')}
+                          aria-describedby={editor.errorId('description')}
                           maxLength={2000}
                           value={draft.description}
                           onChange={(event) =>
@@ -651,35 +663,37 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
                           id={editor.errorId('description')}
                           error={editor.errors.description}
                           message={messages.description}
+                          hint={label('descriptionHelp')}
                         />
                       </div>
-                      {selected !== 'new' && (
-                        <label className="flex min-h-8 w-fit cursor-pointer items-center gap-2">
-                          <input
-                            {...editor.bind('status')}
-                            ref={statusRef}
-                            type="checkbox"
-                            className="size-4 accent-primary"
-                            checked={draft.status === 'active'}
-                            onChange={(event) =>
-                              setDraft({
-                                ...draft,
-                                status: event.target.checked ? 'active' : 'inactive',
-                              })
-                            }
-                          />
-                          {label('active')}
-                        </label>
-                      )}
-                      {editor.errors.status && (
-                        <CatalogueFieldFeedback
-                          compact
-                          id={editor.errorId('status')}
-                          error={editor.errors.status}
-                          message={messages.status}
-                        />
-                      )}
                     </RecordEditorSection>
+                    {selected !== 'new' && (
+                      <RecordEditorSection title={label('availability')}>
+                        <div className={recordEditorField}>
+                          <Label htmlFor="template-status">{label('status')}</Label>
+                          <NativeSelect
+                            {...editor.bind('status')}
+                            id="template-status"
+                            className="w-full sm:max-w-60"
+                            value={draft.status}
+                            aria-describedby={editor.errorId('status')}
+                            onChange={(event) =>
+                              setDraft({ ...draft, status: event.target.value as Draft['status'] })
+                            }
+                          >
+                            <option value="active">{label('active')}</option>
+                            <option value="inactive">{label('inactive')}</option>
+                          </NativeSelect>
+                          <CatalogueFieldFeedback
+                            compact
+                            id={editor.errorId('status')}
+                            error={editor.errors.status}
+                            message={messages.status}
+                            hint={statusHelp(draft.status)}
+                          />
+                        </div>
+                      </RecordEditorSection>
+                    )}
                     <RecordEditorActions>
                       <Button
                         type="button"
@@ -1054,14 +1068,38 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
           }
           summary={
             <div className="space-y-2">
-              <Button
-                type="button"
-                variant="outline"
-                disabled={catalogue.loading || history.loading}
+              {metadataReview && (
+                <dl className="min-w-0 space-y-3 rounded-lg border bg-muted/25 p-4 text-sm">
+                  <div>
+                    <dt className="text-xs text-muted-foreground">{label('name')}</dt>
+                    <dd className="font-medium wrap-anywhere" dir="auto">
+                      {metadataReview.name}
+                    </dd>
+                  </div>
+                  {(metadataReview.description || metadataReview.status) && (
+                    <div>
+                      <dt className="text-xs text-muted-foreground">{label('description')}</dt>
+                      <dd className="whitespace-pre-wrap wrap-anywhere" dir="auto">
+                        {metadataReview.description || '—'}
+                      </dd>
+                    </div>
+                  )}
+                  {metadataReview.status && (
+                    <div className="border-t pt-3">
+                      <dt className="text-xs text-muted-foreground">{label('status')}</dt>
+                      <dd className="font-medium">{label(metadataReview.status)}</dd>
+                      <dd className="text-xs text-muted-foreground">
+                        {statusHelp(metadataReview.status)}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              )}
+              <ListRefreshButton
+                label={label('refresh')}
+                refreshing={catalogue.loading || history.loading}
                 onClick={refresh}
-              >
-                {label('refresh')}
-              </Button>
+              />
               {catalogue.error && (
                 <div role="alert">
                   {label('error')}{' '}

@@ -6,6 +6,7 @@ import {
   templateVersion,
 } from '../src/test/contract-settings-fixtures';
 import { contractTemplatesText } from '@barghsa/i18n/contract-templates';
+import { t } from '@barghsa/i18n/admin-ui';
 
 for (const locale of ['en', 'fa'] as const) {
   test(`contract template selection survives reload and browser history (${locale})`, async ({
@@ -77,12 +78,25 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto(list + '?selected=' + contractTemplate.id);
     await expect(page).toHaveURL(route + '/edit');
     await expect(name).toHaveValue(contractTemplate.name);
+    const status = page.getByRole('combobox', { name: label('status'), exact: true });
+    await expect(status).toHaveValue('active');
+    await expect(status).toHaveAccessibleDescription(label('activeUse'));
+    await status.selectOption('inactive');
+    await expect(status).toHaveAccessibleDescription(label('inactiveUse'));
+    await page.getByRole('button', { name: label('save'), exact: true }).click();
+    const review = page.getByRole('dialog', { name: label('save'), exact: true });
+    await expect(review.getByText(contractTemplate.name, { exact: true })).toBeVisible();
+    await expect(review.getByText(label('inactive'), { exact: true })).toBeVisible();
+    await expect(review.getByText(label('inactiveUse'), { exact: true })).toBeVisible();
+    await review.getByRole('button', { name: t('team.cancel', locale), exact: true }).click();
+    await expect(status).toHaveValue('inactive');
   });
 }
 
-for (const locale of ['en', 'fa'])
+for (const locale of ['en', 'fa'] as const)
   test(`template editor retries captured metadata (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
+    const label = (key: string) => contractTemplatesText(`admin.templates.${key}`, locale);
     await crmShell(page, locale);
     let failed = true,
       verified = false,
@@ -121,12 +135,17 @@ for (const locale of ['en', 'fa'])
       .click();
     const name = page.getByRole('textbox', { name: fa ? 'نام' : 'Name', exact: true });
     await expect(name).toHaveAttribute('aria-required', 'true');
+    await expect(name).toHaveAttribute('placeholder', label('nameExample'));
+    await expect(name).toHaveCSS('direction', fa ? 'rtl' : 'ltr');
+    await expect(page.getByText(label('firstVersionAfterSave'), { exact: true })).toBeVisible();
     await name.fill('  Local contract  ');
     await page
       .getByRole('button', { name: fa ? 'ذخیره قالب' : 'Save template', exact: true })
       .click();
     const dialog = page.getByRole('dialog'),
       confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
+    await expect(dialog.getByText('Local contract', { exact: true })).toBeVisible();
+    expect(attempts).toEqual([]);
     await confirm.click();
     const password = dialog.locator('input[type="password"]');
     await expect(password).toHaveAccessibleName(/\S/);
