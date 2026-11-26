@@ -94,6 +94,24 @@ it('preserves original instants and rejects invalid windows and DST gaps in the 
   expect(giftDraftErrors({ ...draft, start: gap }, 'America/New_York', false)).toContain('start');
 });
 
+it('requires explicitly scheduled dates and preserves an existing expiry when toggled back on', () => {
+  const draft = { ...giftDraftFrom(undefined, zone), code: 'WEEKEND', value: '1000' };
+  expect(giftDraftErrors(draft, zone, true)).toEqual([]);
+  const defaults = giftDraftPayload(draft, zone);
+  expect(defaults.validFrom).toBeUndefined();
+  expect(defaults.validUntil).toBeNull();
+  draft.start.enabled = true;
+  draft.end.enabled = true;
+  expect(giftDraftErrors(draft, zone, true)).toEqual(['start', 'end']);
+
+  const validUntil = '2026-12-31T18:05:47Z';
+  const edit = giftDraftFrom({ ...giftCode(), validUntil }, zone);
+  edit.end.enabled = false;
+  expect(giftDraftPayload(edit, zone).validUntil).toBeNull();
+  edit.end.enabled = true;
+  expect(giftDraftPayload(edit, zone).validUntil).toBe(validUntil);
+});
+
 it.each(['A', 'AB', '-SALE', 'SALE SPACE', 'SALE%', 'کد', 'A'.repeat(65)])(
   'rejects administrator code syntax %s before submission',
   (code) => {

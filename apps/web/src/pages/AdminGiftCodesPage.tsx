@@ -62,7 +62,6 @@ import {
 } from '@barghsa/ui/form';
 import {
   giftDraftFrom as draftFrom,
-  giftDateField as dateField,
   giftCapSubtotal,
   giftDraftErrors,
   giftDraftPayload,
@@ -194,7 +193,7 @@ export default function AdminGiftCodesPage({
                 {children}
               </div>
             </FormControl>
-            <FormMessage reserveSpace />
+            <FormMessage reserveSpace={name !== 'start' && name !== 'end'} />
           </FormItem>
         )}
       />
@@ -984,88 +983,120 @@ export default function AdminGiftCodesPage({
                         </div>
                       </RecordEditorSection>
                       <RecordEditorSection title={label('window')}>
-                        <p className="text-sm">
-                          {label('timezone')}: <bdi>{zone}</bdi>
+                        <p
+                          id="gift-validity-timezone"
+                          className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-xs text-muted-foreground"
+                        >
+                          {label('timezone')} <bdi className="font-medium">{zone}</bdi>
                         </p>
                         {(['start', 'end'] as const).map((field) =>
                           group(
                             field,
-                            <fieldset key={field} className="rounded-md border p-4">
-                              <legend className="px-1 font-semibold">{label(field)}</legend>
+                            <fieldset
+                              key={field}
+                              className="min-w-0 space-y-3 rounded-lg border px-3 pb-3"
+                            >
+                              <legend className="px-1 text-sm font-medium">{label(field)}</legend>
                               {(field === 'end' || editor === 'new') && (
-                                <label className="mb-3 flex items-center gap-2">
-                                  <input
-                                    type="checkbox"
-                                    checked={Boolean(draft[field].date)}
-                                    onChange={(event) =>
-                                      updateDraft({
-                                        ...draft,
-                                        [field]: {
-                                          ...dateField(
-                                            event.target.checked ? new Date().toISOString() : null,
-                                            zone
-                                          ),
-                                          changed: true,
-                                        },
-                                      })
-                                    }
-                                  />
-                                  {label(field === 'start' ? 'setStart' : 'setEnd')}
-                                </label>
+                                <div className="grid w-fit max-w-full grid-cols-2 gap-1 rounded-lg bg-muted/50 p-1">
+                                  {(field === 'start'
+                                    ? ['startImmediately', 'setStart']
+                                    : ['noExpiry', 'setEnd']
+                                  ).map((choice, index) => (
+                                    <label key={choice} className="relative min-w-0">
+                                      <input
+                                        type="radio"
+                                        name={`gift-${field}-mode`}
+                                        className="peer absolute inset-0 size-full cursor-pointer opacity-0"
+                                        checked={draft[field].enabled === (index === 1)}
+                                        onChange={() =>
+                                          updateDraft({
+                                            ...draft,
+                                            [field]: { ...draft[field], enabled: index === 1 },
+                                          })
+                                        }
+                                      />
+                                      <span className="flex min-h-11 items-center justify-center rounded-md border border-transparent px-2 py-1 text-center text-sm text-muted-foreground peer-hover:bg-muted peer-checked:border-border peer-checked:bg-card peer-checked:font-medium peer-checked:text-foreground peer-focus-visible:outline-2 peer-focus-visible:outline-offset-1 peer-focus-visible:outline-ring sm:px-3">
+                                        {label(choice)}
+                                      </span>
+                                    </label>
+                                  ))}
+                                </div>
                               )}
-                              {draft[field].date ? (
-                                <div className={recordEditorGrid}>
-                                  <DatePicker
-                                    label={label(`${field}Date`)}
-                                    placeholder={label('chooseDate')}
-                                    locale={locale}
-                                    timezone={zone}
-                                    value={draft[field].date}
-                                    triggerProps={{
-                                      'aria-required': true,
-                                      'aria-invalid': !!form.formState.errors[field] || undefined,
-                                      'aria-describedby': form.formState.errors[field]
-                                        ? `gift-${field}-message`
-                                        : undefined,
-                                    }}
-                                    onChange={(date) =>
-                                      updateDraft({
-                                        ...draft,
-                                        [field]: { ...draft[field], date, changed: true },
-                                      })
-                                    }
-                                  />
+                              {draft[field].enabled && (
+                                <div className={`${recordEditorGrid} items-start gap-y-3`}>
                                   <div className={recordEditorField}>
-                                    <Label htmlFor={`gift-${field}-time`}>
-                                      {label(`${field}Time`)}
+                                    <Label htmlFor={`gift-${field}-date`}>
+                                      {label(`${field}Date`)}
                                     </Label>
-                                    <Input
-                                      id={`gift-${field}-time`}
-                                      type="time"
-                                      required
-                                      aria-required="true"
-                                      aria-invalid={!!form.formState.errors[field] || undefined}
-                                      aria-describedby={
-                                        form.formState.errors[field]
+                                    <DatePicker
+                                      id={`gift-${field}-date`}
+                                      label={label(`${field}Date`)}
+                                      placeholder={label('chooseDate')}
+                                      className="min-h-11"
+                                      locale={locale}
+                                      timezone={zone}
+                                      value={draft[field].date}
+                                      triggerProps={{
+                                        'aria-required': true,
+                                        'aria-invalid': !!form.formState.errors[field] || undefined,
+                                        'aria-describedby': form.formState.errors[field]
                                           ? `gift-${field}-message`
-                                          : undefined
-                                      }
-                                      value={draft[field].time}
-                                      onChange={(event) =>
+                                          : 'gift-validity-timezone',
+                                      }}
+                                      onChange={(date) =>
                                         updateDraft({
                                           ...draft,
-                                          [field]: {
-                                            ...draft[field],
-                                            time: event.target.value,
-                                            changed: true,
-                                          },
+                                          [field]: { ...draft[field], date, changed: true },
                                         })
                                       }
                                     />
                                   </div>
+                                  <div className={recordEditorField}>
+                                    <Label htmlFor={`gift-${field}-time`}>
+                                      {label(`${field}Time`)}
+                                    </Label>
+                                    <div className="group relative">
+                                      <Input
+                                        id={`gift-${field}-time`}
+                                        type="time"
+                                        dir="ltr"
+                                        required
+                                        aria-required="true"
+                                        aria-invalid={!!form.formState.errors[field] || undefined}
+                                        aria-describedby={
+                                          form.formState.errors[field]
+                                            ? `gift-${field}-message`
+                                            : 'gift-validity-timezone'
+                                        }
+                                        className={
+                                          draft[field].time
+                                            ? undefined
+                                            : 'text-transparent focus:text-foreground [&::-webkit-date-and-time-value]:opacity-0 focus:[&::-webkit-date-and-time-value]:opacity-100'
+                                        }
+                                        value={draft[field].time}
+                                        onChange={(event) =>
+                                          updateDraft({
+                                            ...draft,
+                                            [field]: {
+                                              ...draft[field],
+                                              time: event.target.value,
+                                              changed: true,
+                                            },
+                                          })
+                                        }
+                                      />
+                                      {!draft[field].time && (
+                                        <span
+                                          aria-hidden="true"
+                                          className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-sm text-muted-foreground group-focus-within:hidden"
+                                        >
+                                          {label('chooseTime')}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
                                 </div>
-                              ) : (
-                                <p>{label(field === 'start' ? 'immediate' : 'noExpiry')}</p>
                               )}
                             </fieldset>
                           )

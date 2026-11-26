@@ -9,6 +9,7 @@ import {
 } from '@barghsa/shared/promotions';
 import { normalizeProfileDigits } from './profile-digits.js';
 export type GiftDateField = {
+  enabled: boolean;
   date: Date | undefined;
   time: string;
   original: string | null;
@@ -33,6 +34,7 @@ export type GiftDraft = {
 export function giftDateField(value: string | null, zone: string): GiftDateField {
   const date = value ? new Date(value) : undefined;
   return {
+    enabled: Boolean(date),
     date,
     time: date
       ? new Intl.DateTimeFormat('en-GB', {
@@ -41,7 +43,7 @@ export function giftDateField(value: string | null, zone: string): GiftDateField
           hour: '2-digit',
           minute: '2-digit',
         }).format(date)
-      : '00:00',
+      : '',
     original: value,
     changed: false,
   };
@@ -99,7 +101,8 @@ function limit(value: string): number | null | undefined {
     : undefined;
 }
 function instant(field: GiftDateField, zone: string): string | null {
-  if (!field.date) return null;
+  if (!field.enabled) return null;
+  if (!field.date) throw new Error('Missing date');
   if (!field.changed && field.original) return field.original;
   const match = /^(\d{2}):(\d{2})$/.exec(field.time);
   if (!match) throw new Error('Invalid time');

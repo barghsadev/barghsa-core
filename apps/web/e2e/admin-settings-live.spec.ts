@@ -2142,6 +2142,10 @@ for (const locale of ['en', 'fa'])
     };
     const code = `LOCAL-${locale.toUpperCase()}`,
       form = page.getByRole('form', { name: fa ? 'تنظیمات کد تخفیف' : 'Gift-code settings' });
+    const recipient = form.getByRole('checkbox', {
+      name: fa ? 'Gift recipient حقیقی' : 'Gift recipient Individual',
+      exact: true,
+    });
     const save = async () => {
       await form.getByRole('button', { name: fa ? 'ذخیره کد' : 'Save code', exact: true }).click();
       await confirm();
@@ -2181,14 +2185,13 @@ for (const locale of ['en', 'fa'])
     await form
       .getByLabel(fa ? 'افراد مجاز' : 'Eligibility', { exact: true })
       .selectOption('profile');
-    await form
-      .getByLabel(fa ? 'Gift recipient · حقیقی' : 'Gift recipient · Individual', { exact: true })
-      .check();
+    await recipient.check();
     await form.getByLabel(fa ? 'تعیین تاریخ پایان' : 'Set an expiry date', { exact: true }).check();
     await form
       .getByRole('combobox', { name: fa ? 'تاریخ پایان' : 'Expiry date', exact: true })
       .click();
     await page.getByRole('grid').getByRole('button').last().click();
+    await form.getByLabel(fa ? 'ساعت پایان' : 'Expiry time', { exact: true }).fill('23:59');
     await save();
     const updated = await detail();
     await expect(page.locator('main')).toContainText(fa ? '25%' : '۲۵٪');
@@ -2209,11 +2212,7 @@ for (const locale of ['en', 'fa'])
     await settleLiveRequests();
     await page.reload();
     await page.getByRole('link', { name: fa ? 'ویرایش' : 'Edit', exact: true }).click();
-    await expect(
-      form.getByLabel(fa ? 'Gift recipient · حقیقی' : 'Gift recipient · Individual', {
-        exact: true,
-      })
-    ).toBeChecked();
+    await expect(recipient).toBeChecked();
     await form
       .getByLabel(fa ? 'افراد مجاز' : 'Eligibility', { exact: true })
       .selectOption('public');
