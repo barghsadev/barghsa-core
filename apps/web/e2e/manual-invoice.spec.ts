@@ -228,6 +228,8 @@ for (const locale of ['fa', 'en'] as const)
       await vat.fill('100.01');
       await issue.click();
       await expect(vat).toHaveAttribute('aria-invalid', 'true');
+      const breakdown = panel.getByTestId('invoice-draft-breakdown');
+      await expect(breakdown).toHaveCount(0);
       expect(previews).toHaveLength(0);
       await vat.fill(fa ? '۱۰' : '10');
       await panel
@@ -238,6 +240,10 @@ for (const locale of ['fa', 'en'] as const)
       await description.nth(1).fill(fa ? 'خدمات بدون مالیات' : 'Untaxed service');
       await quantity.nth(1).fill(fa ? '۲' : '2');
       await price.nth(1).fill(fa ? '۱۰۰' : '100');
+      await expect(breakdown.getByRole('definition')).toHaveText([
+        formatCurrencyIrr('55255', locale),
+        formatCurrencyIrr('5506', locale),
+      ]);
       const firstDescription = fa ? 'برق مصرفی' : 'Electricity';
       const secondDescription = fa ? 'خدمات بدون مالیات' : 'Untaxed service';
       await panel.locator('[data-array-action=up]').nth(1).click();

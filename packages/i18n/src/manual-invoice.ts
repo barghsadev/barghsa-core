@@ -33,7 +33,8 @@ const fa: Record<string, string> = {
   'admin.manualInvoice.line': 'ردیف',
   'admin.manualInvoice.lineDescription': 'شرح ردیف',
   'admin.manualInvoice.lines': 'ردیف‌های فاکتور',
-  'admin.manualInvoice.linesHelp': 'برای هر خدمت یا کالا یک ردیف وارد کنید.',
+  'admin.manualInvoice.linesHelp':
+    'برای هر خدمت یا کالا یک ردیف وارد کنید. برای ردیف بدون مالیات، نرخ را صفر بگذارید.',
   'admin.manualInvoice.lineExample': 'مثلاً تأمین برق کارگاه',
   'admin.manualInvoice.quantity': 'تعداد',
   'admin.manualInvoice.unitPrice': 'قیمت واحد (ریال)',
@@ -44,6 +45,7 @@ const fa: Record<string, string> = {
   'admin.manualInvoice.addLine': 'افزودن ردیف',
   'admin.manualInvoice.total': 'مبلغ نهایی با مالیات',
   'admin.manualInvoice.draftTotal': 'جمع پیش‌نویس با مالیات',
+  'admin.manualInvoice.draftBreakdown': 'جزئیات مبلغ پیش‌نویس',
   'admin.manualInvoice.manualReviewTitle': 'بررسی مالی پیش از صدور فاکتور',
   'admin.manualInvoice.manualReviewDescription':
     'مشتری، ردیف‌ها، مالیات و مهلت پرداخت را پیش از صدور تأیید کنید.',
@@ -114,7 +116,7 @@ const en: Record<string, string> = {
   'admin.manualInvoice.line': 'Line',
   'admin.manualInvoice.lineDescription': 'Description',
   'admin.manualInvoice.lines': 'Invoice lines',
-  'admin.manualInvoice.linesHelp': 'Add one line for each service or item.',
+  'admin.manualInvoice.linesHelp': 'Add one line per service or item. Use 0% for untaxed lines.',
   'admin.manualInvoice.lineExample': 'For example, workshop electricity supply',
   'admin.manualInvoice.quantity': 'Quantity',
   'admin.manualInvoice.unitPrice': 'Unit price (IRR)',
@@ -125,6 +127,7 @@ const en: Record<string, string> = {
   'admin.manualInvoice.addLine': 'Add line',
   'admin.manualInvoice.total': 'Total including VAT',
   'admin.manualInvoice.draftTotal': 'Draft total including VAT',
+  'admin.manualInvoice.draftBreakdown': 'Draft amount breakdown',
   'admin.manualInvoice.manualReviewTitle': 'Financial review before issuing',
   'admin.manualInvoice.manualReviewDescription':
     'Confirm the customer, lines, tax, and payment deadline before issuing.',

@@ -1086,7 +1086,7 @@ function OwnedManualInvoiceForm({
               renderItem={(line, index, actions) => (
                 <FieldSet
                   disabled={locked || unavailable}
-                  className="min-w-0 rounded-lg border px-3 pb-3"
+                  className="@container min-w-0 rounded-lg border px-3 pb-3"
                 >
                   <FieldLegend variant="label" className="px-1">
                     {text('line')} {numbers.number(index + 1)}
@@ -1113,7 +1113,29 @@ function OwnedManualInvoiceForm({
                         message={text('descriptionInvalid')}
                       />
                     </Field>
-                    <div className="grid min-w-0 grid-cols-2 gap-2 min-[375px]:grid-cols-[minmax(0,.8fr)_minmax(0,1.3fr)_minmax(0,1fr)] sm:gap-3">
+                    <div className="grid min-w-0 grid-cols-2 gap-2 @min-[27rem]:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)] sm:gap-3">
+                      <Field className="col-span-2 min-w-0 gap-1 @min-[27rem]:col-span-1">
+                        <FieldLabel htmlFor={`manual-price-${line.id}`}>
+                          {text('unitPrice')}
+                        </FieldLabel>
+                        <Input
+                          id={`manual-price-${line.id}`}
+                          {...draft.bind(`lines.${line.id}.unitPrice`)}
+                          required
+                          aria-required="true"
+                          inputMode="numeric"
+                          dir="ltr"
+                          maxLength={19}
+                          value={line.unitPrice}
+                          onChange={(event) => updateLine(line.id, 'unitPrice', event.target.value)}
+                        />
+                        <InvoiceFieldFeedback
+                          reserveSpace={false}
+                          id={draft.errorId(`lines.${line.id}.unitPrice`)}
+                          error={draft.errors.lines?.[line.id]?.unitPrice}
+                          message={text('priceInvalid')}
+                        />
+                      </Field>
                       <Field className="min-w-0 gap-1">
                         <FieldLabel htmlFor={`manual-quantity-${line.id}`}>
                           {text('quantity')}
@@ -1134,28 +1156,6 @@ function OwnedManualInvoiceForm({
                           id={draft.errorId(`lines.${line.id}.quantity`)}
                           error={draft.errors.lines?.[line.id]?.quantity}
                           message={text('quantityInvalid')}
-                        />
-                      </Field>
-                      <Field className="min-w-0 gap-1">
-                        <FieldLabel htmlFor={`manual-price-${line.id}`}>
-                          {text('unitPrice')}
-                        </FieldLabel>
-                        <Input
-                          id={`manual-price-${line.id}`}
-                          {...draft.bind(`lines.${line.id}.unitPrice`)}
-                          required
-                          aria-required="true"
-                          inputMode="numeric"
-                          dir="ltr"
-                          maxLength={19}
-                          value={line.unitPrice}
-                          onChange={(event) => updateLine(line.id, 'unitPrice', event.target.value)}
-                        />
-                        <InvoiceFieldFeedback
-                          reserveSpace={false}
-                          id={draft.errorId(`lines.${line.id}.unitPrice`)}
-                          error={draft.errors.lines?.[line.id]?.unitPrice}
-                          message={text('priceInvalid')}
                         />
                       </Field>
                       <Field className="min-w-0 gap-1">
@@ -1184,6 +1184,30 @@ function OwnedManualInvoiceForm({
                 </FieldSet>
               )}
             />
+            {calculation && 'subtotal' in calculation && (
+              <dl
+                data-testid="invoice-draft-breakdown"
+                aria-label={text('draftBreakdown')}
+                className="grid min-w-0 gap-2 rounded-lg bg-muted/45 p-3 text-sm sm:grid-cols-2"
+              >
+                {(
+                  [
+                    [text('manualReviewSubtotal'), calculation.subtotal],
+                    [text('manualReviewVat'), calculation.vat],
+                  ] as const
+                ).map(([label, value]) => (
+                  <div
+                    key={label}
+                    className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-3 sm:block"
+                  >
+                    <dt className="text-muted-foreground">{label}</dt>
+                    <dd className="font-medium tabular-nums [overflow-wrap:anywhere]">
+                      <bdi>{numbers.money(value)}</bdi>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
           </RecordEditorSection>
         )}
         {(draft.errors.root?.validation?.message || lineError || error) && (

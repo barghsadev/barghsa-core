@@ -267,6 +267,12 @@ for (const locale of ['fa', 'en'] as const)
         price = panel.getByLabel(m('unitPrice'), { exact: true });
       await description.fill('  Retained line  ');
       await price.fill('۵۰');
+      await panel.getByLabel(m('vat'), { exact: true }).fill('۹٫۲۵');
+      const breakdown = panel.getByTestId('invoice-draft-breakdown');
+      await expect(breakdown.getByRole('definition')).toHaveText([
+        new RegExp((50).toLocaleString(locale)),
+        new RegExp((5).toLocaleString(locale)),
+      ]);
       readStatus = 503;
       await load.click();
       await expect(panel.getByRole('alert')).toContainText(c('loadError'));
@@ -285,6 +291,7 @@ for (const locale of ['fa', 'en'] as const)
       await page.goto(`/admin/invoices/${nextId}/correction`);
       await expect(reason).toHaveValue('');
       await expect(description).toHaveCount(0);
+      await expect(breakdown).toHaveCount(0);
       const amount = panel.getByLabel(c('amount'), { exact: true }),
         adjust = panel.getByRole('button', { name: c('adjustmentIssue'), exact: true });
       await reason.fill('  Credit explanation  ');

@@ -41,6 +41,7 @@ export function invoiceLineValues(line: InvoiceDraftLine) {
   const total = subtotal + (subtotal * BigInt(basisPoints) + 5000n) / 10000n;
   if (total > maxInvoiceIrr) return null;
   return {
+    subtotal,
     total,
     line: {
       description: line.description.trim(),
@@ -53,13 +54,17 @@ export function invoiceLineValues(line: InvoiceDraftLine) {
 }
 export function calculateInvoiceDraft(lines: InvoiceDraftLine[]) {
   if (!lines.length || lines.length > 100) return null;
-  let total = 0n;
+  let subtotal = 0n,
+    total = 0n;
   const parsed = [];
   for (const line of lines) {
     const value = invoiceLineValues(line);
     if (!value) return null;
+    subtotal += value.subtotal;
     total += value.total;
     parsed.push(value.line);
   }
-  return total > 0n && total <= maxInvoiceIrr ? { lines: parsed, total } : null;
+  return total > 0n && total <= maxInvoiceIrr
+    ? { lines: parsed, subtotal, vat: total - subtotal, total }
+    : null;
 }
