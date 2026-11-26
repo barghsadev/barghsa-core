@@ -1,6 +1,8 @@
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { Skeleton } from '@barghsa/ui';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { useRef } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import {
@@ -26,6 +28,7 @@ import {
   AlertDescription,
   EmptyState,
   Input,
+  StatusBadge,
 } from '@barghsa/ui';
 
 import {
@@ -227,7 +230,7 @@ export function AddressWorkspace({
         <h1
           ref={headingRef}
           tabIndex={-1}
-          className="min-w-0 text-2xl font-bold outline-none [overflow-wrap:anywhere]"
+          className={`min-w-0 wrap-anywhere font-semibold outline-none ${formMode ? 'text-2xl' : 'text-3xl leading-snug'}`}
         >
           {view.kind === 'edit'
             ? t('settings.addresses.form.editTitle', locale)
@@ -248,11 +251,6 @@ export function AddressWorkspace({
           </Link>
         )}
       </div>
-      {view.kind === 'list' && (
-        <p className="text-sm text-muted-foreground">
-          {t('settings.addresses.description', locale)}
-        </p>
-      )}
       {returnTo && !formMode && (
         <Link
           to={returnTo}
@@ -267,13 +265,21 @@ export function AddressWorkspace({
         </Link>
       )}
 
-      {/* Loading */}
-      {loading && (
-        <div className="text-center py-8 text-muted-foreground" role="status">
-          <Skeleton className="h-6 w-20 shrink-0" />
-          <p className="text-sm">{t('settings.addresses.loading', locale)}</p>
-        </div>
-      )}
+      {loading &&
+        (formMode ? (
+          <div className="py-8 text-muted-foreground" role="status">
+            <Skeleton className="h-6 w-20" />
+            <p className="text-sm">{t('settings.addresses.loading', locale)}</p>
+          </div>
+        ) : view.kind === 'list' ? (
+          <RecordListSkeleton
+            label={t('settings.addresses.loading', locale)}
+            view="card"
+            headings={[]}
+          />
+        ) : (
+          <RecordDetailSkeleton label={t('settings.addresses.loading', locale)} />
+        ))}
 
       {denied && <p role="alert">{copy('forbidden')}</p>}
       {command.locked === 'main' && recovery()}
@@ -314,52 +320,76 @@ export function AddressWorkspace({
             </Card>
           )}
 
-          {addresses.map((address) => (
-            <Card key={address.id} className={address.mainAddress ? 'border-primary/50' : ''}>
-              <CardContent className="pt-4">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="space-y-1 flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      {address.mainAddress && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary text-xs font-medium px-2 py-0.5">
-                          <StarIcon className="h-3 w-3" />
-                          {t('settings.addresses.main', locale)}
-                        </span>
-                      )}
-                      <span className="text-sm font-medium">
-                        {getProvinceName(address)}
-                        {locale === 'fa' ? '، ' : ', '}
-                        {getCityName(address)}
-                      </span>
-                    </div>
+          {addresses.map((address) => {
+            const province = getProvinceName(address);
+            const city = getCityName(address);
+            return (
+              <Card key={address.id} className="py-0">
+                <CardContent className="space-y-3 p-4 sm:p-5">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
                     {view.kind === 'list' && !locked ? (
                       <Link
                         to="/settings/addresses/$addressId"
                         params={{ addressId: address.id }}
                         search={{ returnTo }}
-                        className="touch-action font-medium text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
+                        className="touch-action min-w-0 wrap-anywhere font-semibold text-primary underline-offset-4 hover:underline"
                       >
-                        {address.fullAddress}
+                        <bdi>{address.fullAddress}</bdi>
                       </Link>
                     ) : (
-                      <p className="font-medium [overflow-wrap:anywhere]">{address.fullAddress}</p>
+                      <p className="min-w-0 wrap-anywhere text-lg font-semibold">
+                        <bdi>{address.fullAddress}</bdi>
+                      </p>
                     )}
-                    <p className="text-xs text-muted-foreground">
-                      {t('settings.addresses.form.postalCode', locale)}: {address.postalCode}
-                    </p>
+                    {address.mainAddress && (
+                      <StatusBadge label={t('settings.addresses.main', locale)} tone="info" />
+                    )}
                   </div>
-
-                  <div className="flex shrink-0 flex-wrap items-center gap-2">
+                  {view.kind === 'list' ? (
+                    <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm text-muted-foreground">
+                      <span>
+                        {province === city
+                          ? city
+                          : [province, city].join(locale === 'fa' ? '، ' : ', ')}
+                      </span>
+                      <bdi>{address.postalCode}</bdi>
+                    </p>
+                  ) : (
+                    <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
+                      <div>
+                        <dt className="text-xs text-muted-foreground">
+                          {t('settings.addresses.form.province', locale)}
+                        </dt>
+                        <dd className="mt-1 font-medium">{province}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs text-muted-foreground">
+                          {t('settings.addresses.form.city', locale)}
+                        </dt>
+                        <dd className="mt-1 font-medium">{city}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs text-muted-foreground">
+                          {t('settings.addresses.form.postalCode', locale)}
+                        </dt>
+                        <dd className="mt-1 font-medium">
+                          <bdi>{address.postalCode}</bdi>
+                        </dd>
+                      </div>
+                    </dl>
+                  )}
+                  <div className="flex flex-wrap items-center gap-2 border-t pt-3">
                     {!address.mainAddress && (
                       <button
                         type="button"
                         disabled={locked}
                         onClick={() => void handleSetMain(address.id)}
-                        className="touch-action rounded p-2 text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
+                        className="touch-action inline-flex min-h-11 items-center gap-2 rounded-md px-2 text-sm text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
                         title={t('settings.addresses.setMain', locale)}
                         aria-label={t('settings.addresses.setMain', locale)}
                       >
-                        <StarIcon className="h-4 w-4" />
+                        <StarIcon className="size-4" aria-hidden="true" />
+                        {t('settings.addresses.setMain', locale)}
                       </button>
                     )}
                     {!locked && (
@@ -367,7 +397,7 @@ export function AddressWorkspace({
                         to="/settings/addresses/$addressId/edit"
                         params={{ addressId: address.id }}
                         search={{ returnTo }}
-                        className="touch-action rounded text-sm text-primary underline underline-offset-4"
+                        className="touch-action inline-flex min-h-11 items-center gap-2 rounded-md px-2 text-sm text-primary underline-offset-4 hover:underline"
                         aria-label={t('settings.addresses.edit', locale)}
                       >
                         <PencilIcon className="size-4" aria-hidden="true" />
@@ -382,17 +412,18 @@ export function AddressWorkspace({
                         deleteTriggerRef.current = event.currentTarget;
                         confirmDelete(address.id);
                       }}
-                      className="touch-action rounded p-2 text-muted-foreground hover:text-destructive hover:bg-muted transition-colors"
+                      className="touch-action inline-flex min-h-11 items-center gap-2 rounded-md px-2 text-sm text-muted-foreground hover:text-destructive hover:bg-muted transition-colors"
                       title={t('settings.addresses.delete', locale)}
                       aria-label={t('settings.addresses.delete', locale)}
                     >
-                      <Trash2Icon className="h-4 w-4" />
+                      <Trash2Icon className="size-4" aria-hidden="true" />
+                      {t('settings.addresses.delete', locale)}
                     </button>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
 

@@ -18,6 +18,7 @@ export function NotificationRow({
   locale,
   unread,
   muted = false,
+  inbox = false,
   operatingContext = 'customer',
 }: {
   item: NotificationItem;
@@ -26,6 +27,7 @@ export function NotificationRow({
   unread: boolean;
   /** Reduce visual weight for already-read or compact surfaces. */
   muted?: boolean;
+  inbox?: boolean;
   operatingContext?: 'staff' | 'customer';
 }) {
   const { title, body } = notificationContent(item, locale);
@@ -38,26 +40,31 @@ export function NotificationRow({
 
   return (
     <div className="flex w-full items-start gap-3" dir={isRtl ? 'rtl' : 'ltr'}>
-      <NotificationStatusBadge type={item.type} locale={locale} />
+      {!inbox && <NotificationStatusBadge type={item.type} locale={locale} />}
       <span className="min-w-0 flex-1">
         <span className="flex items-baseline justify-between gap-2">
           <span
-            className={`truncate text-sm font-medium ${muted ? 'text-muted-foreground' : 'text-foreground'}`}
+            className={`${inbox ? 'wrap-anywhere font-semibold' : 'truncate text-sm font-medium'} ${muted ? 'text-muted-foreground' : 'text-foreground'}`}
           >
             {title}
           </span>
           {unread && (
             <span
-              className="h-2 w-2 shrink-0 rounded-full bg-primary"
+              className="size-2 shrink-0 rounded-full bg-primary"
               aria-label={t('notifications.unread', locale)}
               title={t('notifications.unread', locale)}
             />
           )}
         </span>
-        <span className="mt-0.5 block [overflow-wrap:anywhere] text-xs leading-snug text-muted-foreground">
+        <span
+          className={`block wrap-anywhere text-muted-foreground ${inbox ? 'mt-1 line-clamp-2 text-sm' : 'mt-0.5 text-xs leading-snug'}`}
+        >
           {body}
         </span>
-        <span className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
+        <span
+          className={`flex flex-wrap items-center gap-2 text-xs text-muted-foreground ${inbox ? 'mt-2' : 'mt-0.5'}`}
+        >
+          {inbox && <NotificationStatusBadge type={item.type} locale={locale} />}
           <span>{timeLabel}</span>
         </span>
         {customerLinkInStaffMode && (

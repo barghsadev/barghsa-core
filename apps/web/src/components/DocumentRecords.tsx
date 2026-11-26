@@ -86,6 +86,12 @@ const identity = (item: BusinessDocument) =>
   ]);
 
 /** File access is lazy and stays bound to the accepted document revision in either layout. */
+const documentTableColumns = ['file', 'state', 'created', 'fileActions'] as const;
+
+export function documentTableHeadings(locale: Locale) {
+  return documentTableColumns.map((column) => documentText(column, locale));
+}
+
 export function DocumentList(props: Parameters<typeof OwnedDocumentList>[0]) {
   const actor = useAccountUser();
   const revision = useProfileContextRevision();
@@ -323,40 +329,45 @@ function OwnedDocumentList({
       item.category === 'image' ? FileImage : item.category === 'video' ? FileVideo : FileText;
     return (
       <div className="flex min-w-0 items-start gap-2">
-        <Icon aria-hidden="true" className="mt-3 size-4 shrink-0 text-muted-foreground" />
-        {relatedLinks || recordSearch ? (
-          staffOrderId(item.id) ? (
-            <Link
-              {...(relatedLinks
-                ? relatedDocumentLocation(relatedLinks.context, item.id)
-                : {
-                    to: staff
-                      ? '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
-                      : '/documents/$documentId/{-$operation}',
-                    params: { documentId: item.id, operation: undefined },
-                    search: recordSearch,
-                  })}
-              disabled={relatedLinks?.disabled}
-              onClick={(event) => {
-                if (relatedLinks?.blocked?.()) event.preventDefault();
-              }}
-              className="touch-action inline-flex min-w-0 items-center font-medium text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
+        <Icon aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+        <div className="min-w-0 space-y-1">
+          {relatedLinks || recordSearch ? (
+            staffOrderId(item.id) ? (
+              <Link
+                {...(relatedLinks
+                  ? relatedDocumentLocation(relatedLinks.context, item.id)
+                  : {
+                      to: staff
+                        ? '/admin/documents/$documentId/{-$section}/{-$action}/{-$holdId}'
+                        : '/documents/$documentId/{-$operation}',
+                      params: { documentId: item.id, operation: undefined },
+                      search: recordSearch,
+                    })}
+                disabled={relatedLinks?.disabled}
+                onClick={(event) => {
+                  if (relatedLinks?.blocked?.()) event.preventDefault();
+                }}
+                className="touch-action inline-flex min-w-0 items-center font-medium text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
+              >
+                <bdi>{item.originalName}</bdi>
+              </Link>
+            ) : (
+              <bdi>{item.originalName}</bdi>
+            )
+          ) : (
+            <Button
+              variant="link"
+              className="min-w-0 justify-start whitespace-normal break-all text-start"
+              aria-pressed={selectedId === item.id}
+              onClick={() => onSelect(item.id)}
             >
               <bdi>{item.originalName}</bdi>
-            </Link>
-          ) : (
-            <bdi>{item.originalName}</bdi>
-          )
-        ) : (
-          <Button
-            variant="link"
-            className="min-w-0 justify-start whitespace-normal break-all text-start"
-            aria-pressed={selectedId === item.id}
-            onClick={() => onSelect(item.id)}
-          >
-            <bdi>{item.originalName}</bdi>
-          </Button>
-        )}
+            </Button>
+          )}
+          <p className="text-xs font-normal text-muted-foreground">
+            {word(item.category)} · <bdi>{size(item)}</bdi>
+          </p>
+        </div>
       </div>
     );
   }
@@ -586,34 +597,22 @@ function OwnedDocumentList({
       </div>
     );
   }
+  const source = (item: BusinessDocument) => (
+    <div className="space-y-1">
+      <time dateTime={Number.isFinite(Date.parse(item.createdAt)) ? item.createdAt : undefined}>
+        {formatDate(item.createdAt)}
+      </time>
+      <p className="text-xs text-muted-foreground">
+        {word(item.uploadedByType)} · {word(item.businessRecordType)}
+      </p>
+    </div>
+  );
+  const [file, state, created, actions] = documentTableHeadings(locale);
   const columns: HistoryColumn<BusinessDocument>[] = [
-    { id: 'file', label: word('file'), render: name },
-    { id: 'status', label: word('state'), render: status },
-    {
-      id: 'size',
-      label: word('size'),
-      render: (item) => <span className="whitespace-nowrap">{size(item)}</span>,
-    },
-    {
-      id: 'uploaded',
-      label: word('created'),
-      render: (item) => (
-        <time dateTime={Number.isFinite(Date.parse(item.createdAt)) ? item.createdAt : undefined}>
-          {formatDate(item.createdAt)}
-        </time>
-      ),
-    },
-    {
-      id: 'source',
-      label: word('uploadedBy'),
-      render: (item) => (
-        <>
-          {word(item.uploadedByType)} · {word(item.category)}
-          <span className="block text-muted-foreground">{word(item.businessRecordType)}</span>
-        </>
-      ),
-    },
-    { id: 'actions', label: word('fileActions'), render: files, actions: true },
+    { id: 'file', label: file, render: name },
+    { id: 'status', label: state, render: status },
+    { id: 'uploaded', label: created, render: source },
+    { id: 'actions', label: actions, render: files, actions: true },
   ];
   return (
     <div data-slot="document-records" data-view={view} className="min-w-0">
@@ -633,46 +632,14 @@ function OwnedDocumentList({
               <ul className="flex flex-col gap-3">
                 {rows.map((item) => (
                   <li key={item.id}>
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>{name(item)}</CardTitle>
+                    <Card className="gap-3">
+                      <CardHeader className="flex flex-wrap items-start justify-between gap-2">
+                        <CardTitle className="min-w-0">{name(item)}</CardTitle>
                         {status(item)}
                       </CardHeader>
-                      <CardContent className="flex flex-col gap-3">
-                        {recordSearch && files(item)}
-                        <dl
-                          className={`grid gap-3 text-sm ${recordSearch ? 'grid-cols-2' : 'sm:grid-cols-2'}`}
-                        >
-                          <div>
-                            <dt className="text-muted-foreground">{word('size')}</dt>
-                            <dd>{size(item)}</dd>
-                          </div>
-                          <div>
-                            <dt className="text-muted-foreground">{word('created')}</dt>
-                            <dd>
-                              <time
-                                dateTime={
-                                  Number.isFinite(Date.parse(item.createdAt))
-                                    ? item.createdAt
-                                    : undefined
-                                }
-                              >
-                                {formatDate(item.createdAt)}
-                              </time>
-                            </dd>
-                          </div>
-                          <div>
-                            <dt className="text-muted-foreground">{word('uploadedBy')}</dt>
-                            <dd>{word(item.uploadedByType)}</dd>
-                          </div>
-                          <div>
-                            <dt className="text-muted-foreground">{word('kind')}</dt>
-                            <dd>
-                              {word(item.businessRecordType)} · {word(item.category)}
-                            </dd>
-                          </div>
-                        </dl>
-                        {!recordSearch && files(item)}
+                      <CardContent className="space-y-3">
+                        <div className="border-t pt-3 text-sm">{source(item)}</div>
+                        {files(item)}
                       </CardContent>
                     </Card>
                   </li>

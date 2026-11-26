@@ -1,6 +1,6 @@
 import { HistoryStatusEmpty } from '../components/QueueEmptyState.js';
 import { ListPage, cn } from '@barghsa/ui';
-import { RecordListSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,

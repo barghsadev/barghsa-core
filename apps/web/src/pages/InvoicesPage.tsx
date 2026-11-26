@@ -1,5 +1,6 @@
 import { HistoryStatusEmpty } from '../components/QueueEmptyState.js';
-import { LoadingStatus, ListPage, ListToolbar } from '@barghsa/ui';
+import { ListPage, ListToolbar, PageHeader, StatusBadge, buttonVariants } from '@barghsa/ui';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -12,7 +13,6 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
-import { Loader2Icon, ReceiptIcon } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
 import {
   Button,
@@ -132,43 +132,36 @@ export function InvoicesPage({
     amountRange.max
   );
 
-  const columns: HistoryColumn<CustomerInvoiceListItem>[] = [
-    {
-      id: 'reference',
-      label: t('invoices.list.reference', locale),
-      render: (item) => (
-        <div className="min-w-44 space-y-2">
-          <Link
-            to="/invoices/$invoiceId"
-            params={{ invoiceId: item.invoiceId }}
-            className="touch-action text-primary underline underline-offset-4"
-          >
-            <bdi dir="ltr" className="break-all font-mono">
-              {item.invoiceId}
-            </bdi>
-          </Link>
-          {item.explanation && <p className="break-words">{item.explanation}</p>}
-        </div>
-      ),
-    },
-    {
-      id: 'type',
-      label: t('historyView.type', locale),
-      render: (item) => t(roleI18nKey(item.role), locale),
-    },
-    {
-      id: 'state',
-      label: t('historyView.status', locale),
-      render: (item) => t(stateI18nKey(item.state), locale),
-    },
-    {
-      id: 'period',
-      label: t('invoices.list.period', locale),
-      render: (item) =>
-        item.periodStart && item.periodEnd
-          ? formatInvoiceServicePeriod(item.periodStart, item.periodEnd, time.format)
-          : '—',
-    },
+  const invoiceType = (item: CustomerInvoiceListItem) => t(roleI18nKey(item.role), locale);
+  const identity = (item: CustomerInvoiceListItem) => (
+    <div className="min-w-0 space-y-1">
+      <Link
+        to="/invoices/$invoiceId"
+        params={{ invoiceId: item.invoiceId }}
+        className="touch-action font-semibold text-primary hover:underline underline-offset-4"
+      >
+        <bdi>{item.explanation || invoiceType(item)}</bdi>
+      </Link>
+      {item.explanation && (
+        <p className="text-xs font-normal text-muted-foreground">{invoiceType(item)}</p>
+      )}
+      <p className="text-xs font-normal text-muted-foreground">
+        <bdi className="wrap-anywhere">{item.invoiceId}</bdi>
+      </p>
+      {item.periodStart && item.periodEnd && (
+        <p className="text-xs font-normal text-muted-foreground">
+          {t('invoices.list.period', locale)}{' '}
+          {formatInvoiceServicePeriod(item.periodStart, item.periodEnd, time.format)}
+        </p>
+      )}
+    </div>
+  );
+  const state = (item: CustomerInvoiceListItem) => (
+    <StatusBadge state={item.state} label={t(stateI18nKey(item.state), locale)} />
+  );
+  const columns: (HistoryColumn<CustomerInvoiceListItem> & { label: string })[] = [
+    { id: 'reference', label: t('invoices.list.reference', locale), render: identity },
+    { id: 'state', label: t('historyView.status', locale), render: state },
     {
       id: 'amount',
       label: t('historyView.amount', locale),
@@ -215,20 +208,28 @@ export function InvoicesPage({
       ),
     },
   ];
+  const resetFilters = filtered && onClearFilters && (
+    <Button
+      variant="outline"
+      onClick={(event) => {
+        event.currentTarget.closest('main')?.focus();
+        onClearFilters();
+      }}
+    >
+      {t('historyFilters.clearAll', locale)}
+    </Button>
+  );
   return (
-    <div className="mx-auto max-w-4xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
+    <div className="mx-auto w-full max-w-5xl min-w-0 space-y-4" dir={isRtl ? 'rtl' : 'ltr'}>
       {time.notice}
-      <header className="flex items-start gap-3">
-        <div className="grid size-11 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
-          <ReceiptIcon className="size-5" aria-hidden="true" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">{t('invoices.title', locale)}</h1>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            {t('invoices.description', locale)}
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        title={t('invoices.title', locale)}
+        actions={
+          <Link to="/invoices/receipts" className={buttonVariants({ variant: 'outline' })}>
+            {t('invoices.receipts.title', locale)}
+          </Link>
+        }
+      />
       <nav
         className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b pb-2 text-sm"
         aria-label={t('invoices.title', locale)}
@@ -251,16 +252,11 @@ export function InvoicesPage({
         >
           {t('invoices.filter.unpaid', locale)}
         </Link>
-        <Link
-          to="/invoices/receipts"
-          className="touch-action rounded-md px-3 py-2 font-medium text-primary underline underline-offset-4 sm:ms-auto"
-        >
-          {t('invoices.receipts.title', locale)}
-        </Link>
       </nav>
 
       <ListPage>
         <ListPage.Toolbar
+          className="rounded-xl border bg-card p-3"
           filters={
             <HistoryFilterPanel
               query={query}
@@ -365,10 +361,17 @@ export function InvoicesPage({
           empty={items.length === 0}
           retainContent={items.length > 0}
           loadingView={
-            <LoadingStatus className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
-              {t('invoices.loading', locale)}
-            </LoadingStatus>
+            items.length ? (
+              <p role="status" className="sr-only">
+                {t('invoices.loading', locale)}
+              </p>
+            ) : (
+              <RecordListSkeleton
+                label={t('invoices.loading', locale)}
+                view={view}
+                headings={columns.map((column) => column.label)}
+              />
+            )
           }
           errorView={
             <div className="space-y-2" role="alert">
@@ -382,12 +385,18 @@ export function InvoicesPage({
           }
           emptyView={
             history.statusProbe && onShowAllStatuses ? (
-              <HistoryStatusEmpty
-                locale={locale}
-                probe={history.statusProbe}
-                showAll={onShowAllStatuses}
-                message={t(filtered ? 'historyDates.empty' : 'invoices.filter.unpaidEmpty', locale)}
-              />
+              <div className="space-y-3">
+                <HistoryStatusEmpty
+                  locale={locale}
+                  probe={history.statusProbe}
+                  showAll={onShowAllStatuses}
+                  message={t(
+                    filtered ? 'historyDates.empty' : 'invoices.filter.unpaidEmpty',
+                    locale
+                  )}
+                />
+                {resetFilters}
+              </div>
             ) : (
               <div className="space-y-3 rounded-lg border border-dashed border-input bg-card p-8 text-center">
                 <p className="text-sm text-muted-foreground">
@@ -400,17 +409,7 @@ export function InvoicesPage({
                     locale
                   )}
                 </p>
-                {filtered && onClearFilters ? (
-                  <Button
-                    variant="outline"
-                    onClick={(event) => {
-                      event.currentTarget.closest('main')?.focus();
-                      onClearFilters();
-                    }}
-                  >
-                    {t('historyFilters.clearAll', locale)}
-                  </Button>
-                ) : null}
+                {resetFilters}
               </div>
             )
           }
@@ -423,54 +422,46 @@ export function InvoicesPage({
               rowKey={(item) => item.invoiceId}
             />
           ) : (
-            <ul className="space-y-3">
+            <ul className="grid gap-3">
               {items.map((item) => (
-                <li key={item.invoiceId}>
-                  <Link
-                    to="/invoices/$invoiceId"
-                    params={{ invoiceId: item.invoiceId }}
-                    className="block rounded-lg border border-border bg-card text-card-foreground p-4 shadow-sm hover:border-primary/40 hover:shadow-md"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <p className="font-medium text-foreground">
-                        {t(roleI18nKey(item.role), locale)}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {t(stateI18nKey(item.state), locale)}
-                      </p>
+                <li
+                  key={item.invoiceId}
+                  className="min-w-0 space-y-3 rounded-xl border bg-card p-4"
+                >
+                  {identity(item)}
+                  {state(item)}
+                  <dl className="grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <dt className="text-xs text-muted-foreground">
+                        {t('historyView.amount', locale)}
+                      </dt>
+                      <dd className="font-semibold">
+                        <bdi>{numbers.money(item.totalAmount)}</bdi>
+                      </dd>
                     </div>
-                    <p className="mt-2 text-lg font-semibold text-foreground">
-                      {numbers.money(item.totalAmount)}
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {t('invoices.list.reference', locale)}:{' '}
-                      <bdi dir="ltr" className="break-all font-mono">
-                        {item.invoiceId}
-                      </bdi>
-                    </p>
-                    {item.paidAmount !== undefined ? (
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {t('invoices.list.paid', locale)}: {numbers.money(item.paidAmount)}
-                      </p>
-                    ) : null}
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {t('invoices.list.issued', locale)}: {time.format(item.issuedAt)}
-                    </p>
-                    {item.dueAt && (
-                      <p className="text-sm text-muted-foreground">
-                        {t('invoices.list.due', locale)}: {time.format(item.dueAt)}
-                      </p>
+                    {item.paidAmount !== undefined && (
+                      <div>
+                        <dt className="text-xs text-muted-foreground">
+                          {t('invoices.list.paid', locale)}
+                        </dt>
+                        <dd>
+                          <bdi>{numbers.money(item.paidAmount)}</bdi>
+                        </dd>
+                      </div>
                     )}
-                    {item.periodStart && item.periodEnd ? (
-                      <p className="text-sm text-muted-foreground">
-                        {t('invoices.list.period', locale)}:{' '}
-                        {formatInvoiceServicePeriod(item.periodStart, item.periodEnd, time.format)}
-                      </p>
-                    ) : null}
-                    {item.explanation ? (
-                      <p className="mt-2 text-sm text-foreground">{item.explanation}</p>
-                    ) : null}
-                  </Link>
+                  </dl>
+                  <dl className="grid grid-cols-2 gap-3 border-t pt-3 text-xs">
+                    <div>
+                      <dt className="text-muted-foreground">{t('invoices.list.issued', locale)}</dt>
+                      <dd>{time.format(item.issuedAt)}</dd>
+                    </div>
+                    {item.dueAt && (
+                      <div>
+                        <dt className="text-muted-foreground">{t('invoices.list.due', locale)}</dt>
+                        <dd>{time.format(item.dueAt)}</dd>
+                      </div>
+                    )}
+                  </dl>
                 </li>
               ))}
             </ul>

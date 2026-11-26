@@ -218,7 +218,7 @@ for (const locale of ['en', 'fa'] as const) {
       name: t('invoices.title', locale),
       exact: true,
     });
-    await expect(invoiceTable.getByRole('columnheader')).toHaveCount(6);
+    await expect(invoiceTable.getByRole('columnheader')).toHaveCount(4);
     await expect(
       invoiceTable.getByText(formatCurrencyIrr(amount, locale), { exact: true })
     ).toHaveCount(4);
@@ -260,7 +260,7 @@ for (const locale of ['en', 'fa'] as const) {
       name: contractText('title', locale),
       exact: true,
     });
-    await expect(contractTable.getByRole('columnheader')).toHaveCount(8);
+    await expect(contractTable.getByRole('columnheader')).toHaveCount(5);
     await expect(contractTable.getByText('9007199254740993', { exact: true })).toBeVisible();
     await expect(contractTable.getByText(/Accepted company/)).toBeVisible();
     await expect(contractTable.getByText(/Changed company/)).toHaveCount(0);

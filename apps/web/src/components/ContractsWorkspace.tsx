@@ -1,5 +1,6 @@
 import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
-import { HistoryTable, type HistoryColumn } from './HistoryTable.js';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
+import { HistoryTable, TableCellDetails, type HistoryColumn } from './HistoryTable.js';
 import { useListView } from '../hooks/useListView.js';
 import { ContractCancellationRequestQueue } from './ContractCancellationRequestQueue.js';
 import {
@@ -22,7 +23,6 @@ import {
   Input,
   NativeSelect,
   PageHeader,
-  PageLoading,
   StatusBadge,
   ListViewToggle,
   ListPage,
@@ -653,16 +653,6 @@ function ContractResults({
       ) : null}
     </>
   );
-  const renderValue = (item: ContractSummary) => (
-    <>
-      {item.commercialValue ? (
-        <p className="text-sm text-muted-foreground">
-          {word('statedContractValue')}:{' '}
-          <ContractCommercialValueText value={item.commercialValue} />
-        </p>
-      ) : null}
-    </>
-  );
   const renderHistory = (item: ContractSummary) => (
     <>
       {item.changeDescription ? (
@@ -753,9 +743,10 @@ function ContractResults({
   const renderStatus = (item: ContractSummary) => (
     <>
       <div className="flex flex-wrap gap-2">
-        <StatusBadge label={word(item.state)} />
+        <StatusBadge state={item.state} label={word(item.state)} />
         {item.pendingAmendmentState ? (
           <StatusBadge
+            tone="warning"
             label={
               item.pendingAmendmentState === 'Draft'
                 ? `${word('amendmentPending')} · ${word('Draft')}`
@@ -770,61 +761,44 @@ function ContractResults({
       </div>
     </>
   );
-  const renderStarts = (item: ContractSummary) => (
-    <>
-      {item.serviceStartsAt ? (
-        <p className="text-sm text-muted-foreground">
-          {word('serviceStartsAt')}: {time.format(item.serviceStartsAt)}
-        </p>
-      ) : null}
-    </>
-  );
-  const renderEnds = (item: ContractSummary) => (
-    <>
-      {item.serviceEndsAt ? (
-        <p className="text-sm text-muted-foreground">
-          {word('serviceEndsAt')}: {time.format(item.serviceEndsAt)}
-        </p>
-      ) : null}
-    </>
-  );
-  const columns: HistoryColumn<ContractSummary>[] = [
+  const renderTerms = (item: ContractSummary) => {
+    const fields = [
+      {
+        id: 'from',
+        label: word('serviceStartsAt'),
+        value: item.serviceStartsAt && time.format(item.serviceStartsAt),
+      },
+      {
+        id: 'to',
+        label: word('serviceEndsAt'),
+        value: item.serviceEndsAt && time.format(item.serviceEndsAt),
+      },
+    ].filter((field) => field.value);
+    return fields.length ? <TableCellDetails fields={fields} /> : '—';
+  };
+  const renderValue = (item: ContractSummary) =>
+    item.commercialValue ? <ContractCommercialValueText value={item.commercialValue} /> : '—';
+  const columns: (HistoryColumn<ContractSummary> & { label: string })[] = [
     {
       id: 'reference',
       label: word('contractNumber'),
-      render: (item) => <div className="min-w-48">{renderIdentity(item)}</div>,
+      render: (item) => (
+        <div className="min-w-0 space-y-1">
+          {renderIdentity(item)}
+          {renderParty(item)}
+        </div>
+      ),
     },
-    { id: 'type', label: word('serviceType'), render: (item) => word(item.serviceType) },
     { id: 'state', label: word('state'), render: renderStatus },
-    {
-      id: 'party',
-      label: word('acceptedParty'),
-      render: (item) => (item.profileType ? renderParty(item) : '—'),
-    },
-    {
-      id: 'starts',
-      label: word('serviceStartsAt'),
-      render: (item) => (item.serviceStartsAt ? time.format(item.serviceStartsAt) : '—'),
-    },
-    {
-      id: 'ends',
-      label: word('serviceEndsAt'),
-      render: (item) => (item.serviceEndsAt ? time.format(item.serviceEndsAt) : '—'),
-    },
-    {
-      id: 'value',
-      label: word('statedContractValue'),
-      render: (item) =>
-        item.commercialValue ? <ContractCommercialValueText value={item.commercialValue} /> : '—',
-    },
+    { id: 'service', label: word('servicePeriod'), render: renderTerms },
+    { id: 'value', label: word('statedContractValue'), render: renderValue },
     {
       id: 'activity',
       label: appText('historyView.activity', locale),
       render: (item) => (
-        <div className="min-w-52 space-y-2">
-          {renderLinked(item)}
-          {renderHistory(item)}
+        <div className="min-w-40 space-y-2">
           {renderActivity(item)}
+          {renderLinked(item)}
         </div>
       ),
     },
@@ -893,7 +867,13 @@ function ContractResults({
         error={error}
         empty={items.length === 0}
         retainContent={items.length > 0}
-        loadingView={<PageLoading label={word('loading')} />}
+        loadingView={
+          <RecordListSkeleton
+            label={word('loading')}
+            view={staff ? 'card' : view}
+            headings={columns.map((column) => column.label)}
+          />
+        }
         errorView={
           <div className="space-y-2">
             <Alert variant="destructive">
@@ -967,20 +947,34 @@ function ContractResults({
               rowKey={(item) => item.id}
             />
           ) : (
-            <ul className="divide-y rounded-xl border bg-card">
+            <ul className="grid gap-3">
               {items.map((item) => (
-                <li key={item.id} className="flex flex-wrap items-center justify-between gap-3 p-4">
-                  <div>
-                    {renderIdentity(item)}
-                    {renderParty(item)}
-                    {renderLinked(item)}
-                    {renderValue(item)}
-                    {renderHistory(item)}
-                    {renderStarts(item)}
-                    {renderEnds(item)}
-                    {renderActivity(item)}
+                <li key={item.id} className="min-w-0 space-y-3 rounded-xl border bg-card p-4">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <div className="min-w-0 space-y-1">
+                      {renderIdentity(item)}
+                      {renderParty(item)}
+                    </div>
+                    {renderStatus(item)}
                   </div>
-                  {renderStatus(item)}
+                  {(item.serviceStartsAt || item.serviceEndsAt || item.commercialValue) && (
+                    <div className="flex flex-wrap gap-x-8 gap-y-3 border-t pt-3 text-sm">
+                      {(item.serviceStartsAt || item.serviceEndsAt) && renderTerms(item)}
+                      {item.commercialValue && (
+                        <div>
+                          <p className="text-xs text-muted-foreground">
+                            {word('statedContractValue')}
+                          </p>
+                          <p className="mt-1 font-semibold">{renderValue(item)}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <div className="space-y-2 text-sm">
+                    {renderActivity(item)}
+                    {renderLinked(item)}
+                    {renderHistory(item)}
+                  </div>
                 </li>
               ))}
             </ul>

@@ -126,11 +126,7 @@ for (const [index, locale] of (['en', 'fa'] as const).entries())
         await expect
           .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
           .toBe(theme === 'dark');
-        const loading = main.locator(
-          detail.name !== 'invoice'
-            ? '[data-slot="record-detail-skeleton"]'
-            : '[data-slot="loading-status"]'
-        );
+        const loading = main.locator('[data-slot="record-detail-skeleton"]');
         const retry = main.getByRole('button', { name: detail.retry[index], exact: true });
         await expect(loading).toBeVisible();
         await expect(retry.and(main.getByRole('button', { disabled: false }))).toHaveCount(0);

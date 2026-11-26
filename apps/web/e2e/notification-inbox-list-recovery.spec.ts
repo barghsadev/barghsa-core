@@ -39,7 +39,7 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await page.goto('/admin/inbox');
     const main = page.getByRole('main');
-    await expect(main.getByRole('button', { name: /Date notice/ })).toHaveCount(4);
+    await expect(main.getByRole('link', { name: /Date notice/ })).toHaveCount(4);
     await expect(main).toContainText(notificationFeedback('datesUnavailable', locale));
     zoneFailed = false;
     await main
@@ -54,10 +54,10 @@ for (const locale of ['en', 'fa'] as const) {
         group.getByRole('heading', { name: notificationFeedback(key, locale), exact: true })
       ).toBeVisible();
       await expect(
-        group.getByRole('button', { name: new RegExp(`Date notice ${index}`) })
+        group.getByRole('link', { name: new RegExp(`Date notice ${index}`) })
       ).toBeVisible();
     }
-    await expect(main.getByRole('button', { name: /Date notice/ })).toHaveCount(4);
+    await expect(main.getByRole('link', { name: /Date notice/ })).toHaveCount(4);
     expect(
       (
         await new AxeBuilder({ page })
@@ -164,7 +164,11 @@ for (const context of ['customer', 'staff'] as const)
         );
         const main = page.getByRole('main'),
           text = (key: string) => t(`notifications.${key}`, locale);
-        const current = main.getByRole('button', { name: /Current notice/ });
+        const current = main.getByRole('link', { name: 'Current notice', exact: true });
+        const markCurrent = main.getByRole('button', {
+          name: `${text('markReadAria')} — Current notice`,
+          exact: true,
+        });
         await expect(current).toBeVisible();
         failed = true;
         await main.getByRole('button', { name: text('loadMore'), exact: true }).click();
@@ -172,22 +176,22 @@ for (const context of ['customer', 'staff'] as const)
         const retryPage = pageError.getByRole('button', { name: text('retry'), exact: true });
         await expect(retryPage).toBeVisible();
         await expect(current).toBeVisible();
-        await expect(current).toBeDisabled();
+        await expect(markCurrent).toHaveCount(0);
         failed = false;
         await retryPage.click();
-        await expect(main.getByRole('button', { name: /Older notice/ })).toBeVisible();
+        await expect(main.getByRole('link', { name: 'Older notice', exact: true })).toBeVisible();
         expect(cursors.slice(0, 3)).toEqual([null, notificationCursor(), notificationCursor()]);
         // Refresh remains independent of a retry for the failed older page.
         failed = true;
         await main.getByRole('button', { name: text('refresh'), exact: true }).click();
-        await expect(main.getByRole('button', { name: /Older notice/ })).toBeVisible();
+        await expect(main.getByRole('link', { name: 'Older notice', exact: true })).toBeVisible();
         await expect(main.getByRole('alert')).toBeVisible();
         failed = false;
         await main
           .getByRole('alert')
           .getByRole('button', { name: text('retry'), exact: true })
           .click();
-        await current.click();
+        await markCurrent.click();
         await expect(main.getByRole('alert')).toContainText(text('error.write'));
         await expect(page.locator('[data-sonner-toast][data-type="warning"]')).toBeVisible();
         const header = await page.locator('header').first().boundingBox();
@@ -203,8 +207,9 @@ for (const context of ['customer', 'staff'] as const)
           .getByRole('alert')
           .getByRole('button', { name: text('retry'), exact: true })
           .click();
-        await current.click();
-        await expect(current).toBeEnabled();
+        await markCurrent.click();
+        await expect(current).toBeVisible();
+        await expect(markCurrent).toHaveCount(0);
         const bell = page.getByTestId('notification-bell');
         const unread = page.locator('[data-testid=notification-bell] + [role=status]');
         await expect(unread).toHaveRole('status');

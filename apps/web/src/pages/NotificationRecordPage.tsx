@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Button, LoadingStatus } from '@barghsa/ui';
+import { Button, StatusBadge } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -17,6 +17,7 @@ import {
   markOneRead,
   NotificationApiError,
 } from '../lib/notifications.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { NotificationStatusBadge } from '../components/NotificationStatusBadge.js';
 import { NotificationSubjectLinks } from '../components/NotificationSubjectLinks.js';
 
@@ -85,9 +86,7 @@ function NotificationRecord({
       >
         {t('notifications.title', locale)}
       </Link>
-      <h1 className="text-2xl font-semibold [overflow-wrap:anywhere]">
-        {content?.title ?? word('title')}
-      </h1>
+      {!content && <h1 className="text-3xl leading-snug font-semibold">{word('title')}</h1>}
       {isDenied || missing ? (
         <p role="alert">{word('unavailable')}</p>
       ) : read.isError ? (
@@ -100,14 +99,24 @@ function NotificationRecord({
       ) : item && content ? (
         <div className="min-w-0 space-y-4 rounded-xl border bg-card p-4 sm:p-6">
           {time.notice}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-            <NotificationStatusBadge type={item.type} locale={locale} />
-            <time dateTime={item.createdAt} className="text-muted-foreground">
-              {time.format(item.createdAt)}
-            </time>
-            <span>{item.isRead ? word('read') : t('notifications.unread', locale)}</span>
-          </div>
-          <p className="whitespace-pre-line [overflow-wrap:anywhere]">{content.body}</p>
+          <header className="space-y-3">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+              <NotificationStatusBadge type={item.type} locale={locale} />
+              <StatusBadge
+                label={item.isRead ? word('read') : t('notifications.unread', locale)}
+                tone={item.isRead ? 'default' : 'info'}
+              />
+              <time dateTime={item.createdAt} className="text-muted-foreground">
+                {time.format(item.createdAt)}
+              </time>
+            </div>
+            <h1 dir="auto" className="wrap-anywhere text-3xl leading-snug font-semibold">
+              {content.title}
+            </h1>
+          </header>
+          <p dir="auto" className="wrap-anywhere whitespace-pre-line border-t pt-4 leading-relaxed">
+            {content.body}
+          </p>
           <NotificationSubjectLinks
             item={item}
             locale={locale}
@@ -125,7 +134,7 @@ function NotificationRecord({
           {markRead.error && <p role="alert">{t('notifications.error.write', locale)}</p>}
         </div>
       ) : (
-        <LoadingStatus>{t('notifications.loading', locale)}</LoadingStatus>
+        <RecordDetailSkeleton label={t('notifications.loading', locale)} />
       )}
     </article>
   );

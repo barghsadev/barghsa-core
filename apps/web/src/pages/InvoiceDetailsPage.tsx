@@ -2,7 +2,8 @@ import { useOwnedManualServerRead } from '../hooks/useServerQuery.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
-import { Button, LoadingStatus, ResultGlyph, buttonVariants } from '@barghsa/ui';
+import { Button, LoadingStatus, ResultGlyph, StatusBadge, buttonVariants } from '@barghsa/ui';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { InvoiceActivity } from './InvoiceActivity.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -16,7 +17,7 @@ import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { invoiceReceiptPageMessages } from '@barghsa/i18n/receipt-editor';
 import { canCustomerSubmitInvoiceBankReceipt } from '@barghsa/shared/finance';
-import { ArrowRightIcon, Loader2Icon, ReceiptIcon } from 'lucide-react';
+import { ArrowRightIcon, Loader2Icon } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
 import { formatInvoiceServicePeriod } from '../lib/invoice-service-period.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
@@ -164,9 +165,7 @@ function OwnedInvoiceDetails({
   return (
     <div
       className={
-        ReceiptForm
-          ? 'mx-auto max-w-3xl space-y-3'
-          : 'mx-auto max-w-3xl space-y-6 rounded-lg bg-background p-4 text-foreground'
+        ReceiptForm ? 'mx-auto max-w-3xl space-y-3' : 'mx-auto w-full max-w-5xl min-w-0 space-y-4'
       }
       dir={isRtl ? 'rtl' : 'ltr'}
     >
@@ -227,12 +226,9 @@ function OwnedInvoiceDetails({
         </header>
       ) : (
         <header className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <ReceiptIcon className="h-6 w-6 text-primary" aria-hidden="true" />
-            <h1 className="text-2xl font-bold text-foreground">
-              {t('invoices.details.title', locale)}
-            </h1>
-          </div>
+          <h1 className="text-3xl leading-snug font-semibold">
+            {t('invoices.details.title', locale)}
+          </h1>
           {details && !error && (
             <div className="flex flex-wrap items-center gap-3">
               {canSubmitReceipt && (
@@ -275,10 +271,14 @@ function OwnedInvoiceDetails({
       )}
 
       {loading ? (
-        <LoadingStatus className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
-          {t('invoices.details.loading', locale)}
-        </LoadingStatus>
+        ReceiptForm ? (
+          <LoadingStatus className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
+            {t('invoices.details.loading', locale)}
+          </LoadingStatus>
+        ) : (
+          <RecordDetailSkeleton label={t('invoices.details.loading', locale)} layout="payment" />
+        )
       ) : receiptIssue ? (
         <section
           aria-labelledby="invoice-receipt-message"
@@ -372,47 +372,51 @@ function InvoiceDetailsBody({
   const linked = details.chain.filter((node) => node.invoiceId !== details.originalInvoiceId);
 
   return (
-    <section aria-labelledby="invoice-chain-heading" className="space-y-3">
-      <div>
-        <h2 id="invoice-chain-heading" className="text-lg font-semibold text-foreground">
-          {t('invoices.details.chain', locale)}
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {t('invoices.details.chainDescription', locale)}
-        </p>
-      </div>
-
-      {original ? (
-        <InvoiceCard
-          formatTimestamp={formatTimestamp}
-          node={original}
-          heading={t('invoices.details.original', locale)}
-          current={original.invoiceId === details.viewedInvoiceId}
-        />
-      ) : (
-        <InvoiceCard
-          formatTimestamp={formatTimestamp}
-          node={viewed}
-          heading={t(roleI18nKey(viewed.role), locale)}
-          current
-          showExplanation={viewed.role !== 'original'}
-        />
-      )}
-
-      {linked.map((node) => (
-        <InvoiceCard
-          formatTimestamp={formatTimestamp}
-          key={node.invoiceId}
-          node={node}
-          heading={t(roleI18nKey(node.role), locale)}
-          current={node.invoiceId === details.viewedInvoiceId}
-          showExplanation
-        />
-      ))}
-
+    <div className="space-y-5">
       <InvoicePaymentSummary invoice={viewed} onRefreshDetails={onRefreshDetails} />
+      <section aria-labelledby="invoice-chain-heading" className="space-y-3">
+        <div>
+          <h2 id="invoice-chain-heading" className="text-lg font-semibold text-foreground">
+            {t('invoices.details.chain', locale)}
+          </h2>
+          {linked.length > 0 && (
+            <p className="mt-1 text-sm text-muted-foreground">
+              {t('invoices.details.chainDescription', locale)}
+            </p>
+          )}
+        </div>
+
+        {original ? (
+          <InvoiceCard
+            formatTimestamp={formatTimestamp}
+            node={original}
+            heading={t('invoices.details.original', locale)}
+            current={original.invoiceId === details.viewedInvoiceId}
+          />
+        ) : (
+          <InvoiceCard
+            formatTimestamp={formatTimestamp}
+            node={viewed}
+            heading={t(roleI18nKey(viewed.role), locale)}
+            current
+            showExplanation={viewed.role !== 'original'}
+          />
+        )}
+
+        {linked.map((node) => (
+          <InvoiceCard
+            formatTimestamp={formatTimestamp}
+            key={node.invoiceId}
+            node={node}
+            heading={t(roleI18nKey(node.role), locale)}
+            current={node.invoiceId === details.viewedInvoiceId}
+            showExplanation
+          />
+        ))}
+      </section>
+
       <InvoiceActivity details={details} formatTimestamp={formatTimestamp} />
-    </section>
+    </div>
   );
 }
 
@@ -515,9 +519,7 @@ function InvoiceCard({
       data-testid={`invoice-card-${node.invoiceId}`}
       data-role={node.role}
       aria-current={current ? 'page' : undefined}
-      className={`rounded-lg border bg-card text-card-foreground p-4 shadow-sm ${
-        current ? 'border-primary ring-1 ring-primary/20' : 'border-border'
-      }`}
+      className="min-w-0 rounded-xl border bg-card p-4 text-card-foreground sm:p-5"
     >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <div>
@@ -529,7 +531,7 @@ function InvoiceCard({
             </bdi>
           </p>
         </div>
-        <p className="text-sm text-muted-foreground">{t(stateI18nKey(node.state), locale)}</p>
+        <StatusBadge state={node.state} label={t(stateI18nKey(node.state), locale)} />
       </header>
 
       {showExplanation || explanation ? (

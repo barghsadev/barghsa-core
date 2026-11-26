@@ -1,3 +1,4 @@
+import { t } from '@barghsa/i18n/app';
 import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { settingsProfileFixture, settingsProfileId } from './settings-profile-fixture';
@@ -67,6 +68,9 @@ for (const locale of ['fa', 'en'] as const) {
         },
       });
     });
+    await page.route(`**/api/v1/notifications/${item.id}`, (route) =>
+      route.fulfill({ json: { ...item, isRead: marks > 0, readAt: marks ? item.createdAt : null } })
+    );
     await page.route(`**/api/v1/notifications/${item.id}/read`, (route) => {
       expect(route.request().method()).toBe('PATCH');
       marks++;
@@ -76,10 +80,22 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(page.locator('main')).toContainText(title);
     await expect(page.locator('main')).toContainText('Preserved <img src=x onerror=alert(1)> text');
     await expect(page.locator('main img')).toHaveCount(0);
-    const notice = page.getByRole('button', { name: new RegExp(title) });
+    const notice = page.getByRole('link', { name: title, exact: true });
     await expect(notice).toHaveCSS('direction', locale === 'fa' ? 'rtl' : 'ltr');
     await notice.click();
+    await expect(page).toHaveURL(`/notifications/${item.id}`);
+    expect(marks).toBe(0);
+    await expect(page.getByRole('main')).toContainText(
+      'Preserved <img src=x onerror=alert(1)> text'
+    );
+    await expect(page.locator('main img')).toHaveCount(0);
+    await page
+      .getByRole('button', { name: t('notifications.markReadAria', locale), exact: true })
+      .click();
+    await expect.poll(() => marks).toBe(1);
+    await page
+      .getByRole('link', { name: t('notifications.record.openSubject', locale), exact: true })
+      .click();
     await expect(page).toHaveURL(/\/settings\/profile$/);
-    expect(marks).toBe(1);
   });
 }

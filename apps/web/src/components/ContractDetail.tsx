@@ -48,6 +48,7 @@ import {
   contractAttachmentTitle,
   contractVersionPosition,
 } from '../lib/contract-attachments.js';
+import { RecordDetailSkeleton } from './RecordSkeleton.js';
 import { WorkflowStatusBanner } from './WorkflowStatusBanner.js';
 import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
 import { t } from '@barghsa/i18n/workspace';
@@ -777,6 +778,7 @@ function ContractDetailContent({
           ? 'amendmentAcceptForSignatureNotice'
           : 'amendmentAcceptNotice';
   const nextAction = data ? customerContractNextAction(data.contract, signatureStatus) : null;
+  const submittedAt = signatureStatus?.request?.requestedAt ?? data?.contract.submittedAt;
   const commandLocked = locked || preparing || needsLifecycleRead;
   const recordSignatureInSummary = !staff && isCurrent && !data?.contract.canAccept;
   const customerOperation = data?.contract.canAccept
@@ -990,7 +992,11 @@ function ContractDetailContent({
           </Button>
         </Alert>
       ) : !data ? (
-        <PageLoading label={word('loading')} />
+        focusedAction ? (
+          <PageLoading label={word('loading')} />
+        ) : (
+          <RecordDetailSkeleton label={word('loading')} layout="order" />
+        )
       ) : signingOperation ? (
         isCurrent || isPendingAmendment ? (
           <>
@@ -1084,18 +1090,33 @@ function ContractDetailContent({
           {!staff && isCurrent ? (
             <WorkflowStatusBanner
               locale={locale}
-              submittedAt={
-                signatureStatus?.request?.requestedAt || data.contract.submittedAt
-                  ? `${workflowFeedback('submitted', locale)}: ${time.format(signatureStatus?.request?.requestedAt ?? data.contract.submittedAt!)}`
-                  : undefined
-              }
               status={word(data.contract.state)}
+              statusSummary={
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div className="space-y-1">
+                    <p className="text-xs text-muted-foreground">
+                      {word(data.contract.contractNumber ? 'contractNumber' : 'contractReference')}
+                    </p>
+                    <p className="wrap-anywhere font-semibold">
+                      <bdi dir="ltr">{data.contract.contractNumber ?? data.contract.id}</bdi>
+                    </p>
+                    {nextAction!.owner === 'staff' && (
+                      <p className="text-sm text-muted-foreground">
+                        {submittedAt
+                          ? `${workflowFeedback('submitted', locale)}: ${time.format(submittedAt)}`
+                          : workflowFeedback('submissionUnknown', locale)}
+                      </p>
+                    )}
+                  </div>
+                  <StatusBadge state={data.contract.state} label={word(data.contract.state)} />
+                </div>
+              }
               happened={
                 signatureStatus?.signature
                   ? word('signatureRecorded')
                   : signatureStatus?.request
                     ? `${word('signatureRequest')} ${signatureStatus.request.requestNumber.toLocaleString(locale)}`
-                    : data.version.changeDescription
+                    : data.version.changeDescription || word(data.contract.state)
               }
               nextAction={
                 nextAction!.key.startsWith('workflow.')
@@ -1107,14 +1128,18 @@ function ContractDetailContent({
               actionLink={customerDecisionEntry}
             />
           ) : (
-            <StatusBadge label={word(data.contract.state)} />
+            <div className="flex flex-wrap items-start justify-between gap-2 border-b pb-4">
+              <div className="space-y-1">
+                <p className="text-xs text-muted-foreground">
+                  {word(data.contract.contractNumber ? 'contractNumber' : 'contractReference')}
+                </p>
+                <p className="wrap-anywhere font-semibold">
+                  <bdi dir="ltr">{data.contract.contractNumber ?? data.contract.id}</bdi>
+                </p>
+              </div>
+              <StatusBadge state={data.contract.state} label={word(data.contract.state)} />
+            </div>
           )}
-          <p className="text-sm text-muted-foreground">
-            {word(data.contract.contractNumber ? 'contractNumber' : 'contractReference')}:{' '}
-            <bdi dir="ltr" className="[overflow-wrap:anywhere]">
-              {data.contract.contractNumber ?? data.contract.id}
-            </bdi>
-          </p>
           {staff && recordPage && isCurrent && data.contract.state === 'AwaitingStaffReview' && (
             <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-xl border bg-muted/25 px-4 py-3">
               <p className="max-w-md text-sm text-muted-foreground">{copy('publishHelp')}</p>
@@ -1137,65 +1162,6 @@ function ContractDetailContent({
               </div>
             </div>
           )}
-          {recordPage && (data.contract.serviceStartsAt || data.contract.serviceEndsAt) && (
-            <dl className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
-              {data.contract.serviceStartsAt && (
-                <div>
-                  <dt className="text-muted-foreground">{word('serviceStartsAt')}</dt>
-                  <dd>
-                    <time dateTime={data.contract.serviceStartsAt}>
-                      {time.format(data.contract.serviceStartsAt)}
-                    </time>
-                  </dd>
-                </div>
-              )}
-              {data.contract.serviceEndsAt && (
-                <div>
-                  <dt className="text-muted-foreground">{word('serviceEndsAt')}</dt>
-                  <dd>
-                    <time dateTime={data.contract.serviceEndsAt}>
-                      {time.format(data.contract.serviceEndsAt)}
-                    </time>
-                  </dd>
-                </div>
-              )}
-            </dl>
-          )}
-          {data.contract.serviceType === 'electricity' && data.contract.linkedOrderStatus ? (
-            <p className="text-sm text-muted-foreground">
-              {word('linkedOrderStatus')}:{' '}
-              {t(`electricity.order.status.${data.contract.linkedOrderStatus}`, locale)}
-            </p>
-          ) : null}
-          {data.contract.acceptedParty && isCurrent ? (
-            <div className="rounded-lg border p-3 text-sm">
-              <h3 className="font-semibold">{word('acceptedParty')}</h3>
-              <p>
-                {data.contract.acceptedParty.name || word('draftUnnamedProfile')} ·{' '}
-                {word(
-                  data.contract.acceptedParty.profileType === 'LEGAL'
-                    ? 'draftLegal'
-                    : 'draftIndividual'
-                )}
-              </p>
-              {data.contract.acceptedParty.identifier ? (
-                <p>
-                  {word(
-                    data.contract.acceptedParty.profileType === 'LEGAL'
-                      ? 'legalIdentifier'
-                      : 'nationalIdentifier'
-                  )}
-                  : <bdi dir="ltr">{data.contract.acceptedParty.identifier}</bdi>
-                </p>
-              ) : null}
-              {data.contract.acceptedParty.registrationNumber ? (
-                <p>
-                  {word('registrationNumber')}:{' '}
-                  <bdi dir="ltr">{data.contract.acceptedParty.registrationNumber}</bdi>
-                </p>
-              ) : null}
-            </div>
-          ) : null}
           {staff && data.contract.pendingAmendment ? (
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/40 p-3">
               <div>
@@ -1247,6 +1213,96 @@ function ContractDetailContent({
                 {word(isPendingAmendment ? 'amendmentViewEffective' : 'amendmentReview')}
               </Button>
             </div>
+          ) : null}
+          <section className="space-y-3 rounded-xl bg-muted/30 p-4 sm:p-5">
+            <div className="space-y-1">
+              <h2 className="text-lg font-semibold">
+                {word('version')} {data.version.versionNumber.toLocaleString(locale)}
+                {isCurrent ? ` · ${word('current')}` : ''}
+                {isPendingAmendment ? ` · ${word('amendmentPending')}` : ''}
+              </h2>
+              {data.version.changeDescription && (
+                <p className="text-sm text-muted-foreground">{data.version.changeDescription}</p>
+              )}
+              <p className="text-sm">{time.format(data.version.createdAt)}</p>
+              {data.version.publishedAt ? (
+                <p className="text-sm">
+                  {word('publishedAt')}: {time.format(data.version.publishedAt)}
+                </p>
+              ) : null}
+              {staff && data.version.createdBy ? (
+                <p className="text-sm">
+                  {word('changedBy')}: {data.version.createdBy}
+                </p>
+              ) : null}
+            </div>
+            <ContractTerms value={data.version.content} />
+          </section>
+          {((recordPage && (data.contract.serviceStartsAt || data.contract.serviceEndsAt)) ||
+            (data.contract.acceptedParty && isCurrent)) && (
+            <div className="grid gap-4 rounded-xl border p-4 sm:grid-cols-2 sm:p-5">
+              {recordPage && (data.contract.serviceStartsAt || data.contract.serviceEndsAt) && (
+                <dl className="grid grid-cols-2 gap-3 text-sm">
+                  {data.contract.serviceStartsAt && (
+                    <div>
+                      <dt className="text-muted-foreground">{word('serviceStartsAt')}</dt>
+                      <dd>
+                        <time dateTime={data.contract.serviceStartsAt}>
+                          {time.format(data.contract.serviceStartsAt)}
+                        </time>
+                      </dd>
+                    </div>
+                  )}
+                  {data.contract.serviceEndsAt && (
+                    <div>
+                      <dt className="text-muted-foreground">{word('serviceEndsAt')}</dt>
+                      <dd>
+                        <time dateTime={data.contract.serviceEndsAt}>
+                          {time.format(data.contract.serviceEndsAt)}
+                        </time>
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              )}
+              {data.contract.acceptedParty && isCurrent ? (
+                <div className="space-y-1 text-sm">
+                  <h3 className="text-xs font-medium text-muted-foreground">
+                    {word('acceptedParty')}
+                  </h3>
+                  <p>
+                    {data.contract.acceptedParty.name || word('draftUnnamedProfile')} ·{' '}
+                    {word(
+                      data.contract.acceptedParty.profileType === 'LEGAL'
+                        ? 'draftLegal'
+                        : 'draftIndividual'
+                    )}
+                  </p>
+                  {data.contract.acceptedParty.identifier ? (
+                    <p>
+                      {word(
+                        data.contract.acceptedParty.profileType === 'LEGAL'
+                          ? 'legalIdentifier'
+                          : 'nationalIdentifier'
+                      )}
+                      : <bdi dir="ltr">{data.contract.acceptedParty.identifier}</bdi>
+                    </p>
+                  ) : null}
+                  {data.contract.acceptedParty.registrationNumber ? (
+                    <p>
+                      {word('registrationNumber')}:{' '}
+                      <bdi dir="ltr">{data.contract.acceptedParty.registrationNumber}</bdi>
+                    </p>
+                  ) : null}
+                </div>
+              ) : null}
+            </div>
+          )}
+          {data.contract.serviceType === 'electricity' && data.contract.linkedOrderStatus ? (
+            <p className="text-sm text-muted-foreground">
+              {word('linkedOrderStatus')}:{' '}
+              {t(`electricity.order.status.${data.contract.linkedOrderStatus}`, locale)}
+            </p>
           ) : null}
           {!staff && data.contract.serviceType === 'electricity' && data.contract.orderId ? (
             <Link
@@ -1303,26 +1359,6 @@ function ContractDetailContent({
               {word('openLinkedSavingOrder')}
             </Link>
           ) : null}
-          <div>
-            <h3 className="font-semibold">
-              {word('version')} {data.version.versionNumber.toLocaleString(locale)}
-              {isCurrent ? ` · ${word('current')}` : ''}
-              {isPendingAmendment ? ` · ${word('amendmentPending')}` : ''}
-            </h3>
-            <p className="text-sm text-muted-foreground">{data.version.changeDescription}</p>
-            <p className="text-sm">{time.format(data.version.createdAt)}</p>
-            {data.version.publishedAt ? (
-              <p className="text-sm">
-                {word('publishedAt')}: {time.format(data.version.publishedAt)}
-              </p>
-            ) : null}
-            {staff && data.version.createdBy ? (
-              <p className="text-sm">
-                {word('changedBy')}: {data.version.createdBy}
-              </p>
-            ) : null}
-          </div>
-          <ContractTerms value={data.version.content} />
           {staff && isCurrent && ['Draft', 'ChangesRequested'].includes(data.contract.state) ? (
             staffRecordSearch ? (
               <Link

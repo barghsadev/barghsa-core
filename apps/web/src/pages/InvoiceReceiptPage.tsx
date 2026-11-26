@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
-import { Button, LoadingStatus } from '@barghsa/ui';
+import { Button } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { InvoiceReceiptContent } from './InvoiceReceiptContent.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -45,11 +46,11 @@ export function InvoiceReceiptPage({
         >
           {text('title')}
         </Link>
-        <h1 className="text-2xl font-semibold">{text('detailTitle')}</h1>
+        <h1 className="mt-2 text-3xl leading-snug font-semibold">{text('detailTitle')}</h1>
       </div>
       {time.notice}
       {receipt.isFetching ? (
-        <LoadingStatus>{text('detailLoading')}</LoadingStatus>
+        <RecordDetailSkeleton label={text('detailLoading')} layout="payment" />
       ) : receipt.isError ? (
         <div role="alert" className="space-y-3">
           <p>{text(unavailable ? 'detailUnavailable' : 'detailError')}</p>

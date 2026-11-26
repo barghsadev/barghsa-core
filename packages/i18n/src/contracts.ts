@@ -209,6 +209,7 @@ export const en = {
   contextInvalid:
     'Check the invoice reference and dates, and describe the change. The end must be after the start.',
   serviceEndsAt: 'Service term ends',
+  servicePeriod: 'Service period',
   serviceStartsAt: 'Service starts',
   initialInvoiceAmount: 'Initial invoice',
   serviceCompleted: 'The service term is complete. Invoices and refunds keep their own status.',
@@ -583,6 +584,7 @@ export const fa: Record<keyof typeof en, string> = {
   contextInvalid:
     'شناسه صورتحساب و تاریخ‌ها را بررسی و دلیل تغییر را وارد کنید. پایان باید پس از شروع باشد.',
   serviceEndsAt: 'پایان دوره خدمت',
+  servicePeriod: 'دوره خدمت',
   serviceStartsAt: 'شروع خدمت',
   initialInvoiceAmount: 'صورتحساب اولیه',
   serviceCompleted: 'دوره خدمت تکمیل شده است. وضعیت صورتحساب‌ها و بازپرداخت‌ها مستقل است.',

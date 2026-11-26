@@ -21,6 +21,7 @@ import {
   Field,
   FieldLabel,
   PageLoading,
+  Skeleton,
   Textarea,
   Timeline,
   WaitingForBarghsa,
@@ -445,7 +446,7 @@ function OwnedDocumentDetail({
             <h1
               ref={recordHeading}
               tabIndex={-1}
-              className="min-w-0 text-xl font-semibold [overflow-wrap:anywhere] focus-visible:shadow-none! focus-visible:outline-hidden! sm:text-2xl"
+              className="min-w-0 wrap-anywhere text-2xl leading-snug font-semibold focus-visible:shadow-none! focus-visible:outline-hidden! sm:text-3xl"
               dir="auto"
             >
               {title}
@@ -488,7 +489,21 @@ function OwnedDocumentDetail({
           )}
         </Alert>
       ) : !document ? (
-        <PageLoading label={word('loading')} />
+        holdPage || decision ? (
+          <PageLoading label={word('loading')} />
+        ) : (
+          <div
+            role="status"
+            aria-label={word('loading')}
+            data-slot="record-detail-skeleton"
+            className="space-y-4"
+          >
+            <Skeleton className="h-6 w-28 rounded-full" />
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-10 w-52 max-w-full" />
+            <Skeleton className="h-4 w-40" />
+          </div>
+        )
       ) : holdPage && staff && recordSearch ? (
         <DocumentLegalHolds
           document={document}
@@ -604,32 +619,6 @@ function OwnedDocumentDetail({
               }
             />
           )}
-          <dl className="grid grid-cols-2 gap-3 rounded-lg border bg-muted/25 p-3 text-sm lg:grid-cols-4">
-            <div>
-              <dt className="text-muted-foreground">{word('kind')}</dt>
-              <dd>{word(document.businessRecordType)}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">{word('size')}</dt>
-              <dd>{numbers.number(document.sizeBytes)} B</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">{word('uploadedBy')}</dt>
-              <dd>{word(document.uploadedByType)}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">{word('created')}</dt>
-              <dd>{time.format(document.createdAt)}</dd>
-            </div>
-            {document.checksum ? (
-              <div className="col-span-full">
-                <dt className="text-muted-foreground">{word('checksum')}</dt>
-                <dd className="break-all" dir="ltr">
-                  {document.checksum}
-                </dd>
-              </div>
-            ) : null}
-          </dl>
           {isQuarantinedDocument(document) ? (
             <p className="text-sm text-muted-foreground">{word('quarantinedNotice')}</p>
           ) : (document.rejectionReason || document.reviewComment) &&
@@ -844,6 +833,34 @@ function OwnedDocumentDetail({
               heading={SectionHeading}
               location={recordSearch && { page: 'summary', search: recordSearch }}
             />
+          ) : null}
+          <dl className="grid grid-cols-2 gap-x-5 gap-y-3 border-t pt-4 text-sm sm:grid-cols-4">
+            <div>
+              <dt className="text-xs text-muted-foreground">{word('kind')}</dt>
+              <dd className="mt-1 font-medium">{word(document.businessRecordType)}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-muted-foreground">{word('size')}</dt>
+              <dd className="mt-1 font-medium">{numbers.number(document.sizeBytes)} B</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-muted-foreground">{word('uploadedBy')}</dt>
+              <dd className="mt-1 font-medium">{word(document.uploadedByType)}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-muted-foreground">{word('created')}</dt>
+              <dd className="mt-1 font-medium">{time.format(document.createdAt)}</dd>
+            </div>
+          </dl>
+          {document.checksum ? (
+            <details className="rounded-lg border px-3 py-2 text-sm">
+              <summary className="touch-action cursor-pointer font-medium">
+                {word('checksum')}
+              </summary>
+              <p className="mt-2 wrap-anywhere font-mono text-xs text-muted-foreground" dir="ltr">
+                {document.checksum}
+              </p>
+            </details>
           ) : null}
           <SectionHeading className="font-semibold">{word('history')}</SectionHeading>
           <Timeline

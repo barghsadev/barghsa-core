@@ -1,10 +1,10 @@
-import { LoadingStatus, ListPage, ListToolbar } from '@barghsa/ui';
+import { ListPage, ListToolbar, PageHeader, StatusBadge, buttonVariants } from '@barghsa/ui';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { Link } from '@tanstack/react-router';
-import { Loader2Icon, ReceiptText } from 'lucide-react';
 import {
   Button,
   MultiSelectFilter,
@@ -27,7 +27,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useListView } from '../hooks/useListView.js';
-import { HistoryTable } from '../components/HistoryTable.js';
+import { HistoryTable, TableCellDetails, type HistoryColumn } from '../components/HistoryTable.js';
 import { ReceiptDepositDate } from '../components/ReceiptDepositDate.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import {
@@ -314,25 +314,79 @@ function ReceiptHistory({
       });
   }
 
-  return (
-    <div className="mx-auto max-w-7xl space-y-5" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      {time.notice}
-      <header className="space-y-2">
-        <div className="flex items-center gap-2">
-          <ReceiptText className="h-6 w-6" aria-hidden="true" />
-          <h1 className="text-2xl font-bold">{label('title')}</h1>
+  const receiptState = (item: CustomerBankReceiptListItem) => (
+    <StatusBadge
+      state={item.state === 'Confirmed' ? 'approved' : item.state}
+      label={t(`invoices.activity.state.${item.state}`, locale)}
+    />
+  );
+  const receiptDates = (item: CustomerBankReceiptListItem) => (
+    <TableCellDetails
+      fields={[
+        {
+          id: 'deposit',
+          label: label('depositDate'),
+          value: <ReceiptDepositDate value={item.paymentDate} locale={locale} />,
+        },
+        {
+          id: 'submitted',
+          label: label('submittedAt'),
+          value: <time dateTime={item.submittedAt}>{time.format(item.submittedAt)}</time>,
+        },
+      ]}
+    />
+  );
+  const columns: (HistoryColumn<CustomerBankReceiptListItem> & { label: string })[] = [
+    {
+      id: 'receipt',
+      label: label('receipt'),
+      render: (item) => (
+        <div className="min-w-0 space-y-1">
+          <Link
+            to="/invoices/$invoiceId/receipts/$receiptId"
+            params={{ invoiceId: item.invoiceId, receiptId: item.receiptId }}
+            search={recordSearch}
+            className="touch-action text-primary underline-offset-4 hover:underline"
+          >
+            {item.bankName || label('openDetail')}
+          </Link>
+          <p className="text-xs font-normal text-muted-foreground">
+            <bdi dir="ltr" className="wrap-anywhere">
+              {item.receiptId}
+            </bdi>
+          </p>
         </div>
-        <p className="text-sm text-muted-foreground">{label('description')}</p>
-      </header>
-      <nav aria-label={label('title')} className="text-sm">
-        <Link
-          to="/invoices"
-          search={{ status: undefined }}
-          className="touch-action text-primary underline underline-offset-4 pointer-coarse:min-h-[45px]!"
-        >
-          {label('backToInvoices')}
-        </Link>
-      </nav>
+      ),
+    },
+    { id: 'state', label: t('historyView.status', locale), render: receiptState },
+    {
+      id: 'amount',
+      label: t('historyView.amount', locale),
+      render: (item) => (
+        <bdi className="font-semibold whitespace-nowrap">{numbers.money(item.amount)}</bdi>
+      ),
+    },
+    { id: 'activity', label: t('recordTable.activity', locale), render: receiptDates },
+  ];
+
+  return (
+    <div
+      className="mx-auto w-full max-w-5xl min-w-0 space-y-4"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      {time.notice}
+      <PageHeader
+        title={label('title')}
+        actions={
+          <Link
+            to="/invoices"
+            search={{ status: undefined }}
+            className={buttonVariants({ variant: 'outline' })}
+          >
+            {label('backToInvoices')}
+          </Link>
+        }
+      />
       <ListPage>
         <ListPage.Toolbar
           filters={
@@ -445,10 +499,11 @@ function ReceiptHistory({
           empty={items.length === 0}
           retainContent={items.length > 0}
           loadingView={
-            <LoadingStatus className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
-              {label('loading')}
-            </LoadingStatus>
+            <RecordListSkeleton
+              label={label('loading')}
+              view={view}
+              headings={columns.map((column) => column.label)}
+            />
           }
           errorView={
             <div className="space-y-2">
@@ -477,101 +532,39 @@ function ReceiptHistory({
                 caption={label('title')}
                 items={items}
                 rowKey={(item) => item.receiptId}
-                columns={[
-                  {
-                    id: 'receipt',
-                    label: label('receipt'),
-                    render: (item) => (
-                      <Link
-                        to="/invoices/$invoiceId/receipts/$receiptId"
-                        params={{ invoiceId: item.invoiceId, receiptId: item.receiptId }}
-                        search={recordSearch}
-                        className="touch-action text-primary underline underline-offset-4 pointer-coarse:min-h-[45px]!"
-                      >
-                        <bdi dir="ltr">{item.receiptId}</bdi>
-                      </Link>
-                    ),
-                  },
-                  {
-                    id: 'invoice',
-                    label: label('invoice'),
-                    render: (item) => <bdi dir="ltr">{item.invoiceId}</bdi>,
-                  },
-                  {
-                    id: 'amount',
-                    label: t('historyView.amount', locale),
-                    render: (item) => numbers.money(item.amount),
-                  },
-                  {
-                    id: 'bank',
-                    label: label('bank'),
-                    render: (item) => item.bankName ?? label('bankUnknown'),
-                  },
-                  {
-                    id: 'deposit',
-                    label: label('depositDate'),
-                    render: (item) => (
-                      <ReceiptDepositDate value={item.paymentDate} locale={locale} />
-                    ),
-                  },
-                  {
-                    id: 'state',
-                    label: label('filter'),
-                    render: (item) => t(`invoices.activity.state.${item.state}`, locale),
-                  },
-                  {
-                    id: 'submitted',
-                    label: label('submittedAt'),
-                    render: (item) => (
-                      <time dateTime={item.submittedAt}>{time.format(item.submittedAt)}</time>
-                    ),
-                  },
-                ]}
+                columns={columns}
               />
             ) : (
-              <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <ul className="grid gap-3 sm:grid-cols-2">
                 {items.map((item) => (
-                  <li key={item.receiptId} className="rounded-lg border border-border p-3">
-                    <Link
-                      to="/invoices/$invoiceId/receipts/$receiptId"
-                      params={{ invoiceId: item.invoiceId, receiptId: item.receiptId }}
-                      search={recordSearch}
-                      className="group block space-y-2 rounded-md p-2 hover:bg-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <strong className="text-base">{numbers.money(item.amount)}</strong>
-                        <span className="text-sm font-medium">
-                          {t(`invoices.activity.state.${item.state}`, locale)}
-                        </span>
+                  <li key={item.receiptId} className="space-y-3 rounded-xl border bg-card p-4">
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <div className="min-w-0 space-y-1">
+                        <Link
+                          to="/invoices/$invoiceId/receipts/$receiptId"
+                          params={{ invoiceId: item.invoiceId, receiptId: item.receiptId }}
+                          search={recordSearch}
+                          className="touch-action font-semibold text-primary underline-offset-4 hover:underline"
+                        >
+                          {item.bankName || label('openDetail')}
+                        </Link>
+                        <p className="text-xs text-muted-foreground">
+                          <bdi dir="ltr" className="wrap-anywhere">
+                            {item.receiptId}
+                          </bdi>
+                        </p>
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        {label('invoice')}:{' '}
-                        <bdi dir="ltr" className="break-all">
-                          {item.invoiceId}
-                        </bdi>
+                      {receiptState(item)}
+                    </div>
+                    <div className="space-y-1 border-t pt-3">
+                      <p className="text-xs text-muted-foreground">
+                        {t('historyView.amount', locale)}
                       </p>
-                      <p className="text-sm text-muted-foreground">
-                        {label('receipt')}:{' '}
-                        <bdi dir="ltr" className="break-all">
-                          {item.receiptId}
-                        </bdi>
-                      </p>
-                      <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground">
-                        <span>
-                          {label('bank')}: {item.bankName ?? label('bankUnknown')}
-                        </span>
-                        <span>
-                          {label('depositDate')}:{' '}
-                          <ReceiptDepositDate value={item.paymentDate} locale={locale} />
-                        </span>
-                        <span>
-                          {label('submittedAt')}: {time.format(item.submittedAt)}
-                        </span>
-                      </div>
-                      <span className="text-sm text-primary underline underline-offset-4 group-hover:no-underline">
-                        {label('openDetail')}
-                      </span>
-                    </Link>
+                      <bdi className="text-lg font-semibold tabular-nums">
+                        {numbers.money(item.amount)}
+                      </bdi>
+                    </div>
+                    <div className="text-sm">{receiptDates(item)}</div>
                   </li>
                 ))}
               </ul>

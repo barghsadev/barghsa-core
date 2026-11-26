@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
+import { StatusBadge } from '@barghsa/ui';
 import { ReceiptStatusTimeline } from '../components/ReceiptStatusTimeline.js';
 import { ReceiptAttachmentPreview } from '../components/ReceiptAttachmentPreview.js';
 import { ReceiptDepositDate } from '../components/ReceiptDepositDate.js';
@@ -27,42 +28,63 @@ export function InvoiceReceiptContent({
   const state = t(stateKey, locale);
   const status = state === stateKey ? label('state.Unknown') : state;
   return (
-    <div className="space-y-3 [overflow-wrap:anywhere]">
-      <div className="flex flex-wrap justify-between gap-2">
-        <span>{status}</span>
-        <strong className="tabular-nums">{numbers.money(row.amount)}</strong>
+    <div className="space-y-4 wrap-anywhere">
+      <div className="space-y-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <strong className="text-xl font-semibold tabular-nums">
+            <bdi>{numbers.money(row.amount)}</bdi>
+          </strong>
+          <StatusBadge state={row.state === 'Confirmed' ? 'approved' : row.state} label={status} />
+        </div>
+        <p className="text-muted-foreground">{label(`description.${row.state}`)}</p>
       </div>
-      <p className="text-muted-foreground">{label(`description.${row.state}`)}</p>
-      <p>
-        {label('receiptId')}: <bdi className="break-all">{row.id}</bdi>
-      </p>
-      <p>
-        {label('reference')}: <bdi>{row.payerReference}</bdi>
-      </p>
-      <p>
-        {t('invoices.receipts.invoice', locale)}:{' '}
-        <Link
-          to="/invoices/$invoiceId"
-          params={{ invoiceId: invoiceId }}
-          className="touch-action break-all text-primary underline underline-offset-4"
-        >
-          <bdi dir="ltr">{invoiceId}</bdi>
-        </Link>
-      </p>
-      {row.bankName ? (
-        <p>
-          {label('bankName')}: {row.bankName}
-        </p>
-      ) : null}
-      <p>
-        {label('paymentDate')}: <ReceiptDepositDate value={row.paymentDate} locale={locale} />
-      </p>
-      {row.customerNote ? <p>{row.customerNote}</p> : null}
       {row.rejectionReason ? (
-        <p className="text-destructive">
-          {label('rejectionReason')}: {row.rejectionReason}
-        </p>
+        <div className="rounded-lg border border-destructive/20 bg-danger-soft p-3">
+          <p className="font-medium text-destructive">{label('rejectionReason')}</p>
+          <p className="mt-1 text-foreground">{row.rejectionReason}</p>
+        </div>
       ) : null}
+      <dl className="grid gap-x-5 gap-y-3 border-t pt-4 sm:grid-cols-2">
+        <div>
+          <dt className="text-xs text-muted-foreground">{label('reference')}</dt>
+          <dd className="mt-1 font-medium">
+            <bdi>{row.payerReference}</bdi>
+          </dd>
+        </div>
+        {row.bankName ? (
+          <div>
+            <dt className="text-xs text-muted-foreground">{label('bankName')}</dt>
+            <dd className="mt-1 font-medium">{row.bankName}</dd>
+          </div>
+        ) : null}
+        <div>
+          <dt className="text-xs text-muted-foreground">{label('paymentDate')}</dt>
+          <dd className="mt-1 font-medium">
+            <ReceiptDepositDate value={row.paymentDate} locale={locale} />
+          </dd>
+        </div>
+        <div>
+          <dt className="text-xs text-muted-foreground">{label('receiptId')}</dt>
+          <dd className="mt-1">
+            <bdi dir="ltr">{row.id}</bdi>
+          </dd>
+        </div>
+        <div className="sm:col-span-2">
+          <dt className="text-xs text-muted-foreground">
+            {t('invoices.receipts.invoice', locale)}
+          </dt>
+          <dd className="mt-1">
+            <Link
+              to="/invoices/$invoiceId"
+              params={{ invoiceId }}
+              className="touch-action text-primary underline underline-offset-4"
+            >
+              <bdi dir="ltr">{invoiceId}</bdi>
+            </Link>
+          </dd>
+        </div>
+      </dl>
+      {row.customerNote ? <p className="whitespace-pre-wrap">{row.customerNote}</p> : null}
       <ReceiptAttachmentPreview
         key={`${invoiceId}:${row.id}`}
         invoiceId={invoiceId}

@@ -126,7 +126,7 @@ for (const locale of ['en', 'fa'] as const)
       const count = requests.length;
       await tableButton.click();
       const table = page.getByRole('table', { name: copy('title'), exact: true });
-      await expect(table.getByRole('columnheader')).toHaveCount(7);
+      await expect(table.getByRole('columnheader')).toHaveCount(4);
       await expect(table.getByText(formatCurrencyIrr(amount, locale), { exact: true })).toHaveCount(
         2
       );
@@ -134,7 +134,10 @@ for (const locale of ['en', 'fa'] as const)
       await expect(table.locator('time[datetime="2026-09-01"]').first()).toHaveText(transferDate);
       await cardButton.click();
       await expect(detail(older)).toBeVisible();
-      await expect(detail(older).locator('time[datetime="2026-09-01"]')).toHaveText(transferDate);
+      const olderCard = page.getByRole('listitem').filter({
+        has: page.locator(`a[href^="/invoices/${invoice}/receipts/${older}"]`),
+      });
+      await expect(olderCard.locator('time[datetime="2026-09-01"]')).toHaveText(transferDate);
       expect(requests.length).toBe(count);
       // Keep the mobile project's real viewport. Resizing it can leave WebKit
       // rendering to the original device height while laying out at the new height.

@@ -253,12 +253,13 @@ for (const locale of ['en', 'fa'] as const) {
     const deniedQuery = queries.at(-1)!;
     expect(deniedQuery.get('q')).toBe('retry');
     result = 'empty';
+    const retryRequestIndex = queries.length;
     const retry = denial.getByRole('button', { name: copy('retry'), exact: true });
     await retry.focus();
     await page.keyboard.press('Enter');
     await expect(main.getByText(t('historyDates.empty', locale), { exact: true })).toBeVisible();
     await expect(denial).toHaveCount(0);
-    expect(queries.at(-1)?.toString()).toBe(deniedQuery.toString());
+    expect(queries[retryRequestIndex]?.toString()).toBe(deniedQuery.toString());
     const clear = main.locator('[data-slot="list-content"]').getByRole('button', {
       name: t('historyFilters.clearAll', locale),
       exact: true,

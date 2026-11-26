@@ -1,5 +1,5 @@
 import { ListPage, Button, PageHeader, buttonVariants } from '@barghsa/ui';
-import { RecordListSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { Plus } from 'lucide-react';
 import {
   useHistoryFilterDraft,

@@ -9,7 +9,7 @@ import {
   buttonVariants,
 } from '@barghsa/ui';
 import { Plus, UserRound } from 'lucide-react';
-import { RecordListSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { RecordEditorActions } from '../components/RecordEditorLayout.js';
 import {
   useHistoryFilterDraft,

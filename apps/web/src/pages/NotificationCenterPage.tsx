@@ -2,8 +2,8 @@ import { notificationContent } from '../lib/notification-content.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
-import { BellIcon, CheckCheckIcon, Loader2Icon, InboxIcon } from 'lucide-react';
-import { Button, ListPage, ListRefreshButton, LoadingSkeleton } from '@barghsa/ui';
+import { CheckCheckIcon, Loader2Icon, InboxIcon } from 'lucide-react';
+import { Button, ListPage, ListRefreshButton, PageHeader } from '@barghsa/ui';
 import { useNotificationAccessDenied } from '../hooks/useNotificationAccessDenied.js';
 import { useLocale } from '../hooks/useLocale.js';
 import {
@@ -15,6 +15,7 @@ import {
   type NotificationFilter,
   type NotificationItem,
 } from '../lib/notifications.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { NotificationRow } from '../components/NotificationRow.js';
 import { NotificationSubjectLinks } from '../components/NotificationSubjectLinks.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
@@ -282,26 +283,24 @@ function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
 
   return (
     <section className="mx-auto min-w-0 max-w-3xl space-y-5" dir={isRtl ? 'rtl' : 'ltr'}>
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <BellIcon className="h-6 w-6" aria-hidden="true" />
-          <h1 className="text-2xl font-bold">{t('notifications.title', locale)}</h1>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => void markRead()}
-          disabled={!ready || unreadCount === 0}
-          className="gap-2"
-        >
-          {markingAll ? (
-            <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
-          ) : (
-            <CheckCheckIcon className="h-4 w-4" aria-hidden="true" />
-          )}
-          {t('notifications.markAllRead', locale)}
-        </Button>
-      </header>
+      <PageHeader
+        title={t('notifications.title', locale)}
+        actions={
+          <Button
+            variant="outline"
+            onClick={() => void markRead()}
+            disabled={!ready || unreadCount === 0}
+            className="gap-2"
+          >
+            {markingAll ? (
+              <Loader2Icon className="size-4 motion-safe:animate-spin" aria-hidden="true" />
+            ) : (
+              <CheckCheckIcon className="size-4" aria-hidden="true" />
+            )}
+            {t('notifications.markAllRead', locale)}
+          </Button>
+        }
+      />
       {zone.status === 'error' && (
         <p role="status">
           {notificationFeedback('datesUnavailable', locale)}{' '}
@@ -348,7 +347,11 @@ function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
           empty={items.length === 0}
           retainContent={acceptedKey === key && items.length > 0}
           loadingView={
-            <LoadingSkeleton label={t('notifications.loading', locale)} variant="table" />
+            <RecordListSkeleton
+              label={t('notifications.loading', locale)}
+              view="card"
+              headings={[]}
+            />
           }
           errorView={
             <div role="alert" className="space-y-2 rounded-lg border border-destructive/30 p-4">
@@ -418,11 +421,12 @@ function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
                             locale={locale}
                             unread={!item.isRead}
                             muted={item.isRead}
+                            inbox
                             operatingContext={operatingContext}
                           />
                         </Link>
                         {ready && (
-                          <div className="flex flex-wrap items-center gap-x-4 px-4 pb-2">
+                          <div className="flex flex-wrap items-center gap-x-4 border-t px-4 empty:hidden">
                             <NotificationSubjectLinks
                               item={item}
                               locale={locale}

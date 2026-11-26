@@ -9,7 +9,8 @@ import { ElectricityRawDraftQueue } from '../components/ElectricityRawDraftQueue
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
-import { RecordDetailSkeleton, RecordListSkeleton } from '../components/RecordSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { CompactFieldFeedback } from '../components/CompactFieldFeedback.js';
 import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';

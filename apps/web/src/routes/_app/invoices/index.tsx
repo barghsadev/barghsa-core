@@ -47,7 +47,6 @@ function InvoiceListRoute() {
           search: (current) => ({
             ...current,
             q: undefined,
-            status: undefined,
             statuses: undefined,
             from: undefined,
             to: undefined,

@@ -42,7 +42,8 @@ import { staffOrderId } from '../lib/staff-order-list-query.js';
 import type { RecordListQuery } from '../lib/record-list-query.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { DocumentList } from './DocumentRecords.js';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
+import { DocumentList, documentTableHeadings } from './DocumentRecords.js';
 import { DocumentStatusBadge } from './DocumentStatusBadge.js';
 import {
   relatedDocumentLocation,
@@ -685,7 +686,13 @@ function Results({
         error={error}
         empty={!items?.length}
         retainContent={!!items?.length && !denied}
-        loadingView={<PageLoading label={word('loading')} />}
+        loadingView={
+          <RecordListSkeleton
+            label={word('loading')}
+            view={view}
+            headings={documentTableHeadings(locale)}
+          />
+        }
         errorView={
           <Alert variant="destructive">
             <AlertDescription>{word(denied ? 'denied' : 'listError')}</AlertDescription>

@@ -130,7 +130,9 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await page.goto('/notifications');
     await expect.poll(() => Boolean(held)).toBe(true);
-    await expect(page.getByRole('main').locator('[data-slot="skeleton"]')).toHaveCount(5);
+    const loading = page.getByRole('main').locator('[data-slot="record-list-skeleton"]');
+    await expect(loading).toBeVisible();
+    await expect(loading.locator(':scope > div[aria-hidden="true"] > div')).toHaveCount(3);
     if (locale === 'fa') await page.screenshot({ path: '/tmp/notification-center-loading-fa.png' });
     const previous = held!.request();
     const cancelled = page.waitForEvent('requestfailed', (request) => request === previous);
