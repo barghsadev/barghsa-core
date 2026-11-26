@@ -9,8 +9,9 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { formatRelativeTime } from '../lib/relative-time.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import {
-  LoadingStatus,
   Button,
   FinancialReviewSummary,
   Label,
@@ -454,7 +455,17 @@ function ApprovalWorkspace({
           error={error}
           empty={!visibleItems.length}
           retainContent={!!visibleItems.length && !denied}
-          loadingView={<LoadingStatus>{t('admin.approvals.loading', locale)}</LoadingStatus>}
+          loadingView={
+            requestId ? (
+              <RecordDetailSkeleton label={t('admin.approvals.loading', locale)} layout="payment" />
+            ) : (
+              <RecordListSkeleton
+                label={t('admin.approvals.loading', locale)}
+                view="card"
+                headings={[]}
+              />
+            )
+          }
           errorView={
             <div role="alert" className="space-y-2">
               <p>{t(denied ? 'admin.approvals.loadForbidden' : 'admin.approvals.error', locale)}</p>
@@ -491,7 +502,7 @@ function ApprovalWorkspace({
           <ul className="space-y-4">
             {visibleItems.slice(0, PAGE_SIZE).map((request) => {
               const metadata = (
-                <dl className="grid min-w-0 grid-cols-2 gap-2.5 text-sm sm:grid-cols-3">
+                <dl className="grid min-w-0 grid-cols-2 gap-2.5 border-t pt-3 text-sm sm:grid-cols-3">
                   {[
                     [
                       t('admin.approvals.initiator', locale),
@@ -610,7 +621,13 @@ function ApprovalWorkspace({
                         : undefined
                     }
                   >
-                    <dl className="min-w-0 space-y-0.5 rounded-lg border bg-muted/30 px-3 py-2.5">
+                    <dl
+                      className={
+                        renderDecision
+                          ? 'min-w-0 space-y-0.5 rounded-lg border bg-muted/30 px-3 py-2.5'
+                          : 'min-w-0 space-y-0.5'
+                      }
+                    >
                       <dt className="text-xs text-muted-foreground">
                         {t('admin.approvals.amount', locale)}
                       </dt>

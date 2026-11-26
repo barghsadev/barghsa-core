@@ -9,6 +9,8 @@ import {
   ListRefreshButton,
   LoadingStatus,
 } from '@barghsa/ui';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import {
   isConfigAuditPage,
   type ConfigAuditEntry,
@@ -191,7 +193,12 @@ function AuditPage({ filters, eventId, onApply }: AuditProps) {
       </header>
       {!eventId && !denied && onApply && <AuditFilters filters={filters} onApply={onApply} />}
       {notice}
-      {read.loading && <LoadingStatus>{word('loading')}</LoadingStatus>}
+      {read.loading &&
+        (eventId ? (
+          <RecordDetailSkeleton label={word('loading')} />
+        ) : (
+          <RecordListSkeleton label={word('loading')} view="card" headings={[]} />
+        ))}
       {(read.error || denied || repeated) && (
         <Alert variant="destructive" className="space-y-2">
           <p>{word(stateLabel)}</p>
@@ -204,11 +211,11 @@ function AuditPage({ filters, eventId, onApply }: AuditProps) {
         <p className="rounded-lg border bg-card p-4">{word(eventId ? 'unavailable' : 'empty')}</p>
       )}
       {!eventId && items.length > 0 && (
-        <ol className="divide-y rounded-lg border bg-card">
+        <ol className="space-y-3">
           {items.map((item) => (
             <li
               key={item.id}
-              className="grid gap-3 p-4 sm:grid-cols-[minmax(12rem,1.25fr)_minmax(9rem,1fr)_minmax(8rem,1fr)]"
+              className="grid gap-3 rounded-xl border bg-card p-4 sm:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)]"
             >
               <div className="min-w-0 space-y-1">
                 <Link
@@ -240,9 +247,19 @@ function AuditPage({ filters, eventId, onApply }: AuditProps) {
         </ol>
       )}
       {entry && (
-        <article className="space-y-4 rounded-lg border bg-card p-4 sm:p-6">
-          <Badge variant="destructive">{word('deniedBadge')}</Badge>
-          <dl className="grid gap-4 text-sm sm:grid-cols-2">
+        <article className="space-y-4 rounded-xl border bg-card p-4 sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="font-semibold">
+                <bdi>{field(entry, 'action') ?? word('record')}</bdi>
+              </h2>
+              <p className="mt-1 text-sm wrap-anywhere text-muted-foreground">
+                <bdi>{field(entry, 'resource') ?? '—'}</bdi>
+              </p>
+            </div>
+            <Badge variant="destructive">{word('deniedBadge')}</Badge>
+          </div>
+          <dl className="grid gap-4 border-t pt-4 text-sm sm:grid-cols-2">
             <div>
               <dt className="text-muted-foreground">{word('occurred')}</dt>
               <dd>
@@ -265,7 +282,7 @@ function AuditPage({ filters, eventId, onApply }: AuditProps) {
                 )}
               </dd>
             </div>
-            {(['resource', 'action', 'reason', 'correlationId'] as const).map((key) => (
+            {(['reason', 'correlationId'] as const).map((key) => (
               <div key={key}>
                 <dt className="text-muted-foreground">{word(`field.${key}`)}</dt>
                 <dd className="[overflow-wrap:anywhere]">

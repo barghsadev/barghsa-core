@@ -13,6 +13,7 @@ import {
   Textarea,
   buttonVariants,
 } from '@barghsa/ui';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { t } from '@barghsa/i18n/recovery';
 import { staffRecoveryText } from '@barghsa/i18n/staff-recovery';
 import { useLocale } from '../hooks/useLocale.js';
@@ -593,9 +594,14 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
           )}
         </Alert>
       )}
-      {(busy || read.loading) && <LoadingStatus>{text('loading')}</LoadingStatus>}
+      {(busy || read.loading) &&
+        (data ? (
+          <LoadingStatus>{text('loading')}</LoadingStatus>
+        ) : (
+          <RecordDetailSkeleton label={text('loading')} />
+        ))}
       {data && (
-        <article className="space-y-4 rounded-lg border bg-card p-4 [overflow-wrap:anywhere] sm:p-6">
+        <article className="space-y-4 rounded-xl border bg-card p-4 wrap-anywhere sm:p-6">
           <header className="flex items-start justify-between gap-2">
             <div className="min-w-0 space-y-1">
               <Badge variant={data.state === 'rejected' ? 'outline' : 'secondary'}>
@@ -616,7 +622,7 @@ function RecoveryWorkflow({ actor, entry }: { actor: string | null; entry: Recov
               onClick={read.retry}
             />
           </header>
-          <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-4 border-t pt-4 text-sm">
             {(section === 'complete'
               ? (['supportReference'] as const)
               : (['oldLogin', 'newLogin', 'supportReference'] as const)

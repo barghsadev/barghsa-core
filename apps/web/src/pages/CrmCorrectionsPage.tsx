@@ -5,6 +5,8 @@ import { t } from '@barghsa/i18n/crm';
 import { tCrmForm } from '@barghsa/i18n/crm-forms';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { validateLegalNationalIdentifier, validateNationalId } from '@barghsa/shared/validation';
 import {
   LoadingStatus,
@@ -1015,7 +1017,13 @@ function Corrections({
                   error={queueError}
                   empty={!queue?.cases.length}
                   retainContent={!!queue?.cases.length}
-                  loadingView={<LoadingStatus>{t('crm.list.loading', locale)}</LoadingStatus>}
+                  loadingView={
+                    <RecordListSkeleton
+                      label={t('crm.list.loading', locale)}
+                      view="card"
+                      headings={[]}
+                    />
+                  }
                   emptyView={
                     offset === 0 ? (
                       <QueueEmptyState
@@ -1053,17 +1061,25 @@ function Corrections({
                   }
                 >
                   {!!queue?.cases.length && (
-                    <ul className="space-y-2">
+                    <ul className="space-y-3">
                       {queue.cases.map((item) => (
                         <li
                           key={item.id}
-                          className="rounded border bg-card text-card-foreground p-3 flex flex-wrap items-center justify-between gap-3"
+                          className="flex flex-wrap items-start justify-between gap-3 rounded-xl border bg-card p-4 text-card-foreground"
                         >
                           <div className="grid min-w-0 gap-1 break-words">
-                            <span className="font-medium">
-                              {t(`crm.corrections.${item.fieldName}`, locale)} ·{' '}
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="font-medium">
+                                {t(`crm.corrections.${item.fieldName}`, locale)}
+                              </span>
+                              <StatusBadge
+                                state={item.status}
+                                label={t(`crm.corrections.${item.status}`, locale)}
+                              />
+                            </div>
+                            <p className="text-sm">
                               <bdi>{item.requestedValue}</bdi>
-                            </span>
+                            </p>
                             {recordSearch && (
                               <span className="text-sm text-muted-foreground">
                                 {item.assignedName ?? t('tickets.unassigned', locale)}
@@ -1151,7 +1167,7 @@ function Corrections({
               </Button>
             </nav>
           )}
-          {detailRead.loading && <LoadingStatus>{t('crm.list.loading', locale)}</LoadingStatus>}
+          {detailRead.loading && <RecordDetailSkeleton label={t('crm.list.loading', locale)} />}
           {detailRead.error && (
             <div role="alert">
               <p>{t('crm.corrections.error', locale)}</p>
