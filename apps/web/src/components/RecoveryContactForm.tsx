@@ -5,7 +5,18 @@ import { t } from '@barghsa/i18n/recovery';
 import { useLocale } from '../hooks/useLocale.js';
 import { publicAuthFetch } from '../lib/public-auth-fetch.js';
 import { authResponseRecord } from '../lib/auth-responses.js';
+import { uuidReference } from '../lib/form-receipt.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
+
+function validReference(value: string) {
+  try {
+    uuidReference(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export default function RecoveryContactForm() {
   const locale = useLocale();
   const [caseId, setCaseId] = useState(''),
@@ -13,14 +24,30 @@ export default function RecoveryContactForm() {
     [code, setCode] = useState('');
   const [busy, setBusy] = useState(false),
     [result, setResult] = useState<'verified' | 'error' | 'unconfirmed' | null>(null);
+  const [checked, setChecked] = useState({ caseId: false, challengeId: false });
   const controller = useRef<AbortController | null>(null);
+  const feedback = useRef<HTMLParagraphElement | null>(null);
+  const nextField = useRef<HTMLInputElement | null>(null);
   const closed = useRef(false);
   const terminal = result === 'verified' || result === 'unconfirmed';
+  const invalid = { caseId: !validReference(caseId), challengeId: !validReference(challengeId) };
   useEffect(() => () => controller.current?.abort(), []);
-  async function submit(event: FormEvent) {
+  useEffect(() => {
+    if (terminal) feedback.current?.focus();
+  }, [terminal]);
+  useEffect(() => {
+    nextField.current?.focus();
+    nextField.current = null;
+  }, [checked]);
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (controller.current || closed.current || !caseId || !challengeId || code.length !== 6)
+    if (controller.current || closed.current || code.length !== 6) return;
+    if (invalid.caseId || invalid.challengeId) {
+      const firstInvalid = invalid.caseId ? '#recovery-caseId' : '#recovery-challengeId';
+      nextField.current = event.currentTarget.querySelector<HTMLInputElement>(firstInvalid);
+      setChecked({ caseId: true, challengeId: true });
       return;
+    }
     const request = new AbortController();
     controller.current = request;
     setBusy(true);
@@ -65,6 +92,7 @@ export default function RecoveryContactForm() {
       aria-busy={busy}
       className="min-w-0 space-y-3 border-y py-4"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      noValidate
     >
       <div className="space-y-1">
         <h2 id="recovery-contact-heading" className="font-semibold">
@@ -75,29 +103,44 @@ export default function RecoveryContactForm() {
         </p>
       </div>
       <fieldset disabled={busy || terminal} className="min-w-0 space-y-3">
-        {[
-          { value: caseId, set: setCaseId, key: 'caseId' },
-          { value: challengeId, set: setChallengeId, key: 'challengeId' },
-        ].map(({ value, set, key }) => (
-          <div key={key} className="min-w-0 space-y-1">
-            <Label htmlFor={`recovery-${key}`}>{t(`auth.recovery.${key}`, locale)}</Label>
-            <Input
-              id={`recovery-${key}`}
-              required
-              aria-required="true"
-              aria-describedby="recovery-reference-hint"
-              value={value}
-              dir="ltr"
-              autoComplete="off"
-              spellCheck={false}
-              className="min-w-0 font-mono"
-              onChange={(e) => {
-                set(e.target.value.trim());
-                setResult(null);
-              }}
-            />
-          </div>
-        ))}
+        {(
+          [
+            { value: caseId, set: setCaseId, key: 'caseId' },
+            { value: challengeId, set: setChallengeId, key: 'challengeId' },
+          ] as const
+        ).map(({ value, set, key }) => {
+          const id = `recovery-${key}`;
+          const error = checked[key] && invalid[key];
+          return (
+            <div key={key} className="min-w-0 space-y-1">
+              <Label htmlFor={id}>{t(`auth.recovery.${key}`, locale)}</Label>
+              <Input
+                id={id}
+                required
+                aria-required="true"
+                aria-invalid={error || undefined}
+                aria-describedby={error ? `${id}-error` : 'recovery-reference-hint'}
+                value={value}
+                dir="ltr"
+                autoComplete="off"
+                spellCheck={false}
+                className="min-w-0 font-mono"
+                onBlur={() => {
+                  if (value) setChecked((current) => ({ ...current, [key]: true }));
+                }}
+                onChange={(e) => {
+                  set(e.target.value.trim());
+                  setResult(null);
+                }}
+              />
+              {error && (
+                <p id={`${id}-error`} className="text-xs text-destructive">
+                  {t(`auth.recovery.${key}Format`, locale)}
+                </p>
+              )}
+            </div>
+          );
+        })}
         {!terminal && (
           <div className="space-y-3">
             <OtpInput
@@ -120,6 +163,8 @@ export default function RecoveryContactForm() {
       {busy && <p role="status">{t('auth.recovery.loading', locale)}</p>}
       {result && (
         <p
+          ref={feedback}
+          tabIndex={terminal ? -1 : undefined}
           className="rounded-lg border bg-muted/35 px-3 py-2.5 text-sm"
           role={result === 'verified' ? 'status' : 'alert'}
         >

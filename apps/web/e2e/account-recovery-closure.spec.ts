@@ -46,8 +46,10 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(digits).toHaveCount(6);
     for (const input of await digits.all())
       await expect(input).toHaveAttribute('aria-required', 'true');
-    await page.locator('#recovery-caseId').fill(` ${id} `);
-    await page.locator('#recovery-challengeId').fill(` ${challengeId} `);
+    const caseField = page.locator('#recovery-caseId');
+    const challengeField = page.locator('#recovery-challengeId');
+    await caseField.fill(id.slice(0, 18));
+    await challengeField.fill(challengeId.slice(0, 18));
     const digit = page.getByRole('textbox', {
       name: t('auth.otp.digitLabel', locale) + ' 1',
       exact: true,
@@ -58,6 +60,22 @@ for (const locale of ['en', 'fa'] as const) {
       exact: true,
     });
     await submit.click();
+    await expect(caseField).toBeFocused();
+    await expect(caseField).toHaveAttribute('aria-invalid', 'true');
+    await expect(caseField).toHaveAccessibleDescription(t('auth.recovery.caseIdFormat', locale));
+    await expect(challengeField).toHaveAttribute('aria-invalid', 'true');
+    await expect(challengeField).toHaveAccessibleDescription(
+      t('auth.recovery.challengeIdFormat', locale)
+    );
+    expect(requests).toEqual([]);
+    await caseField.fill(` ${id} `);
+    await expect(caseField).not.toHaveAttribute('aria-invalid', 'true');
+    await submit.click();
+    await expect(challengeField).toBeFocused();
+    expect(requests).toEqual([]);
+    await challengeField.fill(` ${challengeId} `);
+    await expect(challengeField).not.toHaveAttribute('aria-invalid', 'true');
+    await submit.click();
     await expect(
       page.getByRole('alert').filter({ hasText: t('auth.recovery.error', locale) })
     ).toBeVisible();
@@ -65,9 +83,11 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#recovery-challengeId')).toHaveValue(challengeId);
     fail = false;
     await submit.click();
-    await expect(
-      page.getByRole('status').filter({ hasText: t('auth.recovery.verified', locale) })
-    ).toBeVisible();
+    const verified = page
+      .getByRole('status')
+      .filter({ hasText: t('auth.recovery.verified', locale) });
+    await expect(verified).toBeVisible();
+    await expect(verified).toBeFocused();
     expect(requests).toEqual([
       { caseId: id, challengeId, code: '123456' },
       { caseId: id, challengeId, code: '123456' },
@@ -152,6 +172,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(form.getByRole('status')).toHaveText(t('auth.recovery.loading', locale));
     await page.clock.fastForward(15_001);
     await expect(form.getByRole('alert')).toHaveText(t('auth.recovery.unconfirmed', locale));
+    await expect(form.getByRole('alert')).toBeFocused();
     await expect(form).toHaveAttribute('aria-busy', 'false');
     await expect(code).toHaveCount(0);
     await expect(form.locator('#recovery-caseId')).toHaveValue(id);
