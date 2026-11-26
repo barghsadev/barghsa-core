@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Input } from '@barghsa/ui';
 import { FormControl, FormField, FormItem, FormLabel, type UseFormReturn } from '@barghsa/ui/form';
 import { contractText } from '@barghsa/i18n/contracts';
@@ -7,6 +7,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { authoringUuid, type ContractContextValues } from '../lib/contract-authoring-form.js';
+import { DocumentRequestError } from '../lib/documents.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { CatalogueChoicePicker } from './CatalogueChoicePicker.js';
 import { CompactFieldFeedback } from './CompactFieldFeedback.js';
@@ -14,6 +15,7 @@ import { CompactFieldFeedback } from './CompactFieldFeedback.js';
 type InvoiceChoice = { id: string; createdAt: string };
 type InvoiceChoices = { invoices: InvoiceChoice[]; nextBefore: string | null };
 const noInvoice = 'none';
+const inputId = 'contract-context-invoice';
 
 export function ContractInvoicePicker({
   contractId,
@@ -28,7 +30,7 @@ export function ContractInvoicePicker({
   profileId: string;
   control: UseFormReturn<ContractContextValues>['control'];
   disabled: boolean;
-  formatDate: (value: string) => string;
+  formatDate: (value: string, options?: Intl.DateTimeFormatOptions) => string;
 }) {
   const locale = useLocale();
   const copy = (key: string) => tContractAuthoring(key, locale);
@@ -37,17 +39,32 @@ export function ContractInvoicePicker({
   const read = useOwnedContractRead(actor, revision, profileId, versionId);
   const [manual, setManual] = useState(false);
   const [choices, setChoices] = useState<InvoiceChoices | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [failed, setFailed] = useState(false);
+  const [status, setStatus] = useState<'loading' | 'ready' | 'failed' | 'denied'>('loading');
   const [request, setRequest] = useState<{ before: string | null }>({ before: null });
+  const requestActions = useRef<HTMLDivElement>(null);
+  const retryButton = useRef<HTMLButtonElement>(null);
+  const restoreFocus = useRef(false);
+
+  function loadInvoices(before: string | null) {
+    restoreFocus.current = true;
+    setStatus('loading');
+    setRequest({ before });
+  }
+
+  useEffect(() => {
+    if (status === 'loading' || !restoreFocus.current) return;
+    restoreFocus.current = false;
+    const active = document.activeElement;
+    if (active !== document.body && !requestActions.current?.contains(active)) return;
+    if (status === 'failed') retryButton.current?.focus();
+    else document.getElementById(inputId)?.focus();
+  }, [status]);
 
   useEffect(() => {
     const controller = new AbortController();
     if (!actor) return;
     const params = new URLSearchParams({ versionId });
     if (request.before) params.set('before', request.before);
-    setLoading(true);
-    setFailed(false);
     void read<
       Partial<InvoiceChoices> & { contractId?: string; profileId?: string; versionId?: string }
     >(
@@ -81,15 +98,16 @@ export function ContractInvoicePicker({
           invoices: request.before && previous ? [...previous.invoices, ...invoices] : invoices,
           nextBefore,
         }));
+        setStatus('ready');
       })
-      .catch(() => {
-        if (!controller.signal.aborted) {
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return;
+        if (error instanceof DocumentRequestError && [401, 403, 404].includes(error.status)) {
           setChoices(null);
-          setFailed(true);
+          setStatus('denied');
+        } else {
+          setStatus('failed');
         }
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
   }, [actor, contractId, versionId, profileId, read, request]);
@@ -97,7 +115,7 @@ export function ContractInvoicePicker({
   const options = [
     { id: noInvoice, title: copy('noLinkedInvoice') },
     ...(choices?.invoices ?? []).map((invoice) => {
-      const date = formatDate(invoice.createdAt);
+      const date = formatDate(invoice.createdAt, { dateStyle: 'medium' });
       return {
         id: invoice.id,
         title: `${date} · …${invoice.id.slice(-12)}`,
@@ -111,7 +129,7 @@ export function ContractInvoicePicker({
       control={control}
       name="initialInvoiceId"
       render={({ field, fieldState }) => (
-        <FormItem id="contract-context-invoice">
+        <FormItem id={inputId}>
           <div className="flex flex-wrap items-center justify-between gap-1">
             <FormLabel>
               {manual ? contractText('contextInvoice', locale) : copy('initialInvoice')}
@@ -137,7 +155,7 @@ export function ContractInvoicePicker({
               />
             ) : (
               <CatalogueChoicePicker
-                id="contract-context-invoice"
+                id={inputId}
                 locale={locale}
                 options={options}
                 selected={field.value || noInvoice}
@@ -165,38 +183,44 @@ export function ContractInvoicePicker({
             validationMessage={copy('invoiceInvalid')}
             invalid={fieldState.invalid}
           />
-          {loading && !manual && (
-            <p role="status" className="text-sm text-muted-foreground">
-              {copy('invoiceLoading')}
-            </p>
-          )}
-          {failed && !manual && (
-            <p role="status" className="text-sm text-muted-foreground">
-              {copy('invoiceLookupError')}
-            </p>
-          )}
-          {!manual && (choices?.nextBefore || failed) && (
-            <div className="flex flex-wrap gap-x-3 gap-y-1">
-              {!manual && choices?.nextBefore && (
-                <Button
-                  type="button"
-                  variant="link"
-                  className="px-0"
-                  disabled={disabled || loading}
-                  onClick={() => setRequest({ before: choices.nextBefore })}
-                >
-                  {copy('invoiceOlder')}
-                </Button>
+          {!manual && (
+            <div ref={requestActions}>
+              {status === 'loading' && (
+                <p role="status" className="text-sm text-muted-foreground">
+                  {copy('invoiceLoading')}
+                </p>
               )}
-              {failed && !manual && (
+              {status === 'denied' && (
+                <p role="status" className="text-sm text-muted-foreground">
+                  {copy('invoiceLookupDenied')}
+                </p>
+              )}
+              {status === 'failed' && (
+                <div className="flex min-w-0 flex-wrap items-center gap-2 rounded-lg border border-border bg-muted/35 p-2.5">
+                  <p role="alert" className="min-w-0 flex-1 basis-36 text-sm text-muted-foreground">
+                    {copy(request.before ? 'invoiceOlderLookupError' : 'invoiceLookupError')}
+                  </p>
+                  <Button
+                    ref={retryButton}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={disabled}
+                    onClick={() => loadInvoices(request.before)}
+                  >
+                    {contractText('retry', locale)}
+                  </Button>
+                </div>
+              )}
+              {status === 'ready' && choices?.nextBefore && (
                 <Button
                   type="button"
                   variant="link"
                   className="px-0"
                   disabled={disabled}
-                  onClick={() => setRequest({ before: null })}
+                  onClick={() => loadInvoices(choices.nextBefore)}
                 >
-                  {contractText('retry', locale)}
+                  {copy('invoiceOlder')}
                 </Button>
               )}
             </div>

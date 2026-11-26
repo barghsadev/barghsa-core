@@ -23,6 +23,84 @@ import {
 
 const keyPattern = /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
 const uuidPattern = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/;
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`contract invoice choices survive a failed page and retry the same cursor (${locale})`, async ({
+    page,
+  }) => {
+    const { state } = await setupContractAuthoring(page, locale, true);
+    const firstInvoice = '87000000-0000-4000-8000-000000000017';
+    const earlierInvoice = '87000000-0000-4000-8000-000000000007';
+    const requests: Array<string | null> = [];
+    const word = (key: string) => tContractAuthoring(key, locale);
+    const retryMessage = word('invoiceOlderLookupError');
+    const deniedMessage = word('invoiceLookupDenied');
+    expect(retryMessage).not.toBe('invoiceOlderLookupError');
+    expect(deniedMessage).not.toBe('invoiceLookupDenied');
+    let fail = true;
+    await page.route(
+      `**/api/admin/contracts/${draftContractId}/activation/invoice-options?*`,
+      (route) => {
+        const query = new URL(route.request().url()).searchParams;
+        const before = query.get('before');
+        requests.push(before);
+        if (before === earlierInvoice)
+          return route.fulfill({ status: 403, json: { message: 'PRIVATE_INVOICE_MESSAGE' } });
+        if (before && fail)
+          return route.fulfill({ status: 503, json: { message: 'PRIVATE_INVOICE_MESSAGE' } });
+        return route.fulfill({
+          json: {
+            contractId: draftContractId,
+            versionId: query.get('versionId'),
+            profileId,
+            invoices: before
+              ? [{ id: earlierInvoice, createdAt: '2026-08-14T10:00:00Z' }]
+              : [
+                  { id: firstInvoice, createdAt: '2026-09-14T10:00:00Z' },
+                  { id: invoiceId, createdAt: '2026-09-01T10:00:00Z' },
+                ],
+            nextBefore: before ? earlierInvoice : invoiceId,
+          },
+        });
+      }
+    );
+    await page.goto(`/admin/contracts/${draftContractId}/service-dates`);
+    const picker = page.getByRole('combobox', { name: word('initialInvoice'), exact: true });
+    const earlier = page.getByRole('button', { name: word('invoiceOlder'), exact: true });
+    const retry = page.getByRole('button', { name: contractText('retry', locale), exact: true });
+    const firstOption = page.getByRole('option', { name: /000000000017/ });
+    const earlierOption = page.getByRole('option', { name: /000000000007/ });
+
+    await expect(earlier).toBeVisible();
+    await picker.click();
+    await firstOption.click();
+    const label = await picker.inputValue();
+    await earlier.click();
+    await expect(page.getByText(retryMessage, { exact: true })).toBeVisible();
+    await expect(picker).toHaveValue(label);
+    await expect(retry).toBeFocused();
+    await picker.click();
+    await expect(firstOption).toBeVisible();
+    await picker.press('Escape');
+    fail = false;
+    await retry.click();
+    await expect(picker).toBeFocused();
+    expect(requests).toEqual([null, invoiceId, invoiceId]);
+    await picker.click();
+    await expect(firstOption).toBeVisible();
+    await earlierOption.click();
+    await expect(picker).toHaveValue(/000000000007/);
+    await earlier.click();
+    await expect(page.getByText(deniedMessage, { exact: true })).toBeVisible();
+    await expect(retry).toHaveCount(0);
+    await picker.click();
+    await expect(firstOption).toHaveCount(0);
+    await expect(earlierOption).toHaveCount(0);
+    await expect(page.getByText('PRIVATE_INVOICE_MESSAGE')).toHaveCount(0);
+    expect(state.writes).toEqual([]);
+  });
+}
+
 async function focusedError(field: Locator) {
   await expect(field).toBeFocused();
   await expect(field).toHaveAttribute('aria-invalid', 'true');

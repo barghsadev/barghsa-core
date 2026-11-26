@@ -46,6 +46,9 @@ export const en: Record<string, string> = {
     'Use the full ID of an invoice for this contract or its order. Leave it blank to unlink.',
   invoiceLoading: 'Looking up eligible invoices…',
   invoiceLookupError: 'Could not load the invoice choices. Retry or enter the full invoice ID.',
+  invoiceOlderLookupError:
+    'Earlier invoices could not be loaded. You can still use the loaded invoices.',
+  invoiceLookupDenied: 'Your access does not allow browsing invoices for this contract.',
   invoiceEmpty: 'No eligible invoices are available for this version.',
   invoiceEnterId: 'Enter invoice ID',
   invoiceChoose: 'Choose from invoices',
@@ -105,6 +108,9 @@ export const fa: Record<string, string> = {
     'شناسه کامل صورتحساب همین قرارداد یا سفارش را وارد کنید. برای قطع پیوند، آن را خالی بگذارید.',
   invoiceLoading: 'در حال دریافت صورتحساب‌های قابل انتخاب…',
   invoiceLookupError: 'فهرست صورتحساب‌ها دریافت نشد. دوباره تلاش کنید یا شناسه کامل را وارد کنید.',
+  invoiceOlderLookupError:
+    'صورتحساب‌های قدیمی‌تر دریافت نشدند. می‌توانید از فهرست فعلی انتخاب کنید.',
+  invoiceLookupDenied: 'دسترسی شما اجازه مشاهده فهرست صورتحساب‌های این قرارداد را نمی‌دهد.',
   invoiceEmpty: 'برای این نسخه صورتحساب قابل انتخابی وجود ندارد.',
   invoiceEnterId: 'وارد کردن شناسه صورتحساب',
   invoiceChoose: 'انتخاب از فهرست صورتحساب‌ها',

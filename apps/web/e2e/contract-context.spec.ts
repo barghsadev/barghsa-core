@@ -205,23 +205,31 @@ for (const locale of ['en', 'fa'] as const) {
       const start = await manualRecordDateTime(page, 'contract-context-start');
       await expect(start).toHaveValue('2026-09-22T03:30');
       const editor = page.getByTestId('contract-context-form');
-      const invoice = editor.getByLabel(copy('initialInvoice'), { exact: true });
+      const invoice = editor.getByRole('combobox', { name: copy('initialInvoice'), exact: true });
+      const chooseInvoice = async (name: string | RegExp) => {
+        await invoice.click();
+        await page.getByRole('option', { name, exact: true }).click();
+      };
       await expect(editor.getByText(copy('invoiceLookupError'), { exact: true })).toBeVisible();
-      await expect(invoice.locator('option')).toHaveCount(1);
+      await invoice.click();
+      await expect(page.getByRole('option')).toHaveCount(1);
+      await expect(page.getByRole('option', { name: /777777777777/ })).toHaveCount(0);
+      await invoice.press('Escape');
       await editor.getByRole('button', { name: words.retry, exact: true }).click();
-      await invoice.selectOption(invoiceId);
+      await expect(invoice).toBeFocused();
+      await chooseInvoice(/777777777777/);
       await editor.getByRole('button', { name: copy('invoiceEnterId'), exact: true }).click();
       await expect(editor.getByLabel(words.contextInvoice, { exact: true })).toHaveValue(invoiceId);
       await editor.getByRole('button', { name: copy('invoiceChoose'), exact: true }).click();
-      await expect(invoice).toHaveValue(invoiceId);
-      await invoice.selectOption('');
+      await expect(invoice).toHaveValue(/777777777777/);
+      await chooseInvoice(copy('noLinkedInvoice'));
       await expect(
         editor.getByRole('button', { name: words.saveContext, exact: true })
       ).toBeDisabled();
       await page.reload();
       await expect(editor).toBeVisible();
       await selectRecordDateTime(page, 'contract-context-end', '2026-11-22T03:30', locale);
-      await invoice.selectOption(invoiceId);
+      await chooseInvoice(/777777777777/);
       await page.getByLabel(words.contextReason, { exact: true }).fill('Extend service term');
       await editor.getByRole('button', { name: words.saveContext, exact: true }).click();
       const dialog = page.getByRole('dialog');
