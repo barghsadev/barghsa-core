@@ -201,9 +201,9 @@ async function previewRevision() {
   await act(async () => {});
 }
 async function confirmRevision() {
-  const button = [...host.querySelectorAll('section [role=status] button')].find(
-    (element) => element.textContent === t('electricity.order.correction.submit', 'en')
-  )!;
+  const button = [
+    ...host.querySelectorAll('[data-testid="electricity-revision-review"] button'),
+  ].find((element) => element.textContent === t('electricity.order.correction.submit', 'en'))!;
   await approveVisibleConfirmation();
   await act(async () => (button as HTMLButtonElement).click());
 }
@@ -395,7 +395,7 @@ it('preserves derived green in a complete simple preview', async () => {
   };
   await renderRevision();
   await previewRevision();
-  expect(host.querySelector('section > [role=status]')).not.toBeNull();
+  expect(host.querySelector('[data-testid="electricity-revision-review"]')).not.toBeNull();
   expect(host.textContent).toContain('110');
 });
 it('accepts canonical advanced quantity receipts from leading-zero inputs and server-derived green', async () => {
@@ -420,7 +420,7 @@ it('accepts canonical advanced quantity receipts from leading-zero inputs and se
   await renderRevision({ ...order, mode: 'advanced' });
   await change('revision-thermal', '0010');
   await previewRevision();
-  expect(host.querySelector('section > [role=status]')).not.toBeNull();
+  expect(host.querySelector('[data-testid="electricity-revision-review"]')).not.toBeNull();
   expect(JSON.parse(String(calls('/revision-preview')[0]![1]?.body))).toMatchObject({
     quantities: { thermal: '0010', green: '0' },
   });
@@ -639,7 +639,7 @@ it('keeps preview controls focusable, blocks duplicate preview commands and disc
   expect(previews).toBe(1);
   await change('revision-note', 'Updated response is retained');
   await act(async () => resolve(Response.json(quote)));
-  expect(host.querySelector('section > [role=status]')).toBeNull();
+  expect(host.querySelector('[data-testid="electricity-revision-review"]')).toBeNull();
   expect(input('revision-note').value).toBe('Updated response is retained');
   expect(calls('/resubmit')).toHaveLength(0);
 });

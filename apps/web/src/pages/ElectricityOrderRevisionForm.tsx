@@ -5,6 +5,7 @@ import {
   StickyRecordEditorActions,
 } from '../components/StickyRecordEditorActions.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
+import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { toast } from '../lib/toast-api.js';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useQueryClient } from '@tanstack/react-query';
@@ -138,6 +139,9 @@ export function ElectricityOrderRevisionForm({
   const advanced = order.mode === 'advanced';
   const profileRevision = useProfileContextRevision();
   const reader = useId();
+  const reviewHeadingId = useId();
+  const editorHeading = useRef<HTMLHeadingElement>(null);
+  const reviewHeading = useRef<HTMLHeadingElement>(null);
   const client = useQueryClient();
   const scopeKey = JSON.stringify([
     actor,
@@ -448,6 +452,11 @@ export function ElectricityOrderRevisionForm({
   ]);
   const currentReview = review?.fingerprint === fingerprint ? review.quote : null;
   const live = acceptedScope === scopeKey && !denied;
+  useEffect(() => {
+    if (!currentReview || !live || !reviewHeading.current) return;
+    reviewHeading.current.scrollIntoView?.({ block: 'start' });
+    reviewHeading.current.focus({ preventScroll: true });
+  }, [currentReview, live]);
   // Read-only validation/preview keeps its own controls focusable. Captured writes freeze both forms.
   const locked =
     !!attempt.current || (lock.owner !== null && lock.owner !== 'revision') || unconfirmed || !live;
@@ -750,7 +759,7 @@ export function ElectricityOrderRevisionForm({
           className={recordEditorFormSurface}
         >
           <div className="space-y-1 border-b bg-muted/25 px-4 py-3 sm:px-5">
-            <h2 className="text-base font-semibold">
+            <h2 ref={editorHeading} tabIndex={-1} className="scroll-mt-20 text-base font-semibold">
               {t('electricity.order.revision.title', locale)}
             </h2>
             <p className="text-sm text-muted-foreground">
@@ -1027,11 +1036,47 @@ export function ElectricityOrderRevisionForm({
         </form>
       </Form>
       {currentReview ? (
-        <div className="space-y-3" role="status">
+        <section
+          aria-labelledby={reviewHeadingId}
+          data-testid="electricity-revision-review"
+          className="min-w-0 space-y-3"
+        >
+          <header className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+            <h2
+              id={reviewHeadingId}
+              ref={reviewHeading}
+              tabIndex={-1}
+              className="scroll-mt-20 text-base font-semibold"
+            >
+              {t('electricity.order.revision.review', locale)}
+            </h2>
+            <Button
+              type="button"
+              variant="ghost"
+              disabled={busy || locked}
+              onClick={() => {
+                editorHeading.current?.scrollIntoView?.({ block: 'start' });
+                editorHeading.current?.focus({ preventScroll: true });
+              }}
+            >
+              {t('electricity.order.revision.backToEditing', locale)}
+            </Button>
+          </header>
           <FinancialReviewSummary
             compact
-            title={t('electricity.order.revision.review', locale)}
+            totalFirst
+            title={t('electricity.order.revision.breakdown', locale)}
             rows={[
+              {
+                id: 'current-total',
+                label: t('electricity.order.revision.currentTotal', locale),
+                value: numbers.money(order.totalIrR),
+              },
+              {
+                id: 'period',
+                label: t('electricity.order.revision.deliveryWindow', locale),
+                value: `${formatInTimezone(currentReview.periodStart, 'Asia/Tehran', locale)} – ${formatInTimezone(currentReview.periodEnd, 'Asia/Tehran', locale)}`,
+              },
               {
                 id: 'quantity',
                 label: t('electricity.order.quantity', locale),
@@ -1059,7 +1104,7 @@ export function ElectricityOrderRevisionForm({
               },
             ]}
             total={{
-              label: t('electricity.order.total', locale),
+              label: t('electricity.order.revision.revisedTotal', locale),
               value: numbers.money(currentReview.totalIrR),
             }}
             notice={t('electricity.order.revision.replacesInvoice', locale)}
@@ -1069,16 +1114,18 @@ export function ElectricityOrderRevisionForm({
             total={currentReview.totalIrR}
             scopeKey={JSON.stringify([scopeKey, currentReview.reviewDigest])}
           />
-          <ConfirmationFields gate={financialGate} disabled={busy || locked} />
-          <Button
-            type="button"
-            variant="warning"
-            disabled={busy || locked || !financialGate.allowed}
-            onClick={() => void resubmit()}
-          >
-            {t('electricity.order.correction.submit', locale)}
-          </Button>
-        </div>
+          <div className="space-y-3 rounded-xl border bg-card p-3 sm:p-4">
+            <ConfirmationFields gate={financialGate} disabled={busy || locked} />
+            <Button
+              type="button"
+              variant="warning"
+              disabled={busy || locked || !financialGate.allowed}
+              onClick={() => void resubmit()}
+            >
+              {t('electricity.order.correction.submit', locale)}
+            </Button>
+          </div>
+        </section>
       ) : null}
     </section>
   );

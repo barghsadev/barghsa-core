@@ -601,6 +601,11 @@ export const fa: I18nDictionary = {
     'شرایط سفارش را اصلاح و قیمت تازه را بررسی کنید. فاکتور قبلی لغو و فاکتور جدید صادر می‌شود.',
   'electricity.order.revision.preview': 'بررسی قیمت تازه',
   'electricity.order.revision.review': 'شرایط و مبلغ جدید',
+  'electricity.order.revision.backToEditing': 'بازگشت به ویرایش',
+  'electricity.order.revision.breakdown': 'جزئیات قیمت پیشنهادی',
+  'electricity.order.revision.currentTotal': 'مبلغ سفارش فعلی',
+  'electricity.order.revision.revisedTotal': 'مبلغ پس از اصلاح',
+  'electricity.order.revision.deliveryWindow': 'بازه تحویل به وقت تهران',
   'electricity.order.revision.replacesInvoice':
     'با ارسال، فاکتور پرداخت‌نشده فعلی لغو و با فاکتور جدید جایگزین می‌شود.',
   'electricity.order.revision.error':
@@ -1392,6 +1397,11 @@ export const englishMessages = {
     'Edit the order terms and review the new price. The previous invoice will be cancelled and replaced.',
   'electricity.order.revision.preview': 'Review new price',
   'electricity.order.revision.review': 'Revised terms and amount',
+  'electricity.order.revision.backToEditing': 'Back to editing',
+  'electricity.order.revision.breakdown': 'Price breakdown',
+  'electricity.order.revision.currentTotal': 'Current order total',
+  'electricity.order.revision.revisedTotal': 'Revised order total',
+  'electricity.order.revision.deliveryWindow': 'Delivery window, Tehran time',
   'electricity.order.revision.replacesInvoice':
     'Submitting cancels the current unpaid invoice and issues a replacement.',
   'electricity.order.revision.error':

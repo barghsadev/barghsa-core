@@ -8,6 +8,7 @@ import { expect, it, vi } from 'vitest';
 import { ElectricityOrderDetailsPage } from './ElectricityOrderDetailsPage.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { t } from '@barghsa/i18n/app';
+import { fireEvent, within } from '@testing-library/react';
 
 async function exerciseCancellation(
   outcome: 'confirmed' | 'retry' | 'already-cancelled' | 'step-up required'
@@ -872,11 +873,10 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
       () => expect(container.textContent).toContain('Change period, quantity or price'),
       { timeout: 5000 }
     );
-    const section = container.querySelector('#electricity-order-correction section')!;
-    const form = section.querySelector('form')!;
-    const quantity = form.querySelector('input[inputmode="numeric"]') as HTMLInputElement;
+    const form = container.querySelector('[data-testid="electricity-revision-form"]')!;
+    const quantity = form.querySelector('#revision-quantity') as HTMLInputElement;
     const note = form.querySelector('textarea') as HTMLTextAreaElement;
-    const city = form.querySelectorAll('select')[2]!;
+    const city = form.querySelector<HTMLInputElement>('#revision-city')!;
     await act(async () => {
       Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
         quantity,
@@ -888,9 +888,11 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
         'Quantity corrected'
       );
       note.dispatchEvent(new Event('input', { bubbles: true }));
-      city.value = '77777777-7777-7777-8777-777777777778';
-      city.dispatchEvent(new Event('change', { bubbles: true }));
     });
+    await act(async () => city.focus());
+    fireEvent.keyDown(city, { key: 'ArrowDown' });
+    const option = await within(document.body).findByRole('option', { name: 'City two' });
+    await act(async () => fireEvent.click(option));
     await approveVisibleConfirmation();
     await act(async () =>
       form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
@@ -898,7 +900,10 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
     await vi.waitFor(() =>
       expect(requests.find((request) => request.url.endsWith('/revision-preview'))).toBeDefined()
     );
-    await vi.waitFor(() => expect(section.textContent).toContain('3000000'));
+    const review = await within(container).findByTestId('electricity-revision-review');
+    expect(within(review).getByText('Revised order total').nextElementSibling?.textContent).toBe(
+      '3000000'
+    );
     expect(
       requests.find((request) => request.url.endsWith('/revision-preview'))?.body
     ).toMatchObject({
@@ -907,8 +912,10 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
       totalKwh: '12',
       expectedVersionId: '44444444-4444-7444-8444-444444444444',
     });
-    expect(section.textContent).toContain('3000000');
-    const submit = Array.from(section.querySelectorAll('button')).find((button) =>
+    expect(within(review).getByText('Current order total').nextElementSibling?.textContent).toBe(
+      '2500000'
+    );
+    const submit = Array.from(review.querySelectorAll('button')).find((button) =>
       button.textContent?.includes('Resubmit for review')
     )!;
     await approveVisibleConfirmation();

@@ -76,6 +76,13 @@ for (const [locale, theme] of [
       } else {
         await page.locator('#revision-quantity').fill('10');
         await preview.click();
+        const review = page.getByTestId('electricity-revision-review');
+        await expect(
+          review.getByRole('heading', { name: copy('electricity.order.revision.review') })
+        ).toBeFocused();
+        await expect(review).toContainText(copy('electricity.order.revision.currentTotal'));
+        await expect(review).toContainText(copy('electricity.order.revision.revisedTotal'));
+        await expect(review).toContainText(copy('electricity.order.revision.deliveryWindow'));
         await approveRiskConfirmation(page, locale, 'financial');
         await revision
           .locator('..')
