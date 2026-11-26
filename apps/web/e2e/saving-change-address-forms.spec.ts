@@ -14,6 +14,8 @@ import {
   savingChangeOrder,
   otherSavingChangeOrder,
   currentHardware,
+  hardwareTitle,
+  replacementTitle,
   replacementHardware,
   unavailableHardware,
   currentAddress,
@@ -168,10 +170,18 @@ for (const [locale, theme] of [
     state.customerQuoteMode = 'success';
     await preview().click();
     const quote = panel.getByTestId('saving-change-quote');
+    await expect(quote).toContainText('Original installation address');
     await expect(quote).toContainText('Replacement installation address');
+    await expect(quote).toContainText(hardwareTitle[locale]);
+    await expect(quote).toContainText(replacementTitle[locale]);
     await expect(quote).toBeFocused();
     await expect(quote).toContainText(copy('retainedDiscount'));
-    await expect(quote.getByText(copy('total'), { exact: true })).toBeInViewport();
+    await expect(
+      quote.getByText(formCopy('customerRevisedTotal'), { exact: true })
+    ).toBeInViewport();
+    await expect(
+      quote.getByText(formCopy('customerCurrentTotal'), { exact: true })
+    ).toBeInViewport();
     const breakdown = quote.getByText(copy('priceBreakdown'), { exact: true });
     const subtotal = quote.getByText(copy('subtotal'), { exact: true });
     await expect(subtotal).toBeHidden();
@@ -190,6 +200,14 @@ for (const [locale, theme] of [
     await expect(acknowledge).toHaveCount(1);
     await expect(acknowledge).not.toBeChecked();
     await expect(confirm).toBeDisabled();
+    const quotes = state.customerQuotes.length;
+    await quote
+      .getByRole('button', { name: formCopy('customerBackToEditing'), exact: true })
+      .click();
+    await expect(hardware).toBeFocused();
+    await expect(hardware).toHaveValue(replacementHardware);
+    await expect(address).toHaveValue(replacementAddress);
+    expect(state.customerQuotes).toHaveLength(quotes);
     expect(state.customerWrites).toEqual([]);
     await acknowledge.check();
     await expect(confirm).toBeEnabled();

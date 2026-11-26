@@ -9,7 +9,7 @@ import { queryKeys } from '../lib/query-keys.js';
 import { OrderWalletBalance } from './OrderWalletBalance.js';
 import { SavingReviewPrice } from './SavingReviewPrice.js';
 import { ChevronDownIcon } from 'lucide-react';
-import { useEffect, useId, useRef, useState, type RefObject } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { Link } from '@tanstack/react-router';
 import { LoadingStatus, Button } from '@barghsa/ui';
 import {
@@ -47,6 +47,11 @@ import {
 import { readWithDeadline } from '../lib/server-query-client.js';
 
 type Props = SavingChangeSource & {
+  currentOrder: {
+    totalIrR: string;
+    hardwareTitle: SavingChangeHardware['title'];
+    address: { full_address: string; postal_code: string };
+  };
   onChanged: () => void;
   onCommandLock?: (locked: boolean) => void;
   onWithdrawal?: () => void;
@@ -119,7 +124,8 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
   const [hardware, setHardware] = useState<SavingChangeHardware[]>([]);
   const [addresses, setAddresses] = useState<SavingChangeAddress[]>([]);
   const [quote, setQuote] = useState<SavingChangeQuote | null>(null);
-  const quoteReview = useRef<HTMLDivElement>(null);
+  const reviewId = useId();
+  const quoteReview = useRef<HTMLElement>(null);
   useEffect(() => {
     if (quote && quoteReview.current) {
       quoteReview.current.focus({ preventScroll: true });
@@ -419,6 +425,8 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
     void send(command.current);
   }
   const frozen = !!command.current;
+  const hardwareChanged = quote && quote.hardware.id !== props.currentHardwareId;
+  const addressChanged = quote && quote.address.id !== props.currentAddressId;
   return (
     <section className="min-w-0 space-y-4" data-testid="saving-change-panel">
       {status === 'loading' && <LoadingStatus>{copy('loading')}</LoadingStatus>}
@@ -462,7 +470,7 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
                       <NativeSelect
                         {...field}
                         aria-required="true"
-                        className="w-full"
+                        className="w-full scroll-mt-20"
                         disabled={frozen}
                         onChange={(event) => edit('hardwareProductId', event.target.value)}
                       >
@@ -498,7 +506,7 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
                       <NativeSelect
                         {...field}
                         aria-required="true"
-                        className="w-full"
+                        className="w-full scroll-mt-20"
                         disabled={frozen}
                         onChange={(event) => edit('installationAddressId', event.target.value)}
                       >
@@ -543,53 +551,67 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
         </Form>
       )}
       {quote && (
-        <div
+        <section
           ref={quoteReview}
           tabIndex={-1}
-          aria-label={formCopy('customerReview')}
+          aria-labelledby={reviewId}
           data-testid="saving-change-quote"
           className="min-w-0 scroll-mt-3 space-y-3 rounded-lg wrap-anywhere text-sm focus:outline-none"
-          aria-live="polite"
         >
           <div className="space-y-3 rounded-xl border bg-card p-3 sm:p-4">
-            <h2 className="text-base font-semibold">{formCopy('customerReview')}</h2>
+            <header className="flex flex-wrap items-center justify-between gap-2">
+              <h2 id={reviewId} className="text-base font-semibold">
+                {formCopy('customerReview')}
+              </h2>
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={busy || frozen}
+                onClick={() =>
+                  form.setFocus(hardwareChanged ? 'hardwareProductId' : 'installationAddressId')
+                }
+              >
+                {formCopy('customerBackToEditing')}
+              </Button>
+            </header>
             <div className="grid min-w-0 gap-3 lg:grid-cols-2 lg:items-start">
               <div className="space-y-2">
-                <SavingReviewPrice quote={quote} />
+                <SavingReviewPrice quote={quote} currentTotal={props.currentOrder.totalIrR} />
                 {quote.discountIrR !== '0' && (
                   <p className="px-2 text-sm text-muted-foreground">{copy('retainedDiscount')}</p>
                 )}
               </div>
-              <dl className="grid min-w-0 gap-x-4 gap-y-3 border-t px-2 pt-3 min-[375px]:grid-cols-2 lg:border-t-0 lg:border-s lg:ps-4 lg:pt-0">
-                <div className="min-w-0">
-                  <dt className="text-muted-foreground">{copy('stepPlan')}</dt>
-                  <dd className="mt-1 font-medium">
-                    <bdi>{quote.plan.title[locale]}</bdi>
-                  </dd>
-                </div>
-                <div className="min-w-0">
-                  <dt className="text-muted-foreground">{copy('stepHardware')}</dt>
-                  <dd className="mt-1 font-medium">
-                    <bdi>{quote.hardware.title[locale]}</bdi>
-                  </dd>
-                </div>
-                <div className="col-span-full min-w-0">
-                  <dt className="text-muted-foreground">{copy('stepAddress')}</dt>
-                  <dd className="mt-1 space-y-1 font-medium">
-                    <p dir="auto">{quote.address.full_address}</p>
-                    <bdi dir="ltr" className="tabular-nums">
-                      {quote.address.postal_code}
-                    </bdi>
-                  </dd>
-                </div>
-                <div className="col-span-full min-w-0">
-                  <dt className="text-muted-foreground">{copy('billIdentifier')}</dt>
-                  <dd className="mt-1 font-medium tabular-nums">
-                    <bdi dir="ltr">{quote.billIdentifier}</bdi>
-                  </dd>
-                </div>
+              <dl className="min-w-0 divide-y rounded-lg border px-3">
+                <ReviewedSelection
+                  label={copy('stepHardware')}
+                  current={
+                    hardwareChanged ? <bdi>{props.currentOrder.hardwareTitle[locale]}</bdi> : null
+                  }
+                  revised={<bdi>{quote.hardware.title[locale]}</bdi>}
+                />
+                <ReviewedSelection
+                  label={copy('stepAddress')}
+                  current={
+                    addressChanged ? <ReviewedAddress address={props.currentOrder.address} /> : null
+                  }
+                  revised={<ReviewedAddress address={quote.address} />}
+                />
               </dl>
             </div>
+            <dl className="grid min-w-0 grid-cols-2 gap-3 border-t px-2 pt-3 text-xs">
+              <div className="min-w-0">
+                <dt className="text-muted-foreground">{copy('stepPlan')}</dt>
+                <dd className="mt-1 font-medium">
+                  <bdi>{quote.plan.title[locale]}</bdi>
+                </dd>
+              </div>
+              <div className="min-w-0">
+                <dt className="text-muted-foreground">{copy('billIdentifier')}</dt>
+                <dd className="mt-1 font-medium tabular-nums">
+                  <bdi dir="ltr">{quote.billIdentifier}</bdi>
+                </dd>
+              </div>
+            </dl>
           </div>
           <details className="group rounded-lg border bg-card">
             <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 rounded-lg px-3 font-medium text-primary hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
@@ -621,7 +643,7 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
               {copy('confirmChange')}
             </Button>
           )}
-        </div>
+        </section>
       )}
       {uncertain && (
         <Button
@@ -641,5 +663,49 @@ function ChangeWorkspace(props: Props & { scope: string; currentScope: RefObject
         </p>
       )}
     </section>
+  );
+}
+
+function ReviewedSelection({
+  label,
+  current,
+  revised,
+}: {
+  label: string;
+  current: ReactNode;
+  revised: ReactNode;
+}) {
+  const locale = useLocale();
+  return (
+    <div className="min-w-0 space-y-1.5 py-2.5">
+      <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
+      {current && (
+        <dd className="flex items-baseline gap-2 text-muted-foreground">
+          <span className="shrink-0 text-xs">
+            {tSavingChange('customerPreviousSelection', locale)}
+          </span>
+          <span className="min-w-0">{current}</span>
+        </dd>
+      )}
+      <dd className="flex items-baseline gap-2 font-medium">
+        {current && (
+          <span className="shrink-0 text-xs text-primary">
+            {tSavingChange('customerRevisedSelection', locale)}
+          </span>
+        )}
+        <span className="min-w-0">{revised}</span>
+      </dd>
+    </div>
+  );
+}
+
+function ReviewedAddress({ address }: { address: Props['currentOrder']['address'] }) {
+  return (
+    <>
+      <bdi>{address.full_address}</bdi>
+      <bdi dir="ltr" className="block text-xs tabular-nums">
+        {address.postal_code}
+      </bdi>
+    </>
   );
 }

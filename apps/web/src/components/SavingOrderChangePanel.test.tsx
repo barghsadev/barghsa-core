@@ -9,6 +9,7 @@ import { refreshProfileContext } from '../lib/profile-context.js';
 import {
   ids,
   source,
+  currentOrder,
   plans,
   addresses,
   fullQuote,
@@ -45,6 +46,7 @@ function tree() {
     <AccountUserProvider value={actor}>
       <SavingOrderChangePanel
         {...current}
+        currentOrder={currentOrder}
         onChanged={changed}
         onCommandLock={locks}
         onWithdrawal={withdrawn}

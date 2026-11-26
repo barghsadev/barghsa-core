@@ -310,6 +310,11 @@ function SavingOrderWorkspace({ orderId, edit = false }: { orderId: string; edit
                 invoiceId={detail.invoice_id ?? ''}
                 billIdentifier={detail.bill_identifier}
                 agreementVersionId={detail.agreement_version_id}
+                currentOrder={{
+                  totalIrR: detail.pricing_snapshot.totalIrR,
+                  hardwareTitle: detail.current_hardware_title,
+                  address: detail.address_snapshot,
+                }}
                 onCommandLock={(locked) => {
                   if (currentScope.current !== scope || currentDetail.current !== loadedDetail)
                     return;

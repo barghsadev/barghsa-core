@@ -66,6 +66,11 @@ export const addresses = {
     address,
   ],
 };
+export const currentOrder = {
+  totalIrR: '275000',
+  hardwareTitle: { fa: 'دستگاه فعلی', en: 'Current device' },
+  address: { full_address: 'Old street', postal_code: '1234567890' },
+};
 export function fullQuote(): SavingChangeQuote {
   return {
     plan: { id: ids.planId, title: { fa: 'طرح', en: 'Plan' } },

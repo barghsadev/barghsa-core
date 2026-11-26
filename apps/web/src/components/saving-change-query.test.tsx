@@ -7,7 +7,7 @@ import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { SavingOrderChangePanel } from './SavingOrderChangePanel.js';
 import { SavingOrderComments, ElectricityOrderComments } from './SavingOrderComments.js';
 import AdminSavingOrdersPage from '../pages/AdminSavingOrdersPage.js';
-import { source, plans, addresses, ids } from '../lib/saving-change-form.fixtures.js';
+import { source, currentOrder, plans, addresses, ids } from '../lib/saving-change-form.fixtures.js';
 import { firstWork, savingWork } from '../test/staff-business-fixtures.js';
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
@@ -99,7 +99,12 @@ async function render(kind: string | null, actor = '33333333-3333-4333-8333-3333
               formatTimestamp={String}
             />
           ) : kind ? (
-            <SavingOrderChangePanel {...source} onChanged={changed} onWithdrawal={withdrawn} />
+            <SavingOrderChangePanel
+              {...source}
+              currentOrder={currentOrder}
+              onChanged={changed}
+              onWithdrawal={withdrawn}
+            />
           ) : null}
         </AccountUserProvider>
       </QueryComponentProvider>
