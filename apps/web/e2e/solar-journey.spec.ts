@@ -1,5 +1,6 @@
 import { selectAddressLocation } from './address-location-fixture';
 import { routePostalRecords } from './solar-postal-record-fixture';
+import { setSolarShipmentDate } from './solar-postal-form-fixture';
 import { tSolar as solarCopy } from '@barghsa/i18n/solar';
 import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import { solarIntakeText } from '@barghsa/i18n/solar-intake';
@@ -819,14 +820,22 @@ for (const locale of ['en', 'fa'] as const)
     ).toBeVisible();
     await postal.getByLabel(solarCopy('postalCourier', locale)).fill('Post office');
     await postal.getByLabel(solarCopy('postalTracking', locale)).fill('TRACK-123');
-    await postal
-      .getByLabel(solarCopy('postalSendDate', locale))
-      .fill(new Date().toISOString().slice(0, 10));
+    const shipmentDay = new Date().toISOString().slice(0, 10);
+    await setSolarShipmentDate(
+      page,
+      postal.getByLabel(solarCopy('postalSendDate', locale)),
+      locale,
+      shipmentDay
+    );
     await postal.getByRole('button', { name: solarCopy('postalSubmit', locale) }).click();
     await expect(
       postal.getByRole('status').filter({ hasText: solarCopy('postal_shipped', locale) })
     ).toBeVisible();
-    expect(shipment).toMatchObject({ courier: 'Post office', trackingNumber: 'TRACK-123' });
+    expect(shipment).toMatchObject({
+      courier: 'Post office',
+      trackingNumber: 'TRACK-123',
+      sendDate: shipmentDay,
+    });
 
     operatingContext = 'staff';
     await page.goto('/admin/solar-postal');

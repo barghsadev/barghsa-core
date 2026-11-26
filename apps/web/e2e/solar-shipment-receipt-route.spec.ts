@@ -3,7 +3,11 @@ import { documentText } from '@barghsa/i18n/documents';
 import { tSolar } from '@barghsa/i18n/solar';
 import { documentUploadPolicy } from '../src/test/document-list-fixtures.js';
 import { solarProfile } from '../src/test/solar-staff-fixtures.js';
-import { postalSiteAddress, setupSolarPostalForms } from './solar-postal-form-fixture';
+import {
+  postalSiteAddress,
+  setSolarShipmentDate,
+  setupSolarPostalForms,
+} from './solar-postal-form-fixture';
 import { test, expect, pdfPreviewImage } from './upload-fixture';
 
 test('receipt page checks access and attaches only the confirmed image to the same draft', async ({
@@ -11,6 +15,7 @@ test('receipt page checks access and attaches only the confirmed image to the sa
   uploadReceiver,
 }) => {
   const locale = 'fa';
+  await page.clock.setFixedTime(new Date('2026-09-25T02:00:00Z'));
   const copy = (key: string) => tSolar(key, locale);
   const docs = (key: string) => documentText(key, locale);
   const { firstSolar, olderSolar, state } = await setupSolarPostalForms(page, locale, false, true);
@@ -84,7 +89,8 @@ test('receipt page checks access and attaches only the confirmed image to the sa
   const tracking = shipment.getByLabel(copy('postalTracking'), { exact: true });
   await courier.fill('پست پیشتاز');
   await tracking.fill('IR-1405-024');
-  await shipment.getByLabel(copy('postalSendDate'), { exact: true }).fill('2026-09-23');
+  const date = shipment.getByLabel(copy('postalSendDate'), { exact: true });
+  await setSolarShipmentDate(page, date, locale, '2026-09-23');
   const upload = shipment.getByRole('link', { name: copy('postalUploadReceipt'), exact: true });
   await expect(upload).toHaveAttribute('href', editorPath);
   await upload.click();
@@ -107,9 +113,7 @@ test('receipt page checks access and attaches only the confirmed image to the sa
   await expect(page).toHaveURL(base);
   await expect(courier).toHaveValue('پست پیشتاز');
   await expect(tracking).toHaveValue('IR-1405-024');
-  await expect(shipment.getByLabel(copy('postalSendDate'), { exact: true })).toHaveValue(
-    '2026-09-23'
-  );
+  await expect(date).toContainText('۱ مهر ۱۴۰۵');
   const receipt = shipment.getByLabel(copy('postalReceipt'), { exact: true });
   await expect(receipt).toBeFocused();
   await expect(receipt).toHaveValue(id);

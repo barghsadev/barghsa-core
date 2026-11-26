@@ -1,5 +1,6 @@
 import { routePostalRecords } from './solar-postal-record-fixture';
-import type { Page, Route } from '@playwright/test';
+import type { Locator, Page, Route } from '@playwright/test';
+import { tSolar } from '@barghsa/i18n/solar';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { fullNavigation } from './navigation-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
@@ -22,6 +23,27 @@ export const postalGuidance = {
   contactDetails: 'Staff contact',
   originals: [] as Array<{ fa: string; en: string }>,
 };
+export function jalaliDay(page: Page, day: string) {
+  const formatted = new Intl.DateTimeFormat('fa-IR', { timeZone: 'UTC' }).format(new Date(day));
+  return page
+    .getByRole('dialog', { name: tSolar('postalSendDate', 'fa') })
+    .locator(`button[data-day="${formatted}"]`);
+}
+
+export async function setSolarShipmentDate(
+  page: Page,
+  date: Locator,
+  locale: 'fa' | 'en',
+  day: string
+) {
+  if (locale === 'en') {
+    await date.fill(day);
+  } else {
+    await date.press('ArrowDown');
+    await jalaliDay(page, day).click();
+  }
+}
+
 type Shipment = {
   courier: string;
   trackingNumber: string;

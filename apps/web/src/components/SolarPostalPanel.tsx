@@ -6,16 +6,27 @@ import { toast } from '../lib/toast-api.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
-import { useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type AriaAttributes,
+  type ComponentProps,
+  type FormEvent,
+  type ReactNode,
+} from 'react';
 import {
   LoadingStatus,
   Alert,
   AlertDescription,
   Button,
+  DatePicker,
   Input,
   ListRefreshButton,
   NativeSelect,
   buttonVariants,
+  datePickerCalendarDate,
 } from '@barghsa/ui';
 import { CompactFieldFeedback } from './CompactFieldFeedback.js';
 import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
@@ -61,6 +72,23 @@ interface State {
   requestStatus: string;
   postal: Postal | null;
   guidance: Guidance;
+}
+
+function ShipmentCalendar({
+  'aria-invalid': invalid,
+  'aria-describedby': describedBy,
+  ...props
+}: ComponentProps<typeof DatePicker> & Pick<AriaAttributes, 'aria-invalid' | 'aria-describedby'>) {
+  return (
+    <DatePicker
+      {...props}
+      triggerProps={{
+        ...props.triggerProps,
+        'aria-invalid': invalid,
+        'aria-describedby': describedBy,
+      }}
+    />
+  );
 }
 
 export function SolarPostalPanel(props: Parameters<typeof OwnedSolarPostalPanel>[0]) {
@@ -135,6 +163,7 @@ function OwnedSolarPostalPanel({
     }
   }
   const locale = useLocale();
+  const today = new Date().toISOString().slice(0, 10);
   const copy = (key: string) => tSolar(key, locale);
   const [state, setState] = useState<State | null>(null);
   const [images, setImages] = useState<BusinessDocument[]>([]);
@@ -634,6 +663,35 @@ function OwnedSolarPostalPanel({
                                   </Link>
                                 )}
                               </div>
+                            ) : name === 'sendDate' && locale === 'fa' ? (
+                              <FormControl>
+                                <ShipmentCalendar
+                                  label={copy(label)}
+                                  locale={locale}
+                                  timezone="UTC"
+                                  value={datePickerCalendarDate(field.value, 'UTC')}
+                                  maxDate={datePickerCalendarDate(today, 'UTC')}
+                                  showYearSelect
+                                  compactLabel
+                                  className="min-h-11"
+                                  disabled={sending || unconfirmed}
+                                  triggerProps={{
+                                    name: field.name,
+                                    ref: field.ref,
+                                    'aria-required': true,
+                                  }}
+                                  onBlur={field.onBlur}
+                                  onChange={(date) => {
+                                    ++editGeneration.current;
+                                    // The Jalali picker returns the selected day at browser-local midnight.
+                                    field.onChange(
+                                      date
+                                        ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+                                        : ''
+                                    );
+                                  }}
+                                />
+                              </FormControl>
                             ) : (
                               <FormControl>
                                 <Input
@@ -641,6 +699,7 @@ function OwnedSolarPostalPanel({
                                   disabled={sending || unconfirmed}
                                   aria-required="true"
                                   type={name === 'sendDate' ? 'date' : 'text'}
+                                  max={name === 'sendDate' ? today : undefined}
                                   dir={name === 'courier' ? 'auto' : 'ltr'}
                                   onChange={(event) => {
                                     ++editGeneration.current;

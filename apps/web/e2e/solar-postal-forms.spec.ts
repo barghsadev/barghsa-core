@@ -5,11 +5,16 @@ import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
 import { documentText } from '@barghsa/i18n/documents';
 import { tSolar } from '@barghsa/i18n/solar';
-import { postalReceipt, setupSolarPostalForms } from './solar-postal-form-fixture';
+import {
+  jalaliDay,
+  postalReceipt,
+  setSolarShipmentDate,
+  setupSolarPostalForms,
+} from './solar-postal-form-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { checkRoutePresentation } from './route-presentation';
 
-test.use({ viewport: { width: 390, height: 844 } });
+test.use({ viewport: { width: 390, height: 844 }, timezoneId: 'Asia/Tehran' });
 const settings = [
   ['en', 'light'],
   ['fa', 'dark'],
@@ -82,6 +87,7 @@ for (const [locale, theme] of settings) {
   test(`solar postal customer form retains captured shipment and recovers by fresh read (${locale}, ${theme})`, async ({
     page,
   }, info) => {
+    await page.clock.setFixedTime(new Date('2026-09-25T02:00:00Z'));
     const { state, persistShipment, customerState, firstSolar, olderSolar } =
       await setupSolarPostalForms(page, locale, theme === 'dark', true);
     await page.goto(`/solar/requests/${firstSolar}/shipment`);
@@ -99,9 +105,22 @@ for (const [locale, theme] of settings) {
     }
     await expect(receipt).not.toHaveAttribute('aria-required', 'true');
     await expect(receipt).not.toHaveAttribute('required');
+    await courier.fill('Courier');
+    await tracking.fill('TRACKING');
+    await submit.click();
+    await focusedError(date);
+    expect(state.shipmentWrites).toEqual([]);
+    if (locale === 'fa') {
+      await date.press('ArrowDown');
+      await expect(jalaliDay(page, '2026-09-26')).toBeDisabled();
+      await page.keyboard.press('Escape');
+      await expect(date).toBeFocused();
+    } else {
+      await expect(date).toHaveAttribute('max', '2026-09-25');
+    }
+    await setSolarShipmentDate(page, date, locale, '2026-09-23');
     await courier.fill('C'.repeat(101));
     await tracking.fill('T'.repeat(201));
-    await date.fill('2026-09-23');
     await submit.click();
     await focusedError(courier);
     expect(state.shipmentWrites).toEqual([]);
@@ -111,7 +130,8 @@ for (const [locale, theme] of settings) {
     await focusedError(tracking);
     await expect(courier).toHaveValue('C'.repeat(100));
     await expect(tracking).toHaveValue('T'.repeat(200));
-    await expect(date).toHaveValue('2026-09-23');
+    if (locale === 'fa') await expect(date).toContainText('۱ مهر ۱۴۰۵');
+    else await expect(date).toHaveValue('2026-09-23');
     expect(state.shipmentWrites).toEqual([
       { courier: 'C'.repeat(100), trackingNumber: 'T'.repeat(200), sendDate: '2026-09-23' },
     ]);
@@ -134,7 +154,8 @@ for (const [locale, theme] of settings) {
     await expect(receipt).toHaveValue(postalReceipt);
     await expect(courier).toHaveValue('  Captured courier  ');
     await expect(tracking).toHaveValue('  CAPTURED-TRACKING  ');
-    await expect(date).toHaveValue('2026-09-23');
+    if (locale === 'fa') await expect(date).toContainText('۱ مهر ۱۴۰۵');
+    else await expect(date).toHaveValue('2026-09-23');
     expect(state.shipmentWrites).toHaveLength(1);
     await inspectForm(page, form, '[aria-label="' + copy('postalStage') + '"]');
     const viewport = page.viewportSize()!;
