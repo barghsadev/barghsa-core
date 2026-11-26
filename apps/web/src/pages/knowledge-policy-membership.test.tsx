@@ -1,4 +1,5 @@
 import { QueryProvider } from '../test/query-provider.js';
+import { chooseComboboxOption } from '../test/choose-combobox-option.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -184,7 +185,10 @@ it.each(cases)(
   'maps only owned $kind fields and verifies a fresh detail before clearing the link',
   async (entry) => {
     const { data } = await mount(entry);
-    await fill(entry.field, entry.choice.id);
+    await chooseComboboxOption(
+      host.querySelector<HTMLInputElement>(`#${entry.field}`)!,
+      entry.choice.title
+    );
     if (entry.kind === 'policy-groups') await fill('policy-member-priority', '-۱۲');
     await submit(entry.field);
     expect(state.action!.successStatus).toBe(204);
@@ -193,7 +197,7 @@ it.each(cases)(
       expect(state.fields!(['private-field'])).toBe(false);
       state.close!();
     });
-    expect(host.querySelector<HTMLInputElement>(`#${entry.field}`)!.value).toBe(entry.choice.id);
+    expect(host.querySelector<HTMLInputElement>(`#${entry.field}`)!.value).toBe(entry.choice.title);
     await submit(entry.field);
     data.members.push(
       entry.kind === 'policy-groups' ? policyMember(entry.choice, -12) : entry.choice
@@ -207,13 +211,16 @@ it.each(cases)(
   'retains an unverified $kind link until fresh detail recovery and explicit reset',
   async (entry) => {
     const { data } = await mount(entry);
-    await fill(entry.field, entry.choice.id);
+    await chooseComboboxOption(
+      host.querySelector<HTMLInputElement>(`#${entry.field}`)!,
+      entry.choice.title
+    );
     await submit(entry.field);
     data.wrong = true;
     await expect(state.success!()).rejects.toThrow('Unconfirmed');
     data.failed = true;
     await act(async () => state.unconfirmed!());
-    expect(host.querySelector<HTMLInputElement>(`#${entry.field}`)!.value).toBe(entry.choice.id);
+    expect(host.querySelector<HTMLInputElement>(`#${entry.field}`)!.value).toBe(entry.choice.title);
     expect(button('Reset to saved settings').disabled).toBe(true);
     data.failed = false;
     data.wrong = false;
@@ -254,7 +261,7 @@ it.each(cases)('verifies $kind removal by absence in a fresh group detail', asyn
 });
 it('does not propose a duplicate or obsolete link after delayed validation', async () => {
   await mount(cases[0]);
-  await fill('kb-member', kb.id);
+  await chooseComboboxOption(host.querySelector<HTMLInputElement>('#kb-member')!, kb.title);
   let resolve!: () => void;
   state.gate = new Promise<void>((done) => {
     resolve = done;
@@ -268,12 +275,12 @@ it('does not propose a duplicate or obsolete link after delayed validation', asy
 });
 it('preserves selection when validation is unavailable and supports a retry', async () => {
   await mount(cases[0]);
-  await fill('kb-member', kb.id);
+  await chooseComboboxOption(host.querySelector<HTMLInputElement>('#kb-member')!, kb.title);
   state.unavailable = true;
   await submit('kb-member');
   expect(host.textContent).toContain('Validation is unavailable');
   expect(state.action).toBeNull();
-  expect(host.querySelector<HTMLSelectElement>('#kb-member')!.value).toBe(kb.id);
+  expect(host.querySelector<HTMLInputElement>('#kb-member')!.value).toBe(kb.title);
   state.unavailable = false;
   await submit('kb-member');
   expect(state.action).not.toBeNull();

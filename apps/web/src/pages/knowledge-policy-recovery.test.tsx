@@ -1,4 +1,5 @@
 import { QueryProvider } from '../test/query-provider.js';
+import { chooseComboboxOption } from '../test/choose-combobox-option.js';
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -248,11 +249,11 @@ it('knowledge group options retry retains member selection and query text', asyn
   await render(Knowledge);
   await click('Knowledge-base groups');
   await click('Open');
-  await fill('#kb-member', kb.id);
+  await chooseComboboxOption(host.querySelector<HTMLInputElement>('#kb-member')!, kb.title);
   await fill('#kb-test-query', 'Keep query');
   fail = true;
   await click('Refresh');
-  expect(host.querySelector<HTMLSelectElement>('#kb-member')!.value).toBe(kb.id);
+  expect(host.querySelector<HTMLInputElement>('#kb-member')!.value).toBe(kb.title);
   const lists = requests.mock.calls.filter(([u]) => String(u).endsWith('/kb-groups')).length;
   fail = false;
   await click('Retry options');
@@ -271,14 +272,16 @@ it('withdrawn knowledge choice invalidates a frozen link while retaining query d
   await render(Knowledge);
   await click('Knowledge-base groups');
   await click('Open');
-  await fill('#kb-member', kb.id);
+  await chooseComboboxOption(host.querySelector<HTMLInputElement>('#kb-member')!, kb.title);
   await fill('#kb-test-query', 'Keep query');
   await click('Add to group');
   withdrawn = true;
   await click('Refresh');
   expect(host.querySelector('[data-testid=confirmation]')).toBeNull();
   expect(host.querySelector<HTMLInputElement>('#kb-test-query')!.value).toBe('Keep query');
-  expect(host.querySelector<HTMLSelectElement>('#kb-member')!.value).toBe(kb.id);
+  expect(host.querySelector<HTMLInputElement>('#kb-member')!.value).toBe(
+    'Option no longer available'
+  );
 });
 it('editing the query aborts an old result and changing kind cannot revive it', async () => {
   let finish!: (r: Response) => void;
@@ -423,7 +426,10 @@ it('policy group detail retry preserves both selected member and dirty override 
   await click('Policy groups');
   await click('Open');
   await fill(`#member-priority-${policy.id}`, '250');
-  await fill('#policy-member', policySecond.id);
+  await chooseComboboxOption(
+    host.querySelector<HTMLInputElement>('#policy-member')!,
+    policySecond.title
+  );
   await fill('#policy-member-priority', '80');
   fail = true;
   await click('Refresh');
@@ -493,7 +499,7 @@ it('withdrawn policy options close a pending new link and retain its priority dr
   await render(Policies);
   await click('Policy groups');
   await click('Open');
-  await fill('#policy-member', policy.id);
+  await chooseComboboxOption(host.querySelector<HTMLInputElement>('#policy-member')!, policy.title);
   await fill('#policy-member-priority', '80');
   await click('Add to group');
   removed = true;

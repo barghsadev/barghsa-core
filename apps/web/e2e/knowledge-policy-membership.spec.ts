@@ -129,17 +129,24 @@ for (const locale of ['en', 'fa'] as const)
       await button(k('runQuery')).click();
       await expect(page.getByText('Verified guidance', { exact: true })).toBeVisible();
       await expect(query).not.toHaveAttribute('aria-invalid', 'true');
+      await member.fill('No candidate by this name');
+      await expect(page.getByText(copy('memberNoMatches'), { exact: true })).toBeVisible();
+      await member.press('Escape');
       await button(k('link')).click();
       await expect(member).toBeFocused();
       await expect(member).toHaveAttribute('aria-invalid', 'true');
       await expect(member).toHaveAccessibleDescription(copy('member'));
-      await member.selectOption(kb.id);
+      await member.fill('knowledge');
+      await expect(page.getByRole('option', { name: kb.title, exact: true })).toBeVisible();
+      await member.press('Enter');
+      await expect(member).toHaveValue(kb.title);
+      await expect(page.getByRole('dialog')).toHaveCount(0);
       await button(k('link')).click();
       await expect(page.getByRole('dialog')).toContainText(kb.title);
       await expect(page.getByRole('dialog')).toContainText(kg.title);
       await confirm();
       await expect(member).toBeFocused();
-      await expect(member).toHaveValue(kb.id);
+      await expect(member).toHaveValue(kb.title);
       await expect(page.locator('main[data-area=admin]')).not.toContainText('private-member-value');
       expect(
         (await new AxeBuilder({ page }).include('main[data-area=admin]').analyze()).violations
@@ -153,7 +160,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(dialog).toHaveCount(0);
       await expect(page.getByText(copy('uncertain'), { exact: true })).toBeVisible();
       await expect(button(copy('reset'))).toBeDisabled();
-      await expect(member).toHaveValue(kb.id);
+      await expect(member).toHaveValue(kb.title);
       await expect(query).toHaveValue('Meter question');
       detailStatus = 200;
       await button(k('detailRetry')).click();
@@ -215,13 +222,14 @@ for (const locale of ['en', 'fa'] as const)
       await expect(first).toBeFocused();
       await expect(first).toHaveAttribute('aria-invalid', 'true');
       expect(policyWrites).toHaveLength(0);
-      await page.locator('#policy-member').selectOption(policySecond.id);
+      await page.locator('#policy-member').fill(policySecond.title);
+      await page.getByRole('option', { name: policySecond.title, exact: true }).click();
       await page.locator('#policy-member-priority').fill(locale === 'fa' ? '-۱۲' : '-12');
       await button(p('link')).click();
       await confirm();
       await expect(page.locator('#policy-member-priority')).toBeFocused();
       await expect(first).toHaveValue('1.5');
-      await expect(page.locator('#policy-member')).toHaveValue(policySecond.id);
+      await expect(page.locator('#policy-member')).toHaveValue(policySecond.title);
       await button(p('link')).click();
       await confirm();
       await expect(page.locator('#policy-member')).toHaveValue('');

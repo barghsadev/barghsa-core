@@ -1441,7 +1441,8 @@ for (const locale of ['en', 'fa'])
     );
     await page
       .getByLabel(fa ? 'انتخاب پایگاه دانش' : 'Choose a knowledge base', { exact: true })
-      .selectOption(kb.id);
+      .fill(renamed);
+    await page.getByRole('option', { name: renamed, exact: true }).click();
     await page
       .getByRole('button', { name: fa ? 'افزودن به گروه' : 'Add to group', exact: true })
       .click();
@@ -1560,9 +1561,8 @@ for (const locale of ['en', 'fa'])
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
     await confirm();
     await expect(page).toHaveURL((url) => url.pathname.startsWith('/admin/policies/groups/'));
-    await page
-      .getByLabel(fa ? 'انتخاب سیاست' : 'Choose a policy', { exact: true })
-      .selectOption(kb.id);
+    await page.getByLabel(fa ? 'انتخاب سیاست' : 'Choose a policy', { exact: true }).fill(renamed);
+    await page.getByRole('option', { name: renamed, exact: true }).click();
     await page
       .getByRole('button', { name: fa ? 'افزودن به گروه' : 'Add to group', exact: true })
       .click();

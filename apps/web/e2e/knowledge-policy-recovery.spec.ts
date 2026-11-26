@@ -186,7 +186,8 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto('/admin/knowledge-bases');
     await page.getByRole('button', { name: k('kb-groups'), exact: true }).click();
     await page.getByRole('link', { name: `${k('open')} ${kg.title}`, exact: true }).click();
-    await page.locator('#kb-member').selectOption(kb.id);
+    await page.locator('#kb-member').fill(kb.title);
+    await page.getByRole('option', { name: kb.title, exact: true }).click();
     await page.locator('#kb-test-query').fill('Keep group question');
     fail = true;
     await page.getByRole('button', { name: k('refresh'), exact: true }).click();
@@ -196,7 +197,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: k('optionsRetry'), exact: true }).click();
     await expect(page.getByRole('alert')).toHaveCount(0);
     expect([listReads, detailReads]).toEqual(before);
-    await expect(page.locator('#kb-member')).toHaveValue(kb.id);
+    await expect(page.locator('#kb-member')).toHaveValue(kb.title);
     await expect(page.locator('#kb-test-query')).toHaveValue('Keep group question');
     await inspect(page, 'knowledge-group', locale, info.project.name);
     denied = true;
@@ -295,7 +296,8 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('link', { name: `${p('open')} ${pg.title}`, exact: true }).click();
     const override = page.locator(`#member-priority-${policy.id}`);
     await override.fill('25');
-    await page.locator('#policy-member').selectOption(policySecond.id);
+    await page.locator('#policy-member').fill(policySecond.title);
+    await page.getByRole('option', { name: policySecond.title, exact: true }).click();
     await page.locator('#policy-member-priority').fill('75');
     failDetail = true;
     await page.getByRole('button', { name: p('refresh'), exact: true }).click();
@@ -306,7 +308,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('alert')).toHaveCount(0);
     expect([listReads, optionReads]).toEqual(before);
     await expect(override).toHaveValue('25');
-    await expect(page.locator('#policy-member')).toHaveValue(policySecond.id);
+    await expect(page.locator('#policy-member')).toHaveValue(policySecond.title);
     await expect(page.locator('#policy-member-priority')).toHaveValue('75');
     failChoices = true;
     await page.getByRole('button', { name: p('refresh'), exact: true }).click();

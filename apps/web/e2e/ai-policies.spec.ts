@@ -274,7 +274,8 @@ for (const locale of ['en', 'fa'] as const)
     await confirm();
     expect(writes.at(-1)).toEqual({ title: 'Support', description: '' });
     await expect(page).toHaveURL(`/admin/policies/groups/${group.id}`);
-    await page.getByLabel(label('selectPolicy'), { exact: true }).selectOption(policy.id);
+    await page.getByLabel(label('selectPolicy'), { exact: true }).fill(policy.title);
+    await page.getByRole('option', { name: policy.title, exact: true }).click();
     await click('link');
     await confirm();
     expect(writes.at(-1)).toEqual({ policyId: policy.id });

@@ -69,8 +69,9 @@ for (const locale of ['en', 'fa'])
       .click();
     await expect(page.locator('#kb-source-url-2')).toBeFocused();
     await page.locator('#kb-source-url-2').fill('https://example.org/faq');
-    await page.getByLabel(fa ? 'اندازه بخش (نویسه)' : 'Chunk size (characters)').fill('600');
-    await page.getByLabel(fa ? 'همپوشانی بخش‌ها' : 'Chunk overlap').fill('60');
+    await page.locator('#kb-indexing > summary').press('Enter');
+    await page.locator('#kb-chunk-size').fill('600');
+    await page.locator('#kb-chunk-overlap').fill('60');
     await page.getByLabel(fa ? 'مدل بردارسازی' : 'Embedding model').fill('embed-1536');
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
     const dialog = page.getByRole('dialog'),
@@ -318,7 +319,8 @@ for (const locale of ['en', 'fa'])
       .click();
     await page
       .getByLabel(fa ? 'انتخاب پایگاه دانش' : 'Choose a knowledge base', { exact: true })
-      .selectOption(kb.id);
+      .fill(kb.title);
+    await page.getByRole('option', { name: kb.title, exact: true }).click();
     await page
       .getByRole('button', { name: fa ? 'افزودن به گروه' : 'Add to group', exact: true })
       .click();
