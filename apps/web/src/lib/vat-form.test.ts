@@ -1,5 +1,11 @@
 import { expect, it } from 'vitest';
-import { vatBasisPoints, vatDraftInstant, vatDefaults, type VatFormContext } from './vat-form.js';
+import {
+  vatBasisPoints,
+  vatDraftInstant,
+  vatDefaults,
+  vatOverrideRateChoice,
+  type VatFormContext,
+} from './vat-form.js';
 import { vatFormSchema } from './vat-form-schema.js';
 
 it.each([
@@ -15,6 +21,20 @@ it.each([
   ['', null],
 ])('validates exact localized percentage %s', (raw, expected) => {
   expect(vatBasisPoints(raw)).toBe(expected);
+});
+
+it('follows the linked-rate rules at exact override window boundaries', () => {
+  const window = {
+    category: 'hardware' as const,
+    effectiveFrom: '2026-11-26T15:00:00.000Z',
+    effectiveUntil: '2026-11-27T15:00:00.000Z',
+  };
+  const productRate = { ...window, category: 'product_override' as const };
+  const before = new Date('2026-11-26T14:59:59.999Z');
+  expect(vatOverrideRateChoice(window, before)).toBe('unavailable');
+  expect(vatOverrideRateChoice(productRate, before)).toBe('later');
+  expect(vatOverrideRateChoice(window, new Date(window.effectiveFrom))).toBe('available');
+  expect(vatOverrideRateChoice(productRate, new Date(window.effectiveUntil))).toBe('unavailable');
 });
 const parse = { basisPoints: vatBasisPoints, instant: vatDraftInstant };
 const context: VatFormContext = {

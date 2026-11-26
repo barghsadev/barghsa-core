@@ -1,4 +1,19 @@
 import { normalizeProfileDigits } from './profile-digits.js';
+import {
+  PRODUCT_OVERRIDE_CATEGORY,
+  vatWindowStatus,
+  type VatConfigDto,
+} from '@barghsa/shared/finance';
+
+export function vatOverrideRateChoice(
+  rate: Pick<VatConfigDto, 'category' | 'effectiveFrom' | 'effectiveUntil'>,
+  at: Date
+) {
+  const status = vatWindowStatus(rate.effectiveFrom, rate.effectiveUntil, at);
+  if (status === 'current') return 'available';
+  if (status === 'scheduled' && rate.category === PRODUCT_OVERRIDE_CATEGORY) return 'later';
+  return 'unavailable';
+}
 
 export interface VatDraft {
   category: string;

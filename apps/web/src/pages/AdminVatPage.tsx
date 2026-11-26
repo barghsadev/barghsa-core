@@ -23,7 +23,6 @@ import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import {
   RecordEditorActions,
   recordEditorField,
-  recordEditorGrid,
   recordEditorSurface,
 } from '../components/RecordEditorLayout.js';
 import { tWorkspace as settingsText } from '@barghsa/i18n/workspace-admin';
@@ -45,6 +44,7 @@ import {
   vatDefaults,
   vatBasisPoints,
   vatDraftInstant,
+  vatOverrideRateChoice,
   type VatDraft,
   type VatFormContext,
 } from '../lib/vat-form.js';
@@ -274,8 +274,9 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
       invalidFocus.current = null;
     }
   }, [locked, draft.form]);
-  function feedback(field: keyof VatDraft) {
+  function feedback(field: keyof VatDraft, reserveSpace = true) {
     const message = draft.errors[field]?.message;
+    if (!message && !reserveSpace) return null;
     return (
       <p
         id={draft.errorId(field)}
@@ -330,13 +331,28 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
     products = productRead.data ?? [];
   const zone =
     preference.status === 'ready' ? preference.timezone : (acceptedZone ?? preference.timezone);
-  validationContext.current = {
+  const context: VatFormContext = {
     kind: editor?.kind ?? 'rate',
     categories,
     productIds: products.map((row) => row.id),
     rateIds: rates.map((row) => row.id),
     resolveDate: (value, hours, minutes) => datePickerAtTime(value, hours, minutes, zone),
   };
+  const proposedInstant = scheduled ? vatDraftInstant(draft.form.getValues(), context) : undefined;
+  const overrideStart =
+    editor?.kind === 'override' && (!scheduled || proposedInstant)
+      ? proposedInstant
+        ? new Date(proposedInstant)
+        : new Date()
+      : null;
+  const rateChoices = new Map(
+    overrideStart ? rates.map((rate) => [rate.id, vatOverrideRateChoice(rate, overrideStart)]) : []
+  );
+  if (overrideStart) {
+    context.rateIds = context.rateIds.filter((id) => rateChoices.get(id) !== 'unavailable');
+    if (rateChoices.get(rateId) === 'unavailable') messages.rateId = label('inactiveRate');
+  }
+  validationContext.current = context;
   const hasZone = preference.status === 'ready' || acceptedZone !== null;
   const rateDisabled =
     scope.denied ||
@@ -722,15 +738,19 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
       vatWindowStatus(row.effectiveFrom, row.effectiveUntil) === 'current'
   );
   const proposedRate = rates.find((row) => row.id === rateId);
+  const rateChoice = rateChoices.get(rateId);
+  const rateStartsLater = rateChoice === 'later' ? proposedRate?.effectiveFrom : null;
+  const rateEnds = rateChoice && rateChoice !== 'unavailable' ? proposedRate?.effectiveUntil : null;
   const referenceRate =
     ending ?? (editor?.kind === 'rate' ? scopeRate : (scopeOverride ?? categoryFallback));
   const referencePercent =
     referenceRate?.rateBasisPoints ?? (editor?.kind === 'override' ? 0 : null);
   const draftPercent =
-    editor?.kind === 'rate' ? vatBasisPoints(percent) : proposedRate?.rateBasisPoints;
-  const proposedInstant = scheduled
-    ? vatDraftInstant(draft.form.getValues(), validationContext.current)
-    : undefined;
+    editor?.kind === 'rate'
+      ? vatBasisPoints(percent)
+      : rateChoice === 'unavailable'
+        ? undefined
+        : proposedRate?.rateBasisPoints;
   const proposedDate = scheduled
     ? proposedInstant
       ? dateText(proposedInstant)
@@ -1000,66 +1020,31 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
                     </div>
                   )}
                   {editor.kind === 'override' && (
-                    <>
-                      <p id="vat-override-help" className="text-sm text-muted-foreground">
-                        {label('overrideHelp')}
-                      </p>
-                      <div className={`${recordEditorGrid} gap-y-3`}>
-                        <div className={recordEditorField}>
-                          <Label htmlFor="vat-product">{label('product')}</Label>
-                          <NativeSelect
-                            id="vat-product"
-                            {...draft.bind('productId')}
-                            className="w-full"
-                            required
-                            aria-required="true"
-                            value={productId}
-                            onChange={(event) => setProductId(event.target.value)}
-                          >
-                            <option value="">{label('chooseProduct')}</option>
-                            {productId && !products.some((row) => row.id === productId) && (
-                              <option value={productId}>
-                                {label('unavailable')} ({productId})
-                              </option>
-                            )}
-                            {products.map((product) => (
-                              <option key={product.id} value={product.id}>
-                                {productTitle(product.id)}
-                              </option>
-                            ))}
-                          </NativeSelect>
-                          {feedback('productId')}
-                        </div>
-                        <div className={recordEditorField}>
-                          <Label htmlFor="vat-rate">{label('rate')}</Label>
-                          <NativeSelect
-                            id="vat-rate"
-                            {...draft.bind('rateId')}
-                            aria-describedby={`vat-override-help ${draft.bind('rateId')['aria-describedby'] ?? ''}`}
-                            className="w-full"
-                            required
-                            aria-required="true"
-                            value={rateId}
-                            onChange={(event) => setRateId(event.target.value)}
-                          >
-                            <option value="">{label('chooseRate')}</option>
-                            {rateId && !rates.some((row) => row.id === rateId) && (
-                              <option value={rateId}>
-                                {label('unavailable')} ({rateId})
-                              </option>
-                            )}
-                            {rates.map((rate) => (
-                              <option key={rate.id} value={rate.id}>
-                                {label(`category.${rate.category}`)} ·{' '}
-                                {numbers.percent(rate.rateBasisPoints / 10000)} ·{' '}
-                                {dateText(rate.effectiveFrom)}
-                              </option>
-                            ))}
-                          </NativeSelect>
-                          {feedback('rateId')}
-                        </div>
-                      </div>
-                    </>
+                    <div className={recordEditorField}>
+                      <Label htmlFor="vat-product">{label('product')}</Label>
+                      <NativeSelect
+                        id="vat-product"
+                        {...draft.bind('productId')}
+                        className="w-full"
+                        required
+                        aria-required="true"
+                        value={productId}
+                        onChange={(event) => setProductId(event.target.value)}
+                      >
+                        <option value="">{label('chooseProduct')}</option>
+                        {productId && !products.some((row) => row.id === productId) && (
+                          <option value={productId}>
+                            {label('unavailable')} ({productId})
+                          </option>
+                        )}
+                        {products.map((product) => (
+                          <option key={product.id} value={product.id}>
+                            {productTitle(product.id)}
+                          </option>
+                        ))}
+                      </NativeSelect>
+                      {feedback('productId', false)}
+                    </div>
                   )}
                   {formPage && 'title' in editor && (
                     <dl className="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-lg bg-muted/50 px-3 py-2.5 text-sm">
@@ -1075,6 +1060,7 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
                         onChange={(event) => {
                           setScheduled(event.target.checked);
                           setInvalidDate(false);
+                          draft.form.clearErrors('rateId');
                         }}
                       />
                       {label(endingEditor ? 'scheduleEnd' : 'schedule')}
@@ -1107,6 +1093,7 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
                             onChange={(value) => {
                               setDate(value);
                               setInvalidDate(false);
+                              draft.form.clearErrors('rateId');
                             }}
                           />
                           {feedback('date')}
@@ -1126,6 +1113,7 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
                             onChange={(event) => {
                               setTime(event.target.value);
                               setInvalidDate(false);
+                              draft.form.clearErrors('rateId');
                             }}
                           />
                           {feedback('time')}
@@ -1142,6 +1130,65 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
                       </p>
                     )}
                   </div>
+                  {editor.kind === 'override' && (
+                    <div className={recordEditorField}>
+                      <Label htmlFor="vat-rate">{label('rate')}</Label>
+                      <p id="vat-override-help" className="text-sm text-muted-foreground">
+                        {label(overrideStart ? 'overrideHelp' : 'chooseStartForRates')}
+                      </p>
+                      <NativeSelect
+                        id="vat-rate"
+                        {...draft.bind('rateId')}
+                        aria-describedby={`vat-override-help ${draft.bind('rateId')['aria-describedby'] ?? ''}`}
+                        className="w-full"
+                        required
+                        aria-required="true"
+                        value={rateId}
+                        onChange={(event) => setRateId(event.target.value)}
+                      >
+                        <option value="">{label('chooseRate')}</option>
+                        {rateId && !proposedRate && (
+                          <option value={rateId}>
+                            {label('unavailable')} ({rateId})
+                          </option>
+                        )}
+                        {(overrideStart
+                          ? (['available', 'later', 'unavailable'] as const)
+                          : [null]
+                        ).map((choice) => {
+                          const options = rates
+                            .filter(
+                              (rate) => choice === null || rateChoices.get(rate.id) === choice
+                            )
+                            .map((rate) => (
+                              <option
+                                key={rate.id}
+                                value={rate.id}
+                                disabled={choice === 'unavailable'}
+                              >
+                                {percentText(rate.rateBasisPoints)} ·{' '}
+                                {label(`category.${rate.category}`)} ·{' '}
+                                {dateText(rate.effectiveFrom)}
+                              </option>
+                            ));
+                          if (choice === null) return options;
+                          return (
+                            options.length > 0 && (
+                              <optgroup key={choice} label={label(`rateChoice.${choice}`)}>
+                                {options}
+                              </optgroup>
+                            )
+                          );
+                        })}
+                      </NativeSelect>
+                      {rateChoice === 'unavailable' && !draft.errors.rateId && (
+                        <p className="text-sm text-muted-foreground" role="status">
+                          {label('inactiveRate')}
+                        </p>
+                      )}
+                      {feedback('rateId', false)}
+                    </div>
+                  )}
                   {(editor.kind !== 'override' || (productId && rateId)) && (
                     <section
                       aria-label={settingsText('admin.settings.comparison', locale)}
@@ -1175,10 +1222,23 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
                                 : percentText(draftPercent)}
                           </dd>
                           {!ending && (
-                            <dd className="break-words text-muted-foreground">{proposedDate}</dd>
+                            <dd className="break-words text-muted-foreground">
+                              {rateStartsLater ? dateText(rateStartsLater) : proposedDate}
+                            </dd>
                           )}
                         </div>
                       </dl>
+                      {(rateStartsLater || rateEnds) && (
+                        <p className="mt-2 flex flex-wrap gap-x-2 gap-y-1 rounded-lg bg-muted/50 px-3 py-2 text-sm">
+                          {rateStartsLater && <span>{label('linkedRateDelayed')}</span>}
+                          {rateEnds && (
+                            <span>
+                              {label('linkedRateEnds')}{' '}
+                              <time dateTime={rateEnds}>{dateText(rateEnds)}</time>
+                            </span>
+                          )}
+                        </p>
+                      )}
                     </section>
                   )}
                   {draft.errors.root && (
@@ -1411,10 +1471,28 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
                   </div>
                   <div>
                     <dt className="text-muted-foreground">
-                      {ending ? label('until') : label('from')}
+                      {ending
+                        ? label('until')
+                        : label(editor.kind === 'override' ? 'overrideStarts' : 'from')}
                     </dt>
                     <dd>{proposedDate}</dd>
                   </div>
+                  {(rateStartsLater || rateEnds) && (
+                    <div className="sm:col-span-2 space-y-2">
+                      {rateStartsLater && (
+                        <div>
+                          <dt className="text-muted-foreground">{label('linkedRateStarts')}</dt>
+                          <dd>{dateText(rateStartsLater)}</dd>
+                        </div>
+                      )}
+                      {rateEnds && (
+                        <div>
+                          <dt className="text-muted-foreground">{label('linkedRateEnds')}</dt>
+                          <dd>{dateText(rateEnds)}</dd>
+                        </div>
+                      )}
+                    </div>
+                  )}
                   <div>
                     <dt className="text-muted-foreground">{label('percent')}</dt>
                     <dd>

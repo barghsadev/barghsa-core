@@ -62,6 +62,71 @@ async function catalogue(page: Page) {
     route.fulfill({ json: [vatProduct] })
   );
 }
+
+test('VAT override checks linked rates at the requested start and explains a later start', async ({
+  page,
+}) => {
+  await page.clock.setFixedTime(new Date('2026-11-26T11:30:00Z'));
+  await setup(page, 'en', false);
+  await catalogue(page);
+  const later = {
+    ...vatRate,
+    id: '01900000-0000-7000-8000-000000000005',
+    category: 'product_override',
+    effectiveFrom: '2026-11-26T15:30:00.000Z',
+    status: 'scheduled',
+  };
+  const ended = {
+    ...electricityVatRate,
+    effectiveUntil: '2026-11-26T10:30:00.000Z',
+    status: 'expired',
+  };
+  const expiring = { ...vatRate, effectiveUntil: '2026-11-26T13:30:00.000Z' };
+  await page.route('**/api/admin/finance/vat', (route) =>
+    route.fulfill({ json: [expiring, later, ended] })
+  );
+  await page.goto('/admin/vat');
+  await page.getByRole('link', { name: 'Add product override', exact: true }).click();
+  await page.locator('#vat-product').selectOption(vatProduct.id);
+  const rates = page.locator('#vat-rate');
+  await expect(rates.locator(`option[value="${ended.id}"]`)).toBeDisabled();
+  await expect(
+    rates.locator(`optgroup[label="Product-specific rates that start later"] option`)
+  ).toHaveAttribute('value', later.id);
+  await rates.selectOption(later.id);
+  await expect(page.getByTestId('config-preview')).toContainText(
+    'The selected rate starts later than the override.'
+  );
+  const save = page.getByRole('button', { name: 'Save rate', exact: true });
+  await save.click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toContainText('Selected rate starts later');
+  await dialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await rates.selectOption(expiring.id);
+  await expect(page.getByTestId('config-preview')).toContainText('Selected rate ends');
+
+  await page.getByRole('checkbox', { name: 'Use a specific effective date' }).check();
+  await page.getByRole('combobox', { name: 'Effective date', exact: true }).click();
+  await page
+    .getByRole('grid')
+    .getByRole('button', { name: /November 26/ })
+    .click();
+  await page.locator('#vat-time').fill('22:00');
+  await expect(rates).toHaveValue(expiring.id);
+  await expect(rates.locator(`option[value="${expiring.id}"]`)).toBeDisabled();
+  await expect(rates.locator(`optgroup[label="Available at the start"] option`)).toHaveAttribute(
+    'value',
+    later.id
+  );
+  await save.click();
+  await expect(rates).toBeFocused();
+  await expect(rates).toHaveAccessibleDescription(/The selected rate is not eligible/);
+  await expect(dialog).toHaveCount(0);
+  await rates.selectOption(later.id);
+  await save.click();
+  await expect(dialog).toBeVisible();
+  await expect(dialog).not.toContainText('Selected rate starts later');
+});
 test('VAT delayed validation locks duplicate submits and rejects a changed financial basis', async ({
   page,
 }) => {
