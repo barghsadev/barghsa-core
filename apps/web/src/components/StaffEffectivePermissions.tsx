@@ -12,6 +12,7 @@ import {
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { useLocale } from '../hooks/useLocale.js';
 import { validEffective, type EffectivePermissions } from '../lib/staff-permissions.js';
+import { RecordDetailSkeleton } from './RecordSkeleton.js';
 import { EffectivePermissionsView } from './EffectivePermissionsView.js';
 
 export function StaffEffectivePermissions({
@@ -87,7 +88,11 @@ export function StaffEffectivePermissions({
       {paused ? (
         <p role="status">{text('paused')}</p>
       ) : loading ? (
-        <LoadingStatus>{text('loading')}</LoadingStatus>
+        standalone && !accepted ? (
+          <RecordDetailSkeleton label={text('loading')} />
+        ) : (
+          <LoadingStatus>{text('loading')}</LoadingStatus>
+        )
       ) : null}
       {error && (
         <div role="alert" className="space-y-2">

@@ -9,6 +9,9 @@ import {
 import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import {
   RecordEditorSection,
@@ -730,6 +733,7 @@ export default function AdminStaffTeamsPage({
     setAction(next);
   }
   const editorRoute = mode === 'create' || mode === 'edit' || mode === 'assignment';
+  const compact = useCompactRecords();
   return (
     <section
       className={`mx-auto min-w-0 space-y-4 ${editorRoute ? 'max-w-3xl' : 'max-w-4xl'}`}
@@ -746,7 +750,14 @@ export default function AdminStaffTeamsPage({
               {label('title')}
             </Link>
           )}
-          <h1 className="text-2xl font-semibold">{heading}</h1>
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-2xl font-semibold wrap-anywhere sm:text-3xl">{heading}</h1>
+            {mode === 'detail' && record && (
+              <Badge variant={record.isActive ? 'success' : 'outline'}>
+                {label(record.isActive ? 'active' : 'inactive')}
+              </Badge>
+            )}
+          </div>
           {catalogue && (
             <p className="mt-2 text-sm text-muted-foreground">{label('description')}</p>
           )}
@@ -813,7 +824,13 @@ export default function AdminStaffTeamsPage({
             error={error || denied}
             empty={!teams.length}
             retainContent={!!teams.length && !denied}
-            loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+            loadingView={
+              <RecordListSkeleton
+                label={label('loading')}
+                view={compact ? 'card' : 'table'}
+                headings={[label('name'), label('status'), label('memberCount'), label('tags')]}
+              />
+            }
             errorView={
               <div role="alert">
                 <p>{label(denied ? 'forbidden' : 'error')}</p>
@@ -832,24 +849,35 @@ export default function AdminStaffTeamsPage({
               caption={label('catalogue')}
               scrollLabel={label('catalogue')}
               nameHeader={label('name')}
-              renderName={(team) =>
-                mode === 'directory' ? (
-                  <Link
-                    className="text-primary underline underline-offset-4"
-                    to="/admin/staff-teams/$teamId"
-                    params={{ teamId: team.id }}
-                  >
+              renderName={(team) => (
+                <span className="block space-y-1">
+                  {mode === 'directory' ? (
+                    <Link
+                      className="text-primary underline underline-offset-4"
+                      to="/admin/staff-teams/$teamId"
+                      params={{ teamId: team.id }}
+                    >
+                      <TextCell value={team.name} />
+                    </Link>
+                  ) : (
                     <TextCell value={team.name} />
-                  </Link>
-                ) : (
-                  <TextCell value={team.name} />
-                )
-              }
+                  )}
+                  {team.description && (
+                    <span className="block text-xs font-normal text-muted-foreground">
+                      <TextCell value={team.description} />
+                    </span>
+                  )}
+                </span>
+              )}
               fields={[
                 {
-                  id: 'description',
-                  label: label('teamDescription'),
-                  render: (team) => <TextCell value={team.description} />,
+                  id: 'status',
+                  label: label('status'),
+                  render: (team) => (
+                    <Badge variant={team.isActive ? 'success' : 'outline'}>
+                      {label(team.isActive ? 'active' : 'inactive')}
+                    </Badge>
+                  ),
                 },
                 {
                   id: 'members',
@@ -877,15 +905,6 @@ export default function AdminStaffTeamsPage({
                   id: 'tags',
                   label: label('tags'),
                   render: (team) => <TextCell value={team.skillTags.join(', ') || null} />,
-                },
-                {
-                  id: 'status',
-                  label: label('status'),
-                  render: (team) => (
-                    <Badge variant={team.isActive ? 'secondary' : 'outline'}>
-                      {label(team.isActive ? 'active' : 'inactive')}
-                    </Badge>
-                  ),
                 },
               ]}
               actionHeader={label('actions')}
@@ -920,12 +939,17 @@ export default function AdminStaffTeamsPage({
                 : {})}
               loading={loading}
               emptyMessage={label('empty')}
-              tableClassName="min-w-[56rem]"
+              tableClassName="min-w-[40rem]"
             />
           </ListPage.Content>
         ) : (
           <>
-            {loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
+            {loading &&
+              (mode === 'detail' ? (
+                <RecordDetailSkeleton label={label('loading')} />
+              ) : (
+                <LoadingStatus>{label('loading')}</LoadingStatus>
+              ))}
             {(missing || denied || error) && (
               <Alert variant="destructive" className="space-y-2">
                 <p>{missing ? unavailableMember : label(denied ? 'forbidden' : 'error')}</p>
@@ -939,9 +963,6 @@ export default function AdminStaffTeamsPage({
             {mode === 'detail' && record && !denied && (
               <section className="space-y-5 rounded-lg border bg-card p-4 sm:p-5">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant={record.isActive ? 'secondary' : 'outline'}>
-                    {label(record.isActive ? 'active' : 'inactive')}
-                  </Badge>
                   {record.description && (
                     <p className="text-sm">
                       <TextCell value={record.description} />

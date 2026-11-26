@@ -16,6 +16,9 @@ import {
   TextCell,
   buttonVariants,
 } from '@barghsa/ui';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { t } from '@barghsa/i18n/admin-ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { staffQueryJson, useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
@@ -82,6 +85,7 @@ interface RolesPageProps {
 }
 
 export default function AdminRolesPage({ queries, variant, roleId }: RolesPageProps = {}) {
+  const compact = useCompactRecords();
   const read = useStaffQueryRead('profiles');
   const locale = useLocale();
   const { numberStyle, number } = useNumberFormatting(locale);
@@ -527,7 +531,17 @@ export default function AdminRolesPage({ queries, variant, roleId }: RolesPagePr
                 error={isError}
                 empty={roleId ? !!roles && !selectedRole : roles?.length === 0}
                 retainContent={roles !== null && roles.length > 0}
-                loadingView={<LoadingStatus>{t('admin.roles.loading', locale)}</LoadingStatus>}
+                loadingView={
+                  roleId ? (
+                    <RecordDetailSkeleton label={word('loading')} />
+                  ) : (
+                    <RecordListSkeleton
+                      label={word('loading')}
+                      view={compact ? 'card' : 'table'}
+                      headings={[word('role'), word('permissions')]}
+                    />
+                  )
+                }
                 errorView={
                   <div role="alert" className="space-y-2">
                     <p>{t('admin.roles.load.failed', locale)}</p>
@@ -540,17 +554,20 @@ export default function AdminRolesPage({ queries, variant, roleId }: RolesPagePr
               >
                 {roleId && selectedRole ? (
                   <section className="space-y-4 rounded-xl border bg-card p-5">
-                    <header className="space-y-1">
+                    <header className="flex flex-wrap items-start justify-between gap-2 border-b pb-4">
                       {selectedRole.predefined && (
                         <p className="text-sm font-medium text-muted-foreground">
                           {word('predefined')}
                         </p>
                       )}
-                      <p>
+                      <p className="text-sm text-muted-foreground">
                         {roleText(selectedRole.roleId, 'description', selectedRole.description)}
                       </p>
                     </header>
-                    <h2 className="text-lg font-semibold">{word('permissions')}</h2>
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <h2 className="text-lg font-semibold">{word('permissions')}</h2>
+                      {roleCount(selectedRole)}
+                    </div>
                     {rolePermissions(selectedRole)}
                   </section>
                 ) : (

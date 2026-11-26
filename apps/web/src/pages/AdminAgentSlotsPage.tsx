@@ -1,6 +1,9 @@
 import { Pencil as TablePencilIcon } from 'lucide-react';
 import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import {
@@ -45,6 +48,7 @@ const slotRoute = (slotKey: SlotKey, action?: 'edit') => ({
 });
 
 export default function AdminAgentSlotsPage({ workspace }: { workspace?: SlotWorkspace } = {}) {
+  const compact = useCompactRecords();
   const locale = useLocale(),
     label = (key: string) => t(`admin.slots.${key}`, locale);
   const time = useAccountTime(locale);
@@ -290,7 +294,7 @@ export default function AdminAgentSlotsPage({ workspace }: { workspace?: SlotWor
           >
             {label(workspace?.slotKey ?? 'title')}
           </h1>
-          {!isEditor && (
+          {(!workspace || workspace.view === 'list') && (
             <p className="mt-1 text-sm text-muted-foreground">{label('description')}</p>
           )}
         </div>
@@ -340,24 +344,42 @@ export default function AdminAgentSlotsPage({ workspace }: { workspace?: SlotWor
           empty={false}
           emptyView={null}
           retainContent={slots.data !== null}
-          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+          loadingView={
+            workspace?.view === 'detail' ? (
+              <RecordDetailSkeleton label={label('loading')} />
+            ) : (
+              <RecordListSkeleton
+                label={label('loading')}
+                view={compact ? 'card' : 'table'}
+                headings={[copy('slot'), label('current'), copy('lastChanged'), copy('assignment')]}
+              />
+            )
+          }
           errorView={<p role="alert">{label(scope.denied ? 'denied' : 'error')}</p>}
         >
           {slot && workspace?.view === 'detail' && (
             <div className="max-w-3xl space-y-4 rounded-xl border bg-card p-4 sm:p-6">
-              <p className="text-sm text-muted-foreground">{label('current')}</p>
+              <h2 className="font-semibold">{label('current')}</h2>
               {assignment(slot.agent)}
-              {slot.alsoUsedIn.length > 0 && (
-                <p className="text-sm">
-                  {label('shared')} ·{' '}
-                  {slot.alsoUsedIn.map((key) => label(key)).join(locale === 'fa' ? '، ' : ', ')}
-                </p>
+              <dl className="grid gap-3 border-t pt-3 text-sm sm:grid-cols-2">
+                <div>
+                  <dt className="text-xs text-muted-foreground">{copy('lastChanged')}</dt>
+                  <dd>
+                    <time dateTime={slot.updatedAt}>{time.format(slot.updatedAt)}</time>
+                  </dd>
+                </div>
+                {slot.alsoUsedIn.length > 0 && (
+                  <div>
+                    <dt className="text-xs text-muted-foreground">{label('shared')}</dt>
+                    <dd>
+                      {slot.alsoUsedIn.map((key) => label(key)).join(locale === 'fa' ? '، ' : ', ')}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+              {!slot.agent?.enabled && (
+                <p className="text-sm text-muted-foreground">{label('fallback')}</p>
               )}
-              <p className="text-sm text-muted-foreground">
-                {copy('lastChanged')} ·{' '}
-                <time dateTime={slot.updatedAt}>{time.format(slot.updatedAt)}</time>
-              </p>
-              <p className="text-sm">{label('fallback')}</p>
               <div className="flex flex-wrap gap-2">
                 {!slots.loading && !slots.error && (
                   <Link
@@ -387,7 +409,7 @@ export default function AdminAgentSlotsPage({ workspace }: { workspace?: SlotWor
               role="region"
               aria-label={copy('slotsTable')}
             >
-              <table className="w-full text-start text-sm md:min-w-[940px]">
+              <table className="w-full text-start text-sm md:min-w-[42rem]">
                 <colgroup className="hidden md:table-column-group">
                   <col className="w-[170px]" />
                   <col className="w-[180px]" />

@@ -23,14 +23,12 @@ import {
 import {
   LoadingStatus,
   Alert,
-  AvatarNameFallback,
   Button,
   Input,
   Label,
   ListPage,
   ListRefreshButton,
   Textarea,
-  SizedAvatar,
   Badge,
   buttonVariants,
 } from '@barghsa/ui';
@@ -55,6 +53,8 @@ import {
   recordEditorSurface,
 } from '../components/RecordEditorLayout.js';
 import { RecordNumberInput } from '../components/RecordNumberInput.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 const TeamActionDialog = lazy(() =>
   import('../components/TeamActionDialog.js').then((module) => ({
     default: module.TeamActionDialog,
@@ -821,7 +821,12 @@ function OwnedAiAgentsPage({
                 </Button>
               </div>
             )}
-            {detailLoading && <LoadingStatus>{label('detailLoading')}</LoadingStatus>}
+            {detailLoading &&
+              (showDetails ? (
+                <RecordDetailSkeleton label={label('detailLoading')} />
+              ) : (
+                <LoadingStatus>{label('detailLoading')}</LoadingStatus>
+              ))}
             {detailError && (
               <div role="alert">
                 <p>{label('detailError')}</p>
@@ -1135,7 +1140,7 @@ function OwnedAiAgentsPage({
               <div className="space-y-4">
                 <section className="space-y-4 rounded-xl border bg-card p-4 sm:p-6">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant={detail.enabled ? 'default' : 'secondary'}>
+                    <Badge variant={detail.enabled ? 'success' : 'outline'}>
                       {label(detail.enabled ? 'enabled' : 'disabled')}
                     </Badge>
                     {detail.description && (
@@ -1164,11 +1169,12 @@ function OwnedAiAgentsPage({
                       <dt className="text-muted-foreground">{label('linkMode')}</dt>
                       <dd>{label(detail.linkMode === 'any_kb' ? 'anyKb' : 'allKbs')}</dd>
                     </div>
-                    {sets.map(([, source]) => (
-                      <div key={source}>
-                        <dt className="text-muted-foreground">{label(source)}</dt>
-                        <dd>
-                          {detail[source].length ? (
+                    {sets
+                      .filter(([, source]) => detail[source].length > 0)
+                      .map(([, source]) => (
+                        <div key={source}>
+                          <dt className="text-muted-foreground">{label(source)}</dt>
+                          <dd>
                             <ul className="list-inside list-disc [overflow-wrap:anywhere]">
                               {detail[source].map((entry) => (
                                 <li key={entry.id}>
@@ -1182,12 +1188,9 @@ function OwnedAiAgentsPage({
                                 </li>
                               ))}
                             </ul>
-                          ) : (
-                            '—'
-                          )}
-                        </dd>
-                      </div>
-                    ))}
+                          </dd>
+                        </div>
+                      ))}
                   </dl>
                   <div className="flex flex-wrap gap-2">{agentActions(detail)}</div>
                 </section>
@@ -1200,7 +1203,9 @@ function OwnedAiAgentsPage({
                 error={error}
                 empty={!rows.length}
                 retainContent={rows.length > 0}
-                loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+                loadingView={
+                  <RecordListSkeleton label={label('loading')} view="card" headings={[]} />
+                }
                 errorView={
                   <div role="alert">
                     <p>{label('error')}</p>
@@ -1230,13 +1235,14 @@ function OwnedAiAgentsPage({
                   })}
                   renderDetails={(row) => (
                     <div className="space-y-2 text-sm">
-                      <SizedAvatar size="sm" aria-hidden="true">
-                        <AvatarNameFallback name={row.title} />
-                      </SizedAvatar>
-                      <p className="break-words text-sm">
-                        {label('model')}: {row.modelTitle}
-                      </p>
-                      <span className="text-sm">{label(row.enabled ? 'enabled' : 'disabled')}</span>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge variant={row.enabled ? 'success' : 'outline'}>
+                          {label(row.enabled ? 'enabled' : 'disabled')}
+                        </Badge>
+                        <p className="wrap-anywhere text-muted-foreground">
+                          {label('model')} <bdi className="text-foreground">{row.modelTitle}</bdi>
+                        </p>
+                      </div>
                       <dl className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
                         <div className="flex gap-2">
                           <dt>{copy('linkedKbs')}</dt>

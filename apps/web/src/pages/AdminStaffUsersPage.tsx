@@ -10,6 +10,9 @@ import {
   X,
 } from 'lucide-react';
 import { TableActionIcon } from '../components/TableActionIcon.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import {
   RecordEditorActions,
@@ -30,6 +33,7 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   LoadingStatus,
   Alert,
+  Badge,
   Button,
   DataTable,
   DateCell,
@@ -803,7 +807,9 @@ export default function AdminStaffUsersPage({
   );
   const staffStatus = (staff: Staff) => (
     <>
-      {label(staff.status)}
+      <Badge variant={staff.status === 'active' ? 'success' : 'outline'}>
+        {label(staff.status)}
+      </Badge>
       {staff.activationPending && (
         <p className="text-xs">
           {label('activationPending')}
@@ -971,6 +977,21 @@ export default function AdminStaffUsersPage({
           ? !access?.canView
           : !access?.canView && !access?.canCreate;
   const editorRoute = mode === 'create' || mode === 'roles';
+  const compact = useCompactRecords();
+  const directoryLoading = (
+    <RecordListSkeleton
+      label={label('loading')}
+      view={compact ? 'card' : 'table'}
+      headings={[
+        label('name'),
+        label('status'),
+        label('roles'),
+        label('lastLogin'),
+        ...(!mode ? [label('actions')] : []),
+      ]}
+    />
+  );
+  const accountLoading = <RecordDetailSkeleton label={label('loading')} />;
   return (
     <section
       className={`mx-auto min-w-0 space-y-4 ${editorRoute ? 'max-w-3xl' : 'max-w-5xl'}`}
@@ -999,7 +1020,13 @@ export default function AdminStaffUsersPage({
               <bdi>{name(account)}</bdi>
             </Link>
           )}
-          <h1 className="text-2xl font-semibold">{title}</h1>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <h1 className="text-2xl font-semibold wrap-anywhere sm:text-3xl">{title}</h1>
+            {mode === 'account' && account && staffStatus(account)}
+          </div>
+          {mode === 'account' && account && (
+            <p className="text-sm text-muted-foreground">{staffUsername(account)}</p>
+          )}
           {directory && (
             <p className="mt-2 text-sm text-muted-foreground">{label('description')}</p>
           )}
@@ -1085,7 +1112,14 @@ export default function AdminStaffUsersPage({
             />
           </ListPage.Toolbar>
         )}
-        {accessLoading && <LoadingStatus>{label('loading')}</LoadingStatus>}
+        {accessLoading &&
+          (directory ? (
+            directoryLoading
+          ) : userId ? (
+            accountLoading
+          ) : (
+            <LoadingStatus>{label('loading')}</LoadingStatus>
+          ))}
         {accessError && (
           <div role="alert">
             <p>{label('accessError')}</p>
@@ -1109,7 +1143,7 @@ export default function AdminStaffUsersPage({
           )}
           {userId && !insufficientAccess && !accessLoading && !accessError && (
             <>
-              {loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
+              {loading && accountLoading}
               {missing && <Alert variant="destructive">{label('accountUnavailable')}</Alert>}
               {error && (
                 <Alert variant="destructive" className="space-y-2">
@@ -1122,14 +1156,12 @@ export default function AdminStaffUsersPage({
               {account && mode === 'account' && (
                 <section
                   aria-label={label('accountTitle')}
-                  className="space-y-5 rounded-lg border bg-card p-4 sm:p-5"
+                  className="space-y-5 rounded-xl border bg-card p-4 sm:p-5"
                 >
                   <dl className="grid gap-4 sm:grid-cols-2">
                     {(
                       [
-                        ['username', staffUsername],
                         ['roles', staffRoles],
-                        ['status', staffStatus],
                         ['lastLogin', staffLastLogin],
                       ] as const
                     ).map(([key, render]) => (
@@ -1167,7 +1199,7 @@ export default function AdminStaffUsersPage({
                 error={error}
                 empty={!list.items.length}
                 retainContent={!!list.items.length}
-                loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+                loadingView={directoryLoading}
                 errorView={
                   <div role="alert">
                     {label('error')}{' '}
@@ -1195,31 +1227,30 @@ export default function AdminStaffUsersPage({
                   keyExtractor={(staff) => staff.userId}
                   sortable={false}
                   className="max-h-[32rem] bg-card"
-                  tableClassName="min-w-[52rem]"
+                  tableClassName="min-w-[40rem]"
                   columns={[
                     {
                       id: 'name',
                       header: label('name'),
-                      cell: staffName,
+                      cell: (staff) => (
+                        <div className="space-y-1">
+                          {staffName(staff)}
+                          <p className="text-xs text-muted-foreground">{staffUsername(staff)}</p>
+                        </div>
+                      ),
                       rowHeader: true,
-                      cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
-                    },
-                    {
-                      id: 'username',
-                      header: label('username'),
-                      cell: staffUsername,
-                      cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
-                    },
-                    {
-                      id: 'roles',
-                      header: label('roles'),
-                      cell: staffRoles,
                       cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
                     },
                     {
                       id: 'status',
                       header: label('status'),
                       cell: staffStatus,
+                      cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
+                    },
+                    {
+                      id: 'roles',
+                      header: label('roles'),
+                      cell: staffRoles,
                       cellClassName: 'align-top p-3 [overflow-wrap:anywhere]',
                     },
                     {
@@ -1241,13 +1272,17 @@ export default function AdminStaffUsersPage({
                   ]}
                   renderCard={(staff) => (
                     <div className="min-w-0 space-y-4 [overflow-wrap:anywhere]">
-                      {staffName(staff)}
-                      <dl className="space-y-3 text-sm">
+                      <div className="flex flex-wrap items-start justify-between gap-2">
+                        <div className="min-w-0 space-y-1">
+                          {staffName(staff)}
+                          <p className="text-xs text-muted-foreground">{staffUsername(staff)}</p>
+                        </div>
+                        <div className="text-sm">{staffStatus(staff)}</div>
+                      </div>
+                      <dl className="grid grid-cols-2 gap-3 border-t pt-3 text-sm">
                         {(
                           [
-                            ['username', staffUsername],
                             ['roles', staffRoles],
-                            ['status', staffStatus],
                             ['lastLogin', staffLastLogin],
                           ] as const
                         ).map(([key, render]) => (
