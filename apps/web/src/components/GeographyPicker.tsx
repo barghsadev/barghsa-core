@@ -1,6 +1,6 @@
-import type { ComponentProps, Ref } from 'react';
+import { useState, type ComponentProps, type Ref } from 'react';
 import { SearchIcon } from 'lucide-react';
-import { ComboBox, ComboBoxInput, ComboBoxItem, ComboBoxPopup } from '@barghsa/ui';
+import { ComboBox, ComboBoxClear, ComboBoxInput, ComboBoxItem, ComboBoxPopup } from '@barghsa/ui';
 import { addressesText } from '@barghsa/i18n/addresses';
 import type { GeographyOption } from '../hooks/useGeographyOptions.js';
 
@@ -56,12 +56,15 @@ export function GeographyPicker({
   onChange: (id: string) => void;
   onBlur: () => void;
 } & Pick<ComponentProps<typeof ComboBoxInput>, 'id' | 'aria-invalid' | 'aria-describedby'>) {
+  const [search, setSearch] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
   const label = (option: GeographyOption) => (locale === 'fa' ? option.nameFa : option.nameEn);
   const value =
     options.find((option) => option.id === selected) ??
     (savedLabel ? { id: selected, nameFa: savedLabel, nameEn: savedLabel } : null);
   const direction = locale === 'fa' ? 'rtl' : 'ltr';
   const text = locationMessages[locale];
+  const clearLabel = addressesText(kind === 'province' ? 'clearProvince' : 'clearCity', locale);
   const placeholder = !hasProvince
     ? addressesText('provinceFirst', locale)
     : loading
@@ -74,6 +77,14 @@ export function GeographyPicker({
     <ComboBox
       items={options}
       value={value}
+      inputValue={search ?? (value ? label(value) : '')}
+      onInputValueChange={(input, { reason }) => {
+        setSearch(reason === 'input-change' ? input : null);
+      }}
+      onOpenChange={(next) => {
+        setOpen(next);
+        if (!next) setSearch(null);
+      }}
       itemToStringLabel={label}
       itemToStringValue={(option) => option.id}
       isItemEqualToValue={(option, selection) => option.id === selection.id}
@@ -87,9 +98,16 @@ export function GeographyPicker({
       autoHighlight
       openOnInputClick
       disabled={disabled}
-      onValueChange={(option) => {
-        if (!disabled && (!option || options.some(({ id }) => id === option.id)))
-          onChange(option?.id ?? '');
+      onValueChange={(option, details) => {
+        if (
+          disabled ||
+          (option ? !options.some(({ id }) => id === option.id) : details.reason !== 'clear-press')
+        ) {
+          if (details.reason === 'escape-key' && search === null) details.allowPropagation();
+          details.cancel();
+          return;
+        }
+        onChange(option?.id ?? '');
       }}
     >
       <SearchIcon
@@ -99,12 +117,30 @@ export function GeographyPicker({
       <ComboBoxInput
         {...inputProps}
         ref={inputRef}
-        onBlur={onBlur}
+        onBlur={() => {
+          if (!open) setSearch(null);
+          onBlur();
+        }}
+        onKeyDown={(event) => {
+          if (
+            event.key === 'Enter' &&
+            !event.nativeEvent.isComposing &&
+            (open || search !== null) &&
+            !event.currentTarget.getAttribute('aria-activedescendant')
+          ) {
+            event.preventDefault();
+          }
+        }}
         aria-required={required || undefined}
         aria-busy={loading || undefined}
         placeholder={placeholder}
-        className="h-11 ps-9 aria-invalid:border-destructive"
+        className={`h-11 ps-9 aria-invalid:border-destructive${value ? ' pe-11' : ''}`}
         dir={direction}
+      />
+      <ComboBoxClear
+        className="absolute end-0 top-1/2 size-11 -translate-y-1/2"
+        clearLabel={clearLabel}
+        title={clearLabel}
       />
       <ComboBoxPopup
         dir={direction}

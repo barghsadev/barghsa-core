@@ -297,7 +297,9 @@ for (const locale of ['en', 'fa']) {
     await expect(owner.getByRole('combobox')).toHaveCount(2);
     await page.reload();
     await expect(owner).toBeVisible();
-    for (const control of await owner.locator('select, textarea, input').all())
+    for (const control of await owner
+      .locator(':is(select, textarea, input):not([aria-hidden="true"]):not([type="hidden"])')
+      .all())
       await expect(control).toHaveAccessibleName(/.+/);
     await owner.getByRole('button', { name: t('settings.addresses.form.cancel', locale) }).focus();
     await page.keyboard.press('Enter');
@@ -465,6 +467,25 @@ for (const locale of ['en', 'fa']) {
     await selectAddressLocation(page, province, provinceName);
     await expect(city).toBeEnabled();
     await selectAddressLocation(page, city, cityName);
+    await dialog.evaluate((form) =>
+      form.addEventListener('submit', () => form.setAttribute('data-location-submitted', 'true'))
+    );
+    await province.click();
+    await province.fill('');
+    await province.fill('No matching province');
+    await expect(province).toHaveAttribute('aria-expanded', 'true');
+    await province.press('Enter');
+    await expect(dialog).not.toHaveAttribute('data-location-submitted', 'true');
+    await province.press('Escape');
+    await expect(province).toHaveValue(provinceName);
+    await expect(city).toHaveValue(cityName);
+    await dialog
+      .getByRole('button', { name: locale === 'fa' ? 'پاک کردن شهر' : 'Clear city', exact: true })
+      .click();
+    await expect(city).toHaveValue('');
+    await expect(city).toBeFocused();
+    await expect(province).toHaveValue(provinceName);
+    await selectAddressLocation(page, city, cityName);
     await selectAddressLocation(page, province, locale === 'fa' ? 'دو' : 'Two');
     await expect(city).toHaveValue('');
     await expect(city).toBeDisabled();
@@ -494,6 +515,7 @@ for (const locale of ['en', 'fa']) {
     await expect(page.getByRole('option', { name: cityName, exact: true })).toBeVisible();
     await city.press('Escape');
     await expect(province).toHaveValue(provinceName);
+    await expect(city).toHaveValue(cityName);
   });
 }
 

@@ -3,12 +3,16 @@ const en = {
   postalCodeFormat: 'Enter 10 digits, starting with a digit from 1 to 9.',
   provinceFirst: 'Select a province first',
   loadingCities: 'Loading cities…',
+  clearProvince: 'Clear province',
+  clearCity: 'Clear city',
 };
 const fa: Record<keyof typeof en, string> = {
   streetExample: 'خیابان، پلاک، طبقه و واحد',
   postalCodeFormat: 'کد پستی باید ۱۰ رقمی باشد و با صفر شروع نشود.',
   provinceFirst: 'ابتدا استان را انتخاب کنید',
   loadingCities: 'در حال دریافت شهرها…',
+  clearProvince: 'پاک کردن استان',
+  clearCity: 'پاک کردن شهر',
 };
 
 export function addressesText(key: keyof typeof en, locale: 'fa' | 'en'): string {
