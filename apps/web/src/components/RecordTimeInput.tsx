@@ -1,5 +1,6 @@
 import type { ComponentProps } from 'react';
 import { Input } from '@barghsa/ui';
+import { accountTimeInputText } from '@barghsa/i18n/account-time-input';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
 
 type RecordTimeInputProps = Omit<ComponentProps<typeof Input>, 'type' | 'value' | 'onChange'> & {
@@ -17,6 +18,7 @@ export function RecordTimeInput({ locale, value, onChange, ...inputProps }: Reco
       placeholder={localEntry ? '۰۰:۰۰' : undefined}
       autoComplete="off"
       dir="ltr"
+      aria-description={localEntry ? accountTimeInputText('time24', locale) : undefined}
       {...inputProps}
       value={value}
       onChange={(event) => {

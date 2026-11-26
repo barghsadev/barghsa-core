@@ -802,7 +802,16 @@ for (const locale of ['en', 'fa'] as const) {
     await selectHoldExpiryDay(page, date, expiresAt, locale);
     await review.click();
     await expect(time).toBeFocused();
-    await time.fill('07:45');
+    if (locale === 'fa') {
+      await time.fill('۰۷۴');
+      await expect(time).toHaveValue('07:4');
+      await review.click();
+      await expect(time).toBeFocused();
+      await expect(time).toHaveAttribute('aria-invalid', 'true');
+      expect(writes).toEqual([]);
+    }
+    await time.fill(locale === 'fa' ? '۰۷۴۵' : '07:45');
+    await expect(time).toHaveValue('07:45');
     await review.click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(reason);

@@ -218,6 +218,11 @@ for (const locale of ['en', 'fa'] as const)
       await expect(price).toHaveAccessibleDescription(label('invalidPrice'));
       const amount = locale === 'fa' ? ' ۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳ ' : ' 9007199254740993 ';
       await price.fill(amount);
+      await page.getByRole('radio', { name: label('schedule'), exact: true }).check();
+      const clock = page.locator('#catalogue-time');
+      await clock.fill(locale === 'fa' ? '۱۴۳۵' : '14:35');
+      await expect(clock).toHaveValue('14:35');
+      await page.getByRole('radio', { name: label('applyNow'), exact: true }).check();
       await page.getByRole('button', { name: label('savePrice'), exact: true }).click();
       await confirm().click();
       await expect(dialog).toBeHidden();

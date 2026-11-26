@@ -30,7 +30,6 @@ import {
   DateCell,
   TextCell,
   DatePicker,
-  Input,
   Label,
   ListPage,
   ListRefreshButton,
@@ -44,6 +43,7 @@ import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { GiftProfilePicker } from '../components/GiftProfilePicker.js';
+import { RecordTimeInput } from '../components/RecordTimeInput.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { useGiftCodeCatalogue } from '../hooks/useGiftCodeCatalogue.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
@@ -1057,10 +1057,9 @@ export default function AdminGiftCodesPage({
                                       {label(`${field}Time`)}
                                     </Label>
                                     <div className="group relative">
-                                      <Input
+                                      <RecordTimeInput
                                         id={`gift-${field}-time`}
-                                        type="time"
-                                        dir="ltr"
+                                        locale={locale}
                                         required
                                         aria-required="true"
                                         aria-invalid={!!form.formState.errors[field] || undefined}
@@ -1070,23 +1069,23 @@ export default function AdminGiftCodesPage({
                                             : 'gift-validity-timezone'
                                         }
                                         className={
-                                          draft[field].time
-                                            ? undefined
-                                            : 'text-transparent focus:text-foreground [&::-webkit-date-and-time-value]:opacity-0 focus:[&::-webkit-date-and-time-value]:opacity-100'
+                                          locale === 'en' && !draft[field].time
+                                            ? 'text-transparent focus:text-foreground [&::-webkit-date-and-time-value]:opacity-0 focus:[&::-webkit-date-and-time-value]:opacity-100'
+                                            : undefined
                                         }
                                         value={draft[field].time}
-                                        onChange={(event) =>
+                                        onChange={(time) =>
                                           updateDraft({
                                             ...draft,
                                             [field]: {
                                               ...draft[field],
-                                              time: event.target.value,
+                                              time,
                                               changed: true,
                                             },
                                           })
                                         }
                                       />
-                                      {!draft[field].time && (
+                                      {locale === 'en' && !draft[field].time && (
                                         <span
                                           aria-hidden="true"
                                           className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-sm text-muted-foreground group-focus-within:hidden"

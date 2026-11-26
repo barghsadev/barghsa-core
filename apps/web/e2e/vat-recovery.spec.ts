@@ -240,7 +240,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('link', { name: label('addRate'), exact: true }).click();
     await page.locator('#vat-percent').fill('7.25');
     await page.getByRole('checkbox').check();
-    await page.locator('#vat-time').fill('10:15');
+    await page.locator('#vat-time').fill(locale === 'fa' ? '۱۰۱۵' : '10:15');
     await expect(page.locator('#vat-time')).toHaveAttribute('dir', 'ltr');
     failZone = true;
     await page.getByRole('button', { name: label('refresh'), exact: true }).click();

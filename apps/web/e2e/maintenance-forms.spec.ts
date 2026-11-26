@@ -349,7 +349,8 @@ for (const locale of ['en', 'fa'] as const) {
     await fa.fill(' ');
     await en.fill(' ');
     await owner.fill(' ');
-    await time.fill('');
+    await time.fill(locale === 'fa' ? '۰۴۱' : '');
+    if (locale === 'fa') await expect(time).toHaveValue('04:1');
     await page.getByRole('button', { name: word('save'), exact: true }).click();
     await expect(fa).toBeFocused();
     await expect(fa).toHaveAttribute('aria-invalid', 'true');
@@ -363,7 +364,8 @@ for (const locale of ['en', 'fa'] as const) {
     await fa.fill('  پیام تازه مشتری  ');
     await en.fill('  A new customer message  ');
     await owner.fill('  Operations  ');
-    await time.fill('04:15');
+    await time.fill(locale === 'fa' ? '۰۴۱۵' : '04:15');
+    await expect(time).toHaveValue('04:15');
     for (const field of [date, time]) await expect(field).not.toHaveAttribute('aria-describedby');
     await page.locator('form').evaluate((form: HTMLFormElement) => {
       form.requestSubmit();

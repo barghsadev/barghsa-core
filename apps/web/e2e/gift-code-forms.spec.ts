@@ -252,7 +252,8 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(endDate).toHaveAttribute('aria-required', 'true');
     await expect(endTime).toHaveValue('');
     await expect(endDate).toHaveText(word('chooseDate'));
-    await endTime.fill('15:30');
+    await endTime.fill(locale === 'fa' ? '١٥٣٠' : '15:30');
+    await expect(endTime).toHaveValue('15:30');
     await form.getByRole('button', { name: word('save'), exact: true }).click();
     await expect(endTime).toHaveAccessibleDescription(word('invalidDate'));
     await expect(endDate).toHaveAccessibleDescription(word('invalidDate'));

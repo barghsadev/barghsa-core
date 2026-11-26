@@ -1,5 +1,6 @@
 import { test, expect } from './coverage-fixture';
 import { shellText } from '@barghsa/i18n/shell';
+import { tPreferenceSettingsForms } from '@barghsa/i18n/preference-settings-forms';
 
 for (const locale of ['fa', 'en'] as const) {
   test(`optional analytics require account consent (${locale})`, async ({ page }) => {
@@ -50,9 +51,9 @@ for (const locale of ['fa', 'en'] as const) {
 
     await page.goto('/settings');
     const settings = page.getByRole('region', { name: shellText('analyticsTitle', locale) });
-    await expect(settings).toContainText(shellText('analyticsDeclined', locale));
+    await expect(settings).toContainText(tPreferenceSettingsForms('analyticsDeclined', locale));
     await settings.getByRole('button', { name: shellText('analyticsAllow', locale) }).click();
-    await expect(settings).toContainText(shellText('analyticsAllowed', locale));
+    await expect(settings).toContainText(tPreferenceSettingsForms('analyticsAllowed', locale));
     await expect.poll(() => events.length).toBeGreaterThan(0);
     expect(
       events.every(
@@ -60,7 +61,7 @@ for (const locale of ['fa', 'en'] as const) {
       )
     ).toBe(true);
     await settings.getByRole('button', { name: shellText('analyticsDecline', locale) }).click();
-    await expect(settings).toContainText(shellText('analyticsDeclined', locale));
+    await expect(settings).toContainText(tPreferenceSettingsForms('analyticsDeclined', locale));
     const count = events.length;
     await page.goto('/dashboard');
     expect(events).toHaveLength(count);

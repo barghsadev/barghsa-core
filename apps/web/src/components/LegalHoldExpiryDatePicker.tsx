@@ -1,8 +1,9 @@
 import { useImperativeHandle, useRef, useState, type RefObject } from 'react';
-import { DatePicker, FieldLabel, Input } from '@barghsa/ui';
+import { DatePicker, FieldLabel } from '@barghsa/ui';
 import type { Locale } from '@barghsa/i18n/app';
 import { documentText } from '@barghsa/i18n/documents';
 import { datetimeLocalToIso } from '@barghsa/i18n/account-time-input';
+import { RecordTimeInput } from './RecordTimeInput.js';
 
 export type HoldExpiryFields = { read: () => string | null; focus: () => void };
 
@@ -62,16 +63,15 @@ export default function LegalHoldExpiryDatePicker({
       </div>
       <div className="min-w-0 space-y-1">
         <FieldLabel htmlFor="hold-expiry-time">{documentText('holdExpiryTime', locale)}</FieldLabel>
-        <Input
+        <RecordTimeInput
           id="hold-expiry-time"
           ref={timeRef}
-          type="time"
-          dir="ltr"
+          locale={locale}
           className="w-full min-w-0"
           disabled={!timezone}
           value={time}
-          onChange={(event) => {
-            setTime(event.target.value);
+          onChange={(value) => {
+            setTime(value);
             onEdit();
           }}
           {...feedback}

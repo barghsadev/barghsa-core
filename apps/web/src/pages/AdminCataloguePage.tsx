@@ -1,6 +1,7 @@
 import { Pencil as TablePencilIcon } from 'lucide-react';
 import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import { RecordTimeInput } from '../components/RecordTimeInput.js';
 import { Link } from '@tanstack/react-router';
 import {
   RecordEditorSection,
@@ -1581,13 +1582,12 @@ export default function AdminCataloguePage({
                                     </div>
                                     <div className={recordEditorField}>
                                       <Label htmlFor="catalogue-time">{label('time')}</Label>
-                                      <Input
+                                      <RecordTimeInput
                                         id="catalogue-time"
                                         {...priceForm.bind('time')}
-                                        dir="ltr"
-                                        type="time"
+                                        locale={locale}
                                         value={time}
-                                        onChange={(event) => setTime(event.target.value)}
+                                        onChange={setTime}
                                       />
                                       {priceFeedback('time')}
                                     </div>

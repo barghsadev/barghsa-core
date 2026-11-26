@@ -60,15 +60,8 @@ const fa = {
   analyticsTitle: 'آمار استفاده',
   analyticsPrompt:
     'آیا اجازه می‌دهید آمار ناشناس استفاده از بخش‌های برنامه را برای بهبود خدمات ثبت کنیم؟',
-  analyticsDescription:
-    'فقط نوع بخش و خدمت ثبت می‌شود؛ اطلاعات هویتی، متن نوشته‌ها و جزئیات سفارش فرستاده نمی‌شود. هر زمان می‌توانید نظرتان را تغییر دهید.',
   analyticsAllow: 'اجازه می‌دهم',
   analyticsDecline: 'اجازه نمی‌دهم',
-  analyticsAllowed: 'ثبت آمار اختیاری فعال است.',
-  analyticsDeclined: 'ثبت آمار اختیاری غیرفعال است.',
-  analyticsUndecided: 'هنوز انتخاب نکرده‌اید.',
-  analyticsLoading: 'در حال بارگذاری انتخاب شما…',
-  analyticsRetry: 'تلاش دوباره',
   analyticsError: 'ذخیره انتخاب شما ناموفق بود. دوباره تلاش کنید.',
   view: 'مشاهده',
 };
@@ -131,15 +124,8 @@ const en: Record<keyof typeof fa, string> = {
   checkTheme: 'Check saved theme',
   analyticsTitle: 'Usage analytics',
   analyticsPrompt: 'May we record anonymous usage of app sections to improve the service?',
-  analyticsDescription:
-    'Only the section and service type are recorded. We do not send identity, written content, or order details. You can change this choice at any time.',
   analyticsAllow: 'Allow analytics',
   analyticsDecline: 'Decline',
-  analyticsAllowed: 'Optional analytics are on.',
-  analyticsDeclined: 'Optional analytics are off.',
-  analyticsUndecided: 'You have not chosen yet.',
-  analyticsLoading: 'Loading your choice…',
-  analyticsRetry: 'Retry',
   analyticsError: 'Could not save your choice. Please try again.',
   view: 'View',
 };

@@ -8,7 +8,6 @@ import {
   LoadingStatus,
   Button,
   DatePicker,
-  Input,
   Label,
   ListRefreshButton,
   buttonVariants,
@@ -27,6 +26,7 @@ import {
 import { tMaintenance } from '@barghsa/i18n/maintenance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { MaintenanceRecovery } from '../components/MaintenanceRecovery.js';
+import { RecordTimeInput } from '../components/RecordTimeInput.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -748,14 +748,13 @@ export default function AdminMaintenancePage({ workspace }: { workspace?: Worksp
                                 </div>
                                 <div className={recordEditorField}>
                                   <Label htmlFor="maintenance-time">{copy('returnTime')}</Label>
-                                  <Input
+                                  <RecordTimeInput
                                     id="maintenance-time"
-                                    type="time"
-                                    dir="ltr"
+                                    locale={locale}
                                     aria-required="true"
                                     aria-describedby={deadlineErrorId}
                                     value={draft.deadline.time}
-                                    onChange={(event) => setDeadline({ time: event.target.value })}
+                                    onChange={(time) => setDeadline({ time })}
                                   />
                                 </div>
                               </div>

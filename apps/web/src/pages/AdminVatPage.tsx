@@ -1,6 +1,7 @@
 import { CalendarX as TableCalendarXIcon } from 'lucide-react';
 import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
+import { RecordTimeInput } from '../components/RecordTimeInput.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
@@ -1102,16 +1103,15 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
                           <Label htmlFor="vat-time">
                             {label(endingEditor ? 'endTime' : 'time')}
                           </Label>
-                          <Input
+                          <RecordTimeInput
                             id="vat-time"
                             {...draft.bind('time')}
-                            type="time"
-                            dir="ltr"
+                            locale={locale}
                             required
                             aria-required="true"
                             value={time}
-                            onChange={(event) => {
-                              setTime(event.target.value);
+                            onChange={(value) => {
+                              setTime(value);
                               setInvalidDate(false);
                               draft.form.clearErrors('rateId');
                             }}
