@@ -12,6 +12,7 @@ import { t as appText } from '@barghsa/i18n/workspace';
 import type { InvoiceDueAtOverrideSnapshot } from '@barghsa/shared/finance';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { useLocale } from '../hooks/useLocale.js';
+import { SettingsValueSkeleton } from './CatalogueEditorFeedback.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useInvoiceLookupForm } from '../hooks/useInvoiceLookupForm.js';
 import { useDeadlineForm } from '../hooks/useDeadlineForms.js';
@@ -447,7 +448,7 @@ function OwnedInvoiceDueAtPanel({
           lookup.errors.root?.validation ? (
             <FormAlert message={lookup.errors.root.validation.message} />
           ) : loading || (time.status === 'ready' && !invoice && !error) ? (
-            <p role="status">{t('admin.invoices.loading', locale)}</p>
+            <SettingsValueSkeleton label={t('admin.invoices.loading', locale)} count={2} />
           ) : null
         ) : (
           <form

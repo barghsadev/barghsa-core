@@ -1458,7 +1458,12 @@ export default function AdminStaffTeamsPage({
                       />
                     )}
                   </div>
-                  {rulesLoading && <LoadingStatus>{label('rulesLoading')}</LoadingStatus>}
+                  {rulesLoading &&
+                    (rulesSnapshot.current ? (
+                      <LoadingStatus>{label('rulesLoading')}</LoadingStatus>
+                    ) : (
+                      <RecordListSkeleton label={label('rulesLoading')} view="card" headings={[]} />
+                    ))}
                   {rulesError && (
                     <div role="alert">
                       <p>{label('rulesError')}</p>
@@ -1479,6 +1484,7 @@ export default function AdminStaffTeamsPage({
                 </div>
                 <fieldset
                   disabled={!!action || pending || rulesStale || rulesUncertain}
+                  hidden={rulesLoading && !rulesSnapshot.current}
                   className="min-w-0 divide-y"
                 >
                   {STAFF_ASSIGNMENT_WORK_TYPES.map((type) => (

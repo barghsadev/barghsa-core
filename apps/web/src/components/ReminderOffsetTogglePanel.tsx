@@ -1,6 +1,6 @@
 import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { Alert, AlertDescription, Button, Input, LoadingStatus, cn } from '@barghsa/ui';
+import { Alert, AlertDescription, Button, Input, cn } from '@barghsa/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -27,6 +27,7 @@ import {
   type ServiceDuePeriodType,
 } from '@barghsa/shared/finance';
 import { useLocale } from '../hooks/useLocale.js';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import { withCsrf } from '../lib/csrf.js';
 import {
   InvoiceTimingServiceList,
@@ -555,12 +556,11 @@ function OwnedReminderOffsetTogglePanel({ onLocked, search, service }: InvoiceTi
 
   if (loading && !toggles) {
     return (
-      <div
-        className="bg-card text-card-foreground rounded-lg border border-border p-6 text-muted-foreground"
-        dir={isRtl ? 'rtl' : 'ltr'}
-      >
-        <LoadingStatus>{t('admin.invoices.reminders.loading', locale)}</LoadingStatus>
-      </div>
+      <RecordListSkeleton
+        label={t('admin.invoices.reminders.loading', locale)}
+        view="card"
+        headings={[]}
+      />
     );
   }
 

@@ -37,7 +37,9 @@ export function InvoiceTimingServiceList({
             <span className="font-semibold">
               {t(`admin.invoices.reminders.service.${service}`, locale)}
             </span>
-            <span className="text-end text-muted-foreground tabular-nums">{summary(service)}</span>
+            <span className="rounded-md bg-muted/70 px-2 py-1 text-end font-medium tabular-nums">
+              {summary(service)}
+            </span>
             <ChevronRight
               className="size-4 shrink-0 text-primary rtl:rotate-180"
               aria-hidden="true"

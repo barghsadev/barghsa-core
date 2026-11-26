@@ -32,6 +32,8 @@ import {
   type InvoiceTimingPanelProps,
 } from './InvoiceTimingServiceList.js';
 import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
+import { SettingsValueSkeleton } from './CatalogueEditorFeedback.js';
 
 const path = '/api/admin/config/invoice-due-periods';
 const validDays = (value: unknown): value is number =>
@@ -312,7 +314,14 @@ function OwnedServiceDuePeriodPanel({ onLocked, search, service }: InvoiceTiming
       </header>
       {(loading || error) && (
         <div className="space-y-2 px-4 py-3 sm:px-6">
-          {loading && <LoadingStatus>{t('loading', locale)}</LoadingStatus>}
+          {loading &&
+            (settings ? (
+              <LoadingStatus>{t('loading', locale)}</LoadingStatus>
+            ) : service ? (
+              <SettingsValueSkeleton label={t('loading', locale)} count={1} />
+            ) : (
+              <RecordListSkeleton label={t('loading', locale)} view="card" headings={[]} />
+            ))}
           <FormAlert message={error ?? undefined} />
           {unavailable && error && (
             <Button
@@ -341,10 +350,12 @@ function OwnedServiceDuePeriodPanel({ onLocked, search, service }: InvoiceTiming
           <FieldSet disabled={locked || unavailable} className="gap-0">
             <div className="space-y-3 px-4 py-3.5 sm:px-6">
               {currentPeriod && (
-                <dl className="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-lg border bg-muted/25 px-3 py-2 text-sm">
+                <dl className="grid gap-3 rounded-lg border bg-muted/25 p-3 text-sm sm:grid-cols-2">
                   <div className="flex flex-wrap items-baseline gap-x-2">
                     <dt className="text-muted-foreground">{t('currentPeriod', locale)}</dt>
-                    <dd className="font-medium">{formatDays(currentPeriod.defaultDays)}</dd>
+                    <dd className="text-lg font-semibold tabular-nums">
+                      {formatDays(currentPeriod.defaultDays)}
+                    </dd>
                   </div>
                   {currentPeriod.effectiveFrom && time.status === 'ready' && (
                     <div className="flex flex-wrap items-baseline gap-x-2">

@@ -10,11 +10,11 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1272 | Accepted with unchanged source bindings. |
+| done | 1273 | Accepted with unchanged source bindings. |
 | verify | 0 | Existing work may be complete; inspect evidence before building. |
 | partial | 91 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
-| in_progress | 2 | Existing work to finish. |
+| in_progress | 1 | Existing work to finish. |
 | blocked | 3 | Named owner or external prerequisite. |
 | superseded | 3 | Explicit approved scope disposition. |
 
@@ -965,7 +965,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `release-readiness#R-05.01` | done | Recorded batch work | Resolve the six recorded owner decisions |
 | `release-readiness#R-05.02` | in_progress | Recorded batch work | Renew security and operational task acceptance |
 | `release-readiness#R-05.03` | blocked | Recorded batch work | Prove production deployment, backup and recovery prerequisites |
-| `ui-refresh#U-01` | in_progress | Recorded batch work | Refresh list, record detail and loading views |
+| `ui-refresh#U-01` | done | Recorded batch work | Refresh list, record detail and loading views |
 | `01-platform-infrastructure.md#T-01.01.01` | done | Earlier acceptance_verified | Create `pnpm-workspace.yaml` with `packages: ['apps/*', 'packages/*']` and verify `pnpm install` resolves correctly |
 | `01-platform-infrastructure.md#T-01.01.02` | done | Earlier acceptance_verified | Create root `turbo.json` pipeline definition |
 | `01-platform-infrastructure.md#T-01.01.03` | done | Earlier acceptance_verified | Create root `.npmrc` with strict peer dependencies and no shameful hoisting |

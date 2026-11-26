@@ -16,6 +16,7 @@ import {
   Textarea,
 } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
+import { SettingsValueSkeleton } from './CatalogueEditorFeedback.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -671,7 +672,12 @@ function RefundWorkspace({
             <RefundFormAlert message={lookup.errors.root?.validation?.message} />
           </form>
         )}
-        {visibleStatus === 'loading' && <LoadingStatus>{word('loading')}</LoadingStatus>}
+        {visibleStatus === 'loading' &&
+          (invoice ? (
+            <LoadingStatus>{word('loading')}</LoadingStatus>
+          ) : (
+            <SettingsValueSkeleton label={word('loading')} count={decision ? 1 : 2} />
+          ))}
         <RefundFormAlert
           message={
             visibleStatus === 'error'
@@ -944,18 +950,25 @@ function RefundWorkspace({
               {!refunds.length && status === 'ready' && (
                 <p className="text-sm text-muted-foreground">{word('empty')}</p>
               )}
-              <ul className="space-y-3">
+              <ul className="grid gap-3">
                 {refunds.map((refund) => (
                   <li key={refund.id} className="space-y-3 rounded-lg border p-4">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <strong>{numbers.money(refund.amount)}</strong>
+                      <strong className="text-lg tabular-nums">
+                        {numbers.money(refund.amount)}
+                      </strong>
                       <StatusBadge label={word(`state.${refund.state}`)} />
                     </div>
-                    <p className="break-all text-xs text-muted-foreground">{refund.id}</p>
+                    <p className="break-all border-t pt-2 font-mono text-xs text-muted-foreground">
+                      <bdi>{refund.id}</bdi>
+                    </p>
                     {destination === 'external_bank' && refund.bankReference && (
-                      <p className="break-all text-sm">
-                        {word('recordedReference')}: {refund.bankReference}
-                      </p>
+                      <dl className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm">
+                        <dt className="text-muted-foreground">{word('recordedReference')}</dt>
+                        <dd className="break-all font-medium">
+                          <bdi>{refund.bankReference}</bdi>
+                        </dd>
+                      </dl>
                     )}
                     {refund.approvalRequestId && (
                       <a

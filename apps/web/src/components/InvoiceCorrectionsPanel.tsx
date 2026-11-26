@@ -15,6 +15,7 @@ import { Button, Field, FieldLabel, Input, ListRefreshButton, PageLoading } from
 import { tInvoiceCorrections as t } from '@barghsa/i18n/invoice-corrections';
 import { t as appText } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
+import { SettingsValueSkeleton } from './CatalogueEditorFeedback.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
 import { useInvoiceLookupForm } from '../hooks/useInvoiceLookupForm.js';
@@ -211,7 +212,7 @@ function OwnedInvoiceCorrectionsPanel({
       </header>
       {recordId ? (
         loading ? (
-          <PageLoading label={t('loading', locale)!} />
+          <SettingsValueSkeleton label={t('loading', locale)!} count={2} />
         ) : (
           <InvoiceFormAlert message={lookup.errors.root?.validation?.message} />
         )
@@ -271,10 +272,16 @@ function OwnedInvoiceCorrectionsPanel({
         <div className={recordEditorSurface}>
           <RecordEditorSection title={t('source', locale)!}>
             <dl className={recordEditorGrid}>
-              <div>
-                <dt className="text-sm text-muted-foreground">{t('invoiceId', locale)}</dt>
-                <dd className="break-all">
-                  <bdi>{source.invoiceId}</bdi>
+              <div className="rounded-lg border bg-muted/30 p-3">
+                <dt className="text-sm text-muted-foreground">{t('originalTotal', locale)}</dt>
+                <dd className="break-words text-lg font-semibold tabular-nums">
+                  {numbers.money(source.totalAmount)}
+                </dd>
+              </div>
+              <div className="rounded-lg border bg-muted/30 p-3">
+                <dt className="text-sm text-muted-foreground">{t('paid', locale)}</dt>
+                <dd className="break-words text-lg font-semibold tabular-nums">
+                  {numbers.money(source.paidAmount)}
                 </dd>
               </div>
               <div>
@@ -282,12 +289,10 @@ function OwnedInvoiceCorrectionsPanel({
                 <dd>{appText(`invoices.state.${source.state}`, locale)}</dd>
               </div>
               <div>
-                <dt className="text-sm text-muted-foreground">{t('originalTotal', locale)}</dt>
-                <dd>{numbers.money(source.totalAmount)}</dd>
-              </div>
-              <div>
-                <dt className="text-sm text-muted-foreground">{t('paid', locale)}</dt>
-                <dd>{numbers.money(source.paidAmount)}</dd>
+                <dt className="text-sm text-muted-foreground">{t('invoiceId', locale)}</dt>
+                <dd className="break-all font-mono text-xs">
+                  <bdi>{source.invoiceId}</bdi>
+                </dd>
               </div>
             </dl>
           </RecordEditorSection>

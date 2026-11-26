@@ -6,7 +6,6 @@ import {
   Button,
   ListPage,
   ListRefreshButton,
-  PageLoading,
   StatusBadge,
   buttonVariants,
 } from '@barghsa/ui';
@@ -20,6 +19,7 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { DocumentRequestError } from '../lib/documents.js';
 import { contractRefundOperation } from '../lib/invoice-refund-route.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 
 interface Obligation {
   id: string;
@@ -117,12 +117,15 @@ function OwnedContractRefundQueue({
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-3">
+    <div className="mx-auto max-w-4xl space-y-4">
       <Link to="/admin/contracts" search={search} className={recordLink}>
         {word('backToContracts')}
       </Link>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-xl font-semibold" id="refund-obligations-heading">
+        <h1
+          className="text-2xl font-semibold tracking-tight sm:text-3xl"
+          id="refund-obligations-heading"
+        >
           {word('cancellationQueue')}
         </h1>
         {status !== 'denied' && (
@@ -150,7 +153,7 @@ function OwnedContractRefundQueue({
               error={status === 'error'}
               empty={!rows.length}
               retainContent={!!rows.length}
-              loadingView={<PageLoading label={word('loading')} />}
+              loadingView={<RecordListSkeleton label={word('loading')} view="card" headings={[]} />}
               errorView={
                 <Alert variant="destructive">
                   <AlertDescription>{word('cancellationQueueError')}</AlertDescription>
@@ -165,23 +168,25 @@ function OwnedContractRefundQueue({
                 </p>
               }
             >
-              <ul className="divide-y rounded-xl border bg-card">
+              <ul className="grid gap-3">
                 {rows.map((row) => {
                   const operation = contractRefundOperation(row, row.exhausted);
                   return (
                     <li
                       key={row.id}
-                      className="grid min-w-0 gap-3 px-4 py-3.5 sm:grid-cols-[1fr_auto] sm:items-center"
+                      className="grid min-w-0 gap-3 rounded-xl border bg-card p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
                     >
                       <div className="min-w-0 space-y-2">
                         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                          <strong>{numbers.money(row.amount)}</strong>
+                          <strong className="text-lg tabular-nums">
+                            {numbers.money(row.amount)}
+                          </strong>
                           <span className="text-sm text-muted-foreground">
                             {word('cancellation.' + row.destination)}
                           </span>
                           <StatusBadge label={word('cancellation.refund.' + row.state)} />
                         </div>
-                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 border-t pt-2 text-sm">
                           {row.contractId && isInvoiceUuid(row.contractId) && (
                             <Link
                               to="/admin/contracts/$contractId/{-$action}/{-$item}"

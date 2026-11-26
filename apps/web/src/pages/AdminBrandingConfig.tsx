@@ -666,9 +666,16 @@ export default function AdminBrandingConfig({
               : word('none')
           }
           renderConfig={(row) => (
-            <p className="break-words" dir="auto">
-              {locale === 'fa' ? row.config.appTitleFa : row.config.appTitle}
-            </p>
+            <div className="flex flex-wrap items-center gap-3 rounded-lg border bg-muted/30 p-3">
+              <span
+                className="size-7 shrink-0 rounded-full border border-border"
+                style={{ backgroundColor: row.config.primaryColor }}
+                aria-hidden="true"
+              />
+              <p className="min-w-0 break-words text-base font-semibold" dir="auto">
+                {locale === 'fa' ? row.config.appTitleFa : row.config.appTitle}
+              </p>
+            </div>
           )}
           disabled={!ready || needsReset || uploading || !!action || (isDirty && editing)}
           onRollback={(source) =>

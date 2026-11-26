@@ -14,7 +14,7 @@ import { onboardingReturn } from '../../lib/auth-return.js';
 import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { Badge, Button } from '@barghsa/ui';
+import { Badge, Button, Skeleton } from '@barghsa/ui';
 import './complete.css';
 
 export const Route = createFileRoute('/onboarding/complete')({
@@ -211,12 +211,12 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
       {profiles.map((p) => (
         <li key={p.id}>
           <dl
-            className={`grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-2 gap-y-1 rounded-lg border p-3 text-start ${journey && selected === p.id ? 'border-primary bg-primary/5' : 'bg-card'}`}
+            className={`grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 rounded-xl border p-4 text-start ${journey && selected === p.id ? 'border-primary bg-primary/5' : 'bg-card'}`}
             aria-label={t('onboarding.wizard.review', locale)}
           >
             <div className="col-span-full">
               <dt className="sr-only">{t('onboarding.wizard.profileName', locale)}</dt>
-              <dd className="min-w-0 font-medium">
+              <dd className="min-w-0 text-base font-semibold">
                 {journey ? (
                   <label className="flex min-h-11 cursor-pointer items-center gap-2.5 rounded-md focus-within:ring-2 focus-within:ring-ring">
                     <input
@@ -260,8 +260,8 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {status === 'complete' && <Confetti />}
-      <div className="relative z-10 w-full min-w-0 max-w-lg space-y-4 bg-background">
-        <h1 className="text-2xl font-semibold" data-toast-anchor>
+      <div className="relative z-10 w-full min-w-0 max-w-lg space-y-4 rounded-2xl border bg-background p-4 sm:p-6">
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl" data-toast-anchor>
           {t(
             status === 'complete'
               ? 'onboarding.complete.title'
@@ -362,7 +362,16 @@ function Completion({ profileId, journeyId }: { profileId?: string; journeyId?: 
             )}
           </>
         ) : status === 'loading' ? (
-          <p role="status">{t('onboarding.complete.finalizing', locale)}</p>
+          <div role="status" aria-label={t('onboarding.complete.finalizing', locale)}>
+            <span className="sr-only">{t('onboarding.complete.finalizing', locale)}</span>
+            <div aria-hidden="true" className="space-y-3 rounded-xl border bg-card p-4">
+              <Skeleton className="h-5 w-40 max-w-full" />
+              <div className="flex items-center justify-between gap-3">
+                <Skeleton className="h-3 w-24 max-w-full" />
+                <Skeleton className="h-5 w-20 rounded-full" />
+              </div>
+            </div>
+          </div>
         ) : (
           <>
             <p role="alert">

@@ -2084,14 +2084,14 @@ function OwnedAdminConsultationsPage({
                     )}
                   {feeEditor && current.fee && (
                     <section
-                      className="space-y-2.5 rounded-xl border bg-card px-4 py-3 text-sm sm:px-6"
+                      className="space-y-3 rounded-xl border bg-card p-4 text-sm sm:px-6"
                       aria-label={copy('savedOffer')}
                     >
                       <h2 className="font-semibold">{copy('savedOffer')}</h2>
                       <dl className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
-                        <div className="col-span-2 min-w-0 sm:col-span-1">
+                        <div className="col-span-2 min-w-0 rounded-lg bg-muted/50 p-3 sm:col-span-1">
                           <dt className="text-muted-foreground">{copy('fee')}</dt>
-                          <dd className="text-base font-semibold wrap-anywhere">
+                          <dd className="text-xl font-semibold wrap-anywhere tabular-nums">
                             {numbers.money(current.fee)}
                           </dd>
                         </div>

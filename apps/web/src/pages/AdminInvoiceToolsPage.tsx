@@ -1,7 +1,8 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useBlocker, useLocation, useNavigate } from '@tanstack/react-router';
 import { Bell, CalendarDays, ChevronRight, FileSearch } from 'lucide-react';
-import { Button, Field, FieldLabel, Input, NativeSelect, PageLoading } from '@barghsa/ui';
+import { Button, Field, FieldLabel, Input, NativeSelect, Skeleton } from '@barghsa/ui';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
 import { tInvoiceCorrections } from '@barghsa/i18n/invoice-corrections';
@@ -122,20 +123,26 @@ function RecentInvoicePicker({
   return (
     <Field>
       <FieldLabel htmlFor={id}>{word('recent')}</FieldLabel>
-      <CatalogueChoicePicker
-        id={id}
-        locale={locale}
-        options={options}
-        selected={value}
-        disabled={!options.length}
-        labels={{
-          search: word('chooseRecent'),
-          noMatches: word('noMatches'),
-          empty: word('noRecent'),
-          unavailable: invoiceReference(value),
-        }}
-        onChange={onChange}
-      />
+      {rows === null && failure === null ? (
+        <div role="status" aria-label={word('loadingRecent')}>
+          <Skeleton className="h-11 w-full rounded-md" />
+        </div>
+      ) : (
+        <CatalogueChoicePicker
+          id={id}
+          locale={locale}
+          options={options}
+          selected={value}
+          disabled={!options.length}
+          labels={{
+            search: word('chooseRecent'),
+            noMatches: word('noMatches'),
+            empty: word('noRecent'),
+            unavailable: invoiceReference(value),
+          }}
+          onChange={onChange}
+        />
+      )}
       {failure ? (
         <div className="flex flex-wrap items-center gap-2">
           <p role="alert" className="text-xs text-destructive">
@@ -158,9 +165,9 @@ function RecentInvoicePicker({
             </Button>
           )}
         </div>
-      ) : !rows?.length ? (
+      ) : rows?.length === 0 ? (
         <p role="status" className="text-xs text-muted-foreground">
-          {word(rows ? 'noRecent' : 'loadingRecent')}
+          {word('noRecent')}
         </p>
       ) : null}
     </Field>
@@ -395,7 +402,15 @@ export default function AdminInvoiceToolsPage({
       </header>
       {activeSettings ? (
         <div className={service ? 'max-w-lg' : 'max-w-2xl'}>
-          <Suspense fallback={<PageLoading label={t('admin.invoices.loading', locale)} />}>
+          <Suspense
+            fallback={
+              <RecordListSkeleton
+                label={t('admin.invoices.loading', locale)}
+                view="card"
+                headings={[]}
+              />
+            }
+          >
             {activeSettings.section === 'reminders' ? (
               <Reminders key={service} onLocked={setLocked} service={service} search={search} />
             ) : (
