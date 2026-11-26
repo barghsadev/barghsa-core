@@ -22,6 +22,7 @@ const digits = (value: string) =>
   value
     .replace(/[۰-۹]/g, (digit) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)))
     .replace(/[,٬\u200e\u200f\u061c]/g, '')
+    .replace(/٫/g, '.')
     .replace(/−/g, '-')
     .replace(/(?:IRR|ریال)\s*/g, '');
 for (const locale of ['en', 'fa'] as const)
@@ -78,7 +79,7 @@ for (const locale of ['en', 'fa'] as const)
       );
       const verify = async () => {
         const first = records.first();
-        const plain = digits(await first.innerText()).replace('٫', '.');
+        const plain = digits(await first.innerText());
         expect(plain).toContain('90071992547409912.05%');
         expect(plain).toContain(charge.adjustmentAmountIrR);
         await expect(first).toContainText(defaultPriceInput.reason);

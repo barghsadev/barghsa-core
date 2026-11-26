@@ -64,6 +64,8 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { QueueEmptyState } from '../components/QueueEmptyState.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 
 interface IncreaseRequest {
   requestId: string;
@@ -890,7 +892,31 @@ function OwnedAdminElectricityIncreasesPage({
           error={error}
           empty={!visibleRequests?.length}
           retainContent={!!visibleRequests?.length && !denied}
-          loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+          loadingView={
+            recordId ? (
+              <RecordDetailSkeleton label={copy('loading')} layout="payment" />
+            ) : (
+              <>
+                <div className="md:hidden">
+                  <RecordListSkeleton label={copy('loading')} view="card" headings={[]} />
+                </div>
+                <div className="hidden md:block">
+                  <RecordListSkeleton
+                    label={copy('loading')}
+                    view="table"
+                    headings={[
+                      copy('request'),
+                      copy('quantity'),
+                      copy('status'),
+                      copy('effective'),
+                      copy('requestReferences'),
+                      copy('actions'),
+                    ]}
+                  />
+                </div>
+              </>
+            )
+          }
           errorView={
             <div role="alert" className="space-y-2">
               <p>{copy(denied ? 'forbidden' : notFound ? 'recordNotFound' : 'error')}</p>
@@ -935,8 +961,34 @@ function OwnedAdminElectricityIncreasesPage({
               caption={copy(view === 'pending' ? 'pendingDirectory' : 'expiredDirectory')}
               scrollLabel={copy(view === 'pending' ? 'pendingDirectory' : 'expiredDirectory')}
               nameHeader={copy('request')}
-              renderName={(request) => <TextCell value={request.requestId} />}
+              renderName={(request) => (
+                <span className="text-sm">
+                  <TextCell value={request.requestId} />
+                </span>
+              )}
+              fieldGroups={[
+                { label: copy('requestReferences'), fields: ['contract', 'order'] },
+                { label: copy('quantity'), fields: ['quantity', 'change'] },
+              ]}
               fields={[
+                {
+                  id: 'quantity',
+                  label: copy('quantity'),
+                  render: (request) => (
+                    <TextCell
+                      value={`${numbers.irrDigits(request.originalKwh)} → ${numbers.irrDigits(request.requestedKwh)} kWh`}
+                    />
+                  ),
+                },
+                {
+                  id: 'change',
+                  label: copy('change'),
+                  render: (request) => (
+                    <TextCell
+                      value={`${numbers.number(Number(((BigInt(request.requestedKwh) - BigInt(request.originalKwh)) * 10000n) / BigInt(request.originalKwh)) / 100)}%`}
+                    />
+                  ),
+                },
                 {
                   id: 'contract',
                   label: copy('contract'),
@@ -955,24 +1007,6 @@ function OwnedAdminElectricityIncreasesPage({
                     >
                       {request.orderId}
                     </LinkCell>
-                  ),
-                },
-                {
-                  id: 'quantity',
-                  label: copy('quantity'),
-                  render: (request) => (
-                    <TextCell
-                      value={`${numbers.irrDigits(request.originalKwh)} → ${numbers.irrDigits(request.requestedKwh)} kWh`}
-                    />
-                  ),
-                },
-                {
-                  id: 'change',
-                  label: copy('change'),
-                  render: (request) => (
-                    <TextCell
-                      value={`${numbers.number(Number(((BigInt(request.requestedKwh) - BigInt(request.originalKwh)) * 10000n) / BigInt(request.originalKwh)) / 100)}%`}
-                    />
                   ),
                 },
                 {
@@ -1112,7 +1146,7 @@ function OwnedAdminElectricityIncreasesPage({
               cardHeading="h2"
               loading={loading}
               emptyMessage={copy(view === 'pending' ? 'empty' : 'emptyExpired')}
-              tableClassName="min-w-[80rem]"
+              tableClassName="min-w-[66rem]"
             />
           )}
           {recordId || (!queueSearch && view === 'pending') ? (
@@ -1128,7 +1162,7 @@ function OwnedAdminElectricityIncreasesPage({
                     className="gap-0 py-0 focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <CardContent className="space-y-3 px-4 py-4 text-sm sm:px-6">
-                      <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/55 px-3 py-2">
+                      <div className="flex flex-wrap items-start justify-between gap-3 rounded-lg bg-muted/55 px-4 py-3">
                         <div>
                           <h2
                             id={`increase-decision-title-${request.requestId}`}
@@ -1136,7 +1170,10 @@ function OwnedAdminElectricityIncreasesPage({
                           >
                             {copy('quantity')}
                           </h2>
-                          <bdi dir="ltr" className="text-lg font-semibold tabular-nums">
+                          <bdi
+                            dir="ltr"
+                            className="text-xl leading-tight font-semibold tabular-nums"
+                          >
                             {numbers.irrDigits(request.originalKwh)} →{' '}
                             {numbers.irrDigits(request.requestedKwh)} kWh
                           </bdi>

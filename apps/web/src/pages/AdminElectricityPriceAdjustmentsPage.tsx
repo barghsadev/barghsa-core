@@ -25,6 +25,8 @@ import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { adminText as t } from '@barghsa/i18n/electricity-price-forms';
@@ -281,7 +283,7 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
   return (
     <section
       className={
-        view === 'new' || decision || (!view && onOpenContract)
+        view === 'new' || view === 'adjustment' || decision || (!view && onOpenContract)
           ? 'mx-auto min-w-0 max-w-3xl space-y-3'
           : 'min-w-0 space-y-5'
       }
@@ -1017,7 +1019,32 @@ function PriceWorkspace({
           )}
         </div>
       ) : null}
-      {loading ? <LoadingStatus>{copy('loading')}</LoadingStatus> : null}
+      {loading &&
+        (data ? (
+          <LoadingStatus>{copy('loading')}</LoadingStatus>
+        ) : view === 'adjustment' || decision || view === 'new' ? (
+          <RecordDetailSkeleton label={copy('loading')} layout="payment" />
+        ) : (
+          <>
+            <div className="md:hidden">
+              <RecordListSkeleton label={copy('loading')} view="card" headings={[]} />
+            </div>
+            <div className="hidden md:block">
+              <RecordListSkeleton
+                label={copy('loading')}
+                view="table"
+                headings={[
+                  copy('adjustment'),
+                  copy('amount'),
+                  copy('statusLabel'),
+                  copy('effective'),
+                  copy('terms'),
+                  copy('actions'),
+                ]}
+              />
+            </div>
+          </>
+        ))}
       {error ? <p role="alert">{copy(error)}</p> : null}
       {uncertain ? (
         <div role="alert" className="space-y-2">
@@ -1212,14 +1239,25 @@ function PriceWorkspace({
                   scrollLabel={copy('directory')}
                   nameHeader={copy('adjustment')}
                   renderName={({ adjustment }) => (
-                    <>
-                      <TextCell value={copy('adjustment')} />
-                      <span className="block font-mono text-xs font-normal">
-                        <TextCell value={adjustment.adjustmentId} />
-                      </span>
-                    </>
+                    <span className="text-sm font-medium">
+                      <TextCell value={adjustment.adjustmentId} />
+                    </span>
                   )}
+                  fieldGroups={[
+                    { label: editorText('changeDetails', locale), fields: ['effective', 'end'] },
+                    { label: copy('amount'), fields: ['amount', 'old', 'new'] },
+                  ]}
                   fields={[
+                    {
+                      id: 'amount',
+                      label: copy('amount'),
+                      render: ({ adjustment }) => (
+                        <CurrencyCell
+                          amount={adjustment.adjustmentAmountIrR}
+                          format={numbers.money}
+                        />
+                      ),
+                    },
                     {
                       id: 'status',
                       label: copy('statusLabel'),
@@ -1329,16 +1367,6 @@ function PriceWorkspace({
                       render: ({ adjustment }) => (
                         <CurrencyCell
                           amount={adjustment.calculation.quote.newFutureIrR}
-                          format={numbers.money}
-                        />
-                      ),
-                    },
-                    {
-                      id: 'amount',
-                      label: copy('amount'),
-                      render: ({ adjustment }) => (
-                        <CurrencyCell
-                          amount={adjustment.adjustmentAmountIrR}
                           format={numbers.money}
                         />
                       ),
@@ -1468,7 +1496,7 @@ function PriceWorkspace({
                   cardHeading="h2"
                   loading={loading}
                   emptyMessage={copy('empty')}
-                  tableClassName="min-w-[96rem]"
+                  tableClassName="min-w-[72rem]"
                 />
               ) : null}
             </ListPage.Content>
@@ -1526,9 +1554,31 @@ function PriceWorkspace({
       )}
       {record && data && !decision && (
         <section data-slot="electricity-price-record" className="space-y-5">
-          <div className="space-y-3 rounded-lg border bg-card p-5">
-            <StatusCell state={record.status} label={copy(`status.${record.status}`)} />
-            <dl className="grid gap-3 text-sm sm:grid-cols-2">
+          <div className="space-y-4 rounded-xl border bg-card p-4 sm:p-5">
+            <div className="flex flex-wrap items-start justify-between gap-3 rounded-lg bg-muted/55 p-3">
+              <dl>
+                <dt className="text-sm text-muted-foreground">{copy('amount')}</dt>
+                <dd className="text-xl font-semibold">
+                  <CurrencyCell amount={record.adjustmentAmountIrR} format={numbers.reviewMoney} />
+                </dd>
+              </dl>
+              <StatusCell state={record.status} label={copy(`status.${record.status}`)} />
+            </div>
+            <dl className="grid gap-4 text-sm sm:grid-cols-2">
+              <div className="min-w-0">
+                <dt className="text-muted-foreground">{copy('reason')}</dt>
+                <dd dir="auto" className="wrap-anywhere whitespace-pre-wrap">
+                  {record.reason}
+                </dd>
+              </div>
+              <div className="min-w-0">
+                <dt className="text-muted-foreground">{copy('basis')}</dt>
+                <dd dir="auto" className="wrap-anywhere whitespace-pre-wrap">
+                  {record.contractualBasis}
+                </dd>
+              </div>
+            </dl>
+            <dl className="grid gap-3 border-t pt-4 text-sm sm:grid-cols-2">
               <div>
                 <dt className="text-muted-foreground">{copy('proposedAt')}</dt>
                 <dd>
@@ -1563,18 +1613,6 @@ function PriceWorkspace({
                   </dd>
                 </div>
               )}
-              <div>
-                <dt className="text-muted-foreground">{copy('reason')}</dt>
-                <dd dir="auto" className="wrap-anywhere whitespace-pre-wrap">
-                  {record.reason}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-muted-foreground">{copy('basis')}</dt>
-                <dd dir="auto" className="wrap-anywhere whitespace-pre-wrap">
-                  {record.contractualBasis}
-                </dd>
-              </div>
             </dl>
           </div>
           <PriceAdjustmentFinancialReview
