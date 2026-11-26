@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { DataTable, TextCell } from '@barghsa/ui';
+import { Badge, DataTable, TextCell } from '@barghsa/ui';
 import { geographyText } from '@barghsa/i18n/geography';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
@@ -44,6 +44,9 @@ export function GeographyRecordTable<T extends Province>({
     const name = locale === 'fa' ? faName(row) : enName(row);
     return renderName ? renderName(row, name) : name;
   };
+  const status = (row: T) => (
+    <Badge variant={row.status === 'active' ? 'secondary' : 'outline'}>{t(row.status)}</Badge>
+  );
   return (
     <div aria-busy={loading || undefined}>
       <DataTable
@@ -83,7 +86,7 @@ export function GeographyRecordTable<T extends Province>({
           {
             id: 'status',
             header: t('status'),
-            cell: (row) => t(row.status),
+            cell: status,
             cellClassName: 'p-3 align-top',
           },
           {
@@ -95,17 +98,16 @@ export function GeographyRecordTable<T extends Province>({
         ]}
         renderCard={(row) => (
           <div className="min-w-0 space-y-3 [overflow-wrap:anywhere]">
-            <Heading className="font-semibold">{primaryName(row)}</Heading>
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <Heading className="min-w-0 font-semibold">{primaryName(row)}</Heading>
+              {status(row)}
+            </div>
             <dl className="space-y-2 text-sm">
               <div>
                 <dt className="font-medium text-muted-foreground">
                   {t(locale === 'fa' ? 'nameEn' : 'nameFa')}
                 </dt>
                 <dd>{locale === 'fa' ? enName(row) : faName(row)}</dd>
-              </div>
-              <div>
-                <dt className="font-medium text-muted-foreground">{t('status')}</dt>
-                <dd>{t(row.status)}</dd>
               </div>
             </dl>
             {renderActions(row)}

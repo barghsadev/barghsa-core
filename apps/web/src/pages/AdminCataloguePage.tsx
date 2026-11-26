@@ -20,6 +20,8 @@ import {
 import { ProductCatalogueFilters } from '../components/ProductCatalogueFilters.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import type { ProductCatalogueType } from '../lib/catalogue-category-query.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import {
@@ -1030,9 +1032,13 @@ export default function AdminCataloguePage({
                     </Button>
                   </div>
                 )}
-                {editor && detailState === 'loading' && (
-                  <LoadingStatus>{label('loading')}</LoadingStatus>
-                )}
+                {editor &&
+                  detailState === 'loading' &&
+                  (detail ? (
+                    <LoadingStatus>{label('loading')}</LoadingStatus>
+                  ) : (
+                    <RecordDetailSkeleton label={label('loading')} layout="payment" />
+                  ))}
                 {editor && detailState === 'error' && (
                   <div role="alert" className="space-y-2">
                     <p>{label('detailError')}</p>
@@ -1347,11 +1353,14 @@ export default function AdminCataloguePage({
                         aria-label={label('productName')}
                         className="space-y-4 rounded-xl border bg-card p-4 sm:p-6"
                       >
-                        <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex flex-wrap items-start justify-between gap-3 rounded-lg bg-muted/45 p-3">
+                          <dl>
+                            <dt className="text-sm text-muted-foreground">{label('price')}</dt>
+                            <dd className="text-xl font-semibold tabular-nums wrap-anywhere">
+                              <bdi>{money(detail.price)}</bdi>
+                            </dd>
+                          </dl>
                           <Badge variant="outline">{label(detail.status)}</Badge>
-                          <bdi className="font-semibold tabular-nums [overflow-wrap:anywhere]">
-                            {money(detail.price)}
-                          </bdi>
                         </div>
                         {(detail.description?.[locale] ||
                           detail.description?.[locale === 'fa' ? 'en' : 'fa']) && (
@@ -1756,7 +1765,26 @@ export default function AdminCataloguePage({
                     error={state === 'error' || state === 'denied'}
                     empty={!rows.length}
                     retainContent={!!rows.length && state !== 'denied'}
-                    loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+                    loadingView={
+                      <>
+                        <div className="md:hidden">
+                          <RecordListSkeleton label={label('loading')} view="card" headings={[]} />
+                        </div>
+                        <div className="hidden md:block">
+                          <RecordListSkeleton
+                            label={label('loading')}
+                            view="table"
+                            headings={[
+                              label('productName'),
+                              label('status'),
+                              label('price'),
+                              label('description'),
+                              label('actions'),
+                            ]}
+                          />
+                        </div>
+                      </>
+                    }
                     errorView={
                       state === 'denied' ? (
                         <p role="alert">{label('denied')}</p>
@@ -1800,15 +1828,6 @@ export default function AdminCataloguePage({
                       )}
                       fields={[
                         {
-                          id: 'description',
-                          label: label('description'),
-                          render: (row) => (
-                            <span className="whitespace-pre-wrap">
-                              <TextCell value={row.description?.[locale]} />
-                            </span>
-                          ),
-                        },
-                        {
                           id: 'status',
                           label: label('status'),
                           render: (row) => (
@@ -1826,6 +1845,15 @@ export default function AdminCataloguePage({
                             ) : (
                               <CurrencyCell amount={row.price} format={numbers.money} />
                             ),
+                        },
+                        {
+                          id: 'description',
+                          label: label('description'),
+                          render: (row) => (
+                            <span className="whitespace-pre-wrap">
+                              <TextCell value={row.description?.[locale]} />
+                            </span>
+                          ),
                         },
                         ...(categoryOptions[type].length
                           ? [

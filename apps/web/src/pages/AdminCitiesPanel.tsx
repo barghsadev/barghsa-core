@@ -16,7 +16,6 @@ import {
 } from 'react';
 import { Link } from '@tanstack/react-router';
 import {
-  LoadingStatus,
   Alert,
   AlertDescription,
   Button,
@@ -46,6 +45,7 @@ import {
   type Province,
 } from '../lib/geography-api.js';
 import { GeographyRecordTable } from '../components/GeographyRecordTable.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { GeographyDialog, type GeographyModal } from './AdminGeographyDialog.js';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import {
@@ -810,7 +810,20 @@ export function CitiesPanel({
           empty={false}
           emptyView={null}
           retainContent={list.data !== null}
-          loadingView={<LoadingStatus>{t('cityLoading')}</LoadingStatus>}
+          loadingView={
+            <>
+              <div className="md:hidden">
+                <RecordListSkeleton label={t('cityLoading')} view="card" headings={[]} />
+              </div>
+              <div className="hidden md:block">
+                <RecordListSkeleton
+                  label={t('cityLoading')}
+                  view="table"
+                  headings={[t('nameFa'), t('nameEn'), t('status'), t('actions')]}
+                />
+              </div>
+            </>
+          }
           errorView={
             <Alert role="alert" variant="destructive">
               <AlertDescription>

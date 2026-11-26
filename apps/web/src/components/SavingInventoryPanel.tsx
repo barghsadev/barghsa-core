@@ -24,6 +24,7 @@ import {
   type InventoryDraft,
 } from '../lib/saving-catalogue-form.js';
 import { TeamActionDialog } from './TeamActionDialog.js';
+import { SettingsValueSkeleton } from './CatalogueEditorFeedback.js';
 
 export function SavingInventoryPanel({
   hardwareId,
@@ -95,7 +96,12 @@ export function SavingInventoryPanel({
       </header>
       {editor.denied && <Alert variant="destructive">{label('denied')}</Alert>}
       {editor.resource.error && <Alert variant="destructive">{label('inventoryLoadError')}</Alert>}
-      {editor.resource.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
+      {editor.resource.loading &&
+        (inventory ? (
+          <LoadingStatus>{label('loading')}</LoadingStatus>
+        ) : (
+          <SettingsValueSkeleton label={label('loading')} />
+        ))}
       <CommandFeedback message={editor.saved ? label('saved') : null} />
       {editor.uncertain && <Alert variant="destructive">{label('unverifiedSaving')}</Alert>}
       {inventory && (

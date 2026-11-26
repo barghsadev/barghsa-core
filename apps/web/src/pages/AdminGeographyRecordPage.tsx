@@ -11,6 +11,8 @@ import {
 } from '@barghsa/ui';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { geographyText, type GeographyTextKey } from '@barghsa/i18n/geography';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { geographyBasis } from '../hooks/useGeographyList.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
@@ -260,7 +262,7 @@ export default function AdminGeographyRecordPage({
         </Alert>
       ) : !hasParent || (hasCity && !record) ? (
         loading ? (
-          <LoadingStatus>{t('loadingLocation')}</LoadingStatus>
+          <RecordDetailSkeleton label={t('loadingLocation')} layout="payment" />
         ) : (
           recovery
         )
@@ -295,7 +297,7 @@ export default function AdminGeographyRecordPage({
       ) : (
         record && (
           <>
-            <dl className="grid min-w-0 gap-4 rounded-xl border bg-card p-4 text-sm sm:grid-cols-3 sm:p-6">
+            <dl className="grid min-w-0 gap-4 rounded-xl border bg-card p-4 text-sm sm:grid-cols-3 sm:p-5">
               <div className="min-w-0">
                 <dt className="text-muted-foreground">{t('nameFa')}</dt>
                 <dd className="mt-1 font-medium [overflow-wrap:anywhere]">
@@ -312,7 +314,7 @@ export default function AdminGeographyRecordPage({
                   </bdi>
                 </dd>
               </div>
-              <div>
+              <div className="space-y-1 rounded-lg bg-muted/45 p-3">
                 <dt className="text-muted-foreground">{t('status')}</dt>
                 <dd className="mt-1">
                   <Badge variant={record.status === 'active' ? 'default' : 'secondary'}>
@@ -323,7 +325,9 @@ export default function AdminGeographyRecordPage({
             </dl>
             {recovery}
             {!cityRoute && province && (
-              <Suspense fallback={<LoadingStatus>{t('cityLoading')}</LoadingStatus>}>
+              <Suspense
+                fallback={<RecordListSkeleton label={t('cityLoading')} view="card" headings={[]} />}
+              >
                 <CitiesPanel
                   key={provinceRead.ownerKey}
                   province={province}

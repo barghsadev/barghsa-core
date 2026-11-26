@@ -8,7 +8,6 @@ import { TableActionIcon } from '../components/TableActionIcon.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import {
-  LoadingStatus,
   Alert,
   AlertDescription,
   Button,
@@ -23,6 +22,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { listProvinces } from '../lib/geography-api.js';
 import { GeographyRecordTable } from '../components/GeographyRecordTable.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { CitiesPanel } from './AdminCitiesPanel.js';
 import { GeographyDialog, type GeographyModal } from './AdminGeographyDialog.js';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
@@ -214,7 +214,20 @@ export default function AdminGeographyPage({
           empty={false}
           emptyView={null}
           retainContent={list.data !== null}
-          loadingView={<LoadingStatus>{t('loading')}</LoadingStatus>}
+          loadingView={
+            <>
+              <div className="md:hidden">
+                <RecordListSkeleton label={t('loading')} view="card" headings={[]} />
+              </div>
+              <div className="hidden md:block">
+                <RecordListSkeleton
+                  label={t('loading')}
+                  view="table"
+                  headings={[t('nameFa'), t('nameEn'), t('status'), t('actions')]}
+                />
+              </div>
+            </>
+          }
           errorView={
             <Alert role="alert" variant="destructive">
               <AlertDescription>
