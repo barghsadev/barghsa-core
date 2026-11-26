@@ -8,6 +8,13 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }, testInfo) => {
     const label = (key: string) => t(`admin.staff.${key}`, locale);
+    const operations = {
+      roleId: 'role-test-operations',
+      name: 'Operations',
+      description: 'Review orders',
+    };
+    const support = { roleId: 'role-test-support', name: 'Support', description: 'Review tickets' };
+    const account = { ...staffUser, roles: [...staffRoles, support] };
     await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', (route) => route.fulfill({ status: 404, json: {} }));
     await page.route('**/api/auth/user', (route) =>
@@ -30,7 +37,7 @@ for (const locale of ['en', 'fa'] as const) {
       route.fulfill({ json: { items: [staffUser], total: 1 } })
     );
     await page.route('**/api/admin/staff-role-options', (route) =>
-      route.fulfill({ json: staffRoles })
+      route.fulfill({ json: [...staffRoles, operations, support] })
     );
     let writes = 0;
     await page.route('**/api/admin/users/create-staff', (route) => {
@@ -41,7 +48,7 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.route(`**/api/admin/staff/accounts/${staffUser.userId}`, (route) =>
-      route.fulfill({ json: staffUser })
+      route.fulfill({ json: account })
     );
     await page.goto('/admin/users');
     await page.getByRole('link', { name: label('create'), exact: true }).click();
@@ -88,6 +95,36 @@ for (const locale of ['en', 'fa'] as const) {
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
     ).toBe(true);
+    const selected = form.getByRole('list', { name: label('selectedRoles'), exact: true });
+    await selected
+      .getByRole('button', { name: locale === 'fa' ? /مالی|Finance/ : /Finance/ })
+      .click();
+    await expect(form.locator('summary')).toBeFocused();
+    await expect(selected).not.toContainText(/مالی|Finance/);
+    await form.getByText(label('chooseRoles'), { exact: true }).click();
+    await form.getByRole('checkbox', { name: /Operations/ }).check();
+    const reason =
+      locale === 'fa'
+        ? 'مسئولیت بررسی سفارش‌ها به این کارمند واگذار شد.'
+        : 'Assigned to order review.';
+    await form.locator('#staff-role-reason').fill(reason);
+    await form.getByRole('button', { name: label('saveRoles'), exact: true }).click();
+    const review = page.getByRole('dialog');
+    for (const [key, expected] of [
+      ['rolesAdded', /Operations/],
+      ['rolesRemoved', /مالی|Finance/],
+      ['rolesRetained', /Support/],
+      ['reason', reason],
+    ] as const)
+      await expect(
+        review.locator('dl > div').filter({
+          has: page.getByText(label(key), { exact: true }),
+        })
+      ).toContainText(expected);
+    await review.getByRole('button', { name: label('cancel'), exact: true }).click();
+    await expect(selected).toContainText('Operations');
+    await expect(selected).toContainText('Support');
+    await expect(form.locator('#staff-role-reason')).toHaveValue(reason);
   });
 
   test(`effective permission lookup validates a blank ID without a read (${locale})`, async ({

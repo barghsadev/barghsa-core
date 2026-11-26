@@ -7,6 +7,7 @@ import {
   Send as TableSendIcon,
   ShieldCheck as TableShieldCheckIcon,
   UserCog as TableUserCogIcon,
+  X,
 } from 'lucide-react';
 import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
@@ -54,7 +55,9 @@ import {
 import type { StaffCreationDraft, StaffRoleDraft } from '../lib/staff-access-form-schemas.js';
 
 type StaffAction = TeamAction & { pageOffset: number } & (
-    { kind: 'create' } | { kind: 'roles' | 'activation' | 'disable'; target: Staff }
+    | { kind: 'create'; body: StaffCreationDraft }
+    | { kind: 'roles'; target: Staff; body: StaffRoleDraft }
+    | { kind: 'activation' | 'disable'; target: Staff }
   );
 
 interface Access {
@@ -517,13 +520,23 @@ export default function AdminStaffUsersPage({
     const translated = t(key, locale);
     return translated === key ? role[field] : translated;
   };
-  const roleSummary = (ids: string[]) =>
-    ids
-      .map((id) => {
-        const role = roles.find((item) => item.roleId === id);
-        return role ? roleText(role, 'name') : id;
-      })
-      .join(', ') || label('noRoles');
+  const roleName = (id: string, previous: Role[] = []) => {
+    const role =
+      roles.find((item) => item.roleId === id) ?? previous.find((item) => item.roleId === id);
+    return role ? roleText(role, 'name') : id;
+  };
+  const roleList = (ids: string[], previous?: Role[]) =>
+    ids.length ? (
+      <ul className="flex flex-wrap gap-x-2 gap-y-1">
+        {ids.map((id) => (
+          <li key={id} className="min-w-0 rounded bg-muted/55 px-2 py-1 wrap-anywhere">
+            <bdi>{roleName(id, previous)}</bdi>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      label('noRoles')
+    );
   const validationPending = createForm.pending || roleForm.pending;
   const disabled =
     loading ||
@@ -599,7 +612,7 @@ export default function AdminStaffUsersPage({
           kind: 'create',
           pageOffset: offset,
           title: label('create'),
-          description: `${value.firstName} ${value.lastName} (${value.username}). ${label('roles')}: ${roleSummary(value.roleIds)}. ${label(value.activationMethod === 'link' ? 'linkHelp' : 'passwordOnce')}`,
+          description: label(value.activationMethod === 'link' ? 'linkHelp' : 'tempPasswordReview'),
           path: '/api/admin/users/create-staff',
           method: 'POST',
           body: {
@@ -621,7 +634,7 @@ export default function AdminStaffUsersPage({
           pageOffset: offset,
           risk: 'destructive',
           title: label('editRoles'),
-          description: `${name(target)} (${target.username}). ${label('roles')}: ${roleSummary(value.roleIds)}. ${label('reason')}: ${value.reason.trim()}. ${label('rolesHelp')}`,
+          description: label('rolesHelp'),
           path: `/api/admin/users/${encodeURIComponent(target.userId)}/roles`,
           method: 'PUT',
           requiresOtp: true,
@@ -713,13 +726,28 @@ export default function AdminStaffUsersPage({
       {selected.length > 0 ? (
         <ul className="flex flex-wrap gap-1.5" aria-label={label('selectedRoles')}>
           {selected.map((id) => {
-            const role = roles.find((item) => item.roleId === id);
+            const selectedName = roleName(id, editing?.roles);
             return (
               <li
                 key={id}
-                className="max-w-full rounded-md border bg-muted/35 px-2 py-0.5 text-xs [overflow-wrap:anywhere]"
+                className="flex min-w-0 max-w-full items-center gap-1 rounded-md border bg-muted/35 ps-2 text-xs"
               >
-                <bdi>{role ? roleText(role, 'name') : id}</bdi>
+                <bdi className="min-w-0 wrap-anywhere">{selectedName}</bdi>
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="ghost"
+                  className="size-9 shrink-0 rounded-sm text-muted-foreground hover:text-foreground"
+                  disabled={rolesDisabled}
+                  aria-label={label('removeSelectedRole').replace('{role}', selectedName)}
+                  onClick={(event) => {
+                    if (validationOwner.current || actionRef.current) return;
+                    change(selected.filter((value) => value !== id));
+                    event.currentTarget.closest('fieldset')?.querySelector('summary')?.focus();
+                  }}
+                >
+                  <X aria-hidden="true" className="size-3.5" />
+                </Button>
               </li>
             );
           })}
@@ -1315,13 +1343,24 @@ export default function AdminStaffUsersPage({
                             key={field}
                             className={`${recordEditorField} ${field === 'username' ? 'sm:col-span-2' : ''}`}
                           >
-                            <Label htmlFor={`staff-${field}`}>{label(field)}</Label>
+                            <Label htmlFor={`staff-${field}`}>
+                              {label(
+                                field === 'username' && draft.activationMethod === 'link'
+                                  ? 'activationEmailAddress'
+                                  : field
+                              )}
+                            </Label>
                             <Input
                               id={`staff-${field}`}
                               required
                               aria-required="true"
                               {...createForm.bind(field)}
                               maxLength={field === 'username' ? 255 : 100}
+                              inputMode={
+                                field === 'username' && draft.activationMethod === 'link'
+                                  ? 'email'
+                                  : undefined
+                              }
                               value={draft[field]}
                               dir={field === 'username' ? 'ltr' : 'auto'}
                               placeholder={
@@ -1536,6 +1575,75 @@ export default function AdminStaffUsersPage({
       {action && (
         <TeamActionDialog
           action={action}
+          summary={
+            action.kind === 'create' ? (
+              <dl className="space-y-3 rounded-lg border p-3 text-sm">
+                <div>
+                  <dt className="text-muted-foreground">{label('accountDetails')}</dt>
+                  <dd>
+                    <bdi>
+                      {action.body.firstName} {action.body.lastName}
+                    </bdi>
+                    <bdi className="block wrap-anywhere">{action.body.username}</bdi>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-muted-foreground">{label('activation')}</dt>
+                  <dd>{label(action.body.activationMethod)}</dd>
+                </div>
+                <div>
+                  <dt className="mb-1 text-muted-foreground">{label('selectedRoles')}</dt>
+                  <dd>{roleList(action.body.roleIds)}</dd>
+                </div>
+              </dl>
+            ) : action.kind === 'roles' ? (
+              <dl className="space-y-3 rounded-lg border p-3 text-sm">
+                <div>
+                  <dt className="text-muted-foreground">{label('accountTitle')}</dt>
+                  <dd>
+                    <bdi>{name(action.target)}</bdi>
+                    <bdi className="block wrap-anywhere">{action.target.username}</bdi>
+                  </dd>
+                </div>
+                {(
+                  [
+                    [
+                      'rolesAdded',
+                      action.body.roleIds.filter(
+                        (id) => !action.target.roles.some((role) => role.roleId === id)
+                      ),
+                    ],
+                    [
+                      'rolesRemoved',
+                      action.target.roles
+                        .filter((role) => !action.body.roleIds.includes(role.roleId))
+                        .map((role) => role.roleId),
+                    ],
+                    [
+                      'rolesRetained',
+                      action.body.roleIds.filter((id) =>
+                        action.target.roles.some((role) => role.roleId === id)
+                      ),
+                    ],
+                  ] as const
+                ).map(([key, ids]) => (
+                  <div
+                    key={key}
+                    className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-t pt-2"
+                  >
+                    <dt className="text-muted-foreground">{label(key)}</dt>
+                    <dd className="min-w-0">{roleList(ids, action.target.roles)}</dd>
+                  </div>
+                ))}
+                <div className="border-t pt-2">
+                  <dt className="text-muted-foreground">{label('reason')}</dt>
+                  <dd dir="auto" className="whitespace-pre-wrap wrap-anywhere">
+                    {action.body.reason}
+                  </dd>
+                </div>
+              </dl>
+            ) : null
+          }
           confirmationDisabled={
             action.pageOffset !== offset ||
             loading ||
@@ -1582,7 +1690,7 @@ export default function AdminStaffUsersPage({
               return;
             const data = result as Record<string, unknown> | null;
             if (action.kind === 'create') {
-              const request = action.body as { username: string; activationMethod: string };
+              const request = action.body;
               const password = data?.temporaryPassword;
               if (
                 !data ||
@@ -1602,7 +1710,7 @@ export default function AdminStaffUsersPage({
               setDraft(blank());
               setShowCreate(false);
             } else if (action.kind === 'roles') {
-              const expected = (action.body as { roleIds: string[] }).roleIds;
+              const expected = action.body.roleIds;
               if (
                 data?.userId !== action.target.userId ||
                 !Array.isArray(data.roleIds) ||

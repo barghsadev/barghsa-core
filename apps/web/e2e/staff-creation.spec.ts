@@ -86,8 +86,9 @@ for (const locale of ['en', 'fa'] as const) {
     const createLabel = fa ? 'ایجاد حساب کارمند' : 'Create staff user';
     const form = page.locator('form');
     await form
-      .getByLabel(fa ? 'ایمیل یا شماره موبایل' : 'Email or mobile number', { exact: true })
+      .getByLabel(fa ? 'نشانی ایمیل' : 'Email address', { exact: true })
       .fill('New.Staff@Example.Test');
+    await expect(form.locator('#staff-username')).toHaveAttribute('inputmode', 'email');
     await form.getByLabel(fa ? 'نام' : 'First name', { exact: true }).fill('New');
     await form.getByLabel(fa ? 'نام خانوادگی' : 'Last name', { exact: true }).fill('Staff');
     await form.locator('summary').focus();
@@ -112,13 +113,18 @@ for (const locale of ['en', 'fa'] as const) {
     }
     await page.evaluate(() => document.documentElement.classList.remove('dark'));
     await form.locator('summary').click();
-    await expect(form.locator('summary')).toContainText(fa ? 'مالی' : 'Finance');
-    await expect(form.locator('summary')).toContainText(fa ? 'عملیات' : 'Operations');
+    const selected = form.getByRole('list', { name: fa ? 'نقش‌های انتخاب‌شده' : 'Selected roles' });
+    await expect(selected).toContainText(fa ? 'مالی' : 'Finance');
+    await expect(selected).toContainText(fa ? 'عملیات' : 'Operations');
     await form
       .getByRole('radio', { name: fa ? 'رمز عبور موقت یک‌بارمصرف' : 'One-time temporary password' })
       .check();
+    await expect(
+      form.getByLabel(fa ? 'ایمیل یا شماره موبایل' : 'Email or mobile number', { exact: true })
+    ).toHaveValue('New.Staff@Example.Test');
     await form.getByRole('button', { name: createLabel, exact: true }).click();
     const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText('new.staff@example.test');
     const confirm = dialog.getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true });
     expect(attempts).toHaveLength(0);
     await confirm.click();
