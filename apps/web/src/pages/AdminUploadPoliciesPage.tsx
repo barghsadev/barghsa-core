@@ -23,6 +23,8 @@ import {
   policyDraft,
   policyInvalidFields,
   emptyPolicyDraft,
+  mib,
+  uploadSizeBytes,
   type UploadPolicyDraft,
 } from '../lib/storage-policy-form.js';
 import type { UploadPolicyCategory, UploadPolicyDto } from '@barghsa/shared/admin';
@@ -36,12 +38,11 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
+  Input,
   Label,
   ListPage,
   ListRefreshButton,
+  NativeSelect,
   DateCell,
   TextCell,
   Alert,
@@ -133,7 +134,6 @@ function basis(limit: Limit, policies: UploadPolicyDto[]) {
     current: policies.find((p) => p.category === limit.category && p.status === 'current') ?? null,
   });
 }
-const mib = 1024 * 1024;
 const collectionPath = '/api/admin/upload-policies';
 type UploadPolicyWorkspace =
   | { view: 'catalogue'; category?: never; versionId?: never }
@@ -175,7 +175,7 @@ export default function AdminUploadPoliciesPage({
     async () => {
       const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
       return contentFormSchema<UploadPolicyDraft>(
-        { extensions: text('extensions'), size: text('size') },
+        { extensions: text('extensions'), size: text('size'), sizeUnit: text('sizeUnit') },
         (draft) => policyInvalidFields(draft, limitRef.current)
       );
     },
@@ -408,6 +408,7 @@ export default function AdminUploadPoliciesPage({
   };
   const size = (bytes: number) =>
     `${numbers.number(bytes / mib, { maximumFractionDigits: 6 })} ${label('mib')}`;
+  const bytesText = (bytes: number) => label('bytes').replace('{count}', numbers.number(bytes));
   const date = (value: string | null) => (value ? time.format(value) : label('openEnded'));
   const errors = {
     UPLOAD_POLICY_INVALID_EFFECTIVE_FROM: label('scheduleConflict'),
@@ -474,10 +475,12 @@ export default function AdminUploadPoliciesPage({
         captured = value;
       })();
       if (!captured || epoch !== generation.current || disabled) return;
+      const maxSizeBytes = uploadSizeBytes(captured);
+      if (maxSizeBytes === null) return;
       const proposed = {
         category: editor.limit.category,
         allowedExtensions: captured.extensions,
-        maxSizeBytes: Number(captured.size) * mib,
+        maxSizeBytes,
       };
       const current = policies.find(
         (policy) => policy.category === proposed.category && policy.status === 'current'
@@ -609,9 +612,7 @@ export default function AdminUploadPoliciesPage({
           {Number.isSafeInteger(bytes) && bytes > 0 ? size(bytes) : '—'}
         </dd>
         {Number.isSafeInteger(bytes) && bytes > 0 && (
-          <dd className="text-muted-foreground">
-            {label('bytes').replace('{count}', numbers.number(bytes))}
-          </dd>
+          <dd className="text-muted-foreground">{bytesText(bytes)}</dd>
         )}
       </div>
     </dl>
@@ -647,6 +648,10 @@ export default function AdminUploadPoliciesPage({
     </dl>
   );
   const EditorActions = workspace ? RecordEditorActions : DialogFooter;
+  const enteredBytes = editor ? uploadSizeBytes(form.values) : null;
+  const sizeUnit = form.values.sizeUnit;
+  const editorSize = sizeUnit === 'mib' ? size : bytesText;
+  const draftLocked = disabled || needsReset || uncertain || form.pending || !!action;
   const editorForm = editor && (
     <form
       noValidate
@@ -664,7 +669,7 @@ export default function AdminUploadPoliciesPage({
                 <p className="min-w-0 font-medium [overflow-wrap:anywhere]">
                   <bdi>{effectivePolicy.allowedExtensions.join(', ') || '—'}</bdi>
                   <span aria-hidden="true"> · </span>
-                  {size(effectivePolicy.maxSizeBytes)}
+                  {editorSize(effectivePolicy.maxSizeBytes)}
                 </p>
               </div>
             )}
@@ -692,7 +697,7 @@ export default function AdminUploadPoliciesPage({
         <fieldset
           ref={extensionsRef}
           className="m-0 min-w-0 space-y-2 border-0 p-0"
-          disabled={disabled || needsReset || uncertain || form.pending || !!action}
+          disabled={draftLocked}
           aria-invalid={form.bind('extensions')['aria-invalid']}
           aria-describedby={
             form.bind('extensions')['aria-describedby'] ?? 'upload-policy-formats-help'
@@ -739,37 +744,77 @@ export default function AdminUploadPoliciesPage({
         <div className={recordEditorField}>
           <Label htmlFor="upload-policy-size">
             {label('maxSize')}
-            <span className="sr-only"> ({label('mib')})</span>
+            <span className="sr-only">
+              {' '}
+              ({sizeUnit === 'mib' ? label('mib') : text('sizeUnitBytes')})
+            </span>
           </Label>
-          <InputGroup className="w-44 max-w-full">
-            <InputGroupInput
+          <div className="flex w-72 max-w-full items-center gap-2">
+            <Input
               {...form.bind('size')}
               id="upload-policy-size"
-              type="number"
+              inputMode={sizeUnit === 'mib' ? 'decimal' : 'numeric'}
+              maxLength={32}
               dir="ltr"
-              className="min-w-0 tabular-nums"
-              min={1 / mib}
-              max={editor.limit.maxSizeBytes / mib}
-              step="any"
+              className="min-w-0 flex-1 tabular-nums"
               required
               aria-required="true"
               aria-describedby={[
                 form.bind('size')['aria-describedby'],
                 'upload-policy-size-ceiling',
+                sizeUnit === 'mib' && enteredBytes !== null && 'upload-policy-size-preview',
               ]
                 .filter(Boolean)
                 .join(' ')}
               value={form.values.size}
-              disabled={disabled || needsReset || uncertain || form.pending || !!action}
+              disabled={draftLocked}
               onChange={(event) => form.field('size')[1](event.target.value)}
             />
-            <InputGroupAddon align="inline-end" aria-hidden="true" className="whitespace-nowrap">
-              {label('mib')}
-            </InputGroupAddon>
-          </InputGroup>
-          <p id="upload-policy-size-ceiling" className="text-sm text-muted-foreground">
-            {label('ceiling')}: {size(editor.limit.maxSizeBytes)}
-          </p>
+            <NativeSelect
+              id="upload-policy-size-unit"
+              aria-label={text('sizeUnit')}
+              value={sizeUnit}
+              disabled={draftLocked}
+              onChange={(event) => {
+                const unit = event.target.value === 'bytes' ? 'bytes' : 'mib';
+                form.form.setValue('sizeUnit', unit, { shouldDirty: true });
+                form.field('size')[1](
+                  enteredBytes === null
+                    ? form.values.size
+                    : String(unit === 'mib' ? enteredBytes / mib : enteredBytes)
+                );
+              }}
+            >
+              <option value="mib">{label('mib')}</option>
+              <option value="bytes">{text('sizeUnitBytes')}</option>
+            </NativeSelect>
+          </div>
+          {sizeUnit === 'mib' && enteredBytes !== null && (
+            <p id="upload-policy-size-preview" className="text-sm text-muted-foreground">
+              {text('sizeExact').replace('{count}', numbers.number(enteredBytes))}
+            </p>
+          )}
+          <div className="flex flex-wrap items-center gap-x-2">
+            <p id="upload-policy-size-ceiling" className="text-sm text-muted-foreground">
+              {label('ceiling')} {editorSize(editor.limit.maxSizeBytes)}
+            </p>
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              className="text-primary"
+              disabled={draftLocked || enteredBytes === editor.limit.maxSizeBytes}
+              onClick={() =>
+                form.field('size')[1](
+                  String(
+                    sizeUnit === 'mib' ? editor.limit.maxSizeBytes / mib : editor.limit.maxSizeBytes
+                  )
+                )
+              }
+            >
+              {text('sizeUseCeiling')}
+            </Button>
+          </div>
         </div>
         <CatalogueFieldFeedback
           id={form.errorId('size')}
@@ -782,11 +827,7 @@ export default function AdminUploadPoliciesPage({
         <Button type="button" variant="outline" onClick={() => cancelEditor()}>
           {label('cancel')}
         </Button>
-        <CatalogueSaveButton
-          label={label('save')}
-          pending={form.pending}
-          disabled={disabled || needsReset || uncertain || form.pending || !!action}
-        />
+        <CatalogueSaveButton label={label('save')} pending={form.pending} disabled={draftLocked} />
       </EditorActions>
     </form>
   );

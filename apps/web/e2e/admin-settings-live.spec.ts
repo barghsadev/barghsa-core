@@ -736,7 +736,12 @@ for (const locale of ['en', 'fa'])
         if (await checkbox.isVisible()) await checkbox.uncheck();
       }
       await main.getByLabel(fa ? '.png' : '.pdf', { exact: true }).check();
-      await main.locator('#upload-policy-size').fill(value);
+      if (value === '2') {
+        await main.locator('#upload-policy-size-unit').selectOption('bytes');
+        await main.locator('#upload-policy-size').fill(fa ? '۲۰۹۷۱۵۲' : '2097152');
+      } else {
+        await main.locator('#upload-policy-size').fill(value);
+      }
       await main
         .getByRole('button', { name: fa ? 'ذخیره سیاست' : 'Save policy', exact: true })
         .click();

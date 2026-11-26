@@ -1,5 +1,6 @@
 import type { UploadPolicyDto } from '@barghsa/shared/admin';
 import { MAX_UPLOAD_POLICY_EXTENSIONS } from '@barghsa/shared/admin';
+import { normalizeProfileDigits } from './profile-digits.js';
 
 export const storageTextFields = [
   'endpoint',
@@ -33,7 +34,7 @@ export type CleanupPolicyView = { hours: number | null; version: number };
 export type CleanupSettings = { hours: number };
 export type CleanupDraft = { hours: string };
 export type UploadLimit = { category: string; allowedExtensions: string[]; maxSizeBytes: number };
-export type UploadPolicyDraft = { extensions: string[]; size: string };
+export type UploadPolicyDraft = { extensions: string[]; size: string; sizeUnit: 'mib' | 'bytes' };
 export const mib = 1024 * 1024;
 const record = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === 'object' && !Array.isArray(value);
@@ -160,14 +161,26 @@ export function cleanupInvalidFields(draft: CleanupDraft): (keyof CleanupDraft)[
     ? []
     : ['hours'];
 }
-export const emptyPolicyDraft = (): UploadPolicyDraft => ({ extensions: [], size: '' });
+export const emptyPolicyDraft = (): UploadPolicyDraft => ({
+  extensions: [],
+  size: '',
+  sizeUnit: 'mib',
+});
 export function policyDraft(limit: UploadLimit, current?: UploadPolicyDto): UploadPolicyDraft {
   return {
     extensions: (current?.allowedExtensions ?? limit.allowedExtensions).filter((ext) =>
       limit.allowedExtensions.includes(ext)
     ),
     size: String(Math.min(current?.maxSizeBytes ?? limit.maxSizeBytes, limit.maxSizeBytes) / mib),
+    sizeUnit: 'mib',
   };
+}
+export function uploadSizeBytes({ size, sizeUnit }: Pick<UploadPolicyDraft, 'size' | 'sizeUnit'>) {
+  const input = normalizeProfileDigits(size.trim()).replace('٫', '.');
+  const pattern = sizeUnit === 'bytes' ? /^\d+$/ : /^(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i;
+  if (!pattern.test(input)) return null;
+  const bytes = Number(input) * (sizeUnit === 'bytes' ? 1 : mib);
+  return Number.isSafeInteger(bytes) && bytes > 0 ? bytes : null;
 }
 export function policyInvalidFields(
   draft: UploadPolicyDraft,
@@ -182,14 +195,7 @@ export function policyInvalidFields(
     draft.extensions.some((ext) => !limit.allowedExtensions.includes(ext))
   )
     invalid.push('extensions');
-  const bytes = Number(draft.size) * mib;
-  if (
-    !limit ||
-    !draft.size.trim() ||
-    !Number.isSafeInteger(bytes) ||
-    bytes < 1 ||
-    bytes > limit.maxSizeBytes
-  )
-    invalid.push('size');
+  const bytes = uploadSizeBytes(draft);
+  if (!limit || bytes === null || bytes > limit.maxSizeBytes) invalid.push('size');
   return invalid;
 }

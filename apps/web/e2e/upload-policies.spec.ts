@@ -4,6 +4,7 @@ import { setupCatalogueForms } from './catalogue-form-fixture';
 import { uploadPolicy } from '../src/test/policy-catalogue-fixtures';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { t } from '@barghsa/i18n/admin-ui';
+import { storagePolicyFormText } from '@barghsa/i18n/storage-policy-forms';
 for (const locale of ['en', 'fa'])
   test(`upload policy editor retains an exact save across failures (${locale})`, async ({
     page,
@@ -84,7 +85,27 @@ for (const locale of ['en', 'fa'])
     await expect(form.getByRole('alert').first()).toBeVisible();
     expect(attempts).toHaveLength(0);
     await form.getByLabel('.pdf', { exact: true }).check();
-    await form.locator('#upload-policy-size').fill('1');
+    const size = form.locator('#upload-policy-size');
+    const unit = form.locator('#upload-policy-size-unit');
+    await size.fill(fa ? '۱٫۵' : '1.5');
+    await expect(form.locator('#upload-policy-size-preview')).toContainText(
+      fa ? '1,572,864' : '۱٬۵۷۲٬۸۶۴'
+    );
+    await unit.selectOption('bytes');
+    await expect(size).toHaveValue('1572864');
+    await form
+      .getByRole('button', {
+        name: storagePolicyFormText('sizeUseCeiling', fa ? 'fa' : 'en'),
+        exact: true,
+      })
+      .click();
+    await expect(size).toHaveValue('11010048');
+    await size.fill(fa ? '۱' : '1');
+    await unit.selectOption('mib');
+    await expect(size).toHaveValue(String(1 / 1048576));
+    await unit.selectOption('bytes');
+    await expect(size).toHaveValue('1');
+    await size.fill(fa ? '۱۰۴۸۵۷۶' : '1048576');
     await form
       .getByRole('button', { name: fa ? 'ذخیره سیاست' : 'Save policy', exact: true })
       .click();

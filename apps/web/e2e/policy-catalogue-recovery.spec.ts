@@ -194,11 +194,14 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('link', { name: `${u('edit')} ${u('category.document')}`, exact: true })
       .click();
     const dialog = page.getByRole('main');
-    const size = dialog.getByRole('spinbutton', { name: /\S/ });
+    const size = dialog.locator('#upload-policy-size');
     const formats = dialog.getByRole('group', { name: u('formats'), exact: true });
     await expect(size).toHaveAttribute('aria-required', 'true');
     await expect(size).toHaveAccessibleDescription(
-      await dialog.locator('#upload-policy-size-ceiling').innerText()
+      [
+        await dialog.locator('#upload-policy-size-ceiling').innerText(),
+        await dialog.locator('#upload-policy-size-preview').innerText(),
+      ].join(' ')
     );
     await expect(formats).toHaveAccessibleDescription(storagePolicyFormText('extensions', locale));
     await size.fill('1.5');
