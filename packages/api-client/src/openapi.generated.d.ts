@@ -35264,7 +35264,7 @@ export interface operations {
                         /** @enum {string} */
                         installationSurface: "" | "land" | "rooftop" | "both";
                         /** @enum {string} */
-                        propertyForm: "apartment" | "villa";
+                        propertyForm: "" | "apartment" | "villa";
                         siteAddressId: string;
                         /** @enum {string} */
                         siteCategory: "" | "agricultural" | "industrial";
@@ -35272,7 +35272,7 @@ export interface operations {
                         /** @enum {string} */
                         siteRelationship: "" | "owner" | "tenant" | "authorized_operator";
                         /** @enum {string} */
-                        structuralFrame: "concrete" | "steel" | "other";
+                        structuralFrame: "" | "concrete" | "steel" | "other";
                         totalUnits: string;
                         usableAreaSqm: string;
                     };

@@ -69,13 +69,15 @@ export interface SolarReview {
 }
 type BuildingType = 'building_apartment' | 'non_household';
 type GridType = 'on_grid' | 'off_grid';
+const propertyForms = ['apartment', 'villa'] as const;
+const structuralFrames = ['concrete', 'steel', 'other'] as const;
 const siteCategories = ['agricultural', 'industrial'] as const;
 const installationSurfaces = ['land', 'rooftop', 'both'] as const;
 const siteRelationships = ['owner', 'tenant', 'authorized_operator'] as const;
 interface SolarDraft {
   buildingType: BuildingType;
-  propertyForm: 'apartment' | 'villa';
-  structuralFrame: 'concrete' | 'steel' | 'other';
+  propertyForm: '' | (typeof propertyForms)[number];
+  structuralFrame: '' | (typeof structuralFrames)[number];
   buildingCompletionDate: string;
   totalUnits: string;
   siteCategory: '' | (typeof siteCategories)[number];
@@ -94,8 +96,8 @@ const solarDraftSchema: DraftSchema<SolarDraft> = {
     const data = value as Record<string, unknown>;
     if (
       !['building_apartment', 'non_household'].includes(String(data.buildingType)) ||
-      !['apartment', 'villa'].includes(String(data.propertyForm)) ||
-      !['concrete', 'steel', 'other'].includes(String(data.structuralFrame)) ||
+      !['', ...propertyForms].includes(String(data.propertyForm)) ||
+      !['', ...structuralFrames].includes(String(data.structuralFrame)) ||
       !['', ...siteCategories].includes(String(data.siteCategory)) ||
       !['', ...installationSurfaces].includes(String(data.installationSurface)) ||
       !['', ...siteRelationships].includes(String(data.siteRelationship)) ||
@@ -176,8 +178,8 @@ export function SolarRequestPage() {
     z
       .object({
         buildingType: z.enum(['building_apartment', 'non_household']),
-        propertyForm: z.enum(['apartment', 'villa']),
-        structuralFrame: z.enum(['concrete', 'steel', 'other']),
+        propertyForm: z.enum(['', ...propertyForms]),
+        structuralFrame: z.enum(['', ...structuralFrames]),
         buildingCompletionDate: z.string(),
         totalUnits: z.string(),
         siteCategory: z.enum(['', ...siteCategories]),
@@ -196,6 +198,10 @@ export function SolarRequestPage() {
         if (!addresses.some((address) => address.id === value.siteAddressId))
           invalid('siteAddressId');
         if (value.buildingType === 'building_apartment') {
+          if (!value.propertyForm)
+            invalid('propertyForm', solarIntakeText('choosePropertyForm', locale));
+          if (!value.structuralFrame)
+            invalid('structuralFrame', solarIntakeText('chooseStructuralFrame', locale));
           if (!completionDateValid(value.buildingCompletionDate)) invalid('buildingCompletionDate');
           if (value.propertyForm === 'apartment' && !unitsValid(value.totalUnits))
             invalid('totalUnits', solarIntakeText('unitsFormat', locale));
@@ -218,8 +224,8 @@ export function SolarRequestPage() {
       }),
     {
       buildingType: 'building_apartment',
-      propertyForm: 'apartment',
-      structuralFrame: 'concrete',
+      propertyForm: '',
+      structuralFrame: '',
       buildingCompletionDate: '',
       totalUnits: '',
       siteCategory: '',
@@ -381,7 +387,9 @@ export function SolarRequestPage() {
         value.installationSurface !== '' &&
         value.siteRelationship !== '' &&
         areaValid(value.usableAreaSqm)
-      : completionDateValid(value.buildingCompletionDate) &&
+      : value.propertyForm !== '' &&
+        value.structuralFrame !== '' &&
+        completionDateValid(value.buildingCompletionDate) &&
         (value.propertyForm === 'villa' || unitsValid(value.totalUnits)));
   const gridValid = (value: SolarDraft) =>
     value.gridType === 'off_grid' ||
@@ -862,14 +870,21 @@ export function SolarRequestPage() {
                               id="solar-property-form"
                               className="w-full"
                               {...fields.bind('propertyForm')}
+                              required
                               aria-required="true"
                               value={propertyForm}
                               onChange={(e) =>
                                 setPropertyForm(e.target.value as typeof propertyForm)
                               }
                             >
-                              <option value="apartment">{copy('apartment')}</option>
-                              <option value="villa">{copy('villa')}</option>
+                              <option value="" disabled>
+                                {solarIntakeText('choosePropertyForm', locale)}
+                              </option>
+                              {propertyForms.map((item) => (
+                                <option key={item} value={item}>
+                                  {copy(item)}
+                                </option>
+                              ))}
                             </NativeSelect>
                           </div>
                           <div className="space-y-1">
@@ -880,20 +895,26 @@ export function SolarRequestPage() {
                               id="solar-structural-frame"
                               className="w-full"
                               {...fields.bind('structuralFrame')}
+                              required
                               aria-required="true"
                               value={structuralFrame}
                               onChange={(e) =>
                                 setStructuralFrame(e.target.value as typeof structuralFrame)
                               }
                             >
-                              {(['concrete', 'steel', 'other'] as const).map((item) => (
+                              <option value="" disabled>
+                                {solarIntakeText('chooseStructuralFrame', locale)}
+                              </option>
+                              {structuralFrames.map((item) => (
                                 <option key={item} value={item}>
                                   {copy(item)}
                                 </option>
                               ))}
                             </NativeSelect>
                           </div>
-                          <div className="min-w-0 space-y-1">
+                          <div
+                            className={`min-w-0 space-y-1 ${propertyForm === 'apartment' ? '' : 'col-span-full sm:max-w-xs'}`}
+                          >
                             <Label htmlFor="solar-completion">{copy('completionDate')}</Label>
                             {manualCompletionDate ? (
                               <Input

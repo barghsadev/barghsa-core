@@ -118,6 +118,14 @@ it.each([
           : 'Choose the type of solar power station you want.'
       );
       expect(container.querySelector('#solar-bill')).toBeNull();
+      expect(container.querySelector('#solar-units')).toBeNull();
+      const property = container.querySelector<HTMLSelectElement>('#solar-property-form')!;
+      expect(property.value).toBe('');
+      expect(container.querySelector<HTMLSelectElement>('#solar-structural-frame')?.value).toBe('');
+      await act(async () => {
+        property.value = 'apartment';
+        property.dispatchEvent(new Event('change', { bubbles: true }));
+      });
       expect(container.querySelector('#solar-units')).not.toBeNull();
       const address = container.querySelector<HTMLSelectElement>('select[name=siteAddressId]')!;
       expect(address.value).toBe(hasMainAddress ? savedAddress.id : '');

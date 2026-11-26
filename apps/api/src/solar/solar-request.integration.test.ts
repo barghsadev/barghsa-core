@@ -104,7 +104,14 @@ it('saves and resumes a scoped solar draft without losing incomplete fields', as
     gridType: 'off_grid',
     billIdentifier: '',
   };
-  const incomplete = { ...data, siteCategory: '', installationSurface: '', siteRelationship: '' };
+  const incomplete = {
+    ...data,
+    propertyForm: '',
+    structuralFrame: '',
+    siteCategory: '',
+    installationSurface: '',
+    siteRelationship: '',
+  };
   expect(
     (
       await request(
@@ -197,6 +204,18 @@ it('submits both solar request types, captures agreement, and creates no contrac
     billIdentifier: '123456789',
     agreementAccepted: true,
   };
+  for (const field of ['propertyForm', 'structuralFrame'] as const) {
+    const incomplete = { ...buildingInput, [field]: '' };
+    expect((await request('/api/solar/requests/review', 'POST', incomplete)).status).toBe(400);
+    expect(
+      (
+        await request('/api/solar/requests', 'POST', {
+          ...incomplete,
+          expectedReviewHash: 'b'.repeat(64),
+        })
+      ).status
+    ).toBe(400);
+  }
   const badBill = await request('/api/solar/requests/review', 'POST', {
     ...buildingInput,
     billIdentifier: undefined,

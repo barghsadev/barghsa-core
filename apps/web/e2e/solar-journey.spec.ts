@@ -550,19 +550,25 @@ for (const locale of ['en', 'fa'] as const)
     await expect(
       page.getByRole('radiogroup', { name: solarCopy('instruction', locale), exact: true })
     ).toHaveAttribute('aria-required', 'true');
-    for (const key of [
-      'propertyForm',
-      'structuralFrame',
-      'completionDate',
-      'totalUnits',
-      'address',
-    ])
+    for (const key of ['propertyForm', 'structuralFrame', 'completionDate', 'address'])
       await expect(page.getByLabel(solarCopy(key, locale), { exact: true })).toHaveAttribute(
         'aria-required',
         'true'
       );
-    await page.getByLabel(solarCopy('propertyForm', locale)).selectOption('villa');
-    await expect(page.getByLabel(solarCopy('totalUnits', locale), { exact: true })).toHaveCount(0);
+    const propertyForm = page.getByLabel(solarCopy('propertyForm', locale));
+    const frame = page.getByLabel(solarCopy('structuralFrame', locale));
+    const units = page.getByLabel(solarCopy('totalUnits', locale), { exact: true });
+    const next = page.getByRole('button', {
+      name: appCopy('onboarding.type.continue', locale),
+      exact: true,
+    });
+    await expect(propertyForm).toHaveValue('');
+    await expect(frame).toHaveValue('');
+    await expect(units).toHaveCount(0);
+    await propertyForm.selectOption('apartment');
+    await expect(units).toHaveAttribute('aria-required', 'true');
+    await propertyForm.selectOption('villa');
+    await expect(units).toHaveCount(0);
     const completion = page.getByLabel(solarCopy('completionDate', locale));
     await expect(completion).toHaveAccessibleDescription(
       solarIntakeText('completionDateCalendar', locale)
@@ -588,9 +594,9 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('#solar-completion-hint time')).toHaveText('۱۱ دی ۱۳۹۸');
     }
     await checkRoutePresentation(page, info, locale);
-    await page
-      .getByRole('button', { name: appCopy('onboarding.type.continue', locale), exact: true })
-      .click();
+    await expect(next).toBeDisabled();
+    await frame.selectOption('steel');
+    await next.click();
     await expect(
       page.getByRole('radiogroup', { name: solarCopy('gridType', locale), exact: true })
     ).toHaveAttribute('aria-required', 'true');
@@ -607,7 +613,11 @@ for (const locale of ['en', 'fa'] as const)
     await expect(
       page.getByRole('status').filter({ hasText: solarCopy('draftSaved', locale) })
     ).toBeVisible();
-    expect(draft?.data).toMatchObject({ propertyForm: 'villa', gridType: 'off_grid' });
+    expect(draft?.data).toMatchObject({
+      propertyForm: 'villa',
+      structuralFrame: 'steel',
+      gridType: 'off_grid',
+    });
 
     await page.reload();
     await expect(page).toHaveURL(/step=2$/);
@@ -615,7 +625,8 @@ for (const locale of ['en', 'fa'] as const)
     await page
       .getByRole('button', { name: appCopy('electricity.order.back', locale), exact: true })
       .click();
-    await expect(page.getByLabel(solarCopy('propertyForm', locale))).toHaveValue('villa');
+    await expect(propertyForm).toHaveValue('villa');
+    await expect(frame).toHaveValue('steel');
     await expect(page.locator('#solar-completion-hint time')).toHaveAttribute(
       'datetime',
       '2020-01-01'
@@ -707,6 +718,7 @@ for (const locale of ['en', 'fa'] as const)
       profileId,
       buildingType: 'building_apartment',
       propertyForm: 'villa',
+      structuralFrame: 'steel',
       gridType: 'off_grid',
       agreementAccepted: true,
       submissionKey: expect.stringMatching(/^[a-f0-9-]{36}$/),
@@ -1147,7 +1159,7 @@ for (const locale of ['en', 'fa'] as const)
                 installationSurface: '',
                 siteRelationship: '',
               }
-            : { propertyForm: 'villa', buildingCompletionDate: '2020-01-01' }),
+            : { propertyForm: 'villa', structuralFrame: '', buildingCompletionDate: '2020-01-01' }),
         });
 
         await selectAddressLocation(
@@ -1191,11 +1203,16 @@ for (const locale of ['en', 'fa'] as const)
             await field.selectOption(value);
           }
           await expect(next).toBeEnabled();
-        } else
+        } else {
           await expect(page.locator('#solar-completion-hint time')).toHaveAttribute(
             'datetime',
             '2020-01-01'
           );
+          const frame = page.getByLabel(tSolar('structuralFrame', locale));
+          await expect(frame).toHaveValue('');
+          await expect(next).toBeDisabled();
+          await frame.selectOption('steel');
+        }
         await expect(page.getByLabel(tSolar('address', locale))).toHaveValue(siteAddress.id);
         expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
@@ -1237,7 +1254,11 @@ for (const locale of ['en', 'fa'] as const)
                 installationSurface: 'rooftop',
                 siteRelationship: 'tenant',
               }
-            : { propertyForm: 'villa', buildingCompletionDate: '2020-01-01' }),
+            : {
+                propertyForm: 'villa',
+                structuralFrame: 'steel',
+                buildingCompletionDate: '2020-01-01',
+              }),
           siteAddressId: siteAddress.id,
           gridType: 'off_grid',
           expectedReviewHash: 'b'.repeat(64),

@@ -1,4 +1,6 @@
 const en = {
+  choosePropertyForm: 'Choose property type',
+  chooseStructuralFrame: 'Choose structural frame',
   completionDateFormat: 'Use the Gregorian calendar.',
   completionDateCalendar: 'Choose the date from the calendar.',
   completionDateManual: 'Enter date manually',
@@ -18,6 +20,8 @@ const en = {
 };
 
 const fa: Record<keyof typeof en, string> = {
+  choosePropertyForm: 'انتخاب نوع ساختمان',
+  chooseStructuralFrame: 'انتخاب نوع اسکلت',
   completionDateFormat: 'تاریخ میلادی را وارد کنید.',
   completionDateCalendar: 'تاریخ را از تقویم شمسی انتخاب کنید.',
   completionDateManual: 'ورود تاریخ میلادی',

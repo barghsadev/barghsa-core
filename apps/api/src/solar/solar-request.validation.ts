@@ -82,8 +82,8 @@ export type SolarSubmissionReviewInput = z.infer<typeof solarSubmissionReview>;
 export const solarDraftData = z
   .object({
     buildingType: z.enum(['building_apartment', 'non_household']),
-    propertyForm: z.enum(['apartment', 'villa']),
-    structuralFrame: z.enum(['concrete', 'steel', 'other']),
+    propertyForm: z.enum(['', 'apartment', 'villa']),
+    structuralFrame: z.enum(['', 'concrete', 'steel', 'other']),
     buildingCompletionDate: z.string().max(10),
     totalUnits: z.string().max(6),
     siteCategory: z.enum(['', 'agricultural', 'industrial']),

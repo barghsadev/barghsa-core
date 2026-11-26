@@ -46369,6 +46369,7 @@
                       },
                       "propertyForm": {
                         "enum": [
+                          "",
                           "apartment",
                           "villa"
                         ],
@@ -46401,6 +46402,7 @@
                       },
                       "structuralFrame": {
                         "enum": [
+                          "",
                           "concrete",
                           "steel",
                           "other"
