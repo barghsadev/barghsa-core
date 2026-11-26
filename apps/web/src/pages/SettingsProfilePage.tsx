@@ -11,7 +11,6 @@ import { LockIcon, AlertCircleIcon, Loader2Icon } from 'lucide-react';
 import {
   Button,
   buttonVariants,
-  DependentSelect,
   NativeSelect,
   ListRefreshButton,
   Textarea,
@@ -32,6 +31,7 @@ import { useProfileSettingsEditor } from '../hooks/useProfileSettingsEditor.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { addressesText } from '@barghsa/i18n/addresses';
 import { RecordEditorSection, recordEditorGrid } from '../components/RecordEditorLayout.js';
+import { GeographyPicker } from '../components/GeographyPicker.js';
 import {
   keepRecordFieldVisible,
   recordEditorFormSurface,
@@ -150,7 +150,6 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
   const saveButton = useRef<HTMLButtonElement>(null);
   const provinces = provinceOptions.options,
     cities = cityOptions.options,
-    loadingProvinces = provinceOptions.loading,
     provinceError = provinceOptions.error,
     cityError = cityOptions.error;
   function recovery() {
@@ -637,34 +636,31 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
                     render={({ field }) => (
                       <FormItem id="profile-province">
                         <FormControl>
-                          <NativeSelect
-                            {...field}
+                          <GeographyPicker
+                            kind="province"
+                            locale={locale}
                             id="profile-province"
-                            aria-required={addressRequired || undefined}
-                            value={provinceId}
-                            onChange={(event) => {
-                              change('provinceId', event.target.value);
+                            options={provinces}
+                            selected={provinceId}
+                            savedLabel={
+                              savedMainAddress?.provinceId === provinceId
+                                ? (locale === 'fa'
+                                    ? savedMainAddress?.provinceNameFa
+                                    : savedMainAddress?.provinceNameEn) ||
+                                  t('settings.addresses.unknownProvince', locale)
+                                : undefined
+                            }
+                            required={addressRequired}
+                            loading={provinceOptions.loading}
+                            disabled={locked || saving || !provinceOptions.ready}
+                            inputRef={field.ref}
+                            onBlur={field.onBlur}
+                            onChange={(id) => {
+                              if (id === provinceId) return;
+                              change('provinceId', id);
                               change('cityId', '');
                             }}
-                            disabled={locked || saving || loadingProvinces || provinceError}
-                            className="w-full"
-                          >
-                            <option value="">{t('settings.profile.selectProvince', locale)}</option>
-                            {provinceId && !provinces.some((item) => item.id === provinceId) && (
-                              <option value={provinceId}>
-                                {(savedMainAddress?.provinceId === provinceId &&
-                                  (locale === 'fa'
-                                    ? savedMainAddress.provinceNameFa
-                                    : savedMainAddress.provinceNameEn)) ||
-                                  t('settings.addresses.unknownProvince', locale)}
-                              </option>
-                            )}
-                            {provinces.map((item) => (
-                              <option key={item.id} value={item.id}>
-                                {locale === 'fa' ? item.nameFa : item.nameEn}
-                              </option>
-                            ))}
-                          </NativeSelect>
+                          />
                         </FormControl>
                         <FormMessage reserveSpace />
                       </FormItem>
@@ -684,40 +680,29 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
                     render={({ field }) => (
                       <FormItem id="profile-city">
                         <FormControl>
-                          <DependentSelect
-                            {...field}
+                          <GeographyPicker
+                            key={provinceId}
+                            kind="city"
+                            locale={locale}
                             id="profile-city"
-                            aria-required={addressRequired || undefined}
-                            dependencyValue={provinceId}
-                            value={cityId}
-                            ready={cityOptions.ready}
+                            options={cities}
+                            selected={cityId}
+                            hasProvince={!!provinceId}
+                            required={addressRequired}
                             loading={cityOptions.loading}
-                            options={cities.map((city) => ({
-                              value: city.id,
-                              label: locale === 'fa' ? city.nameFa : city.nameEn,
-                              dependencyValue: city.provinceId ?? '',
-                            }))}
-                            placeholder={
-                              !provinceId
-                                ? addressesText('provinceFirst', locale)
-                                : cityOptions.loading
-                                  ? addressesText('loadingCities', locale)
-                                  : t('settings.profile.selectCity', locale)
+                            savedLabel={
+                              savedMainAddress?.provinceId === provinceId &&
+                              savedMainAddress.cityId === cityId
+                                ? (locale === 'fa'
+                                    ? savedMainAddress.cityNameFa
+                                    : savedMainAddress.cityNameEn) ||
+                                  t('settings.addresses.unknownCity', locale)
+                                : undefined
                             }
-                            savedOption={{
-                              value: savedMainAddress?.cityId ?? '',
-                              dependencyValue: savedMainAddress?.provinceId ?? '',
-                              label:
-                                (locale === 'fa'
-                                  ? savedMainAddress?.cityNameFa
-                                  : savedMainAddress?.cityNameEn) ||
-                                t('settings.addresses.unknownCity', locale),
-                            }}
-                            onChange={(event) => {
-                              change('cityId', event.target.value);
-                            }}
-                            disabled={locked || saving}
-                            className="h-11 rounded-lg bg-transparent"
+                            inputRef={field.ref}
+                            onBlur={field.onBlur}
+                            onChange={(id) => change('cityId', id)}
+                            disabled={locked || saving || !cityOptions.ready}
                           />
                         </FormControl>
                         <FormMessage reserveSpace />

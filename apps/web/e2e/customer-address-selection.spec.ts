@@ -41,11 +41,12 @@ async function fixture(page: Page, locale: Locale) {
     updatedAt: '2026-10-01T00:00:00Z',
   };
   const addresses = [address];
+  let title = 'Customer';
   let profileUpdatedAt = '2026-10-01T00:00:00Z';
   const profile = () => ({
     id: profileId,
     profileType: 'INDIVIDUAL',
-    title: 'Customer',
+    title,
     firstName: 'Sara',
     lastName: 'Example',
     nationalId: '0010350829',
@@ -122,6 +123,12 @@ async function fixture(page: Page, locale: Locale) {
       });
     if (state.writeFailed) return route.fulfill({ status: 503, json: {} });
     const addressWrite = route.request().url().includes('/addresses');
+    if (!addressWrite && body.fullAddress === undefined) {
+      title = body.title ?? title;
+      profileUpdatedAt = '2026-10-01T00:01:00Z';
+      const { addresses: _, ...current } = profile();
+      return route.fulfill({ json: current });
+    }
     if (!addressWrite || route.request().method() === 'POST') {
       if (!addressWrite) for (const previous of addresses) previous.mainAddress = false;
       address = {
@@ -246,9 +253,7 @@ for (const locale of ['en', 'fa'] as const)
         page.getByRole('button', { name: t('settings.addresses.retry', locale), exact: true });
       await retry().click();
       await expect(province).toBeEnabled();
-      if (surface === 'addresses')
-        await selectAddressLocation(page, province, locale === 'fa' ? 'فارس' : 'Fars');
-      else await province.selectOption(p2);
+      await selectAddressLocation(page, province, locale === 'fa' ? 'فارس' : 'Fars');
       await expect(geographyError('settings.addresses.error.loadCities')).toBeVisible();
       await expect(city).toBeDisabled();
       await expect(city).toHaveValue('');
@@ -274,14 +279,9 @@ for (const locale of ['en', 'fa'] as const)
       state.cityInvalid = false;
       await retry().click();
       await expect(city).toBeEnabled();
-      if (surface === 'addresses')
-        await selectAddressLocation(page, city, locale === 'fa' ? 'شیراز' : 'Shiraz');
-      else await city.selectOption(c2);
+      await selectAddressLocation(page, city, locale === 'fa' ? 'شیراز' : 'Shiraz');
       await expect(full).toHaveValue('Retained address draft');
-      await expect(city).toHaveAttribute(
-        'data-slot',
-        surface === 'addresses' ? 'combobox-input' : 'dependent-select'
-      );
+      await expect(city).toHaveAttribute('data-slot', 'combobox-input');
       const editor = `[data-slot=settings-${surface === 'addresses' ? 'address' : 'profile'}-form]`;
       const scan = new AxeBuilder({ page }).include(editor);
       expect((await scan.withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual(
@@ -329,7 +329,8 @@ for (const locale of ['en', 'fa'] as const)
       );
       expect(state.keyedWrites[0]!.key).toMatch(/^[0-9a-f-]{36}$/i);
       expect(state.keyedWrites[1]).toEqual(state.keyedWrites[0]);
-      if (surface === 'profile') await expect(city).toHaveValue(c2);
+      if (surface === 'profile')
+        await expect(city).toHaveValue(locale === 'fa' ? 'شیراز' : 'Shiraz');
       else {
         await expect(page).toHaveURL(`/settings/addresses/${newAddressId}`);
         await expect(page.getByRole('main')).toContainText('Retained address draft');
@@ -357,6 +358,26 @@ for (const locale of ['en', 'fa'] as const)
       .click();
     await expect(page).toHaveURL(`/settings/addresses/${addressId}`);
     expect(state.writes).toEqual([{ fullAddress: 'Updated street, same location' }]);
+  });
+
+for (const locale of ['en', 'fa'] as const)
+  test(`profile settings display historical locations when saving other details (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, locale);
+    state.provinceFailed = state.cityInvalid = state.writeFailed = false;
+    state.savedLocationInactive = true;
+    await page.goto('/settings/profile/edit');
+
+    const locationName = locale === 'fa' ? 'تهران' : 'Tehran';
+    await expect(page.locator('#profile-province')).toHaveValue(locationName);
+    await expect(page.locator('#profile-city')).toHaveValue(locationName);
+    await page.locator('#profile-title').fill('Updated profile title');
+    const saveName = crmText('settings.profile.save', locale);
+    await page.getByRole('button', { name: saveName, exact: true }).click();
+    await page.getByRole('dialog').getByRole('button', { name: saveName, exact: true }).click();
+    await expect.poll(() => state.writes).toEqual([{ title: 'Updated profile title' }]);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
   });
 
 for (const locale of ['en', 'fa'] as const)

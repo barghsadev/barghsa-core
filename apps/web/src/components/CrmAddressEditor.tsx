@@ -2,11 +2,12 @@ import { useId, useRef, useState } from 'react';
 import { z } from 'zod';
 import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
-import { Button, Input, Label, NativeSelect, Textarea, DependentSelect } from '@barghsa/ui';
+import { Button, Input, Label, Textarea } from '@barghsa/ui';
 import { tCrmForm as t } from '@barghsa/i18n/crm-forms';
 import { useLocale } from '../hooks/useLocale.js';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from './GeographyLoadError.js';
+import { GeographyPicker } from './GeographyPicker.js';
 import { TeamActionDialog } from './TeamActionDialog.js';
 import { RecordEditorSection, recordEditorField, recordEditorGrid } from './RecordEditorLayout.js';
 import {
@@ -112,6 +113,9 @@ export function CrmAddressEditor({
     fields.provinceId ? '/api/geography/provinces/' + fields.provinceId + '/cities' : null,
     fields.provinceId || undefined
   );
+  const provinceField = draft.bind('provinceId');
+  const cityField = draft.bind('cityId');
+  const disabled = pending !== null || draft.form.formState.isSubmitting;
   const changed = (Object.keys(fields) as (keyof AddressFields)[]).some(
     (key) => fields[key].trim() !== address[key]
   );
@@ -163,35 +167,36 @@ export function CrmAddressEditor({
         onFocus={keepRecordFieldVisible}
         aria-label={t('crm.address.edit', locale)}
       >
-        <fieldset disabled={pending !== null || draft.form.formState.isSubmitting}>
+        <fieldset disabled={disabled}>
           <RecordEditorSection title={t('crm.address.locationDetails', locale)}>
             <div className={recordEditorGrid}>
               <div className={recordEditorField}>
                 <Label htmlFor={fieldId + '-province'}>
                   {t('crm.profile.field.province', locale)}
                 </Label>
-                <NativeSelect
-                  {...draft.bind('provinceId')}
+                <GeographyPicker
+                  kind="province"
+                  locale={locale}
                   id={fieldId + '-province'}
-                  aria-required="true"
-                  value={fields.provinceId}
-                  disabled={!provinces.ready}
-                  onChange={(event) => {
-                    draft.field('provinceId')[1](event.target.value);
+                  inputRef={provinceField.ref}
+                  onBlur={provinceField.onBlur}
+                  aria-invalid={provinceField['aria-invalid']}
+                  aria-describedby={provinceField['aria-describedby']}
+                  options={provinces.options}
+                  selected={fields.provinceId}
+                  savedLabel={
+                    fields.provinceId === address.provinceId
+                      ? label(address.provinceName)
+                      : undefined
+                  }
+                  loading={provinces.loading}
+                  disabled={disabled || !provinces.ready}
+                  onChange={(id) => {
+                    if (id === fields.provinceId) return;
+                    draft.field('provinceId')[1](id);
                     draft.field('cityId')[1]('');
                   }}
-                  className="w-full"
-                >
-                  <option value="">{t('crm.address.chooseProvince', locale)}</option>
-                  {!provinces.options.some((p) => p.id === address.provinceId) && (
-                    <option value={address.provinceId}>{label(address.provinceName)}</option>
-                  )}
-                  {provinces.options.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {label(p)}
-                    </option>
-                  ))}
-                </NativeSelect>
+                />
                 <GeographyLoadError
                   {...provinces}
                   message={t('crm.address.provinceError', locale)}
@@ -210,27 +215,26 @@ export function CrmAddressEditor({
               </div>
               <div className={recordEditorField}>
                 <Label htmlFor={fieldId + '-city'}>{t('crm.profile.field.city', locale)}</Label>
-                <DependentSelect
-                  {...draft.bind('cityId')}
+                <GeographyPicker
+                  key={fields.provinceId}
+                  kind="city"
+                  locale={locale}
                   id={fieldId + '-city'}
-                  aria-required="true"
-                  dependencyValue={fields.provinceId}
-                  value={fields.cityId}
-                  ready={cities.ready}
+                  inputRef={cityField.ref}
+                  onBlur={cityField.onBlur}
+                  aria-invalid={cityField['aria-invalid']}
+                  aria-describedby={cityField['aria-describedby']}
+                  options={cities.options}
+                  selected={fields.cityId}
+                  hasProvince={!!fields.provinceId}
+                  savedLabel={
+                    fields.provinceId === address.provinceId && fields.cityId === address.cityId
+                      ? label(address.cityName)
+                      : undefined
+                  }
                   loading={cities.loading}
-                  placeholder={t('crm.address.chooseCity', locale)}
-                  options={cities.options.map((city) => ({
-                    value: city.id,
-                    label: label(city),
-                    dependencyValue: city.provinceId ?? '',
-                  }))}
-                  savedOption={{
-                    value: address.cityId,
-                    label: label(address.cityName),
-                    dependencyValue: address.provinceId,
-                  }}
-                  onChange={(event) => draft.field('cityId')[1](event.target.value)}
-                  className="h-11 rounded-lg bg-transparent"
+                  disabled={disabled || !cities.ready}
+                  onChange={draft.field('cityId')[1]}
                 />
                 <GeographyLoadError
                   {...cities}

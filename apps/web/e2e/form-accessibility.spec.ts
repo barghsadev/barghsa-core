@@ -846,8 +846,9 @@ for (const locale of ['en', 'fa']) {
     await page.route('**/api/geography/company-types', (route) => route.fulfill({ json: [] }));
     await page.goto('/onboarding/legal/profile-one');
     await expect(page.locator('#representativeHonorific')).toHaveValue('Restored');
-    await expect(page.locator('#officialCityId')).toHaveValue('city-one');
-    await expect(page.locator('#representativeCityId')).toHaveValue('city-one');
+    const cityName = locale === 'fa' ? 'شهر' : 'City';
+    await expect(page.locator('#officialCityId')).toHaveValue(cityName);
+    await expect(page.locator('#representativeCityId')).toHaveValue(cityName);
     await page.locator('#representativeHonorific').fill('First edit');
     await expect.poll(() => !!delayed).toBe(true);
     await page.locator('#representativeHonorific').fill('Latest edit');
@@ -875,12 +876,14 @@ for (const locale of ['en', 'fa']) {
       .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Retry', exact: true })
       .click();
     await expect.poll(() => stored.data.representativeHonorific).toBe('Retry edit');
+    expect(stored.data.officialCityId).toBe('city-one');
+    expect(stored.data.representativeCityId).toBe('city-one');
     await expect(
       page.getByText(locale === 'fa' ? 'پیش‌نویس ذخیره شد' : 'Draft saved', { exact: true })
     ).toBeVisible();
     await page.reload();
     await expect(page.locator('#representativeHonorific')).toHaveValue('Retry edit');
-    await expect(page.locator('#officialCityId')).toHaveValue('city-one');
+    await expect(page.locator('#officialCityId')).toHaveValue(cityName);
   });
 }
 test('legal autosave stops at a version conflict until the user reloads the saved draft', async ({
@@ -1214,13 +1217,11 @@ for (const locale of ['en', 'fa']) {
     await expect(firstName).toHaveValue('Changed');
     const province = page.locator('#profile-province');
     const city = page.locator('#profile-city');
-    await expect(province.locator('option:checked')).toHaveText(
-      locale === 'fa' ? 'استان الف' : 'Province A'
-    );
-    await province.selectOption('01900000-0000-7000-8000-000000000021');
+    await expect(province).toHaveValue(locale === 'fa' ? 'استان الف' : 'Province A');
+    await selectAddressLocation(page, province, locale === 'fa' ? 'استان ب' : 'Province B');
     await expect(city).toHaveValue('');
     await expect(city).toBeEnabled();
-    await city.selectOption('01900000-0000-7000-8000-000000000031');
+    await selectAddressLocation(page, city, locale === 'fa' ? 'شهر ب' : 'City B');
     await page.locator('#profile-address').fill('New Street');
     await save.click();
     await page
@@ -1241,11 +1242,12 @@ for (const locale of ['en', 'fa']) {
       });
     await expect(page.locator('#profile-address')).toHaveValue('New Street');
     await page.reload();
-    await expect(city).toHaveValue('01900000-0000-7000-8000-000000000031');
+    await expect(city).toHaveValue(locale === 'fa' ? 'شهر ب' : 'City B');
     await expect(page.locator('#profile-address')).toHaveValue('New Street');
     detail.canEditIdentity = false;
     await page.reload();
-    await expect(firstName).toBeDisabled();
+    await expect(page.locator('[data-slot=profile-locked-identity]')).toContainText('Changed');
+    await expect(firstName).toHaveCount(0);
   });
 }
 

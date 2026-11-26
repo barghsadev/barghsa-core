@@ -4,6 +4,7 @@ import { t } from '@barghsa/i18n/crm';
 import { tCrmForm } from '@barghsa/i18n/crm-forms';
 import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
+import { selectAddressLocation } from './address-location-fixture';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const p1 = '33333333-3333-4333-8333-333333333333',
@@ -13,6 +14,7 @@ const c1 = '55555555-5555-4555-8555-555555555555',
 type Locale = 'fa' | 'en';
 const oldName = { nameFa: 'محل قبلی', nameEn: 'Original place' };
 const newName = { nameFa: 'محل جدید', nameEn: 'New place' };
+const isLocationField = (field: string) => /(?:Province|City)Id$/.test(field);
 const changes = {
   registrationNumber: 'REG-NEW',
   companyTypeId: 'new-company',
@@ -291,12 +293,20 @@ for (const locale of ['fa', 'en'] as const) {
         await expect(edit).toBeVisible();
         await edit.click();
         await expect(registry).toHaveValue('REG-OLD');
+        const placeName = locale === 'fa' ? newName.nameFa : newName.nameEn;
         for (const [field, value] of Object.entries(changes)) {
           const control = form.getByLabel(label(field, locale), { exact: true });
-          if (field.endsWith('Id') && field !== 'representativeNationalId') {
-            await expect(control).toBeEnabled();
-            await control.selectOption(value);
-          } else await control.fill(value);
+          if (isLocationField(field)) await selectAddressLocation(page, control, placeName);
+          else if (field === 'companyTypeId') await control.selectOption(value);
+          else await control.fill(value);
+          if (field === 'officialProvinceId') {
+            await expect(
+              form.getByLabel(label('officialCityId', locale), { exact: true })
+            ).toHaveValue('');
+            await expect(
+              form.getByLabel(label('representativeCityId', locale), { exact: true })
+            ).toHaveValue(locale === 'fa' ? oldName.nameFa : oldName.nameEn);
+          }
         }
         await expect(page.getByRole('tablist')).toHaveCount(0);
         await expect(registry).toHaveValue('REG-NEW');
@@ -371,7 +381,9 @@ for (const locale of ['fa', 'en'] as const) {
         await expect(panel).toContainText('REG-NEW');
         await edit.click();
         for (const [field, value] of Object.entries(changes))
-          await expect(form.getByLabel(label(field, locale), { exact: true })).toHaveValue(value);
+          await expect(form.getByLabel(label(field, locale), { exact: true })).toHaveValue(
+            isLocationField(field) ? placeName : value
+          );
       }
     );
   }

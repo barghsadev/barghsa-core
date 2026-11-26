@@ -2,12 +2,13 @@ import { useId, useRef, useState, type RefObject } from 'react';
 import { z } from 'zod';
 import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
-import { Button, Input, Label, NativeSelect, Textarea, DependentSelect } from '@barghsa/ui';
+import { Button, Input, Label, NativeSelect, Textarea } from '@barghsa/ui';
 import { tCrmForm as t } from '@barghsa/i18n/crm-forms';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 import { useLocale } from '../hooks/useLocale.js';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from './GeographyLoadError.js';
+import { GeographyPicker } from './GeographyPicker.js';
 import { TeamActionDialog } from './TeamActionDialog.js';
 import type { LegalInfo } from '../pages/CrmProfileDetail.js';
 import { RecordEditorSection, recordEditorField, recordEditorGrid } from './RecordEditorLayout.js';
@@ -124,6 +125,7 @@ export function CrmLegalEditor({
     t('crm.profile.error.generic', locale)
   );
   const [pending, setPending] = useState<Changes | null>(null);
+  const disabled = pending !== null || draft.form.formState.isSubmitting;
   const provinces = useGeographyOptions('/api/geography/provinces');
   const companies = useGeographyOptions('/api/geography/company-types');
   const officialCities = useGeographyOptions(
@@ -160,6 +162,7 @@ export function CrmLegalEditor({
       : t('crm.records.unknown', locale);
   }
   function change(field: Field, value: string) {
+    if (values[field] === value) return;
     draft.field(field)[1](value);
     if (field === 'officialProvinceId') draft.field('officialCityId')[1]('');
     if (field === 'representativeProvinceId') draft.field('representativeCityId')[1]('');
@@ -243,15 +246,10 @@ export function CrmLegalEditor({
       fieldId = id + '-' + field,
       invalid = !!errors[field];
     const list = options[field as keyof typeof options];
-    const name = legalInfo[(labelKey(field) + 'Name') as keyof LegalInfo];
-    const currentName =
-      name && typeof name === 'object'
-        ? locale === 'fa'
-          ? name.nameFa
-          : name.nameEn
-        : t('crm.records.unknown', locale);
+    const binding = draft.bind(field);
+    const currentName = display(field, legalInfo[field]);
     const inputProps = {
-      ...draft.bind(field),
+      ...binding,
       id: fieldId,
       value: values[field],
       onChange: (
@@ -272,26 +270,7 @@ export function CrmLegalEditor({
         <Label htmlFor={fieldId}>{label(field)}</Label>
         {list ? (
           <>
-            {dependencyField ? (
-              <DependentSelect
-                {...inputProps}
-                dependencyValue={values[dependencyField]}
-                ready={list.ready}
-                loading={list.loading}
-                options={list.options.map((city) => ({
-                  value: city.id,
-                  label: locale === 'fa' ? city.nameFa : city.nameEn,
-                  dependencyValue: city.provinceId ?? '',
-                }))}
-                className="h-11 rounded-lg bg-transparent"
-                placeholder={label(field)}
-                savedOption={{
-                  value: legalInfo[field] ?? '',
-                  label: currentName,
-                  dependencyValue: legalInfo[dependencyField] ?? '',
-                }}
-              />
-            ) : (
+            {field === 'companyTypeId' ? (
               <NativeSelect {...inputProps} disabled={!list.ready} className="w-full">
                 <option value="">{label(field)}</option>
                 {values[field] === legalInfo[field] &&
@@ -305,6 +284,30 @@ export function CrmLegalEditor({
                   </option>
                 ))}
               </NativeSelect>
+            ) : (
+              <GeographyPicker
+                key={dependencyField ? values[dependencyField] : field}
+                kind={dependencyField ? 'city' : 'province'}
+                locale={locale}
+                id={fieldId}
+                inputRef={binding.ref}
+                onBlur={binding.onBlur}
+                aria-invalid={binding['aria-invalid']}
+                aria-describedby={binding['aria-describedby']}
+                options={list.options}
+                selected={values[field]}
+                hasProvince={!dependencyField || !!values[dependencyField]}
+                savedLabel={
+                  values[field] &&
+                  values[field] === legalInfo[field] &&
+                  (!dependencyField || values[dependencyField] === legalInfo[dependencyField])
+                    ? currentName
+                    : undefined
+                }
+                loading={list.loading}
+                disabled={disabled || !list.ready}
+                onChange={(value) => change(field, value)}
+              />
             )}
             <GeographyLoadError
               {...list}
@@ -372,7 +375,7 @@ export function CrmLegalEditor({
             </a>
           ))}
         </nav>
-        <fieldset disabled={pending !== null || draft.form.formState.isSubmitting}>
+        <fieldset disabled={disabled}>
           {sections.map(([heading, sectionFields], index) => (
             <RecordEditorSection
               key={heading}

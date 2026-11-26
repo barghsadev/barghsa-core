@@ -2,6 +2,7 @@ import { t } from '@barghsa/i18n/crm';
 import type { Page, Route } from '@playwright/test';
 import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
+import { selectAddressLocation } from './address-location-fixture';
 const profileId = '11111111-1111-4111-8111-111111111111';
 const addressId = '22222222-2222-4222-8222-222222222222';
 const p1 = '33333333-3333-4333-8333-333333333333',
@@ -190,11 +191,15 @@ for (const locale of ['fa', 'en'] as const) {
     const city = panel.getByLabel(locale === 'fa' ? 'شهر' : 'City', { exact: true });
     // A new editor loads its own current geography options.
     await expect(province).toBeEnabled();
-    await province.selectOption(p2);
+    await expect(province).toHaveValue(locale === 'fa' ? 'محل قبلی' : 'Original place');
+    const nextLocation = locale === 'fa' ? 'محل جدید' : 'New place';
+    await selectAddressLocation(page, province, nextLocation);
     await expect(city).toHaveValue('');
     await expect(page.getByTestId('crm-address-city-retry')).toBeVisible();
     await page.getByTestId('crm-address-city-retry').click();
-    await city.selectOption(c2);
+    await city.fill(locale === 'fa' ? 'New place' : 'محل جدید');
+    await page.getByRole('option', { name: nextLocation, exact: true }).click();
+    await expect(city).toHaveValue(nextLocation);
     const postal = panel.getByLabel(locale === 'fa' ? 'کد پستی' : 'Postal code', { exact: true });
     for (const control of [province, city, full, postal])
       await expect(control).toHaveAttribute('aria-required', 'true');

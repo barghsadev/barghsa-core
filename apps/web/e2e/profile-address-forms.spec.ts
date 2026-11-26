@@ -11,7 +11,6 @@ import {
   setupSettingsForms,
   profileId,
   otherProfileId,
-  cityId,
   privateText,
   type Command,
 } from './profile-address-forms-fixture';
@@ -287,7 +286,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       owner.getByRole('button', { name: crmText('settings.profile.save', locale), exact: true })
     ).toBeInViewport({ ratio: 0.999 });
-    await expect(page.locator('#profile-city')).toHaveValue(cityId);
+    await expect(page.locator('#profile-city')).toHaveValue(locale === 'fa' ? 'تهران' : 'Tehran');
     await expect(page.locator('#profile-city')).toBeEnabled();
     await title.fill('  Captured profile  ');
     await legal.fill(' ');

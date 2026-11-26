@@ -35,6 +35,7 @@ export function GeographyPicker({
   selected,
   savedLabel,
   hasProvince = true,
+  required = true,
   disabled,
   loading,
   inputRef,
@@ -48,6 +49,7 @@ export function GeographyPicker({
   selected: string;
   savedLabel?: string | undefined;
   hasProvince?: boolean;
+  required?: boolean;
   disabled: boolean;
   loading?: boolean;
   inputRef: Ref<HTMLInputElement>;
@@ -98,7 +100,7 @@ export function GeographyPicker({
         {...inputProps}
         ref={inputRef}
         onBlur={onBlur}
-        aria-required="true"
+        aria-required={required || undefined}
         aria-busy={loading || undefined}
         placeholder={placeholder}
         className="h-11 ps-9 aria-invalid:border-destructive"
