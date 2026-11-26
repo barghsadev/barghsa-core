@@ -423,9 +423,9 @@
 |----|------|------------|
 | **T-03.06.04.01** | 📋 Step 1: Date range selection with Jalali date pickers, duration display | M |
 | **T-03.06.04.02** | 📋 Step 2: Bundle builder — 4 product quantity inputs with line totals, automatic green derivation when rule enabled | L |
-| **T-03.06.04.03** | 📋 Step 3: Price preview with full breakdown: per-product, bundle totals, average power, green status | M |
-| **T-03.06.04.04** | 📋 Step 4: Optional gift code | S |
-| **T-03.06.04.05** | 📋 Step 5: Review & submit — full snapshot, wallet balance, explicit confirm | L |
+| **T-03.06.04.03** | 📋 Step 3: Delivery details with a price preview covering per-product prices, bundle totals, average power and green status | M |
+| **T-03.06.04.04** | 📋 Step 3: Optional gift code with an updated price preview | S |
+| **T-03.06.04.05** | 📋 Step 4: Review and submit with the full snapshot, wallet balance and explicit confirmation | L |
 | **T-03.06.04.06** | ⚠️ Lead time must be enforced: start date cannot violate lead days setting. | S |
 
 ---

@@ -521,11 +521,19 @@ for (const [locale, funding] of [
     await expect(page.locator('#advanced-green')).toHaveValue('1');
     await expect(next).toBeEnabled();
     await next.click();
+    await expect(page).toHaveURL(/\/electricity\/orders\/new\/advanced\?step=4$/);
     const deliveryStart = wizard.locator('time').first();
     await expect(deliveryStart).toHaveAttribute('datetime', String(previews.at(-1)?.startAt));
     await expect(deliveryStart).toContainText(locale === 'fa' ? 'مهر' : 'Mehr');
     await expect(wizard).toContainText(locale === 'fa' ? 'موجودی کیف پول' : 'Wallet balance');
-    await next.click();
+    const deliveryBreakdown = wizard.getByText(t('electricity.order.detail.lines', locale), {
+      exact: true,
+    });
+    const deliveryLine = wizard.getByText(locale === 'fa' ? /جمع قلم/ : /Line total/).first();
+    await expect(deliveryLine).toBeHidden();
+    await deliveryBreakdown.press('Enter');
+    await expect(deliveryLine).toBeVisible();
+    await deliveryBreakdown.press('Enter');
     await page
       .getByRole('textbox', {
         name: locale === 'fa' ? 'کد هدیه (اختیاری)' : 'Gift code (optional)',
@@ -587,8 +595,7 @@ for (const [locale, funding] of [
       })
     ).toBeVisible();
     await expect(page.locator(`a[href="/invoices/${invoiceId}"]`)).toBeVisible();
-    expect(drafts).toHaveLength(5);
-    expect(drafts.at(-1)?.currentStep).toBe(5);
+    expect(drafts.map((draft) => draft.currentStep)).toEqual([2, 4, 4, 5]);
     expect(submissions).toHaveLength(1);
     expect(submissions[0]).toMatchObject({
       profileId,

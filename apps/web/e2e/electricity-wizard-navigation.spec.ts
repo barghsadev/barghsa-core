@@ -659,7 +659,7 @@ test('advanced electricity refreshes the gift quote without an extra apply step'
   isMobile,
 }) => {
   const locale = 'en';
-  const state = await fixture(page, 'advanced', locale, 4);
+  const state = await fixture(page, 'advanced', locale, 3);
   let release: (() => void) | undefined;
   await page.route('**/api/electricity/preview/advanced', async (route) => {
     if (route.request().postDataJSON().giftCode !== 'UNAVAILABLE') return route.fallback();
@@ -669,7 +669,8 @@ test('advanced electricity refreshes the gift quote without an extra apply step'
     return route.fulfill({ status: 400, json: {} });
   });
   try {
-    await page.goto('/electricity/orders/new/advanced?step=4');
+    await page.goto('/electricity/orders/new/advanced?step=3');
+    await expect(page).toHaveURL(/\/electricity\/orders\/new\/advanced\?step=4$/);
     const continueOrder = next(page, 'advanced', locale);
     const gift = page.getByRole('textbox', { name: t('electricity.order.giftCode', locale) });
     const mobileTotal = page
@@ -966,7 +967,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(quantity).toHaveValue('120');
       await expect(quantity).not.toHaveAttribute('aria-invalid', 'true');
       await next(page, mode, locale).click();
-      await expect(page).toHaveURL(mode === 'simple' ? /step=2$/ : /step=3$/);
+      await expect(page).toHaveURL(mode === 'simple' ? /step=2$/ : /step=4$/);
       expect(state.saves.at(-1)?.data[mode === 'simple' ? 'totalKwh' : 'quantities']).toEqual(
         mode === 'simple' ? '120' : expect.objectContaining({ thermal: '120' })
       );
@@ -978,14 +979,15 @@ for (const locale of ['en', 'fa'] as const)
       page,
     }) => {
       const state = await fixture(page, mode, locale);
-      await page.goto(`${path(mode)}?step=2`);
+      await page.goto(`${path(mode)}?step=${mode === 'advanced' ? 3 : 2}`);
       await expect(field(page, mode)).toHaveValue('100');
+      await expect(page).toHaveURL(mode === 'simple' ? /step=1$/ : /step=2$/);
       await field(page, mode).fill('120');
       await next(page, mode, locale).click();
       const reviewUrl =
         mode === 'simple'
           ? /\/electricity\/orders\/new\?step=2$/
-          : /\/electricity\/orders\/new\/advanced\?step=3$/;
+          : /\/electricity\/orders\/new\/advanced\?step=4$/;
       await expect(page).toHaveURL(reviewUrl);
       await page.goBack();
       await expect(field(page, mode)).toHaveValue('120');
@@ -998,7 +1000,7 @@ for (const locale of ['en', 'fa'] as const)
         );
       else
         await expect(page.locator('li[aria-current="step"]')).toContainText(
-          t('electricity.advanced.stepPrice', locale)
+          t('electricity.order.step4', locale)
         );
       await page.goto(`${path(mode)}?step=5`);
       await expect(page).toHaveURL(reviewUrl);
@@ -1112,13 +1114,12 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto(`${path(mode)}?step=5`);
       const submit = button(page, 'electricity.order.submit', locale);
       // Acknowledgment belongs to the loaded quote and resets when its scope changes.
-      if (mode === 'simple') {
-        await expect(
-          page
-            .locator('[data-review-section="price"]')
-            .getByText(t('electricity.order.total', locale), { exact: true })
-        ).toBeVisible();
-      } else {
+      await expect(
+        page
+          .locator('[data-review-section="price"]')
+          .getByText(t('electricity.order.total', locale), { exact: true })
+      ).toBeVisible();
+      if (mode === 'advanced') {
         const review = page.getByRole('region', {
           name: t('electricity.order.review', locale),
           exact: true,
@@ -1310,7 +1311,7 @@ for (const locale of ['en', 'fa'] as const)
         await field(page, mode).fill('120');
         if (mode === 'advanced') {
           await next(page, mode, locale).click();
-          await next(page, mode, locale).click();
+          await expect(page).toHaveURL(/step=4$/);
         }
         await expect(
           page.locator(

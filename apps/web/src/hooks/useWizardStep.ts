@@ -2,6 +2,8 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { wizardStepSearch } from '../lib/wizard-step.js';
 
+const keepStep = (step: number) => step;
+
 /** Financial wizards can revisit completed stages, but cannot skip unsaved stages. */
 export function useWizardStep(
   to:
@@ -9,7 +11,8 @@ export function useWizardStep(
     | '/electricity/orders/new/advanced'
     | '/savings/orders/new'
     | '/solar/requests/new',
-  maxStep = 5
+  maxStep = 5,
+  normalizeStep = keepStep
 ) {
   const navigate = useNavigate();
   const rawStep = useSearch({ strict: false, select: (search) => search.step });
@@ -21,16 +24,20 @@ export function useWizardStep(
       ? 1
       : rawStep === undefined
         ? restored
-        : Math.min(wizardStepSearch({ step: rawStep }, maxStep).step ?? 1, ceiling);
+        : Math.min(normalizeStep(wizardStepSearch({ step: rawStep }, maxStep).step ?? 1), ceiling);
   const currentStep = useRef(step);
   useLayoutEffect(() => {
     currentStep.current = step;
   }, [step]);
-  const restore = useCallback((savedStep: number) => {
-    loaded.current = true;
-    setCeiling(savedStep);
-    setRestored(savedStep);
-  }, []);
+  const restore = useCallback(
+    (savedStep: number) => {
+      const target = normalizeStep(savedStep);
+      loaded.current = true;
+      setCeiling(target);
+      setRestored(target);
+    },
+    [normalizeStep]
+  );
   const reset = useCallback(() => {
     loaded.current = false;
     setRestored(null);

@@ -230,9 +230,9 @@ All four services have a safe browse → intake → review → payment where app
 | `03-core-business.md#T-03.06.03.03` | done | Recorded batch work | Backend performs authoritative calculation of bundle totals: never trust frontend-computed amounts. |
 | `03-core-business.md#T-03.06.04.01` | done | Recorded batch work | Step 1: Date range selection with Jalali date pickers, duration display |
 | `03-core-business.md#T-03.06.04.02` | done | Recorded batch work | Step 2: Bundle builder — 4 product quantity inputs with line totals, automatic green derivation when rule enabled |
-| `03-core-business.md#T-03.06.04.03` | done | Recorded batch work | Step 3: Price preview with full breakdown: per-product, bundle totals, average power, green status |
-| `03-core-business.md#T-03.06.04.04` | done | Recorded batch work | Step 4: Optional gift code |
-| `03-core-business.md#T-03.06.04.05` | done | Recorded batch work | Step 5: Review & submit — full snapshot, wallet balance, explicit confirm |
+| `03-core-business.md#T-03.06.04.03` | done | Recorded batch work | Step 3: Delivery details with a price preview covering per-product prices, bundle totals, average power and green status |
+| `03-core-business.md#T-03.06.04.04` | done | Recorded batch work | Step 3: Optional gift code with an updated price preview |
+| `03-core-business.md#T-03.06.04.05` | done | Recorded batch work | Step 4: Review and submit with the full snapshot, wallet balance and explicit confirmation |
 | `03-core-business.md#T-03.06.04.06` | done | Recorded batch work | Lead time must be enforced: start date cannot violate lead days setting. |
 | `03-core-business.md#T-03.07.01.01` | done | Recorded batch work | Commercial state machine for electricity orders: |
 | `03-core-business.md#T-03.07.01.02` | done | Recorded batch work | Financial state machine for electricity orders: |

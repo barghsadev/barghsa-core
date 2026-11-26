@@ -55,7 +55,6 @@ export function AdvancedElectricityReview({
           {
             id: 'price',
             title: t('electricity.advanced.stepPrice', locale),
-            step: 3,
             content: quote ? (
               <ElectricityFinancialReviewSummary quote={quote} locale={locale} expandable />
             ) : (

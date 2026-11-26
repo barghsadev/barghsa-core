@@ -51,6 +51,8 @@ import {
 
 type Key = 'thermal' | 'green' | 'free_market' | 'energy_saving';
 const keys: Key[] = ['thermal', 'green', 'free_market', 'energy_saving'];
+// Existing links and server drafts may still refer to the former price-only stage.
+const advancePastPrice = (step: number) => (step === 3 ? 4 : step);
 export type AdvancedElectricityQuote = {
   reviewDigest: string;
   contractTemplate?: ElectricityContractTermsSnapshot | null;
@@ -249,7 +251,7 @@ export function AdvancedElectricityOrderPage() {
   const { reset: resetDraft, retire: retireDraft, readRevision } = drafts;
   const saving = drafts.working;
   const [submitting, setSubmitting] = useState(false);
-  const wizard = useWizardStep('/electricity/orders/new/advanced');
+  const wizard = useWizardStep('/electricity/orders/new/advanced', 5, advancePastPrice);
   const { step } = wizard;
   const command = useRef<symbol | null>(null);
   const orderSubmission = useReviewedSubmission(
@@ -535,7 +537,11 @@ export function AdvancedElectricityOrderPage() {
     quoteVersion,
   ]);
 
-  async function saveDraft(next: boolean, target = next ? step + 1 : step, leave = false) {
+  async function saveDraft(
+    next: boolean,
+    target = next ? advancePastPrice(step + 1) : step,
+    leave = false
+  ) {
     if (next && step === 4 && !selectedAddress) return false;
     if (
       command.current ||
@@ -712,7 +718,6 @@ export function AdvancedElectricityOrderPage() {
   const steps = [
     t('electricity.advanced.stepDates', locale),
     t('electricity.advanced.stepProducts', locale),
-    t('electricity.advanced.stepPrice', locale),
     t('electricity.order.step4', locale),
     t('electricity.advanced.stepConfirm', locale),
   ];
@@ -786,7 +791,7 @@ export function AdvancedElectricityOrderPage() {
         disabled={
           held || loading || loadError || blocked || completed.current || saving || submitting
         }
-        onInvalidStep={(target) => wizard.go(target, step)}
+        onInvalidStep={(target) => wizard.go(target < 3 ? target : target + 1, step)}
         fields={[
           [
             { name: 'start', label: t('electricity.advanced.start', locale) },
@@ -798,7 +803,6 @@ export function AdvancedElectricityOrderPage() {
               products.find((product) => product.systemKey === key)?.title?.[locale] ??
               t('electricity.order.quantity', locale),
           })),
-          [],
           [
             { name: 'addressId', label: t('electricity.order.selectAddress', locale) },
             { name: 'giftCode', label: t('electricity.order.giftCode', locale) },
@@ -806,7 +810,7 @@ export function AdvancedElectricityOrderPage() {
           [],
         ]}
         steps={steps}
-        step={step}
+        step={step < 3 ? step : step - 1}
         compactProgress
         actionsClassName={
           step === 2 || step === 4
@@ -862,7 +866,7 @@ export function AdvancedElectricityOrderPage() {
           !!quoteError ||
           submitting
         }
-        onBack={() => void saveDraft(false, step - 1)}
+        onBack={() => void saveDraft(false, step === 4 ? 2 : step - 1)}
         onSave={() => void saveDraft(false)}
         onNext={() => saveDraft(true)}
         onSubmit={submit}
@@ -1165,7 +1169,7 @@ export function AdvancedElectricityOrderPage() {
                 </CardContent>
               </Card>
             )}
-            {(step === 3 || step === 4 || step === 5) && (
+            {(step === 4 || step === 5) && (
               <Card size="sm" className="mb-3">
                 <CardContent className="space-y-3">
                   {step === 4 && (
@@ -1194,11 +1198,7 @@ export function AdvancedElectricityOrderPage() {
                     />
                   ) : quote ? (
                     <>
-                      <ElectricityFinancialReviewSummary
-                        quote={quote}
-                        locale={locale}
-                        expandable={step === 4}
-                      />
+                      <ElectricityFinancialReviewSummary quote={quote} locale={locale} expandable />
                       <dl className="grid gap-x-4 gap-y-2 text-sm min-[375px]:grid-cols-2">
                         {periodRows.map(({ label, value }) => (
                           <div key={label}>
