@@ -1,3 +1,4 @@
+import { settingsDateEntryText } from '@barghsa/i18n/settings-forms';
 import type { Page, Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/crm';
@@ -328,13 +329,16 @@ for (const locale of ['fa', 'en'] as const) {
             else await dayButton.click();
             await expect(control).toHaveText(registrationDateLabel(locale));
             await form
-              .getByRole('button', { name: tCrmForm('crm.legal.dateManual', locale), exact: true })
+              .getByRole('button', {
+                name: `${label(field, locale)} · ${settingsDateEntryText[locale].manual}`,
+                exact: true,
+              })
               .click();
             await expect(control).toBeFocused();
             await expect(control).toHaveValue(value);
             await form
               .getByRole('button', {
-                name: tCrmForm('crm.legal.dateCalendar', locale),
+                name: `${label(field, locale)} · ${settingsDateEntryText[locale].calendar}`,
                 exact: true,
               })
               .click();
@@ -433,7 +437,7 @@ for (const locale of ['fa', 'en'] as const) {
         if (locale === 'fa' && !dark) {
           const date = form.getByLabel(label('registrationDate', locale), { exact: true });
           const clearDate = form.getByRole('button', {
-            name: tCrmForm('crm.legal.clearDate', locale),
+            name: `${label('registrationDate', locale)} · ${settingsDateEntryText[locale].clear}`,
             exact: true,
           });
           await clearDate.click();

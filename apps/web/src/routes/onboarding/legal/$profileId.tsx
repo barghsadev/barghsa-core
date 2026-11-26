@@ -1,4 +1,5 @@
 import { GeographyPicker } from '../../../components/GeographyPicker.js';
+import { CompanyRegistrationDateField } from '../../../components/CompanyRegistrationDateField.js';
 import { Skeleton } from '@barghsa/ui';
 import { useOnboardingForm } from '../../../hooks/useOnboardingForm.js';
 import {
@@ -16,6 +17,7 @@ import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { uploadLegalProfileDocument } from '../../../lib/invoice-bank-receipt-upload.js';
 import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
 import { t } from '@barghsa/i18n/app';
+import { settingsDateEntryText } from '@barghsa/i18n/settings-forms';
 import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
 import { useState, useCallback, useRef, useMemo } from 'react';
 import { createFileRoute, useRouter, useParams } from '@tanstack/react-router';
@@ -26,15 +28,7 @@ import {
   validateNationalId,
 } from '@barghsa/shared/validation';
 import { FileText, Trash2, UploadIcon } from 'lucide-react';
-import {
-  Button,
-  Input,
-  Label,
-  NativeSelect,
-  Textarea,
-  DatePicker,
-  datePickerCalendarDate,
-} from '@barghsa/ui';
+import { Button, Input, Label, NativeSelect, Textarea, datePickerCalendarDate } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/legal/$profileId')({
   // Presentation-only input is bounded when the wizard component loads.
@@ -361,7 +355,9 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             return isRtl ? 'نوع شرکت الزامی است' : 'Company type is required';
           return undefined;
         case 'registrationDate':
-          return undefined; // optional
+          return value && !datePickerCalendarDate(value, 'Asia/Tehran')
+            ? settingsDateEntryText[locale].invalid
+            : undefined;
         case 'economicCode':
           return undefined; // optional
         case 'officialPhone':
@@ -531,27 +527,20 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
             </p>
           </>
         ) : field === 'registrationDate' ? (
-          <DatePicker
+          <CompanyRegistrationDateField
             id={field}
+            name={field}
             label={label}
-            triggerProps={{
-              ref: form.register(field).ref,
-              'aria-invalid': isTouched && !!error,
-              'aria-describedby': isTouched && error ? `${field}-error` : undefined,
-            }}
-            onBlur={() => handleBlur(field)}
             locale={locale}
             timezone="Asia/Tehran"
             numerals={numbers.number(1) === '1' ? 'latn' : 'arabext'}
-            value={datePickerCalendarDate(value, 'Asia/Tehran')}
+            value={value}
             disabled={locked}
-            onChange={(date) =>
-              onChange(
-                date
-                  ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-                  : ''
-              )
-            }
+            inputRef={form.register(field).ref}
+            aria-invalid={isTouched && !!error}
+            aria-describedby={isTouched && error ? `${field}-error` : undefined}
+            onBlur={() => handleBlur(field)}
+            onChange={onChange}
           />
         ) : (
           <Input
@@ -943,13 +932,9 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
 
                         {renderField(
                           'registrationDate',
-                          isRtl ? 'تاریخ ثبت' : 'Registration Date',
+                          t('onboarding.legal.registrationDate', locale),
                           registrationDate,
-                          setRegistrationDate,
-                          {
-                            type: 'date',
-                            placeholder: isRtl ? 'تاریخ ثبت شرکت' : 'Registration date',
-                          }
+                          setRegistrationDate
                         )}
                       </div>
 

@@ -958,16 +958,49 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await companyType.selectOption(legal.companyTypeId);
     const date = page.locator('#registrationDate');
+    const dateLabel = t('onboarding.legal.registrationDate', locale);
     await expect(date).not.toHaveAttribute('aria-required', 'true');
-    await date.click();
+    await date.press('ArrowDown');
     const dialog = page.getByRole('dialog');
     await expect(dialog.getByRole('grid')).toHaveAttribute(
       'aria-label',
       locale === 'fa' ? /فروردین/ : /March/
     );
     await dialog
-      .getByRole('button', { name: locale === 'fa' ? / ۲-ام فروردین ۱۴۰۵/ : /March 22nd/ })
+      .locator('select.rdp-years_dropdown')
+      .selectOption(locale === 'fa' ? '1385' : '2006');
+    await dialog.locator('select.rdp-months_dropdown').selectOption('0');
+    const day = dialog
+      .locator('[role=gridcell]:not([data-outside]) button')
+      .filter({ hasText: locale === 'fa' ? /^۲$/ : /^2$/ });
+    if (test.info().project.use.hasTouch) await day.tap();
+    else await day.click();
+    await expect(dialog).toHaveCount(0);
+    await page
+      .getByRole('button', {
+        name: `${dateLabel} · ${settingsDateEntryText[locale].manual}`,
+        exact: true,
+      })
       .click();
+    await expect(date).toBeFocused();
+    await expect(date).toHaveValue(locale === 'fa' ? '2006-03-22' : '2006-01-02');
+    await page
+      .getByRole('button', {
+        name: `${dateLabel} · ${settingsDateEntryText[locale].clear}`,
+        exact: true,
+      })
+      .click();
+    await expect(date).toBeFocused();
+    await expect(date).toHaveValue('');
+    await date.fill('2026-03-22');
+    await page
+      .getByRole('button', {
+        name: `${dateLabel} · ${settingsDateEntryText[locale].calendar}`,
+        exact: true,
+      })
+      .click();
+    await expect(date).toBeFocused();
+    await expect(date).toHaveText(locale === 'fa' ? '۲ فروردین ۱۴۰۵' : 'Mar 22, 2026');
     await next(page, locale);
     const postal = page.locator('#officialPostalCode');
     await expect(postal).toHaveAccessibleName(locale === 'fa' ? 'کد پستی' : 'Postal Code');
@@ -2224,3 +2257,4 @@ for (const locale of ['fa', 'en'] as const) {
     expect(state.starts).toHaveLength(0);
   });
 }
+import { settingsDateEntryText } from '@barghsa/i18n/settings-forms';

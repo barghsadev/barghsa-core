@@ -70,3 +70,18 @@ export const fa: Record<string, string> = {
 export function tSettingsForms(key: string, locale: Locale = 'fa'): string {
   return (locale === 'fa' ? fa : en)[key] ?? key;
 }
+
+export const settingsDateEntryText = {
+  en: {
+    manual: 'Enter manually',
+    calendar: 'Use calendar',
+    clear: 'Clear',
+    invalid: 'Enter a valid date.',
+  },
+  fa: {
+    manual: 'ورود میلادی',
+    calendar: 'تقویم شمسی',
+    clear: 'پاک کردن',
+    invalid: 'تاریخ معتبر وارد کنید.',
+  },
+};
