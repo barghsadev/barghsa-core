@@ -184,9 +184,7 @@ test('the available verification action has readable text in both themes', async
     ).toBeVisible();
     await expect(verify).toBeEnabled();
     await verify.click();
-    await expect(
-      page.getByText(/پروفایل شما با موفقیت تأیید شد|Your profile has been verified successfully/)
-    ).toBeVisible();
+    await expect(page.getByText(/پروفایل تأیید شد|Profile verified/)).toBeVisible();
     expect(calls).toBe(2);
   } finally {
     releaseFirst();

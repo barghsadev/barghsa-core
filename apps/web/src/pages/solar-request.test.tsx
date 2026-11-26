@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { SolarRequestPage } from './SolarRequestPage.js';
 import { tSolar } from '@barghsa/i18n/solar';
+import { solarIntakeText } from '@barghsa/i18n/solar-intake';
 
 const router = vi.hoisted(() => ({
   step: undefined as unknown,
@@ -148,6 +149,32 @@ it.each([
       expect(completionDescriptions).toHaveLength(2);
       expect(completionDescriptions).toContain('solar-completion-hint');
       expect(completionDescriptions.every((id) => document.getElementById(id))).toBe(true);
+      const manualEntry = Array.from(container.querySelectorAll('button')).find(
+        (button) => button.textContent === solarIntakeText('completionDateManual', locale)
+      )!;
+      vi.setSystemTime(new Date('2026-11-26T12:00:00Z'));
+      try {
+        await act(async () => manualEntry.click());
+        const date = container.querySelector<HTMLInputElement>('#solar-completion')!;
+        for (const [day, age] of [
+          ['2025-12-01', solarIntakeText('buildingAgeUnderOne', locale)],
+          [
+            '2025-11-26',
+            tSolar('buildingAge', locale).replace('{years}', locale === 'fa' ? '۱' : '1'),
+          ],
+        ]) {
+          await act(async () => {
+            Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(
+              date,
+              day
+            );
+            date.dispatchEvent(new Event('input', { bubbles: true }));
+          });
+          expect(container.querySelector('#solar-completion-hint')?.textContent).toContain(age);
+        }
+      } finally {
+        vi.useRealTimers();
+      }
       await act(async () =>
         (container.querySelector('input[value="non_household"]') as HTMLInputElement).click()
       );

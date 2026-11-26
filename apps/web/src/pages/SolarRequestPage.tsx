@@ -619,8 +619,11 @@ export function SolarRequestPage() {
     await sendRequest({ ...reviewInput, expectedReviewHash: review.hash });
   }
 
+  const today = new Date().toISOString().slice(0, 10);
   const age = completionDateValid(buildingCompletionDate)
-    ? Math.max(0, new Date().getFullYear() - Number(buildingCompletionDate.slice(0, 4)))
+    ? Number(today.slice(0, 4)) -
+      Number(buildingCompletionDate.slice(0, 4)) -
+      Number(today.slice(5) < buildingCompletionDate.slice(5))
     : null;
   const localizedCompletion =
     age !== null
@@ -901,6 +904,7 @@ export function SolarRequestPage() {
                                 locale={locale}
                                 timezone="UTC"
                                 showYearSelect
+                                compactLabel
                                 maxDate={new Date()}
                                 value={datePickerCalendarDate(buildingCompletionDate, 'UTC')}
                                 onChange={(date) =>
@@ -935,10 +939,12 @@ export function SolarRequestPage() {
                               )}
                               {age !== null && (
                                 <span>
-                                  {copy('buildingAge').replace(
-                                    '{years}',
-                                    locale === 'fa' ? persianAge.format(age) : String(age)
-                                  )}
+                                  {age === 0
+                                    ? solarIntakeText('buildingAgeUnderOne', locale)
+                                    : copy('buildingAge').replace(
+                                        '{years}',
+                                        locale === 'fa' ? persianAge.format(age) : String(age)
+                                      )}
                                 </span>
                               )}
                             </p>
