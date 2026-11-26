@@ -91,6 +91,10 @@ export function TicketIntakeForm({
       key: string;
       profiles: TicketOptions['profiles'];
     } | null>(null),
+    [recordResult, setRecordResult] = useState<{
+      key: string;
+      records: TicketOptions['records'];
+    } | null>(null),
     [recordPage, setRecordPage] = useState(1),
     [version, setVersion] = useState(0),
     [preview, setPreview] = useState<File | null>(null),
@@ -144,11 +148,24 @@ export function TicketIntakeForm({
           version,
         ])
       : null;
+  const currentOptionsKey = useRef(optionsKey);
+  currentOptionsKey.current = optionsKey;
   const profileKey = JSON.stringify([scope, actor, profileRevision]);
+  const recordKey = JSON.stringify([
+    profileKey,
+    profileId,
+    related?.relatedType,
+    related?.relatedId,
+  ]);
   const result = optionsResult?.key === optionsKey ? optionsResult : null;
   const options = result?.options ?? null;
-  const selectedRecord = options?.records.find((r) => r.type + ':' + r.id === selectedRecordKey);
   const error = result?.error;
+  const priorRecords =
+    recordPage > 1 && error !== 'forbidden' && recordResult?.key === recordKey
+      ? recordResult.records
+      : [];
+  const records = options?.records ?? priorRecords;
+  const selectedRecord = records.find((r) => r.type + ':' + r.id === selectedRecordKey);
   const loading = optionsKey !== null && !result;
   const profiles =
     open && actor && error !== 'forbidden' && profileResult?.key === profileKey
@@ -185,6 +202,7 @@ export function TicketIntakeForm({
         signal,
       });
       if ([401, 403].includes(response.status)) return { status: response.status, value: null };
+      if (profileId && response.status === 404) return { status: 404, value: null };
       if (!response.ok) throw new Error('error');
       return { status: response.status, value: (await response.json()) as unknown };
     },
@@ -194,41 +212,64 @@ export function TicketIntakeForm({
     offered.current = null;
     if (!optionsKey) {
       setProfileResult(null);
+      setRecordResult(null);
       return;
     }
     const controller = new AbortController(),
       token = scope;
+    const currentRead = () =>
+      !controller.signal.aborted &&
+      alive.current &&
+      current.current === token &&
+      currentOptionsKey.current === optionsKey;
     void optionsQuery
       .refetch()
       .then((reply) => {
-        if (controller.signal.aborted || current.current !== token) return;
+        if (!currentRead()) return;
         if (!reply.isSuccess || !reply.data) throw new Error('error');
         if ([401, 403].includes(reply.data.status)) {
-          if (!controller.signal.aborted && current.current === token) coordination.denied();
+          setRecordResult(null);
+          coordination.denied();
           throw new Error('forbidden');
         }
         const parsed = ticketOptions(reply.data.value);
+        if (
+          reply.data.status === 404 ||
+          (profileId && parsed && !parsed.profiles.some((p) => p.id === profileId))
+        ) {
+          setRecordResult(null);
+          form.setValue('record', '');
+          throw new Error('error');
+        }
         if (!parsed) throw new Error('error');
-        if (!controller.signal.aborted && alive.current && current.current === token) {
-          offered.current = parsed;
-          setOptionsResult({ key: optionsKey, options: parsed });
-          setProfileResult({ key: profileKey, profiles: parsed.profiles });
-          if (related && !prefilled.current) {
-            if (!profileId && parsed.suggestedProfileId) {
-              form.setValue('profileId', parsed.suggestedProfileId);
-            } else {
-              prefilled.current = true;
-              const record = parsed.records.find(
-                (item) => item.id === related.relatedId && item.type === related.relatedType
-              );
-              if (record) form.setValue('record', record.type + ':' + record.id);
-              else setRelatedUnavailable(true);
-            }
+        const records =
+          recordPage === 1
+            ? parsed.records
+            : [
+                ...new Map(
+                  [...priorRecords, ...parsed.records].map((r) => [r.type + ':' + r.id, r])
+                ).values(),
+              ];
+        const accepted = { ...parsed, records };
+        offered.current = accepted;
+        setOptionsResult({ key: optionsKey, options: accepted });
+        setProfileResult({ key: profileKey, profiles: parsed.profiles });
+        setRecordResult({ key: recordKey, records });
+        if (related && !prefilled.current) {
+          if (!profileId && parsed.suggestedProfileId) {
+            form.setValue('profileId', parsed.suggestedProfileId);
+          } else {
+            prefilled.current = true;
+            const record = parsed.records.find(
+              (item) => item.id === related.relatedId && item.type === related.relatedType
+            );
+            if (record) form.setValue('record', record.type + ':' + record.id);
+            else setRelatedUnavailable(true);
           }
         }
       })
       .catch((reason: unknown) => {
-        if (!controller.signal.aborted && current.current === token)
+        if (currentRead())
           setOptionsResult({
             key: optionsKey,
             options: null,
@@ -304,6 +345,7 @@ export function TicketIntakeForm({
             uploaded.current.clear();
             setPreview(null);
             setRecordPage(1);
+            setRecordResult(null);
             await onSaved((v as { id: string }).id);
           },
         });
@@ -348,6 +390,7 @@ export function TicketIntakeForm({
                     if (name === 'profileId') {
                       form.setValue('record', '');
                       setRecordPage(1);
+                      setRecordResult(null);
                       uploaded.current.clear();
                       setPreview(null);
                     }
@@ -443,79 +486,75 @@ export function TicketIntakeForm({
                   ...(!profileId && profiles?.length ? { help: copy('recordLinkHelp') } : {}),
                 }
               )}
-              {profileId &&
-                field(
-                  'record',
-                  'related',
-                  options?.records.length
-                    ? [
-                        { value: '', label: text('none') },
-                        ...options.records.map((r) => {
-                          const reference = r.contractNumber ?? `…${r.id.slice(-8)}`;
-                          return {
-                            value: r.type + ':' + r.id,
-                            label: `${text(r.type)} · \u2066${reference}\u2069 · ${formatDate(r.created_at)}`,
-                          };
-                        }),
-                      ]
-                    : [
-                        {
-                          value: '',
-                          label: copy(
-                            loading
-                              ? 'recordsLoading'
-                              : error
-                                ? 'recordsUnavailable'
-                                : 'recordsEmpty'
-                          ),
-                        },
-                      ],
-                  {
-                    disabled: !options?.records.length,
-                    help: selectedRecord && !selectedRecord.contractNumber && (
-                      <>
-                        {copy('recordReference')}{' '}
-                        <bdi dir="ltr" className="[overflow-wrap:anywhere]">
-                          {selectedRecord.id}
-                        </bdi>
-                      </>
-                    ),
-                  }
-                )}
+              {profileId && (
+                <div className="min-w-0 space-y-1.5">
+                  {field(
+                    'record',
+                    'related',
+                    records.length
+                      ? [
+                          { value: '', label: text('none') },
+                          ...records.map((r) => {
+                            const reference = r.contractNumber ?? `…${r.id.slice(-8)}`;
+                            return {
+                              value: r.type + ':' + r.id,
+                              label: `${text(r.type)} · \u2066${reference}\u2069 · ${formatDate(r.created_at)}`,
+                            };
+                          }),
+                        ]
+                      : [
+                          {
+                            value: '',
+                            label: copy(
+                              loading
+                                ? 'recordsLoading'
+                                : error
+                                  ? 'recordsUnavailable'
+                                  : 'recordsEmpty'
+                            ),
+                          },
+                        ],
+                    {
+                      disabled: !options || !records.length,
+                      help: selectedRecord && !selectedRecord.contractNumber && (
+                        <>
+                          {copy('recordReference')}{' '}
+                          <bdi dir="ltr" className="[overflow-wrap:anywhere]">
+                            {selectedRecord.id}
+                          </bdi>
+                        </>
+                      ),
+                    }
+                  )}
+                  {!error &&
+                    (recordPage > 1 || options?.hasMoreRecords) &&
+                    (options && !options.hasMoreRecords ? (
+                      <p role="status" className="text-xs text-muted-foreground">
+                        {copy('allRecordsLoaded')}
+                      </p>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="-ms-2 text-primary"
+                        disabled={!options}
+                        onClick={() => {
+                          if (!coordination.isLocked() && options?.hasMoreRecords)
+                            setRecordPage((p) => p + 1);
+                        }}
+                      >
+                        {copy(loading ? 'recordsLoading' : 'loadOlderRecords')}
+                      </Button>
+                    ))}
+                </div>
+              )}
               {loading && (
                 <p role="status" className="sr-only">
                   {copy(profileId ? 'recordsLoading' : 'profilesLoading')}
                 </p>
               )}
             </div>
-            {profileId && (recordPage > 1 || options?.hasMoreRecords) && (
-              <div className="flex gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={recordPage === 1 || !options}
-                  onClick={() => {
-                    if (coordination.isLocked()) return;
-                    form.setValue('record', '');
-                    setRecordPage((p) => p - 1);
-                  }}
-                >
-                  {text('previous')}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={!options?.hasMoreRecords}
-                  onClick={() => {
-                    if (coordination.isLocked()) return;
-                    form.setValue('record', '');
-                    setRecordPage((p) => p + 1);
-                  }}
-                >
-                  {text('next')}
-                </Button>
-              </div>
-            )}
             {error && (
               <div role="alert">
                 <p>{text(error === 'forbidden' ? 'forbidden' : 'optionsError')}</p>

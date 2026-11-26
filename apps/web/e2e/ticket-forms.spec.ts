@@ -301,6 +301,74 @@ for (const [locale, theme] of [
     expect(state.writes).toHaveLength(0);
   });
 
+  test(`ticket keeps its selected record while loading older records (${locale})`, async ({
+    page,
+  }) => {
+    const { state } = await setupTicketForms(page, locale, false);
+    const older = '86000000-0000-4000-8000-000000000099';
+    const contract = {
+      id: relatedId,
+      type: 'contract',
+      created_at: instant,
+      contractNumber: '10482',
+    };
+    const reads: number[] = [];
+    let failOlder = true;
+    await page.route('**/api/tickets/options**', (route) => {
+      const url = new URL(route.request().url());
+      const chosen = url.searchParams.get('profileId') === profileId;
+      const recordPage = Number(url.searchParams.get('recordPage'));
+      if (chosen) reads.push(recordPage);
+      if (chosen && recordPage === 2 && failOlder) return route.fulfill({ status: 503, json: {} });
+      return route.fulfill({
+        json: {
+          profiles: [{ id: profileId, title: 'Owned profile' }],
+          records: !chosen
+            ? []
+            : recordPage === 1
+              ? [contract]
+              : [contract, { id: older, type: 'invoice', created_at: '2026-08-20T10:00:00Z' }],
+          hasMoreRecords: chosen && recordPage === 1,
+        },
+      });
+    });
+
+    await page.goto('/tickets/new');
+    const intake = form(page, 'ticket-intake-form');
+    const record = intake.locator('#ticket-record');
+    await intake.locator('#ticket-subject').fill('Contract question');
+    await intake.locator('#ticket-body').fill('Please explain the delivery charge.');
+    await intake.locator('#ticket-profile').selectOption(profileId);
+    await record.selectOption('contract:' + relatedId);
+    await intake
+      .getByRole('button', { name: tTicketForms('loadOlderRecords', locale), exact: true })
+      .click();
+    const retryRead = intake.getByRole('button', { name: text('retry'), exact: true });
+    await expect(retryRead).toBeVisible();
+    await expect(record).toHaveValue('contract:' + relatedId);
+    await expect(record).toBeDisabled();
+    await expect(submit(intake)).toBeDisabled();
+    failOlder = false;
+    await retryRead.click();
+    await expect(record.locator('option[value="invoice:' + older + '"]')).toHaveCount(1);
+    await expect(
+      intake.getByRole('status').filter({ hasText: tTicketForms('allRecordsLoaded', locale) })
+    ).toBeVisible();
+    await expect(record.locator('option[value="contract:' + relatedId + '"]')).toHaveCount(1);
+    await expect(record).toHaveValue('contract:' + relatedId);
+    await expect(intake.locator('#ticket-body')).toHaveValue('Please explain the delivery charge.');
+    expect(reads).toEqual([1, 2, 2]);
+    expect(state.writes).toEqual([]);
+    await submit(intake).click();
+    await expect(intake).toHaveCount(0);
+    expect(state.writes.at(-1)?.body).toMatchObject({
+      profileId,
+      relatedEntityType: 'contract',
+      relatedEntityId: relatedId,
+      body: 'Please explain the delivery charge.',
+    });
+  });
+
   test(`customer intake and public replies retain captured commands, ordered files and current privacy (${locale}, ${theme})`, async ({
     page,
   }, testInfo) => {
