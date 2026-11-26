@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { setupCatalogueForms } from './catalogue-form-fixture';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { aiAgentFormText } from '@barghsa/i18n/ai-agent-forms';
 import { cookieResponse } from './cookie-response';
 for (const locale of ['en', 'fa'])
   test(`admin can test an agent and inspect response context (${locale})`, async ({ page }) => {
@@ -148,7 +149,22 @@ for (const locale of ['en', 'fa'] as const)
     await page.getByRole('link', { name: fa ? 'افزودن عامل' : 'Add agent', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill('Local assistant');
     await page.getByLabel(fa ? 'مدل' : 'Model', { exact: true }).selectOption(model);
-    await page.getByLabel(fa ? 'دستورالعمل سیستم' : 'System instructions').fill('Help with energy');
+    const prompt = page.getByLabel(fa ? 'دستورالعمل سیستم' : 'System instructions');
+    const insertExample = page.getByRole('button', {
+      name: aiAgentFormText('promptInsertExample', locale),
+      exact: true,
+    });
+    await insertExample.press('Enter');
+    await expect(prompt).toBeFocused();
+    await expect(prompt).toHaveValue(aiAgentFormText('promptExample', locale));
+    await expect
+      .poll(() => prompt.evaluate((input) => input.scrollHeight - input.clientHeight))
+      .toBeLessThanOrEqual(1);
+    await expect(insertExample).toHaveCount(0);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    expect(attempts).toEqual([]);
+    await prompt.fill('Help with energy');
+    await expect(page.locator('#agent-prompt-count')).toContainText(fa ? '۱۶' : '16');
     await page
       .getByRole('spinbutton', { name: fa ? 'دما' : 'Temperature', exact: true })
       .fill('0.4');

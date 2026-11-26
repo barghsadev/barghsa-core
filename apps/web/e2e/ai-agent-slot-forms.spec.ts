@@ -91,7 +91,12 @@ for (const locale of ['en', 'fa'] as const)
         await expect(field).toHaveAttribute('aria-required', 'true');
       }
       await expect(prompt).not.toHaveAttribute('aria-required', 'true');
-      await expect(prompt).toHaveAccessibleDescription(copy('promptHelp'));
+      const count = copy('promptCount')
+        .replace('{used}', locale === 'fa' ? '۱۸' : '18')
+        .replace('{limit}', locale === 'fa' ? '۸٬۰۰۰' : '8,000');
+      await expect(prompt).toHaveAccessibleDescription(
+        [copy('promptGuidance'), copy('promptHelp'), count].join(' ')
+      );
       await expect(max).not.toHaveAttribute('aria-required', 'true');
       await max.fill('1.5');
       await button(agentText('save')).click();

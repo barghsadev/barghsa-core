@@ -26,13 +26,16 @@ const en = {
   basics: 'Agent details',
   editAgent: 'Edit agent',
   instructions: 'Agent behavior',
-  promptPlaceholder:
+  promptGuidance:
     'Describe what the agent should do, which sources to use, and when to ask for clarification.',
+  promptInsertExample: 'Insert example',
+  promptExample:
+    '## Role\n- Explain electricity plans.\n- Use the linked sources.\n- Ask for missing details.',
+  promptCount: '{used} of {limit} characters',
   sources: 'Knowledge and policies',
   responseSettings: 'Response settings',
   descriptionPlaceholder: 'Summarize what this agent helps with.',
-  promptHelp:
-    'Markdown headings, lists, links and code are highlighted. Instructions are saved as entered.',
+  promptHelp: 'Markdown headings, lists, links and code are highlighted.',
   slotsTable: 'Agent slot assignments',
   slot: 'Slot',
   lastChanged: 'Last changed',
@@ -67,13 +70,15 @@ const fa: Record<keyof typeof en, string> = {
   basics: 'مشخصات عامل',
   editAgent: 'ویرایش عامل',
   instructions: 'رفتار عامل',
-  promptPlaceholder:
-    'بنویسید عامل چه کاری انجام دهد، از چه منابعی استفاده کند و چه زمانی سؤال بپرسد.',
+  promptGuidance: 'بنویسید عامل چه کاری انجام دهد، از چه منابعی استفاده کند و چه زمانی سؤال بپرسد.',
+  promptInsertExample: 'درج نمونه',
+  promptExample:
+    '## نقش عامل\n- طرح‌های برق را توضیح دهید.\n- از منابع متصل استفاده کنید.\n- سؤال تکمیلی بپرسید.',
+  promptCount: '{used} از {limit} نویسه',
   sources: 'دانش و سیاست‌ها',
   responseSettings: 'تنظیمات پاسخ',
   descriptionPlaceholder: 'کوتاه بنویسید این عامل در چه کاری کمک می‌کند.',
-  promptHelp:
-    'عنوان‌ها، فهرست‌ها، پیوندها و کدهای Markdown مشخص می‌شوند. دستورها همان‌گونه که وارد شده‌اند ذخیره می‌شوند.',
+  promptHelp: 'عنوان‌ها، فهرست‌ها، پیوندها و کدهای Markdown مشخص می‌شوند.',
   slotsTable: 'تخصیص‌های جایگاه عامل',
   slot: 'جایگاه',
   lastChanged: 'آخرین تغییر',

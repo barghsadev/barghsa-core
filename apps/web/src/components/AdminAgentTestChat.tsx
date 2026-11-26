@@ -33,6 +33,8 @@ type Request = {
 };
 const blank = () => ({ agentId: '', slotKey: '', message: '' });
 const TEST_CHAT_DEADLINE_MS = 300_000;
+const testChatSelect =
+  'w-full pointer-coarse:[&>select]:appearance-auto pointer-coarse:[&>select]:pe-2.5 pointer-coarse:[&>[data-slot=native-select-icon]]:hidden';
 interface Turn {
   id: string;
   sentAt: number;
@@ -322,7 +324,7 @@ export function AdminAgentTestChat({
               onBlur={() => {
                 if (!form.isPending() && !controller.current) form.bind('agentId').onBlur();
               }}
-              className="w-full"
+              className={testChatSelect}
               value={agentId}
               disabled={locked}
               onChange={(event) => {
@@ -353,7 +355,7 @@ export function AdminAgentTestChat({
               onBlur={() => {
                 if (!form.isPending() && !controller.current) form.bind('slotKey').onBlur();
               }}
-              className="w-full"
+              className={testChatSelect}
               value={slotKey}
               disabled={locked}
               onChange={(event) => {

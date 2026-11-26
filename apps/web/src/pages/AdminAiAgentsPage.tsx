@@ -99,6 +99,7 @@ const agentDependencyRoutes = {
   policies: '/admin/policies/$recordId/{-$action}',
   policyGroups: '/admin/policies/groups/$recordId/{-$action}',
 } as const;
+const promptLimit = 8000;
 
 export default function AdminAiAgentsPage({ workspace }: { workspace?: AgentWorkspace } = {}) {
   const actor = useAccountUser();
@@ -896,25 +897,50 @@ function OwnedAiAgentsPage({
                   </RecordEditorSection>
                   <RecordEditorSection title={copy('instructions')}>
                     <div className={recordEditorField}>
-                      <Label htmlFor="agent-system-prompt">{label('systemPrompt')}</Label>
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <Label htmlFor="agent-system-prompt">{label('systemPrompt')}</Label>
+                        {!draft.systemPrompt && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="border-border"
+                            onClick={() => {
+                              form.field('systemPrompt')[1](
+                                (value) => value || copy('promptExample')
+                              );
+                              form.form.setFocus('systemPrompt');
+                            }}
+                          >
+                            {copy('promptInsertExample')}
+                          </Button>
+                        )}
+                      </div>
+                      <p id="agent-prompt-guidance" className="pb-1 text-sm text-muted-foreground">
+                        {copy('promptGuidance')}
+                      </p>
                       <AgentPromptTextarea
                         {...form.bind('systemPrompt')}
                         id="agent-system-prompt"
-                        maxLength={8000}
+                        maxLength={promptLimit}
                         value={draft.systemPrompt}
                         dir="auto"
                         rows={4}
-                        placeholder={copy('promptPlaceholder')}
                         aria-describedby={
                           form.errors.systemPrompt
-                            ? `${form.errorId('systemPrompt')} agent-prompt-help`
-                            : 'agent-prompt-help'
+                            ? `${form.errorId('systemPrompt')} agent-prompt-guidance agent-prompt-help agent-prompt-count`
+                            : 'agent-prompt-guidance agent-prompt-help agent-prompt-count'
                         }
                         onChange={(event) => form.field('systemPrompt')[1](event.target.value)}
                       />
-                      <p id="agent-prompt-help" className="text-xs text-muted-foreground">
-                        {copy('promptHelp')}
-                      </p>
+                      <div className="flex flex-wrap justify-between gap-x-4 gap-y-1 pt-1 text-xs text-muted-foreground">
+                        <p id="agent-prompt-help">{copy('promptHelp')}</p>
+                        <p id="agent-prompt-count" className="tabular-nums">
+                          {copy('promptCount')
+                            .replace('{used}', numbers.number(draft.systemPrompt.length))
+                            .replace('{limit}', numbers.number(promptLimit))}
+                        </p>
+                      </div>
                       <CatalogueFieldFeedback
                         compact
                         id={form.errorId('systemPrompt')}
