@@ -522,9 +522,7 @@ it('saves the address step before opening address settings', async () => {
   savedStepOverride = 3;
   await mount();
 
-  const gift = [...container.querySelectorAll('label')]
-    .find((label) => label.textContent?.includes(t('electricity.order.giftCode', 'en')))!
-    .querySelector('input')!;
+  const gift = container.querySelector<HTMLInputElement>('#advanced-gift')!;
   await act(async () => {
     Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(gift, 'POWER');
     gift.dispatchEvent(new Event('input', { bubbles: true }));

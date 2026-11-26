@@ -1497,16 +1497,18 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                       <CheckoutGiftCode
                         summary={copy('giftOptional')}
                         label={copy('giftCode')}
-                        applyLabel={copy('apply')}
+                        application={{
+                          label: copy('apply'),
+                          applied: appliedGiftCode,
+                          apply: (value) => {
+                            setAppliedGiftCode(value);
+                            setQuoteRevision((revision) => revision + 1);
+                            submission.resetPreparation();
+                          },
+                        }}
                         field={fields.bind('giftCode')}
                         value={giftCode}
-                        applied={appliedGiftCode}
                         onChange={setGiftCode}
-                        onApply={(value) => {
-                          setAppliedGiftCode(value);
-                          setQuoteRevision((revision) => revision + 1);
-                          submission.resetPreparation();
-                        }}
                       />
                       {profileId && (
                         <div className="rounded-lg border p-3 [&_button]:self-start">

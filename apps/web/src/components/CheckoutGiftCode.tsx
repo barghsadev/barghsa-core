@@ -6,18 +6,21 @@ import { useLocale } from '../hooks/useLocale.js';
 import type { WizardFieldBinding } from '../hooks/useWizardForm.js';
 
 const clearCode = { en: 'Clear code', fa: 'پاک کردن کد' } as const;
+const automaticQuote = {
+  en: 'The price updates automatically when you change the code.',
+  fa: 'با تغییر کد، قیمت به‌طور خودکار به‌روز می‌شود.',
+} as const;
 
 export function CheckoutGiftCode({
   disclosureId,
   inputId,
   summary,
   label,
-  applyLabel,
+  application,
   field,
   value,
-  applied,
+  maxLength,
   onChange,
-  onApply,
   disabled,
   children,
 }: {
@@ -25,12 +28,11 @@ export function CheckoutGiftCode({
   inputId?: string;
   summary: string;
   label: string;
-  applyLabel: string;
+  application?: { applied: string; label: string; apply: (value: string) => void };
   field: WizardFieldBinding;
   value: string;
-  applied: string;
+  maxLength?: number;
   onChange: (value: string) => void;
-  onApply: (value: string) => void;
   disabled?: boolean;
   children?: ReactNode;
 }) {
@@ -40,16 +42,36 @@ export function CheckoutGiftCode({
   const hintId = `${id}-pending`;
   const disclosure = useRef<HTMLDetailsElement>(null);
   const code = value.trim();
-  const changed = code !== applied;
+  const changed = !!application && code !== application.applied;
   const canApply = !disabled && changed && Boolean(code);
-  const hasCode = Boolean(value || applied);
+  const hasCode = Boolean(value || application?.applied);
+  const clearButton = (
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      disabled={disabled}
+      className="ms-auto min-h-8 px-2 text-muted-foreground pointer-coarse:min-h-11"
+      onClick={() => {
+        onChange('');
+        if (application?.applied) application.apply('');
+        disclosure.current?.querySelector('input')?.focus();
+      }}
+    >
+      {clearCode[locale]}
+    </Button>
+  );
   useEffect(() => {
     if (hasCode && disclosure.current) disclosure.current.open = true;
   }, [hasCode]);
 
   return (
     <div className="space-y-1">
-      <details ref={disclosure} className="group rounded-lg border">
+      <details
+        ref={disclosure}
+        open={!application || undefined}
+        className="group rounded-lg border"
+      >
         <summary
           id={disclosureId}
           className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 rounded-lg px-3 text-sm font-medium text-primary hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden"
@@ -64,54 +86,52 @@ export function CheckoutGiftCode({
           <label htmlFor={id} className="sr-only">
             {label}
           </label>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Input
               {...field}
               id={id}
               dir="ltr"
               autoComplete="off"
               spellCheck={false}
+              maxLength={maxLength}
               className="min-h-11 min-w-0 flex-1 basis-28"
               value={value}
               disabled={disabled}
               aria-describedby={
-                [field['aria-describedby'], changed && hintId].filter(Boolean).join(' ') ||
-                undefined
+                [field['aria-describedby'], (!application || changed) && hintId]
+                  .filter(Boolean)
+                  .join(' ') || undefined
               }
               onChange={(event) => onChange(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key !== 'Enter' || event.nativeEvent.isComposing) return;
                 event.preventDefault();
-                if (canApply) onApply(code);
+                if (canApply) application?.apply(code);
               }}
             />
-            <Button
-              type="button"
-              variant="secondary"
-              className="min-h-11"
-              disabled={!canApply}
-              onClick={() => onApply(code)}
-            >
-              {applyLabel}
-            </Button>
-          </div>
-          {hasCode && (
-            <div className="flex flex-wrap items-center gap-x-2">
-              {!changed && children}
+            {application ? (
               <Button
                 type="button"
-                variant="ghost"
-                size="sm"
-                disabled={disabled}
-                className="ms-auto min-h-8 px-2 text-muted-foreground pointer-coarse:min-h-11"
-                onClick={() => {
-                  onChange('');
-                  if (applied) onApply('');
-                  disclosure.current?.querySelector('input')?.focus();
-                }}
+                variant="secondary"
+                className="min-h-11"
+                disabled={!canApply}
+                onClick={() => application.apply(code)}
               >
-                {clearCode[locale]}
+                {application.label}
               </Button>
+            ) : (
+              hasCode && clearButton
+            )}
+          </div>
+          {!application && (
+            <p id={hintId} className="text-xs text-muted-foreground">
+              {automaticQuote[locale]}
+            </p>
+          )}
+          {application && hasCode && (
+            <div className="flex flex-wrap items-center gap-x-2">
+              {!changed && children}
+              {clearButton}
             </div>
           )}
         </div>

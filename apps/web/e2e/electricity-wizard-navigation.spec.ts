@@ -654,6 +654,56 @@ test('simple electricity applies and clears the gift code without advancing chec
   expect(state.orders).toEqual([]);
 });
 
+test('advanced electricity refreshes the gift quote without an extra apply step', async ({
+  page,
+  isMobile,
+}) => {
+  const locale = 'en';
+  const state = await fixture(page, 'advanced', locale, 4);
+  let release: (() => void) | undefined;
+  await page.route('**/api/electricity/preview/advanced', async (route) => {
+    if (route.request().postDataJSON().giftCode !== 'UNAVAILABLE') return route.fallback();
+    await new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    return route.fulfill({ status: 400, json: {} });
+  });
+  try {
+    await page.goto('/electricity/orders/new/advanced?step=4');
+    const continueOrder = next(page, 'advanced', locale);
+    const gift = page.getByRole('textbox', { name: t('electricity.order.giftCode', locale) });
+    const mobileTotal = page
+      .getByRole('status')
+      .filter({ hasText: t('electricity.order.total', locale) });
+    await expect(continueOrder).toBeEnabled();
+    if (isMobile) await expect(mobileTotal).toBeInViewport();
+    await expect(gift).toHaveAccessibleDescription(
+      'The price updates automatically when you change the code.'
+    );
+    await gift.fill('UNAVAILABLE');
+    await expect.poll(() => !!release).toBe(true);
+    await expect(continueOrder).toBeDisabled();
+    if (isMobile) await expect(mobileTotal).toHaveCount(0);
+    await gift.press('Enter');
+    expect(state.saves).toEqual([]);
+    release?.();
+    await expect(
+      page.getByRole('alert').filter({ hasText: t('electricity.order.previewUnavailable', locale) })
+    ).toBeVisible();
+    const refreshing = page.waitForRequest('**/api/electricity/preview/advanced');
+    await page.getByRole('button', { name: 'Clear code', exact: true }).click();
+    expect((await refreshing).postDataJSON()).not.toHaveProperty('giftCode');
+    await expect(gift).toHaveValue('');
+    await expect(gift).toBeFocused();
+    await expect(continueOrder).toBeEnabled();
+    if (isMobile) await expect(mobileTotal).toBeInViewport();
+    expect(state.saves).toEqual([]);
+    expect(state.orders).toEqual([]);
+  } finally {
+    release?.();
+  }
+});
+
 test('advanced electricity updates the visible total after a quantity edit', async ({ page }) => {
   await fixture(page, 'advanced', 'fa');
   await page.goto('/electricity/orders/new/advanced');

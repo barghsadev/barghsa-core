@@ -1,3 +1,4 @@
+import { CheckoutGiftCode } from '../components/CheckoutGiftCode.js';
 import { electricityDraftPath } from '../lib/electricity-draft.js';
 import { takeSavedOrderAddress } from '../lib/order-address-handoff.js';
 import { ConfirmationFields } from '@barghsa/ui';
@@ -93,7 +94,6 @@ const emptyQuantities: Record<Key, string> = {
   energy_saving: '',
 };
 const LeaveDialog = lazy(() => import('../components/WizardLeaveDialog.js'));
-const fieldClass = 'w-full rounded-lg border border-input bg-background px-3 py-2 text-sm';
 const iranCivil = new Intl.DateTimeFormat('en-US-u-ca-gregory', {
   timeZone: 'Asia/Tehran',
   year: 'numeric',
@@ -814,15 +814,18 @@ export function AdvancedElectricityOrderPage() {
             : wizardActionSurface
         }
         actionSummary={
-          step === 2 && (
-            <div role="status" className="w-full text-sm lg:hidden empty:hidden">
+          (step === 2 || step === 4) && (
+            <div
+              role={step === 2 || quote ? 'status' : undefined}
+              className="w-full text-sm lg:hidden empty:hidden"
+            >
               {quote ? (
                 <p className="flex flex-wrap items-baseline justify-between gap-x-2 font-semibold">
                   {t('electricity.order.total', locale)}
                   <bdi className="min-w-0 wrap-anywhere">{numbers.money(quote.totalIrR)}</bdi>
                 </p>
               ) : validPeriod && quantitiesValid && !quoteError ? (
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground" aria-hidden={step === 4 || undefined}>
                   {t('electricity.order.previewLoading', locale)}
                 </p>
               ) : null}
@@ -1166,16 +1169,15 @@ export function AdvancedElectricityOrderPage() {
               <Card size="sm" className="mb-3">
                 <CardContent className="space-y-3">
                   {step === 4 && (
-                    <label className="block text-sm">
-                      {t('electricity.order.giftCode', locale)}
-                      <input
-                        className={fieldClass}
-                        {...fields.bind('giftCode')}
-                        value={giftCode}
-                        maxLength={100}
-                        onChange={(event) => setGiftCode(event.target.value)}
-                      />
-                    </label>
+                    <CheckoutGiftCode
+                      inputId="advanced-gift"
+                      summary={t('electricity.order.giftCode', locale)}
+                      label={t('electricity.order.giftCode', locale)}
+                      field={fields.bind('giftCode')}
+                      value={giftCode}
+                      maxLength={100}
+                      onChange={setGiftCode}
+                    />
                   )}
                   {step === 5 ? (
                     <AdvancedElectricityReview

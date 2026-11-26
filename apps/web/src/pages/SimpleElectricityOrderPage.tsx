@@ -1855,13 +1855,15 @@ function OwnedSimpleElectricityOrderPage() {
                           inputId="electricity-gift"
                           summary={t('electricity.order.giftCode', locale)}
                           label={t('electricity.order.giftCode', locale)}
-                          applyLabel={t('electricity.order.applyGift', locale)}
+                          application={{
+                            label: t('electricity.order.applyGift', locale),
+                            applied: appliedGiftCode,
+                            apply: setAppliedGiftCode,
+                          }}
                           field={fields.bind('giftCode')}
                           value={giftCode}
-                          applied={appliedGiftCode}
                           disabled={submitting}
                           onChange={setGiftCode}
-                          onApply={setAppliedGiftCode}
                         >
                           {appliedGiftCode && quote && (
                             <p className="text-sm text-primary">
