@@ -25,6 +25,7 @@ import {
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { FormField } from '@barghsa/ui/form';
 import { RecordListField } from '../components/RecordListField.js';
+import { PolicyScopeField } from '../components/PolicyScopeField.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
   CatalogueFieldFeedback,
@@ -1239,24 +1240,40 @@ function OwnedAiPoliciesPage({
                           <FormField
                             control={form.form.control}
                             name="items"
-                            render={({ field }) => (
-                              <RecordListField
-                                key={draft.policyType}
-                                id="policy-items"
-                                label={label(draft.policyType)}
-                                value={field.value}
-                                focusRef={field.ref}
-                                onBlur={form.bind('items').onBlur}
-                                onChange={form.field('items')[1]}
-                                limit={200}
-                                rowHelp={copy('policyRowsHelp')}
-                                bulkHelp={label('itemsHelp')}
-                                descriptionId={
-                                  form.errors.items ? form.errorId('items') : undefined
-                                }
-                                invalid={!!form.errors.items}
-                              />
-                            )}
+                            render={({ field }) =>
+                              draft.policyType === 'data_access_scope' ? (
+                                <PolicyScopeField
+                                  id="policy-items"
+                                  locale={locale}
+                                  value={field.value}
+                                  disabled={form.pending || !!action || pending}
+                                  descriptionId={
+                                    form.errors.items ? form.errorId('items') : undefined
+                                  }
+                                  retryLabel={label('retry')}
+                                  focusRef={field.ref}
+                                  onBlur={form.bind('items').onBlur}
+                                  onChange={form.field('items')[1]}
+                                />
+                              ) : (
+                                <RecordListField
+                                  key={draft.policyType}
+                                  id="policy-items"
+                                  label={label(draft.policyType)}
+                                  value={field.value}
+                                  focusRef={field.ref}
+                                  onBlur={form.bind('items').onBlur}
+                                  onChange={form.field('items')[1]}
+                                  limit={200}
+                                  rowHelp={copy('policyRowsHelp')}
+                                  bulkHelp={label('itemsHelp')}
+                                  descriptionId={
+                                    form.errors.items ? form.errorId('items') : undefined
+                                  }
+                                  invalid={!!form.errors.items}
+                                />
+                              )
+                            }
                           />
                           <CatalogueFieldFeedback
                             compact

@@ -2,6 +2,7 @@ import { brandingText } from '@barghsa/i18n/branding';
 import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
 import { aiAgentFormText } from '@barghsa/i18n/ai-agent-forms';
+import { knowledgePolicyFormText } from '@barghsa/i18n/knowledge-policy-forms';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { tStaffTeams } from '@barghsa/i18n/staff-team-forms';
@@ -1488,7 +1489,7 @@ for (const locale of ['en', 'fa'])
   });
 
 for (const locale of ['en', 'fa'])
-  test(`AI policy UI persists through the migrated API (${locale})`, async ({ page }) => {
+  test(`AI policy UI persists through the migrated API (${locale})`, async ({ page, isMobile }) => {
     const fa = locale === 'fa';
     await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', async (route) => {
@@ -1515,18 +1516,59 @@ for (const locale of ['en', 'fa'])
     const name = `Policy live ${locale}`,
       renamed = `${name} edited`,
       groupName = `Policy group ${locale}`;
+    const referenceTitle = `Policy reference ${locale}`;
+    const reference = await page.request.post(`${http.base}/api/admin/knowledge-bases`, {
+      headers: {
+        cookie: `barghsa_session=${http.session}`,
+        'x-csrf-token': http.csrf,
+        origin: 'https://app.example.test',
+      },
+      data: {
+        title: referenceTitle,
+        audience: 'admin',
+        sourceType: 'document',
+        sourceConfig: {},
+        chunkingStrategy: { size: 800, overlap: 100 },
+        vectorEmbeddingModel: null,
+      },
+    });
+    expect(reference.status()).toBe(201);
+    const { id: referenceId } = (await reference.json()) as { id: string };
     await page.goto('/admin/policies');
     await page.getByRole('link', { name: fa ? 'افزودن سیاست' : 'Add policy', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(name);
     await page.getByLabel(fa ? 'توضیحات' : 'Description', { exact: true }).fill('Meter guidance');
-    await page
-      .getByLabel(fa ? 'موضوعات مجاز' : 'Allowed topics', { exact: true })
-      .fill('Meter readings');
-    await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
+    await page.locator('#policy-type').selectOption('data_access_scope');
+    const scopePicker = page.locator('#policy-items');
+    await scopePicker.scrollIntoViewIfNeeded();
+    await scopePicker.fill(referenceTitle);
+    const option = page.getByRole('option', { name: referenceTitle, exact: true });
+    const selectedReferences = page.getByRole('list', {
+      name: knowledgePolicyFormText('scopeSelected', locale),
+      exact: true,
+    });
+    const savePolicy = page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true });
+    if (isMobile) await option.tap();
+    else await option.click();
+    await expect(selectedReferences).toContainText(referenceTitle);
+    if (isMobile) await savePolicy.tap();
+    else await savePolicy.click();
     await confirm();
+    await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
+    const headers = { cookie: `barghsa_session=${http.session}` };
+    const policyId = new URL(page.url()).pathname.split('/').at(-1);
+    const persisted = await page.request.get(`${http.base}/api/admin/policies/${policyId}`, {
+      headers,
+    });
+    expect(persisted.status()).toBe(200);
+    expect(await persisted.json()).toMatchObject({
+      policyType: 'data_access_scope',
+      rules: { scopes: [`kb:${referenceId}`] },
+    });
     await page
       .getByRole('link', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
       .click();
+    await expect(selectedReferences).toContainText(referenceTitle);
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(renamed);
     await page
       .getByLabel(fa ? 'نوع سیاست' : 'Policy type', { exact: true })
@@ -1540,7 +1582,6 @@ for (const locale of ['en', 'fa'])
     await settleLiveRequests();
     await page.reload();
     await expect(page.getByRole('heading', { name: renamed, exact: true })).toBeVisible();
-    const headers = { cookie: `barghsa_session=${http.session}` };
     const kbs = (await (
       await page.request.get(`${http.base}/api/admin/policies`, { headers })
     ).json()) as Array<{ id: string; title: string; description: string }>;

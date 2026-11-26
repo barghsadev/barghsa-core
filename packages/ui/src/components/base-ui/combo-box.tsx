@@ -113,12 +113,14 @@ function ComboBoxPopup({
   className,
   children,
   emptyMessage,
+  positionMethod,
   ...props
 }: Omit<ComboboxPrimitive.Popup.Props, 'children'> &
-  Pick<ComboboxPrimitive.List.Props, 'children'> & { emptyMessage?: string }) {
+  Pick<ComboboxPrimitive.List.Props, 'children'> &
+  Pick<ComboboxPrimitive.Positioner.Props, 'positionMethod'> & { emptyMessage?: string }) {
   return (
     <ComboboxPrimitive.Portal>
-      <ComboboxPrimitive.Positioner className="isolate z-50">
+      <ComboboxPrimitive.Positioner className="isolate z-50" positionMethod={positionMethod}>
         <ComboboxPrimitive.Popup
           data-slot="combobox-popup"
           className={cn(

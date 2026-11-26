@@ -43,6 +43,10 @@ for (const locale of ['en', 'fa'])
       verified = route.request().postDataJSON().password === 'correct';
       return route.fulfill({ status: verified ? 200 : 401, json: {} });
     });
+    if (fa)
+      await page.route('**/api/admin/knowledge-bases', (route) =>
+        route.fulfill({ status: 403, json: {} })
+      );
     await page.goto('/admin/policies');
     await expect(page.getByRole('alert')).toBeVisible();
     failed = false;
@@ -54,6 +58,10 @@ for (const locale of ['en', 'fa'])
       .selectOption(fa ? 'data_access_scope' : 'disallowed_actions');
     const listText = (key: Parameters<typeof knowledgePolicyFormText>[0]) =>
       knowledgePolicyFormText(key, fa ? 'fa' : 'en');
+    if (fa) {
+      await expect(page.getByText(listText('scopeReadDenied'), { exact: true })).toBeVisible();
+      await page.getByRole('button', { name: listText('scopeManual'), exact: true }).click();
+    }
     await page.getByRole('button', { name: listText('editPastedList') }).click();
     await page.locator('textarea#policy-items').fill('Meter readings\n\nBilling\nExtra');
     await page.getByRole('button', { name: listText('editIndividualItems') }).click();
@@ -109,6 +117,16 @@ for (const locale of ['en', 'fa'] as const)
       priorityOverride: null as number | null,
     };
     const group = { id: '01900000-0000-7000-8000-000000000002', title: 'Support', description: '' };
+    const references = [
+      {
+        id: '01900000-0000-7000-8000-000000000007',
+        title: locale === 'fa' ? 'راهنمای کنتور' : 'Meter guide',
+      },
+      {
+        id: '01900000-0000-7000-8000-000000000008',
+        title: locale === 'fa' ? 'راهنمای خورشیدی' : 'Solar guide',
+      },
+    ] as const;
     const policies: Record<string, unknown>[] = [{ ...policy }];
     const writes: unknown[] = [];
     let linked = false,
@@ -138,6 +156,9 @@ for (const locale of ['en', 'fa'] as const)
       policies.push(created);
       return route.fulfill({ status: 201, json: created });
     });
+    await page.route('**/api/admin/knowledge-bases', (route) =>
+      route.fulfill({ json: references })
+    );
     await page.route('**/api/admin/policies/*', (route) => {
       const id = new URL(route.request().url()).pathname.split('/').at(-1);
       const index = policies.findIndex((row) => row.id === id);
@@ -268,6 +289,48 @@ for (const locale of ['en', 'fa'] as const)
       policyType: 'rate_limit',
       rules: { maxRequests: 3, windowSeconds: 120 },
     });
+    await page.goto('/admin/policies/new');
+    await page.getByLabel(label('name'), { exact: true }).fill('Reference access');
+    await page.getByLabel(label('type'), { exact: true }).selectOption('data_access_scope');
+    const copy = (key: Parameters<typeof knowledgePolicyFormText>[0]) =>
+      knowledgePolicyFormText(key, locale);
+    const picker = page.getByRole('combobox', { name: copy('addKnowledgeMember'), exact: true });
+    const picked = page.getByRole('list', { name: copy('scopeSelected'), exact: true });
+    const allSources = page.getByRole('checkbox', { name: copy('scopeAll'), exact: true });
+    await click('save');
+    await expect(picker).toBeFocused();
+    await expect(picker).toHaveAttribute('aria-invalid', 'true');
+    await picker.fill(locale === 'fa' ? 'كنتور' : 'Meter');
+    await expect(
+      page.getByRole('option', { name: references[0].title, exact: true })
+    ).toBeVisible();
+    await picker.press('Enter');
+    await expect(picked).toContainText(references[0].title);
+    await picker.fill(locale === 'fa' ? 'خورشيدي' : 'Solar');
+    await page.getByRole('option', { name: references[1].title, exact: true }).click();
+    await expect(picked).toContainText(references[1].title);
+    await allSources.check();
+    await expect(picked).toContainText(references[0].title);
+    await expect(allSources).toHaveAccessibleDescription(copy('scopeAllHint'));
+    await picked
+      .getByRole('button', { name: copy('scopeRemove').replace('{name}', references[0].title) })
+      .click();
+    await expect(picker).toBeFocused();
+    await expect(picked).not.toContainText(references[0].title);
+    await click('save');
+    await confirm();
+    expect(writes.at(-1)).toMatchObject({
+      policyType: 'data_access_scope',
+      rules: { scopes: [`kb:${references[1].id}`, 'all'] },
+    });
+    const scopeId = policies.find((row) => row.title === 'Reference access')?.id;
+    await page.goto(`/admin/policies/${scopeId}/edit`);
+    await expect(picked).toContainText(references[1].title);
+    await expect(allSources).toBeChecked();
+    await allSources.uncheck();
+    await click('save');
+    await confirm();
+    expect(writes.at(-1)).toMatchObject({ rules: { scopes: [`kb:${references[1].id}`] } });
     await page.goto('/admin/policies/groups/new');
     await page.getByLabel(label('name'), { exact: true }).fill('Support');
     await click('save');

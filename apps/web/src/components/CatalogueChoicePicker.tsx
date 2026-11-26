@@ -74,7 +74,9 @@ export function CatalogueChoicePicker({
         aria-describedby={field['aria-describedby']}
         className="h-11 ps-9 aria-invalid:border-destructive"
       />
+      {/* Keep the portal inside the viewport while the app form scrolls independently. */}
       <ComboBoxPopup
+        positionMethod="fixed"
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
         emptyMessage={options.length ? labels.noMatches : labels.empty}
         className="max-h-[min(18rem,var(--available-height))] w-(--anchor-width) min-w-0 p-1 data-closed:animate-none"
