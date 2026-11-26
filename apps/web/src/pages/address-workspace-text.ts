@@ -5,9 +5,6 @@ const en = {
   profileRequiredHint: 'Open the dashboard to choose a profile before managing its addresses.',
   openDashboard: 'Open dashboard',
   details: 'Address details',
-  province: 'Search or choose a province',
-  city: 'Search or choose a city',
-  noMatch: 'No matching locations',
 };
 
 const fa: Record<keyof typeof en, string> = {
@@ -17,9 +14,6 @@ const fa: Record<keyof typeof en, string> = {
   profileRequiredHint: 'برای مدیریت آدرس‌ها، در داشبورد یک پروفایل انتخاب کنید.',
   openDashboard: 'باز کردن داشبورد',
   details: 'جزئیات آدرس',
-  province: 'جستجو یا انتخاب استان',
-  city: 'جستجو یا انتخاب شهر',
-  noMatch: 'موردی پیدا نشد',
 };
 
 export function addressWorkspaceText(key: keyof typeof en, locale: 'fa' | 'en') {

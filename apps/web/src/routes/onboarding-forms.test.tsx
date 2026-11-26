@@ -128,19 +128,24 @@ it.each(scenarios)('validates and saves the $type address through the wizard', a
     renderWorkspace(<Page />, host, accountId);
   });
   const form = within(host);
-  const province = form.getByRole<HTMLSelectElement>('combobox', { name: 'Province' });
-  const city = form.getByRole<HTMLSelectElement>('combobox', { name: 'City' });
-  expect(city.value).toBe('rey');
-  expect(province.value).toBe('tehran');
+  const province = form.getByRole<HTMLInputElement>('combobox', { name: 'Province' });
+  const cityField = () => form.getByRole<HTMLInputElement>('combobox', { name: 'City' });
+  expect(cityField().value).toBe('Rey');
+  expect(province.value).toBe('Tehran');
 
-  await act(async () => {
-    fireEvent.change(province, { target: { value: 'fars' } });
-  });
+  const popup = within(document.body);
+  await act(async () => province.focus());
+  fireEvent.keyDown(province, { key: 'ArrowDown' });
+  fireEvent.change(province, { target: { value: 'فار' } });
+  const fars = await popup.findByRole('option', { name: 'Fars' });
+  await act(async () => fireEvent.click(fars));
+  const city = cityField();
   expect(city.value).toBe('');
-  const cityOptions = within(city);
-  expect(cityOptions.getByRole('option', { name: 'Shiraz' })).toBeTruthy();
-  expect(form.queryByRole('option', { name: 'Rey' })).toBeNull();
-  fireEvent.change(city, { target: { value: 'shiraz' } });
+  await act(async () => city.focus());
+  fireEvent.keyDown(city, { key: 'ArrowDown' });
+  const shiraz = await popup.findByRole('option', { name: 'Shiraz' });
+  expect(popup.queryByRole('option', { name: 'Rey' })).toBeNull();
+  fireEvent.click(shiraz);
 
   const postalCode = form.getByRole('textbox', { name: 'Postal Code' });
   const next = form.getByRole('button', { name: 'Save and continue' });

@@ -1,4 +1,4 @@
-import { Skeleton } from '@barghsa/ui';
+import { GeographyPicker } from '../../../components/GeographyPicker.js';
 import { useOnboardingForm } from '../../../hooks/useOnboardingForm.js';
 import {
   OnboardingWizard,
@@ -19,7 +19,7 @@ import { useCallback } from 'react';
 import { createFileRoute, useRouter, useParams } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
-import { Input, Label, DependentSelect, NativeSelect, Textarea } from '@barghsa/ui';
+import { Input, Label, Textarea } from '@barghsa/ui';
 
 export const Route = createFileRoute('/onboarding/individual/$profileId')({
   // Presentation-only input is bounded when the wizard component loads.
@@ -84,7 +84,6 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
   );
   const provinces = provinceOptions.options;
   const cities = cityOptions.options;
-  const loadingProvinces = provinceOptions.loading;
   const geographyUnavailable =
     provinceOptions.loading || provinceOptions.error || cityOptions.loading || cityOptions.error;
 
@@ -389,39 +388,26 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                           *
                         </span>
                       </Label>
-                      {loadingProvinces ? (
-                        <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
-                          <Skeleton className="h-6 w-20 shrink-0" />
-                          {t('onboarding.individual.loading', locale)}
-                        </div>
-                      ) : (
-                        <NativeSelect
-                          id="provinceId"
-                          aria-required="true"
-                          ref={form.register('provinceId').ref}
-                          value={selectedProvinceId}
-                          onChange={(e) => {
-                            setSelectedProvinceId(e.target.value);
-                            setSelectedCityId('');
-                          }}
-                          onBlur={() => handleBlur('provinceId')}
-                          disabled={locked || !provinceOptions.ready}
-                          className="w-full"
-                          aria-invalid={touched.provinceId && !!errors.provinceId}
-                          aria-describedby={
-                            touched.provinceId && errors.provinceId ? 'provinceId-error' : undefined
-                          }
-                        >
-                          <option value="">
-                            {t('onboarding.individual.province.placeholder', locale)}
-                          </option>
-                          {provinces.map((p) => (
-                            <option key={p.id} value={p.id}>
-                              {isRtl ? p.nameFa : p.nameEn}
-                            </option>
-                          ))}
-                        </NativeSelect>
-                      )}
+                      <GeographyPicker
+                        kind="province"
+                        locale={locale}
+                        id="provinceId"
+                        inputRef={form.register('provinceId').ref}
+                        selected={selectedProvinceId}
+                        options={provinces}
+                        onChange={(id) => {
+                          if (id === selectedProvinceId) return;
+                          setSelectedProvinceId(id);
+                          setSelectedCityId('');
+                        }}
+                        onBlur={() => handleBlur('provinceId')}
+                        disabled={locked || !provinceOptions.ready}
+                        loading={provinceOptions.loading}
+                        aria-invalid={touched.provinceId && !!errors.provinceId}
+                        aria-describedby={
+                          touched.provinceId && errors.provinceId ? 'provinceId-error' : undefined
+                        }
+                      />
                       {touched.provinceId && errors.provinceId && (
                         <p id="provinceId-error" className="text-sm text-destructive" role="alert">
                           {errors.provinceId}
@@ -437,24 +423,19 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                           *
                         </span>
                       </Label>
-                      <DependentSelect
-                        className="h-11 pointer-coarse:min-h-[45px]!"
+                      <GeographyPicker
+                        key={selectedProvinceId}
+                        kind="city"
+                        locale={locale}
                         id="cityId"
-                        aria-required="true"
-                        ref={form.register('cityId').ref}
-                        dependencyValue={selectedProvinceId}
-                        value={selectedCityId}
-                        options={cities.map((city) => ({
-                          value: city.id,
-                          label: isRtl ? city.nameFa : city.nameEn,
-                          dependencyValue: city.provinceId ?? '',
-                        }))}
-                        ready={cityOptions.ready}
+                        inputRef={form.register('cityId').ref}
+                        selected={selectedCityId}
+                        options={cities}
+                        disabled={locked || !cityOptions.ready}
                         loading={cityOptions.loading}
-                        placeholder={t('onboarding.individual.city.placeholder', locale)}
-                        onChange={(e) => setSelectedCityId(e.target.value)}
+                        hasProvince={!!selectedProvinceId}
+                        onChange={setSelectedCityId}
                         onBlur={() => handleBlur('cityId')}
-                        disabled={locked}
                         aria-invalid={touched.cityId && !!errors.cityId}
                         aria-describedby={
                           touched.cityId && errors.cityId ? 'cityId-error' : undefined

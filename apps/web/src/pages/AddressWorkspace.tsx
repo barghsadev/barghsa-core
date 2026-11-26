@@ -1,7 +1,7 @@
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { Skeleton } from '@barghsa/ui';
-import { useRef, type Ref } from 'react';
+import { useRef } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import {
   useSavedAddressSettingsEditor,
@@ -10,14 +10,10 @@ import {
 import type { SavedAddress as Address } from '../lib/settings-form.js';
 import { t } from '@barghsa/i18n/app';
 import { addressesText } from '@barghsa/i18n/addresses';
-import { MapPinIcon, PlusIcon, PencilIcon, SearchIcon, Trash2Icon, StarIcon } from 'lucide-react';
+import { MapPinIcon, PlusIcon, PencilIcon, Trash2Icon, StarIcon } from 'lucide-react';
 import {
   Button,
   buttonVariants,
-  ComboBox,
-  ComboBoxInput,
-  ComboBoxItem,
-  ComboBoxPopup,
   Card,
   CardContent,
   Dialog,
@@ -42,7 +38,7 @@ import {
 } from '@barghsa/ui/form';
 
 import { useLocale } from '../hooks/useLocale.js';
-import type { GeographyOption } from '../hooks/useGeographyOptions.js';
+import { GeographyPicker } from '../components/GeographyPicker.js';
 import { addressWorkspaceText } from './address-workspace-text.js';
 import { type AddressReturn } from '../lib/address-return.js';
 import { RecordEditorSection, recordEditorGrid } from '../components/RecordEditorLayout.js';
@@ -51,106 +47,6 @@ import {
   keepRecordFieldVisible,
   recordEditorFormSurface,
 } from '../components/StickyRecordEditorActions.js';
-
-function matchableName(value: string) {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[يى]/g, 'ی')
-    .replace(/ك/g, 'ک')
-    .replace(/\u200c/g, ' ');
-}
-
-function AddressLocationPicker({
-  locale,
-  options,
-  selected,
-  saved,
-  placeholder,
-  disabled,
-  loading,
-  inputRef,
-  onChange,
-  onBlur,
-}: {
-  locale: 'fa' | 'en';
-  options: readonly GeographyOption[];
-  selected: string;
-  saved?: GeographyOption;
-  placeholder: string;
-  disabled: boolean;
-  loading?: boolean;
-  inputRef: Ref<HTMLInputElement>;
-  onChange: (id: string) => void;
-  onBlur: () => void;
-}) {
-  const label = (option: GeographyOption) => (locale === 'fa' ? option.nameFa : option.nameEn);
-  const value = options.find((option) => option.id === selected) ?? saved ?? null;
-  const direction = locale === 'fa' ? 'rtl' : 'ltr';
-
-  return (
-    <ComboBox
-      items={options}
-      value={value}
-      itemToStringLabel={label}
-      itemToStringValue={(option) => option.id}
-      isItemEqualToValue={(option, selection) => option.id === selection.id}
-      filter={(option, query) => {
-        const search = matchableName(query);
-        return (
-          matchableName(option.nameFa).includes(search) ||
-          matchableName(option.nameEn).includes(search)
-        );
-      }}
-      autoHighlight
-      openOnInputClick
-      disabled={disabled}
-      onValueChange={(option) => {
-        if (!disabled && (!option || options.some(({ id }) => id === option.id)))
-          onChange(option?.id ?? '');
-      }}
-    >
-      <SearchIcon
-        aria-hidden="true"
-        className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-      />
-      <FormControl>
-        <ComboBoxInput
-          ref={inputRef}
-          onBlur={onBlur}
-          aria-required="true"
-          aria-busy={loading || undefined}
-          placeholder={placeholder}
-          className="h-11 ps-9 aria-invalid:border-destructive"
-          dir={direction}
-        />
-      </FormControl>
-      <ComboBoxPopup
-        dir={direction}
-        emptyMessage={addressWorkspaceText('noMatch', locale)}
-        className="w-(--anchor-width) min-w-0 p-1"
-      >
-        {(option: GeographyOption) => (
-          <ComboBoxItem
-            key={option.id}
-            value={option}
-            aria-label={label(option)}
-            className="min-h-10"
-          >
-            <span className="flex min-w-0 flex-1 flex-wrap items-baseline justify-between gap-x-2">
-              <bdi className="font-medium">{label(option)}</bdi>
-              {option.nameFa !== option.nameEn && (
-                <bdi className="text-xs text-muted-foreground" lang={locale === 'fa' ? 'en' : 'fa'}>
-                  {locale === 'fa' ? option.nameEn : option.nameFa}
-                </bdi>
-              )}
-            </span>
-          </ComboBoxItem>
-        )}
-      </ComboBoxPopup>
-    </ComboBox>
-  );
-}
 
 export function AddressWorkspace({
   view,
@@ -577,37 +473,31 @@ export function AddressWorkspace({
                     render={({ field }) => (
                       <FormItem id="addresses-field-1">
                         <FormLabel>{t('settings.addresses.form.province', locale)}</FormLabel>
-                        <AddressLocationPicker
-                          locale={locale}
-                          options={provinces}
-                          selected={field.value}
-                          {...(editingAddress && field.value === editingAddress.provinceId
-                            ? {
-                                saved: {
-                                  id: field.value,
-                                  nameFa:
-                                    editingAddress.provinceNameFa ??
-                                    getProvinceName(editingAddress),
-                                  nameEn:
-                                    editingAddress.provinceNameEn ??
-                                    getProvinceName(editingAddress),
-                                },
-                              }
-                            : {})}
-                          placeholder={addressWorkspaceText('province', locale)}
-                          disabled={locked || !provinceOptions.ready}
-                          loading={provinceOptions.loading}
-                          inputRef={field.ref}
-                          onBlur={field.onBlur}
-                          onChange={(id) => {
-                            if (command.coordination.isLocked() || id === field.value) return;
-                            form.setValue('cityId', '', {
-                              shouldDirty: true,
-                              shouldValidate: Boolean(form.formState.touchedFields.cityId),
-                            });
-                            field.onChange(id);
-                          }}
-                        />
+                        <FormControl>
+                          <GeographyPicker
+                            kind="province"
+                            locale={locale}
+                            options={provinces}
+                            selected={field.value}
+                            savedLabel={
+                              editingAddress && field.value === editingAddress.provinceId
+                                ? getProvinceName(editingAddress)
+                                : undefined
+                            }
+                            disabled={locked || !provinceOptions.ready}
+                            loading={provinceOptions.loading}
+                            inputRef={field.ref}
+                            onBlur={field.onBlur}
+                            onChange={(id) => {
+                              if (command.coordination.isLocked() || id === field.value) return;
+                              form.setValue('cityId', '', {
+                                shouldDirty: true,
+                                shouldValidate: Boolean(form.formState.touchedFields.cityId),
+                              });
+                              field.onChange(id);
+                            }}
+                          />
+                        </FormControl>
                         <FormMessage reserveSpace />
                       </FormItem>
                     )}
@@ -618,35 +508,28 @@ export function AddressWorkspace({
                     render={({ field }) => (
                       <FormItem id="addresses-field-2">
                         <FormLabel>{t('settings.addresses.form.city', locale)}</FormLabel>
-                        <AddressLocationPicker
-                          key={formProvinceId}
-                          locale={locale}
-                          options={cities}
-                          selected={field.value}
-                          {...(editingAddress && historicalPair
-                            ? {
-                                saved: {
-                                  id: field.value,
-                                  nameFa: editingAddress.cityNameFa ?? getCityName(editingAddress),
-                                  nameEn: editingAddress.cityNameEn ?? getCityName(editingAddress),
-                                },
-                              }
-                            : {})}
-                          placeholder={
-                            !formProvinceId
-                              ? addressesText('provinceFirst', locale)
-                              : cityOptions.loading
-                                ? addressesText('loadingCities', locale)
-                                : addressWorkspaceText('city', locale)
-                          }
-                          disabled={locked || !cityOptions.ready}
-                          loading={cityOptions.loading}
-                          inputRef={field.ref}
-                          onBlur={field.onBlur}
-                          onChange={(id) => {
-                            if (!command.coordination.isLocked()) field.onChange(id);
-                          }}
-                        />
+                        <FormControl>
+                          <GeographyPicker
+                            kind="city"
+                            key={formProvinceId}
+                            locale={locale}
+                            options={cities}
+                            selected={field.value}
+                            savedLabel={
+                              editingAddress && historicalPair
+                                ? getCityName(editingAddress)
+                                : undefined
+                            }
+                            hasProvince={!!formProvinceId}
+                            disabled={locked || !cityOptions.ready}
+                            loading={cityOptions.loading}
+                            inputRef={field.ref}
+                            onBlur={field.onBlur}
+                            onChange={(id) => {
+                              if (!command.coordination.isLocked()) field.onChange(id);
+                            }}
+                          />
+                        </FormControl>
                         <FormMessage reserveSpace />
                       </FormItem>
                     )}

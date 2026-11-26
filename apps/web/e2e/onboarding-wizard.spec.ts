@@ -1,6 +1,8 @@
+import { selectAddressLocation } from './address-location-fixture';
 import { t } from '@barghsa/i18n/app';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { t as crmText } from '@barghsa/i18n/crm';
+import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { t as draftText } from '@barghsa/i18n/onboarding-drafts';
@@ -233,22 +235,37 @@ for (const locale of ['en', 'fa'] as const)
       await retry.click();
       await expect(city).toBeEnabled();
       await expect(connectionNotice).toHaveCount(address === 'personal' ? 1 : 0);
-      await expect(city).toHaveValue(cityId);
+      await expect(city).toHaveValue(locale === 'fa' ? 'تهران' : 'Tehran');
       await expect(full).toHaveValue('Retained address draft');
-      await province.selectOption(nextProvince);
+      await selectAddressLocation(page, province, locale === 'fa' ? 'فارس' : 'Fars');
       await waiting;
       await expect(city).toBeDisabled();
       await expect(city).toHaveAttribute('aria-busy', 'true');
       await expect(city).toHaveValue('');
-      await province.selectOption(provinceId);
+      await selectAddressLocation(page, province, locale === 'fa' ? 'تهران' : 'Tehran');
       await expect(city).toBeEnabled();
       await expect(city).toHaveValue('');
       finish();
-      await city.selectOption(cityId);
-      await expect(city.locator('option[value="late-city"]')).toHaveCount(0);
+      await city.fill(locale === 'fa' ? 'TEH' : 'تهر');
+      const result = page.getByRole('option', {
+        name: locale === 'fa' ? 'تهران' : 'Tehran',
+        exact: true,
+      });
+      await expect(result).toBeVisible();
+      await expect(page.getByRole('option')).toHaveCount(1);
+      const activePopup = '[data-slot=combobox-popup][data-open]';
+      await page.locator(activePopup).evaluate(async (popup) => {
+        await Promise.allSettled(popup.getAnimations().map((animation) => animation.finished));
+      });
+      expect((await new AxeBuilder({ page }).include(activePopup).analyze()).violations).toEqual(
+        []
+      );
+      await city.press('ArrowDown');
+      await city.press('Enter');
+      await expect(city).toHaveValue(locale === 'fa' ? 'تهران' : 'Tehran');
       await expect(full).toHaveValue('Retained address draft');
       expect(state.submissions).toHaveLength(0);
-      await expect(city).toHaveAttribute('data-slot', 'dependent-select');
+      await expect(city).toHaveAttribute('data-slot', 'combobox-input');
       expect((await new AxeBuilder({ page }).include('.container').analyze()).violations).toEqual(
         []
       );
@@ -760,8 +777,16 @@ for (const locale of ['en', 'fa'] as const) {
     if (locale === 'fa')
       await page.screenshot({ path: '/tmp/barghsa-form-step-fa-province.png', fullPage: true });
     expect((await new AxeBuilder({ page }).include('form').analyze()).violations).toEqual([]);
-    await page.locator('#officialProvinceId').selectOption(provinceId);
-    await page.locator('#officialCityId').selectOption(cityId);
+    await selectAddressLocation(
+      page,
+      page.locator('#officialProvinceId'),
+      locale === 'fa' ? 'تهران' : 'Tehran'
+    );
+    await selectAddressLocation(
+      page,
+      page.locator('#officialCityId'),
+      locale === 'fa' ? 'تهران' : 'Tehran'
+    );
     await next(page, locale);
     await next(page, locale);
     await submit(page, locale);
@@ -824,9 +849,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(province).toHaveAttribute('aria-required', 'true');
     await expect(city).toHaveAttribute('aria-required', 'true');
     await expect(city).toBeDisabled();
-    await province.selectOption(provinceId);
+    await selectAddressLocation(page, province, locale === 'fa' ? 'تهران' : 'Tehran');
     await expect(city).toBeEnabled();
-    await city.selectOption(cityId);
+    await selectAddressLocation(page, city, locale === 'fa' ? 'تهران' : 'Tehran');
     for (const [id, field] of [
       ['fullAddress', 'address'],
       ['postalCode', 'postalCode'],
@@ -1242,8 +1267,16 @@ for (const locale of ['fa', 'en'] as const)
         const address = async (prefix: '' | 'representative' | 'official', street: string) => {
           const field = (key: string) =>
             prefix ? `${prefix}${key[0]!.toUpperCase()}${key.slice(1)}` : key;
-          await page.locator(`#${field('provinceId')}`).selectOption(provinceId);
-          await page.locator(`#${field('cityId')}`).selectOption(cityId);
+          await selectAddressLocation(
+            page,
+            page.locator(`#${field('provinceId')}`),
+            locale === 'fa' ? 'تهران' : 'Tehran'
+          );
+          await selectAddressLocation(
+            page,
+            page.locator(`#${field('cityId')}`),
+            locale === 'fa' ? 'تهران' : 'Tehran'
+          );
           await fill({
             [field('fullAddress')]: street,
             [field('postalCode')]: individual.postalCode,
@@ -1389,6 +1422,13 @@ for (const locale of ['fa', 'en'] as const)
         });
         staff = true;
         await page.goto(`/admin/crm/profiles/${profileId}`);
+        await page
+          .getByRole('link', {
+            name: verificationConfigText('identityReview', locale),
+            exact: true,
+          })
+          .click();
+        await expect(page).toHaveURL(new RegExp(`/admin/crm/profiles/${profileId}/verification$`));
         const review = page.getByRole('button', {
           name: crmText('crm.profile.verification.review', locale),
           exact: true,

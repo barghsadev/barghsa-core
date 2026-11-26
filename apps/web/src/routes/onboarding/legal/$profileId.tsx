@@ -1,3 +1,4 @@
+import { GeographyPicker } from '../../../components/GeographyPicker.js';
 import { Skeleton } from '@barghsa/ui';
 import { useOnboardingForm } from '../../../hooks/useOnboardingForm.js';
 import {
@@ -29,7 +30,6 @@ import {
   Button,
   Input,
   Label,
-  DependentSelect,
   NativeSelect,
   Textarea,
   DatePicker,
@@ -199,7 +199,6 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
   const cities = cityOptions.options;
   const representativeCities = representativeCityOptions.options;
   const companyTypes = companyTypeOptions.options;
-  const loadingProvinces = provinceOptions.loading;
   const loadingCompanyTypes = companyTypeOptions.loading;
   const companyTypesError = companyTypeOptions.error;
   const fetchCompanyTypes = companyTypeOptions.retry;
@@ -709,68 +708,56 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                                   *
                                 </span>
                               </Label>
-                              {field === 'representativeCityId' ? (
-                                <DependentSelect
-                                  className="h-11 pointer-coarse:min-h-[45px]!"
-                                  id={field}
-                                  ref={form.register(field).ref}
-                                  required
-                                  aria-required="true"
-                                  dependencyValue={representative.representativeProvinceId}
-                                  value={representative[field]}
-                                  ready={representativeCityOptions.ready}
-                                  loading={representativeCityOptions.loading}
-                                  options={representativeCities.map((city) => ({
-                                    value: city.id,
-                                    label: isRtl ? city.nameFa : city.nameEn,
-                                    dependencyValue: city.provinceId ?? '',
-                                  }))}
-                                  placeholder={t(`onboarding.legal.${field}`, locale)}
-                                  disabled={locked}
-                                  onChange={(event) =>
-                                    setRepresentative((prev) => ({
-                                      ...prev,
-                                      representativeCityId: event.target.value,
-                                    }))
-                                  }
-                                  onBlur={() => handleBlur(field)}
-                                  aria-invalid={touched[field] && !!errors[field]}
-                                  aria-describedby={
-                                    touched[field] && errors[field] ? `${field}-error` : undefined
-                                  }
-                                />
-                              ) : (
-                                <NativeSelect
-                                  id={field}
-                                  ref={form.register(field).ref}
-                                  required
-                                  aria-required="true"
-                                  value={representative[field]}
-                                  disabled={locked || !provinceOptions.ready}
-                                  onChange={(event) =>
-                                    setRepresentative((prev) => ({
-                                      ...prev,
-                                      [field]: event.target.value,
-                                      ...(field === 'representativeProvinceId'
-                                        ? { representativeCityId: '' }
-                                        : {}),
-                                    }))
-                                  }
-                                  onBlur={() => handleBlur(field)}
-                                  aria-invalid={touched[field] && !!errors[field]}
-                                  aria-describedby={
-                                    touched[field] && errors[field] ? `${field}-error` : undefined
-                                  }
-                                  className="w-full"
-                                >
-                                  <option value="">{t(`onboarding.legal.${field}`, locale)}</option>
-                                  {provinces.map((item) => (
-                                    <option key={item.id} value={item.id}>
-                                      {isRtl ? item.nameFa : item.nameEn}
-                                    </option>
-                                  ))}
-                                </NativeSelect>
-                              )}
+                              <GeographyPicker
+                                key={
+                                  field === 'representativeCityId'
+                                    ? representative.representativeProvinceId
+                                    : field
+                                }
+                                kind={field === 'representativeCityId' ? 'city' : 'province'}
+                                locale={locale}
+                                id={field}
+                                inputRef={form.register(field).ref}
+                                selected={representative[field]}
+                                options={
+                                  field === 'representativeCityId'
+                                    ? representativeCities
+                                    : provinces
+                                }
+                                disabled={
+                                  locked ||
+                                  !(field === 'representativeCityId'
+                                    ? representativeCityOptions.ready
+                                    : provinceOptions.ready)
+                                }
+                                loading={
+                                  field === 'representativeCityId'
+                                    ? representativeCityOptions.loading
+                                    : provinceOptions.loading
+                                }
+                                hasProvince={
+                                  field !== 'representativeCityId' ||
+                                  !!representative.representativeProvinceId
+                                }
+                                onChange={(id) =>
+                                  setRepresentative((previous) =>
+                                    previous[field] === id
+                                      ? previous
+                                      : {
+                                          ...previous,
+                                          [field]: id,
+                                          ...(field === 'representativeProvinceId'
+                                            ? { representativeCityId: '' }
+                                            : {}),
+                                        }
+                                  )
+                                }
+                                onBlur={() => handleBlur(field)}
+                                aria-invalid={touched[field] && !!errors[field]}
+                                aria-describedby={
+                                  touched[field] && errors[field] ? `${field}-error` : undefined
+                                }
+                              />
                               {field === 'representativeCityId' && (
                                 <GeographyLoadError
                                   {...representativeCityOptions}
@@ -1034,42 +1021,28 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                             *
                           </span>
                         </Label>
-                        {loadingProvinces ? (
-                          <div className="flex h-10 items-center gap-2 text-sm text-muted-foreground">
-                            <Skeleton className="h-6 w-20 shrink-0" />
-                            {isRtl ? 'در حال بارگذاری...' : 'Loading...'}
-                          </div>
-                        ) : (
-                          <NativeSelect
-                            id="officialProvinceId"
-                            ref={form.register('officialProvinceId').ref}
-                            required
-                            aria-required="true"
-                            value={officialProvinceId}
-                            onChange={(e) => {
-                              setOfficialProvinceId(e.target.value);
-                              setOfficialCityId('');
-                            }}
-                            onBlur={() => handleBlur('officialProvinceId')}
-                            aria-invalid={touched.officialProvinceId && !!errors.officialProvinceId}
-                            aria-describedby={
-                              touched.officialProvinceId && errors.officialProvinceId
-                                ? 'officialProvinceId-error'
-                                : undefined
-                            }
-                            disabled={locked || !provinceOptions.ready}
-                            className="w-full"
-                          >
-                            <option value="">
-                              {isRtl ? 'استان را انتخاب کنید' : 'Select province'}
-                            </option>
-                            {provinces.map((p) => (
-                              <option key={p.id} value={p.id}>
-                                {isRtl ? p.nameFa : p.nameEn}
-                              </option>
-                            ))}
-                          </NativeSelect>
-                        )}
+                        <GeographyPicker
+                          kind="province"
+                          locale={locale}
+                          id="officialProvinceId"
+                          inputRef={form.register('officialProvinceId').ref}
+                          selected={officialProvinceId}
+                          options={provinces}
+                          disabled={locked || !provinceOptions.ready}
+                          loading={provinceOptions.loading}
+                          onChange={(id) => {
+                            if (id === officialProvinceId) return;
+                            setOfficialProvinceId(id);
+                            setOfficialCityId('');
+                          }}
+                          onBlur={() => handleBlur('officialProvinceId')}
+                          aria-invalid={touched.officialProvinceId && !!errors.officialProvinceId}
+                          aria-describedby={
+                            touched.officialProvinceId && errors.officialProvinceId
+                              ? 'officialProvinceId-error'
+                              : undefined
+                          }
+                        />
                         {touched.officialProvinceId && errors.officialProvinceId && (
                           <p
                             id="officialProvinceId-error"
@@ -1089,25 +1062,19 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                             *
                           </span>
                         </Label>
-                        <DependentSelect
-                          className="h-11 pointer-coarse:min-h-[45px]!"
+                        <GeographyPicker
+                          key={officialProvinceId}
+                          kind="city"
+                          locale={locale}
                           id="officialCityId"
-                          ref={form.register('officialCityId').ref}
-                          required
-                          aria-required="true"
-                          dependencyValue={officialProvinceId}
-                          value={officialCityId}
-                          ready={cityOptions.ready}
+                          inputRef={form.register('officialCityId').ref}
+                          selected={officialCityId}
+                          options={cities}
+                          disabled={locked || !cityOptions.ready}
                           loading={cityOptions.loading}
-                          options={cities.map((city) => ({
-                            value: city.id,
-                            label: isRtl ? city.nameFa : city.nameEn,
-                            dependencyValue: city.provinceId ?? '',
-                          }))}
-                          placeholder={t('onboarding.individual.city.placeholder', locale)}
-                          onChange={(e) => setOfficialCityId(e.target.value)}
+                          hasProvince={!!officialProvinceId}
+                          onChange={setOfficialCityId}
                           onBlur={() => handleBlur('officialCityId')}
-                          disabled={locked}
                           aria-invalid={touched.officialCityId && !!errors.officialCityId}
                           aria-describedby={
                             touched.officialCityId && errors.officialCityId

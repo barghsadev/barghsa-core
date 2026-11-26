@@ -5,7 +5,6 @@ import { t } from '@barghsa/i18n/app';
 import { t as crmText } from '@barghsa/i18n/crm';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
 import { selectAddressLocation } from './address-location-fixture';
-import { addressWorkspaceText } from '../src/pages/address-workspace-text';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const p1 = '22222222-2222-4222-8222-222222222222';
@@ -402,7 +401,9 @@ for (const locale of ['en', 'fa'] as const)
       await expect(city).toHaveValue('');
       await expect(city).toBeEnabled();
       await city.fill('Unavailable');
-      await expect(page.getByText(addressWorkspaceText('noMatch', locale))).toBeVisible();
+      await expect(
+        page.getByText(locale === 'fa' ? 'موردی پیدا نشد' : 'No matching locations')
+      ).toBeVisible();
       await expect(page.getByRole('option')).toHaveCount(0);
       await city.fill(locale === 'fa' ? 'SHIR' : 'شیرا');
       await expect(

@@ -551,8 +551,8 @@ for (const locale of ['en', 'fa']) {
           {
             id: route.request().url().includes('province-a') ? 'city-a' : 'city-b',
             provinceId: route.request().url().includes('province-a') ? 'province-a' : 'province-b',
-            nameFa: 'شهر',
-            nameEn: 'City',
+            nameFa: route.request().url().includes('province-a') ? 'شهر الف' : 'شهر ب',
+            nameEn: route.request().url().includes('province-a') ? 'City A' : 'City B',
           },
         ],
       })
@@ -593,8 +593,16 @@ for (const locale of ['en', 'fa']) {
     await page
       .locator('#representativeNationalId')
       .fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۱' : '١٢٣٤٥٦٧٨٩١');
-    await page.locator('#representativeProvinceId').selectOption('province-a');
-    await page.locator('#representativeCityId').selectOption('city-a');
+    await selectAddressLocation(
+      page,
+      page.locator('#representativeProvinceId'),
+      locale === 'fa' ? 'استان الف' : 'Province A'
+    );
+    await selectAddressLocation(
+      page,
+      page.locator('#representativeCityId'),
+      locale === 'fa' ? 'شهر الف' : 'City A'
+    );
     await page.locator('#representativeFullAddress').fill('Representative Street');
     await page
       .locator('#representativePostalCode')
@@ -614,12 +622,31 @@ for (const locale of ['en', 'fa']) {
         exact: true,
       })
     ).toBeVisible();
-    await page.locator('#officialProvinceId').selectOption('province-a');
-    await page.locator('#officialCityId').selectOption('city-a');
-    await page.locator('#officialProvinceId').selectOption('province-b');
+    await selectAddressLocation(
+      page,
+      page.locator('#officialProvinceId'),
+      locale === 'fa' ? 'استان الف' : 'Province A'
+    );
+    await selectAddressLocation(
+      page,
+      page.locator('#officialCityId'),
+      locale === 'fa' ? 'شهر الف' : 'City A'
+    );
+    await selectAddressLocation(
+      page,
+      page.locator('#officialProvinceId'),
+      locale === 'fa' ? 'استان ب' : 'Province B'
+    );
     await expect(page.locator('#officialCityId')).toHaveValue('');
-    await expect(page.locator('#officialCityId option[value="city-a"]')).toHaveCount(0);
-    await page.locator('#officialCityId').selectOption('city-b');
+    await page.locator('#officialCityId').click();
+    await expect(
+      page.getByRole('option', { name: locale === 'fa' ? 'شهر الف' : 'City A', exact: true })
+    ).toHaveCount(0);
+    await selectAddressLocation(
+      page,
+      page.locator('#officialCityId'),
+      locale === 'fa' ? 'شهر ب' : 'City B'
+    );
     await page.locator('#officialFullAddress').fill('Street');
     await page.locator('#officialPostalCode').fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۰' : '١٢٣٤٥٦٧٨٩٠');
     await wizardNext(page, locale);
@@ -700,8 +727,12 @@ for (const locale of ['en', 'fa']) {
     await expect(page.locator('#nationalId')).toHaveValue('0012');
     await page.locator('#nationalId').fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۱' : '١٢٣٤٥٦٧٨٩١');
     await wizardNext(page, locale);
-    await page.locator('#provinceId').selectOption('province-one');
-    await page.locator('#cityId').selectOption('city-one');
+    await selectAddressLocation(
+      page,
+      page.locator('#provinceId'),
+      locale === 'fa' ? 'استان' : 'Province'
+    );
+    await selectAddressLocation(page, page.locator('#cityId'), locale === 'fa' ? 'شهر' : 'City');
     await page.locator('#fullAddress').fill('Street');
     await page.locator('#postalCode').fill(locale === 'fa' ? '۱۲۳۴۵۶۷۸۹۰' : '١٢٣٤٥٦٧٨٩٠');
     await wizardNext(page, locale);
@@ -3866,13 +3897,21 @@ for (const locale of ['en', 'fa'])
       if (kind === 'legal') {
         await page.locator('#representativeLastName').fill('Owner');
         await page.locator('#representativeNationalId').fill('1234567891');
-        await page.locator('#representativeProvinceId').selectOption(province.id);
+        await selectAddressLocation(
+          page,
+          page.locator('#representativeProvinceId'),
+          locale === 'fa' ? province.nameFa : province.nameEn
+        );
         await expect(page.getByTestId('onboarding-representative-cities-retry')).toBeVisible();
         cityResponse = [
           { id: 'city-one', provinceId: province.id, nameEn: 'City One', nameFa: 'شهر یک' },
         ];
         await page.getByTestId('onboarding-representative-cities-retry').click();
-        await page.locator('#representativeCityId').selectOption('city-one');
+        await selectAddressLocation(
+          page,
+          page.locator('#representativeCityId'),
+          locale === 'fa' ? 'شهر یک' : 'City One'
+        );
         await page.locator('#representativeFullAddress').fill('Street');
         await page.locator('#representativePostalCode').fill('1234567890');
         await page.locator('#representativeTitle').fill('CEO');
@@ -3897,20 +3936,24 @@ for (const locale of ['en', 'fa'])
         ];
       }
       const provinceInput = page.locator(kind === 'legal' ? '#officialProvinceId' : '#provinceId');
-      await provinceInput.selectOption(province.id);
+      await selectAddressLocation(
+        page,
+        provinceInput,
+        locale === 'fa' ? province.nameFa : province.nameEn
+      );
       const cityRetry = page.getByTestId(
         kind === 'legal' ? 'onboarding-official-cities-retry' : 'onboarding-cities-retry'
       );
       await expect(cityRetry).toBeVisible();
       const cityInput = page.locator(kind === 'legal' ? '#officialCityId' : '#cityId');
-      await expect(cityInput.locator('option[value="wrong-city"]')).toHaveCount(0);
+      await expect(cityInput).toBeDisabled();
       cityResponse = [
         { id: 'city-one', provinceId: province.id, nameEn: 'City One', nameFa: 'شهر یک' },
       ];
       await cityRetry.click();
-      await cityInput.selectOption('city-one');
+      await selectAddressLocation(page, cityInput, locale === 'fa' ? 'شهر یک' : 'City One');
       await expect(name).toHaveValue('Retained identity');
-      await expect(cityInput).toHaveValue('city-one');
+      await expect(cityInput).toHaveValue(locale === 'fa' ? 'شهر یک' : 'City One');
     });
 
 for (const locale of ['en', 'fa']) {
