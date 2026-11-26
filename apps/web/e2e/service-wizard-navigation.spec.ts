@@ -792,6 +792,34 @@ for (const locale of ['en', 'fa'] as const) {
   });
 }
 
+for (const locale of ['en', 'fa'] as const)
+  test(`saving requires a replacement for an unavailable draft address (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, 'saving', locale, 2);
+    const missingAddress = '90000000-0000-4000-8000-000000000001';
+    state.draft.data = { ...savingData, addressId: missingAddress };
+    await open(page, 'saving', locale);
+    const notice = workspaceCopy('electricity.order.savedAddressUnavailable', locale);
+    const addresses = page.getByRole('radiogroup', {
+      name: tSaving('chooseAddress', locale),
+      exact: true,
+    });
+    await expect(addresses).toHaveAccessibleDescription(notice);
+    await expect(addresses.getByRole('radio')).not.toBeChecked();
+    await expect(savingReviewButton(page, locale)).toBeDisabled();
+    expect(state.saves.at(-1)?.data).toMatchObject({ addressId: missingAddress });
+    await addresses.getByRole('radio').check();
+    await expect(page.getByText(notice, { exact: true })).toHaveCount(0);
+    await expect(savingReviewButton(page, locale)).toBeEnabled();
+    await savingReviewButton(page, locale).click();
+    await expect(page.locator('[data-review-section=bill]')).toContainText(
+      savingData.billIdentifier
+    );
+    expect(state.saves.at(-1)?.data).toEqual(savingData);
+    expect(state.orders).toEqual([]);
+  });
+
 for (const mode of ['saving', 'solar'] as const)
   for (const locale of ['en', 'fa'] as const) {
     test(

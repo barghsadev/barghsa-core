@@ -12,6 +12,7 @@ import { t } from '@barghsa/i18n/app';
 import { toast } from '../lib/toast-api.js';
 import { AdvancedElectricityReview } from '../components/AdvancedElectricityReview.js';
 import {
+  WizardDraftAddressNotice,
   wizardActionSurface,
   wizardChoiceCard,
   wizardChoiceRadio,
@@ -293,6 +294,7 @@ export function AdvancedElectricityOrderPage() {
   const activeBlocker = useRef(blocker);
   activeBlocker.current = blocker;
   const selectedAddress = addresses.find((address) => address.id === addressId);
+  const savedAddressUnavailable = !!addressId && !selectedAddress;
   const startAt = useMemo(() => parseJalaliDateTime(start), [start]);
   const endAt = useMemo(() => parseJalaliDateTime(end), [end]);
   const deliveryTime = useMemo(
@@ -461,7 +463,8 @@ export function AdvancedElectricityOrderPage() {
           : end;
         const restoredQuantities = { ...emptyQuantities, ...draft.data?.quantities };
         const restoredGift = draft.data?.giftCode ?? '';
-        setAddressId(takeSavedOrderAddress(profileId, addresses) ?? restoredAddress);
+        const currentAddress = takeSavedOrderAddress(profileId, addresses) ?? restoredAddress;
+        setAddressId(currentAddress);
         setStart(restoredStart);
         setEnd(restoredEnd);
         setQuantities(restoredQuantities);
@@ -473,7 +476,11 @@ export function AdvancedElectricityOrderPage() {
           restoredGift,
           restoredAddress,
         ]);
-        wizard.restore(draft.currentStep);
+        wizard.restore(
+          draft.currentStep === 5 && !addresses.some((address) => address.id === currentAddress)
+            ? 4
+            : draft.currentStep
+        );
         setLoadError(false);
         setLoading(false);
       })
@@ -1117,10 +1124,14 @@ export function AdvancedElectricityOrderPage() {
                   <h2 id="advanced-address-title" className="font-semibold">
                     {t('electricity.order.selectAddress', locale)}
                   </h2>
+                  {savedAddressUnavailable && <WizardDraftAddressNotice />}
                   {addresses.length > 0 ? (
                     <div
                       role="radiogroup"
                       aria-labelledby="advanced-address-title"
+                      aria-describedby={
+                        savedAddressUnavailable ? 'draft-address-unavailable' : undefined
+                      }
                       aria-required="true"
                       className="space-y-2"
                     >

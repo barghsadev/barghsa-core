@@ -59,7 +59,7 @@ import {
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { ElectricityQuoteErrorNotice } from '../components/ElectricityQuoteErrorNotice.js';
-import { wizardActionSurface } from '../components/FormWizard.js';
+import { WizardDraftAddressNotice, wizardActionSurface } from '../components/FormWizard.js';
 import { ValidatedFormWizard } from '../components/ValidatedFormWizard.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { z } from 'zod';
@@ -374,7 +374,7 @@ function OwnedSimpleElectricityOrderPage() {
   );
   const orderUnconfirmed = orderSubmission.unconfirmed;
   const wizard = useWizardStep('/electricity/orders/new', 2);
-  const { step } = wizard;
+  const { step, restore } = wizard;
   const heading = useRef<HTMLHeadingElement>(null);
   const previousStep = useRef(step);
   const [editTarget, setEditTarget] = useState<string>();
@@ -574,9 +574,7 @@ function OwnedSimpleElectricityOrderPage() {
       if (current !== addressGeneration.current) return;
       const items = readIntakeAddresses(data, activeProfileId);
       setAddresses(items);
-      setSelectedAddressId((current) =>
-        items.some((address) => address.id === current) ? current : defaultIntakeAddressId(items)
-      );
+      setSelectedAddressId((current) => current || defaultIntakeAddressId(items));
     } catch {
       if (current === addressGeneration.current) setAddressError(true);
     } finally {
@@ -859,6 +857,11 @@ function OwnedSimpleElectricityOrderPage() {
     product ? product.title[locale] || product.title.en || product.title.fa || product.id : '';
 
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId);
+  const addressReady = !draftLoading && !draftError && !loadingAddresses && !addressError;
+  const savedAddressUnavailable = addressReady && !!selectedAddressId && !selectedAddress;
+  useEffect(() => {
+    if (step === 2 && addressReady && !selectedAddress) restore(1);
+  }, [addressReady, restore, selectedAddress, step]);
   const selectedProduct = products.find((item) => item.id === selectedProductId);
   const selectedPeriod = periodOptions.find((option) => option.key === period);
   const selectedPeriodDates = useMemo(
@@ -1526,7 +1529,7 @@ function OwnedSimpleElectricityOrderPage() {
             loadingAddresses ||
             addressError ||
             !selectedProductId ||
-            !selectedAddressId ||
+            !selectedAddress ||
             !quote ||
             quoting ||
             periodOptions.length === 0
@@ -1886,6 +1889,11 @@ function OwnedSimpleElectricityOrderPage() {
                           )}
                         </h2>
 
+                        {!showNewAddressForm && savedAddressUnavailable && (
+                          <div className="mb-3">
+                            <WizardDraftAddressNotice />
+                          </div>
+                        )}
                         {loadingAddresses ? (
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Skeleton className="h-6 w-20 shrink-0" />
@@ -1922,6 +1930,11 @@ function OwnedSimpleElectricityOrderPage() {
                                 <div
                                   role="radiogroup"
                                   aria-labelledby="electricity-address-title"
+                                  aria-describedby={
+                                    savedAddressUnavailable
+                                      ? 'draft-address-unavailable'
+                                      : undefined
+                                  }
                                   aria-required="true"
                                   className="space-y-2"
                                 >

@@ -10,6 +10,7 @@ import { useOwnedIntakeRead } from '../hooks/useOwnedIntakeRead.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { commercialFetch as fetch } from '../lib/commercial-fetch.js';
 import {
+  WizardDraftAddressNotice,
   wizardActionSurface,
   wizardChoiceCard as choiceCard,
   wizardChoiceRadio as choiceRadio,
@@ -291,6 +292,11 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
   const [duplicateError, setDuplicateError] = useState(false);
   const [duplicateRevision, setDuplicateRevision] = useState(0);
   const [addressId, setAddressId] = fields.field('addressId');
+  const savedAddressUnavailable =
+    !addressLoading &&
+    !loadError &&
+    !!addressId &&
+    !addresses.some((item) => item.id === addressId);
   const [addingAddress, setAddingAddress] = useState(false);
   const addressHeading = useRef<HTMLHeadingElement>(null);
   const addAddressButton = useRef<HTMLButtonElement>(null);
@@ -1279,6 +1285,7 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                           {copy(addingAddress ? 'newInstallationAddress' : 'chooseAddress')}
                         </h2>
                         {addressLoading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
+                        {!addingAddress && savedAddressUnavailable && <WizardDraftAddressNotice />}
                         {!addingAddress && !addressLoading && !loadError && !addresses.length && (
                           <p role="status">{copy('noSavedAddresses')}</p>
                         )}
@@ -1286,6 +1293,9 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                           <div
                             role="radiogroup"
                             aria-labelledby="saving-address-title"
+                            aria-describedby={
+                              savedAddressUnavailable ? 'draft-address-unavailable' : undefined
+                            }
                             aria-required="true"
                             className="space-y-2"
                           >

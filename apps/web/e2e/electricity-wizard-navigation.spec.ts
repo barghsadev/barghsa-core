@@ -52,6 +52,57 @@ const path = (mode: Mode) =>
 const field = (page: Page, mode: Mode) =>
   page.locator(mode === 'simple' ? '#electricity-kwh' : '#advanced-thermal');
 
+for (const mode of ['simple', 'advanced'] as const)
+  for (const locale of ['en', 'fa'] as const)
+    test(`${mode} electricity requires a replacement for an unavailable draft address (${locale})`, async ({
+      page,
+    }) => {
+      const state = await fixture(page, mode, locale, 5);
+      const missingAddress = '90000000-0000-4000-8000-000000000001';
+      state.draft.data.addressId = missingAddress;
+      const orderPath =
+        mode === 'simple' ? '/electricity/orders/new' : '/electricity/orders/new/advanced';
+      const addressStep = mode === 'simple' ? 1 : 4;
+      const reviewStep = mode === 'simple' ? 2 : 5;
+      let finishRead!: () => void;
+      const addressesPending = new Promise<void>((resolve) => (finishRead = resolve));
+      if (mode === 'simple')
+        await page.route(`**/api/profiles/${profileId}/addresses`, async (route) => {
+          await addressesPending;
+          return route.fulfill({ json: { addresses: [address] } });
+        });
+      try {
+        await page.goto(`${orderPath}?step=${addressStep}`);
+        if (mode === 'simple') await expect(field(page, mode)).toHaveValue('100');
+      } finally {
+        finishRead();
+      }
+      const notice = fundingText('electricity.order.savedAddressUnavailable', locale);
+      expect(notice).not.toBe('electricity.order.savedAddressUnavailable');
+      const group = page.getByRole('radiogroup', {
+        name: t('electricity.order.selectAddress', locale),
+        exact: true,
+      });
+      const replacement = group.getByRole('radio');
+      await expect(group).toHaveAccessibleDescription(notice);
+      await expect(replacement).not.toBeChecked();
+      expect(state.saves).toEqual([]);
+      await page.goto(`${orderPath}?step=${reviewStep}`);
+      await expect(page).toHaveURL(`${orderPath}?step=${addressStep}`);
+      await expect(group).toHaveAccessibleDescription(notice);
+      await expect(next(page, mode, locale)).toBeDisabled();
+      await replacement.check();
+      await expect(page.getByText(notice, { exact: true })).toHaveCount(0);
+      await expect(next(page, mode, locale)).toBeEnabled();
+      await next(page, mode, locale).click();
+      await expect(page).toHaveURL(`${orderPath}?step=${reviewStep}`);
+      expect(state.saves.at(-1)?.data).toMatchObject({
+        addressId: address.id,
+        ...(mode === 'simple' ? { totalKwh: '100' } : { quantities: { thermal: '100' } }),
+      });
+      expect(state.orders).toEqual([]);
+    });
+
 for (const locale of ['en', 'fa'] as const)
   test(`simple electricity dependent address recovery keeps the draft city (${locale})`, async ({
     page,
