@@ -13,6 +13,7 @@ import {
   validRouting,
   matchesTeamReceipt,
   teamBasis,
+  teamValues,
   routingBasis,
 } from './staff-team-form.js';
 import {
@@ -58,6 +59,17 @@ it('captures trimmed values and null descriptions without changing the raw draft
     leadUserId: staffMember.id,
   });
   expect(draft.tags).toBe(' finance, billing ');
+});
+it('preserves saved custom tags verbatim and accepts either comma in a new batch', () => {
+  const draft = teamValues({ ...staffTeam, skillTags: ['invoice', 'receipts, review'] });
+  expect(draft.tags).toBe('');
+  expect(teamBody({ ...draft, tags: ' refund، CRM, ' }).skillTags).toEqual([
+    'invoice',
+    'receipts, review',
+    'refund',
+    'CRM',
+  ]);
+  expect(teamInvalidFields({ ...draft, tags: 'invoice' }, [staffMember.id])).toEqual(['tags']);
 });
 it('rejects duplicate, withdrawn and malformed priority chains while preserving manual defaults', () => {
   const active = routingValues({

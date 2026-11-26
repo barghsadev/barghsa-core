@@ -24,6 +24,7 @@ export interface TeamDraft {
   name: string;
   description: string;
   tags: string;
+  selectedSkills: string[];
   members: string[];
   leadUserId: string | null;
 }
@@ -48,23 +49,32 @@ export const emptyTeamDraft = (): TeamDraft => ({
   name: '',
   description: '',
   tags: '',
+  selectedSkills: [],
   members: [],
   leadUserId: null,
 });
 export const teamValues = (team: Team): TeamDraft => ({
   name: team.name,
   description: team.description ?? '',
-  tags: team.skillTags.join(', '),
+  tags: '',
+  selectedSkills: team.skillTags.map((tag) => tag.trim()),
   members: [...team.memberUserIds],
   leadUserId: team.leadUserId ?? null,
 });
+export const teamSkillTags = (draft: TeamDraft): string[] => [
+  ...draft.selectedSkills,
+  ...draft.tags
+    .split(/[,،]/)
+    .map((tag) => tag.trim())
+    .filter(Boolean),
+];
+export const validTeamSkillTags = (skillTags: string[]): boolean =>
+  validateStaffTeamInput({ name: 'Team', skillTags }).ok;
+
 export const teamBody = (draft: TeamDraft): StaffTeamInput => ({
   name: draft.name.trim(),
   description: draft.description.trim() || null,
-  skillTags: draft.tags
-    .split(',')
-    .map((tag) => tag.trim())
-    .filter(Boolean),
+  skillTags: teamSkillTags(draft),
   memberUserIds: [...draft.members],
   leadUserId: draft.leadUserId,
 });
@@ -165,7 +175,7 @@ export function teamInvalidFields(draft: TeamDraft, eligible: string[]): (keyof 
   const blank = { name: 'Team', description: null, skillTags: [], memberUserIds: [] };
   if (!validateStaffTeamInput({ ...blank, name: body.name }).ok) fields.push('name');
   if (draft.description.length > 2000) fields.push('description');
-  if (!validateStaffTeamInput({ ...blank, skillTags: body.skillTags }).ok) fields.push('tags');
+  if (!validTeamSkillTags(body.skillTags)) fields.push('tags');
   if (
     !validateStaffTeamInput({ ...blank, memberUserIds: body.memberUserIds }).ok ||
     draft.members.some((id) => !eligible.includes(id))

@@ -3,6 +3,7 @@ import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
+import { tStaffTeams } from '@barghsa/i18n/staff-team-forms';
 import { tWorkspace } from '@barghsa/i18n/workspace-admin';
 import type { APIRequestContext, APIResponse, Page, Route } from '@playwright/test';
 import { expandListFilters, test, expect } from './coverage-fixture';
@@ -182,7 +183,14 @@ for (const locale of ['en', 'fa'])
       name = `Team live ${locale}`;
     await page.goto('/admin/staff-teams/new');
     await page.getByLabel(fa ? 'نام تیم' : 'Team name', { exact: true }).fill(name);
-    await page.getByLabel('Member UI', { exact: true }).check();
+    await page.locator('#staff-team-skill').selectOption('ticket');
+    await page.locator('#staff-team-tags').fill('collections');
+    await page
+      .getByRole('button', {
+        name: tStaffTeams('admin.teams.addMember', fa ? 'fa' : 'en').replace('{name}', 'Member UI'),
+        exact: true,
+      })
+      .click();
     await page
       .getByLabel(fa ? 'سرپرست تیم' : 'Team lead', { exact: true })
       .selectOption('team-ui-member');
@@ -201,11 +209,13 @@ for (const locale of ['en', 'fa'])
         name: string;
         memberUserIds: string[];
         leadUserId: string | null;
+        skillTags: string[];
       }>
     ).find((item) => item.name === name)!;
     expect(team).toBeTruthy();
     expect(team.leadUserId).toBe('team-ui-member');
     expect(team.memberUserIds).toEqual(['team-ui-member']);
+    expect(team.skillTags).toEqual(['ticket', 'collections']);
     await page.getByRole('link', { name, exact: true }).click();
     await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
     await page.goto('/admin/staff-teams/assignment');
@@ -241,6 +251,7 @@ for (const locale of ['en', 'fa'])
     await page.goto(`/admin/staff-teams/${team.id}`);
     await page.getByRole('link', { name: fa ? 'ویرایش تیم' : 'Edit team', exact: true }).click();
     await page.getByLabel(fa ? 'نام تیم' : 'Team name', { exact: true }).fill(`${name} revised`);
+    await page.locator('#staff-team-skill').selectOption('invoice');
     await page.getByRole('button', { name: fa ? 'ذخیره تیم' : 'Save team', exact: true }).click();
     await page
       .getByRole('dialog')
@@ -249,6 +260,13 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await page.getByRole('link', { name: `${name} revised`, exact: true }).click();
     await expect(page.getByRole('heading', { name: `${name} revised`, exact: true })).toBeVisible();
+    expect(
+      await (
+        await page.request.get(`${http.base}/api/admin/staff-teams/${team.id}`, {
+          headers: apiHeaders,
+        })
+      ).json()
+    ).toMatchObject({ skillTags: ['ticket', 'collections', 'invoice'] });
     await page.screenshot({ path: `/tmp/barghsa-staff-teams-${locale}.png`, fullPage: true });
     await page.getByRole('button', { name: fa ? 'حذف تیم' : 'Delete team', exact: true }).click();
     await confirmDestructiveAction(page, fa ? 'fa' : 'en');

@@ -43,6 +43,7 @@ import {
   DEFAULT_STAFF_ASSIGNMENT_RULES,
   STAFF_ASSIGNMENT_WORK_TYPES,
   STAFF_ASSIGNMENT_STRATEGIES,
+  STAFF_TEAM_SKILL_TAGS_MAX,
   type StaffAssignmentRules,
   type StaffAssignmentStrategy,
 } from '@barghsa/shared/admin';
@@ -64,6 +65,8 @@ import {
   emptyTeamDraft,
   teamValues,
   teamBody,
+  teamSkillTags,
+  validTeamSkillTags,
   teamBasis,
   memberBasis,
   matchesTeamReceipt,
@@ -84,6 +87,18 @@ import {
 
 type TeamsMode = 'directory' | 'detail' | 'create' | 'edit' | 'assignment';
 
+const specificSkills = [
+  'support',
+  'order',
+  'contract',
+  'invoice',
+  'privacy',
+  'identity',
+  'individual',
+  'legal',
+] as const;
+const routingSkills = new Set<string>([...STAFF_ASSIGNMENT_WORK_TYPES, ...specificSkills]);
+
 function TeamNavigationGuard({ active }: { active: boolean }) {
   useBlocker({ shouldBlockFn: () => active, enableBeforeUnload: () => active });
   return null;
@@ -100,6 +115,13 @@ export default function AdminStaffTeamsPage({
   const teamRequest = useRef<AbortController | null>(null);
   const numbers = useNumberFormatting(locale);
   const label = (key: string) => t(`admin.teams.${key}`, locale);
+  const skillLabel = (skill: string) => {
+    const key = skill.toLowerCase();
+    if (!routingSkills.has(key)) return skill;
+    return label(
+      STAFF_ASSIGNMENT_WORK_TYPES.some((workType) => workType === key) ? key : `skill.${key}`
+    );
+  };
   const catalogue = !mode || mode === 'directory';
   const showEditor = !mode || mode === 'create' || mode === 'edit';
   const showRouting = !mode || mode === 'assignment';
@@ -110,6 +132,7 @@ export default function AdminStaffTeamsPage({
     name: label('invalidName'),
     description: label('invalidDescription'),
     tags: label('invalidTags'),
+    selectedSkills: label('invalidTags'),
     members: label('invalidMembers'),
     leadUserId: label('invalidLead'),
   };
@@ -571,6 +594,19 @@ export default function AdminStaffTeamsPage({
         : previous.members.filter((value) => value !== id),
       leadUserId: !checked && previous.leadUserId === id ? null : previous.leadUserId,
     }));
+  }
+  function addSkills(skill?: string) {
+    const previous = teamForm.form.getValues();
+    const next = skill
+      ? { ...previous, selectedSkills: [...previous.selectedSkills, skill] }
+      : { ...previous, selectedSkills: teamSkillTags(previous), tags: '' };
+    if (!validTeamSkillTags(teamSkillTags(next))) {
+      teamForm.form.setError('tags', { type: 'manual', message: teamMessages.tags });
+      teamForm.form.setFocus('tags');
+      return;
+    }
+    setDraft(next);
+    teamForm.form.clearErrors('tags');
   }
   const disabled = loading || error || denied || !!action || pending;
   const unknownMember = memberLoading ? label('loading') : unavailableMember;
@@ -1049,21 +1085,121 @@ export default function AdminStaffTeamsPage({
                           />
                           {feedback('team', 'description')}
                         </div>
-                        <div className={recordEditorField}>
-                          <Label htmlFor="staff-team-tags">{label('tags')}</Label>
-                          <Input
-                            id="staff-team-tags"
-                            dir="auto"
-                            placeholder="support, order"
-                            {...teamForm.bind('tags')}
-                            aria-describedby={`staff-team-tags-help ${teamForm.errorId('tags')}`}
-                            value={draft.tags}
-                            onChange={(event) => setDraft({ ...draft, tags: event.target.value })}
-                          />
-                          <p id="staff-team-tags-help" className="text-xs text-muted-foreground">
-                            {label('tagsHelp')}
-                          </p>
-                          {feedback('team', 'tags')}
+                        <div className="space-y-3 border-t pt-3">
+                          <div className={recordEditorField}>
+                            <Label htmlFor="staff-team-skill">{label('tags')}</Label>
+                            <NativeSelect
+                              id="staff-team-skill"
+                              className="w-full min-w-0"
+                              value=""
+                              aria-describedby="staff-team-skill-help"
+                              disabled={draft.selectedSkills.length >= STAFF_TEAM_SKILL_TAGS_MAX}
+                              onChange={(event) => addSkills(event.target.value)}
+                            >
+                              <option value="" disabled>
+                                {label('chooseSkill')}
+                              </option>
+                              {(
+                                [
+                                  ['workTypeSkills', STAFF_ASSIGNMENT_WORK_TYPES],
+                                  ['specificSkills', specificSkills],
+                                ] as const
+                              ).map(([group, skills]) => (
+                                <optgroup key={group} label={label(group)}>
+                                  {skills.map((skill) => (
+                                    <option
+                                      key={skill}
+                                      value={skill}
+                                      disabled={draft.selectedSkills.some(
+                                        (tag) => tag.toLowerCase() === skill
+                                      )}
+                                    >
+                                      {skillLabel(skill)}
+                                    </option>
+                                  ))}
+                                </optgroup>
+                              ))}
+                            </NativeSelect>
+                            <p id="staff-team-skill-help" className="text-xs text-muted-foreground">
+                              {label('routingSkillHelp')}
+                            </p>
+                          </div>
+                          {draft.selectedSkills.length > 0 && (
+                            // eslint-disable-next-line jsx-a11y/no-redundant-roles -- Safari drops unmarked list semantics.
+                            <ul
+                              role="list"
+                              aria-label={label('chosenSkills')}
+                              className="flex flex-wrap gap-1.5"
+                            >
+                              {draft.selectedSkills.map((skill) => (
+                                <li
+                                  key={skill}
+                                  className="flex max-w-full min-w-0 items-center gap-1 rounded-md border bg-muted/25 ps-2 text-sm"
+                                >
+                                  <bdi className="min-w-0 [overflow-wrap:anywhere]">
+                                    {skillLabel(skill)}
+                                  </bdi>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon-sm"
+                                    aria-label={`${label('remove')} ${skillLabel(skill)}`}
+                                    onClick={() => {
+                                      teamForm.form.setFocus('tags');
+                                      setDraft((previous) => ({
+                                        ...previous,
+                                        selectedSkills: previous.selectedSkills.filter(
+                                          (tag) => tag !== skill
+                                        ),
+                                      }));
+                                      teamForm.form.clearErrors('tags');
+                                    }}
+                                  >
+                                    <X aria-hidden="true" />
+                                  </Button>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                          <div className={recordEditorField}>
+                            <Label htmlFor="staff-team-tags">{label('customSkills')}</Label>
+                            <div className="flex min-w-0 items-center gap-2">
+                              <Input
+                                id="staff-team-tags"
+                                dir="auto"
+                                {...teamForm.bind('tags')}
+                                aria-describedby={[
+                                  'staff-team-tags-help',
+                                  teamForm.errors.tags && teamForm.errorId('tags'),
+                                ]
+                                  .filter(Boolean)
+                                  .join(' ')}
+                                value={draft.tags}
+                                onChange={(event) =>
+                                  setDraft({ ...draft, tags: event.target.value })
+                                }
+                                onKeyDown={(event) => {
+                                  if (event.key !== 'Enter' || event.nativeEvent.isComposing)
+                                    return;
+                                  event.preventDefault();
+                                  if (draft.tags.trim()) addSkills();
+                                }}
+                              />
+                              <Button
+                                type="button"
+                                variant="outline"
+                                disabled={!draft.tags.trim()}
+                                aria-label={label('addCustomSkills')}
+                                onClick={() => addSkills()}
+                              >
+                                {label('addSkill')}
+                              </Button>
+                            </div>
+                            <p id="staff-team-tags-help" className="text-xs text-muted-foreground">
+                              {label('tagsHelp')}
+                            </p>
+                            {feedback('team', 'tags', false)}
+                          </div>
                         </div>
                       </RecordEditorSection>
                     </div>

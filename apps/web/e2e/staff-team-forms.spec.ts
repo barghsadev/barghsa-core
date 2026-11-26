@@ -127,6 +127,8 @@ for (const locale of ['en', 'fa'] as const)
       const form = page.locator('form').filter({ has: page.locator('#staff-team-name') });
       const name = page.locator('#staff-team-name'),
         tags = page.locator('#staff-team-tags');
+      const skills = form.getByRole('list', { name: text('chosenSkills'), exact: true });
+      const skill = page.locator('#staff-team-skill');
       const save = form.getByRole('button', { name: text('saveTeam'), exact: true });
       await name.fill(' ');
       await save.click();
@@ -134,10 +136,24 @@ for (const locale of ['en', 'fa'] as const)
       await expect(name).toHaveAttribute('aria-invalid', 'true');
       expect(writes).toEqual([]);
       await name.fill(' Finance updated ');
-      await tags.fill('finance, finance');
+      await tags.fill('finance');
       await save.click();
       await expect(tags).toBeFocused();
       await expect(tags).toHaveAttribute('aria-invalid', 'true');
+      await skills
+        .getByRole('button', { name: `${text('remove')} finance`, exact: true })
+        .press('Enter');
+      await expect(tags).toBeFocused();
+      await tags.fill('');
+      await skill.selectOption('invoice');
+      await expect(skills.getByText(text('skill.invoice'), { exact: true })).toBeVisible();
+      await expect(skill.locator('option[value=invoice]')).toBeDisabled();
+      await tags.fill(' internal، escalated ');
+      await tags.press('Enter');
+      await expect(tags).toHaveValue('');
+      await expect(skills.getByText('internal', { exact: true })).toBeVisible();
+      await expect(skills.getByText('escalated', { exact: true })).toBeVisible();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
       await expect(page.locator('#staff-team-lead')).toHaveValue(staffMember.id);
       const search = form.locator('#staff-team-search');
       const add = form.getByRole('button', {
@@ -183,13 +199,15 @@ for (const locale of ['en', 'fa'] as const)
       expect(writes[1]).toEqual(writes[2]);
       expect(saved).toMatchObject({
         name: 'Finance updated',
-        skillTags: ['finance', 'billing'],
+        skillTags: ['invoice', 'internal', 'escalated', 'finance', 'billing'],
         leadUserId: staffMember.id,
         memberUserIds: [staffMember.id],
       });
-      await expect(tags).toHaveValue('finance, billing');
+      await expect(tags).toHaveValue('');
       await page.reload();
-      await expect(tags).toHaveValue('finance, billing');
+      await expect(tags).toHaveValue('');
+      await expect(skills.getByText('finance', { exact: true })).toBeVisible();
+      await expect(skills.getByText(text('skill.invoice'), { exact: true })).toBeVisible();
       await page.evaluate(async () => {
         const animations = [...document.querySelectorAll('[data-sonner-toast]')].flatMap((notice) =>
           notice.getAnimations()
@@ -344,7 +362,11 @@ for (const locale of ['en', 'fa'] as const) {
       if (route.request().method() === 'GET') return route.fulfill({ json: teams });
       expect(route.request().method()).toBe('POST');
       const body = route.request().postDataJSON();
-      expect(body).toMatchObject({ name, memberUserIds: [staffMember.id] });
+      expect(body).toMatchObject({
+        name,
+        memberUserIds: [staffMember.id],
+        skillTags: ['consultation'],
+      });
       writes.push('create');
       teams = [{ ...staffTeam, ...body }];
     });
@@ -371,6 +393,9 @@ for (const locale of ['en', 'fa'] as const) {
     const refresh = dialog.getByRole('button', { name: text('refresh'), exact: true });
     const unverified = dialog.getByRole('alert').filter({ hasText: text('unverified') });
     await input.fill(name);
+    const skillList = page.getByRole('list', { name: text('chosenSkills'), exact: true });
+    await page.locator('#staff-team-skill').selectOption('consultation');
+    await expect(skillList.getByText(text('consultation'), { exact: true })).toBeVisible();
     await page
       .getByRole('button', {
         name: text('addMember').replace('{name}', staffMember.name),
@@ -389,9 +414,11 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByRole('link', { name, exact: true })).toBeVisible();
     await expect(input).toHaveValue(name);
     await expect(save).toBeDisabled();
+    await expect(skillList.getByText(text('consultation'), { exact: true })).toBeVisible();
     await expect(page.getByText(text('saved'), { exact: true })).toHaveCount(0);
     await page.getByRole('button', { name: text('resetTeam'), exact: true }).click();
     await expect(input).toHaveValue('');
+    await expect(skillList).toHaveCount(0);
 
     await page.getByRole('link', { name, exact: true }).click();
     await page.getByRole('button', { name: text('delete'), exact: true }).click();
