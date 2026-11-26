@@ -739,6 +739,7 @@ for (const locale of ['fa', 'en'] as const)
     const mobile = page.getByLabel(locale === 'fa' ? 'شماره موبایل' : 'Mobile', { exact: true });
     await expect(email).toHaveValue('office@example.test');
     await expect(mobile).toHaveValue('+989121234567');
+    await expect(mobile).toHaveAccessibleDescription(/09.*\+98/);
     await expect(page.getByRole('tablist')).toHaveCount(0);
     await expect(page.locator('input[value="signin@example.test"]')).toHaveCount(0);
     await email.fill('broken');
@@ -753,20 +754,24 @@ for (const locale of ['fa', 'en'] as const)
     await expect(email).toBeFocused();
     expect(writes).toEqual([]);
     await email.fill('NEW-OFFICE@example.test');
-    await mobile.fill('09121234569');
+    const enteredMobile = locale === 'fa' ? '۰۹١۲١۲۳۴۵٦۹' : '09121234569';
+    await mobile.fill(enteredMobile);
     await page
       .getByRole('button', {
         name: locale === 'fa' ? 'ذخیره تغییرات' : 'Save Changes',
         exact: true,
       })
       .click();
-    const confirm = page
-      .getByRole('dialog')
-      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true });
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText('+989121234569');
+    const confirm = dialog.getByRole('button', {
+      name: locale === 'fa' ? 'تأیید' : 'Confirm',
+      exact: true,
+    });
     await confirm.click();
-    await expect(page.getByRole('dialog').getByRole('alert')).toBeVisible();
+    await expect(dialog.getByRole('alert')).toBeVisible();
     await expect(email).toHaveValue('NEW-OFFICE@example.test');
-    await expect(mobile).toHaveValue('09121234569');
+    await expect(mobile).toHaveValue(enteredMobile);
     fail = false;
     await confirm.click();
     await expect(page.getByRole('dialog')).toHaveCount(0);

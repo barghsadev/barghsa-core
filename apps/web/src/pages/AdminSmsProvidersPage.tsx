@@ -38,6 +38,8 @@ import {
 } from '@barghsa/ui';
 import { buildSmsTestParameters } from '@barghsa/shared/notifications';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
+import { tAccountSettingsForms } from '@barghsa/i18n/account-settings-forms';
+import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { DeliveryProviderDetail } from '../components/DeliveryProviderDetail.js';
 import { DeliveryProviderTable } from '../components/DeliveryProviderTable.js';
@@ -117,7 +119,11 @@ export default function AdminSmsProvidersPage({
   const requested = useRef({ key: '', restore: false });
   const requestedPanel = workspace?.selection?.panel;
   const requestedId = workspace?.selection?.id;
-  const [testContact, setTestContact] = useState<{ basis: string; value: string } | null>(null);
+  const [testContact, setTestContact] = useState<{
+    basis: string;
+    value: string;
+    blurred: boolean;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null),
     [notice, setNotice] = useState<string | null>(null);
   const [protectedAction, setProtectedAction] = useState<{
@@ -300,8 +306,12 @@ export default function AdminSmsProvidersPage({
   const testProvider = providers.find((p) => p.id === selected);
   const firstEventLabel = smsProviderEventLabel(firstEvent, locale);
   const testContactBasis = testProvider ? rowBasis(testProvider, false) : '';
-  const testRecipient = testContact?.basis === testContactBasis ? testContact.value : '';
-  const validTestRecipient = /^\+?[1-9][0-9]{9,14}$/.test(testRecipient.trim());
+  const recipientDraft = testContact?.basis === testContactBasis ? testContact : null;
+  const testRecipient = recipientDraft?.value ?? '';
+  const normalizedRecipient = normalizeProfileDigits(testRecipient.trim());
+  const validTestRecipient = /^\+?[1-9][0-9]{9,14}$/.test(normalizedRecipient);
+  const invalidTestRecipient =
+    !!recipientDraft?.blurred && !!normalizedRecipient && !validTestRecipient;
   const testMappings = [...(testProvider?.config.template_mappings ?? [])].sort(
     (a, b) => Number(b.event_key === firstEvent) - Number(a.event_key === firstEvent)
   );
@@ -473,7 +483,7 @@ export default function AdminSmsProvidersPage({
       {
         path: `/${encodeURIComponent(id)}/test-connection`,
         method: 'POST',
-        body: { eventKey: firstEvent, recipient: testRecipient.trim() },
+        body: { eventKey: firstEvent, recipient: normalizedRecipient },
       },
       async (result) => {
         let saved: SmsProvider;
@@ -1367,13 +1377,32 @@ export default function AdminSmsProvidersPage({
                 dir="ltr"
                 type="tel"
                 autoComplete="off"
-                maxLength={16}
+                className="max-w-56"
                 value={testRecipient}
                 disabled={disabled}
+                aria-invalid={invalidTestRecipient || undefined}
+                aria-describedby="sms-test-recipient-help"
+                onBlur={() =>
+                  setTestContact((current) =>
+                    current?.basis === testContactBasis ? { ...current, blurred: true } : current
+                  )
+                }
                 onChange={(event) =>
-                  setTestContact({ basis: testContactBasis, value: event.target.value })
+                  setTestContact({
+                    basis: testContactBasis,
+                    value: event.target.value,
+                    blurred: recipientDraft?.blurred ?? false,
+                  })
                 }
               />
+              <div id="sms-test-recipient-help">
+                <p className="text-xs text-muted-foreground">
+                  <bdi dir="ltr">+98…</bdi>
+                </p>
+                <p aria-live="polite" className="text-xs text-destructive">
+                  {invalidTestRecipient && tAccountSettingsForms('mobileInvalid', locale)}
+                </p>
+              </div>
             </div>
           </div>
           <RecordEditorActions>

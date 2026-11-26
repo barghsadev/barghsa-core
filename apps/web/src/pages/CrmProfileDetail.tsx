@@ -35,8 +35,10 @@ import { useBlocker, useParams, useNavigate, Link } from '@tanstack/react-router
 import { Lock } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/crm';
 import { tCrmForm } from '@barghsa/i18n/crm-forms';
+import { tAccountSettingsForms } from '@barghsa/i18n/account-settings-forms';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import { useLocale } from '../hooks/useLocale.js';
+import { normalizeProfileDigits } from '../lib/profile-digits.js';
 
 interface Profile {
   id: string;
@@ -173,6 +175,10 @@ const editableProfileFields = [
   ['email', 'crm.profile.label.email', 'contactEmail'],
   ['mobile', 'crm.profile.label.mobile', 'contactMobile'],
 ] as const;
+
+function savedProfileMobile(value: string | null): string | null {
+  return value && /^09\d{9}$/.test(value) ? '+98' + value.slice(1) : value;
+}
 
 function referenceName(name: LocalizedName | null | undefined, locale: Locale): string {
   return (locale === 'fa' ? name?.nameFa : name?.nameEn) || t('crm.records.unknown', locale);
@@ -374,10 +380,7 @@ function CrmProfileDetailContent({
   const [isEditing, setIsEditing] = useState(false);
   const editMessages = {
     email: t('crm.legal.invalid', locale).replace('{field}', t('crm.profile.label.email', locale)),
-    mobile: t('crm.legal.invalid', locale).replace(
-      '{field}',
-      t('crm.profile.label.mobile', locale)
-    ),
+    mobile: tAccountSettingsForms('mobileInvalid', locale),
     title: t('crm.legal.invalid', locale).replace('{field}', t('crm.profile.field.title', locale)),
   };
   const editDraft = useDraftForm<EditableFields>(
@@ -388,7 +391,7 @@ function CrmProfileDetailContent({
           context.addIssue({ code: 'custom', message: editMessages.email });
       }),
       mobile: z.string().superRefine((value, context) => {
-        const text = value.trim();
+        const text = normalizeProfileDigits(value.trim());
         if (value.length > 32 || (text && !/^(?:09\d{9}|\+989\d{9})$/.test(text)))
           context.addIssue({ code: 'custom', message: editMessages.mobile });
       }),
@@ -524,7 +527,7 @@ function CrmProfileDetailContent({
         body: {
           title: values.title || null,
           email: values.email || null,
-          mobile: values.mobile || null,
+          mobile: normalizeProfileDigits(values.mobile.trim()) || null,
         },
       },
       'edit'
@@ -546,15 +549,13 @@ function CrmProfileDetailContent({
       const profile = result.profile as Record<string, unknown> | undefined;
       const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() || null : null;
       const mobile = typeof body.mobile === 'string' ? body.mobile.trim() || null : null;
-      const normalizedMobile =
-        mobile && /^09\d{9}$/.test(mobile) ? '+98' + mobile.slice(1) : mobile;
       if (
         result.updated !== true ||
         !profile ||
         profile.id !== profileId ||
         profile.title !== body.title ||
         profile.contactEmail !== email ||
-        profile.contactMobile !== normalizedMobile ||
+        profile.contactMobile !== savedProfileMobile(mobile) ||
         typeof profile.updatedAt !== 'string' ||
         !Number.isFinite(Date.parse(profile.updatedAt))
       ) {
@@ -836,7 +837,9 @@ function CrmProfileDetailContent({
     const saved =
       editor.kind === 'legal' ? legalSaved : editor.kind === 'address' ? addressSaved : saveSuccess;
     const proposed =
-      pendingAction?.kind === 'edit' ? (pendingAction.action.body as EditableFields) : null;
+      pendingAction?.kind === 'edit'
+        ? (pendingAction.action.body as Record<keyof EditableFields, string | null>)
+        : null;
     return (
       <section
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
@@ -941,6 +944,14 @@ function CrmProfileDetailContent({
                         error={editDraft.errors[field]?.message}
                         errorId={editDraft.errorId(field)}
                         validationMessage={editMessages[field]}
+                        description={
+                          field === 'mobile' ? (
+                            <>
+                              {tAccountSettingsForms('mobileFormat', locale)}{' '}
+                              <bdi dir="ltr">09… / +98…</bdi>
+                            </>
+                          ) : undefined
+                        }
                         disabled={saving || editDraft.form.formState.isSubmitting}
                       />
                     ))}
@@ -997,7 +1008,11 @@ function CrmProfileDetailContent({
                             {t('crm.profile.edit.proposed', locale)}
                           </dt>
                           <dd>
-                            <bdi>{proposed?.[field] || '—'}</bdi>
+                            <bdi>
+                              {(field === 'mobile'
+                                ? savedProfileMobile(proposed?.mobile ?? null)
+                                : proposed?.[field]) || '—'}
+                            </bdi>
                           </dd>
                         </div>
                       </dl>
@@ -1696,6 +1711,7 @@ function EditRow({
   error,
   errorId,
   validationMessage,
+  description,
   disabled,
 }: {
   field: keyof EditableFields;
@@ -1706,6 +1722,7 @@ function EditRow({
   error: string | undefined;
   errorId: string;
   validationMessage: string;
+  description?: ReactNode;
   disabled: boolean;
 }) {
   const inputId = useId();
@@ -1714,6 +1731,11 @@ function EditRow({
       <Label htmlFor={inputId}>{label}</Label>
       <input
         {...binding}
+        aria-describedby={
+          [description && `${inputId}-help`, binding['aria-describedby']]
+            .filter(Boolean)
+            .join(' ') || undefined
+        }
         disabled={disabled}
         id={inputId}
         type="text"
@@ -1724,6 +1746,11 @@ function EditRow({
         dir={field === 'title' ? 'auto' : 'ltr'}
         className={inputVariants()}
       />
+      {description && (
+        <p id={`${inputId}-help`} className="text-xs text-muted-foreground">
+          {description}
+        </p>
+      )}
       {/* Keep Save in place when blur reveals a validation error. */}
       <p
         id={errorId}
