@@ -90,10 +90,15 @@ for (const locale of ['en', 'fa'] as const)
         message = dialog.locator('#invite-message');
       await expect(username).toHaveAttribute('aria-required', 'true');
       await expect(username).toHaveAccessibleDescription(/09.*\+98/);
-      await expect(dialog.locator('#invite-role')).toHaveAttribute('aria-required', 'true');
-      await expect(dialog.locator('#invite-role')).toHaveAccessibleDescription(
-        t('team.roleEffect.Manager', locale)
-      );
+      const roles = dialog.getByRole('radio');
+      await expect(roles).toHaveCount(3);
+      for (const role of ['Manager', 'Finance', 'Legal'] as const) {
+        const choice = dialog.getByRole('radio', { name: t(`team.${role}`, locale), exact: true });
+        await expect(choice).toHaveAttribute('required', '');
+        await expect(choice).toHaveAccessibleDescription(t(`team.roleEffect.${role}`, locale));
+        await expect(choice).not.toBeChecked();
+      }
+      const manager = dialog.getByRole('radio', { name: t('team.Manager', locale), exact: true });
       await expect(message).not.toHaveAttribute('aria-required', 'true');
       const submit = dialog.getByRole('button', {
         name: fa ? 'ارسال دعوت‌نامه' : 'Send invitation',
@@ -108,6 +113,12 @@ for (const locale of ['en', 'fa'] as const)
       expect(bodies).toHaveLength(0);
       expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
       await username.fill('person{role}@example.test');
+      await expect(dialog.getByText('person{role}@example.test', { exact: true })).toHaveCount(0);
+      await submit.click();
+      await expect(manager).toBeFocused();
+      await expect(manager).toHaveAttribute('aria-invalid', 'true');
+      expect(bodies).toHaveLength(0);
+      await manager.check();
       await expect(dialog.getByText('person{role}@example.test', { exact: true })).toBeVisible();
       const enteredUsername = fa ? ' ۰۹١۲١۲۳۴۵٦۷ ' : ' 09121234567 ';
       await username.fill(enteredUsername);
@@ -145,6 +156,7 @@ for (const locale of ['en', 'fa'] as const)
       await invite.click();
       await expect(username).toHaveValue('');
       await expect(message).toHaveValue('');
+      await expect(dialog.locator('input[name="role"]:checked')).toHaveCount(0);
     });
     test(`team role validation through both editor entry points (${locale}, ${theme})`, async ({
       page,

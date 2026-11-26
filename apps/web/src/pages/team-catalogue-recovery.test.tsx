@@ -46,6 +46,12 @@ async function fill(selector: string, value: string) {
     element.dispatchEvent(new Event('input', { bubbles: true }));
   });
 }
+function managerInvitationChoice() {
+  return document.querySelector<HTMLInputElement>('input[name="role"][value="Manager"]')!;
+}
+async function chooseManager() {
+  await act(async () => managerInvitationChoice().click());
+}
 async function submit() {
   await approveVisibleConfirmation();
   await act(async () =>
@@ -126,6 +132,7 @@ it('retains invitation input and independent transfers while member read pauses 
   );
   await click('Invite a team member');
   await fill('#team-username', 'local@example.test');
+  await chooseManager();
   fail = true;
   await click('Refresh members', true);
   expect(document.querySelector<HTMLInputElement>('#team-username')!.value).toBe(
@@ -299,6 +306,7 @@ it('profile replacement discards old invitation work and ignores late success', 
   );
   await click('Invite a team member');
   await fill('#team-username', 'old@example.test');
+  await chooseManager();
   await submit();
   changed = true;
   await click('Refresh profile');
@@ -319,6 +327,7 @@ it('broadcast profile context invalidates an old editor and pending request', as
   );
   await click('Invite a team member');
   await fill('#team-username', 'old@example.test');
+  await chooseManager();
   await submit();
   await act(async () => refreshProfileContext());
   await act(async () => resolve(reply({ id: 'late-invite' }, 201)));
@@ -331,6 +340,7 @@ it.each([{}, { id: '../unsafe' }])(
     await render((path, init) => (init?.method ? reply(receipt, 201) : baseline(path)));
     await click('Invite a team member');
     await fill('#team-username', 'local@example.test');
+    await chooseManager();
     await submit();
     expect(document.querySelector<HTMLInputElement>('#team-username')!.value).toBe(
       'local@example.test'
@@ -410,6 +420,7 @@ it.each(['read', 'invite', 'remove'])(
     if (operation === 'invite') {
       await click('Invite a team member');
       await fill('#team-username', 'private@example.test');
+      await chooseManager();
       await submit();
     }
     if (operation === 'remove') {
@@ -447,6 +458,7 @@ it('retains an optional message through failures, submits it and clears it only 
   );
   await click('Invite a team member');
   await fill('#team-username', 'new@example.test');
+  await chooseManager();
   await fill('#invite-message', '  Personal note\n<script>text</script>  ');
   await submit();
   expect(document.querySelector<HTMLTextAreaElement>('#invite-message')!.value).toBe(
@@ -803,6 +815,12 @@ it('validates invitation destinations on blur and before sending, retaining corr
   await fill('#team-username', ' 09121234567 ');
   expect(document.querySelector('#team-username')?.getAttribute('aria-invalid')).toBeNull();
   await submit();
+  expect(requests.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(0);
+  await nextFrames();
+  expect(document.activeElement).toBe(managerInvitationChoice());
+  expect(managerInvitationChoice().getAttribute('aria-invalid')).toBe('true');
+  await chooseManager();
+  await submit();
   expect(
     JSON.parse(String(requests.mock.calls.find(([, init]) => init?.method === 'POST')![1]!.body))
   ).toEqual({ username: '+989121234567', role: 'Manager' });
@@ -821,12 +839,16 @@ it.each(['username', 'role', 'message'] as const)(
     );
     await click('Invite a team member');
     await fill('#team-username', 'recipient@example.test');
+    await chooseManager();
     await fill('#invite-message', 'Retained invitation note');
     await submit();
     await nextFrames();
-    const id = field === 'username' ? 'team-username' : `invite-${field}`;
-    expect(document.activeElement?.id).toBe(id);
-    expect(document.querySelector(`#${id}`)?.getAttribute('aria-invalid')).toBe('true');
+    const control =
+      field === 'role'
+        ? managerInvitationChoice()
+        : document.getElementById(field === 'username' ? 'team-username' : 'invite-message');
+    expect(document.activeElement).toBe(control);
+    expect(control?.getAttribute('aria-invalid')).toBe('true');
     expect(document.querySelector<HTMLInputElement>('#team-username')!.value).toBe(
       'recipient@example.test'
     );
@@ -845,6 +867,7 @@ it.each([['unknown'], [], ['username', '__proto__']])(
     await render((path, init) => (init?.method ? fieldFailure(fields) : baseline(path)));
     await click('Invite a team member');
     await fill('#team-username', 'recipient@example.test');
+    await chooseManager();
     await submit();
     expect(document.querySelector('[role=dialog] [role=alert]')).not.toBeNull();
     expect(document.querySelector('#team-username')?.getAttribute('aria-invalid')).toBeNull();
@@ -862,6 +885,7 @@ it('locks invitation submission once and retains the draft after a network failu
   );
   await click('Invite a team member');
   await fill('#team-username', 'recipient@example.test');
+  await chooseManager();
   await submit();
   await submit();
   expect(requests.mock.calls.filter(([, init]) => init?.method === 'POST')).toHaveLength(1);
@@ -919,6 +943,7 @@ it.each([
   const requests = await render(baseline);
   await click('Invite a team member');
   await fill('#team-username', 'recipient@example.test');
+  await chooseManager();
   await fill('#invite-message', note);
   await submit();
   await nextFrames();

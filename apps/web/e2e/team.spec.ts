@@ -269,7 +269,7 @@ for (const locale of ['fa', 'en'] as const) {
       .click();
     const dialog = page.getByRole('form', { name: teamText('team.invite', locale) });
     await dialog.getByLabel(fa ? 'ایمیل یا شماره موبایل' : 'Email or mobile number').fill(username);
-    await dialog.locator('#invite-role').selectOption('Legal');
+    await dialog.locator('input[name="role"][value="Legal"]').check();
     await expect(dialog.getByText(company, { exact: true })).toBeVisible();
     await dialog.getByRole('button', { name: fa ? 'ارسال دعوت‌نامه' : 'Send invitation' }).click();
     await expect(dialog).toHaveCount(0);
@@ -490,9 +490,9 @@ for (const locale of ['fa', 'en'] as const) {
     const input = dialog.getByLabel(fa ? 'ایمیل یا شماره موبایل' : 'Email or mobile number');
     await expect(input).toBeFocused();
     await input.fill('new@example.test');
-    const role = dialog.getByLabel(fa ? 'نقش' : 'Role', { exact: true });
-    await role.selectOption('Finance');
-    await expect(role).toHaveValue('Finance');
+    const role = dialog.locator('input[name="role"][value="Finance"]');
+    await role.check();
+    await expect(role).toBeChecked();
     await expect(dialog.getByText('Example company', { exact: true })).toBeVisible();
     await input.click();
     await expect(input).toBeFocused();
@@ -503,7 +503,8 @@ for (const locale of ['fa', 'en'] as const) {
     expect(sent).toEqual([]);
     await trigger.click();
     await input.fill('new@example.test');
-    await role.selectOption('Finance');
+    await expect(role).not.toBeChecked();
+    await role.check();
     const send = dialog.getByRole('button', { name: fa ? 'ارسال دعوت‌نامه' : 'Send invitation' });
     await expect(input).toHaveValue('new@example.test');
     await send.click();
@@ -558,7 +559,7 @@ for (const locale of ['fa', 'en'] as const) {
     const submit = dialog.getByRole('button', { name: word('sendInvite'), exact: true });
     const enteredAddress = locale === 'fa' ? ' ۰۹١۲١۲۳۴۵٦۷ ' : ' 09121234567 ';
     await address.fill(enteredAddress);
-    await dialog.locator('#invite-role').selectOption('Finance');
+    await dialog.locator('input[name="role"][value="Finance"]').check();
     await message.fill('  Reviewed invitation  ');
     await page.clock.install();
     await submit.click();
@@ -781,7 +782,7 @@ for (const locale of ['fa', 'en'] as const) {
     await page
       .getByLabel(locale === 'fa' ? 'ایمیل یا شماره موبایل' : 'Email or mobile number')
       .fill(enteredEmail);
-    await page.locator('#invite-role').selectOption('Legal');
+    await page.locator('input[name="role"][value="Legal"]').check();
     const invitationPreview =
       locale === 'fa'
         ? 'دعوت new@example.test به عنوان حقوقی برای Example company.'

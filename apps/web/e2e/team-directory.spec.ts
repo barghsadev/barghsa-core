@@ -156,8 +156,9 @@ for (const locale of ['en', 'fa'] as const)
         .click();
       const dialog = page.getByRole('form', { name: fa ? 'دعوت عضو تیم' : 'Invite a team member' });
       await dialog.locator('#team-username').fill('new@example.test');
-      await dialog.locator('#invite-role').selectOption('Finance');
-      await dialog.locator('#invite-role').focus();
+      const invitationRole = dialog.locator('input[name="role"][value="Finance"]');
+      await invitationRole.check();
+      await invitationRole.focus();
       await page.keyboard.press('Tab');
       await expect(dialog.locator('#invite-message')).toBeFocused();
       await dialog.locator('#invite-message').fill(note);

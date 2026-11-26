@@ -57,11 +57,7 @@ import { teamRecordLink, type TeamWorkspace } from '../lib/team-workspace.js';
 import { toast } from '../lib/toast-api.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { AgentDetailDialog } from '../components/AgentDetailDialog.js';
-import {
-  RecordEditorActions,
-  recordEditorGrid,
-  recordEditorSurface,
-} from '../components/RecordEditorLayout.js';
+import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import {
   TeamIdentity,
   TeamRoleFields,
@@ -87,6 +83,8 @@ import {
 function invitationDestination(value: string): string | null {
   return normalizeUsername(value.includes('@') ? value : normalizeProfileDigits(value));
 }
+
+const emptyInvitation = { username: '', role: '' as const, message: '' };
 
 export function TeamPage({ workspace }: { workspace?: TeamWorkspace } = {}) {
   const revision = useProfileContextRevision();
@@ -478,13 +476,15 @@ function TeamMembers({
           (value) => invitationDestination(value) !== null,
           t('team.invalidInvitation', locale)
         ),
-      role: z.enum(ROLES, { error: t('team.invalidRole', locale) }),
+      role: z
+        .enum(['', ...ROLES], { error: t('team.invalidRole', locale) })
+        .refine((value) => value.length > 0, t('team.invalidRole', locale)),
       message: z
         .string()
         .max(1000, t('team.invalidMessage', locale))
         .refine((value) => !value.includes('\0'), t('team.invalidMessage', locale)),
     }),
-    { username: '', role: 'Manager', message: '' }
+    emptyInvitation
   );
   const [username, setUsername] = invitation.field('username');
   const inviteDestination = invitationDestination(username);
@@ -538,7 +538,7 @@ function TeamMembers({
     setAction(null);
     setMemberPending(false);
     setMemberRecovery(null);
-    resetInvitation({ username: '', role: 'Manager', message: '' });
+    resetInvitation(emptyInvitation);
     setRecipientId('');
     setError(null);
     setNotice(null);
@@ -625,12 +625,12 @@ function TeamMembers({
     );
     setInviteRecovery(null);
     if (matched) {
+      resetInvitation(emptyInvitation);
       if (routedInvite && workspace) {
         toast.success(t('team.invitePendingFound', locale));
         workspace.navigate('invitations', matched.id, false, true);
         return;
       }
-      resetInvitation({ username: '', role: inviteRecovery.role, message: '' });
       restoreInviteFocus.current = invitationOpen;
       setInvitationOpen(false);
       setError(null);
@@ -689,7 +689,8 @@ function TeamMembers({
       await invitation.form.handleSubmit(async (values) => {
         if (!current()) return;
         const normalized = invitationDestination(values.username);
-        if (!normalized) return;
+        const { role } = values;
+        if (!normalized || !role) return;
         const message = values.message.trim() || null;
         const controller = new AbortController();
         inviteRequest.current = controller;
@@ -697,7 +698,7 @@ function TeamMembers({
           setError(confirmationText('unconfirmed', locale));
           setInviteRecovery({
             username: normalized,
-            role: values.role,
+            role,
             message,
             readAttempt: resource.retry(),
           });
@@ -715,7 +716,7 @@ function TeamMembers({
               headers: withCsrf({ 'Content-Type': 'application/json' }),
               body: JSON.stringify({
                 username: values.username.includes('@') ? values.username : normalized,
-                role: values.role,
+                role,
                 ...(message ? { message } : {}),
               }),
             }
@@ -776,12 +777,12 @@ function TeamMembers({
           recover();
           return;
         }
+        resetInvitation(emptyInvitation);
         if (routedInvite && workspace) {
           toast.success(word('invited'));
           workspace.navigate('invitations', result.id, false, true);
           return;
         }
-        resetInvitation({ username: '', role: values.role, message: '' });
         restoreInviteFocus.current = true;
         setInvitationOpen(false);
         await load();
@@ -970,6 +971,7 @@ function TeamMembers({
     '{role}': word(role),
     '{entity}': team?.profileName ?? word('legalEntity'),
   };
+  const inviteRoleBinding = invitation.bind('role');
   const inviteForm = invitationOpen ? (
     <form
       noValidate
@@ -989,74 +991,89 @@ function TeamMembers({
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-        <div className={cn(recordEditorGrid, 'sm:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]')}>
-          <div className="min-w-0 space-y-1">
-            <Label htmlFor="team-username">{word('username')}</Label>
-            <Input
-              {...invitation.bind('username')}
-              autoFocus
-              id="team-username"
-              dir="ltr"
-              autoCapitalize="none"
-              spellCheck={false}
-              required
-              aria-required="true"
-              aria-describedby={
-                invitation.errors.username
-                  ? `team-username-help ${invitation.errorId('username')}`
-                  : 'team-username-help'
-              }
-              maxLength={254}
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
-              disabled={inviting || !!inviteRecovery}
-            />
-            <p id="team-username-help" className="text-sm text-muted-foreground">
-              {word('inviteDestination')} <bdi dir="ltr">09… / +98…</bdi>
-            </p>
-            {invitation.errors.username && (
-              <p
-                id={invitation.errorId('username')}
-                role="alert"
-                className="text-sm text-destructive"
-              >
-                {invitation.errors.username.message}
-              </p>
-            )}
-          </div>
-          <div className="min-w-0 space-y-1">
-            <Label htmlFor="invite-role">{word('role')}</Label>
-            <NativeSelect
-              {...invitation.bind('role')}
-              id="invite-role"
-              aria-required="true"
-              className="w-full"
-              aria-describedby={[
-                'invite-role-effect',
-                invitation.errors.role ? invitation.errorId('role') : null,
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              value={role}
-              onChange={(event) => setRole(event.target.value as Role)}
-              disabled={inviting || !!inviteRecovery}
+        <div className="min-w-0 max-w-md space-y-1">
+          <Label htmlFor="team-username">{word('username')}</Label>
+          <Input
+            {...invitation.bind('username')}
+            autoFocus
+            id="team-username"
+            dir="ltr"
+            autoCapitalize="none"
+            spellCheck={false}
+            required
+            aria-required="true"
+            aria-describedby={
+              invitation.errors.username
+                ? `team-username-help ${invitation.errorId('username')}`
+                : 'team-username-help'
+            }
+            maxLength={254}
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            disabled={inviting || !!inviteRecovery}
+          />
+          <p id="team-username-help" className="text-sm text-muted-foreground">
+            {word('inviteDestination')} <bdi dir="ltr">09… / +98…</bdi>
+          </p>
+          {invitation.errors.username && (
+            <p
+              id={invitation.errorId('username')}
+              role="alert"
+              className="text-sm text-destructive"
             >
-              {ROLES.map((item) => (
-                <option key={item} value={item}>
-                  {word(item)}
-                </option>
-              ))}
-            </NativeSelect>
-            <p id="invite-role-effect" className="text-sm text-muted-foreground">
-              {word(`roleEffect.${role}`)}
+              {invitation.errors.username.message}
             </p>
-            {invitation.errors.role && (
-              <p id={invitation.errorId('role')} role="alert" className="text-sm text-destructive">
-                {invitation.errors.role.message}
-              </p>
-            )}
-          </div>
+          )}
         </div>
+        <fieldset
+          disabled={inviting || !!inviteRecovery}
+          className="min-w-0"
+          aria-describedby={inviteRoleBinding['aria-describedby']}
+        >
+          <legend className="mb-1.5 text-sm font-medium">{word('role')}</legend>
+          <div className="grid gap-2 sm:grid-cols-3">
+            {ROLES.map((item) => (
+              <label
+                key={item}
+                className="flex min-w-0 cursor-pointer items-start gap-3 rounded-lg border bg-background px-3 py-2 has-checked:border-primary/40 has-checked:bg-primary/5 has-disabled:cursor-default"
+              >
+                <input
+                  {...inviteRoleBinding}
+                  type="radio"
+                  required
+                  value={item}
+                  checked={role === item}
+                  onChange={() => setRole(item)}
+                  aria-labelledby={`invite-role-${item}`}
+                  aria-describedby={[
+                    `invite-role-${item}-effect`,
+                    inviteRoleBinding['aria-describedby'],
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                  className="mt-0.5 size-4 shrink-0 accent-primary"
+                />
+                <span className="grid min-w-0 gap-0.5 text-sm">
+                  <span id={`invite-role-${item}`} className="font-medium">
+                    {word(item)}
+                  </span>
+                  <span id={`invite-role-${item}-effect`} className="text-muted-foreground">
+                    {word(`roleEffect.${item}`)}
+                  </span>
+                </span>
+              </label>
+            ))}
+          </div>
+          {invitation.errors.role && (
+            <p
+              id={invitation.errorId('role')}
+              role="alert"
+              className="mt-1 text-sm text-destructive"
+            >
+              {invitation.errors.role.message}
+            </p>
+          )}
+        </fieldset>
         <div className="space-y-1">
           <Label htmlFor="invite-message">{word('message')}</Label>
           <Textarea
@@ -1084,7 +1101,7 @@ function TeamMembers({
             </p>
           )}
         </div>
-        {inviteDestination && (
+        {inviteDestination && role && (
           <p className="rounded-md bg-muted/60 px-3 py-2 text-sm [overflow-wrap:anywhere]">
             {word('invitePreview')
               .split(/(\{\w+\})/)
@@ -1111,6 +1128,7 @@ function TeamMembers({
           disabled={inviting || invitation.form.formState.isSubmitting}
           onClick={() => {
             if (invitationPending.current) return;
+            if (!inviteRecovery) resetInvitation(emptyInvitation);
             if (routedInvite && workspace) workspace.navigate('invitations');
             else {
               restoreInviteFocus.current = true;
