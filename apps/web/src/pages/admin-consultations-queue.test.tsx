@@ -5,7 +5,7 @@ import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
 import { AdminConsultationsPage } from './AdminConsultationsPage.js';
-import { tConsultation } from '@barghsa/i18n/consultation';
+import { tStaffConsultation } from '@barghsa/i18n/consultation-staff';
 import {
   consultationContextRows,
   consultationContextDetail,
@@ -427,7 +427,7 @@ it.each(['en', 'fa'] as const)(
     document.documentElement.lang = locale;
     vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
     const requests = consultationContextRows();
-    const copy = (key: string) => tConsultation(key, locale);
+    const copy = (key: string) => tStaffConsultation(key, locale);
     vi.stubGlobal(
       'fetch',
       vi.fn(async (url: string) => {

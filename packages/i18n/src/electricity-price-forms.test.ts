@@ -8,7 +8,27 @@ it('localizes the price workspace and exact retry in both dictionaries', () => {
       .filter((key) => key.startsWith('electricity.priceForm.'))
       .sort()
   );
-  expect(keys).toHaveLength(12);
+  expect(keys).toEqual([
+    'electricity.priceForm.basisHelp',
+    'electricity.priceForm.basisInvalid',
+    'electricity.priceForm.browseContracts',
+    'electricity.priceForm.contractHelp',
+    'electricity.priceForm.contractInvalid',
+    'electricity.priceForm.contractNotFound',
+    'electricity.priceForm.contractReference',
+    'electricity.priceForm.dateHelp',
+    'electricity.priceForm.dateInvalid',
+    'electricity.priceForm.findContract',
+    'electricity.priceForm.lookupFailed',
+    'electricity.priceForm.percentageInvalid',
+    'electricity.priceForm.reasonHelp',
+    'electricity.priceForm.reasonInvalid',
+    'electricity.priceForm.referenceHelp',
+    'electricity.priceForm.referenceInvalid',
+    'electricity.priceForm.retryCaptured',
+    'electricity.priceForm.uncertain',
+    'electricity.priceForm.validationUnavailable',
+  ]);
   for (const key of keys) {
     expect(t(key, 'en')).not.toBe(key);
     expect(t(key, 'fa')).not.toBe(key);

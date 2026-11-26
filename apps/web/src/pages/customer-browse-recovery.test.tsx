@@ -1,4 +1,5 @@
 import { QueryProvider } from '../test/query-provider.js';
+import { AccountUserProvider } from '../hooks/useAccountUser.js';
 import { act, type ComponentType, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -56,7 +57,7 @@ function button(host: ParentNode, text: string) {
   expect(found, text).toBeDefined();
   return found!;
 }
-async function mount(Page: ComponentType) {
+async function mount(Page: ComponentType, actor: string | null = null) {
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true);
   document.documentElement.lang = 'en';
   const host = document.createElement('div');
@@ -65,7 +66,9 @@ async function mount(Page: ComponentType) {
   await act(async () =>
     root.render(
       <QueryProvider>
-        <Page />
+        <AccountUserProvider value={actor}>
+          <Page />
+        </AccountUserProvider>
       </QueryProvider>
     )
   );
@@ -303,29 +306,43 @@ it('product recovery preserves selected/confirmed consultation and its failed su
   }
 });
 it('a refreshed catalogue without the selected product clears confirmation before another request', async () => {
+  const replacement = '86000000-0000-4000-8000-000000000099';
   let replaced = false;
   vi.stubGlobal(
     'fetch',
     vi.fn(async (url: string) =>
       Response.json(
-        url.includes('/products?') && replaced
-          ? { products: [{ ...browseConsultation, id: '86000000-0000-4000-8000-000000000099' }] }
+        url.includes('/products?')
+          ? {
+              products: replaced
+                ? [{ ...browseConsultation, id: replacement }]
+                : [browseConsultation, { ...browseConsultation, id: replacement }],
+            }
           : consultationData(url)
       )
     )
   );
-  const { host, close } = await mount(ConsultationIntakePage);
+  const { host, close } = await mount(ConsultationIntakePage, 'catalogue-refresh-customer');
   try {
     await act(async () => {
       host.querySelector<HTMLInputElement>('input[type="radio"]')!.click();
       host.querySelector<HTMLInputElement>('form input[type="checkbox"]')!.click();
     });
+    expect(host.querySelector<HTMLInputElement>('input[type="radio"]:checked')?.value).toBe(
+      browseConsultation.id
+    );
+    expect(host.querySelector<HTMLInputElement>('form input[type="checkbox"]')?.checked).toBe(true);
     replaced = true;
     await act(async () => button(host, 'Refresh consultations').click());
-    expect(host.querySelector<HTMLInputElement>('input[type="radio"]')?.checked).toBe(false);
-    expect(host.querySelector<HTMLInputElement>('form input[type="checkbox"]')?.checked).toBe(
-      false
+    await vi.waitFor(() =>
+      expect(host.querySelector<HTMLInputElement>('input[type="radio"]')?.value).toBe(replacement)
     );
+    expect(host.querySelector('input[type="radio"]:checked')).toBeNull();
+    await vi.waitFor(() => {
+      expect(host.querySelector<HTMLInputElement>('form input[type="checkbox"]')?.checked).toBe(
+        false
+      );
+    });
     expect(host.querySelector<HTMLButtonElement>('form button[type="submit"]')?.disabled).toBe(
       false
     );

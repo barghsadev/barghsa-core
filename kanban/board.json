@@ -116437,7 +116437,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -116482,7 +116483,7 @@
             2403312248401327,
             1689188761090969,
             693467880281088,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3340384572205152,
             4259592260190887,
@@ -116867,7 +116868,8 @@
             552197353518721,
             3817994007476500,
             1481734470541256,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ],
           "presentation_renewals": [
             {
@@ -117201,7 +117203,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -117246,7 +117249,7 @@
             2403312248401327,
             1689188761090969,
             693467880281088,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3340384572205152,
             4259592260190887,
@@ -117631,7 +117634,8 @@
             552197353518721,
             3817994007476500,
             1481734470541256,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ],
           "presentation_renewals": [
             {
@@ -117965,7 +117969,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -118010,7 +118015,7 @@
             2403312248401327,
             1689188761090969,
             693467880281088,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3340384572205152,
             4259592260190887,
@@ -118395,7 +118400,8 @@
             552197353518721,
             3817994007476500,
             1481734470541256,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ],
           "presentation_renewals": [
             {
@@ -118729,7 +118735,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -118774,7 +118781,7 @@
             2403312248401327,
             1689188761090969,
             693467880281088,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3340384572205152,
             4259592260190887,
@@ -119159,7 +119166,8 @@
             552197353518721,
             3817994007476500,
             1481734470541256,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ],
           "presentation_renewals": [
             {
@@ -119493,7 +119501,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -119538,7 +119547,7 @@
             2403312248401327,
             1689188761090969,
             693467880281088,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3340384572205152,
             4259592260190887,
@@ -119923,7 +119932,8 @@
             552197353518721,
             3817994007476500,
             1481734470541256,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ],
           "presentation_renewals": [
             {
@@ -120257,7 +120267,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -120302,7 +120313,7 @@
             2403312248401327,
             1689188761090969,
             693467880281088,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3340384572205152,
             4259592260190887,
@@ -120687,7 +120698,8 @@
             552197353518721,
             3817994007476500,
             1481734470541256,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ],
           "presentation_renewals": [
             {
@@ -121108,7 +121120,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -121159,7 +121172,7 @@
             1093420899000726,
             693467880281088,
             4311354175537726,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3340384572205152,
             4259592260190887,
@@ -121632,7 +121645,8 @@
             1481734470541256,
             4428934994344553,
             2274958872064561,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ],
           "presentation_renewals": [
             {
@@ -121976,7 +121990,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -122021,7 +122036,7 @@
             2403312248401327,
             1689188761090969,
             693467880281088,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3340384572205152,
             4259592260190887,
@@ -122406,7 +122421,8 @@
             552197353518721,
             3817994007476500,
             1481734470541256,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ],
           "presentation_renewals": [
             {
@@ -122827,7 +122843,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -122878,7 +122895,7 @@
             1093420899000726,
             693467880281088,
             4311354175537726,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3340384572205152,
             4259592260190887,
@@ -123351,7 +123368,8 @@
             1481734470541256,
             4428934994344553,
             2274958872064561,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ],
           "presentation_renewals": [
             {
@@ -123695,7 +123713,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -123740,7 +123759,7 @@
             2403312248401327,
             1689188761090969,
             693467880281088,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3340384572205152,
             4259592260190887,
@@ -124125,7 +124144,8 @@
             552197353518721,
             3817994007476500,
             1481734470541256,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ],
           "presentation_renewals": [
             {
@@ -124420,7 +124440,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-invoice-review-boundaries",
           "release-0.6-invoice-approval-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -124459,7 +124480,7 @@
             3209511481875299,
             2403312248401327,
             693467880281088,
-            3933728712704034,
+            790812788674106,
             4259592260190887,
             344053497533416,
             1492247273028046,
@@ -124753,7 +124774,8 @@
             1832992762036922,
             130241357629046,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ],
           "presentation_renewals": [
             {
@@ -124975,7 +124997,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-invoice-review-boundaries",
           "release-0.6-invoice-approval-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -125018,7 +125041,7 @@
             2403312248401327,
             1413327795496287,
             693467880281088,
-            3933728712704034,
+            790812788674106,
             4259592260190887,
             344053497533416,
             1492247273028046,
@@ -125336,7 +125359,8 @@
             1832992762036922,
             130241357629046,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ],
           "presentation_renewals": [
             {
@@ -125542,7 +125566,8 @@
           "release-0.6-postgres-query-tracing",
           "release-0.6-invoice-review-boundaries",
           "release-0.6-invoice-approval-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -125575,7 +125600,7 @@
             3209511481875299,
             2403312248401327,
             1689188761090969,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             336929221985904,
             4259592260190887,
@@ -125876,7 +125901,8 @@
             1832992762036922,
             130241357629046,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ],
           "presentation_renewals": [
             {
@@ -163584,7 +163610,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-invoice-review-boundaries",
           "release-0.6-invoice-approval-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -163621,7 +163648,7 @@
             3174796548592049,
             3461149100487300,
             670244035808909,
-            3850669944250169,
+            3239827542272444,
             677895519891331,
             3837379671707867,
             3438758712824230,
@@ -164019,7 +164046,8 @@
             251116967695569,
             863744680355744,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            655915473954778
           ],
           "presentation_renewals": [
             {
@@ -164137,7 +164165,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-invoice-review-boundaries",
           "release-0.6-invoice-approval-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -164174,7 +164203,7 @@
             3174796548592049,
             3461149100487300,
             670244035808909,
-            3850669944250169,
+            3239827542272444,
             677895519891331,
             3837379671707867,
             3438758712824230,
@@ -164569,7 +164598,8 @@
             251116967695569,
             863744680355744,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            655915473954778
           ],
           "presentation_renewals": [
             {
@@ -164687,7 +164717,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-invoice-review-boundaries",
           "release-0.6-invoice-approval-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -164724,7 +164755,7 @@
             3174796548592049,
             3461149100487300,
             670244035808909,
-            3850669944250169,
+            3239827542272444,
             677895519891331,
             3837379671707867,
             3438758712824230,
@@ -165119,7 +165150,8 @@
             251116967695569,
             863744680355744,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            655915473954778
           ],
           "presentation_renewals": [
             {
@@ -165237,7 +165269,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-invoice-review-boundaries",
           "release-0.6-invoice-approval-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -165274,7 +165307,7 @@
             3174796548592049,
             3461149100487300,
             670244035808909,
-            3850669944250169,
+            3239827542272444,
             677895519891331,
             3837379671707867,
             3438758712824230,
@@ -165669,7 +165702,8 @@
             251116967695569,
             863744680355744,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            655915473954778
           ],
           "presentation_renewals": [
             {
@@ -165787,7 +165821,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-invoice-review-boundaries",
           "release-0.6-invoice-approval-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -165824,7 +165859,7 @@
             3174796548592049,
             3461149100487300,
             670244035808909,
-            3850669944250169,
+            3239827542272444,
             677895519891331,
             3837379671707867,
             3438758712824230,
@@ -166219,7 +166254,8 @@
             251116967695569,
             863744680355744,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            655915473954778
           ],
           "presentation_renewals": [
             {
@@ -169221,7 +169257,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -169299,7 +169336,7 @@
             2519433350976910,
             635671181338041,
             1011544371548010,
-            1742399414929951,
+            955371262863179,
             1926782919120386,
             3241580596337886,
             620152075760444,
@@ -170490,7 +170527,8 @@
             3172603009200505,
             3576583097240544,
             3179634372118139,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -170727,7 +170765,8 @@
           "release-0.6-profile-export-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "validated-immutable-business-acting-context-and-cross-surface-isolation",
@@ -170805,7 +170844,7 @@
             2519433350976910,
             635671181338041,
             1011544371548010,
-            1742399414929951,
+            955371262863179,
             1926782919120386,
             3241580596337886,
             620152075760444,
@@ -171996,7 +172035,8 @@
             3172603009200505,
             3576583097240544,
             3179634372118139,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -215039,7 +215079,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -215094,7 +215135,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -215667,7 +215708,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -215947,7 +215989,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -216002,7 +216045,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -216575,7 +216618,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -216851,7 +216895,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -216906,7 +216951,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -217479,7 +217524,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -217754,7 +217800,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -217809,7 +217856,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -218382,7 +218429,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -218658,7 +218706,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -218713,7 +218762,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -219286,7 +219335,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -219562,7 +219612,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -219617,7 +219668,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -220190,7 +220241,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -220471,7 +220523,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -220526,7 +220579,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -221099,7 +221152,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -221378,7 +221432,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -221433,7 +221488,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -222006,7 +222061,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -222283,7 +222339,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -222338,7 +222395,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -222911,7 +222968,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -223191,7 +223249,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -223246,7 +223305,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -223819,7 +223878,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -224101,7 +224161,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -224156,7 +224217,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -224729,7 +224790,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -225006,7 +225068,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -225061,7 +225124,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -225634,7 +225697,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -225910,7 +225974,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -225965,7 +226030,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -226538,7 +226603,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -226815,7 +226881,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -226870,7 +226937,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -227443,7 +227510,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -227720,7 +227788,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -227775,7 +227844,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -228348,7 +228417,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -228626,7 +228696,8 @@
           "release-0.6-inbox-read-command-validation",
           "release-0.6-async-retry-command-body",
           "release-0.6-wallet-limit-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -228681,7 +228752,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -229254,7 +229325,8 @@
             1154873146046985,
             436104852049511,
             2119018881295904,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ],
           "presentation_renewals": [
             {
@@ -242438,7 +242510,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -242456,7 +242529,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -242992,7 +243065,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -243156,7 +243230,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -243174,7 +243249,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -243710,7 +243785,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -243874,7 +243950,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -243892,7 +243969,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -244428,7 +244505,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -245247,7 +245325,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -245265,7 +245344,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -245801,7 +245880,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -245966,7 +246046,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -245984,7 +246065,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -246520,7 +246601,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -246684,7 +246766,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -246702,7 +246785,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -247238,7 +247321,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -247402,7 +247486,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -247420,7 +247505,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -247956,7 +248041,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -248120,7 +248206,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -248138,7 +248225,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -248674,7 +248761,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -248839,7 +248927,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -248857,7 +248946,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -249393,7 +249482,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -249557,7 +249647,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -249575,7 +249666,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -250111,7 +250202,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -250275,7 +250367,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -250293,7 +250386,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -250829,7 +250922,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -251647,7 +251741,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -251665,7 +251760,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -252201,7 +252296,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -252365,7 +252461,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -252383,7 +252480,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -252919,7 +253016,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -253083,7 +253181,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -253101,7 +253200,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -253637,7 +253736,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -253801,7 +253901,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -253819,7 +253920,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -254355,7 +254456,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -254519,7 +254621,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -254537,7 +254640,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -255073,7 +255176,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -255237,7 +255341,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -255255,7 +255360,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -255791,7 +255896,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -255955,7 +256061,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -255973,7 +256080,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -256509,7 +256616,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -256673,7 +256781,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -256691,7 +256800,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -257227,7 +257336,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -257394,7 +257504,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -257412,7 +257523,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -257948,7 +258059,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -258112,7 +258224,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -258130,7 +258243,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -258666,7 +258779,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -258830,7 +258944,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-empty-command-validation",
           "release-0.6-coverage-browser-selection",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -258848,7 +258963,7 @@
             310270358365270,
             492945219608791,
             4192407710208085,
-            133420282682149,
+            4173886633286400,
             3325478153730169,
             704371200694038,
             838549242067049,
@@ -259384,7 +259499,8 @@
             251116967695569,
             3395331315898153,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ],
           "presentation_renewals": [
             {
@@ -290410,7 +290526,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-invoice-review-boundaries",
           "release-0.6-invoice-approval-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -290490,7 +290607,7 @@
             803566383526085,
             1757704587668304,
             2438414240011306,
-            3850669944250169,
+            3239827542272444,
             677895519891331,
             3837379671707867,
             3438758712824230,
@@ -290610,7 +290727,8 @@
             251116967695569,
             863744680355744,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            655915473954778
           ],
           "presentation_renewals": [
             {
@@ -291299,7 +291417,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-invoice-review-boundaries",
           "release-0.6-invoice-approval-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -291336,7 +291455,7 @@
             3174796548592049,
             3461149100487300,
             670244035808909,
-            3850669944250169,
+            3239827542272444,
             677895519891331,
             3837379671707867,
             3438758712824230,
@@ -291731,7 +291850,8 @@
             251116967695569,
             863744680355744,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            655915473954778
           ],
           "presentation_renewals": [
             {
@@ -291849,7 +291969,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-invoice-review-boundaries",
           "release-0.6-invoice-approval-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -291886,7 +292007,7 @@
             3174796548592049,
             3461149100487300,
             670244035808909,
-            3850669944250169,
+            3239827542272444,
             677895519891331,
             3837379671707867,
             3438758712824230,
@@ -292281,7 +292402,8 @@
             251116967695569,
             863744680355744,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            655915473954778
           ],
           "presentation_renewals": [
             {
@@ -292400,7 +292522,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-invoice-review-boundaries",
           "release-0.6-invoice-approval-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -292437,7 +292560,7 @@
             3174796548592049,
             3461149100487300,
             670244035808909,
-            3850669944250169,
+            3239827542272444,
             677895519891331,
             3837379671707867,
             3438758712824230,
@@ -292832,7 +292955,8 @@
             251116967695569,
             863744680355744,
             3580149536433996,
-            4200943763172086
+            4200943763172086,
+            655915473954778
           ],
           "presentation_renewals": [
             {
@@ -402479,7 +402603,8 @@
           "release-0.6-web-server-tracing",
           "release-0.6-operational-retention",
           "release-0.6-electricity-setting-recovery",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "source-bound-rendered-ui-journey-tests",
@@ -402501,7 +402626,7 @@
             2204665925791529,
             412218851399652,
             3363578369942257,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3735777036586935,
             1529995062262180,
@@ -402527,7 +402652,8 @@
             3927417430269962,
             3239468737812509,
             3669585400980793,
-            4200943763172086
+            4200943763172086,
+            3012580967551571
           ]
         }
       }
@@ -432688,7 +432814,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-coverage-browser-selection",
           "release-0.6-wallet-recovery-bundle",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -432799,7 +432926,7 @@
             1297261690679946,
             3883839257125722,
             976742065470260,
-            133420282682149,
+            4173886633286400,
             3658992801236231,
             1554261312138542,
             3292228999816766,
@@ -433164,7 +433291,8 @@
             1129682997450800,
             1876950768536101,
             2077621993272827,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ]
         }
       }
@@ -433333,7 +433461,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-coverage-browser-selection",
           "release-0.6-wallet-recovery-bundle",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -433444,7 +433573,7 @@
             1297261690679946,
             3883839257125722,
             976742065470260,
-            133420282682149,
+            4173886633286400,
             3658992801236231,
             1554261312138542,
             3292228999816766,
@@ -433809,7 +433938,8 @@
             1129682997450800,
             1876950768536101,
             2077621993272827,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ]
         }
       }
@@ -433919,7 +434049,8 @@
           "release-0.6-electricity-setting-recovery",
           "release-0.6-coverage-browser-selection",
           "release-0.6-wallet-recovery-bundle",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -434030,7 +434161,7 @@
             1297261690679946,
             3883839257125722,
             976742065470260,
-            133420282682149,
+            4173886633286400,
             3658992801236231,
             1554261312138542,
             3292228999816766,
@@ -434395,7 +434526,8 @@
             1129682997450800,
             1876950768536101,
             2077621993272827,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ]
         }
       }
@@ -434562,7 +434694,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -434650,7 +434783,7 @@
             3004503066149420,
             1618231406278310,
             64939556953238,
-            1742399414929951,
+            955371262863179,
             67539077246601,
             3901812195618582,
             1050649948495083,
@@ -434972,7 +435105,8 @@
             290114092516437,
             4148903635242412,
             2077621993272827,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ]
         }
       }
@@ -450909,7 +451043,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-hosted-native-timeouts",
           "release-0.6-wallet-recovery-bundle",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -451229,7 +451364,7 @@
             2188350886779192,
             1618231406278310,
             2061139272890355,
-            133420282682149,
+            4173886633286400,
             2847885179709997,
             4247548108412275,
             760984814944716,
@@ -451499,7 +451634,8 @@
             447624787030804,
             2346263087658538,
             4274213347807954,
-            4200943763172086
+            4200943763172086,
+            580911493842999
           ]
         }
       }
@@ -471751,7 +471887,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -471906,7 +472043,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -471939,7 +472076,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -472587,7 +472724,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -472792,7 +472930,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -472947,7 +473086,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -472980,7 +473119,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -473628,7 +473767,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -473834,7 +473974,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -473989,7 +474130,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -474022,7 +474163,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -474670,7 +474811,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -474845,7 +474987,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -475000,7 +475143,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -475033,7 +475176,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -475681,7 +475824,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -475882,7 +476026,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -476037,7 +476182,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -476070,7 +476215,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -476729,7 +476874,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -476939,7 +477085,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -477094,7 +477241,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -477127,7 +477274,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -477775,7 +477922,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -477958,7 +478106,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -478113,7 +478262,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -478146,7 +478295,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -478794,7 +478943,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -478941,7 +479091,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -479096,7 +479247,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -479129,7 +479280,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -479777,7 +479928,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -479924,7 +480076,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -480079,7 +480232,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -480112,7 +480265,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -480760,7 +480913,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -480908,7 +481062,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -481063,7 +481218,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -481096,7 +481251,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -481744,7 +481899,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -481891,7 +482047,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -482046,7 +482203,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -482079,7 +482236,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -482727,7 +482884,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -482884,7 +483042,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -483041,7 +483200,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -483055,7 +483214,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -483088,7 +483247,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -483781,7 +483940,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -483932,7 +484092,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -484089,7 +484250,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -484103,7 +484264,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -484136,7 +484297,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -484829,7 +484990,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -485024,7 +485186,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -485586,7 +485749,7 @@
             723531100418069,
             1231318528953631,
             2700408043277990,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             4423790021144107,
             4022806911934414,
@@ -485604,7 +485767,7 @@
             1618231406278310,
             64939556953238,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -485644,7 +485807,7 @@
             2083998356158135,
             2824407702229714,
             4454306727255504,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -485961,7 +486124,8 @@
             852531875417514,
             3140744041171533,
             4072274827137470,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -486112,7 +486276,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -486274,7 +486439,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -486288,7 +486453,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -486321,7 +486486,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -487016,7 +487181,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -487167,7 +487333,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -487324,7 +487491,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -487338,7 +487505,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -487371,7 +487538,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -488064,7 +488231,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -488215,7 +488383,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -488372,7 +488541,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -488386,7 +488555,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -488419,7 +488588,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -489112,7 +489281,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -489263,7 +489433,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -489420,7 +489591,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -489434,7 +489605,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -489467,7 +489638,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -490160,7 +490331,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -490311,7 +490483,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -490468,7 +490641,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -490482,7 +490655,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -490515,7 +490688,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -491208,7 +491381,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -491359,7 +491533,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -491516,7 +491691,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -491530,7 +491705,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -491563,7 +491738,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -492256,7 +492431,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -492407,7 +492583,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -492564,7 +492741,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -492578,7 +492755,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -492611,7 +492788,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -493304,7 +493481,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -493455,7 +493633,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -493612,7 +493791,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -493626,7 +493805,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -493659,7 +493838,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -494352,7 +494531,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -494503,7 +494683,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -494660,7 +494841,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -494674,7 +494855,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -494707,7 +494888,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -495400,7 +495581,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -495551,7 +495733,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -495708,7 +495891,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -495722,7 +495905,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -495755,7 +495938,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -496448,7 +496631,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -496599,7 +496783,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -496756,7 +496941,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -496770,7 +496955,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -496803,7 +496988,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -497496,7 +497681,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -497592,7 +497778,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -497680,7 +497867,7 @@
             3004503066149420,
             1618231406278310,
             64939556953238,
-            1742399414929951,
+            955371262863179,
             67539077246601,
             3901812195618582,
             1050649948495083,
@@ -498002,7 +498189,8 @@
             290114092516437,
             4148903635242412,
             2077621993272827,
-            4200943763172086
+            4200943763172086,
+            1130945288936389
           ]
         }
       }
@@ -498153,7 +498341,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -498310,7 +498499,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -498324,7 +498513,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -498357,7 +498546,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -499050,7 +499239,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -499201,7 +499391,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -499358,7 +499549,7 @@
             526242493799403,
             1808096103472103,
             635671181338041,
-            3933728712704034,
+            790812788674106,
             4423790021144107,
             4022806911934414,
             1139145300995230,
@@ -499372,7 +499563,7 @@
             3004503066149420,
             1618231406278310,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -499405,7 +499596,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -500098,7 +500289,8 @@
             2755637060701758,
             2346263087658538,
             3192001920991408,
-            4200943763172086
+            4200943763172086,
+            3235169174829748
           ]
         }
       }
@@ -500993,7 +501185,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -501148,7 +501341,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -501181,7 +501374,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -501829,7 +502022,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -501972,7 +502166,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -502127,7 +502322,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -502160,7 +502355,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -502808,7 +503003,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -502951,7 +503147,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -503106,7 +503303,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -503139,7 +503336,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -503787,7 +503984,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -503930,7 +504128,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -504085,7 +504284,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -504118,7 +504317,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -504766,7 +504965,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -504909,7 +505109,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -505064,7 +505265,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -505097,7 +505298,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -505745,7 +505946,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -505888,7 +506090,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -506043,7 +506246,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -506076,7 +506279,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -506724,7 +506927,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -506867,7 +507071,8 @@
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -507022,7 +507227,7 @@
             166383836405554,
             1297261690679946,
             2061139272890355,
-            1742399414929951,
+            955371262863179,
             4315534502409890,
             1438331363044687,
             1317126752382168,
@@ -507055,7 +507260,7 @@
             976742065470260,
             3989728750321987,
             987967426455904,
-            133420282682149,
+            4173886633286400,
             4192407710208085,
             3157066815872286,
             1021746289865099,
@@ -507703,7 +507908,8 @@
             2755637060701758,
             2346263087658538,
             4281935275266949,
-            4200943763172086
+            4200943763172086,
+            3814720400928784
           ]
         },
         "acceptance_history": [
@@ -532337,7 +532543,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-solar-postal-utc-day",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -532443,7 +532650,7 @@
             3713106727409958,
             635671181338041,
             4065265390453777,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3735777036586935,
             256168743657061,
@@ -532451,7 +532658,7 @@
             2462352576732396,
             976742065470260,
             3989728750321987,
-            133420282682149,
+            4173886633286400,
             2861008414710573,
             1963038335349447,
             2619018701892959,
@@ -532566,7 +532773,8 @@
             418036033772156,
             4027295898457869,
             44343147062430,
-            4200943763172086
+            4200943763172086,
+            4075865769270918
           ],
           "presentation_renewals": [
             {
@@ -532814,7 +533022,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-solar-postal-utc-day",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -532920,7 +533129,7 @@
             3713106727409958,
             635671181338041,
             4065265390453777,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3735777036586935,
             256168743657061,
@@ -532928,7 +533137,7 @@
             2462352576732396,
             976742065470260,
             3989728750321987,
-            133420282682149,
+            4173886633286400,
             2861008414710573,
             1963038335349447,
             2619018701892959,
@@ -533043,7 +533252,8 @@
             418036033772156,
             4027295898457869,
             44343147062430,
-            4200943763172086
+            4200943763172086,
+            4075865769270918
           ],
           "presentation_renewals": [
             {
@@ -533299,7 +533509,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-solar-postal-utc-day",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -533405,7 +533616,7 @@
             3713106727409958,
             635671181338041,
             4065265390453777,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3735777036586935,
             256168743657061,
@@ -533413,7 +533624,7 @@
             2462352576732396,
             976742065470260,
             3989728750321987,
-            133420282682149,
+            4173886633286400,
             2861008414710573,
             1963038335349447,
             2619018701892959,
@@ -533528,7 +533739,8 @@
             418036033772156,
             4027295898457869,
             44343147062430,
-            4200943763172086
+            4200943763172086,
+            4075865769270918
           ],
           "presentation_renewals": [
             {
@@ -533768,7 +533980,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-solar-postal-utc-day",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -533874,7 +534087,7 @@
             3713106727409958,
             635671181338041,
             4065265390453777,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3735777036586935,
             256168743657061,
@@ -533882,7 +534095,7 @@
             2462352576732396,
             976742065470260,
             3989728750321987,
-            133420282682149,
+            4173886633286400,
             2861008414710573,
             1963038335349447,
             2619018701892959,
@@ -533997,7 +534210,8 @@
             418036033772156,
             4027295898457869,
             44343147062430,
-            4200943763172086
+            4200943763172086,
+            4075865769270918
           ],
           "presentation_renewals": [
             {
@@ -534236,7 +534450,8 @@
           "release-0.6-coverage-browser-selection",
           "release-0.6-solar-postal-utc-day",
           "release-0.6-wallet-history-coverage",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -534342,7 +534557,7 @@
             3713106727409958,
             635671181338041,
             4065265390453777,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             3735777036586935,
             256168743657061,
@@ -534350,7 +534565,7 @@
             2462352576732396,
             976742065470260,
             3989728750321987,
-            133420282682149,
+            4173886633286400,
             2861008414710573,
             1963038335349447,
             2619018701892959,
@@ -534465,7 +534680,8 @@
             418036033772156,
             4027295898457869,
             44343147062430,
-            4200943763172086
+            4200943763172086,
+            4075865769270918
           ],
           "presentation_renewals": [
             {
@@ -572934,7 +573150,7 @@
             1099089813567509,
             2403312248401327,
             1689188761090969,
-            3933728712704034,
+            790812788674106,
             3061474197260633,
             4259592260190887,
             344053497533416,
@@ -573390,7 +573606,7 @@
             3174796548592049,
             3461149100487300,
             670244035808909,
-            3850669944250169,
+            3239827542272444,
             677895519891331,
             3837379671707867,
             3438758712824230,
@@ -574781,7 +574997,8 @@
             4173658256529698,
             2274958872064561,
             2077621993272827,
-            4200943763172086
+            4200943763172086,
+            2183376556763889
           ],
           "presentation_renewals": [
             {
@@ -575136,7 +575353,8 @@
           "release-0.6-solar-postal-utc-day",
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ]
       }
     },
@@ -575364,7 +575582,7 @@
             954938648532602,
             2519433350976910,
             562548647231915,
-            1742399414929951,
+            955371262863179,
             4251789131721601,
             3901812195618582,
             1050649948495083,
@@ -575515,7 +575733,7 @@
             3174796548592049,
             3461149100487300,
             670244035808909,
-            3850669944250169,
+            3239827542272444,
             677895519891331,
             3837379671707867,
             3438758712824230,
@@ -577335,7 +577553,8 @@
             4123418035377478,
             2119018881295904,
             2077621993272827,
-            4200943763172086
+            4200943763172086,
+            995701127396322
           ],
           "presentation_renewals": [
             {
@@ -577819,7 +578038,8 @@
           "release-0.6-solar-postal-utc-day",
           "release-0.6-wallet-limit-recovery",
           "release-0.6-wallet-recovery-bundle",
-          "owner-acceptance-renewal-98ceb5fe"
+          "owner-acceptance-renewal-98ceb5fe",
+          "2026-11-26-publication-test-alignment"
         ]
       }
     },
@@ -789470,6 +789690,164 @@
       "limitations": [
         "This renewal records the owner decision and the checks that ran on the verified revision. No individual task acceptance or live release rehearsal was rerun for this batch."
       ]
+    },
+    "2026-11-26-publication-test-alignment": {
+      "batch": "2026-11-26-publication-test-alignment",
+      "base_commit": "f53487a1a337595f5ebd667b20b0e43e17cf2be8",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "04-invoices-wallet-contracts.md#T-04.6.02.01",
+        "04-invoices-wallet-contracts.md#T-04.6.02.02",
+        "04-invoices-wallet-contracts.md#T-04.6.02.03",
+        "04-invoices-wallet-contracts.md#T-04.6.02.04",
+        "04-invoices-wallet-contracts.md#T-04.6.02.05",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "03-core-business.md#T-03.03.01.01",
+        "03-core-business.md#T-03.03.01.02",
+        "03-core-business.md#T-03.03.01.03",
+        "03-core-business.md#T-03.03.01.04",
+        "03-core-business.md#T-03.03.02.01",
+        "03-core-business.md#T-03.03.02.02",
+        "03-core-business.md#T-03.03.02.03",
+        "03-core-business.md#T-03.03.02.04",
+        "03-core-business.md#T-03.03.02.05",
+        "03-core-business.md#T-03.03.03.01",
+        "03-core-business.md#T-03.03.03.02",
+        "03-core-business.md#T-03.03.03.03",
+        "03-core-business.md#T-03.03.03.04",
+        "03-core-business.md#T-03.03.03.05",
+        "03-core-business.md#T-03.03.03.06",
+        "03-core-business.md#T-03.03.03.07",
+        "03-core-business.md#T-03.05.01.01",
+        "03-core-business.md#T-03.05.01.02",
+        "03-core-business.md#T-03.05.01.03",
+        "03-core-business.md#T-03.05.01.05",
+        "03-core-business.md#T-03.05.01.06",
+        "03-core-business.md#T-03.05.01.07",
+        "03-core-business.md#T-03.05.02.01",
+        "03-core-business.md#T-03.05.02.02",
+        "03-core-business.md#T-03.05.02.03",
+        "03-core-business.md#T-03.05.02.04",
+        "03-core-business.md#T-03.05.03.01",
+        "03-core-business.md#T-03.05.03.03",
+        "03-core-business.md#T-03.05.03.04",
+        "03-core-business.md#T-03.05.03.05",
+        "03-core-business.md#T-03.05.03.06",
+        "03-core-business.md#T-03.05.04.01",
+        "03-core-business.md#T-03.05.04.02",
+        "03-core-business.md#T-03.05.04.03",
+        "03-core-business.md#T-03.05.04.04",
+        "03-core-business.md#T-03.05.04.05",
+        "03-core-business.md#T-03.05.04.06",
+        "03-core-business.md#T-03.05.04.07",
+        "03-core-business.md#T-03.08.02.01",
+        "03-core-business.md#T-03.08.02.02",
+        "03-core-business.md#T-03.08.02.03",
+        "03-core-business.md#T-03.08.02.04",
+        "06-security-testing-observability.md#T-06.09.03.07",
+        "07-ui-ux-design.md#T-07.01.04.02",
+        "07-ui-ux-design.md#T-07.01.04.03",
+        "07-ui-ux-design.md#T-07.01.04.04",
+        "07-ui-ux-design.md#T-07.01.04.05",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.05",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.18.03.01",
+        "07-ui-ux-design.md#T-07.18.03.02",
+        "07-ui-ux-design.md#T-07.18.03.03",
+        "07-ui-ux-design.md#T-07.18.03.04",
+        "07-ui-ux-design.md#T-07.18.03.05",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
+        "apps/web/src/pages/admin-consultations-queue.test.tsx",
+        "apps/web/src/pages/customer-browse-recovery.test.tsx",
+        "apps/web/src/pages/electricity-order-details.test.tsx",
+        "packages/i18n/src/electricity-price-forms.test.ts",
+        "packages/i18n/src/saving-change.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
+          "sha256": "387e38d3b61f7433c9adfdbf0fd9bde78b97155291e6db924502d75dbceba948"
+        },
+        {
+          "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
+          "sha256": "6d03084beacbb932f9e9f616fe6d5c74026af93ed38f0bd1056e69280f678202"
+        },
+        {
+          "path": "apps/web/src/pages/customer-browse-recovery.test.tsx",
+          "sha256": "32ce48fb08f82dae7bd8db15eda1d78ca945dc3c9d8736c9128cf7ddf6c6d7c6"
+        },
+        {
+          "path": "apps/web/src/pages/electricity-order-details.test.tsx",
+          "sha256": "541677c5c3adcab87de718119e886013d40744f2a3a006db8637d403a1112035"
+        },
+        {
+          "path": "packages/i18n/src/electricity-price-forms.test.ts",
+          "sha256": "3a82753458e1204b1633d3f39a864ea3aef74af0f118a60f9d1979c9a6b7b150"
+        },
+        {
+          "path": "packages/i18n/src/saving-change.test.ts",
+          "sha256": "a4608cc2230091475830aab778695c7b407d1ef27a845f581cfa85d7f2d0fb21"
+        }
+      ],
+      "checks": [
+        "All 52 electricity correction, order detail and geography tests passed. The detail test fills the response note using the owned field ID and retains its quote and resubmission assertions.",
+        "All 141 i18n tests passed. The price form test checks the complete bilingual key list, including the contract lookup prompts and errors.",
+        "All 141 i18n tests passed. The saving-change test checks the complete bilingual key list, including the new review and comparison labels.",
+        "All 26 invoice detail tests passed. Amount error assertions follow the field’s description IDs and continue checking focus and that no payment receipt is submitted.",
+        "All six staff consultation queue tests passed. The bilingual status assertions read staff-specific labels and continue checking ownership and private identity handling.",
+        "All eight customer browse recovery tests passed. An authenticated customer loses the prior selection and confirmation after a catalogue refresh removes the selected consultation."
+      ]
     }
   },
   "historical_improvements": [
@@ -801716,9 +802094,9 @@
         "path": "apps/web/src/lib/customer-invoices.ts",
         "sha256": "178cb32b5c2d5c50561c8d7af928fce20400234721f8b4d54b5164cad474b05e"
       },
-      "3933728712704034": {
+      "790812788674106": {
         "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
-        "sha256": "f710a716787f004b99dab441915033d7672641b5624a6dd9ad9428bb1175f9f1"
+        "sha256": "387e38d3b61f7433c9adfdbf0fd9bde78b97155291e6db924502d75dbceba948"
       },
       "4259592260190887": {
         "path": "apps/worker/src/invoices/reminder-canceller.integration.test.ts",
@@ -803104,9 +803482,9 @@
         "path": "packages/db/drizzle/production/0159_electricity_price_adjustments.sql",
         "sha256": "3519deee9994a089883765bfbb1ac97b82fd205a920d40885c11643a76b36420"
       },
-      "3850669944250169": {
+      "3239827542272444": {
         "path": "packages/i18n/src/electricity-price-forms.test.ts",
-        "sha256": "0ac8e959bc62e8710cba1484fb80c1347a295c3c4aceb8a0a4965f0c12bcc53b"
+        "sha256": "3a82753458e1204b1633d3f39a864ea3aef74af0f118a60f9d1979c9a6b7b150"
       },
       "677895519891331": {
         "path": "packages/shared/src/finance/electricity-price-adjustment-review.test.ts",
@@ -803276,9 +803654,9 @@
         "path": "apps/web/src/pages/ConsultationDetailPage.tsx",
         "sha256": "d42757c6984a79fd9b1a7022004f375dc5501377a30dc7f6230c8f3946428bba"
       },
-      "1742399414929951": {
+      "955371262863179": {
         "path": "apps/web/src/pages/admin-consultations-queue.test.tsx",
-        "sha256": "f424078e88dc95825d3d957cf8246a23018029dc2edc0b37404fb460cc39ff95"
+        "sha256": "6d03084beacbb932f9e9f616fe6d5c74026af93ed38f0bd1056e69280f678202"
       },
       "1926782919120386": {
         "path": "apps/web/src/test/solar-progress-fixtures.ts",
@@ -803628,9 +804006,9 @@
         "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
         "sha256": "c14c40dc9384b946951dde33638c0b4908ae89fa9ee246bd174b4cd1848ad491"
       },
-      "133420282682149": {
+      "4173886633286400": {
         "path": "apps/web/src/pages/electricity-order-details.test.tsx",
-        "sha256": "649f9c902172f7549f7e546ef2ca7210e3a019e0448c74d86dd72b6ffb27c89d"
+        "sha256": "541677c5c3adcab87de718119e886013d40744f2a3a006db8637d403a1112035"
       },
       "3325478153730169": {
         "path": "apps/web/src/components/SimpleElectricityReview.tsx",
@@ -825439,6 +825817,14 @@
         ],
         "scope": "Prior assertions and added approval provenance, rollback and replay checks passed against migrated PostgreSQL. Product runtime source and live release receipts are unchanged."
       },
+      "3012580967551571": {
+        "batch": "2026-11-26-publication-test-alignment",
+        "base_commit": "f53487a1a337595f5ebd667b20b0e43e17cf2be8",
+        "paths": [
+          "apps/web/src/pages/InvoiceDetailsPage.test.tsx"
+        ],
+        "scope": "Publication test alignment for form copy, correction controls, receipt feedback and consultation catalogue recovery. The batch records the associated checks."
+      },
       "2538566320479721": {
         "batch": "release-0.6-operator-log-pseudonyms",
         "base_commit": "6761df94c30bc4ba3993bd84a778596cc420d122",
@@ -826615,6 +827001,14 @@
         ],
         "scope": "The price-adjustment history read now holds current staff authority while the same SQL reads its contract and history. Only the staff GET, its read helpers and one added test changed. Existing test cases, the generated contract, customer reads and adjustment proposal and settlement SQL remain unchanged. The new expired-session, write-only and denied-grant assertions passed alongside both existing migrated price charge and credit journeys and the 101 related web cases."
       },
+      "655915473954778": {
+        "batch": "2026-11-26-publication-test-alignment",
+        "base_commit": "f53487a1a337595f5ebd667b20b0e43e17cf2be8",
+        "paths": [
+          "packages/i18n/src/electricity-price-forms.test.ts"
+        ],
+        "scope": "Publication test alignment for form copy, correction controls, receipt feedback and consultation catalogue recovery. The batch records the associated checks."
+      },
       "2918133832778219": {
         "batch": "release-0.5-expanded-verification-settings",
         "base_commit": "0c57434b96bd44e6bb0043bd7728bb874cb549f4",
@@ -826988,6 +827382,14 @@
         ],
         "scope": "The customer consultation catalogue and staff team list check session validity before commit. Their existing queries, profile and role locks, response contracts and financial paths retain prior evidence. The consultation history and detail regressions were rerun with the same expiry, identity and non-disclosure assertions. The SQL review hash rebinds the identical queries to the edited source. The 25 affected compiled tests and a wallet settlement journey passed."
       },
+      "1130945288936389": {
+        "batch": "2026-11-26-publication-test-alignment",
+        "base_commit": "f53487a1a337595f5ebd667b20b0e43e17cf2be8",
+        "paths": [
+          "apps/web/src/pages/admin-consultations-queue.test.tsx"
+        ],
+        "scope": "Publication test alignment for form copy, correction controls, receipt feedback and consultation catalogue recovery. The batch records the associated checks."
+      },
       "2981414942499272": {
         "batch": "release-0.6-operator-log-pseudonyms",
         "base_commit": "6761df94c30bc4ba3993bd84a778596cc420d122",
@@ -827306,6 +827708,14 @@
           "apps/api/src/orders/orders.service.ts"
         ],
         "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+      },
+      "580911493842999": {
+        "batch": "2026-11-26-publication-test-alignment",
+        "base_commit": "f53487a1a337595f5ebd667b20b0e43e17cf2be8",
+        "paths": [
+          "apps/web/src/pages/electricity-order-details.test.tsx"
+        ],
+        "scope": "Publication test alignment for form copy, correction controls, receipt feedback and consultation catalogue recovery. The batch records the associated checks."
       },
       "39654995799108": {
         "batch": "release-0.6-cancellation-financial-scope",
@@ -840419,6 +840829,15 @@
         ],
         "scope": "Renewed staff and AI catalogue bindings for authorized record editors and detail views. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/staff-ai-catalogue-addresses-20261122."
       },
+      "3814720400928784": {
+        "batch": "2026-11-26-publication-test-alignment",
+        "base_commit": "f53487a1a337595f5ebd667b20b0e43e17cf2be8",
+        "paths": [
+          "apps/web/src/pages/admin-consultations-queue.test.tsx",
+          "apps/web/src/pages/electricity-order-details.test.tsx"
+        ],
+        "scope": "Publication test alignment for form copy, correction controls, receipt feedback and consultation catalogue recovery. The batch records the associated checks."
+      },
       "2855464030356011": {
         "batch": "release-0.6-provider-restore-as-draft",
         "base_commit": "f0f9434c3a396ee80c20243cfed15c972e5b680f",
@@ -840685,6 +841104,16 @@
           "docs/design/design-system.md"
         ],
         "scope": "Renewed auth presentation, browser assertions, and related documentation only. Reused existing evidence for unchanged requirements. Scoped checks and source hashes: /Users/majid/.local/state/barghsa-manual-batches/auth-service-intro-20261125/source-binding.json"
+      },
+      "3235169174829748": {
+        "batch": "2026-11-26-publication-test-alignment",
+        "base_commit": "f53487a1a337595f5ebd667b20b0e43e17cf2be8",
+        "paths": [
+          "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
+          "apps/web/src/pages/admin-consultations-queue.test.tsx",
+          "apps/web/src/pages/electricity-order-details.test.tsx"
+        ],
+        "scope": "Publication test alignment for form copy, correction controls, receipt feedback and consultation catalogue recovery. The batch records the associated checks."
       },
       "432651356112426": {
         "batch": "release-0.6-browser-navigation-query-and-resting-states",
@@ -841536,6 +841965,15 @@
           "packages/i18n/src/contracts.ts"
         ],
         "scope": "Renewed empty contracts/invoice presentation and contract view navigation bindings only. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/customer-records-conditional-review."
+      },
+      "4075865769270918": {
+        "batch": "2026-11-26-publication-test-alignment",
+        "base_commit": "f53487a1a337595f5ebd667b20b0e43e17cf2be8",
+        "paths": [
+          "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
+          "apps/web/src/pages/electricity-order-details.test.tsx"
+        ],
+        "scope": "Publication test alignment for form copy, correction controls, receipt feedback and consultation catalogue recovery. The batch records the associated checks."
       },
       "691549263195062": {
         "batch": "release-0.5-profile-workspace-navigation",
@@ -843575,6 +844013,15 @@
         ],
         "scope": "Renewed the changed source bindings for the grid-blue and amber default palette, authentication, workspace layouts and service entry presentation. Source review preserved the surrounding domain handlers, permission gates, record selection and exact amount formatting. Only the revised presentation, default branding and their tested callers were revalidated in this batch. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122."
       },
+      "2183376556763889": {
+        "batch": "2026-11-26-publication-test-alignment",
+        "base_commit": "f53487a1a337595f5ebd667b20b0e43e17cf2be8",
+        "paths": [
+          "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
+          "packages/i18n/src/electricity-price-forms.test.ts"
+        ],
+        "scope": "Publication test alignment for form copy, correction controls, receipt feedback and consultation catalogue recovery. The batch records the associated checks."
+      },
       "1882656989421437": {
         "batch": "release-0.5-expanded-verification-settings",
         "base_commit": "0c57434b96bd44e6bb0043bd7728bb874cb549f4",
@@ -844235,6 +844682,15 @@
           "apps/web/src/routes/admin/staff-teams.tsx"
         ],
         "scope": "Renewed staff and AI catalogue bindings for authorized record editors and detail views. Receipts: /Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/staff-ai-catalogue-addresses-20261122."
+      },
+      "995701127396322": {
+        "batch": "2026-11-26-publication-test-alignment",
+        "base_commit": "f53487a1a337595f5ebd667b20b0e43e17cf2be8",
+        "paths": [
+          "apps/web/src/pages/admin-consultations-queue.test.tsx",
+          "packages/i18n/src/electricity-price-forms.test.ts"
+        ],
+        "scope": "Publication test alignment for form copy, correction controls, receipt feedback and consultation catalogue recovery. The batch records the associated checks."
       },
       "1821416861592831": {
         "batch": "release-0.5-expanded-verification-settings",

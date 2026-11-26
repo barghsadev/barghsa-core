@@ -875,7 +875,7 @@ it('reviews amended electricity terms before submitting a replacement invoice', 
     );
     const form = container.querySelector('[data-testid="electricity-revision-form"]')!;
     const quantity = form.querySelector('#revision-quantity') as HTMLInputElement;
-    const note = form.querySelector('textarea') as HTMLTextAreaElement;
+    const note = form.querySelector<HTMLTextAreaElement>('#revision-note')!;
     const city = form.querySelector<HTMLInputElement>('#revision-city')!;
     await act(async () => {
       Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(

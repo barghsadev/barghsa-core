@@ -757,8 +757,12 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
       expect(amount.value).toBe(value);
       expect(date.value).toBe('2026-08-15');
       expect(payer.value).toBe('TRK-1');
-      const errorId = amount.getAttribute('aria-describedby')!;
-      expect(document.getElementById(errorId)?.textContent).toContain('positive integer');
+      const descriptions = amount.getAttribute('aria-describedby')!.split(/\s+/);
+      expect(
+        descriptions.some((id) =>
+          document.getElementById(id)?.textContent?.includes('positive integer')
+        )
+      ).toBe(true);
       expect(document.activeElement).toBe(amount);
       expect(
         fetchMock.mock.calls.some(
