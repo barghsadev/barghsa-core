@@ -1,6 +1,18 @@
 import { toast } from '../lib/toast-api.js';
-import { Alert, AlertDescription, Button, buttonVariants, LoadingStatus } from '@barghsa/ui';
+import {
+  Alert,
+  AlertDescription,
+  Button,
+  buttonVariants,
+  LoadingStatus,
+  StatusBadge,
+  cn,
+} from '@barghsa/ui';
 import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { statusFilterTone } from '../lib/status-filter-tone.js';
+import { t } from '@barghsa/i18n/app';
 import {
   RecordEditorActions,
   RecordEditorSection,
@@ -18,6 +30,7 @@ import { announceReadRetry } from '../lib/read-retry-feedback.js';
 import { queryKeys } from '../lib/query-keys.js';
 import { Link } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
+import { contractText } from '@barghsa/i18n/contracts';
 import { documentText } from '@barghsa/i18n/documents';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { useLocale } from '../hooks/useLocale.js';
@@ -35,7 +48,6 @@ import { SolarStageProgress } from '../components/SolarStageProgress.js';
 import type { SolarProgress } from '../lib/solar-progress.js';
 import { parseProgress } from '../lib/solar-progress-form.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
-import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
 import { hasSolarShipment, solarNextAction } from '../lib/solar-next-action.js';
 
 interface SolarRequest {
@@ -521,25 +533,56 @@ function SolarRequestDetail({
   );
   return (
     <div
-      className={`mx-auto max-w-3xl space-y-4 px-4 pb-4 sm:pb-5 ${documentEntry ? 'pt-2 sm:pt-4' : 'pt-4 sm:pt-5'}`}
+      className={
+        view === 'detail'
+          ? 'mx-auto w-full max-w-5xl min-w-0 space-y-4'
+          : `mx-auto max-w-3xl space-y-4 px-4 pb-4 sm:pb-5 ${documentEntry ? 'pt-2 sm:pt-4' : 'pt-4 sm:pt-5'}`
+      }
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {documents && <RecordCommandGuard blocked={() => completionKey.current !== null} />}
       {view === 'detail' ? (
-        <>
+        <header className="space-y-2">
           <Link
-            className="touch-action text-sm underline pointer-coarse:min-h-[45px]!"
+            className="touch-action inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4"
             to="/solar/requests"
           >
+            <ArrowLeft aria-hidden="true" className="size-4 rtl:hidden" />
+            <ArrowRight aria-hidden="true" className="hidden size-4 rtl:block" />
             {copy('back')}
           </Link>
-          <h1 className="text-2xl font-semibold sm:text-3xl">{copy('details')}</h1>
-        </>
+          <div className={loading ? 'sr-only' : 'space-y-3 rounded-xl border bg-card p-4 sm:p-6'}>
+            <h1 className="text-2xl leading-tight font-semibold sm:text-3xl">{copy('details')}</h1>
+            {request && (
+              <dl className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                <div className="min-w-0">
+                  <dt className="text-xs text-muted-foreground">
+                    {t('historySearch.reference', locale)}
+                  </dt>
+                  <dd className="mt-1 font-medium wrap-anywhere">
+                    <bdi>{request.id}</bdi>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs text-muted-foreground">{copy('submitted')}</dt>
+                  <dd className="mt-1 font-medium">
+                    <time dateTime={request.submitted_at}>{time.format(request.submitted_at)}</time>
+                  </dd>
+                </div>
+              </dl>
+            )}
+          </div>
+        </header>
       ) : shipmentAvailable ? null : (
         editorHeader(documentChangeBlocked)
       )}
       {time.notice}
-      {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
+      {loading &&
+        (view === 'detail' ? (
+          <RecordDetailSkeleton label={copy('loading')} layout="order" />
+        ) : (
+          <LoadingStatus>{copy('loading')}</LoadingStatus>
+        ))}
       {detailError && (
         <div className="space-y-2">
           <p role="alert">
@@ -830,49 +873,61 @@ function SolarRequestDetail({
           <>
             <WorkflowStatusBanner
               locale={locale}
-              submittedAt={`${workflowFeedback('submitted', locale)}: ${time.format(request.submitted_at)}`}
               status={copy(`status_${request.status}`)}
-              happened={
-                request.status_reason ??
-                `${copy('submitted')}: ${time.format(request.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}`
+              statusSummary={
+                <dl className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+                  <div className="flex items-center gap-2">
+                    <dt className="text-muted-foreground">{copy('status')}</dt>
+                    <dd>
+                      <StatusBadge
+                        label={copy(`status_${request.status}`)}
+                        tone={statusFilterTone(request.status)}
+                      />
+                    </dd>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <dt className="text-muted-foreground">{copy('currentStage')}</dt>
+                    <dd className="font-medium">{copy(stages[currentStage]!)}</dd>
+                  </div>
+                </dl>
               }
+              happened={request.status_reason ?? copy(`status_${request.status}`)}
               nextAction={action!.text}
               owner={action!.owner}
               actionHref={action?.href}
               supportHref={request.support_path ?? '/tickets'}
             />
-            <div className="space-y-1 rounded-xl border bg-card px-4 py-3 sm:px-5">
-              <p>
-                {copy('currentStage')}: <strong>{copy(stages[currentStage]!)}</strong>
-              </p>
-              {request.status === 'submitted' && (
-                <p className="text-sm text-muted-foreground">{copy('noContract')}</p>
-              )}
-              {request.contract_id && (
-                <div className="flex flex-wrap gap-4 text-sm">
-                  {request.contract_published ? (
-                    <Link
-                      className="underline"
-                      to="/contracts/$contractId/{-$action}"
-                      params={{ contractId: request.contract_id }}
-                    >
-                      {copy('solarViewContract')}
-                    </Link>
-                  ) : (
-                    <span>{copy('solarContractAwaitingPublication')}</span>
-                  )}
-                  {request.initial_invoice_id && (
-                    <Link
-                      className="underline"
-                      to="/invoices/$invoiceId"
-                      params={{ invoiceId: request.initial_invoice_id }}
-                    >
-                      {copy('solarViewInvoice')}
-                    </Link>
-                  )}
-                </div>
-              )}
-            </div>
+            {(request.status === 'submitted' || request.contract_id) && (
+              <div className="rounded-xl border bg-card px-4 py-3 text-sm sm:px-6">
+                {request.status === 'submitted' && (
+                  <p className="text-muted-foreground">{copy('noContract')}</p>
+                )}
+                {request.contract_id && (
+                  <div className="flex flex-wrap gap-4">
+                    {request.contract_published ? (
+                      <Link
+                        className="touch-action font-medium text-primary hover:underline underline-offset-4"
+                        to="/contracts/$contractId/{-$action}"
+                        params={{ contractId: request.contract_id }}
+                      >
+                        {copy('solarViewContract')}
+                      </Link>
+                    ) : (
+                      <span>{copy('solarContractAwaitingPublication')}</span>
+                    )}
+                    {request.initial_invoice_id && (
+                      <Link
+                        className="touch-action font-medium text-primary hover:underline underline-offset-4"
+                        to="/invoices/$invoiceId"
+                        params={{ invoiceId: request.initial_invoice_id }}
+                      >
+                        {copy('solarViewInvoice')}
+                      </Link>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
             {hasSolarShipment(request.status) &&
               request.status !== 'waiting_for_postal_submission' && (
                 <Link
@@ -883,13 +938,19 @@ function SolarRequestDetail({
                   {copy('openShipment')}
                 </Link>
               )}
-            <section className="space-y-2.5 rounded-xl border bg-card px-4 py-3 sm:px-5">
-              <h2 className="text-base font-semibold">{copy('stages')}</h2>
-              <ol className="list-inside list-decimal space-y-2">
+            <section className="space-y-3 rounded-xl border bg-card p-4 sm:p-6">
+              <h2 className="font-semibold">{copy('stages')}</h2>
+              <ol className="grid list-inside list-decimal gap-2 text-sm sm:grid-cols-5">
                 {stages.map((stage, index) => (
                   <li
                     key={stage}
-                    className={index === currentStage ? 'font-semibold text-primary' : ''}
+                    aria-current={index === currentStage ? 'step' : undefined}
+                    className={cn(
+                      'rounded-md px-3 py-2',
+                      index === currentStage
+                        ? 'bg-primary/10 font-semibold text-primary'
+                        : 'bg-muted/35 text-muted-foreground'
+                    )}
                   >
                     {copy(stage)}
                   </li>
@@ -899,122 +960,133 @@ function SolarRequestDetail({
             {progress && progress.requestId === requestId && (
               <SolarStageProgress progress={progress} />
             )}
-            <section
-              className="space-y-2.5 rounded-xl border bg-card px-4 py-3 sm:px-5"
-              aria-label={copy('historyTitle')}
-            >
-              <h2 className="text-base font-semibold">{copy('historyTitle')}</h2>
-              <ol className="space-y-3">
-                {(history.length
-                  ? history
-                  : [{ event: 'solar.request.submitted', at: request.submitted_at }]
-                ).map((item, index) => (
-                  <li key={`${item.at}-${index}`} className="border-s-2 border-primary/30 ps-3">
-                    <p>{copy(`history_${item.event}`)}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {historyContextText(item.actorContext, locale)}
-                    </p>
-                    <time className="text-sm text-muted-foreground" dateTime={item.at}>
-                      {time.format(item.at)}
-                    </time>
-                  </li>
-                ))}
-              </ol>
-            </section>
-            <dl className="grid gap-3 rounded-xl border p-5 sm:grid-cols-2">
-              <div>
-                <dt>{copy('instruction')}</dt>
-                <dd>
-                  {copy(request.building_type === 'non_household' ? 'nonHousehold' : 'building')}
-                </dd>
-              </div>
-              <div>
-                <dt>{copy('gridType')}</dt>
-                <dd>{copy(request.grid_type === 'off_grid' ? 'offGrid' : 'onGrid')}</dd>
-              </div>
-              {request.bill_identifier && (
-                <div>
-                  <dt>{copy('billIdentifier')}</dt>
-                  <dd dir="ltr">{request.bill_identifier}</dd>
-                </div>
-              )}
-              {request.property_form && (
-                <div>
-                  <dt>{copy('propertyForm')}</dt>
-                  <dd>{copy(request.property_form)}</dd>
-                </div>
-              )}
-              {request.structural_frame && (
-                <div>
-                  <dt>{copy('structuralFrame')}</dt>
-                  <dd>{copy(request.structural_frame)}</dd>
-                </div>
-              )}
-              {request.building_completion_date && (
-                <div>
-                  <dt>{copy('completionDate')}</dt>
-                  <dd>{request.building_completion_date}</dd>
-                </div>
-              )}
-              {request.total_units && (
-                <div>
-                  <dt>{copy('totalUnits')}</dt>
-                  <dd>{request.total_units}</dd>
-                </div>
-              )}
-              {request.site_category && (
-                <div>
-                  <dt>{copy('siteCategory')}</dt>
-                  <dd>{copy(request.site_category)}</dd>
-                </div>
-              )}
-              {request.installation_surface && (
-                <div>
-                  <dt>{copy('installationSurface')}</dt>
-                  <dd>{copy(request.installation_surface)}</dd>
-                </div>
-              )}
-              {request.usable_area_sqm && (
-                <div>
-                  <dt>{copy('usableArea')}</dt>
-                  <dd>{request.usable_area_sqm}</dd>
-                </div>
-              )}
-              <div>
-                <dt>{copy('address')}</dt>
-                <dd>{request.site_address || copy('addressNotRecorded')}</dd>
-              </div>
-              {request.site_relationship && (
-                <div>
-                  <dt>{copy('relationship')}</dt>
-                  <dd>
-                    {copy(
-                      request.site_relationship === 'authorized_operator'
-                        ? 'authorizedOperator'
-                        : request.site_relationship
-                    )}
-                  </dd>
-                </div>
-              )}
-              {request.site_description && (
-                <div>
-                  <dt>{copy('description')}</dt>
-                  <dd>{request.site_description}</dd>
-                </div>
-              )}
-              <div>
-                <dt>{copy('acceptedVersion')}</dt>
-                <dd>{request.agreement_version}</dd>
-              </div>
-              <div>
-                <dt>{copy('acceptedAt')}</dt>
-                <dd>{time.format(request.agreement_accepted_at)}</dd>
-              </div>
-              <div>
-                <dt>{copy('agreement')}</dt>
-                <dd>{request.agreement_snapshot}</dd>
-              </div>
-            </dl>
+            <div className="grid items-start gap-4 lg:grid-cols-2">
+              <section className="min-w-0 space-y-3 rounded-xl border bg-card p-4 sm:p-6">
+                <h2 className="font-semibold">{copy('wizardProperty')}</h2>
+                <dl className="grid gap-3 text-sm sm:grid-cols-2 [&_dt]:text-xs [&_dt]:text-muted-foreground [&_dd]:mt-1 [&_dd]:font-medium [&_dd]:wrap-anywhere">
+                  <div>
+                    <dt>{t('historyView.type', locale)}</dt>
+                    <dd>
+                      {copy(
+                        request.building_type === 'non_household' ? 'nonHousehold' : 'building'
+                      )}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{copy('gridType')}</dt>
+                    <dd>{copy(request.grid_type === 'off_grid' ? 'offGrid' : 'onGrid')}</dd>
+                  </div>
+                  {request.bill_identifier && (
+                    <div>
+                      <dt>{copy('billIdentifier')}</dt>
+                      <dd>
+                        <bdi>{request.bill_identifier}</bdi>
+                      </dd>
+                    </div>
+                  )}
+                  {request.property_form && (
+                    <div>
+                      <dt>{copy('propertyForm')}</dt>
+                      <dd>{copy(request.property_form)}</dd>
+                    </div>
+                  )}
+                  {request.structural_frame && (
+                    <div>
+                      <dt>{copy('structuralFrame')}</dt>
+                      <dd>{copy(request.structural_frame)}</dd>
+                    </div>
+                  )}
+                  {request.building_completion_date && (
+                    <div>
+                      <dt>{copy('completionDate')}</dt>
+                      <dd>{request.building_completion_date}</dd>
+                    </div>
+                  )}
+                  {request.total_units && (
+                    <div>
+                      <dt>{copy('totalUnits')}</dt>
+                      <dd>{request.total_units}</dd>
+                    </div>
+                  )}
+                  {request.site_category && (
+                    <div>
+                      <dt>{copy('siteCategory')}</dt>
+                      <dd>{copy(request.site_category)}</dd>
+                    </div>
+                  )}
+                  {request.installation_surface && (
+                    <div>
+                      <dt>{copy('installationSurface')}</dt>
+                      <dd>{copy(request.installation_surface)}</dd>
+                    </div>
+                  )}
+                  {request.usable_area_sqm && (
+                    <div>
+                      <dt>{copy('usableArea')}</dt>
+                      <dd>{request.usable_area_sqm}</dd>
+                    </div>
+                  )}
+                  <div>
+                    <dt>{copy('address')}</dt>
+                    <dd>
+                      <bdi>{request.site_address || copy('addressNotRecorded')}</bdi>
+                    </dd>
+                  </div>
+                  {request.site_relationship && (
+                    <div>
+                      <dt>{copy('relationship')}</dt>
+                      <dd>
+                        {copy(
+                          request.site_relationship === 'authorized_operator'
+                            ? 'authorizedOperator'
+                            : request.site_relationship
+                        )}
+                      </dd>
+                    </div>
+                  )}
+                  {request.site_description && (
+                    <div>
+                      <dt>{copy('description')}</dt>
+                      <dd>{request.site_description}</dd>
+                    </div>
+                  )}
+                  <div>
+                    <dt>{copy('acceptedVersion')}</dt>
+                    <dd>{request.agreement_version}</dd>
+                  </div>
+                  <div>
+                    <dt>{copy('acceptedAt')}</dt>
+                    <dd>{time.format(request.agreement_accepted_at)}</dd>
+                  </div>
+                  <div className="sm:col-span-full">
+                    <dt>{contractText('terms', locale)}</dt>
+                    <dd>{request.agreement_snapshot}</dd>
+                  </div>
+                </dl>
+              </section>
+              <section
+                className="space-y-2.5 rounded-xl border bg-card px-4 py-3 sm:px-5"
+                aria-label={copy('historyTitle')}
+              >
+                <h2 className="text-base font-semibold">{copy('historyTitle')}</h2>
+                <ol className="space-y-3">
+                  {(history.length
+                    ? history
+                    : [{ event: 'solar.request.submitted', at: request.submitted_at }]
+                  ).map((item, index) => (
+                    <li key={`${item.at}-${index}`} className="border-s-2 border-primary/30 ps-3">
+                      <p>{copy(`history_${item.event}`)}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {historyContextText(item.actorContext, locale)}
+                      </p>
+                      <time className="text-sm text-muted-foreground" dateTime={item.at}>
+                        {time.format(item.at)}
+                      </time>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            </div>
           </>
         ))}
     </div>

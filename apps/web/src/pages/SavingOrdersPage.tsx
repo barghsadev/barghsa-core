@@ -1,13 +1,13 @@
 import { HistoryStatusEmpty } from '../components/QueueEmptyState.js';
-import { LoadingStatus, ListPage } from '@barghsa/ui';
+import { ListPage, cn } from '@barghsa/ui';
+import { RecordListSkeleton } from '../components/RecordSkeleton.js';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
 } from '../hooks/useHistoryFilterDraft.js';
 import { useListView } from '../hooks/useListView.js';
-import { HistoryTable, TableCellDetails, type HistoryColumn } from '../components/HistoryTable.js';
-import { TableActionIcon } from '../components/TableActionIcon.js';
-import { ArrowUpRight } from 'lucide-react';
+import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { HistoryListControls } from '../components/HistoryListControls.js';
@@ -16,7 +16,7 @@ import { t } from '@barghsa/i18n/app';
 import { HistoryDateFilter } from '../components/HistoryDateFilter.js';
 import type { DateRangeFilterValue } from '@barghsa/shared/validation';
 import { Link } from '@tanstack/react-router';
-import { Button, Card, CardContent, StatusFilter, StatusBadge, ListViewToggle } from '@barghsa/ui';
+import { Button, StatusFilter, DualStatusDisplay, ListViewToggle, statusTone } from '@barghsa/ui';
 import { SAVING_ORDER_STATUSES } from '@barghsa/shared/validation';
 import { useCustomerServiceHistory } from '../hooks/useCustomerServiceHistory.js';
 import { statusFilterTone } from '../lib/status-filter-tone.js';
@@ -106,120 +106,115 @@ export function SavingOrdersPage({
   const { items: orders, nextBefore, loadMore } = history;
   const state = history.loading ? 'loading' : history.error ? 'error' : 'ready';
 
-  const columns: HistoryColumn<SavingOrderRow>[] = [
-    {
-      id: 'reference',
-      label: t('historySearch.reference', locale),
-      render: (order) => (
-        <Link
-          to="/savings/orders/$orderId"
-          params={{ orderId: order.id }}
-          className="touch-action text-primary underline underline-offset-4"
-        >
-          <bdi dir="ltr" className="break-all">
-            {order.id}
-          </bdi>
-        </Link>
-      ),
-    },
+  const allSelected =
+    !pendingOnly && !statuses.length && !dateRange.from && !dateRange.to && !query.q;
+  const scopeClass = (selected: boolean) =>
+    cn(
+      'touch-action rounded-md px-3 hover:bg-muted',
+      selected ? 'bg-primary/10 font-semibold text-primary' : 'text-muted-foreground'
+    );
+  const identity = (order: SavingOrderRow) => (
+    <div className="min-w-0 space-y-1">
+      <Link
+        to="/savings/orders/$orderId"
+        params={{ orderId: order.id }}
+        className="touch-action font-semibold text-primary hover:underline underline-offset-4"
+      >
+        <bdi>{order.plan_title[locale]}</bdi>
+      </Link>
+      <p className="text-sm font-normal text-muted-foreground">
+        <bdi>{order.hardware_title[locale]}</bdi>
+      </p>
+      <p className="text-xs font-normal text-muted-foreground">
+        <bdi className="wrap-anywhere">{order.id}</bdi>
+      </p>
+    </div>
+  );
+  const status = (order: SavingOrderRow) => (
+    <DualStatusDisplay
+      commercialLabel={t('historyView.status', locale)}
+      commercialStatus={
+        statusOptions.find((option) => option.value === order.status)?.label ?? order.status
+      }
+      commercialTone={statusFilterTone(order.status)}
+      financialLabel={copy('financialStatus')}
+      financialStatus={copy('financial.' + order.financial_status)}
+      financialTone={statusTone(order.financial_status)}
+    />
+  );
+  const submitted = (order: SavingOrderRow) => (
+    <time dateTime={order.submitted_at}>
+      {time.format(order.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}
+    </time>
+  );
+  const nextStep = (order: SavingOrderRow) => {
+    const action = savingNextAction(order);
+    const label = copy('action.' + action.kind);
+    return action.href ? (
+      <Link
+        to={action.href}
+        className="touch-action font-medium text-primary hover:underline underline-offset-4"
+      >
+        {label}
+      </Link>
+    ) : (
+      <span className="text-muted-foreground">{label}</span>
+    );
+  };
+  const columns: (HistoryColumn<SavingOrderRow> & { label: string })[] = [
     {
       id: 'plan',
       label: copy('stepPlan'),
       render: (order) => (
-        <div className="min-w-44 space-y-1">
-          <p className="font-medium" dir="auto">
-            {order.plan_title[locale]}
-          </p>
-          <p className="text-muted-foreground" dir="auto">
-            {order.hardware_title[locale]}
-          </p>
+        <div className="space-y-2">
+          {identity(order)}
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs font-normal text-muted-foreground">
+            <span>
+              {copy('billIdentifier')} <bdi>{order.bill_identifier}</bdi>
+            </span>
+            <span>
+              {copy('submittedAt')} {submitted(order)}
+            </span>
+          </div>
         </div>
       ),
     },
     {
       id: 'status',
       label: t('historyView.status', locale),
-      render: (order) => (
-        <TableCellDetails
-          fields={[
-            {
-              id: 'status',
-              label: t('historyView.status', locale),
-              value: (
-                <StatusBadge
-                  label={
-                    statusOptions.find((option) => option.value === order.status)?.label ??
-                    order.status
-                  }
-                  tone={statusFilterTone(order.status)}
-                />
-              ),
-            },
-            {
-              id: 'financial',
-              label: copy('financialStatus'),
-              value: copy('financial.' + order.financial_status),
-            },
-          ]}
-        />
-      ),
+      render: (order) => <div className="max-w-64">{status(order)}</div>,
     },
     {
       id: 'amount',
       label: t('historyView.amount', locale),
       render: (order) => (
-        <bdi className="whitespace-nowrap">{numbers.money(order.total_amount)}</bdi>
-      ),
-    },
-    {
-      id: 'bill',
-      label: copy('billIdentifier'),
-      render: (order) => <bdi dir="ltr">{order.bill_identifier}</bdi>,
-    },
-    {
-      id: 'submitted',
-      label: copy('submittedAt'),
-      render: (order) => (
-        <time dateTime={order.submitted_at}>
-          {time.format(order.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}
-        </time>
+        <bdi className="font-semibold whitespace-nowrap">{numbers.money(order.total_amount)}</bdi>
       ),
     },
     {
       id: 'action',
       actions: true,
       label: copy('nextAction'),
-      render: (order) => {
-        const action = savingNextAction(order);
-        return action.href ? (
-          <Link
-            className="touch-action font-medium text-primary underline underline-offset-4"
-            to={action.href}
-            data-table-action-tooltip={copy('action.' + action.kind)}
-          >
-            <TableActionIcon icon={ArrowUpRight}>{copy('action.' + action.kind)}</TableActionIcon>
-          </Link>
-        ) : (
-          copy('action.' + action.kind)
-        );
-      },
+      render: (order) => <div className="min-w-32 text-start">{nextStep(order)}</div>,
     },
   ];
   return (
     <div
-      className={`mx-auto w-full min-w-0 space-y-6 p-4 md:p-8 ${view === 'table' ? 'max-w-7xl' : 'max-w-4xl'}`}
+      className="mx-auto w-full max-w-5xl min-w-0 space-y-4"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <header className="space-y-2">
         <Link
           to="/savings"
-          className="touch-action text-sm text-primary hover:underline pointer-coarse:min-h-[45px]!"
+          className="touch-action inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4"
         >
+          <ArrowLeft aria-hidden="true" className="size-4 rtl:hidden" />
+          <ArrowRight aria-hidden="true" className="hidden size-4 rtl:block" />
           {copy('title')}
         </Link>
         <h1 className="text-3xl font-semibold">{copy('orders')}</h1>
       </header>
-      <nav className="flex gap-4 text-sm" aria-label={copy('orders')}>
+      <nav className="flex flex-wrap gap-2 text-sm" aria-label={copy('orders')}>
         <Link
           to="/savings/orders"
           search={{
@@ -230,12 +225,8 @@ export function SavingOrdersPage({
             q: undefined,
             sort: undefined,
           }}
-          className="touch-action text-primary underline underline-offset-4"
-          aria-current={
-            pendingOnly || statuses.length || dateRange.from || dateRange.to || query.q
-              ? undefined
-              : 'page'
-          }
+          className={scopeClass(allSelected)}
+          aria-current={allSelected ? 'page' : undefined}
         >
           {copy('allOrders')}
         </Link>
@@ -249,7 +240,7 @@ export function SavingOrdersPage({
             q: undefined,
             sort: undefined,
           }}
-          className="touch-action text-primary underline underline-offset-4"
+          className={scopeClass(pendingOnly)}
           aria-current={pendingOnly ? 'page' : undefined}
         >
           {copy('pendingOrders')}
@@ -257,6 +248,7 @@ export function SavingOrdersPage({
       </nav>
       <ListPage>
         <ListPage.Toolbar
+          className="rounded-xl border bg-card p-3"
           filters={
             <HistoryFilterPanel
               query={query}
@@ -317,7 +309,19 @@ export function SavingOrdersPage({
           error={state === 'error'}
           empty={orders.length === 0}
           retainContent={orders.length > 0}
-          loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+          loadingView={
+            orders.length ? (
+              <p role="status" className="sr-only">
+                {copy('loading')}
+              </p>
+            ) : (
+              <RecordListSkeleton
+                label={copy('loading')}
+                view={view}
+                headings={columns.map((column) => column.label)}
+              />
+            )
+          }
           errorView={
             <div className="space-y-2">
               <p role="alert">
@@ -357,73 +361,36 @@ export function SavingOrdersPage({
               rowKey={(order) => order.id}
             />
           ) : (
-            <div className="space-y-3">
-              {orders.map((order) => {
-                const action = savingNextAction(order);
-                return (
-                  <Card key={order.id}>
-                    <CardContent className="space-y-2 pt-6">
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div>
-                          <h2 className="font-semibold">{order.plan_title[locale]}</h2>
-                          <p className="text-sm text-muted-foreground">
-                            {order.hardware_title[locale]}
-                          </p>
-                        </div>
-                        <span className="rounded-full bg-muted px-3 py-1 text-xs">
-                          {copy(
-                            order.status === 'awaiting_staff_review'
-                              ? 'staffReview'
-                              : order.status === 'in_progress'
-                                ? 'inProgress'
-                                : order.status
-                          )}
-                        </span>
-                      </div>
-                      <p className="text-sm">
-                        <bdi>{order.bill_identifier}</bdi> ·{' '}
-                        <time dateTime={order.submitted_at}>
-                          {time.format(order.submitted_at, {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                          })}
-                        </time>
-                      </p>
-                      <p className="break-all text-xs text-muted-foreground">
-                        {t('historySearch.reference', locale)}: <bdi>{order.id}</bdi>
-                      </p>
-                      <p className="font-medium">
+            <ul className="grid gap-3">
+              {orders.map((order) => (
+                <li key={order.id} className="min-w-0 space-y-3 rounded-xl border bg-card p-4">
+                  {identity(order)}
+                  {status(order)}
+                  <dl className="grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <dt className="text-xs text-muted-foreground">
+                        {t('historyView.amount', locale)}
+                      </dt>
+                      <dd className="font-semibold">
                         <bdi>{numbers.money(order.total_amount)}</bdi>
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {copy('financialStatus')}: {copy('financial.' + order.financial_status)}
-                      </p>
-                      <p className="text-sm">
-                        {copy('nextAction')}:{' '}
-                        {action.href ? (
-                          <Link
-                            className="touch-action font-medium text-primary hover:underline"
-                            to={action.href}
-                          >
-                            {copy('action.' + action.kind)}
-                          </Link>
-                        ) : (
-                          <span>{copy('action.' + action.kind)}</span>
-                        )}
-                      </p>
-                      <Link
-                        to="/savings/orders/$orderId"
-                        params={{ orderId: order.id }}
-                        className="touch-action inline-block text-sm font-medium text-primary hover:underline"
-                      >
-                        {copy('orderDetail')}
-                      </Link>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs text-muted-foreground">{copy('billIdentifier')}</dt>
+                      <dd>
+                        <bdi>{order.bill_identifier}</bdi>
+                      </dd>
+                    </div>
+                  </dl>
+                  <div className="flex flex-wrap items-baseline justify-between gap-2 border-t pt-3 text-sm">
+                    {nextStep(order)}
+                    <span className="text-xs text-muted-foreground">
+                      {copy('submittedAt')} {submitted(order)}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
           )}
         </ListPage.Content>
         <ListPage.Pagination

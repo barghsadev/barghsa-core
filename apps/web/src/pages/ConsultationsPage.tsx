@@ -8,8 +8,8 @@ import {
   PageHeader,
   buttonVariants,
 } from '@barghsa/ui';
-import { TableActionIcon } from '../components/TableActionIcon.js';
-import { ArrowUpRight, ReceiptText, UserRound } from 'lucide-react';
+import { Plus, UserRound } from 'lucide-react';
+import { RecordListSkeleton } from '../components/RecordSkeleton.js';
 import { RecordEditorActions } from '../components/RecordEditorLayout.js';
 import {
   useHistoryFilterDraft,
@@ -759,114 +759,85 @@ function ConsultationWorkspace({
     ? [profile.firstName, profile.lastName].filter(Boolean).join(' ') || profile.title || profile.id
     : '';
 
-  const columns: HistoryColumn<RequestRow>[] = [
-    {
-      id: 'reference',
-      label: t('historySearch.reference', locale),
-      render: (request) => (
-        <Link
-          to="/consultations/$requestId"
-          params={{ requestId: request.id }}
-          className="text-primary underline underline-offset-4"
-        >
-          <bdi dir="ltr" className="break-all">
-            {request.id}
-          </bdi>
-        </Link>
-      ),
-    },
-    {
-      id: 'subject',
-      label: t('historyView.subject', locale),
-      render: (request) => (
-        <span className="font-medium" dir="auto">
-          {request.product_snapshot.title[locale]}
-        </span>
-      ),
-    },
-    {
-      id: 'status',
-      label: copy('status'),
-      render: (request) => (
-        <StatusBadge
-          label={copy(`status_${request.status}`)}
-          tone={statusFilterTone(request.status)}
-        />
-      ),
-    },
-    {
-      id: 'owner',
-      label: copy('owner'),
-      render: (request) => (
-        <div className="min-w-40 space-y-1">
-          <p dir="auto">
-            {request.staff_owner_username ??
-              (request.staff_owner_id
-                ? copy('assignedStaff')
-                : request.staff_team
-                  ? copy('awaitingOwner')
-                  : copy('unassigned'))}
-          </p>
-          {request.staff_team && (
-            <p className="text-muted-foreground">
-              {copy('team')}: <span dir="auto">{request.staff_team}</span>
-            </p>
-          )}
-        </div>
-      ),
-    },
-    {
-      id: 'action',
-      actions: true,
-      label: copy('nextStep'),
-      render: (request) => {
-        const action = consultationNextAction(request, request.refund_pending, locale);
-        const invoiceAction = request.invoice_id && action.href?.startsWith('/invoices/');
-        const href = action.href?.startsWith('#')
-          ? `/consultations/${encodeURIComponent(request.id)}${action.href}`
-          : action.href;
-        return (
-          <div className="min-w-32 space-y-2">
-            {href && !invoiceAction ? (
-              <a
-                href={href}
-                data-table-action-tooltip={action.text}
-                className="text-primary underline underline-offset-4"
-              >
-                <TableActionIcon icon={ArrowUpRight}>{action.text}</TableActionIcon>
-              </a>
-            ) : (
-              <p>{action.text}</p>
-            )}
-            {request.invoice_id && invoiceAction && (
-              <Link
-                to="/invoices/$invoiceId"
-                params={{ invoiceId: request.invoice_id }}
-                className="touch-action font-medium text-primary underline underline-offset-4"
-                data-table-action-tooltip={copy('viewInvoice')}
-              >
-                <TableActionIcon icon={ReceiptText}>{copy('viewInvoice')}</TableActionIcon>
-              </Link>
-            )}
-          </div>
-        );
-      },
-    },
-    {
-      id: 'submitted',
-      label: copy('submittedAt'),
-      render: (request) => (
-        <time dateTime={request.submitted_at}>
-          {time.format(request.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}
-        </time>
-      ),
-    },
+  const requestIdentity = (request: RequestRow) => (
+    <Link
+      to="/consultations/$requestId"
+      params={{ requestId: request.id }}
+      className="block min-w-0 space-y-1 rounded-sm text-start focus-visible:outline-2 focus-visible:outline-ring"
+    >
+      <span className="block font-semibold text-primary hover:underline underline-offset-4">
+        <bdi>{request.product_snapshot.title[locale]}</bdi>
+      </span>
+      <span className="block text-xs font-normal wrap-anywhere text-muted-foreground">
+        <bdi>{request.id}</bdi>
+      </span>
+      <time
+        className="block text-xs font-normal text-muted-foreground"
+        dateTime={request.submitted_at}
+      >
+        {time.format(request.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}
+      </time>
+    </Link>
+  );
+  const status = (request: RequestRow) => (
+    <StatusBadge label={copy(`status_${request.status}`)} tone={statusFilterTone(request.status)} />
+  );
+  const owner = (request: RequestRow) => (
+    <div className="min-w-0 space-y-1 text-sm">
+      <p dir="auto" className="wrap-anywhere">
+        {request.staff_owner_username ??
+          (request.staff_owner_id
+            ? copy('assignedStaff')
+            : request.staff_team
+              ? copy('awaitingOwner')
+              : copy('unassigned'))}
+      </p>
+      {request.staff_team && (
+        <p className="text-xs text-muted-foreground">
+          {copy('team')}: <bdi>{request.staff_team}</bdi>
+        </p>
+      )}
+    </div>
+  );
+  const nextStep = (request: RequestRow) => {
+    const action = consultationNextAction(request, request.refund_pending, locale);
+    const invoiceAction = request.invoice_id && action.href?.startsWith('/invoices/');
+    const href = action.href?.startsWith('#')
+      ? `/consultations/${encodeURIComponent(request.id)}${action.href}`
+      : action.href;
+    const linkClass = 'touch-action font-medium text-primary hover:underline underline-offset-4';
+    return (
+      <div className="min-w-32 space-y-1 text-start">
+        {href && !invoiceAction ? (
+          <a href={href} className={linkClass}>
+            {action.text}
+          </a>
+        ) : (
+          <p className="text-muted-foreground">{action.text}</p>
+        )}
+        {request.invoice_id && invoiceAction && (
+          <Link
+            to="/invoices/$invoiceId"
+            params={{ invoiceId: request.invoice_id }}
+            className={linkClass}
+          >
+            {copy('viewInvoice')}
+          </Link>
+        )}
+      </div>
+    );
+  };
+  const columns: (HistoryColumn<RequestRow> & { label: string })[] = [
+    { id: 'subject', label: t('historyView.subject', locale), render: requestIdentity },
+    { id: 'status', label: copy('status'), render: status },
+    { id: 'owner', label: copy('owner'), render: owner },
+    { id: 'action', actions: true, label: copy('nextStep'), render: nextStep },
   ];
   const showIntakeDetails = !productsDenied && (products.length > 0 || !!pendingIntake.current);
   const onlyServiceSelected = products.length === 1 && products[0]?.id === selectedProductId;
   return (
     <section
-      className={`mx-auto w-full min-w-0 ${isIntake ? 'max-w-3xl space-y-4' : view === 'table' ? 'max-w-7xl space-y-6' : 'max-w-4xl space-y-6'}`}
+      className={`mx-auto w-full min-w-0 ${isIntake ? 'max-w-3xl space-y-4' : 'max-w-5xl space-y-4'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {isIntake ? (
@@ -887,6 +858,7 @@ function ConsultationWorkspace({
           actions={
             !loading && !loadError && profile ? (
               <Link to="/consultations/new" className={buttonVariants()}>
+                <Plus aria-hidden="true" data-icon="inline-start" />
                 {copy('newRequest')}
               </Link>
             ) : null
@@ -1160,11 +1132,12 @@ function ConsultationWorkspace({
 
           {!isIntake && (
             <section className="space-y-3" aria-labelledby="consultation-requests-title">
-              <h2 id="consultation-requests-title" tabIndex={-1} className="text-xl font-semibold">
+              <h2 id="consultation-requests-title" tabIndex={-1} className="sr-only">
                 {copy('myRequests')}
               </h2>
               <ListPage>
                 <ListPage.Toolbar
+                  className="rounded-xl border bg-card p-3"
                   filters={
                     <HistoryFilterPanel
                       query={query}
@@ -1224,7 +1197,19 @@ function ConsultationWorkspace({
                   error={requestsError}
                   empty={requests.length === 0}
                   retainContent={requests.length > 0}
-                  loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+                  loadingView={
+                    requests.length ? (
+                      <p role="status" className="sr-only">
+                        {copy('loading')}
+                      </p>
+                    ) : (
+                      <RecordListSkeleton
+                        label={copy('loading')}
+                        view={view}
+                        headings={columns.map((column) => column.label)}
+                      />
+                    )
+                  }
                   errorView={
                     <div className="space-y-2">
                       <p role="alert">
@@ -1260,72 +1245,23 @@ function ConsultationWorkspace({
                       rowKey={(request) => request.id}
                     />
                   ) : (
-                    <ul className="space-y-3">
-                      {requests.map((request) => {
-                        const action = consultationNextAction(
-                          request,
-                          request.refund_pending,
-                          locale
-                        );
-                        return (
-                          <li key={request.id}>
-                            <Link
-                              to="/consultations/$requestId"
-                              params={{ requestId: request.id }}
-                              className="block rounded-xl border bg-card p-4 hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
-                            >
-                              <span className="block font-semibold" dir="auto">
-                                {request.product_snapshot.title[locale]}
-                              </span>
-                              <span className="mt-2 block text-sm">
-                                {copy('status')}: {copy(`status_${request.status}`)}
-                              </span>
-                              <span className="block text-sm text-muted-foreground">
-                                {copy('nextStep')}: {action.text}
-                              </span>
-                              <span className="block text-sm text-muted-foreground">
-                                {copy('owner')}:{' '}
-                                <span dir="auto">
-                                  {request.staff_owner_username ??
-                                    (request.staff_owner_id
-                                      ? copy('assignedStaff')
-                                      : request.staff_team
-                                        ? copy('awaitingOwner')
-                                        : copy('unassigned'))}
-                                </span>
-                              </span>
-                              {request.staff_team && (
-                                <span className="block text-sm text-muted-foreground">
-                                  {copy('team')}: <span dir="auto">{request.staff_team}</span>
-                                </span>
-                              )}
-                              <span className="block break-all text-xs text-muted-foreground">
-                                {t('historySearch.reference', locale)}:{' '}
-                                <bdi dir="ltr">{request.id}</bdi>
-                              </span>
-                              <time
-                                className="mt-2 block text-xs text-muted-foreground"
-                                dateTime={request.submitted_at}
-                              >
-                                {time.format(request.submitted_at, {
-                                  year: 'numeric',
-                                  month: '2-digit',
-                                  day: '2-digit',
-                                })}
-                              </time>
-                            </Link>
-                            {request.invoice_id && action.href?.startsWith('/invoices/') && (
-                              <Link
-                                to="/invoices/$invoiceId"
-                                params={{ invoiceId: request.invoice_id }}
-                                className="touch-action mt-2 inline-block text-sm font-medium text-primary underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-primary"
-                              >
-                                {copy('viewInvoice')}
-                              </Link>
-                            )}
-                          </li>
-                        );
-                      })}
+                    <ul className="grid gap-3">
+                      {requests.map((request) => (
+                        <li
+                          key={request.id}
+                          className="min-w-0 space-y-3 rounded-xl border bg-card p-4"
+                        >
+                          {requestIdentity(request)}
+                          {status(request)}
+                          <dl className="text-sm">
+                            <div>
+                              <dt className="text-xs text-muted-foreground">{copy('owner')}</dt>
+                              <dd>{owner(request)}</dd>
+                            </div>
+                          </dl>
+                          <div className="border-t pt-3 text-sm">{nextStep(request)}</div>
+                        </li>
+                      ))}
                     </ul>
                   )}
                 </ListPage.Content>

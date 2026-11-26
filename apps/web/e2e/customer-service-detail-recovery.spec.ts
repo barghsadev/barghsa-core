@@ -127,7 +127,7 @@ for (const [index, locale] of (['en', 'fa'] as const).entries())
           .poll(() => page.locator('html').evaluate((node) => node.classList.contains('dark')))
           .toBe(theme === 'dark');
         const loading = main.locator(
-          detail.name === 'electricity'
+          detail.name !== 'invoice'
             ? '[data-slot="record-detail-skeleton"]'
             : '[data-slot="loading-status"]'
         );

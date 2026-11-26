@@ -1,6 +1,6 @@
-import { LoadingStatus, ListPage, Button, PageHeader, buttonVariants } from '@barghsa/ui';
-import { TableActionIcon } from '../components/TableActionIcon.js';
-import { ArrowUpRight } from 'lucide-react';
+import { ListPage, Button, PageHeader, buttonVariants } from '@barghsa/ui';
+import { RecordListSkeleton } from '../components/RecordSkeleton.js';
+import { Plus } from 'lucide-react';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
@@ -98,87 +98,72 @@ export function SolarRequestsPage({
   const { items: rows, nextBefore, loadMore, loading } = history;
   const error = !!history.error;
 
-  const columns: HistoryColumn<RequestRow>[] = [
-    {
-      id: 'reference',
-      label: t('historySearch.reference', locale),
-      render: (row) => (
-        <Link
-          to="/solar/requests/$requestId"
-          params={{ requestId: row.id }}
-          className="text-primary underline underline-offset-4"
-        >
-          <bdi dir="ltr" className="break-all">
-            {row.id}
-          </bdi>
-        </Link>
-      ),
-    },
-    {
-      id: 'type',
-      label: t('historyView.type', locale),
-      render: (row) => copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building'),
-    },
-    {
-      id: 'connection',
-      label: copy('gridType'),
-      render: (row) => copy(row.grid_type === 'off_grid' ? 'offGrid' : 'onGrid'),
-    },
-    {
-      id: 'status',
-      label: copy('status'),
-      render: (row) => (
-        <StatusBadge label={copy(`status_${row.status}`)} tone={statusFilterTone(row.status)} />
-      ),
-    },
-    {
-      id: 'action',
-      actions: true,
-      label: t('workflow.nextAction', locale),
-      render: (row) => {
-        const action = solarNextAction(row, locale);
-        const href = action.href?.startsWith('#')
-          ? `/solar/requests/${encodeURIComponent(row.id)}${action.href}`
-          : action.href;
-        return (
-          <div className="min-w-32 space-y-1">
-            {href ? (
-              <a
-                href={href}
-                data-table-action-tooltip={action.text}
-                className="text-primary underline underline-offset-4"
-              >
-                <TableActionIcon icon={ArrowUpRight}>{action.text}</TableActionIcon>
-              </a>
-            ) : (
-              <p>{action.text}</p>
-            )}
-            <p className="text-muted-foreground">
-              {t('workflow.owner', locale)}: {t(`workflow.owner.${action.owner}`, locale)}
-            </p>
-          </div>
-        );
-      },
-    },
-    {
-      id: 'submitted',
-      label: t('historyView.submitted', locale),
-      render: (row) => (
-        <time dateTime={row.submitted_at}>
-          {time.format(row.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}
-        </time>
-      ),
-    },
+  const identity = (row: RequestRow) => (
+    <div className="min-w-0 space-y-1">
+      <Link
+        to="/solar/requests/$requestId"
+        params={{ requestId: row.id }}
+        className="touch-action font-semibold text-primary hover:underline underline-offset-4"
+      >
+        {copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building')}
+      </Link>
+      <p className="text-sm font-normal text-muted-foreground">
+        {copy(row.grid_type === 'off_grid' ? 'offGrid' : 'onGrid')}
+      </p>
+      <p className="text-xs font-normal text-muted-foreground">
+        <bdi className="wrap-anywhere">{row.id}</bdi>
+      </p>
+    </div>
+  );
+  const status = (row: RequestRow) => (
+    <StatusBadge label={copy(`status_${row.status}`)} tone={statusFilterTone(row.status)} />
+  );
+  const submitted = (row: RequestRow) => (
+    <time dateTime={row.submitted_at}>
+      {time.format(row.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}
+    </time>
+  );
+  const nextStep = (row: RequestRow) => {
+    const action = solarNextAction(row, locale);
+    const href = action.href?.startsWith('#')
+      ? `/solar/requests/${encodeURIComponent(row.id)}${action.href}`
+      : action.href;
+    return (
+      <div className="min-w-32 space-y-1 text-start">
+        {href ? (
+          <a
+            href={href}
+            className="touch-action font-medium text-primary hover:underline underline-offset-4"
+          >
+            {action.text}
+          </a>
+        ) : (
+          <span className="text-muted-foreground">{action.text}</span>
+        )}
+        {action.owner !== 'none' && (
+          <p className="text-xs text-muted-foreground">
+            {t('workflow.owner', locale)}: {t(`workflow.owner.${action.owner}`, locale)}
+          </p>
+        )}
+      </div>
+    );
+  };
+  const columns: (HistoryColumn<RequestRow> & { label: string })[] = [
+    { id: 'reference', label: t('historyView.type', locale), render: identity },
+    { id: 'status', label: copy('status'), render: status },
+    { id: 'submitted', label: t('historyView.submitted', locale), render: submitted },
+    { id: 'action', actions: true, label: t('workflow.nextAction', locale), render: nextStep },
   ];
   return (
     <div
-      className={`mx-auto w-full min-w-0 space-y-5 ${view === 'table' ? 'max-w-7xl' : 'max-w-3xl'}`}
+      className="mx-auto w-full max-w-5xl min-w-0 space-y-4"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <PageHeader
         title={copy('myRequests')}
         actions={
           <Link to="/solar/requests/new" className={buttonVariants()}>
+            <Plus aria-hidden="true" data-icon="inline-start" />
             {copy('submit')}
           </Link>
         }
@@ -186,6 +171,7 @@ export function SolarRequestsPage({
       {time.notice}
       <ListPage>
         <ListPage.Toolbar
+          className="rounded-xl border bg-card p-3"
           filters={
             <HistoryFilterPanel
               query={query}
@@ -245,7 +231,19 @@ export function SolarRequestsPage({
           error={error}
           empty={rows.length === 0}
           retainContent={rows.length > 0}
-          loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+          loadingView={
+            rows.length ? (
+              <p role="status" className="sr-only">
+                {copy('loading')}
+              </p>
+            ) : (
+              <RecordListSkeleton
+                label={copy('loading')}
+                view={view}
+                headings={columns.map((column) => column.label)}
+              />
+            )
+          }
           errorView={
             <div className="space-y-2">
               <p role="alert">
@@ -274,45 +272,19 @@ export function SolarRequestsPage({
               rowKey={(row) => row.id}
             />
           ) : (
-            <ul className="space-y-3">
-              {rows.map((row) => {
-                const action = solarNextAction(row, locale);
-                return (
-                  <li key={row.id}>
-                    <Link
-                      to="/solar/requests/$requestId"
-                      params={{ requestId: row.id }}
-                      className="block rounded-xl border p-4 hover:border-primary"
-                    >
-                      <span className="font-medium">
-                        {copy(row.building_type === 'non_household' ? 'nonHousehold' : 'building')}
-                      </span>
-                      <span className="ms-3 text-muted-foreground">
-                        {copy(row.grid_type === 'off_grid' ? 'offGrid' : 'onGrid')}
-                      </span>
-                      <span className="mt-2 block text-sm">
-                        {copy('status')}: {copy(`status_${row.status}`)}
-                      </span>
-                      <span className="mt-2 block text-sm text-muted-foreground">
-                        {t('workflow.nextAction', locale)}: {action.text}
-                      </span>
-                      <span className="block text-sm text-muted-foreground">
-                        {t('workflow.owner', locale)}: {t(`workflow.owner.${action.owner}`, locale)}
-                      </span>
-                      <span className="block break-all text-xs text-muted-foreground">
-                        {t('historySearch.reference', locale)}: <bdi>{row.id}</bdi>
-                      </span>
-                      <time className="text-sm text-muted-foreground" dateTime={row.submitted_at}>
-                        {time.format(row.submitted_at, {
-                          year: 'numeric',
-                          month: '2-digit',
-                          day: '2-digit',
-                        })}
-                      </time>
-                    </Link>
-                  </li>
-                );
-              })}
+            <ul className="grid gap-3">
+              {rows.map((row) => (
+                <li key={row.id} className="min-w-0 space-y-3 rounded-xl border bg-card p-4">
+                  {identity(row)}
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+                    {status(row)}
+                    <span>
+                      {t('historyView.submitted', locale)} {submitted(row)}
+                    </span>
+                  </div>
+                  <div className="border-t pt-3 text-sm">{nextStep(row)}</div>
+                </li>
+              ))}
             </ul>
           )}
         </ListPage.Content>

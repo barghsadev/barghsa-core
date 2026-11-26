@@ -6,7 +6,7 @@ import { ConfirmationFields } from '@barghsa/ui';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { formatToman } from '@barghsa/i18n/numbers';
-import { ChevronDownIcon } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronDownIcon } from 'lucide-react';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { historyContextText } from '../lib/history-context.js';
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
@@ -17,6 +17,7 @@ import { queryKeys } from '../lib/query-keys.js';
 import { Link, useNavigate } from '@tanstack/react-router';
 import {
   LoadingStatus,
+  StatusBadge,
   Button,
   Alert,
   AlertDescription,
@@ -43,6 +44,7 @@ import {
   type ConsultationInformationCommand,
 } from '../lib/consultation-form.js';
 import { tConsultation } from '@barghsa/i18n/consultation';
+import { t } from '@barghsa/i18n/app';
 import { tConsultationBrief } from '@barghsa/i18n/consultation-intake';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import {
@@ -54,7 +56,8 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
-import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { statusFilterTone } from '../lib/status-filter-tone.js';
 import { consultationNextAction } from '../lib/consultation-next-action.js';
 import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.js';
 
@@ -644,7 +647,7 @@ export function ConsultationDetailPage({
       className={
         editor
           ? 'mx-auto max-w-2xl space-y-4 px-4 py-4 sm:py-5'
-          : 'mx-auto max-w-3xl space-y-4 px-4 py-4 sm:py-5'
+          : 'mx-auto w-full max-w-5xl min-w-0 space-y-4'
       }
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -666,15 +669,56 @@ export function ConsultationDetailPage({
         ) : (
           <Link
             to="/consultations"
-            className="touch-action w-fit text-sm text-primary underline-offset-4 hover:underline"
+            className="touch-action inline-flex w-fit items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4"
           >
+            <ArrowLeft aria-hidden="true" className="size-4 rtl:hidden" />
+            <ArrowRight aria-hidden="true" className="hidden size-4 rtl:block" />
             {copy('back')}
           </Link>
         )}
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h1 className="text-2xl font-semibold sm:text-3xl">
-            {copy(reply ? 'replyTitle' : offer ? 'offerPageTitle' : 'details')}
-          </h1>
+        <div
+          className={
+            editor
+              ? 'flex flex-wrap items-center justify-between gap-2'
+              : loading
+                ? 'sr-only'
+                : 'flex flex-wrap items-start justify-between gap-3 rounded-xl border bg-card p-4 sm:p-6'
+          }
+        >
+          <div className="min-w-0 space-y-2">
+            <h1 className="text-2xl leading-tight font-semibold sm:text-3xl">
+              {copy(reply ? 'replyTitle' : offer ? 'offerPageTitle' : 'details')}
+            </h1>
+            {!editor && request && (
+              <div className="space-y-1.5">
+                <h2 className="text-base font-medium wrap-anywhere">
+                  <bdi>{request.product_snapshot.title[locale]}</bdi>
+                </h2>
+                <dl className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                  <div className="min-w-0">
+                    <dt className="text-xs text-muted-foreground">
+                      {t('historySearch.reference', locale)}
+                    </dt>
+                    <dd className="mt-1 wrap-anywhere">
+                      <bdi>{request.id}</bdi>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs text-muted-foreground">{copy('submittedAt')}</dt>
+                    <dd className="mt-1">
+                      <time dateTime={request.submitted_at}>
+                        {time.format(request.submitted_at, {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                        })}
+                      </time>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            )}
+          </div>
           {error !== 'notFound' &&
             (reply && informationUnconfirmed ? (
               <Button
@@ -702,7 +746,12 @@ export function ConsultationDetailPage({
         )}
       </header>
       {time.notice}
-      {loading && <LoadingStatus>{copy('loading')}</LoadingStatus>}
+      {loading &&
+        (editor ? (
+          <LoadingStatus>{copy('loading')}</LoadingStatus>
+        ) : (
+          <RecordDetailSkeleton label={copy('loading')} layout="order" />
+        ))}
       {error && (
         <p role="alert">
           {error === 'notFound' ? loadingText('recordUnavailable', locale) : copy(error)}
@@ -918,85 +967,106 @@ export function ConsultationDetailPage({
         <>
           <WorkflowStatusBanner
             locale={locale}
-            submittedAt={`${workflowFeedback('submitted', locale)}: ${time.format(request.submitted_at)}`}
             status={copy(`status_${request.status}`)}
+            statusSummary={
+              <dl className="text-sm">
+                <div className="flex items-center gap-2">
+                  <dt className="text-muted-foreground">{copy('status')}</dt>
+                  <dd>
+                    <StatusBadge
+                      label={copy(`status_${request.status}`)}
+                      tone={statusFilterTone(request.status)}
+                    />
+                  </dd>
+                </div>
+              </dl>
+            }
             happened={
-              (latestEvent !== submittedBrief && latestEvent !== informationPrompt
-                ? latestEvent?.reason
-                : null) ??
-              `${copy(`status_${latestEvent?.status ?? request.status}`)} · ${time.format(latestEvent?.created_at ?? request.submitted_at, { year: 'numeric', month: '2-digit', day: '2-digit' })}`
+              latestEvent &&
+              latestEvent !== submittedBrief &&
+              latestEvent !== informationPrompt &&
+              latestEvent.reason
+                ? latestEvent.reason
+                : latestEvent && latestEvent.status !== request.status
+                  ? copy(`status_${latestEvent.status}`)
+                  : copy(`status_${request.status}`)
             }
             nextAction={action!.text}
             owner={action!.owner}
             actionHref={action?.href}
           />
-          <section className="space-y-3 rounded-xl border bg-card p-5 wrap-anywhere">
-            <h2 className="text-xl font-semibold" dir="auto">
-              {request.product_snapshot.title[locale]}
-            </h2>
-            <p>
-              {copy('submittedAt')}:{' '}
-              <time dateTime={request.submitted_at}>
-                {time.format(request.submitted_at, {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                })}
-              </time>
-            </p>
-            <p>
-              {copy('owner')}:{' '}
-              <span dir="auto">
+          <div className="grid items-start gap-4 lg:grid-cols-2">
+            <section className="min-w-0 space-y-3 rounded-xl border bg-card p-4 sm:p-6">
+              <h2 className="font-semibold">{copy('owner')}</h2>
+              <p dir="auto" className="text-sm font-medium wrap-anywhere">
                 {request.staff_owner_username ??
                   (request.staff_owner_id
                     ? copy('assignedStaff')
                     : request.staff_team
                       ? copy('awaitingOwner')
                       : copy('unassigned'))}
-              </span>
-            </p>
-            {request.staff_team && (
-              <p>
-                {copy('team')}: <span dir="auto">{request.staff_team}</span>
               </p>
-            )}
-            {request.fee ? (
-              <p>
-                {copy('fee')}: {new Intl.NumberFormat(locale).format(BigInt(request.fee))} IRR
-              </p>
-            ) : (
-              <p className="text-muted-foreground">{copy('noFee')}</p>
-            )}
-            {request.scope && (
-              <p>
-                {copy('scope')}: <span dir="auto">{request.scope}</span>
-              </p>
-            )}
-            {request.deliverables && (
-              <p>
-                {copy('deliverables')}: <span dir="auto">{request.deliverables}</span>
-              </p>
-            )}
-            {request.offer_valid_until && (
-              <p>
-                {copy('offerValidUntil')}:{' '}
-                <time dateTime={request.offer_valid_until}>
-                  {time.format(request.offer_valid_until)}
-                </time>
-              </p>
-            )}
-            {request.invoice_id && request.accepted_at && (
-              <p>
+              {request.staff_team && (
+                <dl className="text-sm">
+                  <div>
+                    <dt className="text-xs text-muted-foreground">{copy('team')}</dt>
+                    <dd className="mt-1 wrap-anywhere">
+                      <bdi>{request.staff_team}</bdi>
+                    </dd>
+                  </div>
+                </dl>
+              )}
+            </section>
+            <section className="min-w-0 space-y-3 rounded-xl border bg-card p-4 sm:p-6">
+              <h2 className="font-semibold">{copy('fee')}</h2>
+              {request.fee ? (
+                <p className="text-xl font-semibold tabular-nums wrap-anywhere">
+                  <bdi>{new Intl.NumberFormat(locale).format(BigInt(request.fee))} IRR</bdi>
+                </p>
+              ) : (
+                <p className="text-sm text-muted-foreground">{copy('noFee')}</p>
+              )}
+              {(request.scope || request.deliverables || request.offer_valid_until) && (
+                <dl className="space-y-3 border-t pt-3 text-sm [&_dt]:text-xs [&_dt]:text-muted-foreground [&_dd]:mt-1 [&_dd]:wrap-anywhere">
+                  {request.scope && (
+                    <div>
+                      <dt>{copy('scope')}</dt>
+                      <dd dir="auto" className="whitespace-pre-wrap">
+                        {request.scope}
+                      </dd>
+                    </div>
+                  )}
+                  {request.deliverables && (
+                    <div>
+                      <dt>{copy('deliverables')}</dt>
+                      <dd dir="auto" className="whitespace-pre-wrap">
+                        {request.deliverables}
+                      </dd>
+                    </div>
+                  )}
+                  {request.offer_valid_until && (
+                    <div>
+                      <dt>{copy('offerValidUntil')}</dt>
+                      <dd>
+                        <time dateTime={request.offer_valid_until}>
+                          {time.format(request.offer_valid_until)}
+                        </time>
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              )}
+              {request.invoice_id && request.accepted_at && (
                 <Link
-                  className="text-primary underline"
+                  className="touch-action text-sm font-medium text-primary hover:underline underline-offset-4"
                   to="/invoices/$invoiceId"
                   params={{ invoiceId: request.invoice_id }}
                 >
                   {copy('viewInvoice')}
                 </Link>
-              </p>
-            )}
-          </section>
+              )}
+            </section>
+          </div>
           {submittedBrief?.reason && (
             <section
               className="space-y-2 rounded-xl border bg-card p-5"
@@ -1045,27 +1115,29 @@ export function ConsultationDetailPage({
                 {copy('openOffer')}
               </Link>
             )}
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold">{copy('history')}</h2>
-            <StatusTimeline
-              label={copy('history')}
-              items={detail.history.map((event, index) => ({
-                id: `${event.created_at}-${index}`,
-                title:
-                  copy(`status_${event.status}`) === `status_${event.status}`
-                    ? copy('status_unknown')
-                    : copy(`status_${event.status}`),
-                state: event.status,
-                dateTime: event.created_at,
-                dateLabel: time.format(event.created_at),
-                actorLabel: `${copy('actor')}: ${[['staff', 'customer', 'unknown'].includes(event.actor_type) ? event.actor_name : null, historyContextText(event.actor_type, locale)].filter(Boolean).join(' · ')}`,
-                description:
-                  event !== submittedBrief && event.reason
-                    ? `${copy('reason')}: ${event.reason}`
-                    : undefined,
-              }))}
-            />
-          </section>
+          {detail.history.length > 0 && (
+            <section className="space-y-3 rounded-xl border bg-card p-4 sm:p-6">
+              <h2 className="text-xl font-semibold">{copy('history')}</h2>
+              <StatusTimeline
+                label={copy('history')}
+                items={detail.history.map((event, index) => ({
+                  id: `${event.created_at}-${index}`,
+                  title:
+                    copy(`status_${event.status}`) === `status_${event.status}`
+                      ? copy('status_unknown')
+                      : copy(`status_${event.status}`),
+                  state: event.status,
+                  dateTime: event.created_at,
+                  dateLabel: time.format(event.created_at),
+                  actorLabel: `${copy('actor')}: ${[['staff', 'customer', 'unknown'].includes(event.actor_type) ? event.actor_name : null, historyContextText(event.actor_type, locale)].filter(Boolean).join(' · ')}`,
+                  description:
+                    event !== submittedBrief && event.reason
+                      ? `${copy('reason')}: ${event.reason}`
+                      : undefined,
+                }))}
+              />
+            </section>
+          )}
         </>
       )}
       {offer && (

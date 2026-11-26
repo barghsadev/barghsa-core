@@ -1,12 +1,23 @@
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { statusFilterTone } from '../lib/status-filter-tone.js';
 import { Link, useParams } from '@tanstack/react-router';
 import { useEffect, useId, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useServerDetailQuery } from '../hooks/useServerQuery.js';
 import { ServerQueryError } from '../lib/server-query-client.js';
 import { queryKeys } from '../lib/query-keys.js';
-import { LoadingStatus, Button, buttonVariants, Card, CardContent } from '@barghsa/ui';
+import {
+  LoadingStatus,
+  Button,
+  buttonVariants,
+  Card,
+  CardContent,
+  DualStatusDisplay,
+  statusTone,
+} from '@barghsa/ui';
 import { tSaving } from '@barghsa/i18n/saving';
 import { tSavingChange } from '@barghsa/i18n/saving-change';
 import { tTicketForms } from '@barghsa/i18n/ticket-forms';
@@ -38,7 +49,7 @@ import {
 } from '../components/SavingHardwareUpgradeHistory.js';
 import { savingNextAction, type SavingActionContext } from '../lib/saving-next-action.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
-import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
+import { t } from '@barghsa/i18n/app';
 import { AcceptedSavingAgreement } from '../components/AcceptedSavingAgreement.js';
 import { SavingFulfillmentProgress } from '../components/SavingFulfillmentProgress.js';
 import type { SavingFulfillmentEvent, SavingFulfillmentStage } from '../lib/saving-fulfillment.js';
@@ -245,7 +256,12 @@ function SavingOrderWorkspace({ orderId, edit = false }: { orderId: string; edit
   const readFeedback = (
     <>
       {time.notice}
-      {state === 'loading' && <LoadingStatus>{loadingText('loading', locale)}</LoadingStatus>}
+      {state === 'loading' &&
+        (edit ? (
+          <LoadingStatus>{loadingText('loading', locale)}</LoadingStatus>
+        ) : (
+          <RecordDetailSkeleton label={loadingText('loading', locale)} layout="order" />
+        ))}
       {state === 'notFound' && <p role="alert">{loadingText('recordUnavailable', locale)}</p>}
       {state === 'error' && (
         <div className="space-y-2">
@@ -340,6 +356,15 @@ function SavingOrderWorkspace({ orderId, edit = false }: { orderId: string; edit
   }
 
   const action = detail ? savingNextAction(detail) : null;
+  const status =
+    detail &&
+    copy(
+      detail.status === 'awaiting_staff_review'
+        ? 'staffReview'
+        : detail.status === 'in_progress'
+          ? 'inProgress'
+          : detail.status
+    );
   const latestCompletedStage = detail?.stages.filter((stage) => stage.completed_at).at(-1);
   const actionOwner =
     action?.kind === 'none'
@@ -349,18 +374,35 @@ function SavingOrderWorkspace({ orderId, edit = false }: { orderId: string; edit
         : 'staff';
   return (
     <div
-      className="mx-auto w-full max-w-4xl space-y-6 p-4 md:p-8"
+      className="mx-auto w-full max-w-5xl min-w-0 space-y-4"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       <header className="space-y-2">
         <Link
           to="/savings/orders"
-          className="touch-action text-sm text-primary hover:underline pointer-coarse:min-h-[45px]!"
+          className="touch-action inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4"
         >
+          <ArrowLeft aria-hidden="true" className="size-4 rtl:hidden" />
+          <ArrowRight aria-hidden="true" className="hidden size-4 rtl:block" />
           {copy('orders')}
         </Link>
-        <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-2">
-          <h1 className="text-3xl font-semibold">{copy('orderDetail')}</h1>
+        <div
+          className={
+            state === 'loading'
+              ? 'sr-only'
+              : 'flex flex-wrap items-start justify-between gap-3 rounded-xl border bg-card p-4 sm:p-6'
+          }
+        >
+          <div className="min-w-0 space-y-2">
+            <h1 className="text-2xl leading-tight font-semibold sm:text-3xl">
+              {copy('orderDetail')}
+            </h1>
+            {detail && (
+              <p className="text-sm text-muted-foreground wrap-anywhere">
+                <bdi>{detail.order_id}</bdi>
+              </p>
+            )}
+          </div>
           {detail && (
             <div className="flex flex-wrap items-center gap-3">
               {canEdit && (
@@ -388,45 +430,43 @@ function SavingOrderWorkspace({ orderId, edit = false }: { orderId: string; edit
         <>
           <WorkflowStatusBanner
             locale={locale}
-            submittedAt={`${workflowFeedback('submitted', locale)}: ${time.format(detail.submitted_at)}`}
-            status={copy(
-              detail.status === 'awaiting_staff_review'
-                ? 'staffReview'
-                : detail.status === 'in_progress'
-                  ? 'inProgress'
-                  : detail.status
-            )}
+            status={status ?? ''}
+            statusSummary={
+              <DualStatusDisplay
+                commercialLabel={t('historyView.status', locale)}
+                commercialStatus={status ?? ''}
+                commercialTone={statusFilterTone(detail.status)}
+                financialLabel={copy('financialStatus')}
+                financialStatus={copy('financial.' + detail.financial_status)}
+                financialTone={statusTone(detail.financial_status)}
+              />
+            }
             happened={latestCompletedStage ? copy(latestCompletedStage.stage) : copy('submitted')}
             nextAction={copy('action.' + action?.kind)}
             owner={actionOwner}
             actionHref={action?.href}
           />
-          <Card>
-            <CardContent className="space-y-4 pt-6">
-              <h2 className="text-xl font-semibold">
-                {detail.pricing_snapshot.plan.title[locale]}
+          <div className="grid items-start gap-4 lg:grid-cols-2">
+            <section className="min-w-0 space-y-4 rounded-xl border bg-card p-4 sm:p-6">
+              <h2 className="font-semibold">
+                <bdi>{detail.pricing_snapshot.plan.title[locale]}</bdi>
               </h2>
-              <dl className="grid gap-3 text-sm md:grid-cols-2">
+              <dl className="grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <dt className="text-muted-foreground">{copy('stepHardware')}</dt>
-                  <dd>{detail.current_hardware_title[locale]}</dd>
+                  <dt className="text-xs text-muted-foreground">{copy('stepHardware')}</dt>
+                  <dd className="mt-1 font-medium wrap-anywhere">
+                    <bdi>{detail.current_hardware_title[locale]}</bdi>
+                  </dd>
                 </div>
                 <div>
-                  <dt className="text-muted-foreground">{copy('billIdentifier')}</dt>
-                  <dd>
+                  <dt className="text-xs text-muted-foreground">{copy('billIdentifier')}</dt>
+                  <dd className="mt-1">
                     <bdi>{detail.bill_identifier}</bdi>
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-muted-foreground">{copy('stepAddress')}</dt>
-                  <dd>
-                    {detail.address_snapshot.full_address} ·{' '}
-                    <bdi>{detail.address_snapshot.postal_code}</bdi>
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-muted-foreground">{copy('submittedAt')}</dt>
-                  <dd>
+                  <dt className="text-xs text-muted-foreground">{copy('submittedAt')}</dt>
+                  <dd className="mt-1">
                     <time dateTime={detail.submitted_at}>
                       {time.format(detail.submitted_at, {
                         year: 'numeric',
@@ -436,46 +476,62 @@ function SavingOrderWorkspace({ orderId, edit = false }: { orderId: string; edit
                     </time>
                   </dd>
                 </div>
+                <div className="col-span-full border-t pt-3">
+                  <dt className="text-xs text-muted-foreground">{copy('stepAddress')}</dt>
+                  <dd className="mt-1 font-medium wrap-anywhere">
+                    <bdi>{detail.address_snapshot.full_address}</bdi> ·{' '}
+                    <bdi>{detail.address_snapshot.postal_code}</bdi>
+                  </dd>
+                </div>
               </dl>
               {detail.verification_result.status !== 'verified' && (
                 <p className="text-sm text-muted-foreground">{copy('manualReview')}</p>
               )}
-            </CardContent>
-          </Card>
+            </section>
+            <section className="min-w-0 space-y-3 rounded-xl border bg-card p-4 sm:p-6">
+              <h2 className="font-semibold">{copy('invoice')}</h2>
+              <dl className="grid grid-cols-2 gap-3 text-sm">
+                <div className="col-span-full border-b pb-3">
+                  <dt className="text-sm text-muted-foreground">{copy('total')}</dt>
+                  <dd className="mt-1 text-xl font-semibold tabular-nums wrap-anywhere">
+                    <bdi>{numbers.money(detail.pricing_snapshot.totalIrR)}</bdi>
+                  </dd>
+                </div>
+                {(
+                  [
+                    ['subtotal', 'subtotalIrR'],
+                    ['discount', 'discountIrR'],
+                    ['vat', 'vatIrR'],
+                  ] as const
+                ).map(([label, key]) => (
+                  <div key={key}>
+                    <dt className="text-xs text-muted-foreground">{copy(label)}</dt>
+                    <dd className="mt-1 font-medium">
+                      <bdi>{numbers.money(detail.pricing_snapshot[key])}</bdi>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="flex flex-wrap items-baseline justify-between gap-3 border-t pt-3 text-sm">
+                <p className="text-muted-foreground">
+                  {detail.invoice_state ? copy(detail.invoice_state) : copy('unavailable')}
+                </p>
+                {detail.invoice_id && detail.invoice_state && detail.invoice_state !== 'Draft' && (
+                  <Link
+                    to="/invoices/$invoiceId"
+                    params={{ invoiceId: detail.invoice_id }}
+                    className="touch-action font-medium text-primary hover:underline underline-offset-4"
+                  >
+                    {copy('viewInvoice')}
+                  </Link>
+                )}
+              </div>
+            </section>
+          </div>
           <OrderWalletBalance
             profileId={detail.profile_id}
             scopeKey={JSON.stringify([scope, detail.id, detail.contract_version_id])}
           />
-          <Card>
-            <CardContent className="space-y-3 pt-6">
-              <h2 className="text-xl font-semibold">{copy('invoice')}</h2>
-              <p>
-                {copy('subtotal')}: <bdi>{numbers.money(detail.pricing_snapshot.subtotalIrR)}</bdi>
-              </p>
-              <p>
-                {copy('discount')}: <bdi>{numbers.money(detail.pricing_snapshot.discountIrR)}</bdi>
-              </p>
-              <p>
-                {copy('vat')}: <bdi>{numbers.money(detail.pricing_snapshot.vatIrR)}</bdi>
-              </p>
-              <p className="font-semibold">
-                {copy('total')}: <bdi>{numbers.money(detail.pricing_snapshot.totalIrR)}</bdi>
-              </p>
-              <p>{detail.invoice_state ? copy(detail.invoice_state) : copy('unavailable')}</p>
-              <p className="text-sm text-muted-foreground">
-                {copy('financialStatus')}: {copy('financial.' + detail.financial_status)}
-              </p>
-              {detail.invoice_id && detail.invoice_state && detail.invoice_state !== 'Draft' && (
-                <Link
-                  to="/invoices/$invoiceId"
-                  params={{ invoiceId: detail.invoice_id }}
-                  className="inline-block text-primary hover:underline"
-                >
-                  {copy('viewInvoice')}
-                </Link>
-              )}
-            </CardContent>
-          </Card>
           <SavingOrderRevisionHistory
             revisions={detail.revisions ?? []}
             formatTimestamp={time.format}

@@ -186,7 +186,11 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(record(first)).toBeVisible();
       expect(queries).toHaveLength(failedReads + 1);
       expect(queries[0]!.toString()).toBe(queries.at(-1)!.toString());
-      if (kind === 'consultation') await page.getByRole('radio').check();
+      if (kind === 'consultation') {
+        await expect(
+          page.getByRole('link', { name: tConsultation('newRequest', locale), exact: true })
+        ).toHaveAttribute('href', '/consultations/new');
+      }
       const more = page
         .getByRole('navigation', { name: t('historyPagination.label', locale), exact: true })
         .getByRole(
@@ -215,7 +219,11 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(
         page.getByRole('navigation', { name: t('historyPagination.label', locale), exact: true })
       ).toHaveCount(0);
-      if (kind === 'consultation') await expect(page.getByRole('radio')).toBeChecked();
+      if (kind === 'consultation') {
+        await expect(
+          page.getByRole('link', { name: tConsultation('newRequest', locale), exact: true })
+        ).toBeVisible();
+      }
       expect(
         (await new AxeBuilder({ page }).include('[data-slot="list-page"]').analyze()).violations
       ).toEqual([]);

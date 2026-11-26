@@ -176,18 +176,22 @@ test('solar list shows document and contract next actions, with the current docu
   );
 
   await page.goto('/solar/requests');
-  const persianRequest = page.getByRole('link', { name: /نیازمند اصلاح مدارک/ });
-  await expect(persianRequest).toContainText('مدارک درخواستی را بارگذاری کنید');
+  const documentRequest = page.locator(`a[href="/solar/requests/${solarId}"]`);
+  const requestCard = page.getByRole('listitem').filter({ has: documentRequest });
+  await expect(requestCard).toContainText('نیازمند اصلاح مدارک');
+  await expect(requestCard).toContainText('مدارک درخواستی را بارگذاری کنید');
   await switchToEnglish(page);
-  const documentRequest = page.getByRole('link', { name: /Changes requested/ });
-  await expect(documentRequest).toContainText('Upload the requested documents');
-  await expect(documentRequest).toContainText('Who acts next: You');
-  await expect(page.getByRole('link', { name: /Contract created/ })).toContainText('View contract');
-  await documentRequest.click();
-  await expect(page.getByText('Current stage: Document upload')).toBeVisible();
-  await expect(page.getByRole('region', { name: 'Status and next action' })).toContainText(
-    'Upload the requested documents'
+  await expect(requestCard).toContainText('Changes requested');
+  await expect(requestCard).toContainText('Upload the requested documents');
+  await expect(requestCard).toContainText('Who acts next: You');
+  await expect(page.getByRole('listitem').filter({ hasText: 'Contract created' })).toContainText(
+    'View contract'
   );
+  await documentRequest.click();
+  const summary = page.getByRole('region', { name: 'Status and next action' });
+  await expect(summary.getByText('Current stage', { exact: true })).toBeVisible();
+  await expect(summary.getByText('Document upload', { exact: true })).toBeVisible();
+  await expect(summary).toContainText('Upload the requested documents');
 });
 
 test('consultation list opens its request detail route', async ({ page }) => {
@@ -329,14 +333,15 @@ test('consultation list and detail show assigned staff and the payment action', 
   );
 
   await page.goto('/consultations');
-  const requestLink = page.getByRole('link', { name: /مشاوره مکان/ });
-  await expect(requestLink).toContainText('کارشناس مسئول: reviewer@consultation.test');
-  await expect(requestLink).toContainText('شما این پیشنهاد را پذیرفته‌اید');
+  const requestLink = page.locator(`a[href="/consultations/${consultationId}"]`);
+  const requestCard = page.getByRole('listitem').filter({ has: requestLink });
+  await expect(requestCard.getByText('کارشناس مسئول', { exact: true })).toBeVisible();
+  await expect(requestCard.getByText('reviewer@consultation.test', { exact: true })).toBeVisible();
+  await expect(requestCard).toContainText('شما این پیشنهاد را پذیرفته‌اید');
   await switchToEnglish(page);
-  const englishRequestLink = page.getByRole('link', { name: /Site advice/ });
-  await expect(englishRequestLink).toContainText('You accepted this offer. Pay the invoice');
-  await englishRequestLink.click();
-  await expect(page.getByText('Staff owner:')).toBeVisible();
+  await expect(requestCard).toContainText('You accepted this offer. Pay the invoice');
+  await requestLink.click();
+  await expect(page.getByRole('heading', { name: 'Staff owner', exact: true })).toBeVisible();
   await expect(page.getByText('reviewer@consultation.test')).toBeVisible();
   await expect(page.getByText('Engineering')).toBeVisible();
   await page.evaluate(() => {
