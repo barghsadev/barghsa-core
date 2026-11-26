@@ -174,6 +174,22 @@ for (const locale of ['en', 'fa'] as const)
       expect(writes).toEqual([]);
       const raw = '  Updated product  ';
       await title.fill(raw);
+      const description = page.locator('#catalogue-descriptionEn');
+      const disclosure = page.locator('details').filter({ has: description }).locator('summary');
+      await expect(description).toBeHidden();
+      await expect(disclosure).toHaveAccessibleName(label('descriptionEn'));
+      await disclosure.press('Enter');
+      await expect(description).toHaveValue(catalogueProduct().description.en);
+      await description.fill('x'.repeat(4001));
+      await disclosure.press('Enter');
+      await expect(description).toBeHidden();
+      await page.getByRole('button', { name: label('save'), exact: true }).click();
+      await expect(description).toBeFocused();
+      await expect(description).toHaveAccessibleDescription(label('invalidDescription'));
+      expect(writes).toEqual([]);
+      await description.fill(catalogueProduct().description.en);
+      await disclosure.press('Enter');
+      await expect(description).toBeHidden();
       await page.getByRole('button', { name: label('save'), exact: true }).click();
       const dialog = page.getByRole('dialog');
       const confirm = () =>

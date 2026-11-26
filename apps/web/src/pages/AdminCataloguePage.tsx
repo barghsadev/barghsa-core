@@ -1,4 +1,4 @@
-import { Pencil as TablePencilIcon } from 'lucide-react';
+import { ChevronDown, Pencil as TablePencilIcon } from 'lucide-react';
 import { TableActionIcon } from '../components/TableActionIcon.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { RecordTimeInput } from '../components/RecordTimeInput.js';
@@ -28,6 +28,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type FormEvent,
@@ -224,6 +225,26 @@ export default function AdminCataloguePage({
       ),
     [register]
   );
+  const descriptionRefs = useMemo(() => {
+    function revealOnFocus(field: 'descriptionFa' | 'descriptionEn') {
+      return (element: HTMLTextAreaElement | null) =>
+        register(field).ref(
+          element
+            ? {
+                focus: () => {
+                  const disclosure = element.closest('details');
+                  if (disclosure) disclosure.open = true;
+                  element.focus();
+                },
+              }
+            : null
+        );
+    }
+    return {
+      descriptionFa: revealOnFocus('descriptionFa'),
+      descriptionEn: revealOnFocus('descriptionEn'),
+    };
+  }, [register]);
   function groupBinding(field: 'categories' | 'hardwareIds') {
     const binding = productForm.bind(field);
     return {
@@ -1035,66 +1056,102 @@ export default function AdminCataloguePage({
                           <legend className="sr-only">{label('editor')}</legend>
                           <RecordEditorSection
                             title={label('productDetails')}
-                            {...(detail?.systemKey ? { description: label('system') } : {})}
+                            description={label('productCopyHelp')}
                           >
-                            <div className={recordEditorGrid}>
+                            {detail?.systemKey && (
+                              <p className="text-sm text-muted-foreground">{label('system')}</p>
+                            )}
+                            <div className={`${recordEditorGrid} items-start gap-y-4`}>
                               {(
                                 [
-                                  ['titleFa', 'fa', 'rtl'],
-                                  ['titleEn', 'en', 'ltr'],
+                                  ['titleFa', 'descriptionFa', 'fa', 'rtl'],
+                                  ['titleEn', 'descriptionEn', 'en', 'ltr'],
                                 ] as const
-                              ).map(([titleField, language, direction]) => (
-                                <div key={titleField} className={recordEditorField}>
-                                  <Label htmlFor={`catalogue-${titleField}`}>
-                                    {label(titleField)}
-                                  </Label>
-                                  <Input
-                                    id={`catalogue-${titleField}`}
-                                    dir={direction}
-                                    lang={language}
-                                    {...productForm.bind(titleField)}
-                                    required
-                                    value={draft[titleField]}
-                                    onChange={(event) =>
-                                      setDraft({ ...draft, [titleField]: event.target.value })
-                                    }
-                                  />
-                                  {feedback(titleField)}
-                                </div>
-                              ))}
-                            </div>
-                          </RecordEditorSection>
-                          <RecordEditorSection title={label('optionalDescriptions')}>
-                            <div className={recordEditorGrid}>
-                              {(
-                                [
-                                  ['descriptionFa', 'fa', 'rtl'],
-                                  ['descriptionEn', 'en', 'ltr'],
-                                ] as const
-                              ).map(([descriptionField, language, direction]) => (
-                                <div key={descriptionField} className={recordEditorField}>
-                                  <Label htmlFor={`catalogue-${descriptionField}`}>
-                                    {label(descriptionField)}
-                                  </Label>
-                                  <Textarea
-                                    id={`catalogue-${descriptionField}`}
-                                    dir={direction}
-                                    lang={language}
-                                    {...productForm.bind(descriptionField)}
-                                    rows={2}
-                                    className="max-h-40 min-h-14 resize-y"
-                                    placeholder={tCatalogue('productDescriptionExample', language)}
-                                    value={draft[descriptionField]}
-                                    onChange={(event) =>
-                                      setDraft({
-                                        ...draft,
-                                        [descriptionField]: event.target.value,
-                                      })
-                                    }
-                                  />
-                                  {feedback(descriptionField)}
-                                </div>
-                              ))}
+                              ).map(([titleField, descriptionField, language, direction]) => {
+                                const description = draft[descriptionField];
+                                const id = `catalogue-${descriptionField}`;
+                                return (
+                                  <div key={titleField} className="min-w-0 space-y-1.5">
+                                    <div className={recordEditorField}>
+                                      <Label htmlFor={`catalogue-${titleField}`}>
+                                        {label(titleField)}
+                                      </Label>
+                                      <Input
+                                        id={`catalogue-${titleField}`}
+                                        dir={direction}
+                                        lang={language}
+                                        {...productForm.bind(titleField)}
+                                        required
+                                        value={draft[titleField]}
+                                        onChange={(event) =>
+                                          setDraft({ ...draft, [titleField]: event.target.value })
+                                        }
+                                      />
+                                      {feedback(titleField)}
+                                    </div>
+                                    <details className="group min-w-0 rounded-lg border bg-muted/20">
+                                      <summary
+                                        aria-labelledby={`${id}-summary`}
+                                        aria-describedby={
+                                          productForm.errors[descriptionField]
+                                            ? productForm.errorId(descriptionField)
+                                            : undefined
+                                        }
+                                        className="flex min-h-11 min-w-0 cursor-pointer list-none items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden"
+                                      >
+                                        <span className="min-w-0">
+                                          <span
+                                            id={`${id}-summary`}
+                                            className="block font-medium text-primary"
+                                          >
+                                            {label(descriptionField)}
+                                          </span>
+                                          {description.trim() && (
+                                            <bdi
+                                              lang={language}
+                                              dir={direction}
+                                              className="mt-0.5 line-clamp-1 text-xs text-muted-foreground [overflow-wrap:anywhere] group-open:hidden"
+                                            >
+                                              {description}
+                                            </bdi>
+                                          )}
+                                        </span>
+                                        <ChevronDown
+                                          aria-hidden="true"
+                                          className="size-4 shrink-0 text-primary transition-transform group-open:rotate-180 motion-reduce:transition-none"
+                                        />
+                                      </summary>
+                                      <div className="min-w-0 px-3 pb-2">
+                                        <Label htmlFor={id} className="sr-only">
+                                          {label(descriptionField)}
+                                        </Label>
+                                        <Textarea
+                                          {...productForm.bind(descriptionField)}
+                                          ref={descriptionRefs[descriptionField]}
+                                          id={id}
+                                          dir={direction}
+                                          lang={language}
+                                          rows={2}
+                                          className="max-h-40 min-h-14 resize-y"
+                                          placeholder={tCatalogue(
+                                            'productDescriptionExample',
+                                            language
+                                          )}
+                                          value={description}
+                                          onChange={(event) =>
+                                            setDraft({
+                                              ...draft,
+                                              [descriptionField]: event.target.value,
+                                            })
+                                          }
+                                        />
+                                      </div>
+                                    </details>
+                                    {productForm.errors[descriptionField] &&
+                                      feedback(descriptionField)}
+                                  </div>
+                                );
+                              })}
                             </div>
                           </RecordEditorSection>
                           {!!categoryOptions[type].length && (
