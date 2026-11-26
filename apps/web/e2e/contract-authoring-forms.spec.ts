@@ -408,6 +408,26 @@ for (const [locale, theme] of [
     const fixture = await setupContractAuthoring(page, locale, true);
     const { state, persist, error } = fixture;
     const release = await holdSchema(page);
+    const alternativeInvoice = '87000000-0000-4000-8000-000000000017';
+    await page.route(
+      `**/api/admin/contracts/${draftContractId}/activation/invoice-options?*`,
+      (route) => {
+        const versionId = new URL(route.request().url()).searchParams.get('versionId');
+        expect(fixture.versions.has(versionId ?? '')).toBe(true);
+        return route.fulfill({
+          json: {
+            contractId: draftContractId,
+            versionId,
+            profileId,
+            invoices: [
+              { id: alternativeInvoice, createdAt: '2026-09-14T10:00:00Z' },
+              { id: invoiceId, createdAt: '2026-09-01T10:00:00Z' },
+            ],
+            nextBefore: null,
+          },
+        });
+      }
+    );
     await page.goto('/admin/contracts');
     await page.getByRole('link', { name: rowName(2), exact: true }).click();
     await terms(page)
@@ -425,9 +445,19 @@ for (const [locale, theme] of [
       await expect(optional).not.toHaveAttribute('aria-required', 'true');
     await expect(start).toHaveValue('2030-01-02T11:30');
     await expect(end).toHaveValue('2030-01-03T11:30');
+    await expect(invoice).toHaveAccessibleName(tContractAuthoring('initialInvoice', locale));
+    await invoice.click();
+    const alternative = page.getByRole('option', { name: /000000000017/ });
+    await expect(alternative).toBeVisible();
+    await invoice.fill(locale === 'fa' ? '۲۰۲۶-۰۹-۱۴' : '2026-09-14');
+    await expect(page.getByRole('option', { name: /000000000008/ })).toHaveCount(0);
+    await alternative.click();
+    await expect(invoice).toHaveValue(/000000000017/);
+    expect(state.writes).toEqual([]);
     await contextForm(page)
       .getByRole('button', { name: tContractAuthoring('invoiceEnterId', locale) })
       .click();
+    await expect(invoice).toHaveValue(alternativeInvoice);
     await invoice.fill('invalid-invoice');
     await reason.fill('  Keep the original seconds  ');
     await end.focus();

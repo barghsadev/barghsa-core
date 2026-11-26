@@ -39,7 +39,9 @@ export const en: Record<string, string> = {
   endDateHelp: 'Leave blank for an open end date, or choose a time after the start.',
   initialInvoice: 'Initial invoice',
   noLinkedInvoice: 'No initial invoice',
-  invoiceChooseHelp: 'Choose an invoice for this contract or its order.',
+  invoiceChooseHelp: 'Search invoices for this contract or its order by date or reference.',
+  invoiceFind: 'Search by date or reference',
+  invoiceNoMatches: 'No loaded invoices match your search.',
   invoiceIdHelp:
     'Use the full ID of an invoice for this contract or its order. Leave it blank to unlink.',
   invoiceLoading: 'Looking up eligible invoices…',
@@ -96,7 +98,9 @@ export const fa: Record<string, string> = {
   endDateHelp: 'خالی بگذارید یا زمانی پس از شروع انتخاب کنید.',
   initialInvoice: 'صورتحساب اولیه',
   noLinkedInvoice: 'بدون صورتحساب اولیه',
-  invoiceChooseHelp: 'صورتحساب همین قرارداد یا سفارش آن را انتخاب کنید.',
+  invoiceChooseHelp: 'صورتحساب این قرارداد یا سفارش آن را با تاریخ یا شناسه پیدا کنید.',
+  invoiceFind: 'جست‌وجو با تاریخ یا شناسه',
+  invoiceNoMatches: 'در فهرست بارگذاری‌شده صورتحساب مطابقی پیدا نشد.',
   invoiceIdHelp:
     'شناسه کامل صورتحساب همین قرارداد یا سفارش را وارد کنید. برای قطع پیوند، آن را خالی بگذارید.',
   invoiceLoading: 'در حال دریافت صورتحساب‌های قابل انتخاب…',

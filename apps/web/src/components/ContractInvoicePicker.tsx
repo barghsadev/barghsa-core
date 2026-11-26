@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Input, NativeSelect } from '@barghsa/ui';
+import { Button, Input } from '@barghsa/ui';
 import { FormControl, FormField, FormItem, FormLabel, type UseFormReturn } from '@barghsa/ui/form';
 import { contractText } from '@barghsa/i18n/contracts';
 import { tContractAuthoring } from '@barghsa/i18n/contract-authoring';
@@ -8,10 +8,12 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { authoringUuid, type ContractContextValues } from '../lib/contract-authoring-form.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
+import { CatalogueChoicePicker } from './CatalogueChoicePicker.js';
 import { CompactFieldFeedback } from './CompactFieldFeedback.js';
 
 type InvoiceChoice = { id: string; createdAt: string };
 type InvoiceChoices = { invoices: InvoiceChoice[]; nextBefore: string | null };
+const noInvoice = 'none';
 
 export function ContractInvoicePicker({
   contractId,
@@ -66,6 +68,7 @@ export function ContractInvoicePicker({
               row &&
               authoringUuid(row.id) &&
               (!request.before || row.id < request.before) &&
+              typeof row.createdAt === 'string' &&
               Number.isFinite(Date.parse(row.createdAt))
           ) ||
           new Set(page.invoices.map((row) => row.id)).size !== page.invoices.length ||
@@ -90,6 +93,18 @@ export function ContractInvoicePicker({
       });
     return () => controller.abort();
   }, [actor, contractId, versionId, profileId, read, request]);
+
+  const options = [
+    { id: noInvoice, title: copy('noLinkedInvoice') },
+    ...(choices?.invoices ?? []).map((invoice) => {
+      const date = formatDate(invoice.createdAt);
+      return {
+        id: invoice.id,
+        title: `${date} · …${invoice.id.slice(-12)}`,
+        searchText: `${invoice.id} ${invoice.createdAt.slice(0, 10)}`,
+      };
+    }),
+  ];
 
   return (
     <FormField
@@ -121,17 +136,24 @@ export function ContractInvoicePicker({
                 disabled={disabled}
               />
             ) : (
-              <NativeSelect {...field} className="w-full" disabled={disabled}>
-                <option value="">{copy('noLinkedInvoice')}</option>
-                {field.value && !choices?.invoices.some((row) => row.id === field.value) && (
-                  <option value={field.value}>{`…${field.value.slice(-12)}`}</option>
-                )}
-                {choices?.invoices.map((invoice) => (
-                  <option key={invoice.id} value={invoice.id}>
-                    {`…${invoice.id.slice(-12)} · ${formatDate(invoice.createdAt)}`}
-                  </option>
-                ))}
-              </NativeSelect>
+              <CatalogueChoicePicker
+                id="contract-context-invoice"
+                locale={locale}
+                options={options}
+                selected={field.value || noInvoice}
+                required={false}
+                disabled={disabled}
+                field={field}
+                labels={{
+                  search: copy('invoiceFind'),
+                  noMatches: copy('invoiceNoMatches'),
+                  empty: copy('invoiceEmpty'),
+                  unavailable: `…${field.value.slice(-12)}`,
+                }}
+                onChange={(id) => {
+                  if (id) field.onChange(id === noInvoice ? '' : id);
+                }}
+              />
             )}
           </FormControl>
           <CompactFieldFeedback

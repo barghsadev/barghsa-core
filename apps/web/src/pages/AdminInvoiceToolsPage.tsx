@@ -6,6 +6,7 @@ import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { tInvoiceCorrections } from '@barghsa/i18n/invoice-corrections';
 import { SERVICE_DUE_PERIOD_TYPES } from '@barghsa/shared/finance/browser';
 import { RouteNotFound } from '../components/RouteErrorBoundary.js';
+import { CatalogueChoicePicker } from '../components/CatalogueChoicePicker.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -54,6 +55,17 @@ function RecentInvoicePicker({
   const [rows, setRows] = useState<RecentInvoice[] | null>(null);
   const [failure, setFailure] = useState<'unavailable' | 'denied' | null>(null);
   const [attempt, setAttempt] = useState(0);
+  const focusAfterRetry = useRef(false);
+  const id = 'tools-recent-invoice';
+
+  useEffect(() => {
+    if (!rows?.length || !focusAfterRetry.current) return;
+    const frame = requestAnimationFrame(() => {
+      document.getElementById(id)?.focus();
+      focusAfterRetry.current = false;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [rows]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -73,6 +85,7 @@ function RecentInvoicePicker({
       })
       .catch((error: unknown) => {
         if (controller.signal.aborted) return;
+        setRows(null);
         setFailure(
           error instanceof ServerQueryError && [401, 403].includes(error.status)
             ? 'denied'
@@ -82,27 +95,35 @@ function RecentInvoicePicker({
     return () => controller.abort();
   }, [read, attempt]);
 
+  const options = (rows ?? []).map((row) => {
+    const date = format(row.createdAt, { dateStyle: 'medium' });
+    return {
+      id: row.invoiceId,
+      title: `${money(row.totalAmount)} · …${row.invoiceId.slice(-8)}`,
+      detail: date,
+      searchText: `${row.invoiceId} ${row.totalAmount} ${row.createdAt.slice(0, 10)} ${date}`,
+    };
+  });
+
   return (
     <Field>
-      <FieldLabel htmlFor="tools-recent-invoice">{word('recent')}</FieldLabel>
-      <NativeSelect
-        id="tools-recent-invoice"
-        className="min-h-11 w-full"
-        required
-        value={value}
-        disabled={!rows?.length}
-        onChange={(event) => {
-          const next = event.target.value;
-          onChange(rows?.find((row) => row.invoiceId === next)?.invoiceId ?? '');
+      <FieldLabel htmlFor={id}>{word('recent')}</FieldLabel>
+      <CatalogueChoicePicker
+        id={id}
+        locale={locale}
+        options={options}
+        selected={value}
+        disabled={!options.length}
+        labels={{
+          search: word('chooseRecent'),
+          noMatches: word('noMatches'),
+          empty: word('noRecent'),
+          unavailable: `…${value.slice(-8)}`,
         }}
-      >
-        <option value="">{word('chooseRecent')}</option>
-        {rows?.map((row) => (
-          <option key={row.invoiceId} value={row.invoiceId}>
-            {`…${row.invoiceId.slice(-8)} · ${format(row.createdAt, { dateStyle: 'medium' })} · ${money(row.totalAmount)}`}
-          </option>
-        ))}
-      </NativeSelect>
+        onChange={(invoiceId) => {
+          if (invoiceId) onChange(invoiceId);
+        }}
+      />
       {failure ? (
         <div className="flex flex-wrap items-center gap-2">
           <p role="alert" className="text-xs text-destructive">
@@ -116,6 +137,7 @@ function RecentInvoicePicker({
               variant="ghost"
               size="sm"
               onClick={() => {
+                focusAfterRetry.current = true;
                 setFailure(null);
                 setAttempt((value) => value + 1);
               }}

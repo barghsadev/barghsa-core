@@ -113,15 +113,25 @@ test('invoice tools choose a recent invoice without losing the selected action o
   await expect(open).toBeDisabled();
   status = 200;
   await retry.click();
-  await expect(choices).toBeEnabled();
-  await choices.selectOption(invoiceId);
+  await expect(choices).toBeFocused();
+  await expect(choices).toHaveAccessibleName('Recent invoices');
+  await choices.click();
+  await choices.fill('14850000');
+  await expect(region.locator('button[type=submit]')).toBeDisabled();
+  const invoiceOption = page.getByRole('option', { name: /11111111/ });
+  await expect(invoiceOption).toBeVisible();
+  await invoiceOption.click();
+  await expect(choices).toHaveValue(/11111111/);
   await expect(action).toHaveValue('deadline');
   await enter.click();
   await expect(manual).toHaveValue(draftId);
   await expect(action).toHaveValue('deadline');
   await browse.click();
   await expect(choices).toHaveValue('');
-  await choices.selectOption(invoiceId);
+  await expect(choices).toBeEnabled();
+  await choices.click();
+  await choices.fill(invoiceId);
+  await invoiceOption.click();
   await open.click();
   await expect(page).toHaveURL(`/admin/invoices/${invoiceId}/deadline`);
   await expect(page.locator('#invoice-deadline-panel')).toBeVisible();
@@ -134,7 +144,8 @@ test('invoice tools choose a recent invoice without losing the selected action o
   await expect(region.getByRole('alert')).toHaveText(
     'You do not have permission to view invoices.'
   );
-  await expect(choices.locator('option')).toHaveCount(1);
+  await expect(choices).toBeDisabled();
+  await expect(choices).toHaveAttribute('aria-expanded', 'false');
   await expect(retry).toHaveCount(0);
   await expect(open).toBeDisabled();
   await enter.click();

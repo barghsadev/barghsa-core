@@ -19,6 +19,8 @@ export function CatalogueChoicePicker({
   required = true,
   disabled,
   field,
+  'aria-invalid': invalid,
+  'aria-describedby': describedBy,
   labels,
   onChange,
 }: {
@@ -28,7 +30,9 @@ export function CatalogueChoicePicker({
   selected: string;
   required?: boolean;
   disabled: boolean;
-  field: WizardFieldBinding;
+  field?: Partial<WizardFieldBinding>;
+  'aria-invalid'?: boolean | undefined;
+  'aria-describedby'?: string | undefined;
   labels: { search: string; noMatches: string; empty: string; unavailable: string };
   onChange: (id: string | null) => void;
 }) {
@@ -73,12 +77,12 @@ export function CatalogueChoicePicker({
       />
       <ComboBoxInput
         id={id}
-        ref={field.ref}
-        onBlur={field.onBlur}
+        ref={field?.ref}
+        onBlur={field?.onBlur}
         placeholder={labels.search}
         aria-required={required || undefined}
-        aria-invalid={field['aria-invalid']}
-        aria-describedby={field['aria-describedby']}
+        aria-invalid={invalid ?? field?.['aria-invalid']}
+        aria-describedby={describedBy ?? field?.['aria-describedby']}
         className="h-11 ps-9 aria-invalid:border-destructive"
       />
       {/* Keep the portal inside the viewport while the app form scrolls independently. */}
