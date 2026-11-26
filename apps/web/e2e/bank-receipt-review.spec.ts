@@ -130,8 +130,9 @@ for (const locale of ['en', 'fa'] as const) {
     const selectedReviewCount = reviewed.length;
     await selection.fill('000000000000');
     await expect(page.getByText(copy.invoiceChoiceNoMatches, { exact: true })).toBeVisible();
-    await selection.press('Escape');
+    await selection.press('Enter');
     await expect(selection).toHaveValue(/222222222222/);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(reviewed).toHaveLength(selectedReviewCount);
     await expect(page.getByTestId('admin-wallet-receipts-page')).toHaveAttribute(
       'dir',

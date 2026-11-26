@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { SearchIcon } from 'lucide-react';
 import { ComboBox, ComboBoxInput, ComboBoxItem, ComboBoxPopup } from '@barghsa/ui';
 import type { WizardFieldBinding } from '../hooks/useWizardForm.js';
+import { usePickerSearch } from '../hooks/usePickerSearch.js';
 import { catalogueSearchText } from '../lib/catalogue-search.js';
 
 export type CatalogueChoice = {
@@ -34,14 +34,13 @@ export function CatalogueChoicePicker({
   'aria-invalid'?: boolean | undefined;
   'aria-describedby'?: string | undefined;
   labels: { search: string; noMatches: string; empty: string; unavailable: string };
-  onChange: (id: string | null) => void;
+  onChange: (id: string) => void;
 }) {
-  const [search, setSearch] = useState('');
-  // Use the latest input even when reopening interrupts a popup close.
-  const query = catalogueSearchText(search);
   const selectedOption =
     options.find((option) => option.id === selected) ??
     (selected ? { id: selected, title: labels.unavailable } : null);
+  const search = usePickerSearch(selectedOption?.title ?? '', field?.onBlur);
+  const query = catalogueSearchText(search.query);
 
   return (
     <ComboBox
@@ -54,21 +53,20 @@ export function CatalogueChoicePicker({
           : options
       }
       value={selectedOption}
+      {...search.rootProps}
       itemToStringLabel={(option) => option.title}
       itemToStringValue={(option) => option.id}
       isItemEqualToValue={(option, value) => option.id === value.id}
-      onInputValueChange={(value, { reason }) => {
-        if (reason === 'input-change') setSearch(value);
-      }}
-      onOpenChange={(open) => {
-        if (!open) setSearch('');
-      }}
       openOnInputClick
       autoHighlight
       disabled={disabled}
-      onValueChange={(option) => {
-        if (!disabled && (!option || options.some((row) => row.id === option.id)))
-          onChange(option?.id ?? null);
+      onValueChange={(option, details) => {
+        if (disabled || !option || !options.some((row) => row.id === option.id)) {
+          if (details.reason === 'escape-key' && !search.searching) details.allowPropagation();
+          details.cancel();
+          return;
+        }
+        onChange(option.id);
       }}
     >
       <SearchIcon
@@ -78,7 +76,7 @@ export function CatalogueChoicePicker({
       <ComboBoxInput
         id={id}
         ref={field?.ref}
-        onBlur={field?.onBlur}
+        {...search.inputProps}
         placeholder={labels.search}
         aria-required={required || undefined}
         aria-invalid={invalid ?? field?.['aria-invalid']}

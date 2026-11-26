@@ -180,9 +180,7 @@ export function AgentSlotChoiceForm({
                     unavailable:
                       slot.agent?.id === choice ? slot.agent.title : label('unavailableChoice'),
                   }}
-                  onChange={(id) => {
-                    if (id !== null) changeChoice(id);
-                  }}
+                  onChange={changeChoice}
                 />
               </div>
               {choice && (

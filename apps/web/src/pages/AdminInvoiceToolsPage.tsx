@@ -120,9 +120,7 @@ function RecentInvoicePicker({
           empty: word('noRecent'),
           unavailable: `…${value.slice(-8)}`,
         }}
-        onChange={(invoiceId) => {
-          if (invoiceId) onChange(invoiceId);
-        }}
+        onChange={onChange}
       />
       {failure ? (
         <div className="flex flex-wrap items-center gap-2">

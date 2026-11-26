@@ -847,7 +847,7 @@ function OwnedAiAgentsPage({
                                 ? `${savedDetail.current.modelTitle} · ${label('unavailable')}`
                                 : label('unavailable'),
                           }}
-                          onChange={(id) => form.field('modelId')[1](id ?? '')}
+                          onChange={form.field('modelId')[1]}
                         />
                         <CatalogueFieldFeedback
                           compact

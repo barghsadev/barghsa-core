@@ -150,9 +150,7 @@ export function ContractInvoicePicker({
                   empty: copy('invoiceEmpty'),
                   unavailable: `…${field.value.slice(-12)}`,
                 }}
-                onChange={(id) => {
-                  if (id) field.onChange(id === noInvoice ? '' : id);
-                }}
+                onChange={(id) => field.onChange(id === noInvoice ? '' : id)}
               />
             )}
           </FormControl>

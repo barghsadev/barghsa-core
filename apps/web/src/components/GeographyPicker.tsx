@@ -1,8 +1,9 @@
-import { useState, type ComponentProps, type Ref } from 'react';
+import type { ComponentProps, Ref } from 'react';
 import { SearchIcon } from 'lucide-react';
 import { ComboBox, ComboBoxClear, ComboBoxInput, ComboBoxItem, ComboBoxPopup } from '@barghsa/ui';
 import { addressesText } from '@barghsa/i18n/addresses';
 import type { GeographyOption } from '../hooks/useGeographyOptions.js';
+import { usePickerSearch } from '../hooks/usePickerSearch.js';
 
 const locationMessages = {
   en: {
@@ -56,12 +57,11 @@ export function GeographyPicker({
   onChange: (id: string) => void;
   onBlur: () => void;
 } & Pick<ComponentProps<typeof ComboBoxInput>, 'id' | 'aria-invalid' | 'aria-describedby'>) {
-  const [search, setSearch] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
   const label = (option: GeographyOption) => (locale === 'fa' ? option.nameFa : option.nameEn);
   const value =
     options.find((option) => option.id === selected) ??
     (savedLabel ? { id: selected, nameFa: savedLabel, nameEn: savedLabel } : null);
+  const search = usePickerSearch(value ? label(value) : '', onBlur);
   const direction = locale === 'fa' ? 'rtl' : 'ltr';
   const text = locationMessages[locale];
   const clearLabel = addressesText(kind === 'province' ? 'clearProvince' : 'clearCity', locale);
@@ -77,14 +77,7 @@ export function GeographyPicker({
     <ComboBox
       items={options}
       value={value}
-      inputValue={search ?? (value ? label(value) : '')}
-      onInputValueChange={(input, { reason }) => {
-        setSearch(reason === 'input-change' ? input : null);
-      }}
-      onOpenChange={(next) => {
-        setOpen(next);
-        if (!next) setSearch(null);
-      }}
+      {...search.rootProps}
       itemToStringLabel={label}
       itemToStringValue={(option) => option.id}
       isItemEqualToValue={(option, selection) => option.id === selection.id}
@@ -103,7 +96,7 @@ export function GeographyPicker({
           disabled ||
           (option ? !options.some(({ id }) => id === option.id) : details.reason !== 'clear-press')
         ) {
-          if (details.reason === 'escape-key' && search === null) details.allowPropagation();
+          if (details.reason === 'escape-key' && !search.searching) details.allowPropagation();
           details.cancel();
           return;
         }
@@ -116,21 +109,8 @@ export function GeographyPicker({
       />
       <ComboBoxInput
         {...inputProps}
+        {...search.inputProps}
         ref={inputRef}
-        onBlur={() => {
-          if (!open) setSearch(null);
-          onBlur();
-        }}
-        onKeyDown={(event) => {
-          if (
-            event.key === 'Enter' &&
-            !event.nativeEvent.isComposing &&
-            (open || search !== null) &&
-            !event.currentTarget.getAttribute('aria-activedescendant')
-          ) {
-            event.preventDefault();
-          }
-        }}
         aria-required={required || undefined}
         aria-busy={loading || undefined}
         placeholder={placeholder}

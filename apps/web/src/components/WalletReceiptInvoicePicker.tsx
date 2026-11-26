@@ -177,9 +177,7 @@ export function WalletReceiptInvoicePicker({
           empty: copy.invoiceChoiceNone,
           unavailable: `…${value.trim().slice(-12)}`,
         }}
-        onChange={(invoiceId) => {
-          if (invoiceId) onValueChange(invoiceId === wallet ? '' : invoiceId);
-        }}
+        onChange={(invoiceId) => onValueChange(invoiceId === wallet ? '' : invoiceId)}
       />
       <p id={`${id}-hint`} className="text-xs text-muted-foreground">
         {copy.invoiceChoiceHelp}

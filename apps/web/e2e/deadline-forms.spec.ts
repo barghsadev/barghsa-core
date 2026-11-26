@@ -123,6 +123,15 @@ test('invoice tools choose a recent invoice without losing the selected action o
   await invoiceOption.click();
   await expect(choices).toHaveValue(/11111111/);
   await expect(action).toHaveValue('deadline');
+  await choices.click();
+  await choices.fill('No matching reference');
+  await expect(
+    page.getByText('No recent invoices match your search.', { exact: true })
+  ).toBeVisible();
+  await choices.press('Enter');
+  await expect(page).toHaveURL(settings);
+  await expect(choices).toHaveValue(/11111111/);
+  await expect(action).toHaveValue('deadline');
   await enter.click();
   await expect(manual).toHaveValue(draftId);
   await expect(action).toHaveValue('deadline');

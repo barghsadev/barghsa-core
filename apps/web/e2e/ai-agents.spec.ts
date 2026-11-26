@@ -164,6 +164,14 @@ for (const locale of ['en', 'fa'] as const)
     await expect(page.getByRole('option', { name: 'Local model', exact: true })).toBeVisible();
     await modelField.press('Enter');
     await expect(modelField).toHaveValue('Local model');
+    await modelField.click();
+    await modelField.fill('');
+    await modelField.fill('An unavailable model');
+    await expect(
+      page.getByText(aiAgentFormText('modelNoMatches', locale), { exact: true })
+    ).toBeVisible();
+    await modelField.press('Escape');
+    await expect(modelField).toHaveValue('Local model');
     const prompt = page.getByLabel(fa ? 'دستورالعمل سیستم' : 'System instructions');
     const insertExample = page.getByRole('button', {
       name: aiAgentFormText('promptInsertExample', locale),
