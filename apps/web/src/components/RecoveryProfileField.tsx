@@ -194,21 +194,30 @@ export function RecoveryProfileField({
               <li key={option.id}>
                 <button
                   type="button"
-                  className="block min-w-0 w-full px-3 py-2.5 text-start text-sm hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-primary"
+                  className="flex w-full min-w-0 items-center gap-2 px-3 py-2.5 text-start text-sm hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-primary"
                   onClick={() => {
                     const title = option.title?.trim() || option.username;
                     setChosen({ ...option, title });
                     onChange(option.id, title);
                   }}
                 >
-                  <bdi className="block font-medium wrap-anywhere">
-                    {option.title || option.username}
-                  </bdi>
-                  <span className="mt-0.5 block text-xs text-muted-foreground wrap-anywhere">
-                    {label(option.profileType === 'LEGAL' ? 'legalProfile' : 'individualProfile')}
-                    {' · '}
-                    <bdi dir="ltr">{option.username}</bdi>
+                  <span className="min-w-0 flex-1">
+                    <bdi className="block font-medium wrap-anywhere">
+                      {option.title || option.username}
+                    </bdi>
+                    <span className="mt-0.5 block text-xs text-muted-foreground wrap-anywhere">
+                      {label(option.profileType === 'LEGAL' ? 'legalProfile' : 'individualProfile')}
+                      {' · '}
+                      <bdi dir="ltr">{option.username}</bdi>
+                    </span>
                   </span>
+                  <bdi
+                    dir="ltr"
+                    title={option.id}
+                    className="shrink-0 rounded-md bg-muted px-1.5 py-0.5 text-xs text-muted-foreground"
+                  >
+                    …{option.id.slice(-8)}
+                  </bdi>
                 </button>
               </li>
             ))}

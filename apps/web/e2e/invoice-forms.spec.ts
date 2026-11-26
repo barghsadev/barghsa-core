@@ -79,7 +79,9 @@ for (const locale of ['fa', 'en'] as const)
         route.fulfill({
           status: readStatus,
           json: {
-            items: [{ id: profileId, title: 'Customer', profileType: 'LEGAL' }],
+            items: new URL(route.request().url()).searchParams.get('search')
+              ? []
+              : [{ id: profileId, title: 'Customer', profileType: 'LEGAL' }],
             nextBefore: null,
           },
         })
@@ -154,12 +156,19 @@ for (const locale of ['fa', 'en'] as const)
       await expect(price.first()).toHaveValue('۵۰');
       await expect(issue).toBeDisabled();
       readStatus = 200;
-      await panel.getByRole('button', { name: m('search'), exact: true }).click();
+      const profileSearch = panel.getByLabel(m('searchProfiles'), { exact: true });
+      await profileSearch.fill('Unmatched billing profile');
+      await profileSearch.press('Enter');
+      await expect(panel.getByText(m('noProfiles'), { exact: true })).toBeVisible();
+      await expect(customer).toHaveValue(profileId);
+      await expect(customer).toHaveAccessibleDescription(m('recipientRetained'));
+      expect(previews).toHaveLength(1);
       await expect(issue).toBeEnabled();
       reviewStatus = 201;
       await issue.click();
       const review = page.getByRole('dialog', { name: m('manualReviewTitle') });
       await expect(review).toBeVisible();
+      expect(previews.at(-1)?.profileId).toBe(profileId);
       const confirm = review.getByRole('button', { name: m('manualReviewConfirm'), exact: true });
       await expect(confirm).toBeDisabled();
       await approveRiskConfirmation(page, locale, 'financial');
@@ -192,7 +201,7 @@ for (const locale of ['fa', 'en'] as const)
       await expect(confirm).toBeDisabled();
       await approveRiskConfirmation(page, locale, 'financial');
       await confirm.click();
-      await expect(panel.getByRole('status')).toContainText(nextId);
+      await expect(panel.getByRole('status').filter({ hasText: nextId })).toBeVisible();
       expect(commands).toHaveLength(2);
       expect(commands[1]?.lines).toEqual([
         { description: 'Second line', quantity: 2, unitPrice: '60', vatRate: 0, isTaxable: false },

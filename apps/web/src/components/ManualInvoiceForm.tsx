@@ -180,6 +180,7 @@ function OwnedManualInvoiceForm({
   const [reason, setReason] = draft.field('reason'),
     [amount, setAmount] = draft.field('amount');
   const [profileId, setProfileId] = draft.field('profileId');
+  const profileField = draft.bind('profileId');
   const lines = draft.values.lineOrder.map((id) => draft.values.lines[id]!);
   const setLines: Dispatch<SetStateAction<DraftLine[]>> = (update) => {
     if (busy.current || locked || unavailable) return;
@@ -201,6 +202,12 @@ function OwnedManualInvoiceForm({
     [query, setQuery] = useState('');
   const [revision, setRevision] = useState(0),
     [profiles, setProfiles] = useState<Profile[]>([]);
+  const [selectedRecipient, setSelectedRecipient] = useState<Profile | null>(null);
+  const retainedRecipient =
+    selectedRecipient?.id === profileId && !profiles.some((profile) => profile.id === profileId)
+      ? selectedRecipient
+      : null;
+  const recipientChoices = retainedRecipient ? [retainedRecipient, ...profiles] : profiles;
   const [before, setBefore] = useState<string | null>(null);
   const [nextBefore, setNextBefore] = useState<string | null>(null);
   const [loading, setLoading] = useState(!correction),
@@ -337,8 +344,9 @@ function OwnedManualInvoiceForm({
         )
           throw new Error('lookup');
         if (!abort.signal.aborted) {
-          if (!before && !data.items.some((item) => item.id === draft.form.getValues('profileId')))
-            setProfileId('');
+          setSelectedRecipient((current) =>
+            current ? (data.items!.find((profile) => profile.id === current.id) ?? current) : null
+          );
           setProfiles((current) => {
             if (!before) return data.items!;
             const shown = new Set(current.map((profile) => profile.id));
@@ -399,6 +407,7 @@ function OwnedManualInvoiceForm({
     setStepUp(false);
     setPassword('');
     setProfiles([]);
+    setSelectedRecipient(null);
     setNextBefore(null);
     setReady(false);
     const line = blankLine();
@@ -887,6 +896,7 @@ function OwnedManualInvoiceForm({
               setResult(null);
               setLines([blankLine()]);
               setProfileId('');
+              setSelectedRecipient(null);
             }}
           >
             {text('another')}
@@ -943,6 +953,11 @@ function OwnedManualInvoiceForm({
                     {loading ? text('loading') : text('search')}
                   </Button>
                 </div>
+                {ready && profiles.length === 0 && (
+                  <p role="status" className="text-sm text-muted-foreground">
+                    {text('noProfiles')}
+                  </p>
+                )}
               </Field>
               <Field
                 className="min-w-0 gap-1"
@@ -952,18 +967,32 @@ function OwnedManualInvoiceForm({
                 <FieldLabel htmlFor="manual-profile">{text('profile')}</FieldLabel>
                 <NativeSelect
                   id="manual-profile"
-                  {...draft.bind('profileId')}
+                  {...profileField}
                   value={profileId ?? ''}
-                  onChange={(event) => setProfileId(event.target.value)}
+                  onChange={(event) => {
+                    const id = event.target.value;
+                    setSelectedRecipient(
+                      recipientChoices.find((profile) => profile.id === id) ?? null
+                    );
+                    setProfileId(id);
+                  }}
                   disabled={locked || !ready}
                   className="w-full"
                   required
                   aria-required="true"
+                  aria-describedby={
+                    [
+                      profileField['aria-describedby'],
+                      ready && retainedRecipient && 'manual-profile-retained',
+                    ]
+                      .filter(Boolean)
+                      .join(' ') || undefined
+                  }
                 >
                   <NativeSelectOption value="" disabled>
                     {text('chooseProfile')}
                   </NativeSelectOption>
-                  {profiles.map((profile) => {
+                  {recipientChoices.map((profile) => {
                     const label = [
                       profile.title || text('untitled'),
                       profileTypeText(profile.profileType, locale),
@@ -984,8 +1013,14 @@ function OwnedManualInvoiceForm({
                   error={draft.errors.profileId}
                   message={text('profileInvalid')}
                 />
-                {ready && profiles.length === 0 && (
-                  <p className="text-sm text-muted-foreground">{text('noProfiles')}</p>
+                {ready && retainedRecipient && (
+                  <p
+                    id="manual-profile-retained"
+                    role="status"
+                    className="text-sm text-muted-foreground"
+                  >
+                    {text('recipientRetained')}
+                  </p>
                 )}
                 {nextBefore && (
                   <Button

@@ -451,6 +451,7 @@ for (const locale of ['en', 'fa'] as const) {
                   username: 'old@example.test',
                   profiles: [
                     { id: profileId, profileType: 'INDIVIDUAL', title: 'Recovery customer' },
+                    { id, profileType: 'INDIVIDUAL', title: 'Recovery customer' },
                   ],
                 },
               ],
@@ -464,7 +465,12 @@ for (const locale of ['en', 'fa'] as const) {
     await search.press('Enter');
     await expect(page.getByRole('alert')).toContainText(word('profileSearchFailed'));
     await page.getByRole('button', { name: word('findProfile'), exact: true }).click();
-    await page.getByRole('button', { name: /Recovery customer/ }).click();
+    const choices = page
+      .getByRole('list', { name: word('profileResults') })
+      .getByRole('button', { name: /Recovery customer/ });
+    await expect(choices).toHaveCount(2);
+    await expect(choices.nth(1)).toContainText(`…${id.slice(-8)}`);
+    await choices.filter({ hasText: `…${profileId.slice(-8)}` }).click();
     const contact = page.getByLabel(word('newLogin'), { exact: true });
     await expect(contact).toBeFocused();
     expect(searches).toBe(2);
