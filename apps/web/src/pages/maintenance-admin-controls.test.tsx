@@ -169,6 +169,8 @@ it('keeps the staff rationale private and only accepts the standard notice for t
   expect(host.textContent).toContain(reasons.fa);
   expect(host.querySelector('time')?.dateTime).toBe(deadline);
   await toggle('publishReason');
+  await fill('reasonFa', reasons.fa);
+  await fill('reasonEn', reasons.en);
   await submit();
   const review = await command();
   expect(review.action).toMatchObject({

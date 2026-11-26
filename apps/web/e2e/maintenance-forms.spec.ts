@@ -253,14 +253,27 @@ for (const locale of ['en', 'fa'] as const) {
   });
   test(`maintenance can keep the pause rationale private (${locale})`, async ({ page }, info) => {
     const { word, confirmPause, save, row } = await setup(page, locale);
-    const visibility = page.getByRole('checkbox', { name: word('publishReason'), exact: true });
-    await expect(visibility).toBeChecked();
-    await visibility.focus();
-    await visibility.press('Space');
-    await expect(visibility).not.toBeChecked();
+    const standard = page.getByRole('radio', { name: word('standardNotice'), exact: true });
+    const custom = page.getByRole('radio', { name: word('writeNotice'), exact: true });
+    const publicReason = row().reason!;
+    await expect(custom).toBeChecked();
+    await standard.focus();
+    await standard.press('Space');
+    await expect(standard).toBeChecked();
+    await expect(page.getByLabel(word('privateReasonEn'), { exact: true })).toHaveValue('');
     const privateReason = { fa: 'دلیل داخلی آزمایشی', en: 'Private fixture rationale' };
     await page.getByLabel(word('privateReasonFa'), { exact: true }).fill(privateReason.fa);
     await page.getByLabel(word('privateReasonEn'), { exact: true }).fill(privateReason.en);
+    await custom.check();
+    await expect(page.getByLabel(word('reasonFa'), { exact: true })).toHaveValue(publicReason.fa);
+    await expect(page.getByLabel(word('reasonEn'), { exact: true })).toHaveValue(publicReason.en);
+    await standard.check();
+    await expect(page.getByLabel(word('privateReasonFa'), { exact: true })).toHaveValue(
+      privateReason.fa
+    );
+    await expect(page.getByLabel(word('privateReasonEn'), { exact: true })).toHaveValue(
+      privateReason.en
+    );
     const writes: unknown[] = [];
     await page.route('**/api/admin/maintenance/electricity_checkout', async (route) => {
       if (route.request().method() === 'GET') return route.fallback();
@@ -289,7 +302,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByText(privateReason.en, { exact: true })).toHaveCount(0);
     await expect(page).toHaveURL('/admin/maintenance/electricity_checkout');
     await page.getByRole('link', { name: word('manage'), exact: true }).click();
-    await expect(visibility).not.toBeChecked();
+    await expect(standard).toBeChecked();
     await expect(page.getByLabel(word('privateReasonEn'), { exact: true })).toHaveValue('');
   });
 

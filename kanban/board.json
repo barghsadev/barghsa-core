@@ -400899,7 +400899,8 @@
             1477462655610601,
             4474776807561533,
             1418917016749917,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "source_evidence": [
             1501764925946930,
@@ -400930,7 +400931,7 @@
             2811945343786479,
             3305232709718029,
             3197975817201788,
-            223502301067569,
+            3161541450820657,
             2976728063000349,
             2587326359191564,
             315801395080800,
@@ -415526,11 +415527,11 @@
             2058946213734767,
             1617330653885514,
             1312104955077758,
-            4339046543191455,
+            1559930310916599,
             293870123292230,
             2015370855096008,
             4287053005570571,
-            1655635504503067
+            3213572289864860
           ],
           "checks": [
             4103494847465442,
@@ -415539,7 +415540,8 @@
             2689672081647735,
             2201291801792273,
             3435543400513314,
-            2465653514315153
+            2465653514315153,
+            2571269142182069
           ],
           "source_renewals": [
             1872091724219701,
@@ -415626,11 +415628,11 @@
             2058946213734767,
             1617330653885514,
             1312104955077758,
-            4339046543191455,
+            1559930310916599,
             293870123292230,
             2015370855096008,
             4287053005570571,
-            1655635504503067
+            3213572289864860
           ],
           "checks": [
             4103494847465442,
@@ -415639,7 +415641,8 @@
             2689672081647735,
             2201291801792273,
             3435543400513314,
-            2465653514315153
+            2465653514315153,
+            2571269142182069
           ],
           "source_renewals": [
             1872091724219701,
@@ -415728,11 +415731,11 @@
             2058946213734767,
             1617330653885514,
             1312104955077758,
-            4339046543191455,
+            1559930310916599,
             293870123292230,
             2015370855096008,
             4287053005570571,
-            1655635504503067
+            3213572289864860
           ],
           "checks": [
             4103494847465442,
@@ -415741,7 +415744,8 @@
             2689672081647735,
             2201291801792273,
             3435543400513314,
-            2465653514315153
+            2465653514315153,
+            2571269142182069
           ],
           "source_renewals": [
             1872091724219701,
@@ -415967,11 +415971,11 @@
             2058946213734767,
             1617330653885514,
             1312104955077758,
-            4339046543191455,
+            1559930310916599,
             293870123292230,
             2015370855096008,
             4287053005570571,
-            1655635504503067
+            3213572289864860
           ],
           "checks": [
             4103494847465442,
@@ -415980,7 +415984,8 @@
             2689672081647735,
             2201291801792273,
             3435543400513314,
-            2465653514315153
+            2465653514315153,
+            2571269142182069
           ],
           "source_renewals": [
             1872091724219701,
@@ -428457,7 +428462,7 @@
             2587073189626446,
             1379994195971894,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3843920676321302,
             3773439245300709,
@@ -428614,7 +428619,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -445286,7 +445292,7 @@
             1859653477539036,
             1631661873791907,
             1379994195971894,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3773439245300709,
             1768208864182816,
@@ -445382,7 +445388,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-target-and-fields/proof.json",
           "scope_dispositions": [
@@ -448769,7 +448776,7 @@
             242017731477868,
             3305232709718029,
             3859385006634468,
-            223502301067569,
+            3161541450820657,
             2096178494201534,
             4336739995083235,
             2976728063000349,
@@ -448984,7 +448991,7 @@
             1914549007068186,
             1379994195971894,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3843920676321302,
             3773439245300709,
@@ -449132,7 +449139,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
           "scope_dispositions": [
@@ -469429,7 +469437,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -469722,7 +469730,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -470416,7 +470425,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -470709,7 +470718,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -471404,7 +471414,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -471697,7 +471707,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -472361,7 +472372,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -472654,7 +472665,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -473344,7 +473356,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -473637,7 +473649,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -474336,7 +474349,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -474629,7 +474642,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -475301,7 +475315,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -475594,7 +475608,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -476230,7 +476245,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -476523,7 +476538,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -477159,7 +477175,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -477452,7 +477468,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -478089,7 +478106,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -478382,7 +478399,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -479018,7 +479036,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -479311,7 +479329,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -479964,7 +479983,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -480287,7 +480306,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -480967,7 +480987,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -481290,7 +481310,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -481968,7 +481989,7 @@
             134194829509391,
             640079934743303,
             2811945343786479,
-            223502301067569,
+            3161541450820657,
             3204382832740797,
             2096178494201534,
             2498670064060096,
@@ -482402,7 +482423,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3843920676321302,
             3773439245300709,
@@ -482649,7 +482670,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -483041,7 +483063,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -483363,7 +483385,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -484043,7 +484066,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -484366,7 +484389,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -485046,7 +485070,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -485369,7 +485393,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -486049,7 +486074,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -486372,7 +486397,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -487052,7 +487078,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -487375,7 +487401,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -488055,7 +488082,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -488378,7 +488405,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -489058,7 +489086,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -489381,7 +489409,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -490061,7 +490090,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -490384,7 +490413,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -491064,7 +491094,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -491387,7 +491417,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -492067,7 +492098,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -492390,7 +492421,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -493070,7 +493102,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -493393,7 +493425,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -494569,7 +494602,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -494892,7 +494925,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -495572,7 +495606,7 @@
             1379994195971894,
             3159929861499020,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3843920676321302,
             3299929513452876,
             599985995154118,
@@ -495895,7 +495929,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -496561,7 +496596,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "source_evidence": [
             4426486251880254,
@@ -496696,7 +496732,7 @@
             1379994195971894,
             693467880281088,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3843920676321302,
             3773439245300709,
@@ -497256,7 +497292,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -497549,7 +497585,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -498181,7 +498218,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -498474,7 +498511,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -499106,7 +499144,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -499399,7 +499437,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -500031,7 +500070,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -500324,7 +500363,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -500956,7 +500996,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -501249,7 +501289,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -501881,7 +501922,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -502174,7 +502215,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -502806,7 +502848,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3299929513452876,
             992502057662144,
@@ -503099,7 +503141,8 @@
             1477462655610601,
             1418917016749917,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -576826,7 +576869,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "source_evidence": [
             4368684968752415,
@@ -576994,7 +577038,7 @@
             1379994195971894,
             693467880281088,
             2924556917994766,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3843920676321302,
             3773439245300709,
@@ -577820,7 +577864,7 @@
             1379994195971894,
             2924556917994766,
             3903604788785823,
-            4339046543191455,
+            1559930310916599,
             3805993198405108,
             3843920676321302,
             3773439245300709,
@@ -577916,7 +577960,7 @@
             1079662255570347,
             1269012851549274,
             3582260474783698,
-            1483765296566643,
+            917544253838265,
             2016473975593667,
             2686485987759667,
             4157901963037666,
@@ -578205,7 +578249,8 @@
             2606643979391855,
             2228038009963933,
             2113786303901130,
-            69956759907908
+            69956759907908,
+            2571269142182069
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -786397,6 +786442,7 @@
       "769746505400166": "Reviewed the current critical customer and protected staff form flows against the existing rendered and browser assertions. Checked localized validation feedback and retained fields, original captured request retries after ambiguous outcomes, no duplicate upload or financial write, profile and permission changes, and rejection and retirement of one-time codes.",
       "4446206801094908": "All eight Chromium shards in scheduled GitHub run 43190340052 completed successfully. In the 61 selected specifications, 702 cases passed on the first attempt. The evidence records the actual titles and shard for authentication, onboarding, addresses and uploads, four launch services, wallet, invoices, contracts and refunds, and protected configuration and staff actions.",
       "3073323863794353": "The tested web app, UI, generated API client, browser runner, workflow, 61 exact specification files and reviewed form source are unchanged. The shared package and lockfile delta adds server OpenTelemetry and operational log and alert helpers with no browser imports. Existing source-bound wallet top-up and invoice rendered tests remain in force. Documentation and git diff --check passed.",
+      "2571269142182069": "The service pause editor defaults new pauses to the standard notice and keeps separate customer and internal drafts when switching notice type. Existing custom notices retain their content. Farsi return times retain hour-minute order. Thirty-eight Chromium and mobile Safari cases, two 320 px probes, fourteen web unit cases, three migrated API cases and 212 gzip budgets passed. Local captures and complete logs are in /tmp/barghsa-form-review/maintenance-notice-*.",
       "3552878928454923": "React Testing Library uses accessible names to verify that a read-only staff member sees the no-action message and has no cancellation control. The cancellation editor omits the refund choice and disables submission for a paid discretionary refund without finance authority, even with a reason entered. The granted case exposes the choice and enables the decision. Existing text and DOM protections are retained and no product code changed.",
       "2005183846090960": "All 40 cancellation panel cases passed, including the new granted/denied contrast. Web TypeScript, ESLint, Prettier and whitespace checks passed.",
       "1965131192832218": "Exact hosted diagnostic 43135700901 started the compiled local/CI fixture against pgvector/pgvector:pg17. Both live containers returned server_version_num 170011, shared the recorded image ID, exposed separate loopback ports and random credentials, and mounted test data in tmpfs. Both extensions were installed. Row isolation, continued operation of the second project after the first was removed, and removal of both projects passed.",
@@ -800003,9 +800049,9 @@
         "path": "apps/web/e2e/invoice-forms.spec.ts",
         "sha256": "ab637a8609bb0a736f0ca12372b26b205a7d05ea01001872ca8859deccee1187"
       },
-      "223502301067569": {
+      "3161541450820657": {
         "path": "apps/web/e2e/maintenance-forms.spec.ts",
-        "sha256": "6ec33fe356c8e83fa7c2bd52b21d3f94e89684eb743254ff5be2ed5a3f8a6623"
+        "sha256": "1ca9cef4fbb0ccb964e3efc942c57af80a74732ac60c48a30da277c0ad28434f"
       },
       "2354175645261344": {
         "path": "apps/web/e2e/payment-review-recovery.spec.ts",
@@ -800775,9 +800821,9 @@
         "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
         "sha256": "3fd26c2cd69c1d3762a6c2d6f291b811cf432bc9068ce71a51166b60fd8165bb"
       },
-      "4339046543191455": {
+      "1559930310916599": {
         "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-        "sha256": "2f8b136e3fdd2e2078c5a9041aa455ac1f52b2efc6fb64877abdf7f4b9c003b8"
+        "sha256": "970083ac066f03c1d4b1dc7832ff53614120cdc27b543b6a4e192d49613911f6"
       },
       "293870123292230": {
         "path": "apps/web/src/components/AdminMaintenanceSummary.tsx",
@@ -800787,9 +800833,9 @@
         "path": "apps/web/src/hooks/useMaintenance.ts",
         "sha256": "2375dab75d72feb640de889ae3a53c3f5e32ef62fa73ef70ae3cc756e28de102"
       },
-      "1655635504503067": {
+      "3213572289864860": {
         "path": "apps/web/src/lib/maintenance-form.ts",
-        "sha256": "1241a369903f8dd974fb97291f2b65f7a7b58059c4ddee40b23ff5df33887314"
+        "sha256": "217d4fd422329c72b77066dcc6327cc058a8d9d568fd400a50c34db99664d134"
       },
       "4249869371035194": {
         "path": "deploy/production/test_rollout_observer.py",
@@ -803211,9 +803257,9 @@
         "path": "packages/i18n/src/maintenance-public.ts",
         "sha256": "67e608f9ba2efe00b1d5f1aaafc66ff3248a3b685faa9d7f21456a98f321b170"
       },
-      "1483765296566643": {
+      "917544253838265": {
         "path": "packages/i18n/src/maintenance.ts",
-        "sha256": "ebd4bde83c881ff5ed9469a826ad5547aa419c9954baf52034f3d72b18f2f366"
+        "sha256": "03e1f4e36e58314aa3ed63ba282abcb23f699e652d331942487cc7cfd3362604"
       },
       "4157901963037666": {
         "path": "packages/i18n/src/notification-forms.ts",

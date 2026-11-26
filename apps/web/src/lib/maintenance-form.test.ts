@@ -35,6 +35,7 @@ it('preserves the exact saved instant while editing unrelated raw text', () => {
 });
 it('validates all active fields and accepts deactivation without a deadline', () => {
   const draft = maintenanceDraft(null, zone);
+  expect(draft.publishReason).toBe(false);
   draft.active = true;
   draft.reasonFa = ' ';
   draft.reasonEn = 'x'.repeat(501);

@@ -52,7 +52,7 @@ export function maintenanceDraft(
 ): MaintenanceDraft {
   const original = setting?.estimatedUntil ?? null;
   const date = original ? new Date(original) : undefined;
-  const publishReason = !isStandardMaintenanceNotice(setting?.reason ?? null);
+  const publishReason = setting?.active === true && !isStandardMaintenanceNotice(setting.reason);
   return {
     active: setting?.active ?? false,
     publishReason,

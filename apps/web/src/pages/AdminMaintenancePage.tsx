@@ -91,6 +91,7 @@ export default function AdminMaintenancePage({ workspace }: { workspace?: Worksp
     generation: number;
   } | null>(null);
   const errorFocus = useRef<keyof MaintenanceDraft | null>(null);
+  const otherNotice = useRef<{ fa: string; en: string } | null>(null);
   const form = useZodForm<MaintenanceDraft>(
     async () => {
       const { contentFormSchema } = await import('../lib/catalogue-form-schemas.js');
@@ -121,6 +122,21 @@ export default function AdminMaintenancePage({ workspace }: { workspace?: Worksp
   const deadlineId = 'maintenance-deadline';
   const deadlineErrorId = form.formState.errors.deadline ? `${deadlineId}-message` : undefined;
 
+  function resetDraft(setting: MaintenanceSetting | null, zone: string) {
+    otherNotice.current = null;
+    form.reset(maintenanceDraft(setting, zone));
+  }
+
+  function changeNotice(publish: boolean) {
+    if (owned.current || publish === form.getValues('publishReason')) return;
+    const next = otherNotice.current;
+    otherNotice.current = { fa: form.getValues('reasonFa'), en: form.getValues('reasonEn') };
+    form.setValue('reasonFa', next?.fa ?? '', { shouldDirty: true });
+    form.setValue('reasonEn', next?.en ?? '', { shouldDirty: true });
+    form.setValue('publishReason', publish, { shouldDirty: true });
+    form.clearErrors(['reasonFa', 'reasonEn', 'publishReason']);
+  }
+
   function clearPrivate() {
     ++generation.current;
     initializedEditor.current = false;
@@ -130,7 +146,7 @@ export default function AdminMaintenancePage({ workspace }: { workspace?: Worksp
     setSelected(null);
     setRecoveryOpen(false);
     setRecoveryDraft(null);
-    form.reset(maintenanceDraft(null, time.timezone));
+    resetDraft(null, time.timezone);
     setAction(null);
     setValidating(false);
     setUncertain(false);
@@ -216,7 +232,7 @@ export default function AdminMaintenancePage({ workspace }: { workspace?: Worksp
     setRecoveryOpen(false);
     setRecoveryDraft(null);
     setDraftZone(time.timezone);
-    form.reset(maintenanceDraft(setting, time.timezone));
+    resetDraft(setting, time.timezone);
     setSaved(false);
   }
   function loadRecovery(draft: MaintenanceRecoveryDraft) {
@@ -232,7 +248,7 @@ export default function AdminMaintenancePage({ workspace }: { workspace?: Worksp
     ++generation.current;
     setRecoveryDraft(draft);
     setRecoveryOpen(false);
-    form.reset(maintenanceDraft(draft.setting, draftZone));
+    resetDraft(draft.setting, draftZone);
     setSaved(false);
   }
   function closeAction() {
@@ -603,34 +619,49 @@ export default function AdminMaintenancePage({ workspace }: { workspace?: Worksp
               </div>
               {draft.active && (
                 <>
-                  <RecordEditorSection
-                    title={copy('noticeContent')}
-                    description={copy(
-                      draft.publishReason ? 'publicMessageHelp' : 'privateMessageHelp'
-                    )}
-                  >
+                  <RecordEditorSection title={copy('noticeContent')}>
                     <FormField
                       control={form.control}
                       name="publishReason"
                       render={({ field }) => (
                         <FormItem>
-                          <label className="touch-label flex cursor-pointer items-center gap-2 text-sm">
-                            <FormControl>
-                              <input
-                                type="checkbox"
-                                name={field.name}
-                                ref={field.ref}
-                                onBlur={field.onBlur}
-                                checked={field.value}
-                                onChange={(event) => field.onChange(event.target.checked)}
-                              />
-                            </FormControl>
-                            {copy('publishReason')}
-                          </label>
+                          <FormControl>
+                            <div
+                              role="radiogroup"
+                              aria-label={copy('publicNotice')}
+                              aria-describedby="maintenance-notice-help"
+                              ref={field.ref}
+                              tabIndex={-1}
+                              onBlur={field.onBlur}
+                              className="grid gap-2 sm:grid-cols-2"
+                            >
+                              {(['standardNotice', 'writeNotice'] as const).map((key) => {
+                                const publish = key === 'writeNotice';
+                                return (
+                                  <label
+                                    key={key}
+                                    className="flex min-h-11 cursor-pointer items-center gap-2.5 rounded-lg border px-3 py-2 text-sm font-medium hover:bg-muted/40 has-checked:border-primary/40 has-checked:bg-primary/5 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
+                                  >
+                                    <input
+                                      type="radio"
+                                      name={field.name}
+                                      className="size-4 shrink-0 accent-primary"
+                                      checked={field.value === publish}
+                                      onChange={() => changeNotice(publish)}
+                                    />
+                                    {copy(key)}
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+                    <p id="maintenance-notice-help" className="text-sm text-muted-foreground">
+                      {copy(draft.publishReason ? 'publicMessageHelp' : 'privateMessageHelp')}
+                    </p>
                     <div className={recordEditorGrid}>
                       <FormTextarea
                         control={form.control}
@@ -720,6 +751,7 @@ export default function AdminMaintenancePage({ workspace }: { workspace?: Worksp
                                   <Input
                                     id="maintenance-time"
                                     type="time"
+                                    dir="ltr"
                                     aria-required="true"
                                     aria-describedby={deadlineErrorId}
                                     value={draft.deadline.time}
