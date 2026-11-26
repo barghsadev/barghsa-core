@@ -9,15 +9,24 @@ vi.mock('@tanstack/react-router', () => ({
   Link: ({
     children,
     to,
+    params,
     search,
     className,
   }: {
     children: ReactNode;
     to: string;
+    params?: { invoiceId: string };
     search?: { status?: string };
     className?: string;
   }) => (
-    <a href={search?.status ? `${to}?status=${search.status}` : to} className={className}>
+    <a
+      href={
+        search?.status
+          ? `${to}?status=${search.status}`
+          : to.replace('$invoiceId', params?.invoiceId ?? '')
+      }
+      className={className}
+    >
       {children}
     </a>
   ),
@@ -97,12 +106,20 @@ it('shows an invoice due date when the API supplies one', async () => {
         </QueryProvider>
       )
     );
-    expect(container.textContent).toContain('Issued: 2026-09-23T10:00:00Z');
-    expect(container.textContent).toContain('Due: 2026-09-30T10:00:00Z');
-    expect(container.textContent).toContain('Electricity service period:');
-    expect(container.textContent).toContain('Invoice reference: invoice-1');
-    expect(container.textContent).toMatch(/Confirmed paid: IRR\s+40,000/);
-    expect(container.querySelector('bdi[dir="ltr"]')?.textContent).toBe('invoice-1');
+    const terms = new Map(
+      [...container.querySelectorAll('dt')].map((term) => [
+        term.textContent,
+        term.nextElementSibling?.textContent,
+      ])
+    );
+    expect(terms.get('Issued')).toBe('2026-09-23T10:00:00Z');
+    expect(terms.get('Due')).toBe('2026-09-30T10:00:00Z');
+    expect(terms.get('Confirmed paid')).toMatch(/^IRR\s+40,000$/);
+    expect(container.textContent).toContain(
+      'Electricity service period 2026-10-01T00:00:00Z – 2026-10-31T23:59:59.999Z'
+    );
+    expect(container.querySelector('a[href="/invoices/invoice-1"]')?.textContent).toBe('Original');
+    expect(container.querySelector('li p bdi')?.textContent).toBe('invoice-1');
   } finally {
     await act(async () => root.unmount());
     container.remove();

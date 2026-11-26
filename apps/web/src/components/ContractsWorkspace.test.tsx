@@ -434,7 +434,10 @@ it.each(['en', 'fa'] as const)(
       words.openLinkedOrder
     );
     await click(`${words.electricity} · ${words.version} ${(2).toLocaleString(locale)}`);
-    expect(container.textContent?.split(`${words.contractNumber}: 1001`)).toHaveLength(3);
+    const detailNumber = [...container.querySelectorAll('bdi[dir="ltr"]')].find(
+      (value) => value.parentElement?.previousElementSibling?.textContent === words.contractNumber
+    );
+    expect(detailNumber?.textContent).toBe('1001');
     expect(container.textContent?.split(words.linkedOrderStatus)).toHaveLength(3);
   }
 );
@@ -482,10 +485,15 @@ it.each(['en', 'fa'] as const)('shows an exact stated contract value in %s', asy
     api(detail({ version: version({ content: { title: 'Terms', commercialValue } }) }))
   );
   await render(<ContractsPage />);
-  expect(container.textContent).toContain(`${words.statedContractValue}: 9007199254740993 IRR`);
+  const listValue = [...container.querySelectorAll('li p')].find(
+    (label) => label.textContent === words.statedContractValue
+  );
+  expect(listValue?.nextElementSibling?.textContent).toBe('9007199254740993 IRR');
   await click(`${words.electricity} · ${words.version} ${(2).toLocaleString(locale)}`);
-  expect(container.textContent?.split(words.statedContractValue)).toHaveLength(3);
-  expect(container.textContent?.split('9007199254740993 IRR')).toHaveLength(3);
+  const detailValue = [...container.querySelectorAll('dt')].find(
+    (term) => term.textContent === words.statedContractValue
+  );
+  expect(detailValue?.nextElementSibling?.textContent).toBe('9007199254740993 IRR');
 });
 it('labels a variable contract price with its stated rule', async () => {
   const commercialValue = { kind: 'variable', description: 'Indexed to delivered kWh' };
@@ -494,8 +502,11 @@ it('labels a variable contract price with its stated rule', async () => {
     api(detail({ version: version({ content: { title: 'Terms', commercialValue } }) }))
   );
   await render(<ContractsPage />);
-  expect(container.textContent).toContain(
-    `${en.statedContractValue}: ${en.variableContractValue}: Indexed to delivered kWh`
+  const label = [...container.querySelectorAll('li p')].find(
+    (element) => element.textContent === en.statedContractValue
+  );
+  expect(label?.nextElementSibling?.textContent).toBe(
+    `${en.variableContractValue}: Indexed to delivered kWh`
   );
 });
 it.each(['en', 'fa'] as const)(
@@ -517,8 +528,15 @@ it.each(['en', 'fa'] as const)(
       )
     );
     await render(<ContractsPage />);
-    expect(container.textContent).toContain(`${words.serviceStartsAt}: 2026-10-01T00:00:00Z`);
-    expect(container.textContent).toContain(`${words.serviceEndsAt}: 2027-10-01T00:00:00Z`);
+    const terms = [...container.querySelectorAll('dt')];
+    expect(
+      terms.find((term) => term.textContent === words.serviceStartsAt)?.nextElementSibling
+        ?.textContent
+    ).toBe('2026-10-01T00:00:00Z');
+    expect(
+      terms.find((term) => term.textContent === words.serviceEndsAt)?.nextElementSibling
+        ?.textContent
+    ).toBe('2027-10-01T00:00:00Z');
     expect(container.textContent).toContain(`${words.initialInvoiceAmount}: 125000 IRR`);
     expect(container.querySelector(`a[href="/invoices/${invoiceId}"]`)?.textContent).toBe(
       words.openInitialInvoice

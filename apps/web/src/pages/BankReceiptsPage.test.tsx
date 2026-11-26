@@ -95,7 +95,7 @@ it.each(['en', 'fa'] as const)(
     vi.stubGlobal('fetch', fetcher);
     await act(async () => renderReceipt(<BankReceiptsPage />));
     expect(host.textContent).toContain('Bank Mellat');
-    expect(host.textContent).toContain(firstReceipt.invoiceId);
+    expect(host.textContent).toContain(firstReceipt.receiptId);
     expect(
       host.querySelector(
         `a[href="/invoices/${firstReceipt.invoiceId}/receipts/${firstReceipt.receiptId}"]`
@@ -109,8 +109,12 @@ it.each(['en', 'fa'] as const)(
     expect(older).toBeDefined();
     await act(async () => older!.click());
     expect(host.querySelectorAll('ul > li')).toHaveLength(2);
-    expect(host.textContent).toContain(secondReceipt.invoiceId);
-    expect(host.textContent).toContain(locale === 'en' ? 'Not provided' : 'ثبت نشده');
+    expect(host.textContent).toContain(secondReceipt.receiptId);
+    expect(
+      host.querySelector(
+        `a[href="/invoices/${secondReceipt.invoiceId}/receipts/${secondReceipt.receiptId}"]`
+      )?.textContent
+    ).toBe(locale === 'en' ? 'View receipt' : 'مشاهده رسید');
 
     await act(async () => renderReceipt(<BankReceiptsPage statuses={['Rejected']} />));
     expect(fetcher.mock.calls.some(([url]) => String(url).includes('statuses=Rejected'))).toBe(

@@ -138,8 +138,12 @@ for (const view of ['table', 'card'] as const)
       await click('Approved.pdf');
       expect(onSelect).toHaveBeenCalledWith('4');
       expect(fetcher).not.toHaveBeenCalled();
-      if (view === 'table') expect(container.querySelectorAll('th[scope="col"]')).toHaveLength(6);
-      else expect(container.querySelectorAll('dl')).toHaveLength(8);
+      if (view === 'table') {
+        expect(container.querySelectorAll('th[scope="col"]')).toHaveLength(4);
+        expect(container.querySelectorAll('tbody tr')).toHaveLength(8);
+      } else {
+        expect(container.querySelectorAll('[data-slot="document-records"] li')).toHaveLength(8);
+      }
     });
 it('gives all known statuses meaningful badges and handles an unknown status safely', async () => {
   await act(async () =>
