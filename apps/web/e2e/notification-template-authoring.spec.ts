@@ -5,8 +5,31 @@ import { t } from '@barghsa/i18n/admin-ui';
 import { notificationFormText } from '@barghsa/i18n/notification-forms';
 test.use({ viewport: { width: 390, height: 844 } });
 
+test('new notification drafts inherit delivery filters from the catalogue', async ({ page }) => {
+  await crmShell(page, 'fa');
+  await page.route(
+    (url) => url.pathname === '/api/admin/notifications/templates',
+    (route) => route.fulfill({ json: [] })
+  );
+  await page.goto('/admin/notifications?eventKey=payment.invoice_reminder&channel=sms&locale=fa');
+  await page
+    .getByRole('link', { name: t('admin.notifications.newTemplate', 'fa'), exact: true })
+    .click();
+  await expect(page).toHaveURL(/\/admin\/notifications\/new\?/);
+  const event = page.locator('#notification-template-eventKey');
+  await expect(event).toHaveValue('payment.invoice_reminder');
+  await expect(page.locator('#notification-template-channel')).toHaveValue('sms');
+  await expect(page.locator('#notification-template-locale')).toHaveValue('fa');
+  await expect(page.locator('#notification-template-subject')).toHaveCount(0);
+  await event.selectOption('contract.signed');
+  await page
+    .getByRole('button', { name: t('admin.notifications.refresh', 'fa'), exact: true })
+    .click();
+  await expect(event).toHaveValue('contract.signed');
+});
+
 for (const locale of ['en', 'fa'] as const) {
-  test(`template authoring supports new event keys, native variable drag and keyboard insertion (${locale})`, async ({
+  test(`template authoring supports registered and custom events, native drag and keyboard insertion (${locale})`, async ({
     page,
     baseURL,
   }) => {
@@ -23,7 +46,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route('**/api/admin/notifications/templates', (route) => {
       if (route.request().method() === 'GET') return route.fulfill({ json: saved ? [saved] : [] });
       const body = route.request().postDataJSON();
-      expect(body.eventKey).toBe('auth.refresh_token_reused');
+      expect(body.eventKey).toBe('billing.installment_ready');
       expect(body.subject).toBe('Notice for {{user.name}}');
       expect(body.bodyTemplate).toBe('Hello {{user.name}}');
       expect(body.variables).toEqual([{ name: 'user.name', description }]);
@@ -56,7 +79,15 @@ for (const locale of ['en', 'fa'] as const) {
       'aria-required',
       'true'
     );
-    await editor.locator('#notification-template-eventKey').fill('auth.refresh_token_reused');
+    const event = editor.locator('#notification-template-eventKey');
+    await expect(event).toHaveValue('');
+    await event.selectOption('auth.refresh_token_reused');
+    await expect(event).toHaveValue('auth.refresh_token_reused');
+    await event.selectOption({ label: notificationFormText('customEvent', locale) });
+    await expect(event).toHaveAccessibleDescription(
+      notificationFormText('customEventHelp', locale)
+    );
+    await event.fill('billing.installment_ready');
     const channel = editor.locator('#notification-template-channel');
     const title = editor.locator('#notification-template-subject');
     await channel.selectOption('in_app');
@@ -78,7 +109,9 @@ for (const locale of ['en', 'fa'] as const) {
     await body.fill('Hello ');
     const variable = editor.getByRole('button', { name: '{{user.name}}', exact: true });
     await expect(variable).toHaveAttribute('draggable', 'true');
-    await variable.dragTo(body);
+    await variable.scrollIntoViewIfNeeded();
+    await body.scrollIntoViewIfNeeded();
+    await variable.dragTo(body, { targetPosition: { x: 48, y: 20 } });
     await expect(body).toHaveValue(/\{\{user\.name\}\}/);
     expect((await body.inputValue()).match(/\{\{user\.name\}\}/g)).toHaveLength(1);
     await body.fill('Hello selected');
@@ -108,7 +141,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       page
         .getByRole('main')
-        .getByRole('heading', { name: 'auth.refresh_token_reused', exact: true })
+        .getByRole('heading', { name: 'billing.installment_ready', exact: true })
     ).toBeVisible();
     expect(saved).not.toBeNull();
   });
@@ -158,6 +191,12 @@ test('a new SMS omits the other channel’s title and an existing SMS can clear 
   await editor.locator('#notification-template-channel').selectOption('sms');
   await expect(title).toHaveCount(0);
   await body.fill('A new SMS');
+  await editor.locator('button[type=submit]').click();
+  const event = editor.locator('#notification-template-eventKey');
+  await expect(event).toHaveAttribute('aria-invalid', 'true');
+  await expect(event).toBeFocused();
+  expect(writes).toEqual([]);
+  await event.selectOption('payment.invoice_reminder');
   await editor.locator('button[type=submit]').click();
   await expect(editor).toHaveCount(0);
   await expect(page).toHaveURL(`/admin/notifications/${newId}`);

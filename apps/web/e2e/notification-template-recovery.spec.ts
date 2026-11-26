@@ -83,6 +83,7 @@ for (const locale of ['en', 'fa'] as const) {
     const editor = page
       .locator('form')
       .filter({ has: page.locator('#notification-template-eventKey') });
+    await editor.locator('#notification-template-eventKey').selectOption(template.eventKey);
     await editor.getByRole('button', { name: notificationFormText('addVariable', locale) }).click();
     await editor.locator('[data-variable-name]').fill('name');
     await editor.locator('[data-variable-description]').fill('Recipient');
@@ -115,6 +116,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page
       .getByRole('button', { name: t('admin.notifications.reset', locale), exact: true })
       .click();
+    await editor.locator('#notification-template-eventKey').selectOption(template.eventKey);
     await editor.locator('#notification-template-subject').fill(template.subject);
     await editor.locator('#notification-template-bodyTemplate').fill(template.bodyTemplate);
     await editor.locator('button[type=submit]').click();

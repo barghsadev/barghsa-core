@@ -14,6 +14,7 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 import { Link } from '@tanstack/react-router';
 import { useDestructiveConfirm } from '../hooks/useDestructiveConfirm.js';
 import {
+  NOTIFICATION_TYPE_REGISTRY,
   notificationSubjectRequiredForPublish,
   parseTemplateEventKey,
 } from '@barghsa/shared/notifications';
@@ -131,6 +132,8 @@ const KNOWN_EVENT_KEYS = [
   'support_ticket_resolved',
   'agent_assigned',
 ];
+const REGISTERED_EVENT_KEYS = Object.keys(NOTIFICATION_TYPE_REGISTRY).sort();
+const CUSTOM_EVENT_OPTION = 'custom event';
 
 const CHANNEL_OPTIONS: TemplateChannel[] = ['email', 'sms', 'in_app'];
 const LOCALE_OPTIONS: TemplateLocale[] = ['fa', 'en'];
@@ -229,6 +232,7 @@ function OwnedNotificationsPage({
   );
   const applyEditorErrors = useActionFieldErrors(editorForm.form, messages, messages.bodyTemplate);
   const [eventKey, setEventKey] = editorForm.field('eventKey');
+  const [customEventEntry, setCustomEventEntry] = useState(false);
   const [channel, setChannel] = editorForm.field('channel');
   const [locale, setLocale] = editorForm.field('locale');
   const [subject, setSubject] = editorForm.field('subject');
@@ -291,6 +295,16 @@ function OwnedNotificationsPage({
   const bodyRef = useRef<HTMLTextAreaElement | null>(null);
 
   const parsedVariables = normalizeNotificationVariables(variableRows);
+  const savedEventKeys = [
+    ...new Set([...KNOWN_EVENT_KEYS, ...templates.map((row) => row.eventKey)]),
+  ]
+    .filter((key) => !Object.hasOwn(NOTIFICATION_TYPE_REGISTRY, key))
+    .sort();
+  const showCustomEvent =
+    customEventEntry ||
+    (!!eventKey &&
+      !Object.hasOwn(NOTIFICATION_TYPE_REGISTRY, eventKey) &&
+      !savedEventKeys.includes(eventKey));
   const contentSignature = JSON.stringify([subject, bodyTemplate, parsedVariables]);
   const unsavedContent =
     contentSignature !== savedContent || notificationVariableIssues(variableRows).some(Boolean);
@@ -682,7 +696,16 @@ function OwnedNotificationsPage({
   function openCreate() {
     if (!ready || protectedAction || editorForm.isPending()) return;
     setEditBasis(null);
-    editorForm.form.reset({ ...emptyNotificationDraft, eventKey: KNOWN_EVENT_KEYS[0]! });
+    editorForm.form.reset({
+      ...emptyNotificationDraft,
+      eventKey: filterEventKey,
+      channel:
+        CHANNEL_OPTIONS.find((option) => option === filterChannel) ??
+        emptyNotificationDraft.channel,
+      locale:
+        LOCALE_OPTIONS.find((option) => option === filterLocale) ?? emptyNotificationDraft.locale,
+    });
+    setCustomEventEntry(false);
     subjectBeforeSms.current = '';
     setEditorUncertain(false);
     editorGeneration.current++;
@@ -701,6 +724,7 @@ function OwnedNotificationsPage({
     if (!ready || protectedAction || editorForm.isPending()) return;
     setEditBasis(copy ? null : templateBasis(template));
     editorForm.form.reset(emptyNotificationDraft);
+    setCustomEventEntry(false);
     setEditorUncertain(false);
     editorGeneration.current++;
     resetEditorBusy();
@@ -1919,40 +1943,89 @@ function OwnedNotificationsPage({
                           )}
                         </dl>
                       ) : (
-                        <div className="grid min-w-0 gap-x-4 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
-                          <div className={`${recordEditorField} sm:col-span-2 lg:col-span-1`}>
-                            <Label htmlFor="notification-template-eventKey">
-                              {t('admin.notifications.eventKey', uiLocale)}{' '}
+                        <div className="grid min-w-0 grid-cols-2 gap-x-3 gap-y-2 sm:gap-x-4 lg:grid-cols-3">
+                          <div className={`${recordEditorField} col-span-2 lg:col-span-1`}>
+                            <Label
+                              htmlFor={
+                                showCustomEvent
+                                  ? 'notification-template-event-picker'
+                                  : 'notification-template-eventKey'
+                              }
+                            >
+                              {editorCopy('event')}{' '}
                               <span aria-hidden="true" className="text-destructive">
                                 *
                               </span>
                             </Label>
-                            <Input
-                              id="notification-template-eventKey"
-                              dir="ltr"
-                              {...editorForm.bind('eventKey')}
-                              list="notification-event-suggestions"
-                              value={eventKey}
-                              onChange={(e) => setEventKey(e.target.value)}
-                              className="w-full"
+                            <NativeSelect
+                              {...(!showCustomEvent ? editorForm.bind('eventKey') : {})}
+                              id={
+                                showCustomEvent
+                                  ? 'notification-template-event-picker'
+                                  : 'notification-template-eventKey'
+                              }
+                              value={showCustomEvent ? CUSTOM_EVENT_OPTION : eventKey}
+                              className="w-full min-w-0"
                               required
                               aria-required="true"
-                              maxLength={100}
-                              pattern="\S+"
-                            />
-                            {feedback('eventKey')}
-                            <datalist id="notification-event-suggestions">
-                              {[
-                                ...new Set([
-                                  ...KNOWN_EVENT_KEYS,
-                                  ...templates.map((template) => template.eventKey),
-                                ]),
-                              ]
-                                .sort()
-                                .map((key) => (
-                                  <option key={key} value={key} />
+                              onChange={(event) => {
+                                const value = event.target.value;
+                                setCustomEventEntry(value === CUSTOM_EVENT_OPTION);
+                                setEventKey(value === CUSTOM_EVENT_OPTION ? '' : value);
+                              }}
+                            >
+                              <option value="" disabled>
+                                {editorCopy('chooseEvent')}
+                              </option>
+                              <option value={CUSTOM_EVENT_OPTION}>
+                                {editorCopy('customEvent')}
+                              </option>
+                              <optgroup label={editorCopy('registeredEvents')}>
+                                {REGISTERED_EVENT_KEYS.map((key) => (
+                                  <option key={key} value={key}>
+                                    {key}
+                                  </option>
                                 ))}
-                            </datalist>
+                              </optgroup>
+                              <optgroup label={editorCopy('otherEvents')}>
+                                {savedEventKeys.map((key) => (
+                                  <option key={key} value={key}>
+                                    {key}
+                                  </option>
+                                ))}
+                              </optgroup>
+                            </NativeSelect>
+                            {showCustomEvent && (
+                              <div className="space-y-1 pt-2">
+                                <Label htmlFor="notification-template-eventKey">
+                                  {label('eventKey')}
+                                </Label>
+                                <Input
+                                  id="notification-template-eventKey"
+                                  dir="ltr"
+                                  {...editorForm.bind('eventKey')}
+                                  aria-describedby={[
+                                    'notification-custom-event-help',
+                                    editorForm.errors.eventKey && editorForm.errorId('eventKey'),
+                                  ]
+                                    .filter(Boolean)
+                                    .join(' ')}
+                                  value={eventKey}
+                                  onChange={(event) => setEventKey(event.target.value)}
+                                  required
+                                  aria-required="true"
+                                  maxLength={100}
+                                  pattern="\S+"
+                                />
+                                <p
+                                  id="notification-custom-event-help"
+                                  className="text-xs text-muted-foreground"
+                                >
+                                  {editorCopy('customEventHelp')}
+                                </p>
+                              </div>
+                            )}
+                            {feedback('eventKey')}
                           </div>
 
                           <div className={recordEditorField}>

@@ -227,6 +227,12 @@ it('keeps a saved template outside the applied event scope out of the catalogue 
     event.closest('form')!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
   await click('New Template');
+  const picker = host.querySelector<HTMLSelectElement>('#notification-template-eventKey')!;
+  expect(picker.value).toBe(notificationTemplate().eventKey);
+  await act(async () => {
+    picker.value = [...picker.options].find((option) => option.text === 'Custom event key')!.value;
+    picker.dispatchEvent(new Event('change', { bubbles: true }));
+  });
   await fill('eventKey', 'another.event');
   await fill('subject', 'Other saved subject');
   await fill('bodyTemplate', 'Other saved body');
