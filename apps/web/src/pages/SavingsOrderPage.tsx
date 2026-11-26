@@ -19,21 +19,12 @@ import { useWizardForm } from '../hooks/useWizardForm.js';
 import { z } from 'zod';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  LoadingStatus,
-  Button,
-  Card,
-  CardContent,
-  DependentSelect,
-  Input,
-  NativeSelect,
-  Textarea,
-} from '@barghsa/ui';
-import { ChevronDownIcon } from 'lucide-react';
+import { LoadingStatus, Button, Card, CardContent, Input, Textarea } from '@barghsa/ui';
 import { addressesText } from '@barghsa/i18n/addresses';
 import { validatePostalCode } from '@barghsa/shared/validation';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../components/GeographyLoadError.js';
+import { GeographyPicker } from '../components/GeographyPicker.js';
 import { t } from '@barghsa/i18n/app';
 import { useWizardStep } from '../hooks/useWizardStep.js';
 import { useWizardDraftProtection } from '../hooks/useWizardDraftProtection.js';
@@ -380,6 +371,8 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
       'aria-describedby': rejected || postal ? fields.errorId(name) : undefined,
     };
   }
+  const provinceField = bindAddressField('provinceId');
+  const cityField = bindAddressField('cityId');
   function addressFieldError(name: AddressDraftField) {
     return addressErrors.includes(name) ? (
       <p id={fields.errorId(name)} className="text-sm text-destructive">
@@ -1309,26 +1302,24 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                                 >
                                   {copy('province')}
                                 </label>
-                                <NativeSelect
+                                <GeographyPicker
                                   id="saving-address-province"
-                                  className="w-full"
-                                  {...bindAddressField('provinceId')}
-                                  value={provinceId}
+                                  kind="province"
+                                  locale={locale}
+                                  inputRef={provinceField.ref}
+                                  onBlur={provinceField.onBlur}
+                                  aria-invalid={provinceField['aria-invalid']}
+                                  aria-describedby={provinceField['aria-describedby']}
+                                  options={provinces}
+                                  selected={provinceId}
+                                  loading={provinceOptions.loading}
                                   disabled={savingAddress || !provinceOptions.ready}
-                                  onChange={(event) => {
-                                    setProvinceId(event.target.value);
+                                  onChange={(id) => {
+                                    if (id === provinceId) return;
+                                    setProvinceId(id);
                                     setCityId('');
                                   }}
-                                >
-                                  <option value="">
-                                    {t('settings.addresses.form.provincePlaceholder', locale)}
-                                  </option>
-                                  {provinces.map((item) => (
-                                    <option key={item.id} value={item.id}>
-                                      {locale === 'fa' ? item.nameFa : item.nameEn}
-                                    </option>
-                                  ))}
-                                </NativeSelect>
+                                />
                                 {addressFieldError('provinceId')}
                                 <GeographyLoadError
                                   {...provinceOptions}
@@ -1344,35 +1335,22 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                                 >
                                   {copy('city')}
                                 </label>
-                                <div className="relative">
-                                  <DependentSelect
-                                    id="saving-address-city"
-                                    className="h-11 appearance-none rounded-lg bg-transparent py-1 pe-8 ps-2.5"
-                                    dependencyValue={provinceId}
-                                    {...bindAddressField('cityId')}
-                                    value={cityId}
-                                    ready={cityOptions.ready}
-                                    loading={cityOptions.loading}
-                                    disabled={savingAddress}
-                                    options={cities.map((city) => ({
-                                      value: city.id,
-                                      label: locale === 'fa' ? city.nameFa : city.nameEn,
-                                      dependencyValue: city.provinceId ?? '',
-                                    }))}
-                                    placeholder={
-                                      !provinceId
-                                        ? addressesText('provinceFirst', locale)
-                                        : cityOptions.loading
-                                          ? addressesText('loadingCities', locale)
-                                          : t('settings.addresses.form.cityPlaceholder', locale)
-                                    }
-                                    onChange={(event) => setCityId(event.target.value)}
-                                  />
-                                  <ChevronDownIcon
-                                    aria-hidden="true"
-                                    className="pointer-events-none absolute end-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-                                  />
-                                </div>
+                                <GeographyPicker
+                                  key={provinceId}
+                                  id="saving-address-city"
+                                  kind="city"
+                                  locale={locale}
+                                  inputRef={cityField.ref}
+                                  onBlur={cityField.onBlur}
+                                  aria-invalid={cityField['aria-invalid']}
+                                  aria-describedby={cityField['aria-describedby']}
+                                  options={cities}
+                                  selected={cityId}
+                                  hasProvince={!!provinceId}
+                                  loading={cityOptions.loading}
+                                  disabled={savingAddress || !cityOptions.ready}
+                                  onChange={setCityId}
+                                />
                                 {addressFieldError('cityId')}
                                 <GeographyLoadError
                                   {...cityOptions}

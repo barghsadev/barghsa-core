@@ -423,7 +423,11 @@ for (const locale of ['en', 'fa'] as const)
     });
     await open(page, 'saving', locale);
     await page.getByRole('button', { name: tSaving('newAddress', locale), exact: true }).click();
-    await page.locator('#saving-address-province').selectOption(provinceId);
+    await selectAddressLocation(
+      page,
+      page.locator('#saving-address-province'),
+      locale === 'fa' ? 'تهران' : 'Tehran'
+    );
     const city = page.locator('#saving-address-city');
     await expect(page.getByTestId('saving-address-city-retry')).toBeVisible();
     await expect(city).toBeDisabled();
@@ -435,7 +439,11 @@ for (const locale of ['en', 'fa'] as const)
     await expect(save).toBeDisabled();
     valid = true;
     await page.getByTestId('saving-address-city-retry').click();
-    await city.selectOption(cityId);
+    await city.fill(locale === 'fa' ? 'Teh' : 'تهر');
+    const cityName = locale === 'fa' ? 'تهران' : 'Tehran';
+    await expect(page.getByRole('option', { name: cityName, exact: true })).toBeVisible();
+    await city.press('Enter');
+    await expect(city).toHaveValue(cityName);
     await save.click();
     await expect.poll(() => writes.length).toBe(1);
     await expect(page.getByLabel(tSaving('fullAddress', locale), { exact: true })).toHaveValue(
@@ -1143,3 +1151,4 @@ for (const locale of ['en', 'fa'] as const)
       }
     );
   }
+import { selectAddressLocation } from './address-location-fixture';

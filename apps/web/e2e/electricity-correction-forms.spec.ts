@@ -33,7 +33,8 @@ async function inspectForm(page: Page, form: Locator, testId: string) {
     (await new AxeBuilder({ page }).include(`[data-testid="${testId}"]`).analyze()).violations
   ).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  for (const field of await form.locator('input,textarea,select,button').all()) {
+  const controls = form.locator(':is(input,textarea,select,button):not([aria-hidden=true])');
+  for (const field of await controls.all()) {
     const bounds = await field.boundingBox();
     if (bounds) {
       expect(bounds.x).toBeGreaterThanOrEqual(0);

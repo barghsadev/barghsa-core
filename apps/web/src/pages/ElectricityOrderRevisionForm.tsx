@@ -24,17 +24,10 @@ import {
   type AriaAttributes,
 } from 'react';
 import { t } from '@barghsa/i18n/app';
-import {
-  Button,
-  DependentSelect,
-  Input,
-  LoadingStatus,
-  Textarea,
-  DateTimePicker,
-  NativeSelect,
-} from '@barghsa/ui';
+import { Button, Input, LoadingStatus, Textarea, DateTimePicker, NativeSelect } from '@barghsa/ui';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../components/GeographyLoadError.js';
+import { GeographyPicker } from '../components/GeographyPicker.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -896,32 +889,28 @@ export function ElectricityOrderRevisionForm({
                     <FormItem id="revision-province">
                       <FormLabel>{t('electricity.order.revision.province', locale)}</FormLabel>
                       <FormControl>
-                        <NativeSelect
-                          {...field}
-                          aria-required="true"
-                          className="w-full"
+                        <GeographyPicker
+                          kind="province"
+                          locale={locale}
+                          inputRef={field.ref}
+                          onBlur={field.onBlur}
+                          options={provinces}
+                          selected={provinceId}
+                          savedLabel={
+                            provinceId && provinceId === order.provinceId
+                              ? t('electricity.order.revision.currentProvince', locale)
+                              : undefined
+                          }
+                          loading={provinceOptions.loading}
                           disabled={locked || !provinceOptions.ready}
-                          onChange={(event) => {
-                            field.onChange(event);
+                          onChange={(id) => {
+                            if (id === provinceId) return;
+                            field.onChange(id);
                             form.setValue('cityId', '', {
                               shouldValidate: !!form.formState.touchedFields.cityId,
                             });
                           }}
-                        >
-                          <option value="">
-                            {t('settings.addresses.form.provincePlaceholder', locale)}
-                          </option>
-                          {!provinces.some((place) => place.id === provinceId) && provinceId ? (
-                            <option value={provinceId}>
-                              {t('electricity.order.revision.currentProvince', locale)}
-                            </option>
-                          ) : null}
-                          {provinces.map((place) => (
-                            <option key={place.id} value={place.id}>
-                              {locale === 'fa' ? place.nameFa : place.nameEn}
-                            </option>
-                          ))}
-                        </NativeSelect>
+                        />
                       </FormControl>
                       {fieldFeedback}
                     </FormItem>
@@ -934,25 +923,23 @@ export function ElectricityOrderRevisionForm({
                     <FormItem id="revision-city">
                       <FormLabel>{t('electricity.order.revision.city', locale)}</FormLabel>
                       <FormControl>
-                        <DependentSelect
-                          {...field}
-                          aria-required="true"
-                          className="w-full rounded-md border bg-background p-2 pointer-coarse:h-11"
-                          disabled={locked}
-                          dependencyValue={provinceId}
-                          ready={cityOptions.ready}
+                        <GeographyPicker
+                          key={provinceId}
+                          kind="city"
+                          locale={locale}
+                          inputRef={field.ref}
+                          onBlur={field.onBlur}
+                          options={cities}
+                          selected={cityId}
+                          hasProvince={!!provinceId}
+                          savedLabel={
+                            cityId && cityId === order.cityId && provinceId === order.provinceId
+                              ? t('electricity.order.revision.currentCity', locale)
+                              : undefined
+                          }
                           loading={cityOptions.loading}
-                          placeholder={t('electricity.order.revision.selectCity', locale)}
-                          options={cities.map((city) => ({
-                            value: city.id,
-                            label: locale === 'fa' ? city.nameFa : city.nameEn,
-                            dependencyValue: city.provinceId ?? '',
-                          }))}
-                          savedOption={{
-                            value: order.cityId,
-                            label: t('electricity.order.revision.currentCity', locale),
-                            dependencyValue: order.provinceId,
-                          }}
+                          disabled={locked || !cityOptions.ready}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       {fieldFeedback}

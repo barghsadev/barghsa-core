@@ -1,4 +1,5 @@
 import { approveVisibleConfirmation } from '../test/confirmation.js';
+import { fireEvent, within } from '@testing-library/dom';
 import { QueryProvider } from '../test/query-provider.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -38,12 +39,13 @@ afterEach(async () => {
   host.remove();
   vi.unstubAllGlobals();
 });
-async function select(index: number, value: string) {
-  const element = host.querySelectorAll('select')[index]!;
-  await act(async () => {
-    element.value = value;
-    element.dispatchEvent(new Event('change', { bubbles: true }));
-  });
+const city = () => host.querySelector<HTMLInputElement>('#revision-city')!;
+async function select(id: string, name: string) {
+  const input = host.querySelector<HTMLInputElement>(id)!;
+  await act(async () => input.focus());
+  fireEvent.keyDown(input, { key: 'ArrowDown' });
+  const option = await within(document.body).findByRole('option', { name });
+  await act(async () => fireEvent.click(option));
 }
 async function note() {
   const element = host.querySelector('textarea')!;
@@ -89,8 +91,8 @@ it('blocks a changed province until its bound city list recovers and preserves a
     )
   );
   await note();
-  await select(1, 'p2');
-  expect(host.querySelectorAll('select')[2]!.disabled).toBe(true);
+  await select('#revision-province', 'Two');
+  expect(city().disabled).toBe(true);
   expect(preview().disabled).toBe(true);
   await approveVisibleConfirmation();
   await act(async () =>
@@ -104,7 +106,7 @@ it('blocks a changed province until its bound city list recovers and preserves a
   await act(async () =>
     host.querySelector<HTMLButtonElement>('[data-testid=electricity-revision-city-retry]')!.click()
   );
-  await select(2, 'c2');
+  await select('#revision-city', 'City two');
   expect(preview().disabled).toBe(false);
   expect(
     [...host.querySelectorAll('input')].some((element) => element.value === 'Retained address')
@@ -137,6 +139,6 @@ it('allows review of an unchanged historical address while geography is unavaila
     )
   );
   await note();
-  expect(host.querySelectorAll('select')[2]!.value).toBe('c1');
+  expect(city().value).toBe('Current city');
   expect(preview().disabled).toBe(false);
 });

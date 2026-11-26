@@ -739,9 +739,9 @@ for (const locale of ['en', 'fa'] as const)
     await page.getByRole('button', { name: savingCopy('verifyBill', locale) }).click();
     await page.getByRole('button', { name: savingCopy('newAddress', locale), exact: true }).click();
     const province = page.locator('#saving-address-province');
-    await province.selectOption(provinceId);
+    await selectAddressLocation(page, province, locale === 'fa' ? 'استان' : 'Province');
     const city = page.locator('#saving-address-city');
-    await city.selectOption(cityId);
+    await selectAddressLocation(page, city, locale === 'fa' ? 'شهر' : 'City');
     if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
       const { width, height } = (await city.boundingBox())!;
       expect(width).toBeGreaterThanOrEqual(44);
@@ -1144,3 +1144,4 @@ for (const locale of ['en', 'fa'] as const)
       savingCopy('installation_and_document_upload', locale)
     );
   });
+import { selectAddressLocation } from './address-location-fixture';

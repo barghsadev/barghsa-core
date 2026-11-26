@@ -2,6 +2,7 @@ import { selectAddressLocation } from './address-location-fixture';
 import { createRequire } from 'node:module';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { confirmationText } from '@barghsa/i18n/confirmation';
+import { addressesText } from '@barghsa/i18n/addresses';
 import { verifyClippedContrast } from './clipped-contrast';
 import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
 import { DEFAULT_VERIFICATION_POLICY } from '@barghsa/shared/verification';
@@ -96,26 +97,30 @@ for (const locale of ['en', 'fa']) {
     const message = t('formWizard.invalidField', locale);
     await save.click();
     await expect(province).toBeFocused();
-    for (const field of [province, address, postal]) {
+    for (const field of [province, address]) {
       await expect(field).toHaveAttribute('aria-invalid', 'true');
       await expect(field).toHaveAccessibleDescription(message);
     }
+    await expect(postal).toHaveAttribute('aria-invalid', 'true');
+    await expect(postal).toHaveAccessibleDescription(addressesText('postalCodeFormat', locale));
     await expect(city).toBeDisabled();
     await expect(city).not.toHaveAttribute('aria-invalid', 'true');
     expect(writes).toHaveLength(0);
-    await province.selectOption('province');
+    await selectAddressLocation(page, province, locale === 'fa' ? 'استان' : 'Province');
     await expect(city).toBeEnabled();
     await save.click();
     await expect(city).toBeFocused();
     await expect(city).toHaveAccessibleDescription(message);
     expect(writes).toHaveLength(0);
-    await city.selectOption('city');
+    await selectAddressLocation(page, city, locale === 'fa' ? 'شهر' : 'City');
     await address.fill('Saved delivery address');
     await postal.fill('1234567890');
     for (const field of [province, city, address, postal]) {
       await expect(field).not.toHaveAttribute('aria-invalid', 'true');
-      await expect(field).not.toHaveAttribute('aria-describedby');
     }
+    for (const field of [province, city, address])
+      await expect(field).not.toHaveAttribute('aria-describedby');
+    await expect(postal).toHaveAccessibleDescription(addressesText('postalCodeFormat', locale));
     try {
       await save.evaluate((button: HTMLButtonElement) => {
         button.click();
@@ -453,35 +458,42 @@ for (const locale of ['en', 'fa']) {
       .getByRole('link', { name: locale === 'fa' ? 'افزودن آدرس' : 'Add Address', exact: true })
       .click();
     const dialog = page.locator('[data-slot=settings-address-form]');
-    const province = dialog.getByRole('combobox').nth(0);
-    const city = dialog.getByRole('combobox').nth(1);
-    await province.selectOption(provinceOne);
+    const province = dialog.locator('#addresses-field-1');
+    const city = dialog.locator('#addresses-field-2');
+    const provinceName = locale === 'fa' ? 'یک' : 'One';
+    const cityName = locale === 'fa' ? 'شهر یک' : 'City One';
+    await selectAddressLocation(page, province, provinceName);
     await expect(city).toBeEnabled();
-    await city.selectOption(cityOne);
-    await province.selectOption(provinceTwo);
+    await selectAddressLocation(page, city, cityName);
+    await selectAddressLocation(page, province, locale === 'fa' ? 'دو' : 'Two');
     await expect(city).toHaveValue('');
     await expect(city).toBeDisabled();
     await expect.poll(() => !!delayed).toBe(true);
     fail = true;
-    await province.selectOption(provinceOne);
-    await expect(dialog.getByRole('alert')).toContainText(
-      locale === 'fa' ? 'بارگذاری شهرها با خطا مواجه شد' : 'Failed to load cities'
-    );
+    await selectAddressLocation(page, province, provinceName);
+    await expect(
+      dialog.getByRole('alert').filter({
+        hasText: locale === 'fa' ? 'بارگذاری شهرها با خطا مواجه شد' : 'Failed to load cities',
+      })
+    ).toBeVisible();
     fail = false;
     await dialog
       .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again' })
       .click();
     await expect(city).toBeEnabled();
-    await city.selectOption(cityOne);
+    await selectAddressLocation(page, city, cityName);
     // The earlier request may already have been cancelled by AbortController.
     await delayed!
       .fulfill({
         json: [{ id: cityTwo, provinceId: provinceTwo, nameFa: 'شهر دو', nameEn: 'City Two' }],
       })
       .catch(() => {});
-    await expect(city).toHaveValue(cityOne);
-    await expect(city.getByRole('option')).toHaveCount(2);
-    await expect(province).toHaveValue(provinceOne);
+    await expect(city).toHaveValue(cityName);
+    await city.fill(locale === 'fa' ? 'City' : 'شهر');
+    await expect(page.getByRole('option')).toHaveCount(1);
+    await expect(page.getByRole('option', { name: cityName, exact: true })).toBeVisible();
+    await city.press('Escape');
+    await expect(province).toHaveValue(provinceName);
   });
 }
 
@@ -2686,26 +2698,32 @@ for (const locale of ['en', 'fa']) {
         .click();
       const province = page.locator('#order-address-province');
       const city = page.locator('#order-address-city');
-      await province.selectOption('b');
-      await city.selectOption('city-b');
+      await selectAddressLocation(page, province, 'b');
+      await selectAddressLocation(page, city, 'city-b');
       const backgroundResponse = page.waitForResponse('**/api/geography/provinces/a/cities');
       releaseBackground();
       await backgroundResponse;
       await expect(city).toHaveValue('city-b');
-      await expect(city.locator('option[value="city-a"]')).toHaveCount(0);
-      await province.selectOption('c');
+      await city.fill('city-');
+      await expect(page.getByRole('option')).toHaveCount(1);
+      await expect(page.getByRole('option', { name: 'city-b', exact: true })).toBeVisible();
+      await city.press('Escape');
+      await selectAddressLocation(page, province, 'c');
       await expect.poll(() => obsoleteStarted).toBe(true);
       await expect(city).toHaveValue('');
       const obsoleteCancelled = page.waitForEvent('requestfailed', {
         predicate: (request) =>
           new URL(request.url()).pathname === '/api/geography/provinces/c/cities',
       });
-      await province.selectOption('b');
-      await city.selectOption('city-b');
+      await selectAddressLocation(page, province, 'b');
+      await selectAddressLocation(page, city, 'city-b');
       await obsoleteCancelled;
       releaseObsolete();
       await expect(city).toHaveValue('city-b');
-      await expect(city.locator('option[value="city-c"]')).toHaveCount(0);
+      await city.fill('city-');
+      await expect(page.getByRole('option')).toHaveCount(1);
+      await expect(page.getByRole('option', { name: 'city-b', exact: true })).toBeVisible();
+      await city.press('Escape');
     } finally {
       releaseBackground();
       releaseObsolete();
@@ -2927,7 +2945,7 @@ for (const locale of ['en', 'fa']) {
         .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
         .click();
     }
-    await province.selectOption('province');
+    await selectAddressLocation(page, province, locale === 'fa' ? 'استان' : 'Province');
     for (let attempt = 0; attempt < 2; attempt++) {
       const alert = page.getByRole('main').getByRole('alert');
       await expect(alert).toContainText(
@@ -2941,8 +2959,9 @@ for (const locale of ['en', 'fa']) {
         .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
         .click();
     }
-    await city.selectOption('city');
-    await expect(city).toHaveValue('city');
+    const cityName = locale === 'fa' ? 'شهر' : 'City';
+    await selectAddressLocation(page, city, cityName);
+    await expect(city).toHaveValue(cityName);
     await expect(page.getByRole('main').getByRole('alert')).toHaveCount(0);
     expect(provinces).toBe(3);
     expect(cities).toBe(3);

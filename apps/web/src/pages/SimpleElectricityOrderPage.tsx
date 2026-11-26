@@ -29,27 +29,19 @@ import { t } from '@barghsa/i18n/workspace';
 import { addressFormText, addressesText } from '@barghsa/i18n/addresses';
 import { validatePostalCode } from '@barghsa/shared/validation';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
-import {
-  MapPinIcon,
-  PlusIcon,
-  Loader2Icon,
-  CheckIcon,
-  HomeIcon,
-  PackageIcon,
-  ChevronDownIcon,
-} from 'lucide-react';
+import { MapPinIcon, PlusIcon, Loader2Icon, CheckIcon, HomeIcon, PackageIcon } from 'lucide-react';
 import {
   SkeletonText,
   LoadingStatus,
   Button,
   Card,
   CardContent,
-  DependentSelect,
   Input,
   NativeSelect,
   Textarea,
 } from '@barghsa/ui';
 import { useGeographyOptions, loadGeographyOptions } from '../hooks/useGeographyOptions.js';
+import { GeographyPicker } from '../components/GeographyPicker.js';
 import { useWizardStep } from '../hooks/useWizardStep.js';
 import { electricityOrderReceipt } from '../lib/form-receipt.js';
 import {
@@ -907,6 +899,9 @@ function OwnedSimpleElectricityOrderPage() {
       'aria-describedby': invalid || name === 'formPostalCode' ? fields.errorId(name) : undefined,
     };
   }
+
+  const provinceField = bindAddressField('formProvinceId');
+  const cityField = bindAddressField('formCityId');
 
   function addressFieldError(name: AddressField) {
     if (name === 'formPostalCode') {
@@ -2020,29 +2015,24 @@ function OwnedSimpleElectricityOrderPage() {
                                     >
                                       {addressFormText('settings.addresses.form.province', locale)}
                                     </label>
-                                    <NativeSelect
+                                    <GeographyPicker
                                       id="order-address-province"
-                                      {...bindAddressField('formProvinceId')}
-                                      disabled={loadingProvinces || provinceError || savingAddress}
-                                      value={formProvinceId}
-                                      onChange={(e) => {
-                                        setFormProvinceId(e.target.value);
+                                      kind="province"
+                                      locale={locale}
+                                      inputRef={provinceField.ref}
+                                      onBlur={provinceField.onBlur}
+                                      aria-invalid={provinceField['aria-invalid']}
+                                      aria-describedby={provinceField['aria-describedby']}
+                                      options={provinces}
+                                      selected={formProvinceId}
+                                      loading={loadingProvinces}
+                                      disabled={!provinceOptions.ready || savingAddress}
+                                      onChange={(id) => {
+                                        if (id === formProvinceId) return;
+                                        setFormProvinceId(id);
                                         setFormCityId('');
                                       }}
-                                      className="w-full"
-                                    >
-                                      <option value="">
-                                        {addressFormText(
-                                          'settings.addresses.form.provincePlaceholder',
-                                          locale
-                                        )}
-                                      </option>
-                                      {provinces.map((p) => (
-                                        <option key={p.id} value={p.id}>
-                                          {locale === 'fa' ? p.nameFa : p.nameEn}
-                                        </option>
-                                      ))}
-                                    </NativeSelect>
+                                    />
                                     {addressFieldError('formProvinceId')}
                                   </div>
 
@@ -2053,38 +2043,22 @@ function OwnedSimpleElectricityOrderPage() {
                                     >
                                       {addressFormText('settings.addresses.form.city', locale)}
                                     </label>
-                                    <div className="relative">
-                                      <DependentSelect
-                                        id="order-address-city"
-                                        {...bindAddressField('formCityId')}
-                                        dependencyValue={formProvinceId}
-                                        value={formCityId}
-                                        ready={cityOptions.ready}
-                                        loading={cityOptions.loading}
-                                        options={cities.map((city) => ({
-                                          value: city.id,
-                                          label: locale === 'fa' ? city.nameFa : city.nameEn,
-                                          dependencyValue: city.provinceId ?? '',
-                                        }))}
-                                        placeholder={
-                                          !formProvinceId
-                                            ? addressesText('provinceFirst', locale)
-                                            : loadingCities
-                                              ? addressesText('loadingCities', locale)
-                                              : addressFormText(
-                                                  'settings.addresses.form.cityPlaceholder',
-                                                  locale
-                                                )
-                                        }
-                                        onChange={(e) => setFormCityId(e.target.value)}
-                                        disabled={savingAddress}
-                                        className="h-11 appearance-none rounded-lg bg-transparent py-1 pe-8 ps-2.5"
-                                      />
-                                      <ChevronDownIcon
-                                        aria-hidden="true"
-                                        className="pointer-events-none absolute end-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-                                      />
-                                    </div>
+                                    <GeographyPicker
+                                      key={formProvinceId}
+                                      id="order-address-city"
+                                      kind="city"
+                                      locale={locale}
+                                      inputRef={cityField.ref}
+                                      onBlur={cityField.onBlur}
+                                      aria-invalid={cityField['aria-invalid']}
+                                      aria-describedby={cityField['aria-describedby']}
+                                      options={cities}
+                                      selected={formCityId}
+                                      hasProvince={!!formProvinceId}
+                                      loading={loadingCities}
+                                      disabled={!cityOptions.ready || savingAddress}
+                                      onChange={setFormCityId}
+                                    />
                                     {addressFieldError('formCityId')}
                                   </div>
                                 </div>

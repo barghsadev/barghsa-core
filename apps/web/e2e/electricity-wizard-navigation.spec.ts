@@ -90,7 +90,11 @@ for (const locale of ['en', 'fa'] as const)
       .click();
     for (const id of ['province', 'city', 'fullAddress', 'postalCode'])
       await expect(page.locator(`#order-address-${id}`)).toHaveAttribute('aria-required', 'true');
-    await page.locator('#order-address-province').selectOption(provinceId);
+    await selectAddressLocation(
+      page,
+      page.locator('#order-address-province'),
+      locale === 'fa' ? 'فارس' : 'Fars'
+    );
     const city = page.locator('#order-address-city');
     await expect(city).toBeDisabled();
     const error = page
@@ -103,7 +107,11 @@ for (const locale of ['en', 'fa'] as const)
     await postalCode.fill(locale === 'fa' ? '۰۳۴۵۶۷۸۹۰۱' : '0345678901');
     valid = true;
     await error.getByRole('button').click();
-    await city.selectOption(cityId);
+    await city.fill(locale === 'fa' ? 'Shir' : 'شیر');
+    const cityName = locale === 'fa' ? 'شیراز' : 'Shiraz';
+    await expect(page.getByRole('option', { name: cityName, exact: true })).toBeVisible();
+    await city.press('Enter');
+    await expect(city).toHaveValue(cityName);
     await expect(page.locator('#order-address-fullAddress')).toHaveValue('Retained power address');
     const saveAddress = page.getByRole('button', {
       name: t('electricity.order.saveAndUse', locale),

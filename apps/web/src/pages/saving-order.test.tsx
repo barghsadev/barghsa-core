@@ -1,4 +1,5 @@
 import { QueryProvider } from '../test/query-provider.js';
+import { fireEvent, within } from '@testing-library/dom';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -346,6 +347,14 @@ for (const locale of ['en', 'fa'] as const)
           );
         });
       }
+      async function selectLocation(id: string, name: string) {
+        const input = container.querySelector<HTMLInputElement>(id)!;
+        await vi.waitFor(() => expect(input.disabled).toBe(false));
+        await act(async () => input.focus());
+        fireEvent.keyDown(input, { key: 'ArrowDown' });
+        const option = await within(document.body).findByRole('option', { name });
+        await act(async () => fireEvent.click(option));
+      }
       try {
         await act(async () =>
           root.render(
@@ -366,18 +375,8 @@ for (const locale of ['en', 'fa'] as const)
         const review = () => button(tSaving('stepReview', locale));
         expect(review().disabled).toBe(true);
         await act(async () => button(tSaving('newAddress', locale)).click());
-        await vi.waitFor(() =>
-          expect(
-            container.querySelector<HTMLSelectElement>('#saving-address-province')!.disabled
-          ).toBe(false)
-        );
-        await value('#saving-address-province', provinceId);
-        await vi.waitFor(() =>
-          expect(container.querySelector<HTMLSelectElement>('#saving-address-city')!.disabled).toBe(
-            false
-          )
-        );
-        await value('#saving-address-city', cityId);
+        await selectLocation('#saving-address-province', locale === 'fa' ? 'استان' : 'Province');
+        await selectLocation('#saving-address-city', locale === 'fa' ? 'شهر' : 'City');
         await value('#saving-address-full', address.fullAddress);
         await value('input[name=postalCode]', address.postalCode);
         await act(async () => button(tSaving('saveAddress', locale)).click());
