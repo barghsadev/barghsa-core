@@ -1423,7 +1423,10 @@ it.each([
     )
   );
   await setInput(host.querySelector<HTMLInputElement>('#correction-reason')!, 'Correct amount');
-  await setInput(host.querySelector<HTMLInputElement>('#correction-amount')!, '-100');
+  await act(async () =>
+    host.querySelector<HTMLInputElement>('input[name=correction-direction][value=credit]')!.click()
+  );
+  await setInput(host.querySelector<HTMLInputElement>('#correction-amount')!, '100');
   await approveVisibleConfirmation();
   await act(async () => host.querySelector<HTMLButtonElement>('button[type=submit]')!.click());
   const confirm = Array.from(

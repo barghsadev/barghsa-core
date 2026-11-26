@@ -2,7 +2,7 @@ const fa: Record<string, string> = {
   'admin.manualInvoice.profileInvalid': 'پروفایل مشتری را انتخاب کنید.',
   'admin.manualInvoice.reasonInvalid': 'شرحی بین ۱ تا ۱٬۰۰۰ نویسه وارد کنید.',
   'admin.manualInvoice.amountInvalid':
-    'مبلغ بدهکار یا بستانکار را به ریال و به‌صورت عدد صحیح غیرصفر در محدوده مجاز وارد کنید.',
+    'مبلغ را به ریال و به‌صورت عدد صحیح مثبت در محدوده مجاز وارد کنید.',
   'admin.manualInvoice.linesInvalid':
     'بین ۱ تا ۱۰۰ ردیف معتبر با جمع مثبت و در محدوده مبلغ مجاز ریال وارد کنید.',
   'admin.manualInvoice.descriptionInvalid': 'شرحی بین ۱ تا ۱٬۰۰۰ نویسه وارد کنید.',
@@ -86,7 +86,7 @@ const en: Record<string, string> = {
   'admin.manualInvoice.profileInvalid': 'Choose a customer profile.',
   'admin.manualInvoice.reasonInvalid': 'Enter an explanation of 1 to 1,000 characters.',
   'admin.manualInvoice.amountInvalid':
-    'Enter a nonzero whole-IRR charge or credit within the supported range.',
+    'Enter a positive whole amount in rials within the supported range.',
   'admin.manualInvoice.linesInvalid':
     'Add 1 to 100 valid lines with a positive total within the supported IRR range.',
   'admin.manualInvoice.descriptionInvalid': 'Enter a description of 1 to 1,000 characters.',

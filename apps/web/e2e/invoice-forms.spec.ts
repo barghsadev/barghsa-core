@@ -305,10 +305,16 @@ for (const locale of ['fa', 'en'] as const)
         adjust = panel.getByRole('button', { name: c('adjustmentIssue'), exact: true });
       await reason.fill('  Credit explanation  ');
       await amount.fill('-۲۵');
+      const previewsBeforeAmount = previews.length;
+      await adjust.click();
+      await expect(amount).toBeFocused();
+      expect(previews).toHaveLength(previewsBeforeAmount);
+      await panel.getByRole('radio', { name: c('creditAdjustment'), exact: true }).check();
+      await amount.fill('۲۵');
       await adjust.click();
       await expect(amount).toHaveAttribute('aria-invalid', 'true');
       await expect(amount).toBeFocused();
-      await expect(amount).toHaveValue('-۲۵');
+      await expect(amount).toHaveValue('۲۵');
       await expect(reason).toHaveValue('  Credit explanation  ');
       expect(previews.at(-1)).toEqual({
         kind: 'adjustment',
@@ -330,7 +336,7 @@ for (const locale of ['fa', 'en'] as const)
       );
       if (locale === 'fa' && darkMode && test.info().project.name === 'mobile-safari')
         await page.screenshot({ path: '/tmp/barghsa-invoice-forms-fa-dark-mobile.png' });
-      await amount.fill('-۳۰');
+      await amount.fill('۳۰');
       reviewStatus = 403;
       await adjust.click();
       await expect(panel.getByRole('alert')).toContainText(c('denied'));

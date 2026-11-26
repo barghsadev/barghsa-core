@@ -10,12 +10,23 @@ export interface InvoiceDraftValues {
   profileId: string;
   reason: string;
   amount: string;
+  direction: 'charge' | 'credit';
   lines: Record<string, InvoiceDraftLine>;
   lineOrder: string[];
 }
 export const maxInvoiceIrr = 9_223_372_036_854_775_807n;
 export function invoiceDigits(value: string): string {
   return normalizeProfileDigits(value).replace('٫', '.');
+}
+export function invoiceAdjustmentAmount(
+  value: string,
+  direction: InvoiceDraftValues['direction']
+): bigint | null {
+  const amount = invoiceDigits(value);
+  if (!/^\d{1,19}$/.test(amount) || (direction !== 'charge' && direction !== 'credit')) return null;
+  const magnitude = BigInt(amount);
+  if (magnitude === 0n || magnitude > maxInvoiceIrr) return null;
+  return direction === 'credit' ? -magnitude : magnitude;
 }
 export function blankInvoiceLine(): InvoiceDraftLine {
   return { id: crypto.randomUUID(), description: '', quantity: '1', unitPrice: '', vat: '0' };

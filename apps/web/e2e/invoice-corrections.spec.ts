@@ -12,11 +12,13 @@ const correctionId = '33333333-3333-7333-8333-333333333333';
 for (const locale of ['fa', 'en'] as const)
   for (const darkMode of [false, true])
     for (const kind of ['replacement', 'adjustment'] as const)
-      for (const outcome of kind === 'adjustment' ? ['issued', 'pending'] : ['issued'])
+      for (const outcome of kind === 'adjustment' ? ['issued', 'pending', 'charge'] : ['issued'])
         test(`invoice ${kind} ${outcome}: captured verification and safe retry (${locale}, dark=${darkMode})`, async ({
           page,
         }) => {
           const fa = locale === 'fa';
+          const credit = outcome !== 'charge';
+          const adjustmentAmount = credit ? '-25000' : '25000';
           await page.addInitScript((locale) => {
             localStorage.setItem('barghsa.locale', locale);
             const apply = () => {
@@ -63,7 +65,7 @@ for (const locale of ['fa', 'en'] as const)
               expect(body).toEqual({
                 kind: 'adjustment',
                 reason: fa ? 'اصلاح مصرف' : 'Usage correction',
-                amount: '-25000',
+                amount: adjustmentAmount,
               });
               return route.fulfill({
                 json: {
@@ -106,7 +108,7 @@ for (const locale of ['fa', 'en'] as const)
                     contracts: [],
                     cancellation: 'separate_review_required',
                     adjustment: {
-                      direction: 'credit',
+                      direction: credit ? 'credit' : 'charge',
                       amount: body.amount,
                       absoluteAmount: '25000',
                       reason: body.reason,
@@ -234,7 +236,7 @@ for (const locale of ['fa', 'en'] as const)
                   status: 'pending_approval',
                   originalInvoiceId: originalId,
                   approvalRequestId: correctionId,
-                  amount: requests.length === 2 ? '999' : '-25000',
+                  amount: requests.length === 2 ? '999' : adjustmentAmount,
                 },
               });
             return route.fulfill({
@@ -246,7 +248,12 @@ for (const locale of ['fa', 'en'] as const)
                 kind,
                 idempotencyKey: body.idempotencyKey,
                 reason: body.reason,
-                amount: requests.length === 2 ? '999' : kind === 'replacement' ? '5506' : '-25000',
+                amount:
+                  requests.length === 2
+                    ? '999'
+                    : kind === 'replacement'
+                      ? '5506'
+                      : adjustmentAmount,
                 totalAmount: kind === 'replacement' ? '5506' : '25000',
               },
             });
@@ -309,11 +316,26 @@ for (const locale of ['fa', 'en'] as const)
             await issue.click();
             await expect(amount).toHaveAttribute('aria-invalid', 'true');
             expect(requests).toHaveLength(0);
-            await amount.fill(fa ? '-۲۵۰۰۰' : '-25000');
+            const chargeChoice = panel.getByRole('radio', {
+              name: correctionText('reviewCharge', locale),
+              exact: true,
+            });
+            const creditChoice = panel.getByRole('radio', {
+              name: correctionText('creditAdjustment', locale),
+              exact: true,
+            });
+            await expect(chargeChoice).toBeChecked();
+            if (credit) await chargeChoice.press('ArrowDown');
+            await expect(credit ? creditChoice : chargeChoice).toBeChecked();
+            await amount.fill(fa ? '۲۵۰۰۰' : '25000');
           }
-          const total = formatCurrencyIrr(kind === 'replacement' ? 5506n : -25000n, locale, {
-            numberStyle: fa ? 'persian' : 'western',
-          });
+          const total = formatCurrencyIrr(
+            kind === 'replacement' ? 5506n : BigInt(adjustmentAmount),
+            locale,
+            {
+              numberStyle: fa ? 'persian' : 'western',
+            }
+          );
           await expect(panel).toContainText(total);
           await issue.hover();
           await issue.evaluate(async (element) => {
@@ -338,6 +360,9 @@ for (const locale of ['fa', 'en'] as const)
             });
             await expect(review).toContainText(
               formatCurrencyIrr(25000n, locale, { numberStyle: fa ? 'persian' : 'western' })
+            );
+            await expect(review).toContainText(
+              correctionText(credit ? 'reviewCredit' : 'reviewCharge', locale)!
             );
             await expect(
               review.getByText(correctionText('amount', locale)!, { exact: true })
@@ -434,7 +459,7 @@ for (const locale of ['fa', 'en'] as const)
             ]);
             expect(requests[0]).toHaveProperty('expectedReviewHash', 'd'.repeat(64));
           } else {
-            expect(requests[0]).toHaveProperty('amount', '-25000');
+            expect(requests[0]).toHaveProperty('amount', adjustmentAmount);
             expect(requests[0]).toHaveProperty('expectedReviewHash', 'c'.repeat(64));
           }
           await expect(reload).toBeEnabled();

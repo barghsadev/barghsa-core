@@ -54,7 +54,7 @@ import { isInvoiceUuid } from '../lib/invoice-uuid.js';
 import { useInvoiceDraftForm } from '../hooks/useInvoiceDraftForm.js';
 import {
   blankInvoiceLine as blankLine,
-  invoiceDigits as digits,
+  invoiceAdjustmentAmount,
   calculateInvoiceDraft as calculate,
   maxInvoiceIrr as maxIrr,
   type InvoiceDraftLine as DraftLine,
@@ -173,12 +173,14 @@ function OwnedManualInvoiceForm({
       profileId: correction?.profileId ?? '',
       reason: '',
       amount: '',
+      direction: 'charge',
       lineOrder: lines.map((line) => line.id),
       lines: Object.fromEntries(lines.map((line) => [line.id, line])),
     };
   });
   const [reason, setReason] = draft.field('reason'),
     [amount, setAmount] = draft.field('amount');
+  const [direction, setDirection] = draft.field('direction');
   const [profileId, setProfileId] = draft.field('profileId');
   const profileField = draft.bind('profileId');
   const lines = draft.values.lineOrder.map((id) => draft.values.lines[id]!);
@@ -275,9 +277,8 @@ function OwnedManualInvoiceForm({
   const authorized = useRef(financialGate.allowed);
   authorized.current = financialGate.allowed;
   const submitButton = useRef<HTMLButtonElement>(null);
-  const signed = /^-?\d{1,19}$/.test(digits(amount)) ? BigInt(digits(amount)) : 0n;
-  const validAdjustment =
-    signed !== 0n && signed >= -maxIrr && signed <= maxIrr && Boolean(reason.trim());
+  const signed = invoiceAdjustmentAmount(amount, direction) ?? 0n;
+  const validAdjustment = signed !== 0n && Boolean(reason.trim());
   const calculation =
     correction?.kind === 'adjustment'
       ? validAdjustment
@@ -415,6 +416,7 @@ function OwnedManualInvoiceForm({
       profileId: '',
       reason: '',
       amount: '',
+      direction: 'charge',
       lineOrder: [line.id],
       lines: { [line.id]: line },
     });
@@ -715,7 +717,10 @@ function OwnedManualInvoiceForm({
         const rows = values.lineOrder.map((id) => values.lines[id]!);
         const calculated = correction?.kind === 'adjustment' ? null : calculate(rows);
         const value =
-          correction?.kind === 'adjustment' ? BigInt(digits(values.amount)) : calculated!.total;
+          correction?.kind === 'adjustment'
+            ? invoiceAdjustmentAmount(values.amount, values.direction)
+            : calculated!.total;
+        if (value === null) return;
         submittedTotal.current = (value < 0n ? -value : value).toString();
         submittedLineIds.current = [...values.lineOrder];
         request.current = {
@@ -1071,36 +1076,79 @@ function OwnedManualInvoiceForm({
               />
             </Field>
             {correction.kind === 'adjustment' && (
-              <Field data-disabled={locked || unavailable}>
-                <FieldLabel htmlFor="correction-amount">{text('amount')}</FieldLabel>
-                <Input
-                  id="correction-amount"
-                  {...draft.bind('amount')}
-                  required
-                  aria-required="true"
-                  dir="ltr"
-                  inputMode="text"
-                  maxLength={20}
-                  disabled={locked || unavailable}
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  aria-describedby={[
-                    'correction-amount-hint',
-                    draft.errors.amount ? draft.errorId('amount') : undefined,
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                />
-                <InvoiceFieldFeedback
-                  reserveSpace={false}
-                  id={draft.errorId('amount')}
-                  error={draft.errors.amount}
-                  message={text('amountInvalid')}
-                />
-                <p id="correction-amount-hint" className="text-sm text-muted-foreground">
-                  {text('amountHint')}
-                </p>
-              </Field>
+              <>
+                <fieldset disabled={locked || unavailable} className="min-w-0">
+                  <legend className="mb-2 text-sm font-medium">{text('reviewDirection')}</legend>
+                  <div className={recordEditorGrid}>
+                    {(
+                      [
+                        ['charge', 'reviewCharge', 'chargeAdjustmentHelp'],
+                        ['credit', 'creditAdjustment', 'creditAdjustmentHelp'],
+                      ] as const
+                    ).map(([choice, title, help]) => (
+                      <label
+                        key={choice}
+                        className="flex min-w-0 cursor-pointer items-start gap-2.5 rounded-lg border px-3 py-2.5 hover:bg-muted/40 has-checked:border-primary/45 has-checked:bg-primary/5 has-disabled:cursor-not-allowed has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
+                      >
+                        <input
+                          name="correction-direction"
+                          type="radio"
+                          value={choice}
+                          checked={direction === choice}
+                          onChange={() => setDirection(choice)}
+                          aria-labelledby={`correction-${choice}-label`}
+                          aria-describedby={`correction-${choice}-help`}
+                          className="mt-1 size-4 shrink-0 accent-primary"
+                        />
+                        <span className="min-w-0 space-y-1">
+                          <span
+                            id={`correction-${choice}-label`}
+                            className="block text-sm font-medium"
+                          >
+                            {text(title)}
+                          </span>
+                          <span
+                            id={`correction-${choice}-help`}
+                            className="block text-xs text-muted-foreground"
+                          >
+                            {text(help)}
+                          </span>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+                <Field data-disabled={locked || unavailable} className="max-w-sm">
+                  <FieldLabel htmlFor="correction-amount">{text('amount')}</FieldLabel>
+                  <Input
+                    id="correction-amount"
+                    {...draft.bind('amount')}
+                    required
+                    aria-required="true"
+                    dir="ltr"
+                    inputMode="numeric"
+                    maxLength={20}
+                    disabled={locked || unavailable}
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    aria-describedby={[
+                      'correction-amount-hint',
+                      draft.errors.amount ? draft.errorId('amount') : undefined,
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
+                  />
+                  <InvoiceFieldFeedback
+                    reserveSpace={false}
+                    id={draft.errorId('amount')}
+                    error={draft.errors.amount}
+                    message={text('amountInvalid')}
+                  />
+                  <p id="correction-amount-hint" className="text-sm text-muted-foreground">
+                    {text('amountHint')}
+                  </p>
+                </Field>
+              </>
             )}
           </RecordEditorSection>
         )}
@@ -1260,7 +1308,15 @@ function OwnedManualInvoiceForm({
             <div aria-live="polite" className="min-w-0 space-y-0.5">
               {calculation ? (
                 <>
-                  <p className="text-xs text-muted-foreground">{text('draftTotal')}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {text(
+                      correction?.kind === 'adjustment'
+                        ? direction === 'credit'
+                          ? 'creditAdjustment'
+                          : 'reviewCharge'
+                        : 'draftTotal'
+                    )}
+                  </p>
                   <strong className="text-sm tabular-nums [overflow-wrap:anywhere] sm:text-base">
                     {numbers.money(correction?.kind === 'adjustment' ? signed : calculation.total)}
                   </strong>

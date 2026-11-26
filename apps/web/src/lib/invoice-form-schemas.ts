@@ -3,6 +3,7 @@ import type { $ZodType } from 'zod/v4/core';
 import { isInvoiceUuid } from './invoice-uuid.js';
 import {
   calculateInvoiceDraft,
+  invoiceAdjustmentAmount,
   invoiceDigits,
   maxInvoiceIrr,
   type InvoiceDraftValues,
@@ -30,13 +31,7 @@ export function invoiceDraftSchema(
     if (kind !== 'manual' && (!value.reason.trim() || value.reason.trim().length > 1000))
       issue(['reason'], messages.reason);
     if (kind === 'adjustment') {
-      const amount = invoiceDigits(value.amount);
-      if (
-        !/^-?\d{1,19}$/.test(amount) ||
-        BigInt(amount) === 0n ||
-        BigInt(amount) < -maxInvoiceIrr ||
-        BigInt(amount) > maxInvoiceIrr
-      )
+      if (invoiceAdjustmentAmount(value.amount, value.direction) === null)
         issue(['amount'], messages.amount);
       return;
     }
