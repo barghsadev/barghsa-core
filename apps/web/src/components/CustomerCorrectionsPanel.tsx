@@ -1,7 +1,8 @@
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { ArrowUpRight, RefreshCw } from 'lucide-react';
-import { Button, LoadingStatus, cn } from '@barghsa/ui';
+import { Button, cn } from '@barghsa/ui';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { tWorkspace as t, type Locale } from '@barghsa/i18n/workspace-admin';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -132,7 +133,7 @@ export default function CustomerCorrectionsPanel({
         </Button>
       </div>
       {phase === 'loading' ? (
-        <LoadingStatus>{label('loading')}</LoadingStatus>
+        <RecordListSkeleton label={label('loading')} view="card" headings={[]} />
       ) : phase === 'error' ? (
         <p role="alert">{label('error')}</p>
       ) : !load?.access.canView ? (
@@ -142,11 +143,11 @@ export default function CustomerCorrectionsPanel({
           {label('empty')}
         </p>
       ) : (
-        <ul className="divide-y overflow-hidden rounded-xl border bg-card">
+        <ul className="space-y-3">
           {load.rows.map((row) => (
             <li
               key={row.id}
-              className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
+              className="flex flex-wrap items-start justify-between gap-3 rounded-xl border bg-card p-4"
             >
               <div className="min-w-0 flex-1 break-words space-y-1">
                 <Link

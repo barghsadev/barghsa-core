@@ -138,7 +138,10 @@ for (const locale of ['en', 'fa'] as const)
       expect(saved.bodyTemplate).toBe('Local body');
       const exact = `/admin/notifications/${saved.id}`;
       await expect(page).toHaveURL(exact);
-      await expect(page.getByRole('heading', { name: saved.eventKey, exact: true })).toBeVisible();
+      await expect(
+        page.getByRole('heading', { level: 1, name: saved.subject || saved.eventKey, exact: true })
+      ).toBeVisible();
+      await expect(page.getByRole('main').getByText(saved.eventKey, { exact: true })).toBeVisible();
       await page.goto('/admin/notifications/settings');
       const windowForm = page
         .locator('form')

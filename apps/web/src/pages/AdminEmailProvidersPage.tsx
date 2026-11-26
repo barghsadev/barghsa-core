@@ -15,7 +15,6 @@ import {
   type ProviderWorkspace,
 } from '../lib/provider-workspace.js';
 import {
-  LoadingStatus,
   Button,
   Input,
   Label,
@@ -36,6 +35,8 @@ import {
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { DeliveryProviderDetail } from '../components/DeliveryProviderDetail.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { DeliveryProviderTable } from '../components/DeliveryProviderTable.js';
 import { ProviderHealthMetrics } from '../components/ProviderHealthMetrics.js';
 import { ProviderAlertHistory } from '../components/ProviderAlertHistory.js';
@@ -1109,7 +1110,7 @@ export default function AdminEmailProvidersPage({
       )}
 
       {showingRecord && loading && (
-        <LoadingStatus>{providerText('admin.providers.loading', uiLocale)}</LoadingStatus>
+        <RecordDetailSkeleton label={providerText('admin.providers.loading', uiLocale)} />
       )}
       {showingRecord && failed && (
         <div role="alert" className="space-y-2">
@@ -1140,7 +1141,11 @@ export default function AdminEmailProvidersPage({
             emptyView={null}
             retainContent={catalogue.data !== null}
             loadingView={
-              <LoadingStatus>{providerText('admin.providers.loading', uiLocale)}</LoadingStatus>
+              <RecordListSkeleton
+                label={providerText('admin.providers.loading', uiLocale)}
+                view="card"
+                headings={[]}
+              />
             }
             errorView={
               <div role="alert" className="space-y-2">

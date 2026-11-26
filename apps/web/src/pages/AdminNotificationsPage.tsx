@@ -26,7 +26,6 @@ import { withCsrf } from '../lib/csrf.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {
-  LoadingStatus,
   Alert,
   Button,
   ListPage,
@@ -41,6 +40,8 @@ import {
   buttonVariants,
 } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { t as workspaceText } from '@barghsa/i18n/workspace';
 import {
@@ -1389,7 +1390,7 @@ function OwnedNotificationsPage({
             : view === 'preview' || view === 'compare'
               ? label('preview.title')
               : view === 'detail'
-                ? (record?.eventKey ?? label('view'))
+                ? record?.subject || record?.eventKey || label('view')
                 : label('title');
 
   const isWriting = view === 'new' || view === 'edit' || view === 'copy';
@@ -1408,7 +1409,14 @@ function OwnedNotificationsPage({
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0 space-y-1">
           {view && !listView && back}
-          <h1 className="text-2xl font-semibold [overflow-wrap:anywhere]">{pageTitle}</h1>
+          <h1 className="text-2xl font-semibold [overflow-wrap:anywhere]" dir="auto">
+            {pageTitle}
+          </h1>
+          {view === 'detail' && record?.subject && (
+            <p className="wrap-anywhere text-sm text-muted-foreground">
+              <bdi dir="ltr">{record.eventKey}</bdi>
+            </p>
+          )}
         </div>
         {isRecordTask && (
           <ListRefreshButton
@@ -1662,7 +1670,13 @@ function OwnedNotificationsPage({
           empty={false}
           emptyView={null}
           retainContent={accepted}
-          loadingView={<LoadingStatus>{t('admin.notifications.loading', uiLocale)}</LoadingStatus>}
+          loadingView={
+            isRecordTask || view === 'detail' ? (
+              <RecordDetailSkeleton label={label('loading')} />
+            ) : (
+              <RecordListSkeleton label={label('loading')} view="card" headings={[]} />
+            )
+          }
           errorView={
             <div role="alert">
               <p>
@@ -1763,7 +1777,7 @@ function OwnedNotificationsPage({
                           {record.eventKey}
                         </p>
                       )}
-                      <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm sm:grid-cols-4">
+                      <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg bg-muted/45 p-3 text-sm sm:grid-cols-4">
                         {[
                           ['channel', channelLabels[record.channel]],
                           ['locale', LOCALE_LABELS[record.locale]],
@@ -1814,25 +1828,12 @@ function OwnedNotificationsPage({
                   )}
                   {view === 'detail' && (
                     <section className="space-y-4 rounded-xl border bg-card p-4 sm:p-5">
-                      {record.subject && (
-                        <div>
-                          <h2 className="text-sm font-medium text-muted-foreground">
-                            {subjectLabel(record.channel)}
-                          </h2>
-                          <p
-                            className="[overflow-wrap:anywhere]"
-                            dir={record.locale === 'fa' ? 'rtl' : 'ltr'}
-                          >
-                            {record.subject}
-                          </p>
-                        </div>
-                      )}
                       <div>
                         <h2 className="text-sm font-medium text-muted-foreground">
                           {label('bodyTemplate')}
                         </h2>
                         <p
-                          className="whitespace-pre-wrap [overflow-wrap:anywhere]"
+                          className="mt-2 whitespace-pre-wrap rounded-lg bg-muted/45 p-3 leading-relaxed [overflow-wrap:anywhere]"
                           dir={record.locale === 'fa' ? 'rtl' : 'ltr'}
                         >
                           {record.bodyTemplate}

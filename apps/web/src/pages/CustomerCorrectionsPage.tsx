@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { ArrowRight, MailX, RefreshCw } from 'lucide-react';
 import { Alert, Button, Label, LoadingStatus, Textarea, buttonVariants } from '@barghsa/ui';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { tWorkspace as t, type Locale } from '@barghsa/i18n/workspace-admin';
@@ -209,7 +210,12 @@ function CorrectionRecord({
         </h1>
         {refreshControl}
       </header>
-      {phase === 'loading' && <LoadingStatus>{label('loading')}</LoadingStatus>}
+      {phase === 'loading' &&
+        (row ? (
+          <LoadingStatus>{label('loading')}</LoadingStatus>
+        ) : (
+          <RecordDetailSkeleton label={label('loading')} />
+        ))}
       {phase === 'error' && <Alert variant="destructive">{label('error')}</Alert>}
       {phase === 'ready' && result?.kind === 'missing' && (
         <Alert variant="destructive">{notificationFormText('correctionMissing', locale)}</Alert>
@@ -222,12 +228,12 @@ function CorrectionRecord({
       {row && (
         <div className={recordEditorSurface}>
           <div className="space-y-3 px-4 py-4 sm:px-6">
-            <dl className="grid gap-2.5 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] sm:gap-5">
+            <dl className="grid gap-3 rounded-lg bg-muted/45 p-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
               <div className="min-w-0">
                 <dt className="text-xs text-muted-foreground">
                   {notificationFormText('correctionAddress', locale)}
                 </dt>
-                <dd className="wrap-anywhere text-sm font-semibold">
+                <dd className="wrap-anywhere font-semibold">
                   <bdi dir="ltr">{row.address}</bdi>
                 </dd>
               </div>

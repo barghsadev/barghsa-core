@@ -42,6 +42,8 @@ import { tAccountSettingsForms } from '@barghsa/i18n/account-settings-forms';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { DeliveryProviderDetail } from '../components/DeliveryProviderDetail.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { DeliveryProviderTable } from '../components/DeliveryProviderTable.js';
 import { ProviderHealthMetrics } from '../components/ProviderHealthMetrics.js';
 import { ProviderAlertHistory } from '../components/ProviderAlertHistory.js';
@@ -826,7 +828,7 @@ export default function AdminSmsProvidersPage({
         </div>
       )}
       {showingRecord && !failed && recovery(true)}
-      {showingRecord && loading && <LoadingStatus>{text('tabs')}…</LoadingStatus>}
+      {showingRecord && loading && <RecordDetailSkeleton label={`${text('tabs')}…`} />}
       {showingRecord && failed && (
         <div role="alert" className="space-y-2">
           {text(scope.denied ? 'denied' : 'loadFailed')}
@@ -850,7 +852,13 @@ export default function AdminSmsProvidersPage({
             loading={loading}
             error={loadFailed || scope.denied}
             retainContent={providers.length > 0}
-            loadingView={<LoadingStatus>{smsProviderText('tabs', locale)}…</LoadingStatus>}
+            loadingView={
+              <RecordListSkeleton
+                label={`${smsProviderText('tabs', locale)}…`}
+                view="card"
+                headings={[]}
+              />
+            }
             errorView={<p role="alert">{text(scope.denied ? 'denied' : 'loadFailed')}</p>}
             empty={!providers.length}
             emptyView={<p>{text('empty')}</p>}

@@ -35,6 +35,7 @@ import {
   CatalogueFieldFeedback,
   catalogueRootMessage,
   CatalogueSaveButton,
+  SettingsValueSkeleton,
 } from './CatalogueEditorFeedback.js';
 import {
   windowValues,
@@ -315,7 +316,12 @@ export default function DeliveryWindowConfigPanel({
           onClick={() => (scope.denied ? scope.recover() : refresh())}
         />
       </header>
-      {resource.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
+      {resource.loading &&
+        (config ? (
+          <LoadingStatus>{label('loading')}</LoadingStatus>
+        ) : (
+          <SettingsValueSkeleton label={label('loading')} count={2} />
+        ))}
       {resource.error && <Alert variant="destructive">{label('loadFailed')}</Alert>}
       {scope.denied && (
         <Alert variant="destructive">{notificationFormText('denied', uiLocale)}</Alert>
@@ -463,13 +469,15 @@ export default function DeliveryWindowConfigPanel({
                 </p>
               )}
               {config && (
-                <p className="text-xs text-muted-foreground">
-                  {label('current')}:{' '}
-                  <bdi className="font-mono">
-                    {config.timezone} {formatWindowTime(config.startHour)}–
-                    {formatWindowTime(config.endHour)}
-                  </bdi>
-                </p>
+                <dl className="rounded-lg bg-muted/45 p-3 text-sm">
+                  <dt className="text-muted-foreground">{label('current')}</dt>
+                  <dd className="flex flex-wrap items-baseline gap-x-3 gap-y-1 font-medium">
+                    <bdi dir="ltr">
+                      {formatWindowTime(config.startHour)}–{formatWindowTime(config.endHour)}
+                    </bdi>
+                    <bdi className="text-xs text-muted-foreground">{config.timezone}</bdi>
+                  </dd>
+                </dl>
               )}
             </RecordEditorSection>
           </fieldset>
