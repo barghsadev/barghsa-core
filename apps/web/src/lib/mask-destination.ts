@@ -2,9 +2,9 @@
 export function maskDestination(destination: string): string {
   if (destination.startsWith('+')) {
     // Phone: show +98 *** 4567
-    const parts = destination.match(/^(\+\d{2,3})(\d*)(\d{4})$/);
+    const parts = destination.match(/^(\+98|\+\d{2,3})\d*(\d{4})$/);
     if (parts) {
-      return `${parts[1]} *** ${parts[3]}`;
+      return `${parts[1]} *** ${parts[2]}`;
     }
     return destination.replace(/.(?=.{4})/g, '*');
   }

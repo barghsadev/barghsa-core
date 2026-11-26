@@ -3,6 +3,7 @@ import {
   isAuthenticationUsername,
   isE164,
 } from '@barghsa/shared/username-normalization';
+import { normalizeProfileDigits } from './profile-digits.js';
 
 type UsernameType = 'email' | 'mobile' | 'international' | null;
 
@@ -15,12 +16,14 @@ interface NormalizationResult {
 /** Use the canonical destination for requests and format a local mobile for display. */
 export function normalizeRecoveryUsername(raw: string): NormalizationResult {
   const trimmed = raw.trim();
-  const normalized = canonicalizeAuthenticationUsername(trimmed);
+  const input = trimmed.includes('@') ? trimmed : normalizeProfileDigits(trimmed);
+  const normalized = canonicalizeAuthenticationUsername(input);
   if (!isAuthenticationUsername(normalized)) {
     return { type: null, normalized: trimmed, formatted: null };
   }
   if (!isE164(normalized)) return { type: 'email', normalized, formatted: null };
-  if (trimmed.startsWith('+')) return { type: 'international', normalized, formatted: null };
+  if (input.startsWith('+'))
+    return { type: 'international', normalized, formatted: input === trimmed ? null : normalized };
 
   const formatted = [
     normalized.slice(0, 3),

@@ -39,12 +39,14 @@ for (const locale of ['fa', 'en']) {
     await openRegistration(page, locale);
     const brand = page.getByRole('complementary');
     const wideLayout = await page.evaluate(() => matchMedia('(min-width: 64rem)').matches);
+    await expect(brand).toBeVisible();
     if (wideLayout) {
-      await expect(brand).toBeVisible();
       await expect(brand.locator('p')).toHaveCount(2);
       await expect(brand.locator('p').last()).not.toBeEmpty();
     } else {
-      await expect(brand).toBeHidden();
+      const formBox = await page.getByRole('main').boundingBox();
+      const brandBox = await brand.boundingBox();
+      expect(brandBox!.y).toBeGreaterThanOrEqual(formBox!.y + formBox!.height);
     }
     await expect(page.getByRole('banner').getByRole('link')).toHaveAttribute('href', '/');
     await expect(page.locator('main a[href="/login"]')).toBeVisible();
@@ -75,7 +77,7 @@ for (const locale of ['fa', 'en']) {
     await secret.press('Tab');
     await expect(secret).not.toBeFocused();
     await expect(page.getByRole('progressbar')).toBeVisible();
-    const toggle = page.locator('button[aria-pressed]');
+    const toggle = page.locator('form button[aria-pressed]');
     await toggle.click();
     await expect(secret).toHaveAttribute('type', 'text');
     await expect(toggle).toHaveAttribute('aria-pressed', 'true');

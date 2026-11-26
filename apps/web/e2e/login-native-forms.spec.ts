@@ -10,7 +10,7 @@ type Locale = 'en' | 'fa';
 const id = '00000000-0000-4000-8000-000000000001';
 const secret = [' old synthetic ', 'credential '].join('');
 const newSecret = [' Raw synthetic change ', '12A '].join('');
-async function setup(page: Page, locale: Locale) {
+async function setup(page: Page, locale: Locale, username = 'draft@example.test') {
   await setupCatalogueForms(page, locale, locale === 'fa');
   await page.addInitScript((lang) => localStorage.setItem('barghsa-locale', lang), locale);
   await mockPublicAuthCsrf(page);
@@ -29,7 +29,7 @@ async function setup(page: Page, locale: Locale) {
       expect(route.request().headers()).not.toHaveProperty('idempotency-key');
       state.writes.push({ path, body });
       if (path.endsWith('/login')) {
-        expect(body).toEqual({ username: 'draft@example.test', password: secret });
+        expect(body).toEqual({ username, password: secret });
         if (state.mode === 'holdLogin') {
           state.held = route;
           return;
@@ -98,7 +98,12 @@ for (const locale of ['en', 'fa'] as const) {
   test(`native login validates credentials and owns an unknown sign-in through explicit restart (${locale})`, async ({
     page,
   }, info) => {
-    const state = await setup(page, locale);
+    const destination = locale === 'fa' ? '۰۹۱۲۱۲۳۴۵۶۷' : ' Draft@Example.test ';
+    const state = await setup(
+      page,
+      locale,
+      locale === 'fa' ? '+989121234567' : 'draft@example.test'
+    );
     await page.goto('/login');
     await expect(page.locator('#username')).toHaveAttribute('aria-required', 'true');
     await expect(page.locator('#password')).toHaveAttribute('aria-required', 'true');
@@ -108,7 +113,11 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#username')).toBeFocused();
     expect(state.writes).toHaveLength(0);
     await capture(page, info.outputPath(`login-credentials-invalid-${locale}.png`));
-    await page.locator('#username').fill(' Draft@Example.test ');
+    await page.locator('#username').fill(destination);
+    if (locale === 'fa')
+      await expect(page.locator('#username')).toHaveAccessibleDescription(
+        t('auth.username.phonePreview', locale) + ' +98 912 123 4567'
+      );
     await page.locator('#password').fill(secret);
     await page.locator('form').evaluate((form: HTMLFormElement) => {
       form.requestSubmit();
@@ -141,7 +150,7 @@ for (const locale of ['en', 'fa'] as const) {
       loginFormText('restart', locale)
     );
     await expect(page.locator('#password')).toHaveValue('');
-    await expect(page.locator('#username')).toHaveValue(' Draft@Example.test ');
+    await expect(page.locator('#username')).toHaveValue(destination);
     expect(state.writes).toHaveLength(1);
   });
   test(`native required change and OTP preserve captured values, trust and uncertain ownership (${locale})`, async ({

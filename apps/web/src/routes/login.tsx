@@ -5,6 +5,7 @@ import { t, type Locale } from '@barghsa/i18n/auth';
 import { loginFormText } from '@barghsa/i18n/login-forms';
 import { Button, Input, Alert, AlertDescription } from '@barghsa/ui';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@barghsa/ui/form';
+import { AuthUsernameHint } from '../components/AuthUsernameHint.js';
 import { AuthLayout } from '../components/AuthLayout.js';
 import { PasswordField } from '../components/PasswordField.js';
 import { OtpInput, type OtpInputHandle } from '../components/OtpInput.js';
@@ -63,7 +64,6 @@ function LoginPage() {
     form = model.form;
   const username = form.watch('username'),
     normalized = normalizeUsername(username);
-  const touched = !!form.formState.touchedFields.username || form.formState.isSubmitted;
   const cooldown = Math.max(0, Math.ceil((resendUntil - now) / 1000)),
     attemptCooldown = Math.max(0, Math.ceil((attemptUntil - now) / 1000));
   useEffect(() => {
@@ -467,19 +467,10 @@ function LoginPage() {
                           onBlur={() => {
                             if (model.canEdit()) field.onBlur();
                           }}
-                          aria-describedby={
-                            touched && !form.formState.errors.username && normalized.formatted
-                              ? 'username-hint'
-                              : undefined
-                          }
                         />
                       </FormControl>
+                      <AuthUsernameHint locale={locale} formatted={normalized.formatted} />
                       <FormMessage />
-                      {touched && !form.formState.errors.username && normalized.formatted && (
-                        <p id="username-hint" dir="ltr" className="text-sm text-muted-foreground">
-                          {normalized.formatted}
-                        </p>
-                      )}
                     </FormItem>
                   )}
                 />

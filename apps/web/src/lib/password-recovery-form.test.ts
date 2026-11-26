@@ -7,6 +7,7 @@ import {
   recoveryResetReceipt,
 } from './password-recovery-form.js';
 import { passwordRecoverySchema } from './password-recovery-form-schemas.js';
+import { maskDestination } from './mask-destination.js';
 const valid = {
   username: (value: string) => !!normalizeRecoveryUsername(value).type,
   password: recoveryPasswordValid,
@@ -25,6 +26,24 @@ it('retains the original Iranian, international and email normalization', () => 
   expect(normalizeRecoveryUsername('09121234567').normalized).toBe('+989121234567');
   expect(normalizeRecoveryUsername('+447700900123').normalized).toBe('+447700900123');
   expect(normalizeRecoveryUsername('not valid').type).toBeNull();
+});
+it('normalizes mobile digits without replacing digits in email addresses', () => {
+  expect(normalizeRecoveryUsername(' ۰۹١۲۱۲۳۴۵۶۷ ')).toEqual({
+    type: 'mobile',
+    normalized: '+989121234567',
+    formatted: '+98 912 123 4567',
+  });
+  expect(normalizeRecoveryUsername('+۴۴۷۷۰۰۹۰۰۱۲۳')).toEqual({
+    type: 'international',
+    normalized: '+447700900123',
+    formatted: '+447700900123',
+  });
+  expect(normalizeRecoveryUsername('User۲@Example.test').normalized).toBe('user۲@example.test');
+});
+it('keeps the Iranian country code and the last four digits in a masked destination', () => {
+  expect(maskDestination('+989121234567')).toBe('+98 *** 4567');
+  expect(maskDestination('+14155552671')).toBe('+141 *** 2671');
+  expect(maskDestination('recovery@example.test')).toBe('r***@example.test');
 });
 it('validates only the current stage while preserving raw drafts', () => {
   const values = { username: ' Recovery@Example.test ', otp: '', password: '', confirmation: '' };

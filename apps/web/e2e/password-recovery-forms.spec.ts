@@ -125,10 +125,21 @@ for (const locale of ['en', 'fa'] as const) {
       page.locator('form'),
       info.outputPath(`recovery-destination-invalid-${locale}.png`)
     );
-    await page.locator('#username').fill(' Recovery@Example.test ');
+    await page
+      .locator('#username')
+      .fill(locale === 'fa' ? '۰۹۱۲۱۲۳۴۵۶۷' : ' Recovery@Example.test ');
+    if (locale === 'fa')
+      await expect(page.locator('#username')).toHaveAccessibleDescription(
+        t('auth.username.phonePreview', locale) + ' +98 912 123 4567'
+      );
     await submit(page);
     await expect(page.locator('#reset-otp input')).toHaveCount(6);
-    expect(state.writes[0]!.body).toEqual({ username: 'recovery@example.test' });
+    expect(state.writes[0]!.body).toEqual({
+      username: locale === 'fa' ? '+989121234567' : 'recovery@example.test',
+    });
+    await expect(page.locator('main .auth-form')).toContainText(
+      locale === 'fa' ? '+98 *** 4567' : 'r***@example.test'
+    );
     state.mode = 'codeReject';
     await code(page, locale);
     await expect(page.getByRole('alert')).toHaveText(t('auth.otp.error.invalid', locale));

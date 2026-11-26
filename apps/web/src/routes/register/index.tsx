@@ -6,6 +6,7 @@ import { t, type Locale } from '@barghsa/i18n/auth';
 import { registrationFormText } from '@barghsa/i18n/registration-forms';
 import { Button, Checkbox, Input, Alert, AlertDescription } from '@barghsa/ui';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@barghsa/ui/form';
+import { AuthUsernameHint } from '../../components/AuthUsernameHint.js';
 import { AuthLayout } from '../../components/AuthLayout.js';
 import { useLocale } from '../../hooks/useLocale.js';
 import { useNumberFormatting } from '../../hooks/useNumberFormatting.js';
@@ -250,19 +251,10 @@ function RegisterPage() {
                         onBlur={() => {
                           if (model.canEdit()) field.onBlur();
                         }}
-                        aria-describedby={
-                          touched && !form.formState.errors.username && normalized.formatted
-                            ? 'username-hint'
-                            : undefined
-                        }
                       />
                     </FormControl>
+                    <AuthUsernameHint locale={locale} formatted={normalized.formatted} />
                     <FormMessage />
-                    {touched && !form.formState.errors.username && normalized.formatted && (
-                      <p id="username-hint" className="text-sm text-muted-foreground" dir="ltr">
-                        {normalized.formatted}
-                      </p>
-                    )}
                   </FormItem>
                 )}
               />

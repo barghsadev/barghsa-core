@@ -8,7 +8,7 @@ import { t } from '@barghsa/i18n/auth';
 type Locale = 'en' | 'fa';
 const id = '00000000-0000-4000-8000-000000000001';
 const secret = ' Raw synthetic registration value 12A ';
-async function setup(page: Page, locale: Locale) {
+async function setup(page: Page, locale: Locale, username = 'draft@example.test') {
   await setupCatalogueForms(page, locale, locale === 'fa');
   await mockPublicAuthCsrf(page);
   await page.route('**/api/tos/current?*', (route) =>
@@ -35,7 +35,7 @@ async function setup(page: Page, locale: Locale) {
     expect(route.request().headers()).not.toHaveProperty('idempotency-key');
     state.writes.push({ path, body });
     if (path.endsWith('/register')) {
-      expect(body).toEqual({ username: 'draft@example.test', password: secret, tosVersionId: id });
+      expect(body).toEqual({ username, password: secret, tosVersionId: id });
       if (state.mode === 'holdRegister') {
         state.held = route;
         return;
@@ -99,7 +99,12 @@ for (const locale of ['en', 'fa'] as const) {
   test(`native registration validates destination and consent and holds an uncertain captured start (${locale})`, async ({
     page,
   }, info) => {
-    const state = await setup(page, locale);
+    const destination = locale === 'fa' ? '۰۹۱۲۱۲۳۴۵۶۷' : ' Draft@Example.test ';
+    const state = await setup(
+      page,
+      locale,
+      locale === 'fa' ? '+989121234567' : 'draft@example.test'
+    );
     await page.goto('/register');
     await expect(page.locator('#username')).toHaveAttribute('aria-required', 'true');
     await expect(page.locator('#password')).toHaveCount(0);
@@ -110,7 +115,11 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#username')).toBeFocused();
     expect(state.writes).toHaveLength(0);
     await capture(page, info.outputPath(`registration-destination-invalid-${locale}.png`));
-    await page.locator('#username').fill(' Draft@Example.test ');
+    await page.locator('#username').fill(destination);
+    if (locale === 'fa')
+      await expect(page.locator('#username')).toHaveAccessibleDescription(
+        t('auth.username.phonePreview', locale) + ' +98 912 123 4567'
+      );
     await page.locator('#username').press('Tab');
     await expect(page.locator('#password')).toHaveAttribute('aria-required', 'true');
     await page.locator('#password').fill(secret);
@@ -138,7 +147,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('form [role=alert]').first()).toHaveText(
       registrationFormText('uncertain', locale)
     );
-    await expect(page.locator('#username')).toHaveValue(' Draft@Example.test ');
+    await expect(page.locator('#username')).toHaveValue(destination);
     await expect(page.locator('#password')).toHaveValue(secret);
     await expect(page.getByRole('checkbox')).toBeChecked();
     await submit(page);
@@ -161,7 +170,7 @@ for (const locale of ['en', 'fa'] as const) {
       form.requestSubmit();
     });
     expect(state.writes).toHaveLength(1);
-    await expect(page.locator('#username')).toHaveValue(' Draft@Example.test ');
+    await expect(page.locator('#username')).toHaveValue(destination);
     await expect(page.getByRole('checkbox')).not.toBeChecked();
     expect(
       (await page.locator('#password').count()) ? await page.locator('#password').inputValue() : ''
@@ -173,7 +182,9 @@ for (const locale of ['en', 'fa'] as const) {
     await submit(page);
     await expect(page).toHaveURL(/\/register\/verify\?/);
     expect(state.writes).toHaveLength(2);
-    expect(new URL(page.url()).searchParams.get('destination')).toBe('d***@example.test');
+    expect(new URL(page.url()).searchParams.get('destination')).toBe(
+      locale === 'fa' ? '+98 *** 4567' : 'd***@example.test'
+    );
     expect(page.url()).not.toContain(secret);
   });
   test(`native registration OTP keeps clearing policy and serializes uncertainty with resend (${locale})`, async ({

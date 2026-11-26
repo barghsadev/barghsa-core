@@ -104,7 +104,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(table).toContainText(fa ? 'عضو نمونه' : 'Example Member');
       await expect(table).toContainText('m***@example.test');
       await expect(table).not.toContainText('i***@example.test');
-      await expect(table).toContainText('+989 *** 4567');
+      await expect(table).toContainText('+98 *** 4567');
       await expect(table).not.toContainText('member@example.test');
       await expect(table).not.toContainText('+989121234567');
       await expect(table.locator('[data-slot=avatar]')).toHaveCount(2);

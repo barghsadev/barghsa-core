@@ -5,12 +5,14 @@ import { t } from '@barghsa/i18n/auth';
 import { passwordRecoveryText } from '@barghsa/i18n/password-recovery-forms';
 import { Button, Input, Alert, AlertDescription } from '@barghsa/ui';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@barghsa/ui/form';
+import { AuthUsernameHint } from '../components/AuthUsernameHint.js';
 import { AuthLayout } from '../components/AuthLayout.js';
 import { PasswordField } from '../components/PasswordField.js';
 import { OtpInput } from '../components/OtpInput.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { usePasswordRecoveryForm } from '../hooks/usePasswordRecoveryForm.js';
+import { normalizeRecoveryUsername } from '../lib/auth-username.js';
 import { maskDestination } from '../lib/mask-destination.js';
 import { toast } from '../lib/toast-api.js';
 export const Route = createFileRoute('/forgot-password')({
@@ -33,6 +35,7 @@ function ForgotPasswordPage() {
     });
   });
   const form = model.form;
+  const phonePreview = normalizeRecoveryUsername(form.watch('username')).formatted;
   const element = model.feedback.element;
   const stage = useRef(model.stage);
   const focusUsername = useRef(false);
@@ -125,6 +128,7 @@ function ForgotPasswordPage() {
                         }}
                       />
                     </FormControl>
+                    <AuthUsernameHint locale={locale} formatted={phonePreview} />
                     <FormMessage />
                   </FormItem>
                 )}
