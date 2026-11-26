@@ -1,4 +1,4 @@
-import { LoadingStatus } from '@barghsa/ui';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n';
@@ -67,15 +67,15 @@ export function PublishedTermsHistory({
       <summary className="cursor-pointer py-3 font-medium">
         {termsHistoryText('history', locale)}
       </summary>
-      <ul className="space-y-3">
+      <ul className="divide-y">
         {history?.versions.map((version) => (
-          <li key={version.id} className="flex flex-wrap gap-3">
+          <li key={version.id} className="flex flex-wrap items-center justify-between gap-3 py-2">
             <Link
               to="/terms/$version"
               params={{ version: version.id }}
               search={{ lang: locale }}
               aria-current={version.id === currentId ? 'page' : undefined}
-              className="underline underline-offset-4"
+              className="touch-action inline-flex min-h-11 items-center rounded-md px-2 font-semibold text-primary underline-offset-4 hover:underline aria-[current=page]:bg-sidebar-active aria-[current=page]:text-sidebar-active-foreground"
             >
               {version.versionId}
             </Link>
@@ -85,7 +85,9 @@ export function PublishedTermsHistory({
           </li>
         ))}
       </ul>
-      {loading && <LoadingStatus>{t('tos.page.loading', locale)}</LoadingStatus>}
+      {loading && (
+        <RecordListSkeleton label={t('tos.page.loading', locale)} view="card" headings={[]} />
+      )}
       {error && <p role="alert">{termsHistoryText('historyError', locale)}</p>}
       {history?.versions.length === 0 && <p>{termsHistoryText('historyEmpty', locale)}</p>}
       {(error || history?.nextCursor) && (

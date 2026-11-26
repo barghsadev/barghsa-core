@@ -1,3 +1,5 @@
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import {
   ArrowLeftRight as TableArrowLeftRightIcon,
   Eye as TableEyeIcon,
@@ -27,6 +29,7 @@ import {
   Alert,
   AlertDescription,
   Badge,
+  StatusBadge,
   Textarea,
   ListPage,
   ListRefreshButton,
@@ -184,14 +187,14 @@ function TeamCatalogue({ workspace }: { workspace?: TeamWorkspace | undefined })
       {time.notice}
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">
-          <h1 className="text-2xl font-semibold">{word('title')}</h1>
+          <h1 className="text-3xl leading-snug font-semibold">{word('title')}</h1>
           {workspace && active?.profileType === 'LEGAL' && active.title && (
             <p className="text-sm text-muted-foreground [overflow-wrap:anywhere]">
               <bdi>{active.title}</bdi>
             </p>
           )}
         </div>
-        {editing && profileRefresh}
+        {workspace?.section !== 'transfers' && profileRefresh}
       </header>
       {workspace && (
         <nav
@@ -273,7 +276,7 @@ function TeamCatalogue({ workspace }: { workspace?: TeamWorkspace | undefined })
               error={transfers.error || scope.denied}
               retainContent={!!transfers.data?.transfers.length}
               empty={!!transfers.data && !transfers.data.transfers.length}
-              loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
+              loadingView={<RecordListSkeleton label={word('loading')} view="card" headings={[]} />}
               errorView={
                 <p role="alert">{word(scope.denied ? 'forbidden' : 'loadTransfersError')}</p>
               }
@@ -330,7 +333,6 @@ function TeamCatalogue({ workspace }: { workspace?: TeamWorkspace | undefined })
       )}
       {workspace?.section !== 'transfers' && (
         <ListPage>
-          {!editing && <ListPage.Toolbar>{profileRefresh}</ListPage.Toolbar>}
           <ListPage.Content
             loading={profiles.loading}
             error={profiles.error || scope.denied}
@@ -1181,6 +1183,17 @@ function TeamMembers({
         {((!routedInvite && !refreshInEditor) || !team) && (
           <ListPage.Toolbar>
             {memberRefresh}
+            {team && workspace && (showMembers || showInvitations) && (
+              <Link
+                to="/settings/team/$section"
+                params={{ section: 'invite' }}
+                className={buttonVariants({ className: 'min-h-11' })}
+                disabled={!ready || !!action || !!ownershipStep}
+              >
+                {word('invite')}
+              </Link>
+            )}
+
             {showMembers &&
               team?.canTransferOwnership &&
               !Array.from(members.values()).some((member) => member.roles.includes('Owner')) && (
@@ -1207,21 +1220,29 @@ function TeamMembers({
           retainContent={!!team}
           empty={false}
           emptyView={null}
-          loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
+          loadingView={
+            routedId && !workspace?.edit ? (
+              <RecordDetailSkeleton label={word('loading')} />
+            ) : routedInvite || workspace?.edit ? (
+              <LoadingStatus>{word('loading')}</LoadingStatus>
+            ) : (
+              <RecordListSkeleton
+                label={word('loading')}
+                view={compact || section === 'roles' ? 'card' : 'table'}
+                headings={[
+                  word('agent'),
+                  word('roles'),
+                  word('status'),
+                  word('activity'),
+                  word('actions'),
+                ]}
+              />
+            )
+          }
           errorView={<p role="alert">{word(scope.denied ? 'forbidden' : 'loadError')}</p>}
         >
           {team && (
             <>
-              {workspace && (showMembers || showInvitations) && (
-                <Link
-                  to="/settings/team/$section"
-                  params={{ section: 'invite' }}
-                  className={buttonVariants({ className: 'min-h-11' })}
-                  disabled={!ready || !!action || !!ownershipStep}
-                >
-                  {word('invite')}
-                </Link>
-              )}
               {!workspace && (
                 <Button
                   ref={inviteTrigger}
@@ -1277,9 +1298,7 @@ function TeamMembers({
                             word('agent'),
                             word('roles'),
                             word('status'),
-                            word('invitedOn'),
-                            word('joined'),
-                            word('lastActive'),
+                            word('activity'),
                             word('actions'),
                           ].map((label) => (
                             <th
@@ -1304,7 +1323,7 @@ function TeamMembers({
                               role={compact ? 'listitem' : undefined}
                               className="block md:table-row"
                             >
-                              <TeamRecordCell compact={compact} colSpan={7}>
+                              <TeamRecordCell compact={compact} colSpan={5}>
                                 {word('empty')}
                               </TeamRecordCell>
                             </tr>
@@ -1359,18 +1378,15 @@ function TeamMembers({
                                 <Badge variant="secondary">{word(entry.role)}</Badge>
                               </TeamRecordCell>
                               <TeamRecordCell compact={compact} label={word('status')}>
-                                {word('pending')}
+                                <StatusBadge state="pending" label={word('pending')} />
                               </TeamRecordCell>
-                              <TeamRecordCell compact={compact} label={word('invitedOn')}>
+                              <TeamRecordCell compact={compact} label={word('activity')}>
+                                <span className="block text-xs text-muted-foreground">
+                                  {word('invitedOn')}
+                                </span>
                                 <time dateTime={entry.createdAt}>
                                   {time.format(entry.createdAt, { dateStyle: 'medium' })}
                                 </time>
-                              </TeamRecordCell>
-                              <TeamRecordCell compact={compact} className="hidden md:table-cell">
-                                —
-                              </TeamRecordCell>
-                              <TeamRecordCell compact={compact} className="hidden md:table-cell">
-                                —
                               </TeamRecordCell>
                               <TeamRecordCell
                                 compact={compact}
@@ -1698,33 +1714,28 @@ function Member({
         )}
       </TeamRecordCell>
       <TeamRecordCell compact={compact} label={word('status')}>
-        {word('active')}
+        <StatusBadge state="active" label={word('active')} />
       </TeamRecordCell>
-      <TeamRecordCell compact={compact} label={word('invitedOn')} className="md:whitespace-nowrap">
-        {entry.invitedAt ? (
-          <time dateTime={entry.invitedAt}>{formatJoinedAt(entry.invitedAt)}</time>
-        ) : (
-          '—'
-        )}
-      </TeamRecordCell>
-      <TeamRecordCell compact={compact} label={word('joined')} className="md:whitespace-nowrap">
-        {entry.joinedAt ? (
-          <time dateTime={entry.joinedAt}>{formatJoinedAt(entry.joinedAt)}</time>
-        ) : (
-          '—'
-        )}
-      </TeamRecordCell>
-      <TeamRecordCell
-        compact={compact}
-        label={word('lastActive')}
-        className="md:whitespace-nowrap"
-        title={word('lastActiveHint')}
-      >
-        {entry.lastActiveAt ? (
-          <time dateTime={entry.lastActiveAt}>{formatJoinedAt(entry.lastActiveAt)}</time>
-        ) : (
-          '—'
-        )}
+      <TeamRecordCell compact={compact} label={word('activity')} title={word('lastActiveHint')}>
+        <dl className="min-w-0 space-y-1">
+          {(
+            [
+              ['invitedOn', entry.invitedAt],
+              ['joined', entry.joinedAt],
+              ['lastActive', entry.lastActiveAt],
+            ] as const
+          ).map(
+            ([label, value]) =>
+              value && (
+                <div key={label}>
+                  <dt className="text-xs text-muted-foreground">{word(label)}</dt>
+                  <dd>
+                    <time dateTime={value}>{formatJoinedAt(value)}</time>
+                  </dd>
+                </div>
+              )
+          )}
+        </dl>
       </TeamRecordCell>
       <TeamRecordCell compact={compact} data-table-actions={compact ? undefined : ''}>
         <div className="flex flex-wrap gap-2">

@@ -133,9 +133,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(owner.getByText('Other workspace', { exact: true })).toHaveCount(0);
     const requestHeadings = await owner.getByRole('heading', { level: 2 }).allTextContents();
     expect(requestHeadings).toEqual([
+      t('settings.privacy.requests', locale),
       t('settings.privacy.export.title', locale),
       t('settings.privacy.closure.title', locale),
-      t('settings.privacy.requests', locale),
     ]);
     const clear = owner.locator('details');
     const activeOrder = owner.getByText(t('settings.privacy.blocker.activeOrder', locale), {

@@ -478,7 +478,7 @@ for (const locale of ['fa', 'en'] as const) {
     await page.goto('/settings/team/invitations');
     // Scope is a real accessible table; invitees expose no registration detail.
     const table = page.getByRole('table');
-    await expect(table.getByRole('columnheader')).toHaveCount(7);
+    await expect(table.getByRole('columnheader')).toHaveCount(5);
     const pendingRow = table.getByRole('row').filter({ hasText: 'i***@example.test' });
     await expect(pendingRow).toContainText(fa ? 'در انتظار' : 'Pending');
     const trigger = page.getByRole('link', {

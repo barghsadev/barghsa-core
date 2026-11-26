@@ -1,3 +1,4 @@
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import { sendToast, toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useQueryClient } from '@tanstack/react-query';
@@ -5,15 +6,7 @@ import { queryKeys } from '../lib/query-keys.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { useEffect, useId, useRef, useState } from 'react';
 import { ArrowDownToLine, CheckCircle2, TriangleAlert } from 'lucide-react';
-import {
-  Alert,
-  AlertDescription,
-  Badge,
-  Button,
-  buttonVariants,
-  LoadingStatus,
-  PageHeader,
-} from '@barghsa/ui';
+import { Alert, AlertDescription, Badge, Button, buttonVariants, PageHeader } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { lifecycleFormText } from '@barghsa/i18n/profile-lifecycle-forms';
 import { useLocale } from '../hooks/useLocale.js';
@@ -288,7 +281,11 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
     >
       <PageHeader title={t('settings.privacy.profileRequests', locale)} />
       {state === 'loading' && (
-        <LoadingStatus>{t('settings.privacy.loading', locale)}</LoadingStatus>
+        <RecordListSkeleton
+          label={t('settings.privacy.loading', locale)}
+          view="card"
+          headings={[]}
+        />
       )}
       {state === 'error' && (
         <Alert variant="destructive">
@@ -356,7 +353,70 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
             </div>
           )}
           <div className="grid items-start gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:grid-rows-[max-content_1fr]">
-            <div className={recordEditorSurface}>
+            <div className={`${recordEditorSurface} md:col-start-1 md:row-start-1`}>
+              <RecordEditorSection title={t('settings.privacy.requests', locale)}>
+                {preview.requests.length ? (
+                  <ul className="grid gap-3">
+                    {preview.requests.map((item) => (
+                      <li
+                        key={item.ticketId}
+                        className="min-w-0 space-y-2 rounded-lg border bg-card p-3"
+                      >
+                        <a
+                          className="touch-action flex min-h-11 flex-wrap items-center justify-between gap-2 rounded-sm"
+                          href={`/tickets/${encodeURIComponent(item.ticketId)}`}
+                        >
+                          <span className="grid min-w-0 gap-0.5">
+                            <span className="text-sm font-semibold text-primary underline underline-offset-4">
+                              {t(`settings.privacy.${item.type}.title`, locale)}
+                            </span>
+                            <time
+                              dateTime={item.createdAt}
+                              className="text-xs text-muted-foreground"
+                            >
+                              {formatRelativeTime(item.createdAt, locale) ||
+                                lifecycleFormText('submittedNow', locale)}
+                            </time>
+                          </span>
+                          <Badge>{t(`tickets.${item.status}`, locale)}</Badge>
+                        </a>
+                        {item.type === 'export' &&
+                          item.exportJobId &&
+                          (item.exportExpiresAt &&
+                          new Date(item.exportExpiresAt).getTime() <= Date.now() ? (
+                            <p className="text-sm text-muted-foreground">
+                              {t('settings.privacy.export.expired', locale)}
+                            </p>
+                          ) : (
+                            <JobProgress jobId={item.exportJobId} />
+                          ))}
+                        {item.type === 'export' && !item.exportJobId && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            disabled={submitting !== null || pending}
+                            loading={
+                              submitting === 'export' &&
+                              !pending &&
+                              command.current?.body === null &&
+                              command.current.ticketId === item.ticketId
+                            }
+                            onClick={() => startExport(item.ticketId)}
+                          >
+                            {t('settings.privacy.export.prepare', locale)}
+                          </Button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    {lifecycleFormText('noRequests', locale)}
+                  </p>
+                )}
+              </RecordEditorSection>
+            </div>
+            <div className={`${recordEditorSurface} md:col-start-1 md:row-start-2`}>
               <div>
                 <RecordEditorSection
                   title={t('settings.privacy.export.title', locale)}
@@ -479,66 +539,6 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
                   </Button>
                 )}
               </RecordEditorActions>
-            </div>
-            <div className={`${recordEditorSurface} md:col-start-1 md:row-start-2`}>
-              <RecordEditorSection title={t('settings.privacy.requests', locale)}>
-                {preview.requests.length ? (
-                  <ul className="divide-y">
-                    {preview.requests.map((item) => (
-                      <li key={item.ticketId} className="space-y-2 py-2 first:pt-0 last:pb-0">
-                        <a
-                          className="flex min-h-11 flex-wrap items-center justify-between gap-2 rounded-sm"
-                          href={`/tickets/${encodeURIComponent(item.ticketId)}`}
-                        >
-                          <span className="grid min-w-0 gap-0.5">
-                            <span className="text-sm text-primary underline underline-offset-4">
-                              {t(`settings.privacy.${item.type}.title`, locale)}
-                            </span>
-                            <time
-                              dateTime={item.createdAt}
-                              className="text-xs text-muted-foreground"
-                            >
-                              {formatRelativeTime(item.createdAt, locale) ||
-                                lifecycleFormText('submittedNow', locale)}
-                            </time>
-                          </span>
-                          <Badge>{t(`tickets.${item.status}`, locale)}</Badge>
-                        </a>
-                        {item.type === 'export' &&
-                          item.exportJobId &&
-                          (item.exportExpiresAt &&
-                          new Date(item.exportExpiresAt).getTime() <= Date.now() ? (
-                            <p className="text-sm text-muted-foreground">
-                              {t('settings.privacy.export.expired', locale)}
-                            </p>
-                          ) : (
-                            <JobProgress jobId={item.exportJobId} />
-                          ))}
-                        {item.type === 'export' && !item.exportJobId && (
-                          <Button
-                            type="button"
-                            variant="outline"
-                            disabled={submitting !== null || pending}
-                            loading={
-                              submitting === 'export' &&
-                              !pending &&
-                              command.current?.body === null &&
-                              command.current.ticketId === item.ticketId
-                            }
-                            onClick={() => startExport(item.ticketId)}
-                          >
-                            {t('settings.privacy.export.prepare', locale)}
-                          </Button>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    {lifecycleFormText('noRequests', locale)}
-                  </p>
-                )}
-              </RecordEditorSection>
             </div>
           </div>
         </>

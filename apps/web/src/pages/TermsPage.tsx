@@ -161,9 +161,16 @@ export function TermsPage({
           </nav>
           {/* Loading state */}
           {loading && (
-            <div className="flex flex-col items-center justify-center py-16">
-              <SkeletonText lines={3} className="w-full max-w-md" />
-              <p className="mt-4 text-sm text-muted-foreground">{t('tos.page.loading', locale)}</p>
+            <div
+              role="status"
+              aria-label={t('tos.page.loading', locale)}
+              data-slot="record-detail-skeleton"
+              className="space-y-6 rounded-xl border bg-card p-4 sm:p-6"
+            >
+              <span className="sr-only">{t('tos.page.loading', locale)}</span>
+              <SkeletonText lines={2} className="w-1/2" />
+              <SkeletonText lines={4} className="border-t pt-4" />
+              <SkeletonText lines={3} />
             </div>
           )}
 
@@ -193,12 +200,19 @@ export function TermsPage({
           {/* TOS content */}
           {tos && !loading && !error && (
             <article className="prose prose-sm dark:prose-invert max-w-none">
-              <header className="mb-8 not-prose">
-                <h1 className="text-2xl font-bold tracking-tight">{t('tos.page.title', locale)}</h1>
-                <div className="mt-2 flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
-                  <p>
-                    <bdi>{tos.versionId}</bdi>
-                  </p>
+              <header className="not-prose mb-6 space-y-3 border-b pb-5">
+                <h1 className="text-3xl leading-snug font-semibold">
+                  {t('tos.page.title', locale)}
+                </h1>
+                <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-muted-foreground">
+                    <bdi className="font-semibold text-foreground">{tos.versionId}</bdi>
+                    {formattedDate && (
+                      <span>
+                        {t('tos.page.published', locale).replace('{date}', formattedDate)}
+                      </span>
+                    )}
+                  </div>
                   <Button
                     type="button"
                     variant="outline"
@@ -208,11 +222,6 @@ export function TermsPage({
                     {t('tos.page.print', locale)}
                   </Button>
                 </div>
-                {formattedDate && (
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    {t('tos.page.published', locale).replace('{date}', formattedDate)}
-                  </p>
-                )}
               </header>
 
               <Suspense fallback={<p role="status">{t('tos.page.loading', locale)}</p>}>

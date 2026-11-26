@@ -1,7 +1,8 @@
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import { Link } from '@tanstack/react-router';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import {
-  LoadingStatus,
+  StatusBadge,
   Badge,
   Button,
   buttonVariants,
@@ -132,36 +133,41 @@ export function AgentDetailDialog({
     <>
       {recoveryNotice && <p role="alert">{recoveryNotice}</p>}
       {refreshError && <p role="alert">{word('loadError')}</p>}
-      <TeamIdentity entry={entry} owner={owner} />
-      <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-        <dt className="text-muted-foreground">{word('status')}</dt>
-        <dd>{word(pending ? 'pending' : 'active')}</dd>
-        <dt className="text-muted-foreground">{word('roles')}</dt>
-        <dd className="flex flex-wrap gap-1">
-          {roles.map((role) => (
-            <Badge key={role} variant="secondary">
-              {word(role === 'Owner' ? 'owner' : role)}
-            </Badge>
-          ))}
-        </dd>
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <TeamIdentity entry={entry} owner={owner} />
+        <StatusBadge
+          state={pending ? 'pending' : 'active'}
+          label={word(pending ? 'pending' : 'active')}
+        />
+      </div>
+      <dl className="grid grid-cols-2 gap-3 border-t pt-4 text-sm sm:grid-cols-4">
+        <div>
+          <dt className="text-xs text-muted-foreground">{word('roles')}</dt>
+          <dd className="mt-1 flex flex-wrap gap-1">
+            {roles.map((role) => (
+              <Badge key={role} variant="secondary">
+                {word(role === 'Owner' ? 'owner' : role)}
+              </Badge>
+            ))}
+          </dd>
+        </div>
         {(
           [
             ['invitedOn', pending ? entry.createdAt : entry.invitedAt],
             ['joined', entry.joinedAt],
             ['lastActive', entry.lastActiveAt],
           ] as const
-        ).map(([label, date]) => (
-          <div key={label} className="contents">
-            <dt className="text-muted-foreground">{word(label)}</dt>
-            <dd>
-              {date ? (
-                <time dateTime={date}>{time.format(date, { dateStyle: 'medium' })}</time>
-              ) : (
-                '—'
-              )}
-            </dd>
-          </div>
-        ))}
+        ).map(
+          ([label, date]) =>
+            date && (
+              <div key={label}>
+                <dt className="text-xs text-muted-foreground">{word(label)}</dt>
+                <dd className="mt-1">
+                  <time dateTime={date}>{time.format(date, { dateStyle: 'medium' })}</time>
+                </dd>
+              </div>
+            )
+        )}
       </dl>
       {!pending && <p className="text-xs text-muted-foreground">{word('lastActiveHint')}</p>}
       {pending && entry.message && (
@@ -238,7 +244,7 @@ export function AgentDetailDialog({
     return (
       <section className="space-y-5 rounded-xl border bg-card p-4 md:p-6" aria-label={title}>
         <div className="flex items-center justify-between gap-3">
-          <h2 ref={heading} tabIndex={-1} className="text-lg font-semibold">
+          <h2 ref={heading} tabIndex={-1} className="text-2xl font-semibold">
             {title}
           </h2>
           {editorRefresh}
@@ -318,7 +324,9 @@ function ActivityHistory({
   return (
     <div className="space-y-3">
       <p className="text-sm text-muted-foreground">{word('activityHint')}</p>
-      {resource.loading && <LoadingStatus>{word('activityLoading')}</LoadingStatus>}
+      {resource.loading && (
+        <RecordListSkeleton label={word('activityLoading')} view="card" headings={[]} />
+      )}
       {resource.error && (
         <div className="space-y-2">
           <p role="alert">{word('activityError')}</p>
