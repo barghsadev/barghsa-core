@@ -246,6 +246,19 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('#policy-language')).not.toHaveAttribute('aria-required', 'true');
       await expect(page.locator('#policy-length')).not.toHaveAttribute('aria-required', 'true');
       await page.locator('#policy-tone').fill('Friendly');
+      const language = page.getByRole('combobox', { name: copy('responseLanguage'), exact: true });
+      await language.selectOption('custom');
+      const customLanguage = page.getByRole('textbox', {
+        name: copy('customLanguage'),
+        exact: true,
+      });
+      await expect(customLanguage).toHaveAttribute('aria-required', 'true');
+      await button(policyText('save')).click();
+      await expect(customLanguage).toBeFocused();
+      await expect(customLanguage).toHaveAccessibleDescription(copy('language'));
+      expect(policyWrites).toHaveLength(0);
+      await language.selectOption('');
+      await expect(customLanguage).toHaveCount(0);
       await page.getByRole('checkbox', { name: policyText('requireSources'), exact: true }).check();
       await expect(enabled).not.toBeChecked();
       await button(policyText('save')).click();

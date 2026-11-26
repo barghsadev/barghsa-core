@@ -34,6 +34,7 @@ export interface PolicyDraft {
   items: string;
   tone: string;
   language: string;
+  customLanguage: boolean;
   maxLength: string;
   requireSources: boolean;
   format: 'plain_text' | 'json_object';
@@ -125,7 +126,8 @@ export function invalidPolicyFields(value: PolicyDraft, kind: PolicyKind): (keyo
   if (typeof value.enabled !== 'boolean') errors.push('enabled');
   if (value.policyType === 'response_style') {
     if (!value.tone.trim() || value.tone.trim().length > 200) errors.push('tone');
-    if (value.language.trim().length > 50) errors.push('language');
+    const language = value.language.trim();
+    if ((value.customLanguage && !language) || language.length > 50) errors.push('language');
     if (value.maxLength.trim() && boundedCatalogueInteger(value.maxLength, 1, 100000) === null)
       errors.push('maxLength');
     if (typeof value.requireSources !== 'boolean') errors.push('requireSources');

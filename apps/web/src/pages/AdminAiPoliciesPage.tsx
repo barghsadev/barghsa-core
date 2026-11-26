@@ -140,6 +140,7 @@ function membersBasis(rows: PolicyRow[]) {
 function draftFor(row?: Entry): Draft {
   const rules = row?.rules ?? {},
     items = rules.topics ?? rules.actions ?? rules.scopes ?? rules.blockedTerms;
+  const language = typeof rules.language === 'string' ? rules.language.trim() : '';
   return {
     ...(row ? { id: row.id } : {}),
     title: row?.title ?? '',
@@ -151,7 +152,8 @@ function draftFor(row?: Entry): Draft {
       ? items.filter((item): item is string => typeof item === 'string').join('\n')
       : '',
     tone: typeof rules.tone === 'string' ? rules.tone : '',
-    language: typeof rules.language === 'string' ? rules.language : '',
+    language,
+    customLanguage: !!language && language !== 'fa' && language !== 'en',
     maxLength: typeof rules.maxLength === 'number' ? String(rules.maxLength) : '',
     requireSources: rules.requireSources === true,
     format: rules.format === 'json_object' ? 'json_object' : 'plain_text',
@@ -559,6 +561,7 @@ function OwnedAiPoliciesPage({
     form.field('policyType')[1](value);
     for (const field of ['items', 'tone', 'language', 'maxLength'] as const)
       form.field(field)[1]('');
+    form.field('customLanguage')[1](false);
     form.field('requireSources')[1](false);
     form.form.clearErrors([
       'items',
@@ -1056,17 +1059,45 @@ function OwnedAiPoliciesPage({
                             />
                           </div>
                           <div className={recordEditorField}>
-                            <Label htmlFor="policy-language">{label('language')}</Label>
-                            <Input
-                              {...form.bind('language')}
+                            <Label htmlFor="policy-language">{copy('responseLanguage')}</Label>
+                            <NativeSelect
+                              {...(!draft.customLanguage ? form.bind('language') : {})}
                               id="policy-language"
-                              dir="auto"
-                              maxLength={50}
-                              value={draft.language}
-                              onChange={(event) =>
-                                form.field('language')[1](event.target.value as Draft['language'])
-                              }
-                            />
+                              className="w-full"
+                              value={draft.customLanguage ? 'custom' : draft.language}
+                              onChange={(event) => {
+                                const choice = event.target.value;
+                                const custom = choice === 'custom';
+                                form.field('customLanguage')[1](custom);
+                                form.field('language')[1](custom ? '' : choice);
+                              }}
+                            >
+                              <option value="">{copy('noLanguageRule')}</option>
+                              <option value="fa">{copy('persian')}</option>
+                              <option value="en">{copy('english')}</option>
+                              <option value="custom">{copy('otherLanguage')}</option>
+                            </NativeSelect>
+                            {draft.customLanguage && (
+                              <div className="space-y-1 pt-1.5">
+                                <Label htmlFor="policy-custom-language">
+                                  {copy('customLanguage')}
+                                </Label>
+                                <Input
+                                  {...form.bind('language')}
+                                  id="policy-custom-language"
+                                  dir="auto"
+                                  maxLength={50}
+                                  required
+                                  aria-required="true"
+                                  placeholder={copy('languageExample')}
+                                  className="placeholder-shown:[direction:inherit]"
+                                  value={draft.language}
+                                  onChange={(event) =>
+                                    form.field('language')[1](event.target.value)
+                                  }
+                                />
+                              </div>
+                            )}
                             <CatalogueFieldFeedback
                               compact
                               id={form.errorId('language')}
@@ -1075,7 +1106,7 @@ function OwnedAiPoliciesPage({
                             />
                           </div>
                           <div className={recordEditorField}>
-                            <Label htmlFor="policy-length">{label('maxLength')}</Label>
+                            <Label htmlFor="policy-length">{copy('responseLength')}</Label>
                             <Input
                               {...form.bind('maxLength')}
                               id="policy-length"
@@ -1085,6 +1116,8 @@ function OwnedAiPoliciesPage({
                               min={1}
                               max={100000}
                               step={1}
+                              className="max-w-36"
+                              aria-describedby={form.errorId('maxLength')}
                               value={draft.maxLength}
                               onChange={(event) =>
                                 form.field('maxLength')[1](event.target.value as Draft['maxLength'])
@@ -1095,6 +1128,7 @@ function OwnedAiPoliciesPage({
                               id={form.errorId('maxLength')}
                               error={form.errors.maxLength}
                               message={messages.maxLength}
+                              hint={copy('responseLengthHelp')}
                             />
                           </div>
                           <div className="self-center">

@@ -1522,12 +1522,8 @@ for (const locale of ['en', 'fa'])
       .getByLabel(fa ? 'نوع سیاست' : 'Policy type', { exact: true })
       .selectOption('response_style');
     await page.getByLabel(fa ? 'لحن' : 'Tone', { exact: true }).fill('Clear and concise');
-    await page
-      .getByLabel(fa ? 'زبان (اختیاری)' : 'Language (optional)', { exact: true })
-      .fill(locale);
-    await page
-      .getByLabel(fa ? 'حداکثر طول (اختیاری)' : 'Maximum length (optional)', { exact: true })
-      .fill('1200');
+    await page.locator('#policy-language').selectOption(locale);
+    await page.locator('#policy-length').fill('1200');
     await page.getByLabel(fa ? 'فعال' : 'Enabled', { exact: true }).uncheck();
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
     await confirmDestructiveAction(page, fa ? 'fa' : 'en');

@@ -28,6 +28,7 @@ const policy: PolicyDraft = {
   items: 'energy',
   tone: '',
   language: '',
+  customLanguage: false,
   maxLength: '',
   requireSources: false,
   format: 'plain_text',

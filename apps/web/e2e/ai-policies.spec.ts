@@ -194,8 +194,24 @@ for (const locale of ['en', 'fa'] as const)
     await page.getByLabel(label('name'), { exact: true }).fill('Style');
     await page.getByLabel(label('type'), { exact: true }).selectOption('response_style');
     await page.getByLabel(label('tone'), { exact: true }).fill('Concise');
-    await page.getByLabel(label('language'), { exact: true }).fill(locale);
-    await page.getByLabel(label('maxLength'), { exact: true }).fill('500');
+    const language = page.getByRole('combobox', {
+      name: knowledgePolicyFormText('responseLanguage', locale),
+      exact: true,
+    });
+    const customLanguage = page.getByRole('textbox', {
+      name: knowledgePolicyFormText('customLanguage', locale),
+      exact: true,
+    });
+    await expect(language).toHaveValue('');
+    await language.selectOption(locale);
+    await expect(customLanguage).toHaveCount(0);
+    const length = page.getByLabel(knowledgePolicyFormText('responseLength', locale), {
+      exact: true,
+    });
+    await expect(length).toHaveAccessibleDescription(
+      knowledgePolicyFormText('responseLengthHelp', locale)
+    );
+    await length.fill(locale === 'fa' ? '۵۰۰' : '500');
     await page.getByLabel(label('requireSources'), { exact: true }).check();
     expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
     await click('save');
@@ -204,6 +220,23 @@ for (const locale of ['en', 'fa'] as const)
       policyType: 'response_style',
       rules: { tone: 'Concise', language: locale, maxLength: 500, requireSources: true },
     });
+    const styleId = policies.find((row) => row.title === 'Style')?.id;
+    expect(styleId).toEqual(expect.any(String));
+    const editStyle = `/admin/policies/${styleId}/edit`;
+    await page.goto(editStyle);
+    await expect(language).toHaveValue(locale);
+    await language.selectOption('custom');
+    await customLanguage.fill('fr-CA');
+    expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+    await click('save');
+    await confirm();
+    expect(writes.at(-1)).toMatchObject({
+      policyType: 'response_style',
+      rules: { tone: 'Concise', language: 'fr-CA', maxLength: 500, requireSources: true },
+    });
+    await page.goto(editStyle);
+    await expect(language).toHaveValue('custom');
+    await expect(customLanguage).toHaveValue('fr-CA');
     await page.goto('/admin/policies/new');
     await page.getByLabel(label('name'), { exact: true }).fill('Filter');
     await page.getByLabel(label('type'), { exact: true }).selectOption('content_filter');
