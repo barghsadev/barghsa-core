@@ -434,6 +434,54 @@ for (const kind of ['wallet', 'invoice'] as const) {
 }
 
 for (const locale of ['en', 'fa'] as const) {
+  test(`invoice receipt errors lead to the correct recovery action (${locale})`, async ({
+    page,
+  }) => {
+    const { submissions, uploads } = await setup(page, locale, 'invoice', false, 'light', false);
+    let status = 503;
+    const reads: string[] = [];
+    await page.route(`**/api/invoices/${invoiceId}`, (route) => {
+      reads.push(route.request().method());
+      return status === 200
+        ? route.fallback()
+        : route.fulfill({ status, json: { message: 'Private invoice detail' } });
+    });
+    const recovery = page.getByTestId('invoice-load-error');
+    const retry = recovery.getByRole('button', {
+      name: t('invoices.activity.retry', locale),
+      exact: true,
+    });
+    const back = recovery.getByRole('link', {
+      name: t('invoices.details.back', locale),
+    });
+    await page.reload();
+    await expect(recovery.getByRole('alert')).toContainText(t('invoices.details.error', locale));
+    await expect(back).toHaveAttribute('href', '/invoices');
+    const beforeRetry = reads.length;
+    status = 200;
+    await retry.press('Enter');
+    await expect(page.getByTestId('invoice-receipt-form')).toBeVisible();
+    expect(reads.slice(beforeRetry)).toEqual(['GET']);
+    await expect(recovery).toHaveCount(0);
+
+    status = 403;
+    await page.reload();
+    await expect(recovery.getByRole('alert')).toContainText(t('invoices.details.notFound', locale));
+    await expect(retry).toHaveCount(0);
+    await expect(page.getByTestId('invoice-receipt-form')).toHaveCount(0);
+    await expect(page.getByRole('main')).not.toContainText('Private invoice detail');
+    await expect(back).toHaveAttribute('href', '/invoices');
+    expect(
+      (await new AxeBuilder({ page }).include('[data-testid="invoice-load-error"]').analyze())
+        .violations
+    ).toEqual([]);
+    await back.click();
+    await expect(page).toHaveURL('/invoices');
+    expect(reads.every((method) => method === 'GET')).toBe(true);
+    expect(submissions).toEqual([]);
+    expect(uploads).toEqual([]);
+  });
+
   test(`invoice receipt route opens directly and rechecks eligibility (${locale})`, async ({
     page,
   }) => {

@@ -2,7 +2,7 @@ import { useOwnedManualServerRead } from '../hooks/useServerQuery.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { queryKeys } from '../lib/query-keys.js';
-import { LoadingStatus, buttonVariants } from '@barghsa/ui';
+import { Button, LoadingStatus, ResultGlyph, buttonVariants } from '@barghsa/ui';
 import { InvoiceActivity } from './InvoiceActivity.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -135,16 +135,31 @@ function OwnedInvoiceDetails({
     return () => controller.abort();
   }, [readDetails, reload, revision]);
   const receiptCopy = invoiceReceiptPageMessages[locale];
-  const backLabel = ReceiptForm ? receiptCopy.back : t('invoices.details.back', locale);
+  const canSubmitReceipt = details && canCustomerSubmitInvoiceBankReceipt(details.invoice);
+  const receiptIssue =
+    ReceiptForm && !loading
+      ? (error ?? (details && !canSubmitReceipt ? 'ineligible' : null))
+      : null;
+  const backToInvoice = ReceiptForm && !error;
+  const backLabel = backToInvoice ? receiptCopy.back : t('invoices.details.back', locale);
   const backContents = (
     <>
       <ArrowRightIcon className={`size-4 ${isRtl ? '' : 'rotate-180'}`} aria-hidden="true" />
       {backLabel}
     </>
   );
-  const canSubmitReceipt = details && canCustomerSubmitInvoiceBankReceipt(details.invoice);
   const backClass =
     'touch-action inline-flex items-center gap-2 text-sm text-foreground underline underline-offset-4';
+  const backLink = (className: string) =>
+    backToInvoice ? (
+      <Link to="/invoices/$invoiceId" params={{ invoiceId }} className={className}>
+        {backContents}
+      </Link>
+    ) : (
+      <Link to="/invoices" className={className}>
+        {backContents}
+      </Link>
+    );
 
   return (
     <div
@@ -156,17 +171,7 @@ function OwnedInvoiceDetails({
       dir={isRtl ? 'rtl' : 'ltr'}
     >
       {time.notice}
-      <nav aria-label={backLabel}>
-        {ReceiptForm ? (
-          <Link to="/invoices/$invoiceId" params={{ invoiceId }} className={backClass}>
-            {backContents}
-          </Link>
-        ) : (
-          <Link to="/invoices" className={backClass}>
-            {backContents}
-          </Link>
-        )}
-      </nav>
+      {!receiptIssue && <nav aria-label={backLabel}>{backLink(backClass)}</nav>}
       {!ReceiptForm && details?.consultationId && (
         <Link
           className="touch-action text-sm text-primary underline"
@@ -214,9 +219,11 @@ function OwnedInvoiceDetails({
           >
             {t('invoices.details.receiptTitle', locale)}
           </h1>
-          <p className="text-sm text-muted-foreground">
-            {t('invoices.details.receiptSubtitle', locale)}
-          </p>
+          {!receiptIssue && (
+            <p className="text-sm text-muted-foreground">
+              {t('invoices.details.receiptSubtitle', locale)}
+            </p>
+          )}
         </header>
       ) : (
         <header className="flex flex-wrap items-center justify-between gap-3">
@@ -272,6 +279,49 @@ function OwnedInvoiceDetails({
           <Loader2Icon className="h-4 w-4 animate-spin" aria-hidden="true" />
           {t('invoices.details.loading', locale)}
         </LoadingStatus>
+      ) : receiptIssue ? (
+        <section
+          aria-labelledby="invoice-receipt-message"
+          data-testid={error ? 'invoice-load-error' : undefined}
+          className="rounded-xl border bg-card p-4 sm:p-5"
+        >
+          <div className="flex items-start gap-3">
+            <ResultGlyph error={receiptIssue === 'load'} />
+            <div className="min-w-0 space-y-1" role={error ? 'alert' : 'status'}>
+              <h2 id="invoice-receipt-message" className="text-base font-semibold">
+                {receiptIssue === 'ineligible'
+                  ? receiptCopy.unavailable
+                  : t(
+                      receiptIssue === 'load'
+                        ? 'invoices.details.error'
+                        : 'invoices.details.notFound',
+                      locale
+                    )}
+              </h2>
+              {receiptIssue !== 'load' && (
+                <p className="text-sm text-muted-foreground">
+                  {receiptIssue === 'ineligible'
+                    ? receiptCopy.checkInvoice
+                    : receiptCopy.chooseInvoice}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {receiptIssue === 'load' && (
+              <Button
+                type="button"
+                onClick={() => {
+                  heading.current?.focus({ preventScroll: true });
+                  setReload((value) => value + 1);
+                }}
+              >
+                {t('invoices.activity.retry', locale)}
+              </Button>
+            )}
+            {backLink(buttonVariants({ variant: 'outline', className: 'min-h-11' }))}
+          </div>
+        </section>
       ) : error ? (
         <p className="text-destructive" role="alert" data-testid="invoice-load-error">
           {t(
@@ -289,18 +339,12 @@ function OwnedInvoiceDetails({
           )}
         </p>
       ) : details && ReceiptForm ? (
-        canSubmitReceipt ? (
-          <InvoiceReceiptEditor
-            details={details}
-            ReceiptForm={ReceiptForm}
-            onRefreshDetails={refreshDetails}
-            formatTimestamp={time.format}
-          />
-        ) : (
-          <p role="status" className="rounded-lg border bg-card p-4 text-sm">
-            {receiptCopy.unavailable}
-          </p>
-        )
+        <InvoiceReceiptEditor
+          details={details}
+          ReceiptForm={ReceiptForm}
+          onRefreshDetails={refreshDetails}
+          formatTimestamp={time.format}
+        />
       ) : details ? (
         <InvoiceDetailsBody
           key={details.viewedInvoiceId}

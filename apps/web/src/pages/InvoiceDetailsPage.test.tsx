@@ -995,7 +995,8 @@ describe('InvoiceDetailsPage (T-04.1.05.04)', () => {
         expect(container.textContent).not.toContain('Receipt saved, but history');
         if (outcome === 'denied') {
           const unavailable = container.querySelector('[data-testid="invoice-load-error"]');
-          expect(unavailable?.textContent).toBe('Invoice not found');
+          expect(unavailable?.querySelector('h2')?.textContent).toBe('Invoice not found');
+          expect(unavailable?.querySelector('a')?.getAttribute('href')).toBe('/invoices');
           expect(unavailable?.querySelector('button')).toBeNull();
           expect(container.querySelector('[data-testid="invoice-activity"]')).toBeNull();
           expect(container.querySelector('[data-testid="invoice-receipt-form"]')).toBeNull();

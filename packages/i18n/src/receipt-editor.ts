@@ -2,10 +2,14 @@ export const invoiceReceiptPageMessages = {
   en: {
     back: 'Back to invoice',
     unavailable: 'Bank receipt submission is unavailable for this invoice.',
+    checkInvoice: 'Return to the invoice to see its payment status.',
+    chooseInvoice: 'Open an invoice from the list for your active profile.',
   },
   fa: {
     back: 'بازگشت به فاکتور',
     unavailable: 'امکان ارسال رسید بانکی برای این فاکتور وجود ندارد.',
+    checkInvoice: 'برای مشاهده وضعیت پرداخت، به فاکتور بازگردید.',
+    chooseInvoice: 'فاکتور موردنظر را از فهرست فاکتورهای پروفایل فعال باز کنید.',
   },
 };
 
