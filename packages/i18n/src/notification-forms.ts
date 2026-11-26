@@ -57,8 +57,8 @@ const en = {
   eventKey: 'Enter an event key without spaces, up to 100 characters.',
   event: 'Event',
   chooseEvent: 'Choose an event',
-  registeredEvents: 'Application events',
-  otherEvents: 'Saved and legacy events',
+  searchEvents: 'Search by event name or key',
+  noMatchingEvents: 'No matching events',
   customEvent: 'Custom event key',
   customEventHelp: 'Enter the exact key sent by the integration.',
   channel: 'Select email, SMS or in-app delivery.',
@@ -136,8 +136,8 @@ const fa: Record<keyof typeof en, string> = {
   eventKey: 'کلید رویداد را بدون فاصله و حداکثر با ۱۰۰ نویسه وارد کنید.',
   event: 'رویداد',
   chooseEvent: 'انتخاب رویداد',
-  registeredEvents: 'رویدادهای برنامه',
-  otherEvents: 'رویدادهای ذخیره‌شده و قدیمی',
+  searchEvents: 'جست‌وجوی نام یا کلید رویداد',
+  noMatchingEvents: 'رویدادی پیدا نشد',
   customEvent: 'کلید رویداد سفارشی',
   customEventHelp: 'کلیدی را وارد کنید که سامانهٔ متصل ارسال می‌کند.',
   channel: 'ارسال ایمیل، پیامک یا درون‌برنامه‌ای را انتخاب کنید.',
@@ -160,4 +160,63 @@ const fa: Record<keyof typeof en, string> = {
 export type NotificationFormKey = keyof typeof en;
 export function notificationFormText(key: NotificationFormKey, locale: Locale): string {
   return (locale === 'fa' ? fa : en)[key];
+}
+
+export const notificationEventTitles: Record<string, readonly [english: string, persian: string]> =
+  {
+    'admin.operations_alert': ['Operations alert', 'هشدار عملیاتی'],
+    'admin.service_target_breached': ['Response target missed', 'عبور از زمان هدف پاسخ'],
+    'admin.service_escalated': ['Work escalated', 'ارجاع کار به سطح بالاتر'],
+    'auth.otp_sent': ['One-time code sent', 'ارسال رمز یک‌بار مصرف'],
+    'auth.password_changed': ['Password changed', 'تغییر رمز عبور'],
+    'auth.session_revoked': ['Session ended', 'پایان نشست'],
+    'auth.refresh_token_reused': ['Session token reused', 'استفاده دوباره از توکن نشست'],
+    'auth.new_device_login': ['Sign-in on a new device', 'ورود از دستگاه جدید'],
+    'payment.wallet_topup_completed': ['Wallet top-up completed', 'شارژ موفق کیف پول'],
+    'payment.wallet_topup_failed': ['Wallet top-up failed', 'شارژ ناموفق کیف پول'],
+    'payment.invoice_paid': ['Invoice paid', 'پرداخت فاکتور'],
+    'payment.bank_receipt_rejected': ['Bank receipt rejected', 'رد رسید بانکی'],
+    'payment.invoice_overdue': ['Invoice overdue', 'گذشتن سررسید فاکتور'],
+    'payment.invoice_reminder': ['Invoice payment reminder', 'یادآوری پرداخت فاکتور'],
+    'payment.refund_completed': ['Refund completed', 'بازپرداخت موفق'],
+    'payment.refund_failed': ['Refund failed', 'بازپرداخت ناموفق'],
+    'contract.created': ['Contract created', 'ایجاد قرارداد'],
+    'contract.awaiting_acceptance': ['Contract awaiting acceptance', 'قرارداد در انتظار پذیرش'],
+    'contract.accepted': ['Contract accepted', 'پذیرش قرارداد'],
+    'contract.signed': ['Contract signed', 'امضای قرارداد'],
+    'contract.active': ['Contract activated', 'فعال‌سازی قرارداد'],
+    'contract.cancelled': ['Contract cancelled', 'لغو قرارداد'],
+    'contract.changes_requested': ['Contract changes requested', 'درخواست اصلاح قرارداد'],
+    'order.submitted': ['Order submitted', 'ثبت سفارش'],
+    'order.status_changed': ['Order status changed', 'تغییر وضعیت سفارش'],
+    'order.awaiting_staff': ['Order awaiting staff review', 'سفارش در انتظار بررسی کارکنان'],
+    'order.cancellation_requested': ['Order cancellation requested', 'درخواست لغو سفارش'],
+    'ticket.new_reply': ['New ticket reply', 'پاسخ جدید تیکت'],
+    'ticket.assigned': ['Ticket assigned', 'اختصاص تیکت'],
+    'document.uploaded': ['Document uploaded', 'بارگذاری مدرک'],
+    'document.scan_failed': ['Document scan failed', 'بررسی خودکار ناموفق مدرک'],
+    'document.quarantined': ['Document quarantined', 'قرنطینه مدرک'],
+    'document.review_completed': ['Document review completed', 'پایان بررسی مدرک'],
+    'profile.verification_status': [
+      'Profile verification status changed',
+      'تغییر وضعیت احراز هویت پروفایل',
+    ],
+    'profile.invitation_received': ['Profile invitation received', 'دریافت دعوت به پروفایل'],
+    'profile.agent_role_changed': [
+      'Profile representative role changed',
+      'تغییر نقش نماینده پروفایل',
+    ],
+    'wallet.low_balance': ['Low wallet balance', 'موجودی کم کیف پول'],
+    'wallet.credit_received': ['Wallet credit received', 'افزایش اعتبار کیف پول'],
+    'system.service_outage': ['Service interruption', 'اختلال سرویس'],
+    'marketing.promotion': ['Promotional offer', 'پیشنهاد تبلیغاتی'],
+    'system.notification_test': ['Test notification', 'اعلان آزمایشی'],
+    'finance.chargeback_unresolved': ['Unresolved chargeback', 'شارژبک حل‌نشده'],
+    'finance.chargeback_reversed': ['Chargeback reversed', 'برگشت شارژبک'],
+  };
+
+export function notificationEventTitle(key: string, locale: Locale): string {
+  return Object.hasOwn(notificationEventTitles, key)
+    ? notificationEventTitles[key]![locale === 'fa' ? 1 : 0]
+    : key;
 }

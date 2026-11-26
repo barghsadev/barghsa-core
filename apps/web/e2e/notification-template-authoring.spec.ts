@@ -2,7 +2,8 @@ import { crmShell } from './crm-shell-fixture';
 import { notificationTemplate } from '../src/test/content-catalogue-fixtures';
 import { test, expect } from './coverage-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
-import { notificationFormText } from '@barghsa/i18n/notification-forms';
+import { notificationEventTitle, notificationFormText } from '@barghsa/i18n/notification-forms';
+import { chooseNotificationEvent } from './notification-event-fixture';
 test.use({ viewport: { width: 390, height: 844 } });
 
 test('new notification drafts inherit delivery filters from the catalogue', async ({ page }) => {
@@ -17,15 +18,15 @@ test('new notification drafts inherit delivery filters from the catalogue', asyn
     .click();
   await expect(page).toHaveURL(/\/admin\/notifications\/new\?/);
   const event = page.locator('#notification-template-eventKey');
-  await expect(event).toHaveValue('payment.invoice_reminder');
+  await expect(event).toHaveValue(notificationEventTitle('payment.invoice_reminder', 'fa'));
   await expect(page.locator('#notification-template-channel')).toHaveValue('sms');
   await expect(page.locator('#notification-template-locale')).toHaveValue('fa');
   await expect(page.locator('#notification-template-subject')).toHaveCount(0);
-  await event.selectOption('contract.signed');
+  await chooseNotificationEvent(page, 'contract.signed', 'fa', 'امضای قرارداد');
   await page
     .getByRole('button', { name: t('admin.notifications.refresh', 'fa'), exact: true })
     .click();
-  await expect(event).toHaveValue('contract.signed');
+  await expect(event).toHaveValue(notificationEventTitle('contract.signed', 'fa'));
 });
 
 for (const locale of ['en', 'fa'] as const) {
@@ -81,9 +82,13 @@ for (const locale of ['en', 'fa'] as const) {
     );
     const event = editor.locator('#notification-template-eventKey');
     await expect(event).toHaveValue('');
-    await event.selectOption('auth.refresh_token_reused');
-    await expect(event).toHaveValue('auth.refresh_token_reused');
-    await event.selectOption({ label: notificationFormText('customEvent', locale) });
+    await chooseNotificationEvent(page, 'auth.refresh_token_reused', locale);
+    await expect(event).toHaveValue(notificationEventTitle('auth.refresh_token_reused', locale));
+    await expect(editor.getByText('auth.refresh_token_reused', { exact: true })).toBeVisible();
+    await editor
+      .getByRole('button', { name: notificationFormText('customEvent', locale), exact: true })
+      .click();
+    await expect(event).toBeFocused();
     await expect(event).toHaveAccessibleDescription(
       notificationFormText('customEventHelp', locale)
     );
@@ -196,13 +201,19 @@ test('a new SMS omits the other channel’s title and an existing SMS can clear 
   await expect(event).toHaveAttribute('aria-invalid', 'true');
   await expect(event).toBeFocused();
   expect(writes).toEqual([]);
-  await event.selectOption('payment.invoice_reminder');
+  await chooseNotificationEvent(page, 'payment.invoice_reminder', 'fa', 'invoice reminder');
   await editor.locator('button[type=submit]').click();
   await expect(editor).toHaveCount(0);
   await expect(page).toHaveURL(`/admin/notifications/${newId}`);
   expect(writes).toHaveLength(1);
   expect(writes[0]).toMatchObject({ channel: 'sms', bodyTemplate: 'A new SMS' });
   expect(writes[0]).not.toHaveProperty('subject');
+
+  await page.goto(`/admin/notifications/${newId}/edit`);
+  await expect(event).toHaveText('payment.invoice_reminder');
+  await expect(
+    editor.getByText(notificationEventTitle('payment.invoice_reminder', 'fa'), { exact: true })
+  ).toBeVisible();
 
   await page.goto(`/admin/notifications/${saved.id}/edit`);
   await expect(title).toHaveAccessibleName(notificationFormText('legacySmsSubject', 'fa'));

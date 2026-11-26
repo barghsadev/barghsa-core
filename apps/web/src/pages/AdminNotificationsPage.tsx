@@ -9,6 +9,7 @@ import {
   Upload as TableUploadIcon,
 } from 'lucide-react';
 import { TableActionIcon } from '../components/TableActionIcon.js';
+import { CatalogueChoicePicker } from '../components/CatalogueChoicePicker.js';
 import { sendToast, toast } from '../lib/toast-api.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { Link } from '@tanstack/react-router';
@@ -48,7 +49,11 @@ import {
   recordEditorField,
   recordEditorSurface,
 } from '../components/RecordEditorLayout.js';
-import { notificationFormText, type NotificationFormKey } from '@barghsa/i18n/notification-forms';
+import {
+  notificationEventTitle,
+  notificationFormText,
+  type NotificationFormKey,
+} from '@barghsa/i18n/notification-forms';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
@@ -133,7 +138,6 @@ const KNOWN_EVENT_KEYS = [
   'agent_assigned',
 ];
 const REGISTERED_EVENT_KEYS = Object.keys(NOTIFICATION_TYPE_REGISTRY).sort();
-const CUSTOM_EVENT_OPTION = 'custom event';
 
 const CHANNEL_OPTIONS: TemplateChannel[] = ['email', 'sms', 'in_app'];
 const LOCALE_OPTIONS: TemplateLocale[] = ['fa', 'en'];
@@ -238,6 +242,13 @@ function OwnedNotificationsPage({
   const [subject, setSubject] = editorForm.field('subject');
   const subjectBeforeSms = useRef('');
   const subjectRef = useRef<HTMLInputElement>(null);
+  // The event field can change modes on blur. Validate the draft rather than the transient search.
+  const eventBinding = {
+    name: 'eventKey',
+    ref: editorForm.form.register('eventKey').ref,
+    'aria-invalid': !!editorForm.errors.eventKey || undefined,
+    'aria-describedby': editorForm.errors.eventKey ? editorForm.errorId('eventKey') : undefined,
+  };
   const [bodyTemplate, setBodyTemplate] = editorForm.field('bodyTemplate');
   const [variableRows, setVariableRows] = editorForm.field('variables');
   const registerVariableFields = editorForm.form.register;
@@ -305,6 +316,7 @@ function OwnedNotificationsPage({
     (!!eventKey &&
       !Object.hasOwn(NOTIFICATION_TYPE_REGISTRY, eventKey) &&
       !savedEventKeys.includes(eventKey));
+  const selectedEventTitle = notificationEventTitle(eventKey, uiLocale);
   const contentSignature = JSON.stringify([subject, bodyTemplate, parsedVariables]);
   const unsavedContent =
     contentSignature !== savedContent || notificationVariableIssues(variableRows).some(Boolean);
@@ -1912,11 +1924,19 @@ function OwnedNotificationsPage({
                         <dl className="grid grid-cols-2 gap-x-4 gap-y-2 rounded-lg bg-muted/40 px-3 py-2.5 sm:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))]">
                           <div className="col-span-2 min-w-0 sm:col-span-1">
                             <dt className="text-xs text-muted-foreground">{label('eventKey')}</dt>
-                            <dd
-                              id="notification-template-eventKey"
-                              className="text-sm font-medium [overflow-wrap:anywhere]"
-                            >
-                              <bdi dir="ltr">{eventKey}</bdi>
+                            <dd className="text-sm font-medium [overflow-wrap:anywhere]">
+                              {selectedEventTitle !== eventKey && <p>{selectedEventTitle}</p>}
+                              <bdi
+                                id="notification-template-eventKey"
+                                dir="ltr"
+                                className={
+                                  selectedEventTitle !== eventKey
+                                    ? 'text-xs text-muted-foreground'
+                                    : undefined
+                                }
+                              >
+                                {eventKey}
+                              </bdi>
                             </dd>
                           </div>
                           <div>
@@ -1945,65 +1965,18 @@ function OwnedNotificationsPage({
                       ) : (
                         <div className="grid min-w-0 grid-cols-2 gap-x-3 gap-y-2 sm:gap-x-4 lg:grid-cols-3">
                           <div className={`${recordEditorField} col-span-2 lg:col-span-1`}>
-                            <Label
-                              htmlFor={
-                                showCustomEvent
-                                  ? 'notification-template-event-picker'
-                                  : 'notification-template-eventKey'
-                              }
-                            >
-                              {editorCopy('event')}{' '}
+                            <Label htmlFor="notification-template-eventKey">
+                              {showCustomEvent ? label('eventKey') : editorCopy('event')}{' '}
                               <span aria-hidden="true" className="text-destructive">
                                 *
                               </span>
                             </Label>
-                            <NativeSelect
-                              {...(!showCustomEvent ? editorForm.bind('eventKey') : {})}
-                              id={
-                                showCustomEvent
-                                  ? 'notification-template-event-picker'
-                                  : 'notification-template-eventKey'
-                              }
-                              value={showCustomEvent ? CUSTOM_EVENT_OPTION : eventKey}
-                              className="w-full min-w-0"
-                              required
-                              aria-required="true"
-                              onChange={(event) => {
-                                const value = event.target.value;
-                                setCustomEventEntry(value === CUSTOM_EVENT_OPTION);
-                                setEventKey(value === CUSTOM_EVENT_OPTION ? '' : value);
-                              }}
-                            >
-                              <option value="" disabled>
-                                {editorCopy('chooseEvent')}
-                              </option>
-                              <option value={CUSTOM_EVENT_OPTION}>
-                                {editorCopy('customEvent')}
-                              </option>
-                              <optgroup label={editorCopy('registeredEvents')}>
-                                {REGISTERED_EVENT_KEYS.map((key) => (
-                                  <option key={key} value={key}>
-                                    {key}
-                                  </option>
-                                ))}
-                              </optgroup>
-                              <optgroup label={editorCopy('otherEvents')}>
-                                {savedEventKeys.map((key) => (
-                                  <option key={key} value={key}>
-                                    {key}
-                                  </option>
-                                ))}
-                              </optgroup>
-                            </NativeSelect>
-                            {showCustomEvent && (
-                              <div className="space-y-1 pt-2">
-                                <Label htmlFor="notification-template-eventKey">
-                                  {label('eventKey')}
-                                </Label>
+                            {showCustomEvent ? (
+                              <>
                                 <Input
                                   id="notification-template-eventKey"
                                   dir="ltr"
-                                  {...editorForm.bind('eventKey')}
+                                  {...eventBinding}
                                   aria-describedby={[
                                     'notification-custom-event-help',
                                     editorForm.errors.eventKey && editorForm.errorId('eventKey'),
@@ -2023,8 +1996,68 @@ function OwnedNotificationsPage({
                                 >
                                   {editorCopy('customEventHelp')}
                                 </p>
-                              </div>
+                              </>
+                            ) : (
+                              <CatalogueChoicePicker
+                                id="notification-template-eventKey"
+                                locale={uiLocale}
+                                options={[...REGISTERED_EVENT_KEYS, ...savedEventKeys].map(
+                                  (key) => {
+                                    const title = notificationEventTitle(key, uiLocale);
+                                    return {
+                                      id: key,
+                                      title,
+                                      detail: title === key ? undefined : key,
+                                      searchText: `${key} ${key.replace(/[._]/g, ' ')} ${notificationEventTitle(key, uiLocale === 'fa' ? 'en' : 'fa')}`,
+                                    };
+                                  }
+                                )}
+                                selected={eventKey}
+                                disabled={
+                                  saving ||
+                                  editorForm.pending ||
+                                  editorUncertain ||
+                                  stale ||
+                                  !!protectedAction
+                                }
+                                field={eventBinding}
+                                labels={{
+                                  search: editorCopy('searchEvents'),
+                                  noMatches: editorCopy('noMatchingEvents'),
+                                  empty: editorCopy('noMatchingEvents'),
+                                  unavailable: editorCopy('chooseEvent'),
+                                }}
+                                onChange={setEventKey}
+                              />
                             )}
+                            <div className="flex min-w-0 flex-wrap items-center justify-between gap-x-2">
+                              {!showCustomEvent && selectedEventTitle !== eventKey && (
+                                <bdi
+                                  dir="ltr"
+                                  className="text-xs text-muted-foreground [overflow-wrap:anywhere]"
+                                >
+                                  {eventKey}
+                                </bdi>
+                              )}
+                              <Button
+                                type="button"
+                                variant="link"
+                                size="sm"
+                                className="px-0"
+                                onClick={() => {
+                                  setCustomEventEntry(!showCustomEvent);
+                                  editorForm.form.setValue('eventKey', '', { shouldDirty: true });
+                                  editorForm.form.clearErrors('eventKey');
+                                  requestAnimationFrame(() =>
+                                    document
+                                      .getElementById('notification-template-eventKey')
+                                      ?.focus()
+                                  );
+                                }}
+                              >
+                                {editorCopy(showCustomEvent ? 'chooseEvent' : 'customEvent')}
+                              </Button>
+                            </div>
                             {feedback('eventKey')}
                           </div>
 

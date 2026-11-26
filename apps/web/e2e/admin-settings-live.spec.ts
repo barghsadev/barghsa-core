@@ -3127,9 +3127,9 @@ for (const locale of ['en', 'fa'] as const)
     const editor = page
       .locator('form')
       .filter({ has: page.locator('#notification-template-eventKey') });
-    await editor.locator('#notification-template-eventKey').selectOption({
-      label: notificationFormText('customEvent', locale),
-    });
+    await editor
+      .getByRole('button', { name: notificationFormText('customEvent', locale), exact: true })
+      .click();
     await editor.locator('#notification-template-eventKey').fill(eventKey);
     await editor.locator('#notification-template-channel').selectOption(channel);
     await editor.locator('#notification-template-locale').selectOption(locale);

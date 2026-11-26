@@ -1,4 +1,6 @@
 import { expect, it } from 'vitest';
+import { NOTIFICATION_TYPE_REGISTRY } from '@barghsa/shared/notifications';
+import { notificationEventTitle, notificationEventTitles } from '@barghsa/i18n/notification-forms';
 import {
   emptyNotificationDraft,
   notificationInvalidFields,
@@ -17,6 +19,19 @@ const draft = {
   subject: 'For {{user.name}}',
   variables: [{ rowId: 0, name: 'user.name', description: 'Recipient' }],
 };
+it('labels every registered event in both languages and preserves custom keys', () => {
+  expect(Object.keys(notificationEventTitles).sort()).toEqual(
+    Object.keys(NOTIFICATION_TYPE_REGISTRY).sort()
+  );
+  for (const key of Object.keys(NOTIFICATION_TYPE_REGISTRY)) {
+    expect(notificationEventTitle(key, 'en')).toMatch(/[A-Z]/);
+    expect(notificationEventTitle(key, 'fa')).toMatch(/[آ-ی]/);
+  }
+  expect(notificationEventTitle('billing.installment_ready', 'fa')).toBe(
+    'billing.installment_ready'
+  );
+  expect(notificationEventTitle('constructor', 'en')).toBe('constructor');
+});
 it('validates declared subject and body paths', () => {
   expect(notificationInvalidFields(draft)).toEqual([]);
 });
