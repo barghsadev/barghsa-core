@@ -44,7 +44,7 @@ for (const locale of ['en', 'fa'] as const) {
             path: '/electricity/orders',
             api: '/api/electricity/orders',
             key: 'electricity-orders',
-            columns: 6,
+            columns: 4,
             title: t('electricity.orders.title', locale),
             more: t('electricity.orders.more', locale),
           },

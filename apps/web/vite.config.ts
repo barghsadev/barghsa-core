@@ -227,7 +227,7 @@ export default defineConfig(({ mode }) => {
       sourcemap: process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'hidden' : false,
       // Coverage needs original statement boundaries; production remains minified.
       minify: process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? false : 'terser',
-      terserOptions: { ecma: 2020, compress: { passes: 2 } },
+      terserOptions: { ecma: 2020, compress: { passes: 3 } },
     },
     ssr: {
       // NoExternal for monorepo workspace packages so they're bundled correctly

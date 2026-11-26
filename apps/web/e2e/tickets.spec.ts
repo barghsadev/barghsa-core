@@ -354,12 +354,12 @@ for (const staff of [false, true])
         { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'short' },
         row.updatedAt
       );
-      await expect(records).toContainText(exact);
       const disclosure = records.locator('details');
       await expect(disclosure).not.toHaveAttribute('open');
       await disclosure.locator('summary').focus();
       await page.keyboard.press('Enter');
       await expect(disclosure).toHaveAttribute('open', '');
+      await expect(disclosure.getByText(exact, { exact: true })).toBeVisible();
       if (staff) {
         await expect(records).toContainText('Support agent');
         await expect(records.getByRole('link')).toHaveCount(1);
@@ -367,7 +367,13 @@ for (const staff of [false, true])
       const initialReads = reads;
       await page.setViewportSize({ width: 1280, height: 900 });
       await expect(records.getByRole('table')).toBeVisible();
-      await expect(records.getByRole('columnheader')).toHaveCount(staff ? 9 : 6);
+      await expect(records.getByRole('columnheader')).toHaveText([
+        copy('subject'),
+        copy('status'),
+        copy('updated'),
+        ...(staff ? [copy('assignee')] : []),
+        copy('queueDetails'),
+      ]);
       await page.setViewportSize({ width: 390, height: 844 });
       await expect(records.locator('details')).toHaveAttribute('open', '');
       expect(reads).toBe(initialReads);
@@ -730,25 +736,32 @@ for (const locale of ['en', 'fa'])
       .locator('[data-slot=tickets-page]')
       .getByRole('link', { name: tTicketForms('backToTickets', locale), exact: true })
       .click();
+    const createdRow = page
+      .getByRole('row')
+      .filter({ has: page.getByRole('link', { name: item.subject, exact: true }) });
     await expect(
-      page.getByRole('cell', { name: locale === 'en' ? 'Billing' : 'سفارش‌ها', exact: true })
+      createdRow
+        .getByRole('rowheader')
+        .getByText(t(`tickets.category.${locale === 'en' ? 'billing' : 'orders'}`, locale), {
+          exact: true,
+        })
     ).toBeVisible();
+    await createdRow.locator('summary').click();
     await expect(
-      page
-        .getByRole('row')
-        .filter({ has: page.getByRole('link', { name: item.subject, exact: true }) })
-    ).toContainText(
-      await formatBrowserDate(
-        page,
-        locale,
-        {
-          timeZone: 'America/Los_Angeles',
-          dateStyle: 'medium',
-          timeStyle: 'short',
-        },
-        item.updatedAt
+      createdRow.getByText(
+        await formatBrowserDate(
+          page,
+          locale,
+          {
+            timeZone: 'America/Los_Angeles',
+            dateStyle: 'medium',
+            timeStyle: 'short',
+          },
+          item.updatedAt
+        ),
+        { exact: true }
       )
-    );
+    ).toBeVisible();
     expect(uploads).toBe(1);
     expect(submits).toBe(2);
   });
@@ -780,11 +793,17 @@ for (const locale of ['en', 'fa'] as const) {
       name: `${locale === 'en' ? 'Invoice' : 'صورتحساب'} ${profileId}`,
       exact: true,
     });
+    await page
+      .getByRole('row')
+      .filter({ has: page.getByRole('link', { name: item.subject, exact: true }) })
+      .locator('summary')
+      .click();
     await expect(invoiceLink).toHaveCount(1);
     await expect(invoiceLink).toHaveAttribute('href', `/invoices/${profileId}`);
     const orderRow = page
       .getByRole('row')
       .filter({ has: page.getByRole('link', { name: 'Order question', exact: true }) });
+    await orderRow.locator('summary').click();
     await expect(orderRow.getByRole('link')).toHaveCount(1);
     await expect(orderRow).toContainText(
       locale === 'en' ? 'Record view is unavailable.' : 'نمایش این رکورد در دسترس نیست.'
@@ -1770,10 +1789,17 @@ for (const staff of [false, true])
       const path = staff ? '/admin/tickets' : '/tickets';
       const queue = page.locator('[data-slot=ticket-queue-records]');
       const table = page.getByRole('button', { name: t('historyView.table', locale), exact: true });
+      const recordRow = (subject: string) =>
+        queue
+          .getByRole('row')
+          .filter({ has: page.getByRole('link', { name: subject, exact: true }) });
       await page.goto(path);
       await table.click();
-      for (const record of records)
-        await expect(queue.locator(`a[href="${record.href}"]`)).toBeVisible();
+      for (const [index, record] of records.entries()) {
+        const row = recordRow(rows[index]!.subject);
+        await row.locator('summary').click();
+        await expect(row.locator(`a[href="${record.href}"]`)).toBeVisible();
+      }
       await queue.getByRole('link', { name: rows[0]!.subject, exact: true }).click();
       const detail = page.locator('[data-slot=ticket-detail]');
       await expect(detail.locator('a')).toHaveAttribute('href', records[0]!.href);
@@ -1781,10 +1807,14 @@ for (const staff of [false, true])
       await page.keyboard.press('Enter');
       await expect(page).toHaveURL(records[0]!.href);
       await expect(page.getByText('Published electricity terms', { exact: true })).toBeVisible();
-      for (const record of records.slice(1)) {
+      for (const [index, record] of records.entries()) {
+        if (index === 0) continue;
         await page.goto(path);
-        await expect(queue.locator(`a[href="${record.href}"]`)).toBeVisible();
-        await queue.locator(`a[href="${record.href}"]`).click();
+        const row = recordRow(rows[index]!.subject);
+        await row.locator('summary').click();
+        const link = row.locator(`a[href="${record.href}"]`);
+        await expect(link).toBeVisible();
+        await link.click();
         await expect(page).toHaveURL(new RegExp(record.href.replace('?', '\\?') + '$'));
         if (record.destination === 'invoice') {
           await expect.poll(() => invoiceReads).toBeGreaterThan(0);

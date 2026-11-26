@@ -5,6 +5,8 @@ import {
   StickyRecordEditorActions,
 } from '../components/StickyRecordEditorActions.js';
 import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import { ConfirmationFields } from '@barghsa/ui';
 import { confirmationText } from '@barghsa/i18n/confirmation';
@@ -19,7 +21,17 @@ import { readWithDeadline } from '../lib/server-query-client.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { historyContextText } from '../lib/history-context.js';
-import { lazy, Suspense, useEffect, useId, useMemo, useRef, useState, type FormEvent } from 'react';
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from 'react';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { t as increaseText } from '@barghsa/i18n/electricity-increase-customer';
@@ -76,7 +88,6 @@ import {
 import { withCsrf } from '../lib/csrf.js';
 import { ElectricityPriceAdjustmentsPanel } from './ElectricityPriceAdjustmentsPanel.js';
 import { WorkflowStatusBanner } from '../components/WorkflowStatusBanner.js';
-import { workflowFeedback } from '@barghsa/i18n/workflow-feedback';
 import { OrderDiscussionSection } from '../components/OrderDiscussionSection.js';
 import {
   commercialStatusTone,
@@ -275,6 +286,23 @@ function validOrderDetail(
 
 function cancellable(detail: ElectricityOrderDetail) {
   return ['awaiting_staff_review', 'changes_requested'].includes(detail.electricityStatus);
+}
+
+function OrderFact({
+  label,
+  children,
+  className = 'min-w-0',
+}: {
+  label: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={className}>
+      <dt className="text-xs text-muted-foreground">{label}</dt>
+      <dd className="mt-1 font-medium wrap-anywhere">{children}</dd>
+    </div>
+  );
 }
 
 export function ElectricityOrderDetailsPage({
@@ -887,7 +915,7 @@ export function ElectricityOrderDetailsPage({
   const cancellationLocked = () => cancelTransport.current !== null || cancelRecovery !== null;
   return (
     <div
-      className={`mx-auto w-full max-w-2xl min-w-0 ${orderActionPage ? 'space-y-4' : 'space-y-6 px-4 py-8'}`}
+      className={`mx-auto w-full min-w-0 space-y-4 ${orderActionPage ? 'max-w-2xl' : 'max-w-5xl'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {edit && <RecordCommandGuard blocked={() => !!correctionLock.owner} />}
@@ -908,29 +936,36 @@ export function ElectricityOrderDetailsPage({
           ) : (
             <Link
               to="/electricity/orders"
-              className="touch-action text-sm text-primary underline underline-offset-4"
+              className="touch-action inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4"
             >
+              <ArrowLeft aria-hidden="true" className="size-4 rtl:hidden" />
+              <ArrowRight aria-hidden="true" className="hidden size-4 rtl:block" />
               {t('electricity.order.detail.back', locale)}
             </Link>
           )}
-          <h1 className="text-2xl font-bold">
-            {increaseRoute
-              ? increaseText('electricity.increase.title', locale)
-              : t(
-                  cancel
-                    ? 'electricity.order.detail.cancel'
-                    : edit
-                      ? 'electricity.order.correction.title'
-                      : 'electricity.order.detail.title',
-                  locale
-                )}
-          </h1>
-          {!orderActionPage && (
-            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-              <p className="text-muted-foreground">
-                {t('electricity.order.detail.description', locale)}
-              </p>
-              {!loading && !error && detail && cancellable(detail) && (
+          <div
+            className={
+              orderActionPage
+                ? undefined
+                : loading
+                  ? 'sr-only'
+                  : 'rounded-xl border bg-card p-4 sm:p-6'
+            }
+          >
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h1 className="text-2xl leading-tight font-semibold sm:text-3xl">
+                {increaseRoute
+                  ? increaseText('electricity.increase.title', locale)
+                  : t(
+                      cancel
+                        ? 'electricity.order.detail.cancel'
+                        : edit
+                          ? 'electricity.order.correction.title'
+                          : 'electricity.order.detail.title',
+                      locale
+                    )}
+              </h1>
+              {!orderActionPage && !loading && !error && detail && cancellable(detail) && (
                 <Link
                   to="/electricity/orders/$orderId/cancel"
                   params={{ orderId }}
@@ -940,12 +975,31 @@ export function ElectricityOrderDetailsPage({
                 </Link>
               )}
             </div>
-          )}
+            {!orderActionPage && !loading && !error && detail && (
+              <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-3 text-sm">
+                <OrderFact label={t('electricity.order.success.order', locale)}>
+                  <bdi>{detail.orderId}</bdi>
+                </OrderFact>
+                {detail.submittedAt && (
+                  <OrderFact label={t('electricity.order.detail.submittedAt', locale)}>
+                    <time dateTime={detail.submittedAt}>{time.format(detail.submittedAt)}</time>
+                  </OrderFact>
+                )}
+              </dl>
+            )}
+          </div>
         </header>
       )}
       {time.notice}
       {loading ? (
-        <LoadingStatus>{t('electricity.order.detailLoading', locale)}</LoadingStatus>
+        orderActionPage ? (
+          <LoadingStatus>{t('electricity.order.detailLoading', locale)}</LoadingStatus>
+        ) : (
+          <RecordDetailSkeleton
+            label={t('electricity.order.detailLoading', locale)}
+            layout="order"
+          />
+        )
       ) : error === 'unavailable' ? (
         <p role="alert">{loadingText('recordUnavailable', locale)}</p>
       ) : error || !detail ? (
@@ -1264,12 +1318,23 @@ export function ElectricityOrderDetailsPage({
         <>
           <WorkflowStatusBanner
             locale={locale}
-            submittedAt={
-              detail.submittedAt
-                ? `${workflowFeedback('submitted', locale)}: ${time.format(detail.submittedAt)}`
-                : undefined
-            }
             status={t(electricityStatusKey(detail.electricityStatus, 'commercial'), locale)}
+            statusSummary={
+              <DualStatusDisplay
+                commercialLabel={t('electricity.order.commercialStatus', locale)}
+                commercialStatus={t(
+                  electricityStatusKey(detail.electricityStatus, 'commercial'),
+                  locale
+                )}
+                commercialTone={commercialStatusTone(detail.electricityStatus)}
+                financialLabel={t('electricity.order.financialStatus', locale)}
+                financialStatus={t(
+                  electricityStatusKey(detail.financialStatus, 'financial'),
+                  locale
+                )}
+                financialTone={financialStatusTone(detail.financialStatus)}
+              />
+            }
             happened={t(
               latestEvent
                 ? electricityTimelineKey(latestEvent.event)
@@ -1283,53 +1348,57 @@ export function ElectricityOrderDetailsPage({
             owner={actionOwner}
             actionHref={nextActionLink}
           />
-          <DualStatusDisplay
-            commercialLabel={t('electricity.order.commercialStatus', locale)}
-            commercialStatus={t(
-              electricityStatusKey(detail.electricityStatus, 'commercial'),
-              locale
-            )}
-            commercialTone={commercialStatusTone(detail.electricityStatus)}
-            financialLabel={t('electricity.order.financialStatus', locale)}
-            financialStatus={t(electricityStatusKey(detail.financialStatus, 'financial'), locale)}
-            financialTone={financialStatusTone(detail.financialStatus)}
-          />
-          <Card>
-            <CardContent className="space-y-3 pt-6 text-sm">
-              <p className="flex justify-between gap-3">
-                <span>{t('electricity.order.success.order', locale)}</span>
-                <strong className="break-all">{detail.orderId}</strong>
-              </p>
-              {['simple', 'advanced'].includes(detail.mode) ? (
-                <p className="flex justify-between gap-3">
-                  <span>{t('electricity.order.detail.mode', locale)}</span>
-                  <span>
-                    {t(
-                      detail.mode === 'advanced'
-                        ? 'electricity.order.detail.mode.advanced'
-                        : 'electricity.order.detail.mode.simple',
-                      locale
-                    )}
-                  </span>
-                </p>
-              ) : null}
-              {detail.submittedAt ? (
-                <p className="flex justify-between gap-3">
-                  <span>{t('electricity.order.detail.submittedAt', locale)}</span>
-                  <time dateTime={detail.submittedAt}>{time.format(detail.submittedAt)}</time>
-                </p>
-              ) : null}
-              <p className="flex justify-between gap-3">
-                <span>{t('electricity.order.profile', locale)}</span>
-                <span>{detail.profileName || detail.profileId}</span>
-              </p>
-              <p className="flex justify-between gap-3">
-                <span>{t('electricity.order.contractStatus', locale)}</span>
-                <span>{contractText(detail.contractState, locale)}</span>
-              </p>
-              <p className="flex justify-between gap-3">
-                <span>{t('electricity.order.period.selection', locale)}</span>
-                <span>
+          <div className="grid items-start gap-4 lg:grid-cols-2">
+            <section
+              aria-labelledby="order-payment-heading"
+              className="min-w-0 rounded-xl border bg-card p-4 sm:p-6"
+            >
+              <h2 id="order-payment-heading" className="font-semibold">
+                {t('invoices.payment.title', locale)}
+              </h2>
+              <dl className="mt-3 space-y-3 text-sm">
+                <div className="pb-3">
+                  <dt className="text-sm text-muted-foreground">
+                    {t('electricity.order.total', locale)}
+                  </dt>
+                  <dd className="mt-1 text-xl font-semibold tabular-nums wrap-anywhere">
+                    <bdi>{numbers.money(detail.totalIrR)}</bdi>
+                  </dd>
+                </div>
+                <div className="grid grid-cols-2 gap-3 border-t pt-3">
+                  <OrderFact label={t('electricity.order.paidAmount', locale)}>
+                    <bdi>{numbers.money(detail.paidIrR)}</bdi>
+                  </OrderFact>
+                  <OrderFact label={t('electricity.order.refundedAmount', locale)}>
+                    <bdi>{numbers.money(detail.refundedIrR)}</bdi>
+                  </OrderFact>
+                  {terminalOrder ? (
+                    refundRemaining > 0n ? (
+                      <OrderFact label={t('electricity.order.refundRemainingAmount', locale)}>
+                        <bdi>{numbers.money(refundRemaining.toString())}</bdi>
+                      </OrderFact>
+                    ) : null
+                  ) : (
+                    <OrderFact label={t('electricity.order.remainingAmount', locale)}>
+                      <bdi>
+                        {numbers.money(
+                          (BigInt(detail.totalIrR) - BigInt(detail.paidIrR)).toString()
+                        )}
+                      </bdi>
+                    </OrderFact>
+                  )}
+                </div>
+              </dl>
+            </section>
+            <section
+              aria-labelledby="order-terms-heading"
+              className="min-w-0 rounded-xl border bg-card p-4 sm:p-6"
+            >
+              <h2 id="order-terms-heading" className="font-semibold">
+                {t('recordTable.orderTerms', locale)}
+              </h2>
+              <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                <OrderFact label={t('electricity.order.period.selection', locale)}>
                   {time.format(detail.periodStart, {
                     year: 'numeric',
                     month: '2-digit',
@@ -1341,57 +1410,45 @@ export function ElectricityOrderDetailsPage({
                     month: '2-digit',
                     day: '2-digit',
                   })}
-                </span>
-              </p>
-              <p className="flex justify-between gap-3">
-                <span>{t('electricity.order.quantity', locale)}</span>
-                <span>{detail.totalKwh} kWh</span>
-              </p>
-              {detail.effectiveTotalKwh && detail.effectiveTotalKwh !== detail.totalKwh ? (
-                <p className="flex justify-between gap-3 font-medium">
-                  <span>{t('electricity.increase.currentQuantity', locale)}</span>
-                  <span>{numbers.irrDigits(detail.effectiveTotalKwh)} kWh</span>
-                </p>
-              ) : null}
-              <p className="flex justify-between gap-3">
-                <span>{t('electricity.order.total', locale)}</span>
-                <strong>{numbers.money(detail.totalIrR)}</strong>
-              </p>
-              <p className="flex justify-between gap-3">
-                <span>{t('electricity.order.paidAmount', locale)}</span>
-                <span>{numbers.money(detail.paidIrR)}</span>
-              </p>
-              <p className="flex justify-between gap-3">
-                <span>{t('electricity.order.refundedAmount', locale)}</span>
-                <span>{numbers.money(detail.refundedIrR)}</span>
-              </p>
-              {terminalOrder ? (
-                refundRemaining > 0n ? (
-                  <p className="flex justify-between gap-3">
-                    <span>{t('electricity.order.refundRemainingAmount', locale)}</span>
-                    <span>{numbers.money(refundRemaining.toString())}</span>
-                  </p>
-                ) : null
-              ) : (
-                <p className="flex justify-between gap-3">
-                  <span>{t('electricity.order.remainingAmount', locale)}</span>
-                  <span>
-                    {numbers.money((BigInt(detail.totalIrR) - BigInt(detail.paidIrR)).toString())}
-                  </span>
-                </p>
-              )}
-              <p className="flex justify-between gap-3">
-                <span>{t('electricity.order.deliveryAddress', locale)}</span>
-                <span>{detail.fullAddress}</span>
-              </p>
-              {detail.postalCode ? (
-                <p className="flex justify-between gap-3">
-                  <span>{t('electricity.order.postalCode', locale)}</span>
-                  <span dir="ltr">{detail.postalCode}</span>
-                </p>
-              ) : null}
-            </CardContent>
-          </Card>
+                </OrderFact>
+                <OrderFact label={t('electricity.order.quantity', locale)}>
+                  <bdi>{numbers.irrDigits(detail.totalKwh)} kWh</bdi>
+                </OrderFact>
+                {detail.effectiveTotalKwh && detail.effectiveTotalKwh !== detail.totalKwh && (
+                  <OrderFact label={t('electricity.increase.currentQuantity', locale)}>
+                    <bdi>{numbers.irrDigits(detail.effectiveTotalKwh)} kWh</bdi>
+                  </OrderFact>
+                )}
+                <OrderFact label={t('electricity.order.profile', locale)}>
+                  <bdi>{detail.profileName || detail.profileId}</bdi>
+                </OrderFact>
+                {['simple', 'advanced'].includes(detail.mode) && (
+                  <OrderFact label={t('electricity.order.detail.mode', locale)}>
+                    {t(
+                      detail.mode === 'advanced'
+                        ? 'electricity.order.detail.mode.advanced'
+                        : 'electricity.order.detail.mode.simple',
+                      locale
+                    )}
+                  </OrderFact>
+                )}
+                <OrderFact label={t('electricity.order.contractStatus', locale)}>
+                  {contractText(detail.contractState, locale)}
+                </OrderFact>
+                <OrderFact
+                  className="col-span-full min-w-0 border-t pt-3"
+                  label={t('electricity.order.deliveryAddress', locale)}
+                >
+                  <bdi>{detail.fullAddress}</bdi>
+                </OrderFact>
+                {detail.postalCode && (
+                  <OrderFact label={t('electricity.order.postalCode', locale)}>
+                    <bdi>{detail.postalCode}</bdi>
+                  </OrderFact>
+                )}
+              </dl>
+            </section>
+          </div>
           <Card>
             <CardContent className="space-y-3 pt-6 text-sm">
               <h2 className="font-semibold">{t('electricity.order.detail.lines', locale)}</h2>

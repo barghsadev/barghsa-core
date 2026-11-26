@@ -1,4 +1,4 @@
-import { Eye as TableEyeIcon } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Eye as TableEyeIcon } from 'lucide-react';
 import { TableActionIcon } from '../components/TableActionIcon.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
@@ -9,6 +9,7 @@ import { ElectricityRawDraftQueue } from '../components/ElectricityRawDraftQueue
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import { RecordDetailSkeleton, RecordListSkeleton } from '../components/RecordSkeleton.js';
 import { CompactFieldFeedback } from '../components/CompactFieldFeedback.js';
 import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
@@ -28,6 +29,7 @@ import {
   Label,
   ListPage,
   ListRefreshButton,
+  PageHeader,
   ScrollArea,
   StatusBadge,
   StatusTimeline,
@@ -896,11 +898,19 @@ function OwnedAdminElectricityOrdersPage({
     if (recordId) recordHeading.current?.focus();
   }, [recordId, reasonDecision]);
   const Content = showQueue ? ListPage : 'div';
+  const queueHeadings = [
+    copy('customer'),
+    appText('recordTable.progress', locale),
+    appText('recordTable.orderTerms', locale),
+    appText('invoices.payment.title', locale),
+    appText('recordTable.activity', locale),
+    copy('actions'),
+  ];
 
   return (
     <section
       data-slot={recordId ? 'electricity-staff-order' : undefined}
-      className={reasonDecision ? 'mx-auto max-w-3xl space-y-4' : 'space-y-5'}
+      className={`mx-auto min-w-0 space-y-4 ${reasonDecision ? 'max-w-3xl' : 'max-w-6xl'}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {recordId ? (
@@ -913,17 +923,29 @@ function OwnedAdminElectricityOrdersPage({
               }
               params={reasonDecision ? { orderId: recordId } : {}}
               search={queueSearch ?? {}}
-              className="touch-action text-sm text-primary underline underline-offset-4"
+              className="touch-action inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4"
               aria-disabled={navigationBlocked() || undefined}
               onClick={(event) => {
                 if (navigationBlocked()) event.preventDefault();
               }}
             >
+              <ArrowLeft className="size-4 rtl:hidden" aria-hidden="true" />
+              <ArrowRight className="hidden size-4 rtl:block" aria-hidden="true" />
               {copy(reasonDecision ? 'backToOrder' : 'backToQueue')}
             </Link>
-            <div className="flex flex-wrap items-start justify-between gap-3">
+            <div
+              className={
+                reasonDecision
+                  ? 'flex flex-wrap items-start justify-between gap-3'
+                  : 'flex flex-wrap items-start justify-between gap-3 rounded-xl border bg-card p-4 sm:p-6'
+              }
+            >
               <div className="min-w-0 space-y-1" data-toast-anchor={uncertain ? undefined : true}>
-                <h1 ref={recordHeading} tabIndex={-1} className="text-2xl font-semibold">
+                <h1
+                  ref={recordHeading}
+                  tabIndex={-1}
+                  className="w-fit text-2xl leading-tight font-semibold sm:text-3xl"
+                >
                   {copy(reasonDecision ?? 'recordTitle')}
                 </h1>
                 {detail && (
@@ -950,10 +972,7 @@ function OwnedAdminElectricityOrdersPage({
               )}
             </div>
             {!reasonDecision && (canApprove || availableDecisions.length > 0) && (
-              <section
-                aria-label={copy('orderDecision')}
-                className="flex flex-wrap gap-2 border-t pt-3"
-              >
+              <section aria-label={copy('orderDecision')} className="flex flex-wrap gap-2">
                 {canApprove && (
                   <Button disabled={locked()} onClick={() => choose('approve')}>
                     {copy('approve')}
@@ -976,21 +995,43 @@ function OwnedAdminElectricityOrdersPage({
           </header>
         </>
       ) : (
-        <>
-          <header className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <h1 className="text-2xl font-semibold">{copy('title')}</h1>
-              <p className="text-muted-foreground">{copy('description')}</p>
-            </div>
-          </header>
-          <ElectricityRawDraftQueue />
-        </>
+        <PageHeader
+          title={copy('title')}
+          actions={
+            <ListRefreshButton
+              label={copy('refresh')}
+              onClick={() => {
+                if (!locked()) refreshQueue();
+              }}
+              disabled={loading || locked()}
+            />
+          }
+        />
       )}
       <Content>
         {showQueue && (
           <ListPage.Toolbar
+            className="rounded-xl border bg-card p-3"
             filters={
               <div className="space-y-3">
+                <nav className="flex flex-wrap gap-2" aria-label={copy('views')}>
+                  <Button
+                    variant={queueView === 'review' ? 'secondary' : 'ghost'}
+                    aria-pressed={queueView === 'review'}
+                    disabled={pending.current || !!action || uncertain}
+                    onClick={() => changeQueueView('review')}
+                  >
+                    {copy('reviewView')}
+                  </Button>
+                  <Button
+                    variant={queueView === 'conversations' ? 'secondary' : 'ghost'}
+                    aria-pressed={queueView === 'conversations'}
+                    disabled={pending.current || !!action || uncertain}
+                    onClick={() => changeQueueView('conversations')}
+                  >
+                    {copy('conversationView')}
+                  </Button>
+                </nav>
                 <form className="flex flex-wrap items-end gap-3" onSubmit={lookupOrder}>
                   <div className="min-w-0 flex-1 basis-64 space-y-2">
                     <Label htmlFor="electricity-order-lookup">{copy('lookupOrderId')}</Label>
@@ -1008,7 +1049,11 @@ function OwnedAdminElectricityOrdersPage({
                       }
                     />
                   </div>
-                  <Button type="submit" disabled={pending.current || !!action || uncertain}>
+                  <Button
+                    type="submit"
+                    variant="outline"
+                    disabled={pending.current || !!action || uncertain}
+                  >
                     {copy('lookup')}
                   </Button>
                   {lookupInvalid ? (
@@ -1017,32 +1062,7 @@ function OwnedAdminElectricityOrdersPage({
                     </p>
                   ) : null}
                 </form>
-                <nav className="flex flex-wrap gap-2" aria-label={copy('views')}>
-                  <Button
-                    variant={queueView === 'review' ? 'secondary' : 'outline'}
-                    disabled={pending.current || !!action || uncertain}
-                    onClick={() => changeQueueView('review')}
-                  >
-                    {copy('reviewView')}
-                  </Button>
-                  <Button
-                    variant={queueView === 'conversations' ? 'secondary' : 'outline'}
-                    disabled={pending.current || !!action || uncertain}
-                    onClick={() => changeQueueView('conversations')}
-                  >
-                    {copy('conversationView')}
-                  </Button>
-                </nav>
               </div>
-            }
-            actions={
-              <ListRefreshButton
-                label={copy('refresh')}
-                onClick={() => {
-                  if (!locked()) refreshQueue();
-                }}
-                disabled={loading || locked()}
-              />
             }
           />
         )}
@@ -1058,7 +1078,30 @@ function OwnedAdminElectricityOrdersPage({
                 error={error || denied}
                 empty={orders.length === 0 && !selectedId}
                 retainContent={orders.length > 0 && !denied}
-                loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+                loadingView={
+                  orders.length && !denied ? (
+                    <p role="status" className="sr-only">
+                      {copy('loading')}
+                    </p>
+                  ) : (
+                    <>
+                      <div className="md:hidden">
+                        <RecordListSkeleton
+                          label={copy('loading')}
+                          view="card"
+                          headings={queueHeadings}
+                        />
+                      </div>
+                      <div className="hidden md:block">
+                        <RecordListSkeleton
+                          label={copy('loading')}
+                          view="table"
+                          headings={queueHeadings}
+                        />
+                      </div>
+                    </>
+                  )
+                }
                 errorView={
                   denied ? (
                     <p role="alert">{copy('forbidden')}</p>
@@ -1125,57 +1168,24 @@ function OwnedAdminElectricityOrdersPage({
                         fields: ['period', 'quantity'],
                         icon: GaugeIcon,
                       },
+                      {
+                        label: appText('invoices.payment.title', locale),
+                        fields: ['total', 'paid'],
+                      },
+                      {
+                        label: appText('recordTable.activity', locale),
+                        fields: ['priority', 'age', 'comment', 'submitted'],
+                      },
                     ]}
                     renderName={(order) => (
                       <>
                         <TextCell value={order.customerName} />
-                        <span className="block font-mono text-xs font-normal">
+                        <span className="block text-xs font-normal text-muted-foreground">
                           <TextCell value={order.orderId} />
                         </span>
                       </>
                     )}
                     fields={[
-                      ...(queueView === 'conversations'
-                        ? [
-                            {
-                              id: 'comment',
-                              label: copy('latestComment'),
-                              render: (order: ReviewOrder) => (
-                                <DateCell
-                                  value={order.latestCommentAt}
-                                  format={(value) => time.format(value)}
-                                />
-                              ),
-                            },
-                          ]
-                        : [
-                            {
-                              id: 'priority',
-                              label: copy('priorityLabel'),
-                              render: (order: ReviewOrder) => (
-                                <TextCell value={copy(`priority.${order.priority ?? 'normal'}`)} />
-                              ),
-                            },
-                            {
-                              id: 'age',
-                              label: copy('ageLabel'),
-                              render: (order: ReviewOrder) => (
-                                <NumberCell
-                                  value={order.ageHours}
-                                  locale={locale}
-                                  numerals={
-                                    numbers.numberStyle === 'western'
-                                      ? 'latn'
-                                      : numbers.numberStyle === 'persian'
-                                        ? 'arabext'
-                                        : locale === 'fa'
-                                          ? 'arabext'
-                                          : 'latn'
-                                  }
-                                />
-                              ),
-                            },
-                          ]),
                       {
                         id: 'commercial',
                         label: copy('commercial'),
@@ -1242,6 +1252,47 @@ function OwnedAdminElectricityOrdersPage({
                           <CurrencyCell amount={order.paidIrR} format={numbers.money} />
                         ),
                       },
+                      ...(queueView === 'conversations'
+                        ? [
+                            {
+                              id: 'comment',
+                              label: copy('latestComment'),
+                              render: (order: ReviewOrder) => (
+                                <DateCell
+                                  value={order.latestCommentAt}
+                                  format={(value) => time.format(value)}
+                                />
+                              ),
+                            },
+                          ]
+                        : [
+                            {
+                              id: 'priority',
+                              label: copy('priorityLabel'),
+                              render: (order: ReviewOrder) => (
+                                <TextCell value={copy(`priority.${order.priority ?? 'normal'}`)} />
+                              ),
+                            },
+                            {
+                              id: 'age',
+                              label: copy('ageLabel'),
+                              render: (order: ReviewOrder) => (
+                                <NumberCell
+                                  value={order.ageHours}
+                                  locale={locale}
+                                  numerals={
+                                    numbers.numberStyle === 'western'
+                                      ? 'latn'
+                                      : numbers.numberStyle === 'persian'
+                                        ? 'arabext'
+                                        : locale === 'fa'
+                                          ? 'arabext'
+                                          : 'latn'
+                                  }
+                                />
+                              ),
+                            },
+                          ]),
                       {
                         id: 'submitted',
                         label: copy('submitted'),
@@ -1291,7 +1342,7 @@ function OwnedAdminElectricityOrdersPage({
                     emptyMessage={copy(
                       queueView === 'conversations' ? 'emptyConversations' : 'empty'
                     )}
-                    tableClassName="min-w-[76rem]"
+                    tableClassName="min-w-[56rem]"
                   />
                 )}
               </ListPage.Content>
@@ -1327,12 +1378,19 @@ function OwnedAdminElectricityOrdersPage({
                 label={appText('historyPagination.label', locale)}
                 nextLabel={copy('more')}
               />
+              <ElectricityRawDraftQueue />
             </div>
           )}
           {recordId && denied && <p role="alert">{copy('forbidden')}</p>}
-          {selectedId && !detail && !detailError && !denied ? (
-            <p role="status">{copy('loadingDetail')}</p>
-          ) : null}
+          {selectedId &&
+            !detail &&
+            !detailError &&
+            !denied &&
+            (reasonDecision ? (
+              <LoadingStatus>{copy('loadingDetail')}</LoadingStatus>
+            ) : (
+              <RecordDetailSkeleton label={copy('loadingDetail')} layout="order" />
+            ))}
           {detailError ? (
             <div role="alert" className="space-y-2 text-sm">
               <p>{copy('detailError')}</p>
@@ -1370,81 +1428,86 @@ function OwnedAdminElectricityOrdersPage({
                   financialStatus={statusLabel(detail.financialStatus, 'financial')}
                   financialTone={financialStatusTone(detail.financialStatus)}
                 />
-                <dl className="grid gap-3 text-sm sm:grid-cols-2">
-                  {!recordId && (
-                    <div>
-                      <dt className="text-muted-foreground">{copy('customer')}</dt>
-                      <dd>{detail.customerName}</dd>
-                    </div>
-                  )}
-                  <div>
-                    <dt className="text-muted-foreground">{copy('submitted')}</dt>
-                    <dd>{time.format(detail.submittedAt)}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-muted-foreground">{copy('period')}</dt>
-                    <dd>{periodText(detail.periodStart, detail.periodEnd)}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-muted-foreground">{copy('quantity')}</dt>
-                    <dd>{detail.totalKwh} kWh</dd>
-                  </div>
-                  <div>
-                    <dt className="text-muted-foreground">{copy('price')}</dt>
-                    <dd>{numbers.money(detail.totalIrR)}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-muted-foreground">{copy('paid')}</dt>
-                    <dd>{numbers.money(detail.paidIrR)}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-muted-foreground">{copy('revision.invoice')}</dt>
-                    <dd>
-                      <a
-                        className="touch-action text-primary underline underline-offset-2"
-                        href={`/admin/invoices/${encodeURIComponent(detail.invoiceId)}`}
-                      >
-                        {copy('openInvoice')}
-                      </a>
-                    </dd>
-                  </div>
-                  {detail.contractId ? (
-                    <div>
-                      <dt className="text-muted-foreground">{copy('contract')}</dt>
-                      <dd>
-                        <a
-                          className="touch-action text-primary underline underline-offset-2"
-                          href={`/admin/contracts/${encodeURIComponent(detail.contractId)}`}
-                        >
-                          {copy('openContract')}
-                        </a>
-                      </dd>
-                    </div>
-                  ) : null}
-                </dl>
-                <p className="text-sm">
-                  <strong>{copy('address')}: </strong>
-                  {detail.fullAddress}
-                </p>
-                <section className="space-y-3">
-                  <h3 className="font-medium">{copy('timeline')}</h3>
-                  {detail.timeline?.length ? (
-                    <StatusTimeline
-                      label={copy('timeline')}
-                      items={detail.timeline.map((event) => ({
-                        id: event.id,
-                        title: appText(electricityTimelineKey(event.event), locale),
-                        state: electricityTimelineState(event.event),
-                        dateTime: event.at,
-                        dateLabel: time.format(event.at),
-                        actorLabel: event.actorName ?? undefined,
-                        description: [event.reason, event.comment].filter(Boolean).join(' · '),
-                      }))}
-                    />
-                  ) : (
-                    <p className="text-sm text-muted-foreground">{copy('emptyTimeline')}</p>
-                  )}
-                </section>
+                <div className="grid gap-x-6 gap-y-4 border-y py-4 lg:grid-cols-2">
+                  <section className="min-w-0 space-y-3">
+                    <h3 className="font-medium">{appText('invoices.payment.title', locale)}</h3>
+                    <dl className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="col-span-full">
+                        <dt className="text-muted-foreground">{copy('price')}</dt>
+                        <dd className="mt-1 text-xl font-semibold tabular-nums wrap-anywhere">
+                          <bdi>{numbers.money(detail.totalIrR)}</bdi>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">{copy('paid')}</dt>
+                        <dd className="font-medium wrap-anywhere">
+                          <bdi>{numbers.money(detail.paidIrR)}</bdi>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">{copy('revision.invoice')}</dt>
+                        <dd>
+                          <a
+                            className="touch-action font-medium text-primary underline underline-offset-2"
+                            href={`/admin/invoices/${encodeURIComponent(detail.invoiceId)}`}
+                          >
+                            {copy('openInvoice')}
+                          </a>
+                        </dd>
+                      </div>
+                    </dl>
+                  </section>
+                  <section className="min-w-0 space-y-3">
+                    <h3 className="font-medium">{appText('recordTable.orderTerms', locale)}</h3>
+                    <dl className="grid grid-cols-2 gap-3 text-sm">
+                      {!recordId && (
+                        <div>
+                          <dt className="text-muted-foreground">{copy('customer')}</dt>
+                          <dd className="wrap-anywhere">
+                            <bdi>{detail.customerName}</bdi>
+                          </dd>
+                        </div>
+                      )}
+                      <div>
+                        <dt className="text-muted-foreground">{copy('period')}</dt>
+                        <dd>{periodText(detail.periodStart, detail.periodEnd)}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">{copy('quantity')}</dt>
+                        <dd>
+                          <bdi>{numbers.irrDigits(detail.totalKwh)} kWh</bdi>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">{copy('submitted')}</dt>
+                        <dd>
+                          <time dateTime={detail.submittedAt}>
+                            {time.format(detail.submittedAt)}
+                          </time>
+                        </dd>
+                      </div>
+                      {detail.contractId && (
+                        <div>
+                          <dt className="text-muted-foreground">{copy('contract')}</dt>
+                          <dd>
+                            <a
+                              className="touch-action font-medium text-primary underline underline-offset-2"
+                              href={`/admin/contracts/${encodeURIComponent(detail.contractId)}`}
+                            >
+                              {copy('openContract')}
+                            </a>
+                          </dd>
+                        </div>
+                      )}
+                      <div className="col-span-full">
+                        <dt className="text-muted-foreground">{copy('address')}</dt>
+                        <dd className="wrap-anywhere">
+                          <bdi>{detail.fullAddress}</bdi>
+                        </dd>
+                      </div>
+                    </dl>
+                  </section>
+                </div>
                 <h3 className="font-medium">{copy('products')}</h3>
                 <ScrollArea
                   scrollbarOrientation="horizontal"
@@ -1500,6 +1563,25 @@ function OwnedAdminElectricityOrdersPage({
                     </tbody>
                   </table>
                 </ScrollArea>
+                <section className="space-y-3">
+                  <h3 className="font-medium">{copy('timeline')}</h3>
+                  {detail.timeline?.length ? (
+                    <StatusTimeline
+                      label={copy('timeline')}
+                      items={detail.timeline.map((event) => ({
+                        id: event.id,
+                        title: appText(electricityTimelineKey(event.event), locale),
+                        state: electricityTimelineState(event.event),
+                        dateTime: event.at,
+                        dateLabel: time.format(event.at),
+                        actorLabel: event.actorName ?? undefined,
+                        description: [event.reason, event.comment].filter(Boolean).join(' · '),
+                      }))}
+                    />
+                  ) : (
+                    <p className="text-sm text-muted-foreground">{copy('emptyTimeline')}</p>
+                  )}
+                </section>
                 {detail.revisionReview ? (
                   <section
                     className="space-y-3 rounded-md border p-4"

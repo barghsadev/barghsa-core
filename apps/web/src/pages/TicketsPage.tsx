@@ -4,13 +4,14 @@ import { queryKeys, type ServerQueryKey } from '../lib/query-keys.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { TicketIntakeForm } from '../components/TicketIntakeForm.js';
 import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import { RecordDetailSkeleton, RecordListSkeleton } from '../components/RecordSkeleton.js';
 import { useTicketCommand } from '../hooks/useTicketCommand.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { sendToast } from '../lib/toast-api.js';
 import { tTicketForms } from '@barghsa/i18n/ticket-forms';
 import { lifecycleFormText } from '@barghsa/i18n/profile-lifecycle-forms';
-import { Archive, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Archive, ArrowLeft, ArrowRight, Plus } from 'lucide-react';
 import {
   ticketRecord,
   ticketViewer,
@@ -714,7 +715,7 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
       onAuxClickCapture={guard}
       onSubmitCapture={guard}
       onChangeCapture={guard}
-      className={`mx-auto bg-background text-foreground ${closureTicketId ? 'max-w-3xl space-y-3' : `space-y-5 ${entry && !staff ? 'max-w-3xl' : 'max-w-5xl'}`}`}
+      className={`mx-auto min-w-0 text-foreground ${closureTicketId ? 'max-w-3xl space-y-3' : `space-y-4 ${entry && !staff ? 'max-w-3xl' : 'max-w-5xl'}`}`}
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
       {entry && (
@@ -743,8 +744,10 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
             aria-disabled={busy || undefined}
             to={staff ? '/admin/tickets' : '/tickets'}
             search={recordSearch ?? {}}
-            className="inline-flex min-h-10 items-center text-sm font-medium text-primary underline underline-offset-4"
+            className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-primary hover:underline underline-offset-4"
           >
+            <ArrowLeft aria-hidden="true" className="size-4 rtl:hidden" />
+            <ArrowRight aria-hidden="true" className="hidden size-4 rtl:block" />
             {tTicketForms(staff ? 'backToStaffQueue' : 'backToTickets', locale)}
           </Link>
         )
@@ -765,7 +768,7 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
           )}
         </header>
       ) : (
-        !(entry?.kind === 'record' && detail) && (
+        !(entry?.kind === 'record' && (detail || detailLoading)) && (
           <header className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
@@ -776,10 +779,10 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
                   {tTicketForms('describeRequest', locale)}
                 </p>
               )}
-              {staff && <p className="mt-2 text-sm text-muted-foreground">{text('targetNote')}</p>}
             </div>
             {!staff && showQueue && recordSearch && !queueAccessDenied && (
               <Link className={buttonVariants()} to="/tickets/new" search={recordSearch}>
+                <Plus aria-hidden="true" data-icon="inline-start" />
                 {text('create')}
               </Link>
             )}
@@ -872,7 +875,7 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
           <ListPage>
             <div className="min-w-0 overflow-hidden rounded-xl border bg-card">
               <ListPage.Toolbar
-                className="p-3 min-[23rem]:flex-nowrap min-[23rem]:[&>[data-slot=list-toolbar-search]]:basis-0"
+                className="items-center p-3 min-[23rem]:[&>[data-slot=list-toolbar-search]]:basis-0"
                 search={
                   <ListSearchInput
                     id="ticket-search"
@@ -902,15 +905,8 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
                     ))}
                   </NativeSelect>
                 }
-              />
-              <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t bg-muted/30 px-3 py-1.5">
-                <div className="flex min-w-0 flex-wrap items-center gap-x-2">
-                  <label
-                    htmlFor="ticket-sort"
-                    className="sr-only text-sm text-muted-foreground sm:not-sr-only"
-                  >
-                    {text('sort')}
-                  </label>
+              >
+                <div className="flex grow basis-full flex-wrap items-center justify-between gap-x-3 gap-y-2 border-t pt-2 lg:grow-0 lg:basis-auto lg:border-0 lg:pt-0">
                   <NativeSelect
                     id="ticket-sort"
                     aria-label={text('sort')}
@@ -924,23 +920,41 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
                     <option value="desc">{text('newest')}</option>
                     <option value="asc">{text('oldest')}</option>
                   </NativeSelect>
+                  <div className="ms-auto flex items-center gap-2">
+                    {viewToggle}
+                    <ListRefreshButton
+                      label={text('refresh')}
+                      refreshing={loading}
+                      onClick={() => void load()}
+                    />
+                  </div>
                 </div>
-                <div className="ms-auto flex items-center gap-2">
-                  {viewToggle}
-                  <ListRefreshButton
-                    label={text('refresh')}
-                    refreshing={loading}
-                    onClick={() => void load()}
-                  />
-                </div>
-              </div>
+              </ListPage.Toolbar>
             </div>
             <ListPage.Content
               loading={loading}
               error={!!queueError}
               empty={!visibleQueue?.data.length}
               retainContent={!!visibleQueue?.data.length && queueError !== 'forbidden'}
-              loadingView={<LoadingStatus>{text('loading')}</LoadingStatus>}
+              loadingView={
+                visibleQueue?.data.length ? (
+                  <p role="status" className="sr-only">
+                    {text('loading')}
+                  </p>
+                ) : (
+                  <RecordListSkeleton
+                    label={text('loading')}
+                    view={view}
+                    headings={[
+                      text('subject'),
+                      text('status'),
+                      text('updated'),
+                      ...(staff ? [text('assignee')] : []),
+                      text('queueDetails'),
+                    ]}
+                  />
+                )
+              }
               errorView={
                 <div role="alert" className="space-y-2">
                   <p>{text(queueError === 'forbidden' ? 'forbidden' : 'queueError')}</p>
@@ -1012,6 +1026,9 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
                 />
               )}
             </ListPage.Content>
+            {staff && visibleQueue?.responseTargetHours && (
+              <p className="text-xs text-muted-foreground">{text('targetNote')}</p>
+            )}
             <ListPage.Pagination
               kind="page"
               page={acceptedPage}
@@ -1027,7 +1044,14 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
           </ListPage>
         </fieldset>
       )}
-      {detailLoading && <LoadingStatus>{text('loading')}</LoadingStatus>}
+      {detailLoading &&
+        (detail ? (
+          <p role="status" className="sr-only">
+            {text('loading')}
+          </p>
+        ) : (
+          <RecordDetailSkeleton label={text('loading')} sidebar={staff && !closureTicketId} />
+        ))}
       {detailError && (
         <div role="alert" className="space-y-2">
           <p>{text(detailError === 'forbidden' ? 'forbidden' : 'detailError')}</p>
@@ -1064,7 +1088,7 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
         detail && (
           <article
             data-slot="ticket-detail"
-            className={`break-words rounded-xl border bg-card p-4 text-card-foreground sm:p-6 ${staff ? 'grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,0.75fr)]' : 'space-y-5'}`}
+            className={`min-w-0 wrap-anywhere ${staff ? 'grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,0.5fr)]' : 'space-y-4'}`}
           >
             {!staff && entry?.kind === 'record' && actor && (
               <TicketRepliesSeen
@@ -1073,12 +1097,13 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
                 comments={comments}
               />
             )}
-            <header className="flex flex-col gap-3 lg:col-span-full">
+            <header className="space-y-3 rounded-xl border bg-card p-4 text-card-foreground sm:p-6 lg:col-span-full">
               {entry?.kind === 'record' ? (
                 <h1
                   ref={heading}
                   tabIndex={-1}
-                  className="text-2xl font-semibold tracking-tight sm:text-3xl"
+                  dir="auto"
+                  className="w-fit max-w-full text-2xl leading-tight font-semibold sm:text-3xl"
                 >
                   {detail.subject}
                 </h1>
@@ -1105,7 +1130,7 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
                     {lifecycleFormText('openClosureReview', locale)}
                   </Link>
                 )}
-              <dl className="grid gap-3 sm:grid-cols-2">
+              <dl className="flex flex-wrap gap-x-6 gap-y-2 border-t pt-3 text-sm">
                 <div>
                   <dt className="text-sm text-muted-foreground">{text('created')}</dt>
                   <dd>
@@ -1119,7 +1144,7 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
                   </dd>
                 </div>
                 {detail.relatedEntityId && (
-                  <div className="min-w-0 sm:col-span-2">
+                  <div className="min-w-0">
                     <dt className="text-sm text-muted-foreground">{text('related')}</dt>
                     <dd>
                       <RelatedTicketRecord ticket={detail} staff={staff} locale={locale} />
@@ -1128,10 +1153,12 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
                 )}
               </dl>
             </header>
-            <div className="min-w-0 space-y-5">
-              <p className="whitespace-pre-wrap">{detail.body}</p>
-              <p>
-                {text('category')}: {text(`category.${detail.category ?? 'general'}`)}
+            <div className="min-w-0 space-y-4 rounded-xl border bg-card p-4 text-card-foreground sm:p-6">
+              <p className="text-xs font-medium text-muted-foreground">
+                {text(`category.${detail.category ?? 'general'}`)}
+              </p>
+              <p className="whitespace-pre-wrap" dir="auto">
+                {detail.body}
               </p>
               {detail.attachmentFiles?.length ? (
                 <ul aria-label={text('files')} className="flex flex-wrap gap-3">
@@ -1238,19 +1265,21 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
                   {text('reopen')}
                 </Button>
               )}
-              <TicketCommentThread
-                ticketId={detail.id}
-                headingLevel={entry?.kind === 'record' ? 2 : 3}
-                comments={comments}
-                ownerId={detail.userId}
-                staff={staff}
-                locale={locale}
-                customerName={
-                  staff ? (detail.customer?.profile?.title ?? detail.customer?.username) : null
-                }
-                assignees={assignees}
-                formatDate={formatDate}
-              />
+              <div className="border-t pt-4">
+                <TicketCommentThread
+                  ticketId={detail.id}
+                  headingLevel={entry?.kind === 'record' ? 2 : 3}
+                  comments={comments}
+                  ownerId={detail.userId}
+                  staff={staff}
+                  locale={locale}
+                  customerName={
+                    staff ? (detail.customer?.profile?.title ?? detail.customer?.username) : null
+                  }
+                  assignees={assignees}
+                  formatDate={formatDate}
+                />
+              </div>
               {canWrite && (
                 <div hidden={['closed', 'resolved'].includes(detail.status)}>
                   <TicketReplyInput
@@ -1273,7 +1302,7 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
             </div>
             {staff && (
               <section
-                className="min-w-0 space-y-4 rounded-lg border bg-muted/40 p-4"
+                className="min-w-0 space-y-4 rounded-xl border bg-card p-4 text-card-foreground sm:p-5"
                 aria-labelledby="ticket-management-heading"
               >
                 <h2 id="ticket-management-heading" className="font-semibold">
@@ -1295,12 +1324,12 @@ function Tickets({ staff, queries, recordSearch, entry }: TicketsProps & { staff
                 {staff && detail.customer && (
                   <section
                     aria-labelledby="ticket-customer-heading"
-                    className="rounded border bg-muted p-3 space-y-2"
+                    className="space-y-2 border-y py-3"
                   >
                     <h3 id="ticket-customer-heading" className="font-semibold">
                       {text('customerInfo')}
                     </h3>
-                    <dl className="grid gap-3 sm:grid-cols-2">
+                    <dl className="grid gap-3 text-sm sm:max-lg:grid-cols-2">
                       <div>
                         <dt className="text-sm text-muted-foreground">{text('account')}</dt>
                         <dd>

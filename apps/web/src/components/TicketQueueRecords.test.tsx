@@ -77,7 +77,11 @@ for (const locale of ['en', 'fa'] as const) {
           'minute'
         )
       );
-      expect(host.textContent).toContain(`Account time: ${ticket.updatedAt}`);
+      const details = host.querySelector('details')!;
+      expect(details.open).toBe(false);
+      await act(async () => details.querySelector('summary')!.click());
+      expect(details.open).toBe(true);
+      expect(details.querySelector('time')?.textContent).toBe(`Account time: ${ticket.updatedAt}`);
       expect(host.querySelector('time')?.dateTime).toBe(ticket.updatedAt);
       expect(host.querySelector('[data-slot=ticket-queue-records]')?.getAttribute('dir')).toBe(
         locale === 'fa' ? 'rtl' : 'ltr'
@@ -87,8 +91,12 @@ for (const locale of ['en', 'fa'] as const) {
       expect(host.querySelector('button')?.getAttribute('aria-current')).toBe('true');
       if (view === 'table') {
         expect(host.querySelector('caption')?.textContent).toBe(t('tickets.title', locale));
-        expect(host.querySelectorAll('th[scope=col]')).toHaveLength(6);
-      } else expect(host.querySelector('details')?.open).toBe(false);
+        expect(
+          Array.from(host.querySelectorAll('th[scope=col]'), (cell) => cell.textContent)
+        ).toEqual(
+          ['subject', 'status', 'updated', 'queueDetails'].map((key) => t(`tickets.${key}`, locale))
+        );
+      }
     });
   }
 }

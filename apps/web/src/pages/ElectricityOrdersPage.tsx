@@ -1,25 +1,18 @@
 import { HistoryStatusEmpty } from '../components/QueueEmptyState.js';
-import { LoadingStatus, ListPage } from '@barghsa/ui';
+import { ListPage, buttonVariants, cn } from '@barghsa/ui';
+import { RecordListSkeleton } from '../components/RecordSkeleton.js';
 import {
   useHistoryFilterDraft,
   type HistoryFilterSelection,
 } from '../hooks/useHistoryFilterDraft.js';
 import { useListView } from '../hooks/useListView.js';
-import { HistoryTable, TableCellDetails, type HistoryColumn } from '../components/HistoryTable.js';
-import { TableActionIcon } from '../components/TableActionIcon.js';
-import { ArrowUpRight } from 'lucide-react';
+import { HistoryTable, type HistoryColumn } from '../components/HistoryTable.js';
+import { Plus } from 'lucide-react';
 import type { HistoryFilterKey } from '../lib/history-filter-state.js';
 import { HistoryFilterPanel } from '../components/HistoryFilterPanel.js';
 import { Link } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
-import {
-  Button,
-  Card,
-  CardContent,
-  StatusFilter,
-  DualStatusDisplay,
-  ListViewToggle,
-} from '@barghsa/ui';
+import { Button, StatusFilter, DualStatusDisplay, ListViewToggle, PageHeader } from '@barghsa/ui';
 import {
   ELECTRICITY_ORDER_STATUSES,
   DEFAULT_HISTORY_SORT,
@@ -155,6 +148,13 @@ export function ElectricityOrdersPage({
   });
   const { items: orders, nextBefore, loadMore, loading, noProfile } = history;
   const error = !!history.error;
+  const allSelected =
+    !pendingOnly && !statuses.length && !dateRange.from && !dateRange.to && !query.q;
+  const scopeClass = (selected: boolean) =>
+    cn(
+      'touch-action rounded-md px-3 hover:bg-muted',
+      selected ? 'bg-primary/10 font-semibold text-primary' : 'text-muted-foreground'
+    );
 
   const formatPeriod = (order: ListedOrder) =>
     `${time.format(order.periodStart, { year: 'numeric', month: '2-digit', day: '2-digit' })} – ${time.format(new Date(new Date(order.periodEnd).getTime() - 1), { year: 'numeric', month: '2-digit', day: '2-digit' })}`;
@@ -168,18 +168,55 @@ export function ElectricityOrdersPage({
       financialTone={financialStatusTone(order.financialStatus)}
     />
   );
-  const columns: HistoryColumn<ListedOrder>[] = [
+  const submitted = (order: ListedOrder) => (
+    <time dateTime={order.submittedAt}>
+      {time.format(order.submittedAt, { year: 'numeric', month: '2-digit', day: '2-digit' })}
+    </time>
+  );
+  const identity = (order: ListedOrder) => (
+    <div className="min-w-0 space-y-1 text-start">
+      <Link
+        to="/electricity/orders/$orderId"
+        params={{ orderId: order.orderId }}
+        aria-label={`${t('electricity.orders.view', locale)} ${order.orderId}`}
+        className="touch-action font-semibold text-primary hover:underline underline-offset-4"
+      >
+        {formatPeriod(order)}
+      </Link>
+      <p className="text-xs font-normal text-muted-foreground">
+        <bdi className="wrap-anywhere">{order.orderId}</bdi>
+      </p>
+    </div>
+  );
+  const nextStep = (order: ListedOrder) => {
+    const action = nextActionLink(order);
+    return action ? (
+      <a
+        className="touch-action font-medium text-primary hover:underline underline-offset-4"
+        href={action.href}
+      >
+        {t(action.label, locale)}
+      </a>
+    ) : (
+      <span className="text-muted-foreground">
+        {t(`electricity.order.nextAction.${order.nextAction}`, locale)}
+      </span>
+    );
+  };
+  const columns: (HistoryColumn<ListedOrder> & { label: string })[] = [
     {
       id: 'reference',
-      label: t('historySearch.reference', locale),
+      label: t('recordTable.orderTerms', locale),
       render: (order) => (
-        <Link
-          to="/electricity/orders/$orderId"
-          params={{ orderId: order.orderId }}
-          className="touch-action max-w-full break-all font-semibold text-primary underline underline-offset-4"
-        >
-          {t('electricity.orders.view', locale)} · <bdi dir="ltr">{order.orderId}</bdi>
-        </Link>
+        <div className="space-y-2">
+          {identity(order)}
+          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-xs font-normal text-muted-foreground">
+            <bdi>{numbers.irrDigits(order.totalKwh)} kWh</bdi>
+            <span>
+              {t('historyView.submitted', locale)} {submitted(order)}
+            </span>
+          </div>
+        </div>
       ),
     },
     {
@@ -190,82 +227,35 @@ export function ElectricityOrdersPage({
     {
       id: 'amount',
       label: t('electricity.order.total', locale),
-      render: (order) => <bdi className="whitespace-nowrap">{numbers.money(order.totalIrR)}</bdi>,
-    },
-    {
-      id: 'quantity',
-      label: t('recordTable.orderTerms', locale),
       render: (order) => (
-        <TableCellDetails
-          fields={[
-            {
-              id: 'quantity',
-              label: t('electricity.order.quantity', locale),
-              value: <bdi>{numbers.irrDigits(order.totalKwh)} kWh</bdi>,
-            },
-            {
-              id: 'period',
-              label: t('electricity.order.period.selection', locale),
-              value: formatPeriod(order),
-            },
-          ]}
-        />
-      ),
-    },
-    {
-      id: 'submitted',
-      label: t('historyView.submitted', locale),
-      render: (order) => (
-        <time dateTime={order.submittedAt}>
-          {time.format(order.submittedAt, { year: 'numeric', month: '2-digit', day: '2-digit' })}
-        </time>
+        <bdi className="font-semibold whitespace-nowrap">{numbers.money(order.totalIrR)}</bdi>
       ),
     },
     {
       id: 'action',
       actions: true,
       label: t('electricity.order.nextAction', locale),
-      render: (order) => {
-        const action = nextActionLink(order);
-        return (
-          <div className="min-w-32 space-y-2">
-            <p className="text-muted-foreground">
-              {t(`electricity.order.nextAction.${order.nextAction}`, locale)}
-            </p>
-            {action && (
-              <a
-                className="touch-action font-medium text-primary underline underline-offset-4"
-                href={action.href}
-                data-table-action-tooltip={t(action.label, locale)}
-              >
-                <TableActionIcon icon={ArrowUpRight}>{t(action.label, locale)}</TableActionIcon>
-              </a>
-            )}
-          </div>
-        );
-      },
+      render: (order) => <div className="min-w-32 text-start">{nextStep(order)}</div>,
     },
   ];
   return (
     <div
-      className={`container mx-auto min-w-0 space-y-6 px-4 py-8 ${view === 'table' ? 'max-w-7xl' : 'max-w-4xl'}`}
+      className="mx-auto w-full max-w-5xl min-w-0 space-y-4"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold">{t('electricity.orders.title', locale)}</h1>
-          <p className="text-sm text-muted-foreground">
-            {t('electricity.orders.description', locale)}
-          </p>
-        </div>
-        <Link
-          to="/electricity/order"
-          className="touch-action rounded-md border px-4 py-2 text-sm text-primary underline underline-offset-4"
-        >
-          {t('electricity.orders.new', locale)}
-        </Link>
-      </header>
-      <nav className="flex gap-4 text-sm" aria-label={t('electricity.orders.title', locale)}>
+      <PageHeader
+        title={t('electricity.orders.title', locale)}
+        actions={
+          <Link to="/electricity/order" className={buttonVariants()}>
+            <Plus aria-hidden="true" data-icon="inline-start" />
+            {t('electricity.orders.new', locale)}
+          </Link>
+        }
+      />
+      <nav
+        className="flex flex-wrap gap-2 text-sm"
+        aria-label={t('electricity.orders.title', locale)}
+      >
         <Link
           to="/electricity/orders"
           search={{
@@ -276,12 +266,8 @@ export function ElectricityOrdersPage({
             q: undefined,
             sort: undefined,
           }}
-          className="touch-action text-primary underline underline-offset-4"
-          aria-current={
-            pendingOnly || statuses.length || dateRange.from || dateRange.to || query.q
-              ? undefined
-              : 'page'
-          }
+          className={scopeClass(allSelected)}
+          aria-current={allSelected ? 'page' : undefined}
         >
           {t('electricity.orders.all', locale)}
         </Link>
@@ -295,7 +281,7 @@ export function ElectricityOrdersPage({
             q: undefined,
             sort: undefined,
           }}
-          className="touch-action text-primary underline underline-offset-4"
+          className={scopeClass(pendingOnly)}
           aria-current={pendingOnly ? 'page' : undefined}
         >
           {t('electricity.orders.pending', locale)}
@@ -303,6 +289,7 @@ export function ElectricityOrdersPage({
       </nav>
       <ListPage>
         <ListPage.Toolbar
+          className="rounded-xl border bg-card p-3"
           filters={
             <HistoryFilterPanel
               query={query}
@@ -363,7 +350,19 @@ export function ElectricityOrdersPage({
           error={error}
           empty={noProfile || orders.length === 0}
           retainContent={!noProfile && orders.length > 0}
-          loadingView={<LoadingStatus>{t('electricity.orders.loading', locale)}</LoadingStatus>}
+          loadingView={
+            orders.length && !noProfile ? (
+              <p role="status" className="sr-only">
+                {t('electricity.orders.loading', locale)}
+              </p>
+            ) : (
+              <RecordListSkeleton
+                label={t('electricity.orders.loading', locale)}
+                view={view}
+                headings={columns.map((column) => column.label)}
+              />
+            )
+          }
           errorView={
             <div role="alert" className="space-y-2">
               <p>
@@ -398,51 +397,36 @@ export function ElectricityOrdersPage({
               rowKey={(order) => order.orderId}
             />
           ) : (
-            <div className="space-y-3">
-              {orders.map((order) => {
-                const action = nextActionLink(order);
-                return (
-                  <Card key={order.orderId}>
-                    <CardContent className="space-y-3 pt-6">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <Link
-                          to="/electricity/orders/$orderId"
-                          params={{ orderId: order.orderId }}
-                          className="touch-action max-w-full break-all font-semibold text-primary underline underline-offset-4"
-                        >
-                          {t('electricity.orders.view', locale)} · <bdi>{order.orderId}</bdi>
-                        </Link>
-                        <span className="text-sm text-muted-foreground">
-                          {time.format(order.submittedAt, {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                          })}
-                        </span>
-                      </div>
-                      <p className="text-sm">
-                        {formatPeriod(order)} · {numbers.irrDigits(order.totalKwh)} kWh ·{' '}
-                        {numbers.money(order.totalIrR)}
-                      </p>
-                      {status(order)}
-                      <div className="flex flex-wrap items-center justify-between gap-2 rounded-md bg-muted/50 p-3 text-sm">
-                        <p className="text-muted-foreground">
-                          {t(`electricity.order.nextAction.${order.nextAction}`, locale)}
-                        </p>
-                        {action ? (
-                          <a
-                            className="touch-action font-medium text-primary underline underline-offset-4"
-                            href={action.href}
-                          >
-                            {t(action.label, locale)}
-                          </a>
-                        ) : null}
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
+            <ul className="grid gap-3">
+              {orders.map((order) => (
+                <li key={order.orderId} className="min-w-0 space-y-3 rounded-xl border bg-card p-4">
+                  {identity(order)}
+                  {status(order)}
+                  <dl className="grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <dt className="text-xs text-muted-foreground">
+                        {t('electricity.order.total', locale)}
+                      </dt>
+                      <dd className="font-semibold">
+                        <bdi>{numbers.money(order.totalIrR)}</bdi>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs text-muted-foreground">
+                        {t('historyView.submitted', locale)}
+                      </dt>
+                      <dd>{submitted(order)}</dd>
+                    </div>
+                  </dl>
+                  <div className="flex flex-wrap items-baseline justify-between gap-2 border-t pt-3 text-sm">
+                    {nextStep(order)}
+                    <bdi className="text-muted-foreground">
+                      {numbers.irrDigits(order.totalKwh)} kWh
+                    </bdi>
+                  </div>
+                </li>
+              ))}
+            </ul>
           )}
         </ListPage.Content>
         <ListPage.Pagination

@@ -17,6 +17,7 @@ export interface WorkflowStatusBannerProps {
   supportHref?: string;
   submittedAt?: ReactNode;
   expectedResponse?: ReactNode;
+  statusSummary?: ReactNode;
 }
 
 /** A shared customer-facing summary for any order, request, or contract. */
@@ -31,6 +32,7 @@ export function WorkflowStatusBanner({
   supportHref = '/tickets',
   submittedAt,
   expectedResponse,
+  statusSummary,
 }: WorkflowStatusBannerProps) {
   const safeSupportHref =
     supportHref.startsWith('/') && !supportHref.startsWith('//') ? supportHref : '/tickets';
@@ -57,6 +59,39 @@ export function WorkflowStatusBanner({
     ) : (
       <span dir={waiting ? undefined : 'auto'}>{nextAction}</span>
     ));
+  if (statusSummary) {
+    return (
+      <section
+        aria-label={label('summary')}
+        className="min-w-0 space-y-4 rounded-xl border bg-card p-4 sm:p-6"
+        dir={locale === 'fa' ? 'rtl' : 'ltr'}
+      >
+        {statusSummary}
+        <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3 border-t pt-4 text-sm">
+          <div className="min-w-0 space-y-1">
+            <h2 className="text-xs font-medium text-muted-foreground">{label('nextAction')}</h2>
+            <div className="text-base font-semibold">{action}</div>
+            {owner !== 'none' && (
+              <p className="text-muted-foreground">
+                {label('owner')}: {label(`owner.${owner}`)}
+              </p>
+            )}
+          </div>
+          {supportLink}
+        </div>
+        {(happened !== status || waiting) && (
+          <div className="space-y-1 text-sm text-muted-foreground">
+            {happened !== status && (
+              <p>
+                {label('happened')}: <bdi>{happened}</bdi>
+              </p>
+            )}
+            {waiting && (expectedResponse ?? <p>{workflowFeedback('responseUnknown', locale)}</p>)}
+          </div>
+        )}
+      </section>
+    );
+  }
   return (
     <section
       aria-label={label('summary')}

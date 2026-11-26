@@ -481,7 +481,9 @@ it.each([
       expect(container.textContent).toContain(`Green · ${requiredGreenKwh} kWh`);
     }
     expect(container.textContent).toContain('Awaiting staff review');
-    expect(container.textContent).toContain('Current status');
+    expect(container.querySelector('[data-slot="dual-status-display"]')?.textContent).toContain(
+      'Commercial statusAwaiting staff review'
+    );
     expect(container.textContent).toContain('Who acts next');
     expect(container.textContent).toContain('Financial status');
     expect(container.textContent).toContain('Order method');

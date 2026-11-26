@@ -1,15 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import type { TicketListFilters } from '../lib/support-list-query.js';
-import {
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  type ListView,
-} from '@barghsa/ui';
+import { Badge, Button, StatusBadge, type ListView, type StatusTone } from '@barghsa/ui';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { tTicketForms } from '@barghsa/i18n/ticket-forms';
 import { HistoryTable, type HistoryColumn } from './HistoryTable.js';
@@ -168,7 +160,7 @@ export function TicketQueueRecords({
           to={staff ? '/admin/tickets/$ticketId/{-$section}' : '/tickets/$ticketId'}
           params={{ ticketId: item.id }}
           search={recordSearch}
-          className="inline-flex min-h-8 max-w-full items-center break-words text-start font-medium text-primary hover:underline"
+          className="inline-flex min-h-8 max-w-full items-center text-start font-semibold wrap-anywhere text-primary hover:underline pointer-coarse:min-h-11"
         >
           {item.subject}
         </Link>
@@ -187,9 +179,10 @@ export function TicketQueueRecords({
     );
   }
   const status = (item: Ticket) => <TicketStatusBadge status={item.status} locale={locale} />;
-  const priority = (item: Ticket) => (
-    <TicketPriorityBadge priority={item.priority} locale={locale} />
-  );
+  const priority = (item: Ticket) =>
+    item.priority === 'high' ? (
+      <TicketPriorityBadge priority={item.priority} locale={locale} />
+    ) : null;
   const unread = (item: Ticket) =>
     !staff && item.hasUnreadReply ? (
       <Badge className="bg-primary text-primary-foreground">{copy('newReply')}</Badge>
@@ -205,7 +198,10 @@ export function TicketQueueRecords({
           </span>
           <time dateTime={reply.createdAt}>{formatDate(reply.createdAt)}</time>
         </div>
-        <p dir="auto" className="line-clamp-2 break-words text-sm">
+        <p
+          dir="auto"
+          className="line-clamp-2 text-sm font-normal wrap-anywhere text-muted-foreground"
+        >
           {reply.preview || copy('replyWithAttachment')}
         </p>
       </div>
@@ -220,11 +216,13 @@ export function TicketQueueRecords({
         : '';
     const absolute = formatDate(item.updatedAt);
     return (
-      <div className="flex flex-col gap-1">
-        <time dateTime={Number.isFinite(stamp.getTime()) ? item.updatedAt : undefined}>
+      <div className="space-y-0.5">
+        <time
+          dateTime={Number.isFinite(stamp.getTime()) ? item.updatedAt : undefined}
+          title={relative ? absolute : undefined}
+        >
           {relative || absolute}
         </time>
-        {relative && <span className="text-xs text-muted-foreground">{absolute}</span>}
       </div>
     );
   }
@@ -234,7 +232,7 @@ export function TicketQueueRecords({
       Number.isFinite(due.getTime()) &&
       ['open', 'in_progress', 'waiting_staff'].includes(item.status)
       ? formatDate(due.toISOString())
-      : text('none');
+      : null;
   }
   function owner(item: Ticket) {
     return (
@@ -243,48 +241,111 @@ export function TicketQueueRecords({
       text('unassigned')
     );
   }
+  function classification(item: Ticket) {
+    return (
+      <span className="text-xs font-normal text-muted-foreground">
+        {text(`category.${item.category ?? 'general'}`)}
+      </span>
+    );
+  }
+  function state(item: Ticket) {
+    return (
+      <div className="flex flex-wrap items-center gap-2">
+        {status(item)}
+        {priority(item)}
+      </div>
+    );
+  }
+  function more(item: Ticket) {
+    return (
+      <details open={expanded.has(item.id)} className="min-w-0">
+        <summary
+          className="w-fit cursor-pointer rounded py-2 text-sm font-medium text-primary focus-visible:outline-2 focus-visible:outline-ring pointer-coarse:min-h-11 pointer-coarse:py-3"
+          aria-label={`${text('queueDetails')}: ${item.subject}`}
+          onClick={(event) => {
+            // Keep disclosure when changing between table and card views.
+            event.preventDefault();
+            setExpanded((previous) => {
+              const next = new Set(previous);
+              if (next.has(item.id)) next.delete(item.id);
+              else next.add(item.id);
+              return next;
+            });
+          }}
+        >
+          {text('queueDetails')}
+        </summary>
+        <dl className="grid gap-3 pb-2 text-sm font-normal">
+          <div>
+            <dt className="text-xs text-muted-foreground">{text('updated')}</dt>
+            <dd>
+              <time dateTime={item.updatedAt}>{formatDate(item.updatedAt)}</time>
+            </dd>
+          </div>
+          {item.priority !== 'high' && (
+            <div>
+              <dt className="text-xs text-muted-foreground">{text('priority')}</dt>
+              <dd>
+                <TicketPriorityBadge priority={item.priority} locale={locale} />
+              </dd>
+            </div>
+          )}
+          {item.relatedEntityId && (
+            <div>
+              <dt className="text-xs text-muted-foreground">{text('related')}</dt>
+              <dd>
+                <RelatedTicketRecord ticket={item} staff={staff} locale={locale} />
+              </dd>
+            </div>
+          )}
+          {staff && (
+            <div>
+              <dt className="text-xs text-muted-foreground">{text('customer')}</dt>
+              <dd className="wrap-anywhere">
+                <bdi>{item.userId}</bdi>
+              </dd>
+            </div>
+          )}
+        </dl>
+      </details>
+    );
+  }
+  function assignment(item: Ticket) {
+    const due = target(item);
+    return (
+      <dl className="space-y-1 text-sm">
+        <div>
+          <dt className="sr-only">{text('assignee')}</dt>
+          <dd className="font-medium wrap-anywhere">{owner(item)}</dd>
+        </div>
+        {due && (
+          <div className="flex flex-wrap items-baseline gap-x-1.5 text-xs text-muted-foreground">
+            <dt>{text('target')}</dt>
+            <dd>{due}</dd>
+          </div>
+        )}
+      </dl>
+    );
+  }
   const columns: HistoryColumn<Ticket>[] = [
     {
       id: 'subject',
       label: text('subject'),
       render: (item) => (
-        <div className="min-w-48 max-w-80 space-y-2">
+        <div className="min-w-40 max-w-80">
           <div className="flex flex-wrap items-center gap-x-2">
             {subject(item)}
             {unread(item)}
           </div>
-          {replyPreview(item)}
+          {classification(item)}
+          {item.latestReply && <div className="mt-2">{replyPreview(item)}</div>}
         </div>
       ),
     },
-    {
-      id: 'category',
-      label: text('category'),
-      render: (item) => text(`category.${item.category ?? 'general'}`),
-    },
-    { id: 'status', label: text('status'), render: status },
-    { id: 'priority', label: text('priority'), render: priority },
+    { id: 'status', label: text('status'), render: state },
     { id: 'updated', label: text('updated'), render: updated },
-    {
-      id: 'related',
-      label: text('related'),
-      render: (item) => <RelatedTicketRecord ticket={item} staff={staff} locale={locale} />,
-    },
-    ...(staff
-      ? [
-          {
-            id: 'customer',
-            label: text('customer'),
-            render: (item: Ticket) => <bdi>{item.userId}</bdi>,
-          },
-          {
-            id: 'assignee',
-            label: text('assignee'),
-            render: owner,
-          },
-          { id: 'target', label: text('target'), render: target },
-        ]
-      : []),
+    ...(staff ? [{ id: 'assignee', label: text('assignee'), render: assignment }] : []),
+    { id: 'details', label: text('queueDetails'), render: more },
   ];
   return (
     <div data-slot="ticket-queue-records" className="min-w-0" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -298,74 +359,25 @@ export function TicketQueueRecords({
       ) : (
         <ul aria-label={text(staff ? 'staffTitle' : 'title')} className="grid gap-3">
           {items.map((item) => (
-            <li key={item.id} className="min-w-0">
-              <Card>
-                <CardHeader>
-                  <CardTitle>{subject(item)}</CardTitle>
-                  <div className="flex flex-wrap gap-2">
-                    {status(item)}
-                    {priority(item)}
-                    {unread(item)}
-                  </div>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-3">
-                  {replyPreview(item)}
-                  <div>
-                    <p className="text-sm text-muted-foreground">{text('updated')}</p>
-                    {updated(item)}
-                  </div>
-                  {staff && (
-                    <dl className="grid grid-cols-2 gap-3">
-                      <div className="min-w-0 break-words">
-                        <dt className="text-xs text-muted-foreground">{text('assignee')}</dt>
-                        <dd className="text-sm">{owner(item)}</dd>
-                      </div>
-                      <div className="min-w-0 break-words">
-                        <dt className="text-xs text-muted-foreground">{text('target')}</dt>
-                        <dd className="text-sm">{target(item)}</dd>
-                      </div>
-                    </dl>
-                  )}
-                  <details open={expanded.has(item.id)}>
-                    <summary
-                      className="cursor-pointer rounded py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-ring pointer-coarse:min-h-11 pointer-coarse:py-3"
-                      aria-label={`${text('queueDetails')}: ${item.subject}`}
-                      onClick={(event) => {
-                        // Native toggle events are deferred and can be lost during a view change.
-                        event.preventDefault();
-                        setExpanded((previous) => {
-                          const next = new Set(previous);
-                          if (next.has(item.id)) next.delete(item.id);
-                          else next.add(item.id);
-                          return next;
-                        });
-                      }}
-                    >
-                      {text('queueDetails')}
-                    </summary>
-                    <dl className="grid gap-3 pt-3 sm:grid-cols-2">
-                      {columns
-                        .filter(
-                          (column) =>
-                            ![
-                              'subject',
-                              'status',
-                              'priority',
-                              'updated',
-                              'assignee',
-                              'target',
-                            ].includes(column.id)
-                        )
-                        .map((column) => (
-                          <div key={column.id} className="min-w-0 break-words">
-                            <dt className="text-sm text-muted-foreground">{column.label}</dt>
-                            <dd>{column.render(item)}</dd>
-                          </div>
-                        ))}
-                    </dl>
-                  </details>
-                </CardContent>
-              </Card>
+            <li
+              key={item.id}
+              className="min-w-0 rounded-xl border bg-card px-4 pt-3 text-card-foreground"
+            >
+              <div className="mb-3 space-y-2">
+                <div className="flex flex-wrap items-center gap-x-2">
+                  {subject(item)}
+                  {unread(item)}
+                </div>
+                {classification(item)}
+                {state(item)}
+                {replyPreview(item)}
+              </div>
+              <div className="flex flex-wrap items-baseline gap-x-2 text-xs text-muted-foreground">
+                <span>{text('updated')}</span>
+                {updated(item)}
+              </div>
+              {staff && <div className="my-2">{assignment(item)}</div>}
+              <div className="mt-3 border-t">{more(item)}</div>
             </li>
           ))}
         </ul>
@@ -375,11 +387,15 @@ export function TicketQueueRecords({
 }
 
 export function TicketStatusBadge({ status, locale }: { status: TicketStatus; locale: Locale }) {
-  return (
-    <Badge variant={status === 'resolved' || status === 'closed' ? 'secondary' : 'outline'}>
-      {t(`tickets.${status}`, locale)}
-    </Badge>
-  );
+  const tone: Record<TicketStatus, StatusTone> = {
+    open: 'info',
+    in_progress: 'info',
+    waiting_customer: 'warning',
+    waiting_staff: 'warning',
+    resolved: 'success',
+    closed: 'default',
+  };
+  return <StatusBadge label={t(`tickets.${status}`, locale)} tone={tone[status]} />;
 }
 
 export function TicketPriorityBadge({ priority, locale }: { priority: string; locale: Locale }) {
