@@ -21,7 +21,16 @@ import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import type { ProductCatalogueType } from '../lib/catalogue-category-query.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type FormEvent,
+} from 'react';
 import {
   LoadingStatus,
   Button,
@@ -71,6 +80,7 @@ import {
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 const base = '/api/admin/catalogue/products';
+const SavingPlanHardwarePicker = lazy(() => import('../components/SavingPlanHardwarePicker.js'));
 export type CatalogueView = 'list' | 'new' | 'detail' | 'edit' | 'price' | 'configuration';
 export type SavingConfigurationEditor = 'agreement' | 'activate-agreement';
 export default function AdminCataloguePage({
@@ -1151,63 +1161,25 @@ export default function AdminCataloguePage({
                                     </Button>
                                   </div>
                                 )}
-                                <div className="space-y-1">
-                                  {hardwareOptions
-                                    .filter((item) => item.status !== 'archived')
-                                    .map((item) => (
-                                      <label
-                                        key={item.id}
-                                        className="flex min-h-9 min-w-0 cursor-pointer items-center gap-2"
-                                      >
-                                        <input
-                                          type="checkbox"
-                                          className="size-4 shrink-0 accent-primary"
-                                          checked={draft.hardwareIds.includes(item.id)}
-                                          onChange={(event) =>
-                                            setDraft({
-                                              ...draft,
-                                              hardwareIds: event.target.checked
-                                                ? [...draft.hardwareIds, item.id]
-                                                : draft.hardwareIds.filter((id) => id !== item.id),
-                                            })
-                                          }
-                                        />
-                                        <span className="min-w-0 [overflow-wrap:anywhere]">
-                                          {title(item)} · {money(item.price)}
-                                        </span>
-                                      </label>
-                                    ))}
-                                  {draft.hardwareIds
-                                    .filter(
-                                      (id) =>
-                                        !hardwareOptions.some(
-                                          (item) => item.id === id && item.status !== 'archived'
-                                        )
-                                    )
-                                    .map((id) => (
-                                      <label
-                                        key={id}
-                                        className="flex min-h-9 min-w-0 cursor-pointer items-center gap-2"
-                                      >
-                                        <input
-                                          type="checkbox"
-                                          className="size-4 shrink-0 accent-primary"
-                                          checked
-                                          onChange={() =>
-                                            setDraft({
-                                              ...draft,
-                                              hardwareIds: draft.hardwareIds.filter(
-                                                (value) => value !== id
-                                              ),
-                                            })
-                                          }
-                                        />
-                                        <span className="min-w-0 [overflow-wrap:anywhere]">
-                                          {label('unavailable')} · <bdi>{id}</bdi>
-                                        </span>
-                                      </label>
-                                    ))}
-                                </div>
+                                {(hardwareState === 'ready' ||
+                                  hardwareOptions.length > 0 ||
+                                  draft.hardwareIds.length > 0) && (
+                                  <Suspense
+                                    fallback={<LoadingStatus>{label('loading')}</LoadingStatus>}
+                                  >
+                                    <SavingPlanHardwarePicker
+                                      key={editor}
+                                      options={hardwareOptions}
+                                      selected={draft.hardwareIds}
+                                      locale={locale}
+                                      title={title}
+                                      money={money}
+                                      onChange={(hardwareIds) =>
+                                        setDraft({ ...draft, hardwareIds })
+                                      }
+                                    />
+                                  </Suspense>
+                                )}
                                 {feedback('hardwareIds')}
                               </fieldset>
                             </RecordEditorSection>

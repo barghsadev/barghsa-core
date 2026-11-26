@@ -8,9 +8,12 @@ import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   catalogueBase as base,
   catalogueId as id,
+  catalogueConfig,
   catalogueProduct,
   catalogueDetail,
   catalogueReferences,
+  hardwareId,
+  secondCatalogueId,
 } from '../src/test/catalogue-fixtures';
 async function reads(page: Page) {
   await page.route('**/api/admin/catalogue/**', (route) => {
@@ -21,6 +24,78 @@ async function reads(page: Page) {
     return route.fulfill({ json: catalogueDetail() });
   });
 }
+
+test('saving-plan hardware search retains selected equipment and requires unavailable items to be removed', async ({
+  page,
+}) => {
+  await setup(page, 'en', false);
+  const meter = {
+    ...catalogueProduct('hardware', hardwareId),
+    title: { en: 'Meter kit', fa: 'بسته کنتور' },
+  };
+  const sensor = {
+    ...catalogueProduct('hardware', secondCatalogueId),
+    title: { en: 'Current sensor', fa: 'حسگر جریان' },
+  };
+  const retired = {
+    ...catalogueProduct('hardware', '85000000-0000-4000-8000-000000000004'),
+    title: { en: 'Legacy meter', fa: 'کنتور قدیمی' },
+    status: 'archived',
+  };
+  const writes: Array<{ hardwareIds: string[] }> = [];
+  await page.route('**/api/admin/catalogue/**', (route) => {
+    const url = new URL(route.request().url());
+    if (url.pathname === base) return route.fulfill({ json: [meter, sensor, retired] });
+    if (url.pathname.endsWith('/rule-references'))
+      return route.fulfill({ json: catalogueReferences });
+    if (url.pathname.endsWith('/configuration'))
+      return route.fulfill({
+        json: { ...catalogueConfig, hardwareIds: writes[0]?.hardwareIds ?? [meter.id, retired.id] },
+      });
+    const plan = catalogueDetail('saving_plan');
+    if (route.request().method() === 'GET') return route.fulfill({ json: plan });
+    const body = route.request().postDataJSON();
+    writes.push(body);
+    return route.fulfill({ json: { ...plan, ...body } });
+  });
+
+  await page.goto(`/admin/catalogue/saving_plan/${id}/edit`);
+  const equipment = page.getByRole('region', { name: 'Compatible hardware', exact: true });
+  const find = equipment.getByRole('searchbox', { name: 'Find compatible equipment' });
+  const chosen = equipment.getByRole('checkbox', { name: /Meter kit/ });
+  const removed = equipment.getByRole('checkbox', {
+    name: /Legacy meter.*Choice no longer available/,
+  });
+  const add = equipment.getByRole('checkbox', { name: /Current sensor/ });
+  await expect(chosen).toBeChecked();
+  await expect(removed).toBeChecked();
+  await find.fill('حسگر');
+  await expect(add).toBeVisible();
+  await expect(chosen).toBeChecked();
+  await add.check();
+
+  await find.fill('something else');
+  await find.press('Enter');
+  await expect(equipment.getByRole('status')).toHaveText(
+    'No unselected equipment matches your search.'
+  );
+  await expect(add).toBeChecked();
+  await expect(removed).toBeChecked();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+
+  const save = page.getByRole('button', { name: 'Save product', exact: true });
+  await save.click();
+  await expect(
+    equipment.getByText('Choose at least one available hardware product.')
+  ).toBeVisible();
+  expect(writes).toEqual([]);
+  await removed.press('Space');
+  await expect(removed).toHaveCount(0);
+  await expect(find).toBeFocused();
+  await save.click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
+  await expect.poll(() => writes[0]?.hardwareIds).toEqual([meter.id, sensor.id]);
+});
 for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true]) {
     test(`catalogue fields focus, freeze, map safe errors and verify product/price receipts (${locale}, dark=${dark})`, async ({
