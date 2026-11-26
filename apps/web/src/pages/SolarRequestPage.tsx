@@ -251,6 +251,8 @@ export function SolarRequestPage() {
   const [usableAreaSqm, setUsableAreaSqm] = fields.field('usableAreaSqm');
   const [siteAddressId, setSiteAddressId] = fields.field('siteAddressId');
   const selectedSiteAddress = addresses.find((address) => address.id === siteAddressId);
+  const hasSiteAddresses = addresses.length > 0;
+  const savedSiteAddressUnavailable = Boolean(siteAddressId && !selectedSiteAddress);
   const siteAddressField = fields.bind('siteAddressId');
   const [siteRelationship, setSiteRelationship] = fields.field('siteRelationship');
   const [siteDescription, setSiteDescription] = fields.field('siteDescription');
@@ -1097,7 +1099,11 @@ export function SolarRequestPage() {
                       )}
                       <div className="col-span-full min-w-0 space-y-1 border-t pt-2">
                         <div className="flex flex-wrap items-center justify-between gap-x-2">
-                          <Label htmlFor="solar-site-address-id">{copy('address')}</Label>
+                          {hasSiteAddresses ? (
+                            <Label htmlFor="solar-site-address-id">{copy('address')}</Label>
+                          ) : (
+                            <p className="text-sm font-medium">{copy('address')}</p>
+                          )}
                           <Link
                             className="inline-flex min-h-11 w-fit items-center gap-1.5 rounded-sm text-sm font-medium text-primary hover:underline"
                             to="/settings/addresses/new"
@@ -1109,33 +1115,57 @@ export function SolarRequestPage() {
                             }}
                           >
                             <PlusIcon className="size-4 shrink-0" aria-hidden="true" />
-                            {copy(addresses.length ? 'addAddress' : 'noAddresses')}
+                            {copy('addAddress')}
                           </Link>
                         </div>
-                        <NativeSelect
-                          id="solar-site-address-id"
-                          className="w-full"
-                          {...siteAddressField}
-                          value={siteAddressId}
-                          onChange={(e) => setSiteAddressId(e.target.value)}
-                          required
-                          aria-required="true"
-                          aria-describedby={
-                            [
-                              siteAddressField['aria-describedby'],
-                              selectedSiteAddress && 'solar-site-address-postal',
-                            ]
-                              .filter(Boolean)
-                              .join(' ') || undefined
-                          }
-                        >
-                          <option value="">{solarIntakeText('chooseSavedAddress', locale)}</option>
-                          {addresses.map((address) => (
-                            <option key={address.id} value={address.id}>
-                              {`${address.fullAddress} · \u2066${address.postalCode}\u2069`}
+                        {(savedSiteAddressUnavailable || !hasSiteAddresses) && (
+                          <p
+                            id="solar-site-address-recovery"
+                            role="status"
+                            className="rounded-md border bg-muted/35 px-3 py-2 text-sm text-muted-foreground"
+                          >
+                            {savedSiteAddressUnavailable && (
+                              <span className="block">
+                                {solarIntakeText('savedAddressUnavailable', locale)}
+                              </span>
+                            )}
+                            {!hasSiteAddresses && (
+                              <span className="block">{copy('noAddresses')}</span>
+                            )}
+                          </p>
+                        )}
+                        {hasSiteAddresses && (
+                          <NativeSelect
+                            id="solar-site-address-id"
+                            className="w-full"
+                            {...siteAddressField}
+                            value={selectedSiteAddress?.id ?? ''}
+                            onChange={(e) => setSiteAddressId(e.target.value)}
+                            required
+                            aria-required="true"
+                            aria-invalid={
+                              savedSiteAddressUnavailable || siteAddressField['aria-invalid']
+                            }
+                            aria-describedby={
+                              [
+                                siteAddressField['aria-describedby'],
+                                savedSiteAddressUnavailable && 'solar-site-address-recovery',
+                                selectedSiteAddress && 'solar-site-address-postal',
+                              ]
+                                .filter(Boolean)
+                                .join(' ') || undefined
+                            }
+                          >
+                            <option value="">
+                              {solarIntakeText('chooseSavedAddress', locale)}
                             </option>
-                          ))}
-                        </NativeSelect>
+                            {addresses.map((address) => (
+                              <option key={address.id} value={address.id}>
+                                {`${address.fullAddress} · \u2066${address.postalCode}\u2069`}
+                              </option>
+                            ))}
+                          </NativeSelect>
+                        )}
                         {selectedSiteAddress && (
                           <p
                             id="solar-site-address-postal"

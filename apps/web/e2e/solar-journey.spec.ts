@@ -1127,9 +1127,7 @@ for (const locale of ['en', 'fa'] as const)
           await expect(manualDate).toBeFocused();
           await manualDate.fill('2020-01-01');
         }
-        await page
-          .getByRole('link', { name: tSolar(existing ? 'addAddress' : 'noAddresses', locale) })
-          .click();
+        await page.getByRole('link', { name: tSolar('addAddress', locale), exact: true }).click();
         await expect(page).toHaveURL(/\/settings\/addresses\/new\?/);
         expect(draft?.data).toMatchObject({
           buildingType,

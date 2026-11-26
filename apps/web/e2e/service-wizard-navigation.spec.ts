@@ -736,6 +736,62 @@ for (const locale of ['en', 'fa'] as const) {
   });
 }
 
+for (const locale of ['en', 'fa'] as const) {
+  test(`solar recovers a draft whose site address is unavailable (${locale})`, async ({ page }) => {
+    const state = await fixture(page, 'solar', locale, 2);
+    const missingAddress = '90000000-0000-4000-8000-000000000001';
+    const saved = {
+      ...solarData,
+      siteAddressId: missingAddress,
+      gridType: 'on_grid',
+      billIdentifier: '1234567890123',
+    };
+    state.draft.data = saved;
+    let savedAddresses = [address];
+    await page.route(`**/api/profiles/${profileId}/addresses`, (route) =>
+      route.fulfill({ json: { addresses: savedAddresses } })
+    );
+    const recovery = page.getByText(solarIntakeText('savedAddressUnavailable', locale), {
+      exact: true,
+    });
+    const picker = page.getByLabel(tSolar('address', locale), { exact: true });
+    const next = button(page, 'electricity.order.next', locale);
+    await page.goto(`${path('solar')}?step=2`);
+    await expect(recovery).toBeVisible();
+    await expect(page).toHaveURL(/step=1$/);
+    await expect(picker).toHaveValue('');
+    await expect(picker).toHaveAttribute('aria-invalid', 'true');
+    await expect(picker).toHaveAccessibleDescription(
+      solarIntakeText('savedAddressUnavailable', locale)
+    );
+    await expect(input(page, 'solar', locale)).toHaveValue(saved.usableAreaSqm);
+    await expect(next).toBeDisabled();
+    expect(state.saves).toEqual([]);
+    await picker.selectOption(address.id);
+    await expect(recovery).toHaveCount(0);
+    await expect(next).toBeEnabled();
+    await next.click();
+    await expect(page.locator('#solar-bill')).toHaveValue(saved.billIdentifier);
+    expect(state.saves.at(-1)).toMatchObject({ data: { ...saved, siteAddressId: address.id } });
+    expect(state.orders).toEqual([]);
+
+    const saveCount = state.saves.length;
+    state.draft = { currentStep: 2, data: saved };
+    savedAddresses = [];
+    await page.goto(`${path('solar')}?step=2`);
+    await expect(recovery).toBeVisible();
+    await expect(page.getByText(tSolar('noAddresses', locale), { exact: true })).toBeVisible();
+    await expect(picker).toHaveCount(0);
+    const addAddress = page.getByRole('link', { name: tSolar('addAddress', locale), exact: true });
+    await expect(addAddress).toHaveAttribute('href', /\/settings\/addresses\/new/);
+    await expect(next).toBeDisabled();
+    expect(state.saves).toHaveLength(saveCount);
+    await addAddress.click();
+    await expect(page).toHaveURL(/\/settings\/addresses\/new\?/);
+    expect(state.saves.at(-1)).toMatchObject({ data: saved });
+  });
+}
+
 for (const mode of ['saving', 'solar'] as const)
   for (const locale of ['en', 'fa'] as const) {
     test(
