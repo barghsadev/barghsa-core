@@ -14,9 +14,11 @@ import {
   type OtpConfig,
   type OtpDraft,
 } from '../lib/verification-settings-form.js';
-import { LoadingStatus, Alert, Button, Input, Label, ListRefreshButton } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button, Label, ListRefreshButton } from '@barghsa/ui';
 import { CatalogueFieldFeedback, catalogueRootMessage } from './CatalogueEditorFeedback.js';
 import { SettingsFormSection } from './SettingsFormSection.js';
+import { parseRecordNumber } from '../lib/record-number.js';
+import { RecordNumberInput } from './RecordNumberInput.js';
 import { AuditLogViewer } from './AuditLogViewer.js';
 const TeamActionDialog = lazy(() =>
   import('./TeamActionDialog.js').then((module) => ({ default: module.TeamActionDialog }))
@@ -100,7 +102,7 @@ export function OtpConfigPanel({ onReadDenied }: { onReadDenied?: () => void }) 
     try {
       let body: { ttlSeconds: number; expectedVersion: number } | undefined;
       await form.form.handleSubmit((value) => {
-        const ttlSeconds = Number(value.ttlSeconds);
+        const ttlSeconds = parseRecordNumber(value.ttlSeconds);
         if (ttlSeconds !== state.current!.ttlSeconds)
           body = { ttlSeconds, expectedVersion: state.current!.version };
       })();
@@ -171,7 +173,9 @@ export function OtpConfigPanel({ onReadDenied }: { onReadDenied?: () => void }) 
               ref={saveRef}
               type="submit"
               disabled={
-                blocked || busy || Number(form.values.ttlSeconds) === state.current?.ttlSeconds
+                blocked ||
+                busy ||
+                parseRecordNumber(form.values.ttlSeconds) === state.current?.ttlSeconds
               }
               aria-busy={form.pending || undefined}
             >
@@ -192,12 +196,11 @@ export function OtpConfigPanel({ onReadDenied }: { onReadDenied?: () => void }) 
           <legend className="sr-only">{text('otpTitle')}</legend>
           <Label htmlFor="otp-lifetime">{text('otpLabel')}</Label>
           <div className="flex min-w-0 items-center gap-3">
-            <Input
+            <RecordNumberInput
               {...form.bind('ttlSeconds')}
               className="w-28 min-w-0"
-              dir="ltr"
               id="otp-lifetime"
-              type="number"
+              locale={locale}
               min={60}
               max={900}
               step={1}
@@ -211,8 +214,8 @@ export function OtpConfigPanel({ onReadDenied }: { onReadDenied?: () => void }) 
               ]
                 .filter(Boolean)
                 .join(' ')}
-              onChange={(event) => {
-                form.field('ttlSeconds')[1](event.target.value);
+              onChange={(value) => {
+                form.field('ttlSeconds')[1](value);
                 setSaved(false);
               }}
             />

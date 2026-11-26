@@ -601,7 +601,7 @@ for (const locale of ['en', 'fa'] as const) {
         exact: true,
       })
       .click();
-    const years = retention.getByRole('spinbutton', { name: word('retentionYears'), exact: true });
+    const years = retention.getByLabel(word('retentionYears'), { exact: true });
     const note = retention.getByRole('textbox', { name: word('approvalNote'), exact: true });
     const save = retention.getByRole('button', { name: word('reviewRetention'), exact: true });
     await expect(
@@ -609,12 +609,13 @@ for (const locale of ['en', 'fa'] as const) {
     ).toBeVisible();
     await expect(years).toHaveAttribute('aria-required', 'true');
     await expect(note).toHaveAttribute('aria-required', 'true');
-    await years.fill('101');
+    await years.fill(locale === 'fa' ? '۱۰۱' : '101');
     await note.fill('  ');
     await save.click();
     await expect(years).toHaveAccessibleDescription(word('retentionYearsError'));
     await expect(note).toHaveAccessibleDescription(word('legalReasonLength'));
-    await years.fill('12');
+    await years.fill(locale === 'fa' ? '۱۲' : '12');
+    await expect(years).toHaveValue('12');
     await expect(years).not.toHaveAttribute('aria-invalid', 'true');
     await expect(note).toHaveAttribute('aria-invalid', 'true');
     await note.fill('Reviewed by legal');

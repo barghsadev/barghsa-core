@@ -62,7 +62,7 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     await page.goto('/admin/storage/cleanup');
-    const hours = page.getByRole('spinbutton', { name: t('admin.storage.cleanupHours', locale) });
+    const hours = page.getByLabel(t('admin.storage.cleanupHours', locale), { exact: true });
     await expect(hours).toHaveValue('24');
     await page.getByRole('button', { name: text('recoveryTitle') }).click();
     const recovery = page.getByRole('region', { name: text('recoveryTitle') });
@@ -268,7 +268,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.getByRole('button', { name: storage('cleanupSave'), exact: true }).click();
       await expect(hours).toBeFocused();
       expect(cleanupWrites).toHaveLength(0);
-      await hours.fill('48');
+      await hours.fill(locale === 'fa' ? '۴۸' : '48');
       await page.getByRole('button', { name: storage('cleanupSave'), exact: true }).click();
       await confirm();
       await expect(page.getByRole('dialog')).toHaveCount(0);

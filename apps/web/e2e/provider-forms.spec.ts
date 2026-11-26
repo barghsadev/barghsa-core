@@ -144,7 +144,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.getByRole('alert').filter({ hasText: portFeedback })).toBeVisible();
       await expect(port).toHaveAccessibleDescription(portFeedback);
       expect(emailWrites).toHaveLength(0);
-      await port.fill('465');
+      await port.fill(locale === 'fa' ? '۴۶۵' : '465');
       await page.locator('#email-provider-label').fill('Local email');
       await page.locator('form button[type=submit]').click();
       await expect(port).toBeFocused();
@@ -155,7 +155,7 @@ for (const locale of ['en', 'fa'] as const)
           .locator('form')
           .screenshot({ path: `/tmp/barghsa-provider-email-form-${info.project.name}.png` });
       invalid = false;
-      await port.fill('465');
+      await port.fill(locale === 'fa' ? '۴۶۵' : '465');
       await page.locator('form button[type=submit]').click();
       await expect(page.locator('#email-provider-label')).toHaveCount(0);
       expect(emailWrites).toHaveLength(2);
@@ -170,7 +170,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.locator('form button[type=submit]').click();
       await expect(timeout).toBeFocused();
       expect(smsWrites).toHaveLength(0);
-      await timeout.fill('25');
+      await timeout.fill(locale === 'fa' ? '۲۵' : '25');
       const mapping = page.getByRole('textbox', { name: `${text('template')} 1`, exact: true });
       await expect(mapping).toHaveAttribute('aria-required', 'true');
       await mapping.fill('0');

@@ -1,3 +1,5 @@
+import { parseRecordNumber } from './record-number.js';
+
 export interface Model {
   id: string;
   title: string;
@@ -153,11 +155,10 @@ export function budgetDraftFor(model: Model): BudgetDraft {
     outputPriceUsd: String((model.budget?.outputPricePerMillionMicros ?? 0) / 1_000_000),
   };
 }
-const whole = (value: string, min: number, max: number) =>
-  value.trim() !== '' &&
-  Number.isSafeInteger(Number(value)) &&
-  Number(value) >= min &&
-  Number(value) <= max;
+const whole = (value: string, min: number, max: number) => {
+  const number = parseRecordNumber(value);
+  return Number.isSafeInteger(number) && number >= min && number <= max;
+};
 /** Parse decimal USD without rounding away a submitted fraction of a microdollar. */
 export function usdMicros(value: string): number | null {
   if (!/^(?:\d+(?:\.\d*)?|\.\d+)$/.test(value.trim())) return null;
@@ -188,12 +189,8 @@ export function invalidModelFields(draft: Draft, stored?: Model): (keyof Draft)[
   }
   if (!draft.modelName.trim() || draft.modelName.trim().length > 200) invalid.push('modelName');
   if (!whole(draft.maxTokens, 1, 4096)) invalid.push('maxTokens');
-  if (
-    !draft.temperature.trim() ||
-    !Number.isFinite(Number(draft.temperature)) ||
-    Number(draft.temperature) < 0 ||
-    Number(draft.temperature) > 2
-  )
+  const temperature = parseRecordNumber(draft.temperature);
+  if (!Number.isFinite(temperature) || temperature < 0 || temperature > 2)
     invalid.push('temperature');
   if (!['keep', 'replace', 'clear'].includes(draft.tokenChoice)) invalid.push('tokenChoice');
   const destinationChanged =
@@ -242,7 +239,10 @@ export function modelBody(draft: Draft) {
     providerType: draft.providerType,
     baseUrl: draft.baseUrl.trim(),
     modelName: draft.modelName.trim(),
-    config: { max_tokens: Number(draft.maxTokens), temperature: Number(draft.temperature) },
+    config: {
+      max_tokens: parseRecordNumber(draft.maxTokens),
+      temperature: parseRecordNumber(draft.temperature),
+    },
     ...(draft.tokenChoice === 'clear'
       ? { apiToken: '' }
       : draft.tokenChoice === 'replace'
@@ -252,7 +252,9 @@ export function modelBody(draft: Draft) {
 }
 export function budgetBody(draft: BudgetDraft) {
   return {
-    monthlyTokenLimit: draft.monthlyTokenLimit.trim() ? Number(draft.monthlyTokenLimit) : null,
+    monthlyTokenLimit: draft.monthlyTokenLimit.trim()
+      ? parseRecordNumber(draft.monthlyTokenLimit)
+      : null,
     monthlyCostLimitMicros: draft.monthlyCostUsd.trim() ? usdMicros(draft.monthlyCostUsd) : null,
     inputPricePerMillionMicros: usdMicros(draft.inputPriceUsd)!,
     outputPricePerMillionMicros: usdMicros(draft.outputPriceUsd)!,
@@ -268,8 +270,8 @@ export function matchesModelReceipt(value: unknown, draft: Draft): value is Mode
     value.baseUrl === draft.baseUrl.trim() &&
     value.modelName === draft.modelName.trim() &&
     record(value.config) &&
-    value.config.max_tokens === Number(draft.maxTokens) &&
-    value.config.temperature === Number(draft.temperature) &&
+    value.config.max_tokens === parseRecordNumber(draft.maxTokens) &&
+    value.config.temperature === parseRecordNumber(draft.temperature) &&
     (draft.tokenChoice !== 'clear' || value.apiTokenMasked === '') &&
     (draft.tokenChoice !== 'keep' || value.apiTokenMasked === draft.masked) &&
     (draft.tokenChoice !== 'replace' ||

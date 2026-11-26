@@ -165,10 +165,8 @@ for (const locale of ['en', 'fa'] as const)
     expect(attempts).toEqual([]);
     await prompt.fill('Help with energy');
     await expect(page.locator('#agent-prompt-count')).toContainText(fa ? '۱۶' : '16');
-    await page
-      .getByRole('spinbutton', { name: fa ? 'دما' : 'Temperature', exact: true })
-      .fill('0.4');
-    await page.getByLabel(fa ? 'حداکثر توکن' : 'Maximum tokens').fill('512');
+    await page.getByLabel(fa ? 'دما' : 'Temperature', { exact: true }).fill(fa ? '۰٫۴' : '0.4');
+    await page.getByLabel(fa ? 'حداکثر توکن' : 'Maximum tokens').fill(fa ? '۵۱۲' : '512');
     await page.getByLabel('Support knowledge', { exact: true }).check();
     await page.getByLabel('Support policies', { exact: true }).check();
     await page.getByRole('button', { name: fa ? 'ذخیره عامل' : 'Save agent', exact: true }).click();

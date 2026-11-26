@@ -97,12 +97,25 @@ for (const locale of ['en', 'fa'] as const)
       await expect(base).toHaveAccessibleDescription(aiModelFormText('baseUrl', locale));
       expect(modelWrites).toHaveLength(0);
       await base.fill(model.baseUrl);
-      await max.fill('1.5');
-      await button('save').click();
-      await expect(max).toBeFocused();
-      await expect(max).toHaveAttribute('aria-invalid', 'true');
-      expect(modelWrites).toHaveLength(0);
-      await max.fill('512');
+      for (const invalid of ['1.5', ...(locale === 'fa' ? ['0x200'] : [])]) {
+        await max.fill(invalid);
+        await button('save').click();
+        await expect(max).toBeFocused();
+        await expect(max).toHaveAttribute('aria-invalid', 'true');
+        expect(modelWrites).toHaveLength(0);
+      }
+      if (locale === 'fa') {
+        await max.fill('۵۲');
+        await max.evaluate((input: HTMLInputElement) => input.setSelectionRange(1, 1));
+        await page.keyboard.insertText('۱');
+        await expect(max).toHaveValue('512');
+        await expect(max).toHaveJSProperty('selectionStart', 2);
+      } else {
+        await max.fill('512');
+      }
+      const temperature = page.locator('#ai-model-temperature');
+      await temperature.fill(locale === 'fa' ? '٠٫٥' : '0.5');
+      await expect(temperature).toHaveValue('0.5');
       await base.fill('https://changed.example.test/v1');
       await button('save').click();
       await expect(choice).toBeFocused();
@@ -130,7 +143,7 @@ for (const locale of ['en', 'fa'] as const)
           providerType: model.providerType,
           baseUrl: model.baseUrl,
           modelName: model.modelName,
-          config: { max_tokens: 512, temperature: 0 },
+          config: { max_tokens: 512, temperature: 0.5 },
           apiToken: 'private-new-token',
         })
       );
@@ -140,13 +153,15 @@ for (const locale of ['en', 'fa'] as const)
       await expect(cost).not.toHaveAttribute('aria-required', 'true');
       for (const id of ['inputPriceUsd', 'outputPriceUsd'])
         await expect(page.locator(`#ai-model-${id}`)).toHaveAttribute('aria-required', 'true');
-      await cost.fill('0.0000001');
+      await cost.fill(locale === 'fa' ? '۰٫۰۰۰۰۰۰۱' : '0.0000001');
       await button('budgetSave').click();
       await expect(cost).toBeFocused();
       expect(budgetWrites).toHaveLength(0);
-      await cost.fill('0.000001');
-      await page.locator('#ai-model-inputPriceUsd').fill('0.000001');
-      await page.locator('#ai-model-outputPriceUsd').fill('0.000002');
+      await cost.fill(locale === 'fa' ? '۰٫۰۰۰۰۰۱' : '0.000001');
+      await page.locator('#ai-model-inputPriceUsd').fill(locale === 'fa' ? '۰٫۰۰۰۰۰۱' : '0.000001');
+      await page
+        .locator('#ai-model-outputPriceUsd')
+        .fill(locale === 'fa' ? '۰٫۰۰۰۰۰۲' : '0.000002');
       await button('budgetSave').click();
       await confirm();
       await expect(cost).toBeFocused();

@@ -55,6 +55,7 @@ import {
   recordEditorGrid,
   recordEditorSurface,
 } from '../components/RecordEditorLayout.js';
+import { RecordNumberInput } from '../components/RecordNumberInput.js';
 import { Alert } from '@barghsa/ui';
 const TeamActionDialog = lazy(() =>
   import('../components/TeamActionDialog.js').then((module) => ({
@@ -894,17 +895,17 @@ function OwnedAiModelsPage({
                     <div className={recordEditorGrid}>
                       <div className={recordEditorField}>
                         <Label htmlFor="ai-model-max-tokens">{label('maxTokens')}</Label>
-                        <Input
+                        <RecordNumberInput
                           {...modelForm.bind('maxTokens')}
                           id="ai-model-max-tokens"
-                          type="number"
+                          locale={locale}
                           min={1}
                           max={4096}
                           step={1}
                           required
                           aria-required="true"
                           value={draft.maxTokens}
-                          onChange={(event) => modelForm.field('maxTokens')[1](event.target.value)}
+                          onChange={(value) => modelForm.field('maxTokens')[1](value)}
                         />
                         <CatalogueFieldFeedback
                           compact
@@ -915,10 +916,10 @@ function OwnedAiModelsPage({
                       </div>
                       <div className={recordEditorField}>
                         <Label htmlFor="ai-model-temperature">{label('temperature')}</Label>
-                        <Input
+                        <RecordNumberInput
                           {...modelForm.bind('temperature')}
                           id="ai-model-temperature"
-                          type="number"
+                          locale={locale}
                           min={0}
                           max={2}
                           step="any"
@@ -926,9 +927,7 @@ function OwnedAiModelsPage({
                           aria-required="true"
                           aria-describedby={modelForm.errorId('temperature')}
                           value={draft.temperature}
-                          onChange={(event) =>
-                            modelForm.field('temperature')[1](event.target.value)
-                          }
+                          onChange={(value) => modelForm.field('temperature')[1](value)}
                         />
                         <CatalogueFieldFeedback
                           compact
@@ -992,11 +991,10 @@ function OwnedAiModelsPage({
                         {fields.map(([key, fieldLabel, min, max, step]) => (
                           <div className={recordEditorField} key={key}>
                             <Label htmlFor={`ai-model-${key}`}>{fieldLabel}</Label>
-                            <Input
+                            <RecordNumberInput
                               {...budgetForm.bind(key)}
                               id={`ai-model-${key}`}
-                              type="number"
-                              dir="ltr"
+                              locale={locale}
                               min={min}
                               max={max}
                               step={step}
@@ -1005,7 +1003,7 @@ function OwnedAiModelsPage({
                                 key === 'inputPriceUsd' || key === 'outputPriceUsd' || undefined
                               }
                               value={budgetDraft[key]}
-                              onChange={(event) => budgetForm.field(key)[1](event.target.value)}
+                              onChange={(value) => budgetForm.field(key)[1](value)}
                             />
                             <CatalogueFieldFeedback
                               compact

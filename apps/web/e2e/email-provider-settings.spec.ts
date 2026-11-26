@@ -150,7 +150,8 @@ for (const locale of ['en', 'fa'] as const) {
         await expect(form.getByLabel(text('field.host'), { exact: false })).toHaveValue(
           'smtp.example.test'
         );
-        const port = form.getByRole('spinbutton', { name: text('field.port'), exact: true });
+        const port = form.locator('#email-provider-port');
+        await expect(port).toHaveAccessibleName(text('field.port'));
         await expect(port).toHaveValue('465');
         await expect(port).toHaveAttribute('aria-required', 'true');
         await expect(form.getByLabel(text('field.security'), { exact: false })).toHaveValue('TLS');
@@ -173,7 +174,9 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(form.locator('#email-provider-label')).toHaveValue('Saved email');
       await form.locator('#email-provider-label').fill('Renamed email');
       if (transport === 'smtp')
-        await form.getByLabel(text('field.connectionTimeout'), { exact: false }).fill('31');
+        await form
+          .getByLabel(text('field.connectionTimeout'), { exact: false })
+          .fill(locale === 'fa' ? '۳۱' : '31');
       await form.locator('button[type=submit]').click();
       await expect(page.getByRole('alert').filter({ hasText: text('error.save') })).toBeVisible();
       await expect(form.locator('#email-provider-label')).toHaveValue('Renamed email');
@@ -184,7 +187,9 @@ for (const locale of ['en', 'fa'] as const) {
         .click();
       await form.locator('#email-provider-label').fill('Renamed email');
       if (transport === 'smtp')
-        await form.getByLabel(text('field.connectionTimeout'), { exact: false }).fill('31');
+        await form
+          .getByLabel(text('field.connectionTimeout'), { exact: false })
+          .fill(locale === 'fa' ? '۳۱' : '31');
       await form.locator('button[type=submit]').click();
       await expect(form).toHaveCount(0);
       await expect(

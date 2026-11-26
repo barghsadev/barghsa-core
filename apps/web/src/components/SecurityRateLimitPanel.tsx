@@ -8,7 +8,6 @@ import {
 import {
   Alert,
   Button,
-  Input,
   Label,
   ListRefreshButton,
   LoadingStatus,
@@ -20,6 +19,8 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useSettingsSnapshot } from '../hooks/useSettingsSnapshot.js';
 import { CommandFeedback } from './CommandFeedback.js';
 import { SettingsFormSection } from './SettingsFormSection.js';
+import { parseRecordNumber } from '../lib/record-number.js';
+import { RecordNumberInput } from './RecordNumberInput.js';
 import { recordEditorField, recordEditorGrid } from './RecordEditorLayout.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
@@ -166,7 +167,7 @@ export default function SecurityRateLimitPanel({
   const policy = state.current?.policies.find((row) => row.policy === selected);
   const emergency = policy?.emergency;
   const blocked = !state.ready || state.changed || state.uncertain || !policy;
-  const nextLimit = Number(limit ?? policy?.limit);
+  const nextLimit = parseRecordNumber(limit ?? String(policy?.limit ?? ''));
   const expiryFormatter = new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
     dateStyle: 'medium',
     timeStyle: 'short',
@@ -177,18 +178,20 @@ export default function SecurityRateLimitPanel({
     event.preventDefault();
     if (blocked || showRecovery || !policy || captured.current) return;
     const message = reason.trim();
+    const temporaryLimit = parseRecordNumber(emergencyLimit);
+    const duration = parseRecordNumber(minutes);
     if (
       !inRange(nextLimit, 1, policy.ceiling) ||
       (operation !== 'keep' && !inRange(message.length, 10, 300)) ||
       (operation === 'set' &&
-        (!inRange(Number(emergencyLimit), 1, nextLimit - 1) || !inRange(Number(minutes), 5, 1440)))
+        (!inRange(temporaryLimit, 1, nextLimit - 1) || !inRange(duration, 5, 1440)))
     ) {
       setInvalid(true);
       return;
     }
     const change: EmergencyOperation =
       operation === 'set'
-        ? { operation, limit: Number(emergencyLimit), minutes: Number(minutes), reason: message }
+        ? { operation, limit: temporaryLimit, minutes: duration, reason: message }
         : operation === 'clear'
           ? { operation, reason: message }
           : { operation };
@@ -302,19 +305,18 @@ export default function SecurityRateLimitPanel({
           <div className={recordEditorField}>
             <Label htmlFor="security-rate-value">{text('rateLimitValue')}</Label>
             <div className="flex min-w-0 items-center gap-3">
-              <Input
+              <RecordNumberInput
                 id="security-rate-value"
                 className="w-28 min-w-0"
-                dir="ltr"
-                type="number"
+                locale={locale}
                 min={1}
                 max={policy.ceiling}
                 step={1}
                 required
                 aria-describedby="security-rate-range security-rate-current"
                 value={limit ?? String(policy.limit)}
-                onChange={(event) => {
-                  setDraft({ ...draft, limit: event.target.value });
+                onChange={(value) => {
+                  setDraft({ ...draft, limit: value });
                   setSaved(false);
                 }}
               />
@@ -378,32 +380,30 @@ export default function SecurityRateLimitPanel({
                   <Label htmlFor="security-rate-emergency-value">
                     {text('rateLimitEmergencyValue')}
                   </Label>
-                  <Input
+                  <RecordNumberInput
                     id="security-rate-emergency-value"
-                    dir="ltr"
-                    type="number"
+                    locale={locale}
                     min={1}
-                    max={nextLimit - 1}
+                    max={Number.isFinite(nextLimit) ? nextLimit - 1 : undefined}
                     step={1}
                     required
                     value={emergencyLimit}
-                    onChange={(event) => setDraft({ ...draft, emergencyLimit: event.target.value })}
+                    onChange={(value) => setDraft({ ...draft, emergencyLimit: value })}
                   />
                 </div>
                 <div className={recordEditorField}>
                   <Label htmlFor="security-rate-emergency-minutes">
                     {text('rateLimitMinutes')}
                   </Label>
-                  <Input
+                  <RecordNumberInput
                     id="security-rate-emergency-minutes"
-                    dir="ltr"
-                    type="number"
+                    locale={locale}
                     min={5}
                     max={1440}
                     step={1}
                     required
                     value={minutes}
-                    onChange={(event) => setDraft({ ...draft, minutes: event.target.value })}
+                    onChange={(value) => setDraft({ ...draft, minutes: value })}
                   />
                 </div>
               </div>

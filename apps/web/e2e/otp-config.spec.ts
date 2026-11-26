@@ -74,11 +74,16 @@ for (const locale of ['en', 'fa'] as const) {
     await action.selectOption('login');
     const limit = panel.getByLabel(text('rateLimitValue'), { exact: true });
     await expect(limit).toHaveValue('50');
-    await expect(limit).toHaveAttribute('max', '50');
-    await limit.fill('12');
+    if (locale === 'fa') await expect(limit).toHaveAttribute('inputmode', 'numeric');
+    else await expect(limit).toHaveAttribute('max', '50');
+    await limit.fill(locale === 'fa' ? '۱۲' : '12');
     await panel.getByLabel(text('rateLimitEmergency'), { exact: true }).selectOption('set');
-    await panel.getByLabel(text('rateLimitEmergencyValue'), { exact: true }).fill('2');
-    await panel.getByLabel(text('rateLimitMinutes'), { exact: true }).fill('15');
+    await panel
+      .getByLabel(text('rateLimitEmergencyValue'), { exact: true })
+      .fill(locale === 'fa' ? '۲' : '2');
+    await panel
+      .getByLabel(text('rateLimitMinutes'), { exact: true })
+      .fill(locale === 'fa' ? '۱۵' : '15');
     await panel.getByLabel(text('rateLimitReason'), { exact: true }).fill(reason);
     const review = panel.getByRole('button', { name: text('rateLimitSave'), exact: true });
     await review.click();
@@ -250,13 +255,13 @@ for (const locale of ['en', 'fa']) {
     });
     await page.goto('/admin/verification/codes');
     const panel = page.getByRole('region', { name: title, exact: true, includeHidden: true });
-    const input = panel.getByRole('spinbutton', { includeHidden: true });
+    const input = panel.locator('#otp-lifetime');
     const save = panel.getByRole('button', { name: saveName, exact: true });
     await expect(input).toHaveValue('300');
     await expect(input).toHaveAttribute('aria-required', 'true');
     await expect(input).toHaveAccessibleDescription(/\S/);
     await expect(save).toBeDisabled();
-    for (const invalid of ['', '59', '901', '60.5']) {
+    for (const invalid of ['', '59', '901', '60.5', ...(fa ? ['0x78'] : [])]) {
       await input.fill(invalid);
       await save.click();
       await expect(input).toHaveAttribute('aria-invalid', 'true');
@@ -264,7 +269,7 @@ for (const locale of ['en', 'fa']) {
       await expect(page.getByRole('dialog')).toHaveCount(0);
       expect(writes).toHaveLength(0);
     }
-    await input.fill('120');
+    await input.fill(fa ? '۱۲۰' : '120');
     await save.click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
@@ -310,8 +315,8 @@ for (const locale of ['en', 'fa']) {
     });
     await page.goto('/admin/verification/codes');
     const panel = page.getByRole('region', { name: title, exact: true, includeHidden: true });
-    const input = panel.getByRole('spinbutton', { includeHidden: true });
-    await input.fill('120');
+    const input = panel.locator('#otp-lifetime');
+    await input.fill(fa ? '۱۲۰' : '120');
     await panel.getByRole('button', { name: saveName, exact: true }).click();
     const dialog = page.getByRole('dialog');
     await dialog
@@ -335,7 +340,7 @@ for (const locale of ['en', 'fa']) {
       await expect(input).toHaveValue('120');
       await panel.getByRole('button', { name: resetName, exact: true }).click();
       await expect(input).toHaveValue('300');
-      await input.fill('120');
+      await input.fill(fa ? '۱۲۰' : '120');
       await panel.getByRole('button', { name: saveName, exact: true }).click();
     }
     await dialog
@@ -384,7 +389,7 @@ for (const locale of ['en', 'fa']) {
       });
       await page.goto('/admin/verification/codes');
       const panel = page.getByRole('region', { name: title, exact: true, includeHidden: true });
-      const input = panel.getByRole('spinbutton', { includeHidden: true });
+      const input = panel.locator('#otp-lifetime');
       await page
         .locator('html')
         .evaluate((node, enabled) => node.classList.toggle('dark', enabled), dark);

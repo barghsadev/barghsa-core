@@ -11,7 +11,6 @@ import {
   Button,
   Field,
   FieldLabel,
-  Input,
   NativeSelect,
   Textarea,
   buttonVariants,
@@ -27,6 +26,8 @@ import {
   RecordEditorSection,
   recordEditorSurface,
 } from './RecordEditorLayout.js';
+import { parseRecordNumber } from '../lib/record-number.js';
+import { RecordNumberInput } from './RecordNumberInput.js';
 import { RecordCommandGuard } from './RecordCommandGuard.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 
@@ -106,7 +107,7 @@ function OwnedDocumentRetentionPolicies({ location }: { location?: Location | un
   const [unconfirmed, setUnconfirmed] = useState(false);
   const [reload, setReload] = useState(0);
   const [kind, setKind] = useState(location?.recordId ?? 'contract');
-  const [years, setYears] = useState(10);
+  const [yearsDraft, setYearsDraft] = useState('10');
   const [held, setHeld] = useState(false);
   const [note, setNote] = useState('');
   const [attempted, setAttempted] = useState(false);
@@ -116,6 +117,7 @@ function OwnedDocumentRetentionPolicies({ location }: { location?: Location | un
   const version = current?.id;
   const savedYears = current?.retentionYears;
   const savedHold = current?.legalHold;
+  const years = parseRecordNumber(yearsDraft);
   const validYears = Number.isInteger(years) && years >= 1 && years <= 100;
   const validNote = note.trim().length >= 3;
   const directory = location && !location.recordId;
@@ -152,7 +154,7 @@ function OwnedDocumentRetentionPolicies({ location }: { location?: Location | un
     return () => controller.abort();
   }, [reload, readDocument]);
   useEffect(() => {
-    setYears(savedYears ?? 10);
+    setYearsDraft(String(savedYears ?? 10));
     setHeld(savedHold ?? false);
     setNote('');
     setAttempted(false);
@@ -293,12 +295,11 @@ function OwnedDocumentRetentionPolicies({ location }: { location?: Location | un
               <div className="grid items-start gap-3 sm:grid-cols-[minmax(0,10rem)_1fr]">
                 <Field className="gap-1.5" data-invalid={(attempted && !validYears) || undefined}>
                   <FieldLabel htmlFor="retention-years">{word('retentionYears')}</FieldLabel>
-                  <Input
+                  <RecordNumberInput
                     id="retention-years"
                     ref={yearsInput}
-                    dir="ltr"
                     className="max-w-28"
-                    type="number"
+                    locale={locale}
                     min={1}
                     max={100}
                     required
@@ -307,8 +308,8 @@ function OwnedDocumentRetentionPolicies({ location }: { location?: Location | un
                     aria-describedby={
                       attempted && !validYears ? 'retention-years-error' : undefined
                     }
-                    value={years}
-                    onChange={(event) => setYears(Number(event.target.value))}
+                    value={yearsDraft}
+                    onChange={setYearsDraft}
                   />
                   {attempted && !validYears && (
                     <p id="retention-years-error" role="alert" className="text-sm text-destructive">

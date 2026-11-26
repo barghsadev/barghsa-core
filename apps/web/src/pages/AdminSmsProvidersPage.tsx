@@ -56,6 +56,7 @@ import {
   recordEditorGrid,
   recordEditorSurface,
 } from '../components/RecordEditorLayout.js';
+import { RecordNumberInput } from '../components/RecordNumberInput.js';
 import {
   StickyRecordEditorActions,
   keepRecordFieldVisible,
@@ -978,15 +979,14 @@ export default function AdminSmsProvidersPage({
                 {(['timeout', 'throughput', 'credit'] as const).map((key) => (
                   <div key={key} className={recordEditorField}>
                     <Label htmlFor={`sms-${key}`}>{text(key)}</Label>
-                    <Input
+                    <RecordNumberInput
                       {...form.bind(key)}
                       id={`sms-${key}`}
-                      dir="ltr"
                       value={editor[key]}
-                      onChange={(e) => field(key, e.target.value)}
+                      onChange={(value) => field(key, value)}
                       required
                       aria-required="true"
-                      type="number"
+                      locale={locale}
                       {...(key === 'timeout'
                         ? { min: 1, max: 300 }
                         : key === 'throughput'

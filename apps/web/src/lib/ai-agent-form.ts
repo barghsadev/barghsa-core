@@ -1,3 +1,5 @@
+import { parseRecordNumber } from './record-number.js';
+
 export interface Ref {
   id: string;
   title: string;
@@ -185,18 +187,16 @@ export function invalidAgentFields(draft: Draft, options: Options): (keyof Draft
   if (!uuid(draft.modelId) || !options.models.some((v) => v.id === draft.modelId))
     invalid.push('modelId');
   if (draft.systemPrompt.length > 8000) invalid.push('systemPrompt');
+  const temperature = parseRecordNumber(draft.temperature);
+  const maxTokens = parseRecordNumber(draft.maxTokens);
   if (
     draft.temperature.trim() &&
-    (!Number.isFinite(Number(draft.temperature)) ||
-      Number(draft.temperature) < 0 ||
-      Number(draft.temperature) > 2)
+    (!Number.isFinite(temperature) || temperature < 0 || temperature > 2)
   )
     invalid.push('temperature');
   if (
     draft.maxTokens.trim() &&
-    (!Number.isSafeInteger(Number(draft.maxTokens)) ||
-      Number(draft.maxTokens) < 1 ||
-      Number(draft.maxTokens) > 8192)
+    (!Number.isSafeInteger(maxTokens) || maxTokens < 1 || maxTokens > 8192)
   )
     invalid.push('maxTokens');
   if (!['any_kb', 'all_kbs'].includes(draft.linkMode)) invalid.push('linkMode');
@@ -214,8 +214,8 @@ export function agentBody(draft: Draft) {
   return {
     ...draft,
     title: draft.title.trim(),
-    temperature: draft.temperature.trim() ? Number(draft.temperature) : null,
-    maxTokens: draft.maxTokens.trim() ? Number(draft.maxTokens) : null,
+    temperature: draft.temperature.trim() ? parseRecordNumber(draft.temperature) : null,
+    maxTokens: draft.maxTokens.trim() ? parseRecordNumber(draft.maxTokens) : null,
   };
 }
 export function matchesAgentReceipt(value: unknown, draft: Draft, id?: string): value is Agent {

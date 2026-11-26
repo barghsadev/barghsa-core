@@ -54,6 +54,7 @@ import {
   recordEditorField,
   recordEditorGrid,
 } from '../components/RecordEditorLayout.js';
+import { RecordNumberInput } from '../components/RecordNumberInput.js';
 import {
   StickyRecordEditorActions,
   keepRecordFieldVisible,
@@ -1247,13 +1248,12 @@ function SmtpFields({
               label={sec('port')}
               required
             >
-              <Input
-                type="number"
-                dir="ltr"
+              <RecordNumberInput
+                locale={uiLocale}
                 min={1}
                 max={65535}
                 value={form.port}
-                onChange={(e) => set('port', e.target.value)}
+                onChange={(value) => set('port', value)}
               />
             </Field>
             {form.port !== standardPort && !feedback.errors.port && (
@@ -1355,15 +1355,14 @@ function SmtpFields({
               label={sec(key)}
               required
             >
-              <Input
-                type="number"
+              <RecordNumberInput
+                locale={uiLocale}
                 min={1}
                 max={600}
                 step={1}
                 required
-                dir="ltr"
                 value={form[key]}
-                onChange={(e) => set(key, e.target.value)}
+                onChange={(value) => set(key, value)}
               />
             </Field>
           ))}

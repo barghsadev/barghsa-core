@@ -55,6 +55,7 @@ import {
   recordEditorGrid,
   recordEditorSurface,
 } from '../components/RecordEditorLayout.js';
+import { RecordNumberInput } from '../components/RecordNumberInput.js';
 const TeamActionDialog = lazy(() =>
   import('../components/TeamActionDialog.js').then((module) => ({
     default: module.TeamActionDialog,
@@ -959,17 +960,16 @@ function OwnedAiAgentsPage({
                       ).map(([key, id, min, max, step]) => (
                         <div key={key} className={recordEditorField}>
                           <Label htmlFor={id}>{label(key)}</Label>
-                          <Input
+                          <RecordNumberInput
                             {...form.bind(key)}
                             id={id}
-                            type="number"
-                            dir="ltr"
+                            locale={locale}
                             min={min}
                             max={max}
                             step={step}
                             placeholder={label('modelDefault')}
                             value={draft[key]}
-                            onChange={(event) => form.field(key)[1](event.target.value)}
+                            onChange={(value) => form.field(key)[1](value)}
                           />
                           <CatalogueFieldFeedback
                             compact

@@ -1,4 +1,5 @@
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { parseRecordNumber } from './record-number.js';
 export const verificationModes = ['DISABLED', 'MANUAL', 'API'] as const;
 export type VerificationMode = (typeof verificationModes)[number];
 export type VerificationConfig = {
@@ -39,10 +40,8 @@ export const otpBasis = (value: OtpConfig) => JSON.stringify([value.ttlSeconds, 
 export const invalidVerificationFields = (draft: VerificationDraft): (keyof VerificationDraft)[] =>
   draft.mode === 'DISABLED' || draft.mode === 'MANUAL' ? [] : ['mode'];
 export function invalidOtpFields(draft: OtpDraft): (keyof OtpDraft)[] {
-  const seconds = Number(draft.ttlSeconds);
-  return draft.ttlSeconds.trim() && Number.isSafeInteger(seconds) && seconds >= 60 && seconds <= 900
-    ? []
-    : ['ttlSeconds'];
+  const seconds = parseRecordNumber(draft.ttlSeconds);
+  return Number.isSafeInteger(seconds) && seconds >= 60 && seconds <= 900 ? [] : ['ttlSeconds'];
 }
 
 export function settingsErrorFields(value: unknown): unknown[] {

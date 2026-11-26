@@ -20,6 +20,7 @@ import {
   recordEditorGrid,
   recordEditorSurface,
 } from '../components/RecordEditorLayout.js';
+import { RecordNumberInput } from '../components/RecordNumberInput.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -796,18 +797,17 @@ export default function AdminStorageConfig({ section }: { section?: StorageSecti
             <fieldset disabled={cleanupDisabled} className="m-0 min-w-0 space-y-1 border-0 p-0">
               <Label htmlFor="storage-cleanup-hours">{label('cleanupHours')}</Label>
               <div className="flex min-w-0 items-center gap-3">
-                <Input
+                <RecordNumberInput
                   {...cleanupForm.bind('hours')}
                   className="w-28 min-w-0"
-                  dir="ltr"
                   id="storage-cleanup-hours"
-                  type="number"
+                  locale={locale}
                   min={1}
                   max={168}
                   required
                   aria-required="true"
                   value={hours}
-                  onChange={(event) => cleanupForm.field('hours')[1](event.target.value)}
+                  onChange={(value) => cleanupForm.field('hours')[1](value)}
                 />
                 {cleanup.data.hours !== null && (
                   <p className="min-w-0 border-s ps-3 text-sm text-muted-foreground">
