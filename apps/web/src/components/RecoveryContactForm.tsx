@@ -90,7 +90,7 @@ export default function RecoveryContactForm() {
       onSubmit={(e) => void submit(e)}
       aria-labelledby="recovery-contact-heading"
       aria-busy={busy}
-      className="min-w-0 space-y-3 border-y py-4"
+      className="min-w-0 space-y-4"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
       noValidate
     >

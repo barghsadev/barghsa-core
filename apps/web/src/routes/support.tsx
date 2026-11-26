@@ -6,7 +6,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { BrandMark } from '../components/BrandMark.js';
 import { LanguageSwitcher } from '../components/LanguageSwitcher.js';
 import { brandName, useBrandConfig } from '../providers/BrandThemeProvider.js';
-import { Card, CardContent } from '@barghsa/ui';
+import { buttonVariants, Card, CardContent } from '@barghsa/ui';
 import { MailIcon, PhoneIcon, ClockIcon, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { PublicKnowledgeAssistant } from '../components/PublicKnowledgeAssistant.js';
 import { feedbackText } from '@barghsa/i18n/feedback';
@@ -34,6 +34,9 @@ function SupportPage() {
     locale === 'fa' ? value.replace(/[0-9]/g, (digit) => '۰۱۲۳۴۵۶۷۸۹'[Number(digit)]!) : value;
   const isRtl = locale === 'fa';
   const BackIcon = isRtl ? ArrowRightIcon : ArrowLeftIcon;
+  const emailSubject = reference
+    ? `?subject=${encodeURIComponent(`${feedbackText('reference', locale)}: ${reference}`)}`
+    : '';
 
   return (
     <div className="flex min-h-dvh flex-col" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -49,131 +52,127 @@ function SupportPage() {
       <main
         id="main-content"
         tabIndex={-1}
-        className="flex flex-1 items-start justify-center px-4 py-6 md:px-8 md:py-10"
+        className="mx-auto w-full max-w-5xl space-y-5 px-4 py-6 sm:px-6 md:py-10"
       >
-        <Card className="w-full max-w-xl">
-          <CardContent className="p-4 sm:p-6">
-            <div className="space-y-6">
-              {/* Title */}
-              <div className="space-y-1.5">
-                <h1 className="text-xl font-semibold tracking-tight">
-                  {t('auth.support.title', locale)}
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  {t('auth.support.subtitle', locale)}
-                </p>
-                <a
-                  href="#recovery-support-contact"
-                  className="touch-action inline-flex min-h-11 items-center text-sm font-medium text-primary underline underline-offset-4"
-                >
-                  {t('auth.support.contactLink', locale)}
-                </a>
-              </div>
-
-              {reference && (
-                <p className="break-all text-sm">
-                  {feedbackText('reference', locale)}: <bdi>{reference}</bdi>
-                </p>
-              )}
-
-              <Suspense fallback={<p role="status">{loadingText('loading', locale)}</p>}>
-                <RecoveryContactForm />
-              </Suspense>
-              {/* Recovery process */}
-              <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
-                <p className="text-sm leading-relaxed">{t('auth.support.steps', locale)}</p>
-              </div>
-
-              {/* Contact methods */}
-              <div
-                id="recovery-support-contact"
-                tabIndex={-1}
-                className="space-y-4 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
-              >
-                {brandConfig.supportEmail && (
-                  <div className="flex items-start gap-3">
-                    <MailIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-                    <div className="space-y-0.5">
-                      <p className="text-sm font-medium">
-                        {t('auth.support.contactEmail', locale)}
-                      </p>
-                      <a
-                        href={`mailto:${brandConfig.supportEmail}${reference ? `?subject=${encodeURIComponent(`${feedbackText('reference', locale)}: ${reference}`)}` : ''}`}
-                        className="touch-action text-sm text-primary underline-offset-4 hover:underline"
-                      >
-                        {brandConfig.supportEmail}
-                      </a>
-                    </div>
-                  </div>
-                )}
-
-                {brandConfig.supportPhone && (
-                  <div className="flex items-start gap-3">
-                    <PhoneIcon
-                      className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                      aria-hidden="true"
-                    />
-                    <div className="space-y-0.5">
-                      <p className="text-sm font-medium">
-                        {t('auth.support.contactPhone', locale)}
-                      </p>
-                      <a
-                        href={phoneHref(brandConfig.supportPhone)}
-                        dir="ltr"
-                        className="touch-action text-sm text-primary underline-offset-4 hover:underline"
-                      >
-                        {displayPhone(brandConfig.supportPhone)}
-                      </a>
-                    </div>
-                  </div>
-                )}
-
-                {brandConfig.supportMobile && (
-                  <div className="flex items-start gap-3">
-                    <PhoneIcon
-                      className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                      aria-hidden="true"
-                    />
-                    <div className="space-y-0.5">
-                      <p className="text-sm font-medium">
-                        {t('auth.support.contactMobile', locale)}
-                      </p>
-                      <a
-                        href={phoneHref(brandConfig.supportMobile)}
-                        dir="ltr"
-                        className="touch-action text-sm text-primary underline-offset-4 hover:underline"
-                      >
-                        {displayPhone(brandConfig.supportMobile)}
-                      </a>
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex items-start gap-3">
-                  <ClockIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-                  <div className="space-y-0.5">
-                    <p className="text-sm text-muted-foreground">
-                      {t('auth.support.responseTime', locale)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <PublicKnowledgeAssistant locale={locale} />
-            </div>
-          </CardContent>
-
-          {/* Footer */}
-          <div className="px-(--card-spacing) pb-(--card-spacing)">
-            <Link
-              to="/login"
-              className="touch-action inline-flex items-center gap-2 text-sm font-medium text-primary underline-offset-4 hover:underline"
-              aria-label={t('auth.support.backToLogin', locale)}
+        <header className="space-y-2">
+          <h1 className="text-xl font-semibold tracking-tight">
+            {t('auth.support.title', locale)}
+          </h1>
+          <p className="text-sm text-muted-foreground">{t('auth.support.subtitle', locale)}</p>
+          <div className="flex flex-wrap items-center gap-2">
+            <a href="#recovery-support-contact" className={buttonVariants()}>
+              {t('auth.support.contactLink', locale)}
+            </a>
+            <a
+              href="#recovery-contact-verification"
+              className={buttonVariants({
+                variant: 'outline',
+                className: 'h-auto min-h-11 whitespace-normal',
+              })}
             >
-              <BackIcon className="h-3.5 w-3.5" aria-hidden="true" />
-              {t('auth.support.backToLogin', locale)}
-            </Link>
+              {t('auth.support.verifyContactLink', locale)}
+            </a>
           </div>
-        </Card>
+        </header>
+
+        <div className="grid items-start gap-4 md:grid-cols-2 md:grid-rows-[max-content_1fr]">
+          <section
+            id="recovery-support-contact"
+            aria-labelledby="support-contact-heading"
+            tabIndex={-1}
+            className="min-w-0 scroll-mt-4 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+          >
+            <Card className="py-0">
+              <CardContent className="min-w-0 space-y-4 p-4 sm:p-5">
+                <h2 id="support-contact-heading" className="font-semibold">
+                  {t('auth.support.contactLink', locale)}
+                </h2>
+                <dl className="divide-y">
+                  {[
+                    {
+                      label: t('auth.support.contactEmail', locale),
+                      value: brandConfig.supportEmail,
+                      href: `mailto:${brandConfig.supportEmail}${emailSubject}`,
+                      Icon: MailIcon,
+                    },
+                    {
+                      label: t('auth.support.contactPhone', locale),
+                      value: displayPhone(brandConfig.supportPhone),
+                      href: phoneHref(brandConfig.supportPhone),
+                      Icon: PhoneIcon,
+                    },
+                    {
+                      label: t('auth.support.contactMobile', locale),
+                      value: displayPhone(brandConfig.supportMobile),
+                      href: phoneHref(brandConfig.supportMobile),
+                      Icon: PhoneIcon,
+                    },
+                  ].map(({ label, value, href, Icon }) =>
+                    value ? (
+                      <div key={label} className="min-w-0 py-1.5">
+                        <dt className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <Icon aria-hidden="true" className="size-4 shrink-0 text-primary" />
+                          {label}
+                        </dt>
+                        <dd className="min-w-0 ps-6">
+                          <a
+                            href={href}
+                            className="touch-action inline-flex min-h-9 items-center text-sm font-medium text-primary underline underline-offset-4 [overflow-wrap:anywhere]"
+                          >
+                            <bdi dir="ltr">{value}</bdi>
+                          </a>
+                        </dd>
+                      </div>
+                    ) : null
+                  )}
+                </dl>
+                {reference && (
+                  <dl className="space-y-1 rounded-lg bg-muted/45 px-3 py-2.5">
+                    <dt className="text-xs text-muted-foreground">
+                      {feedbackText('reference', locale)}
+                    </dt>
+                    <dd className="font-mono text-xs [overflow-wrap:anywhere]">
+                      <bdi dir="ltr">{reference}</bdi>
+                    </dd>
+                  </dl>
+                )}
+                <p className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <ClockIcon aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+                  {t('auth.support.responseTime', locale)}
+                </p>
+              </CardContent>
+            </Card>
+          </section>
+
+          <section
+            id="recovery-contact-verification"
+            tabIndex={-1}
+            className="min-w-0 scroll-mt-4 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring md:col-start-2 md:row-span-2 md:row-start-1"
+          >
+            <Card className="py-0">
+              <CardContent className="min-w-0 space-y-4 p-4 sm:p-5">
+                <Suspense fallback={<p role="status">{loadingText('loading', locale)}</p>}>
+                  <RecoveryContactForm />
+                </Suspense>
+                <p className="border-t pt-3 text-sm leading-relaxed text-muted-foreground">
+                  {t('auth.support.steps', locale)}
+                </p>
+              </CardContent>
+            </Card>
+          </section>
+
+          <div className="min-w-0 md:col-start-1 md:row-start-2">
+            <PublicKnowledgeAssistant locale={locale} />
+          </div>
+        </div>
+
+        <Link
+          to="/login"
+          className="touch-action inline-flex min-h-11 items-center gap-2 text-sm font-medium text-primary underline underline-offset-4"
+        >
+          <BackIcon className="size-4" aria-hidden="true" />
+          {t('auth.support.backToLogin', locale)}
+        </Link>
       </main>
     </div>
   );

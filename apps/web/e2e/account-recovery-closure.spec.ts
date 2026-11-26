@@ -35,6 +35,27 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('link', { name: authText('auth.support.contactLink', locale), exact: true })
       .click();
     await expect(page).toHaveURL(/\/support#recovery-support-contact$/);
+    const contact = page.locator('#recovery-support-contact');
+    const verification = page.locator('#recovery-contact-verification');
+    await expect(
+      contact.getByRole('heading', { name: authText('auth.support.contactLink', locale) })
+    ).toBeVisible();
+    expect(
+      await contact.evaluate((element) =>
+        Boolean(
+          element.compareDocumentPosition(
+            document.querySelector('#recovery-contact-verification')!
+          ) & Node.DOCUMENT_POSITION_FOLLOWING
+        )
+      )
+    ).toBe(true);
+    await page
+      .getByRole('link', { name: authText('auth.support.verifyContactLink', locale), exact: true })
+      .click();
+    await expect(page).toHaveURL(/\/support#recovery-contact-verification$/);
+    await expect(
+      verification.getByRole('heading', { name: t('auth.recovery.confirmContact', locale) })
+    ).toBeVisible();
     for (const key of ['caseId', 'challengeId'] as const) {
       const field = page.getByLabel(t(`auth.recovery.${key}`, locale), { exact: true });
       await expect(field).toHaveAttribute('aria-required', 'true');

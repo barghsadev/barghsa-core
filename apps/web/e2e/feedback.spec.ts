@@ -216,7 +216,8 @@ for (const locale of ['en', 'fa'] as const) {
     });
     const dist = process.env['BARGHSA_BROWSER_COVERAGE'] === '1' ? 'dist-coverage' : 'dist';
     const manifest = JSON.parse(readFileSync(resolve(dist, '.vite/manifest.json'), 'utf8'));
-    const routeChunk = manifest['src/pages/SolarRequestDetailPage.tsx']?.file;
+    const routeChunk =
+      manifest['src/routes/_app/solar.requests.$requestId.tsx?tsr-split=component']?.file;
     const recoveryChunk = manifest['src/components/RouteErrorBoundary.tsx']?.file;
     expect(routeChunk).toBeTruthy();
     expect(recoveryChunk).toBeTruthy();

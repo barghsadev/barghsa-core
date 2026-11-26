@@ -58,7 +58,7 @@ for (const locale of ['fa', 'en'] as const) {
       await support.press('Enter');
       await expect(page).toHaveURL(/\/support$/);
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-        locale === 'fa' ? 'پشتیبانی بازیابی حساب' : 'Account Recovery Support'
+        locale === 'fa' ? 'پشتیبانی' : 'Support'
       );
       await expect(page.locator('main').locator('..')).toHaveAttribute(
         'dir',
