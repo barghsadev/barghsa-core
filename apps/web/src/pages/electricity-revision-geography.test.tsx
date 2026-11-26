@@ -40,6 +40,7 @@ afterEach(async () => {
   vi.unstubAllGlobals();
 });
 const city = () => host.querySelector<HTMLInputElement>('#revision-city')!;
+const responseNote = () => host.querySelector<HTMLTextAreaElement>('#revision-note')!;
 async function select(id: string, name: string) {
   const input = host.querySelector<HTMLInputElement>(id)!;
   await act(async () => input.focus());
@@ -48,7 +49,7 @@ async function select(id: string, name: string) {
   await act(async () => fireEvent.click(option));
 }
 async function note() {
-  const element = host.querySelector('textarea')!;
+  const element = responseNote();
   await act(async () => {
     Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(
       element,
@@ -108,10 +109,10 @@ it('blocks a changed province until its bound city list recovers and preserves a
   );
   await select('#revision-city', 'City two');
   expect(preview().disabled).toBe(false);
-  expect(
-    [...host.querySelectorAll('input')].some((element) => element.value === 'Retained address')
-  ).toBe(true);
-  expect(host.querySelector('textarea')!.value).toBe('Reviewed correction');
+  expect(host.querySelector<HTMLTextAreaElement>('#revision-address')!.value).toBe(
+    'Retained address'
+  );
+  expect(responseNote().value).toBe('Reviewed correction');
   await approveVisibleConfirmation();
   await act(async () => preview().click());
   await vi.waitFor(() =>

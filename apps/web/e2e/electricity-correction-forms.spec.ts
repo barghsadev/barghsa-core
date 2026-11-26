@@ -472,6 +472,12 @@ for (const [locale, theme] of [
       ])
         await expect(field).toHaveAttribute('aria-required', 'true');
       await expect(form.locator('#revision-gift')).not.toHaveAttribute('aria-required', 'true');
+      const delivery = form.getByRole('group', {
+        name: copy('electricity.order.deliveryAddress'),
+        exact: true,
+      });
+      await expect(delivery.locator('textarea#revision-address')).toBeVisible();
+      await expect(delivery.locator('#revision-gift')).toHaveCount(0);
       if (advanced) {
         for (const [boundary, id] of [
           ['start', 'revision-start-date'],
@@ -510,11 +516,21 @@ for (const [locale, theme] of [
       }
       // Isolate each local error so focus follows its owned field.
       await note.fill('Quantity validation companion note');
-      await quantity.fill('invalid');
+      const overlong = '12345678901234567890';
+      await quantity.fill(overlong);
+      await expect(quantity).toHaveValue(overlong);
       await preview.click();
       await focusedError(quantity);
       expect(state.quotePreviews).toEqual([]);
-      await quantity.fill('10');
+      await quantity.fill(locale === 'fa' ? '۱۰' : '١٠');
+      await expect(quantity).toHaveValue('10');
+      await postal.fill('۱۲۳۴۵-۶۷۸۹۰۱');
+      await expect(postal).toHaveValue('12345678901');
+      await preview.click();
+      await focusedError(postal);
+      expect(state.quotePreviews).toEqual([]);
+      await postal.fill(locale === 'fa' ? '۱۲۳۴۵-۶۷۸۹۰' : '12345-67890');
+      await expect(postal).toHaveValue('1234567890');
       await note.fill('');
       await preview.click();
       await focusedError(note);

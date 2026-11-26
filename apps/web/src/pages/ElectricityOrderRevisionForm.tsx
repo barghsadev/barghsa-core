@@ -25,6 +25,7 @@ import {
   type AriaAttributes,
 } from 'react';
 import { t } from '@barghsa/i18n/app';
+import { tSettingsForms } from '@barghsa/i18n/settings-forms';
 import { Button, Input, LoadingStatus, Textarea, DateTimePicker, NativeSelect } from '@barghsa/ui';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../components/GeographyLoadError.js';
@@ -32,6 +33,7 @@ import { GeographyPicker } from '../components/GeographyPicker.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
+import { normalizeProfileDigits, stripDigitSeparators } from '../lib/profile-digits.js';
 import { formatJalaliDateTime, parseJalaliDateTime } from '../lib/jalali-date-time.js';
 import {
   Form,
@@ -693,54 +695,65 @@ export function ElectricityOrderRevisionForm({
     name: keyof ElectricityRevisionDraft,
     label: string,
     id: string,
-    maxLength: number,
-    numeric = false,
-    multiline = false
-  ) => (
-    <FormField
-      key={name}
-      control={form.control}
-      name={name}
-      render={({ field }) => (
-        <FormItem id={id}>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            {multiline ? (
-              <Textarea
-                {...field}
-                dir="auto"
-                rows={2}
-                className="min-h-14"
-                aria-required="true"
-                disabled={locked}
-                maxLength={maxLength}
-              />
+    maxLength?: number
+  ) => {
+    const multiline = name === 'fullAddress' || name === 'responseNote';
+    const numeric = !multiline && name !== 'giftCode';
+    return (
+      <FormField
+        key={name}
+        control={form.control}
+        name={name}
+        render={({ field }) => (
+          <FormItem id={id}>
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              {multiline ? (
+                <Textarea
+                  {...field}
+                  dir="auto"
+                  rows={2}
+                  className="min-h-14"
+                  aria-required="true"
+                  disabled={locked}
+                  maxLength={maxLength}
+                />
+              ) : (
+                <Input
+                  {...field}
+                  aria-required={name === 'totalKwh' || name === 'postalCode' || undefined}
+                  disabled={locked}
+                  maxLength={maxLength}
+                  inputMode={numeric ? 'numeric' : 'text'}
+                  dir={numeric ? 'ltr' : 'auto'}
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    field.onChange(
+                      numeric
+                        ? normalizeProfileDigits(
+                            name === 'postalCode' ? stripDigitSeparators(value) : value
+                          )
+                        : value
+                    );
+                  }}
+                />
+              )}
+            </FormControl>
+            {name === 'responseNote' ? (
+              <FormDescription>{copy('responseHelp')}</FormDescription>
+            ) : name === 'postalCode' ? (
+              <FormDescription>{tSettingsForms('postalCodeHelp', locale)}</FormDescription>
+            ) : name === 'totalKwh' ? (
+              <FormDescription>{t('electricity.order.quantityInvalid', locale)}</FormDescription>
             ) : (
-              <Input
-                {...field}
-                aria-required={
-                  name === 'totalKwh' ||
-                  name === 'fullAddress' ||
-                  name === 'postalCode' ||
-                  undefined
-                }
-                disabled={locked}
-                maxLength={maxLength}
-                inputMode={numeric ? 'numeric' : 'text'}
-                dir={numeric ? 'ltr' : 'auto'}
-              />
+              <FormDescription className="sr-only">{copy('help')}</FormDescription>
             )}
-          </FormControl>
-          {multiline ? (
-            <FormDescription>{copy('responseHelp')}</FormDescription>
-          ) : (
-            <FormDescription className="sr-only">{copy('help')}</FormDescription>
-          )}
-          <FormMessage />
-        </FormItem>
-      )}
-    />
-  );
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    );
+  };
   const fieldFeedback = (
     <>
       <FormDescription className="sr-only">{copy('help')}</FormDescription>
@@ -838,9 +851,7 @@ export function ElectricityOrderRevisionForm({
                         text(
                           systemFields[key],
                           `${order.lines?.find((line) => line.systemKey === key)?.title?.[locale] ?? t(`electricity.order.revision.${key}`, locale)} (kWh)`,
-                          `revision-${key.replace('_', '-')}`,
-                          19,
-                          true
+                          `revision-${key.replace('_', '-')}`
                         )
                       )
                     )}
@@ -873,23 +884,13 @@ export function ElectricityOrderRevisionForm({
                     </FormItem>
                   )}
                 />
-                {text(
-                  'totalKwh',
-                  t('electricity.order.quantity', locale),
-                  'revision-quantity',
-                  19,
-                  true
-                )}
+                {text('totalKwh', t('electricity.order.quantity', locale), 'revision-quantity')}
               </div>
             )}
             <fieldset className="min-w-0 space-y-2.5 border-t pt-3">
-              <legend className="sr-only">{t('electricity.order.deliveryAddress', locale)}</legend>
-              {text(
-                'fullAddress',
-                t('electricity.order.deliveryAddress', locale),
-                'revision-address',
-                500
-              )}
+              <legend className="pe-2 text-sm font-semibold">
+                {t('electricity.order.deliveryAddress', locale)}
+              </legend>
               <div className="grid gap-3 sm:grid-cols-2">
                 <FormField
                   control={form.control}
@@ -968,25 +969,29 @@ export function ElectricityOrderRevisionForm({
                 locale={locale}
                 testId="electricity-revision-city-retry"
               />
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(10rem,0.5fr)]">
+                {text(
+                  'fullAddress',
+                  t('settings.addresses.form.fullAddress', locale),
+                  'revision-address',
+                  500
+                )}
                 {text(
                   'postalCode',
                   t('electricity.order.correction.postalCode', locale),
-                  'revision-postal',
-                  10,
-                  true
+                  'revision-postal'
                 )}
-                {text('giftCode', t('electricity.order.giftCode', locale), 'revision-gift', 100)}
               </div>
             </fieldset>
-            {text(
-              'responseNote',
-              t('electricity.order.correction.responseNote', locale),
-              'revision-note',
-              1000,
-              false,
-              true
-            )}
+            <div className="grid gap-3 border-t pt-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+              {text(
+                'responseNote',
+                t('electricity.order.correction.responseNote', locale),
+                'revision-note',
+                1000
+              )}
+              {text('giftCode', t('electricity.order.giftCode', locale), 'revision-gift', 100)}
+            </div>
             {error || form.formState.errors.root ? (
               <p role="alert" className="text-sm text-destructive">
                 {unconfirmed
