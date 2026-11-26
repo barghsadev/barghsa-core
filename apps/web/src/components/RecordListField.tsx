@@ -16,6 +16,8 @@ export function RecordListField({
   limit,
   rowHelp,
   bulkHelp,
+  guidance,
+  placeholder,
   descriptionId,
   invalid,
   urls = false,
@@ -29,6 +31,8 @@ export function RecordListField({
   limit: number;
   rowHelp: string;
   bulkHelp: string;
+  guidance?: string;
+  placeholder?: string;
   descriptionId?: string | undefined;
   invalid: boolean;
   urls?: boolean;
@@ -43,7 +47,8 @@ export function RecordListField({
   const bulk = editingBulk || lines.length > limit;
   const focusId = useRef<string | null>(null);
   const helpId = `${id}-help`;
-  const describedBy = descriptionId ? `${descriptionId} ${helpId}` : helpId;
+  const guidanceId = guidance ? `${id}-guidance` : undefined;
+  const describedBy = [descriptionId, guidanceId, helpId].filter(Boolean).join(' ');
   const rowId = (index: number) => (index === 0 ? id : `${id}-${index + 1}`);
   useEffect(() => {
     if (!focusId.current) return;
@@ -79,14 +84,20 @@ export function RecordListField({
           {copy(bulk ? 'editIndividualItems' : 'editPastedList')}
         </Button>
       </div>
+      {guidance && (
+        <p id={guidanceId} className="text-sm text-muted-foreground">
+          {guidance}
+        </p>
+      )}
       {bulk ? (
         <Textarea
           id={id}
           ref={focusRef}
           value={value}
           rows={3}
-          className="max-h-48 resize-y"
+          className="max-h-48 resize-y placeholder-shown:[direction:inherit]"
           dir={urls ? 'ltr' : 'auto'}
+          placeholder={placeholder}
           aria-required="true"
           aria-invalid={invalid || undefined}
           aria-describedby={describedBy}
@@ -111,9 +122,11 @@ export function RecordListField({
                       ? copy('listItemNumber').replace('{number}', number(index + 1))
                       : undefined
                   }
-                  className="min-w-0"
+                  className={
+                    placeholder ? 'min-w-0 placeholder-shown:[direction:inherit]' : 'min-w-0'
+                  }
                   value={line}
-                  placeholder={urls ? 'https://' : undefined}
+                  placeholder={urls ? 'https://' : index === 0 ? placeholder : undefined}
                   aria-required={lines.length === 1 || undefined}
                   aria-invalid={index === 0 && invalid ? true : undefined}
                   aria-describedby={describedBy}

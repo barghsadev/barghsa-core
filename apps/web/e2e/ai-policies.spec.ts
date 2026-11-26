@@ -61,6 +61,14 @@ for (const locale of ['en', 'fa'])
     if (fa) {
       await expect(page.getByText(listText('scopeReadDenied'), { exact: true })).toBeVisible();
       await page.getByRole('button', { name: listText('scopeManual'), exact: true }).click();
+    } else {
+      await expect(page.locator('#policy-items')).toHaveAttribute(
+        'placeholder',
+        listText('actionExample')
+      );
+      await expect(page.locator('#policy-items')).toHaveAccessibleDescription(
+        `${listText('actionMatchHelp')} ${listText('phraseCaseHelp')} ${listText('policyRowsHelp')}`
+      );
     }
     await page.getByRole('button', { name: listText('editPastedList') }).click();
     await page.locator('textarea#policy-items').fill('Meter readings\n\nBilling\nExtra');
@@ -263,23 +271,52 @@ for (const locale of ['en', 'fa'] as const)
     await page.goto('/admin/policies/new');
     await page.getByLabel(label('name'), { exact: true }).fill('Filter');
     await page.getByLabel(label('type'), { exact: true }).selectOption('content_filter');
-    await page.getByLabel(label('content_filter'), { exact: true }).fill('secret');
+    const blockedTerms = page.getByLabel(label('content_filter'), { exact: true });
+    await expect(blockedTerms).toHaveAttribute('placeholder', copy('filterExample'));
+    await expect(blockedTerms).toHaveAccessibleDescription(
+      `${copy('filterMatchHelp')} ${copy('phraseCaseHelp')} ${copy('policyRowsHelp')}`
+    );
+    await blockedTerms.fill('secret');
     await click('save');
     await confirm();
     expect(writes.at(-1)).toMatchObject({
       policyType: 'content_filter',
       rules: { blockedTerms: ['secret'] },
     });
+    const filterId = policies.find((row) => row.title === 'Filter')?.id;
+    await page.goto(`/admin/policies/${filterId}/edit`);
+    await expect(blockedTerms).toHaveValue('secret');
+    await expect(page.locator('#policy-items-guidance')).toContainText(copy('filterMatchHelp'));
     await page.goto('/admin/policies/new');
     await page.getByLabel(label('name'), { exact: true }).fill('Format');
     await page.getByLabel(label('type'), { exact: true }).selectOption('output_format');
-    await page.getByLabel(label('format'), { exact: true }).selectOption('json_object');
+    const formats = page.getByRole('radiogroup', { name: label('format'), exact: true });
+    const plain = formats.getByRole('radio', { name: label('plain_text'), exact: true });
+    const json = formats.getByRole('radio', { name: label('json_object'), exact: true });
+    const example = page.locator('#policy-format-example');
+    await expect(plain).toBeChecked();
+    await expect(json).toBeVisible();
+    await expect(example.locator('pre')).toHaveCount(0);
+    await plain.press('ArrowDown');
+    await expect(json).toBeChecked();
+    await expect(formats).toHaveAccessibleDescription(copy('formatJsonHelp'));
+    const exampleText = await example.locator('pre').innerText();
+    expect(JSON.parse(exampleText)).toEqual({ answer: copy('formatExampleAnswer') });
     await click('save');
+    await expect(page.getByRole('dialog')).toContainText(copy('formatJsonHelp'));
     await confirm();
     expect(writes.at(-1)).toMatchObject({
       policyType: 'output_format',
       rules: { format: 'json_object' },
     });
+    const formatId = policies.find((row) => row.title === 'Format')?.id;
+    await page.goto(`/admin/policies/${formatId}/edit`);
+    await expect(json).toBeChecked();
+    await plain.check();
+    await expect(example.locator('pre')).toHaveCount(0);
+    await click('save');
+    await confirm();
+    expect(writes.at(-1)).toMatchObject({ rules: { format: 'plain_text' } });
     await page.goto('/admin/policies/new');
     await page.getByLabel(label('name'), { exact: true }).fill('Limit');
     await page.getByLabel(label('type'), { exact: true }).selectOption('rate_limit');

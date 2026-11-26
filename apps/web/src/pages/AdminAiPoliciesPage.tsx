@@ -80,6 +80,11 @@ const types = [
   'rate_limit',
 ] as const;
 type PolicyType = (typeof types)[number];
+const termCopy = {
+  allowed_topics: { guidance: 'topicMatchHelp', placeholder: 'topicExample' },
+  disallowed_actions: { guidance: 'actionMatchHelp', placeholder: 'actionExample' },
+  content_filter: { guidance: 'filterMatchHelp', placeholder: 'filterExample' },
+} as const;
 type Kind = 'policies' | 'policy-groups';
 interface PolicyRow {
   id: string;
@@ -199,6 +204,8 @@ function OwnedAiPoliciesPage({
   const listSearch = kind === 'policy-groups' ? { kind: 'policy-groups' as const } : {};
   const copy = (key: Parameters<typeof knowledgePolicyFormText>[0]) =>
     knowledgePolicyFormText(key, locale);
+  const formatHelp = (format: Draft['format']) =>
+    copy(format === 'json_object' ? 'formatJsonHelp' : 'formatPlainHelp');
   function rateWindowLabel(total: number) {
     if (total === 3600) return copy('rateHour').replace('{count}', numbers.number(1));
     const minutes = Math.floor(total / 60);
@@ -236,6 +243,13 @@ function OwnedAiPoliciesPage({
   const ownedFields = useActionFieldErrors(form.form, messages, copy('invalid'));
   const [draftOpen, setDraftOpen] = useState(false);
   const draft = draftOpen ? form.values : null;
+  const policyType = draft?.policyType;
+  const termRule =
+    policyType === 'allowed_topics' ||
+    policyType === 'disallowed_actions' ||
+    policyType === 'content_filter'
+      ? termCopy[policyType]
+      : null;
   const rateWindow =
     draft?.policyType === 'rate_limit'
       ? boundedCatalogueInteger(draft.windowSeconds, 1, 3600)
@@ -622,15 +636,16 @@ function OwnedAiPoliciesPage({
         validationBusy.current = false;
         const body = policyBody(value, kindRef.current);
         formCapture.current = { body, ...(value.id ? { id: value.id } : {}) };
-        const rateReview =
-          kindRef.current === 'policies' && value.policyType === 'rate_limit'
-            ? rateLimitSummary(value)
-            : null;
+        let ruleReview: string | null = null;
+        if (kindRef.current === 'policies') {
+          if (value.policyType === 'rate_limit') ruleReview = rateLimitSummary(value);
+          if (value.policyType === 'output_format') ruleReview = formatHelp(value.format);
+        }
         propose(
           `/api/admin/${kind}${value.id ? `/${value.id}` : ''}`,
           value.id ? 'PUT' : 'POST',
           label('save'),
-          rateReview ? `${label('confirmSave')} ${rateReview}` : label('confirmSave'),
+          ruleReview ? `${label('confirmSave')} ${ruleReview}` : label('confirmSave'),
           body
         );
       })();
@@ -1185,27 +1200,78 @@ function OwnedAiPoliciesPage({
                           </div>
                         </div>
                       ) : draft.policyType === 'output_format' ? (
-                        <div className={recordEditorField}>
-                          <Label htmlFor="policy-format">{label('format')}</Label>
-                          <NativeSelect
-                            {...form.bind('format')}
+                        <div className="min-w-0 space-y-2.5">
+                          <fieldset
                             id="policy-format"
-                            aria-required="true"
-                            className="w-full"
-                            value={draft.format}
-                            onChange={(event) =>
-                              form.field('format')[1](event.target.value as Draft['format'])
+                            role="radiogroup"
+                            aria-labelledby="policy-format-label"
+                            aria-describedby={
+                              form.errors.format
+                                ? `${form.errorId('format')} policy-format-help`
+                                : 'policy-format-help'
                             }
+                            aria-required="true"
+                            className="min-w-0"
                           >
-                            <option value="plain_text">{label('plain_text')}</option>
-                            <option value="json_object">{label('json_object')}</option>
-                          </NativeSelect>
-                          <CatalogueFieldFeedback
-                            compact
-                            id={form.errorId('format')}
-                            error={form.errors.format}
-                            message={messages.format}
-                          />
+                            <legend id="policy-format-label" className="mb-1 text-sm font-medium">
+                              {label('format')}
+                            </legend>
+                            <div className="grid grid-cols-2 gap-2">
+                              {(['plain_text', 'json_object'] as const).map((format) => (
+                                <label
+                                  key={format}
+                                  className="flex min-h-11 min-w-0 cursor-pointer items-center gap-2 rounded-lg border px-2.5 py-2 text-sm font-medium hover:bg-muted/40 has-checked:border-primary/45 has-checked:bg-primary/5 has-disabled:cursor-not-allowed has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
+                                >
+                                  <input
+                                    {...form.bind('format')}
+                                    type="radio"
+                                    value={format}
+                                    checked={draft.format === format}
+                                    className="size-3.5 shrink-0 accent-primary"
+                                    onChange={() => form.field('format')[1](format)}
+                                  />
+                                  {label(format)}
+                                </label>
+                              ))}
+                            </div>
+                            {form.errors.format && (
+                              <CatalogueFieldFeedback
+                                compact
+                                id={form.errorId('format')}
+                                error={form.errors.format}
+                                message={messages.format}
+                              />
+                            )}
+                          </fieldset>
+                          <p
+                            id="policy-format-help"
+                            className="text-xs text-muted-foreground"
+                            role="status"
+                          >
+                            {formatHelp(draft.format)}
+                          </p>
+                          <div
+                            id="policy-format-example"
+                            className="min-w-0 space-y-1 rounded-lg border bg-muted/35 px-3 py-2.5"
+                          >
+                            <p className="text-xs font-medium text-muted-foreground">
+                              {copy('formatExample')}
+                            </p>
+                            {draft.format === 'json_object' ? (
+                              <pre
+                                dir="ltr"
+                                className="text-xs whitespace-pre-wrap [overflow-wrap:anywhere] sm:text-sm"
+                              >
+                                {'{\n  "answer": "'}
+                                <bdi className="font-sans">
+                                  {JSON.stringify(copy('formatExampleAnswer')).slice(1, -1)}
+                                </bdi>
+                                {'"\n}'}
+                              </pre>
+                            ) : (
+                              <p className="text-sm">{copy('formatExampleAnswer')}</p>
+                            )}
+                          </div>
                         </div>
                       ) : draft.policyType === 'rate_limit' ? (
                         <div className="min-w-0 space-y-2.5">
@@ -1306,7 +1372,7 @@ function OwnedAiPoliciesPage({
                             control={form.form.control}
                             name="items"
                             render={({ field }) =>
-                              draft.policyType === 'data_access_scope' ? (
+                              !termRule ? (
                                 <PolicyScopeField
                                   id="policy-items"
                                   locale={locale}
@@ -1330,6 +1396,8 @@ function OwnedAiPoliciesPage({
                                   onBlur={form.bind('items').onBlur}
                                   onChange={form.field('items')[1]}
                                   limit={200}
+                                  guidance={`${copy(termRule.guidance)} ${copy('phraseCaseHelp')}`}
+                                  placeholder={copy(termRule.placeholder)}
                                   rowHelp={copy('policyRowsHelp')}
                                   bulkHelp={label('itemsHelp')}
                                   descriptionId={

@@ -249,11 +249,13 @@ for (const locale of ['en', 'fa'] as const)
         await expect(field).toHaveAttribute('aria-required', 'true');
       }
       const items = page.locator('#policy-items');
-      await expect(items).toHaveAccessibleDescription(copy('policyRowsHelp'));
+      const itemHelp = `${copy('topicMatchHelp')} ${copy('phraseCaseHelp')} ${copy('policyRowsHelp')}`;
+      await expect(items).toHaveAccessibleDescription(itemHelp);
+      await expect(items).toHaveAttribute('placeholder', copy('topicExample'));
       await items.fill('');
       await button(policyText('save')).click();
       await expect(items).toBeFocused();
-      await expect(items).toHaveAccessibleDescription(`${copy('items')} ${copy('policyRowsHelp')}`);
+      await expect(items).toHaveAccessibleDescription(`${copy('items')} ${itemHelp}`);
       expect(policyWrites).toHaveLength(0);
       await items.fill('energy');
       await priority.fill('1.5');
@@ -265,7 +267,9 @@ for (const locale of ['en', 'fa'] as const)
       await priority.fill(locale === 'fa' ? '-۱۲' : '-12');
       await enabled.uncheck();
       await page.locator('#policy-type').selectOption('output_format');
-      await expect(page.locator('#policy-format')).toHaveAttribute('aria-required', 'true');
+      const formats = page.getByRole('radiogroup', { name: policyText('format'), exact: true });
+      await expect(formats).toHaveAttribute('aria-required', 'true');
+      await expect(formats).toHaveAccessibleDescription(copy('formatPlainHelp'));
       await expect(items).toHaveCount(0);
       await page.locator('#policy-type').selectOption('response_style');
       await expect(page.locator('#policy-tone')).toHaveAttribute('aria-required', 'true');

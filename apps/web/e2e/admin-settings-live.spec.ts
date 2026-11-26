@@ -1618,6 +1618,26 @@ for (const locale of ['en', 'fa'])
       policyType: 'rate_limit',
       rules: { maxRequests: 7, windowSeconds: 300 },
     });
+    const formatTitle = `Policy format ${locale}`;
+    await page.goto('/admin/policies/new');
+    await page.locator('#policy-title').fill(formatTitle);
+    await page.locator('#policy-type').selectOption('output_format');
+    await page.locator('#policy-format input[value=json_object]').check();
+    await savePolicy.click();
+    await expect(page.getByRole('dialog')).toContainText(
+      knowledgePolicyFormText('formatJsonHelp', locale)
+    );
+    await confirm();
+    await expect(page.getByRole('heading', { name: formatTitle, exact: true })).toBeVisible();
+    const formatId = new URL(page.url()).pathname.split('/').at(-1);
+    const formatReceipt = await page.request.get(`${http.base}/api/admin/policies/${formatId}`, {
+      headers,
+    });
+    expect(formatReceipt.status()).toBe(200);
+    expect(await formatReceipt.json()).toMatchObject({
+      policyType: 'output_format',
+      rules: { format: 'json_object' },
+    });
     await page.goto('/admin/policies?kind=policy-groups');
     await page.getByRole('link', { name: fa ? 'افزودن گروه' : 'Add group', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(groupName);
