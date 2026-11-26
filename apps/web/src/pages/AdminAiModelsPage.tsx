@@ -14,6 +14,8 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { Link } from '@tanstack/react-router';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { AiModelRecordTable } from '../components/AiModelRecordTable.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import {
@@ -750,7 +752,13 @@ function OwnedAiModelsPage({
           <p role="alert">{label('forbidden')}</p>
         ) : (
           <>
-            {!isList && loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
+            {!isList &&
+              loading &&
+              (currentModel ? (
+                <LoadingStatus>{label('loading')}</LoadingStatus>
+              ) : (
+                <RecordDetailSkeleton label={label('loading')} />
+              ))}
             {!isList && error && (
               <Alert variant="destructive">
                 <p>{label('error')}</p>
@@ -1212,7 +1220,15 @@ function OwnedAiModelsPage({
                     <Badge variant="outline">{label('circuitOpen')}</Badge>
                   )}
                 </div>
-                <dl className="grid gap-4 border-y py-4 text-sm sm:grid-cols-2">
+                {currentModel.lastTestError && (
+                  <p
+                    className="wrap-anywhere rounded-lg bg-destructive/10 p-3 text-sm text-destructive"
+                    dir="auto"
+                  >
+                    {currentModel.lastTestError}
+                  </p>
+                )}
+                <dl className="grid gap-4 rounded-lg bg-muted/45 p-3 text-sm sm:grid-cols-2">
                   {Object.entries({
                     provider:
                       currentModel.providerType === 'anthropic' ? 'Anthropic' : label('openai'),
@@ -1225,7 +1241,7 @@ function OwnedAiModelsPage({
                     <div key={key} className="min-w-0">
                       <dt className="text-muted-foreground">{label(key)}</dt>
                       <dd className="[overflow-wrap:anywhere]">
-                        <bdi>{value}</bdi>
+                        <bdi className="font-medium">{value}</bdi>
                       </dd>
                     </div>
                   ))}
@@ -1260,11 +1276,6 @@ function OwnedAiModelsPage({
                     </div>
                   )}
                 </dl>
-                {currentModel.lastTestError && (
-                  <p className="[overflow-wrap:anywhere] text-sm text-destructive" dir="auto">
-                    {currentModel.lastTestError}
-                  </p>
-                )}
                 <section className="space-y-2 border-b pb-4 text-sm">
                   <h2 className="font-semibold">{label('budgetTitle')}</h2>
                   {currentModel.budget ? (
@@ -1312,7 +1323,25 @@ function OwnedAiModelsPage({
                 error={error}
                 empty={models.length === 0}
                 retainContent={models.length > 0}
-                loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+                loadingView={
+                  <>
+                    <div className="md:hidden">
+                      <RecordListSkeleton label={label('loading')} view="card" headings={[]} />
+                    </div>
+                    <div className="hidden md:block">
+                      <RecordListSkeleton
+                        label={label('loading')}
+                        view="table"
+                        headings={[
+                          label('name'),
+                          label('provider'),
+                          label('status'),
+                          label('actions'),
+                        ]}
+                      />
+                    </div>
+                  </>
+                }
                 errorView={
                   <div role="alert">
                     <p>{label('error')}</p>

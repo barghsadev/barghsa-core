@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import type { Locale } from '@barghsa/i18n/app';
-import { DataTable, TextCell } from '@barghsa/ui';
+import { Badge, DataTable, TextCell } from '@barghsa/ui';
 import type { Model } from '../lib/ai-model-form.js';
 
 /** Read-only presentation; the owning page supplies protected action handlers. */
@@ -32,27 +32,25 @@ export function AiModelRecordTable({
   });
   const formatUsd = (micros: number) => usd.format(micros / 1_000_000);
   const name = (model: Model) => (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <h2 className="font-semibold">
         {renderTitle ? renderTitle(model) : <TextCell value={model.title} />}
       </h2>
-      <p className="break-all" dir="ltr">
-        <TextCell value={model.baseUrl} />
+      <p className="text-sm text-muted-foreground" dir="auto">
+        <TextCell value={model.modelName} />
       </p>
     </div>
   );
-  const provider = (model: Model) => (
-    <div className="space-y-2">
-      <p>{model.providerType === 'anthropic' ? 'Anthropic' : label('openai')}</p>
-      <p>
-        {label('token')}: <span dir="ltr">{model.apiTokenMasked || label('noToken')}</span>
-      </p>
-    </div>
-  );
+  const provider = (model: Model) =>
+    model.providerType === 'anthropic' ? 'Anthropic' : label('openai');
   const status = (model: Model) => (
     <div className="space-y-2">
-      <p className="font-medium">{label(model.isEnabled ? 'enabled' : 'disabled')}</p>
-      <p>{label(model.status)}</p>
+      <div className="flex flex-wrap gap-2">
+        <Badge variant={model.isEnabled ? 'secondary' : 'outline'}>
+          {label(model.isEnabled ? 'enabled' : 'disabled')}
+        </Badge>
+        <Badge variant="outline">{label(model.status)}</Badge>
+      </div>
       {model.circuitOpen && (
         <p className="font-medium text-destructive" role="status">
           {label('circuitOpen')}
@@ -63,45 +61,31 @@ export function AiModelRecordTable({
           )}
         </p>
       )}
-      {model.lastTestedAt && (
-        <p>
-          {label('lastTest')}: {formatTime(model.lastTestedAt)}
-        </p>
-      )}
       {model.lastTestLatencyMs !== null && (
-        <p>
-          {label('latency')}: <bdi>{formatNumber(model.lastTestLatencyMs)} ms</bdi>
+        <p className="text-xs text-muted-foreground">
+          {label('latency')} <bdi>{formatNumber(model.lastTestLatencyMs)} ms</bdi>
         </p>
       )}
-      {model.lastTestError && (
-        <p className="break-words text-destructive" dir="auto">
-          {model.lastTestError}
-        </p>
+      {model.budget && (
+        <div className="text-xs text-muted-foreground">
+          <p className="font-medium text-foreground">{label('budgetTitle')}</p>
+          {model.budget.monthlyTokenLimit !== null && (
+            <p>
+              {label('budgetTokens')}:{' '}
+              <bdi>
+                {formatNumber(model.budget.usedInputTokens + model.budget.usedOutputTokens)} /{' '}
+                {formatNumber(model.budget.monthlyTokenLimit)}
+              </bdi>
+            </p>
+          )}
+          {model.budget.monthlyCostLimitMicros !== null && (
+            <p>
+              {label('budgetCost')}: <bdi>{formatUsd(model.budget.usedCostMicros)}</bdi> /{' '}
+              <bdi>{formatUsd(model.budget.monthlyCostLimitMicros)}</bdi>
+            </p>
+          )}
+        </div>
       )}
-      <div className="border-t pt-2 text-xs text-muted-foreground">
-        <p className="font-medium text-foreground">{label('budgetTitle')}</p>
-        {model.budget ? (
-          <>
-            {model.budget.monthlyTokenLimit !== null && (
-              <p>
-                {label('budgetTokens')}:{' '}
-                <bdi>
-                  {formatNumber(model.budget.usedInputTokens + model.budget.usedOutputTokens)} /{' '}
-                  {formatNumber(model.budget.monthlyTokenLimit)}
-                </bdi>
-              </p>
-            )}
-            {model.budget.monthlyCostLimitMicros !== null && (
-              <p>
-                {label('budgetCost')}: <bdi>{formatUsd(model.budget.usedCostMicros)}</bdi> /{' '}
-                <bdi>{formatUsd(model.budget.monthlyCostLimitMicros)}</bdi>
-              </p>
-            )}
-          </>
-        ) : (
-          <p>{label('budgetNone')}</p>
-        )}
-      </div>
     </div>
   );
   const actions = (model: Model) => (
@@ -119,7 +103,7 @@ export function AiModelRecordTable({
       keyExtractor={(model) => model.id}
       sortable={false}
       className="max-h-[40rem]"
-      tableClassName="min-w-[760px] text-start"
+      tableClassName="min-w-[42rem] text-start"
       columns={[
         {
           id: 'name',
@@ -134,36 +118,14 @@ export function AiModelRecordTable({
           cell: provider,
           cellClassName: 'align-top p-4',
         },
-        {
-          id: 'modelName',
-          header: label('modelName'),
-          cell: (model) => (
-            <span dir="ltr" className="break-all">
-              <TextCell value={model.modelName} />
-            </span>
-          ),
-          cellClassName: 'align-top p-4',
-        },
         { id: 'status', header: label('status'), cell: status, cellClassName: 'align-top p-4' },
         { id: 'actions', header: label('actions'), cell: actions, cellClassName: 'align-top p-4' },
       ]}
       renderCard={(model) => (
         <div className="space-y-4 [overflow-wrap:anywhere]">
           {name(model)}
-          <div>
-            <p className="text-sm text-muted-foreground">{label('provider')}</p>
-            {provider(model)}
-          </div>
-          <p>
-            <span className="text-muted-foreground">{label('modelName')}: </span>
-            <span dir="ltr">
-              <TextCell value={model.modelName} />
-            </span>
-          </p>
-          <div>
-            <h3 className="font-semibold">{label('status')}</h3>
-            {status(model)}
-          </div>
+          <p className="text-sm">{provider(model)}</p>
+          {status(model)}
           {actions(model)}
         </div>
       )}

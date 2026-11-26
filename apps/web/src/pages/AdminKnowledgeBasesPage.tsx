@@ -22,6 +22,8 @@ import {
   type ReviewedMembershipCommand,
 } from '../components/CatalogueRelationEditor.js';
 import { CatalogueRecordTable } from '../components/CatalogueRecordTable.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import {
   matchesMembership,
   memberIdsBasis,
@@ -1101,7 +1103,12 @@ function OwnedKnowledgeBasesPage({
                 <Button onClick={choices.retry}>{label('optionsRetry')}</Button>
               </div>
             )}
-            {selectedRead.loading && <LoadingStatus>{label('detailLoading')}</LoadingStatus>}
+            {selectedRead.loading &&
+              (detail ? (
+                <LoadingStatus>{label('detailLoading')}</LoadingStatus>
+              ) : (
+                <RecordDetailSkeleton label={label('detailLoading')} />
+              ))}
             {!isList && !recordId && collection.loading && (
               <LoadingStatus>{label('loading')}</LoadingStatus>
             )}
@@ -1504,7 +1511,20 @@ function OwnedKnowledgeBasesPage({
                 error={list.error}
                 empty={!rows.length}
                 retainContent={rows.length > 0}
-                loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+                loadingView={
+                  <>
+                    <div className="md:hidden">
+                      <RecordListSkeleton label={label('loading')} view="card" headings={[]} />
+                    </div>
+                    <div className="hidden md:block">
+                      <RecordListSkeleton
+                        label={label('loading')}
+                        view="table"
+                        headings={[label('name'), copy('tableDetails'), copy('tableActions')]}
+                      />
+                    </div>
+                  </>
+                }
                 errorView={
                   <div role="alert">
                     <p>{label('error')}</p>
@@ -1543,16 +1563,18 @@ function OwnedKnowledgeBasesPage({
                       </p>
                       {kind === 'knowledge-bases' && (
                         <div className="space-y-1 text-sm text-muted-foreground">
-                          <p>
-                            {label('contentState')}:{' '}
-                            {row.contentState === undefined
-                              ? label('unknown')
-                              : label(`state${row.contentState}`)}
-                            {' · '}
-                            {row.isEnabled === undefined
-                              ? label('unknown')
-                              : label(row.isEnabled ? 'enabled' : 'disabled')}
-                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            <Badge variant="secondary">
+                              {row.contentState === undefined
+                                ? label('unknown')
+                                : label(`state${row.contentState}`)}
+                            </Badge>
+                            <Badge variant="outline">
+                              {row.isEnabled === undefined
+                                ? label('unknown')
+                                : label(row.isEnabled ? 'enabled' : 'disabled')}
+                            </Badge>
+                          </div>
                           <p>
                             {label('audience')}:{' '}
                             {row.audience === undefined
@@ -1723,7 +1745,7 @@ function OwnedKnowledgeBasesPage({
                   </p>
                 )}
                 {view === 'detail' && kind === 'knowledge-bases' && (
-                  <dl className="grid gap-3 border-y py-4 text-sm sm:grid-cols-3">
+                  <dl className="grid gap-4 rounded-lg bg-muted/45 p-3 text-sm sm:grid-cols-3">
                     <div>
                       <dt className="text-muted-foreground">{label('sourceType')}</dt>
                       <dd>{sourceName(detail.sourceType)}</dd>
@@ -2105,10 +2127,14 @@ function OwnedKnowledgeBasesPage({
                         (doc ? (
                           <>
                             {time.notice}
-                            <dl className="grid gap-4 border-y py-4 text-sm sm:grid-cols-2">
+                            <dl className="grid gap-4 rounded-lg bg-muted/45 p-3 text-sm sm:grid-cols-2">
                               <div>
                                 <dt className="text-muted-foreground">{label('contentState')}</dt>
-                                <dd>{statusLabel(doc.processingStatus)}</dd>
+                                <dd className="mt-1">
+                                  <Badge variant="secondary">
+                                    {statusLabel(doc.processingStatus)}
+                                  </Badge>
+                                </dd>
                               </div>
                               {doc.mimeType && (
                                 <div>

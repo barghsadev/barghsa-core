@@ -17,6 +17,8 @@ import {
   type ReviewedMembershipCommand,
 } from '../components/CatalogueRelationEditor.js';
 import { CatalogueRecordTable } from '../components/CatalogueRecordTable.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import {
   matchesMembership,
   memberIdsBasis,
@@ -929,7 +931,12 @@ function OwnedAiPoliciesPage({
                 <Button onClick={choices.retry}>{label('optionsRetry')}</Button>
               </div>
             )}
-            {selectedRead.loading && <LoadingStatus>{label('detailLoading')}</LoadingStatus>}
+            {selectedRead.loading &&
+              (detail ? (
+                <LoadingStatus>{label('detailLoading')}</LoadingStatus>
+              ) : (
+                <RecordDetailSkeleton label={label('detailLoading')} />
+              ))}
             {!isList && !recordId && collection.loading && (
               <LoadingStatus>{label('loading')}</LoadingStatus>
             )}
@@ -1477,7 +1484,20 @@ function OwnedAiPoliciesPage({
                 error={list.error}
                 empty={!rows.length}
                 retainContent={rows.length > 0}
-                loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+                loadingView={
+                  <>
+                    <div className="md:hidden">
+                      <RecordListSkeleton label={label('loading')} view="card" headings={[]} />
+                    </div>
+                    <div className="hidden md:block">
+                      <RecordListSkeleton
+                        label={label('loading')}
+                        view="table"
+                        headings={[label('name'), copy('tableDetails'), copy('tableActions')]}
+                      />
+                    </div>
+                  </>
+                }
                 errorView={
                   <div role="alert">
                     <p>{label('error')}</p>
@@ -1512,16 +1532,14 @@ function OwnedAiPoliciesPage({
                         </p>
                       )}
                       {row.policyType && (
-                        <div className="mt-2 flex flex-wrap gap-2 text-sm">
-                          <span className="rounded-full bg-muted px-2 py-1">
-                            {label(row.policyType)}
-                          </span>
-                          <span className="px-2 py-1">
+                        <div className="flex flex-wrap items-center gap-2 text-sm">
+                          <Badge variant="secondary">{label(row.policyType)}</Badge>
+                          <Badge variant="outline">
                             {row.enabled === undefined
                               ? label('unavailable')
                               : label(row.enabled ? 'enabled' : 'disabled')}
-                          </span>
-                          <span className="px-2 py-1">
+                          </Badge>
+                          <span>
                             {label('priority')}:{' '}
                             <bdi>
                               {row.priority === undefined ? '—' : numbers.number(row.priority)}
@@ -1623,7 +1641,7 @@ function OwnedAiPoliciesPage({
                   </p>
                 )}
                 {time.notice}
-                <dl className="grid gap-4 border-y py-4 text-sm sm:grid-cols-2">
+                <dl className="grid gap-4 rounded-lg bg-muted/45 p-3 text-sm sm:grid-cols-2">
                   <div>
                     <dt className="text-muted-foreground">{label('priority')}</dt>
                     <dd>{detail.priority === undefined ? '—' : numbers.number(detail.priority)}</dd>
@@ -1652,7 +1670,7 @@ function OwnedAiPoliciesPage({
                     </div>
                   ))}
                   {(ruleList.length > 0 || detail.rules?.requireSources === true) && (
-                    <div className="sm:col-span-2">
+                    <div className="border-t pt-3 sm:col-span-2">
                       <dt className="font-medium">{label('rules')}</dt>
                       <dd>
                         {ruleList.length > 0 && (
@@ -1699,9 +1717,21 @@ function OwnedAiPoliciesPage({
                   className="flex min-w-0 flex-col gap-4 rounded-xl border bg-card p-4 sm:p-6"
                   aria-label={label('members')}
                 >
-                  <h2 className="break-words text-xl font-semibold">
-                    {workspace ? label('members') : rows.find((row) => row.id === selected)?.title}
-                  </h2>
+                  <div className="space-y-2">
+                    <h2 className="break-words text-xl font-semibold">
+                      {workspace
+                        ? label('members')
+                        : rows.find((row) => row.id === selected)?.title}
+                    </h2>
+                    {workspace && detail?.description && (
+                      <p
+                        dir="auto"
+                        className="wrap-anywhere whitespace-pre-wrap text-sm text-muted-foreground"
+                      >
+                        {detail.description}
+                      </p>
+                    )}
+                  </div>
                   {workspace && detail && recordActions(detail)}
                   {operationRecovery}
                   <CatalogueRelationEditor
