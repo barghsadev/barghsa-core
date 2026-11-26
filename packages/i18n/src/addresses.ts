@@ -1,22 +1,10 @@
 const en = {
-  removalHistory:
-    'This address will be removed from your saved list. Its record and addresses on existing orders will be retained.',
-  profileRequired: 'Choose an active profile',
-  profileRequiredHint: 'Open the dashboard to choose a profile before managing its addresses.',
-  openDashboard: 'Open dashboard',
-  details: 'Address details',
   streetExample: 'Street, building number, floor and unit',
   postalCodeFormat: 'Enter 10 digits, starting with a digit from 1 to 9.',
   provinceFirst: 'Select a province first',
   loadingCities: 'Loading cities…',
 };
 const fa: Record<keyof typeof en, string> = {
-  removalHistory:
-    'این آدرس از فهرست آدرس‌های ذخیره‌شده حذف می‌شود. سابقه آن و آدرس سفارش‌های قبلی حفظ خواهد شد.',
-  profileRequired: 'یک پروفایل فعال انتخاب کنید',
-  profileRequiredHint: 'برای مدیریت آدرس‌ها، در داشبورد یک پروفایل انتخاب کنید.',
-  openDashboard: 'باز کردن داشبورد',
-  details: 'جزئیات آدرس',
   streetExample: 'خیابان، پلاک، طبقه و واحد',
   postalCodeFormat: 'کد پستی باید ۱۰ رقمی باشد و با صفر شروع نشود.',
   provinceFirst: 'ابتدا استان را انتخاب کنید',

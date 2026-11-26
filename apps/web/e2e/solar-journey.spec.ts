@@ -1,3 +1,4 @@
+import { selectAddressLocation } from './address-location-fixture';
 import { routePostalRecords } from './solar-postal-record-fixture';
 import { tSolar as solarCopy } from '@barghsa/i18n/solar';
 import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
@@ -1137,8 +1138,16 @@ for (const locale of ['en', 'fa'] as const)
             : { propertyForm: 'villa', buildingCompletionDate: '2020-01-01' }),
         });
 
-        await page.locator('#addresses-field-1').selectOption(siteAddress.provinceId);
-        await page.locator('#addresses-field-2').selectOption(siteAddress.cityId);
+        await selectAddressLocation(
+          page,
+          page.locator('#addresses-field-1'),
+          locale === 'fa' ? 'تهران' : 'Tehran'
+        );
+        await selectAddressLocation(
+          page,
+          page.locator('#addresses-field-2'),
+          locale === 'fa' ? 'تهران' : 'Tehran'
+        );
         await page.locator('#addresses-field-3').fill(siteAddress.fullAddress);
         await page.locator('#addresses-field-4').fill(siteAddress.postalCode);
         await page

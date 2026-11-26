@@ -1,3 +1,4 @@
+import { selectAddressLocation } from './address-location-fixture';
 import { createRequire } from 'node:module';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { confirmationText } from '@barghsa/i18n/confirmation';
@@ -4239,9 +4240,16 @@ for (const locale of ['en', 'fa']) {
       })
     );
     const dialog = page.locator('[data-slot=settings-address-form]');
-    await dialog.locator('#addresses-field-1').selectOption(provinceId);
-    await expect(dialog.locator(`#addresses-field-2 option[value="${cityId}"]`)).toHaveCount(1);
-    await dialog.locator('#addresses-field-2').selectOption(cityId);
+    await selectAddressLocation(
+      page,
+      dialog.locator('#addresses-field-1'),
+      locale === 'fa' ? 'استان' : 'Province'
+    );
+    await selectAddressLocation(
+      page,
+      dialog.locator('#addresses-field-2'),
+      locale === 'fa' ? 'شهر' : 'City'
+    );
     await dialog.locator('#addresses-field-3').fill('Displayed profile street');
     await dialog.locator('#addresses-field-4').fill('1234567890');
     await dialog

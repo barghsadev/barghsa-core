@@ -1,16 +1,16 @@
+import { selectAddressLocation } from './address-location-fixture';
 import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page, Route } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
 import { t as crmText } from '@barghsa/i18n/crm';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
-import { addressesText } from '@barghsa/i18n/addresses';
+import { addressWorkspaceText } from '../src/pages/address-workspace-text';
 import { test, expect } from './coverage-fixture';
 import {
   setupSettingsForms,
   profileId,
   otherProfileId,
-  provinceId,
   cityId,
   privateText,
   type Command,
@@ -55,7 +55,9 @@ async function quality(page: Page, owner: Locator, selector: string) {
     ).violations
   ).toEqual([]);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  for (const control of await owner.locator('input,textarea,select,button').all()) {
+  for (const control of await owner
+    .locator(':is(input,textarea,select,button):not([aria-hidden="true"])')
+    .all()) {
     const box = await control.boundingBox();
     if (box) {
       expect(box.x).toBeGreaterThanOrEqual(0);
@@ -445,7 +447,9 @@ for (const locale of ['en', 'fa'] as const) {
       exact: true,
     });
     const empty = page.getByText(t('settings.addresses.noAddresses', locale), { exact: true });
-    const noProfile = page.getByText(addressesText('profileRequired', locale), { exact: true });
+    const noProfile = page.getByText(addressWorkspaceText('profileRequired', locale), {
+      exact: true,
+    });
     const loadError = page
       .getByRole('alert')
       .filter({ hasText: t('settings.addresses.error.load', locale) });
@@ -477,9 +481,8 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(field).toHaveAccessibleName(t(`settings.addresses.form.${key}`, locale));
       await expect(field).toHaveAttribute('aria-required', 'true');
     }
-    await province.selectOption(provinceId);
-    await expect(city.locator(`option[value="${cityId}"]`)).toHaveCount(1);
-    await city.selectOption(cityId);
+    await selectAddressLocation(page, province, locale === 'fa' ? 'تهران' : 'Tehran');
+    await selectAddressLocation(page, city, locale === 'fa' ? 'تهران' : 'Tehran');
     await full.fill(' ');
     await postal.fill('0000000000');
     await postal.press('Enter');
@@ -607,7 +610,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(empty).toHaveCount(0);
     await expect(add).toHaveCount(0);
     await expect(
-      page.getByRole('link', { name: addressesText('openDashboard', locale), exact: true })
+      page.getByRole('link', { name: addressWorkspaceText('openDashboard', locale), exact: true })
     ).toHaveAttribute('href', '/app');
     expect(state.effects).toEqual({ profile: 0, create: 1, edit: 1, history: 0, audit: 2 });
     expect(state.companionWrites).toEqual([]);

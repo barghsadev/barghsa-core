@@ -1,3 +1,4 @@
+import { selectAddressLocation } from './address-location-fixture';
 import { randomUUID } from 'node:crypto';
 import { test, expect } from './upload-fixture';
 import { t } from '@barghsa/i18n/app';
@@ -551,8 +552,16 @@ for (const [locale, funding] of [
       })
       .click();
     await expect(page).toHaveURL(/\/settings\/addresses\/new\?/);
-    await page.locator('#addresses-field-1').selectOption(address.provinceId);
-    await page.locator('#addresses-field-2').selectOption(address.cityId);
+    await selectAddressLocation(
+      page,
+      page.locator('#addresses-field-1'),
+      locale === 'fa' ? 'تهران' : 'Tehran'
+    );
+    await selectAddressLocation(
+      page,
+      page.locator('#addresses-field-2'),
+      locale === 'fa' ? 'تهران' : 'Tehran'
+    );
     await page.locator('#addresses-field-3').fill(addedAddress.fullAddress);
     await page.locator('#addresses-field-4').fill(addedAddress.postalCode);
     // The journey freezes Date/timers; expire the prior success toast as production would.

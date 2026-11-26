@@ -4,6 +4,8 @@ import { fullNavigation } from './navigation-fixture';
 import { t } from '@barghsa/i18n/app';
 import { t as crmText } from '@barghsa/i18n/crm';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
+import { selectAddressLocation } from './address-location-fixture';
+import { addressWorkspaceText } from '../src/pages/address-workspace-text';
 
 const profileId = '11111111-1111-4111-8111-111111111111';
 const p1 = '22222222-2222-4222-8222-222222222222';
@@ -17,6 +19,7 @@ async function fixture(page: Page, locale: Locale) {
   const state = {
     provinceFailed: true,
     cityInvalid: true,
+    savedLocationInactive: false,
     writeFailed: true,
     validationFields: [] as string[],
     writeGate: null as Promise<void> | null,
@@ -178,7 +181,7 @@ async function fixture(page: Page, locale: Locale) {
       json: [
         { id: p1, nameFa: 'تهران', nameEn: 'Tehran' },
         { id: p2, nameFa: 'فارس', nameEn: 'Fars' },
-      ],
+      ].filter(({ id }) => !state.savedLocationInactive || id !== p1),
     })
   );
   for (const [provinceId, cityId, nameFa, nameEn] of [
@@ -187,14 +190,17 @@ async function fixture(page: Page, locale: Locale) {
   ] as const)
     await page.route(`**/api/geography/provinces/${provinceId}/cities`, (route) =>
       route.fulfill({
-        json: [
-          {
-            id: cityId,
-            provinceId: provinceId === p2 && state.cityInvalid ? p1 : provinceId,
-            nameFa,
-            nameEn,
-          },
-        ],
+        json:
+          state.savedLocationInactive && provinceId === p1
+            ? []
+            : [
+                {
+                  id: cityId,
+                  provinceId: provinceId === p2 && state.cityInvalid ? p1 : provinceId,
+                  nameFa,
+                  nameEn,
+                },
+              ],
       })
     );
   return state;
@@ -241,7 +247,9 @@ for (const locale of ['en', 'fa'] as const)
         page.getByRole('button', { name: t('settings.addresses.retry', locale), exact: true });
       await retry().click();
       await expect(province).toBeEnabled();
-      await province.selectOption(p2);
+      if (surface === 'addresses')
+        await selectAddressLocation(page, province, locale === 'fa' ? 'فارس' : 'Fars');
+      else await province.selectOption(p2);
       await expect(geographyError('settings.addresses.error.loadCities')).toBeVisible();
       await expect(city).toBeDisabled();
       await expect(city).toHaveValue('');
@@ -267,9 +275,14 @@ for (const locale of ['en', 'fa'] as const)
       state.cityInvalid = false;
       await retry().click();
       await expect(city).toBeEnabled();
-      await city.selectOption(c2);
+      if (surface === 'addresses')
+        await selectAddressLocation(page, city, locale === 'fa' ? 'شیراز' : 'Shiraz');
+      else await city.selectOption(c2);
       await expect(full).toHaveValue('Retained address draft');
-      await expect(city).toHaveAttribute('data-slot', 'dependent-select');
+      await expect(city).toHaveAttribute(
+        'data-slot',
+        surface === 'addresses' ? 'combobox-input' : 'dependent-select'
+      );
       const editor = `[data-slot=settings-${surface === 'addresses' ? 'address' : 'profile'}-form]`;
       const scan = new AxeBuilder({ page }).include(editor);
       expect((await scan.withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual(
@@ -326,6 +339,28 @@ for (const locale of ['en', 'fa'] as const)
   }
 
 for (const locale of ['en', 'fa'] as const)
+  test(`saved addresses keep historical location names when editing the street (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, locale);
+    state.provinceFailed = state.cityInvalid = state.writeFailed = false;
+    state.savedLocationInactive = true;
+    await page.goto(`/settings/addresses/${addressId}/edit`);
+
+    const province = page.locator('#addresses-field-1');
+    const city = page.locator('#addresses-field-2');
+    const locationName = locale === 'fa' ? 'تهران' : 'Tehran';
+    await expect(province).toHaveValue(locationName);
+    await expect(city).toHaveValue(locationName);
+    await page.locator('#addresses-field-3').fill('Updated street, same location');
+    await page
+      .getByRole('button', { name: t('settings.addresses.form.save', locale), exact: true })
+      .click();
+    await expect(page).toHaveURL(`/settings/addresses/${addressId}`);
+    expect(state.writes).toEqual([{ fullAddress: 'Updated street, same location' }]);
+  });
+
+for (const locale of ['en', 'fa'] as const)
   for (const operation of ['create', 'edit'] as const)
     test(`address ${operation} validates inline, retains server-rejected values and blocks busy submits (${locale})`, async ({
       page,
@@ -363,10 +398,19 @@ for (const locale of ['en', 'fa'] as const)
         await expect(full).toHaveValue('Saved address');
         await expect(postal).toHaveValue('1234567890');
       }
-      await province.selectOption(p2);
+      await selectAddressLocation(page, province, locale === 'fa' ? 'فارس' : 'Fars');
       await expect(city).toHaveValue('');
       await expect(city).toBeEnabled();
-      await city.selectOption(c2);
+      await city.fill('Unavailable');
+      await expect(page.getByText(addressWorkspaceText('noMatch', locale))).toBeVisible();
+      await expect(page.getByRole('option')).toHaveCount(0);
+      await city.fill(locale === 'fa' ? 'SHIR' : 'شیرا');
+      await expect(
+        page.getByRole('option', { name: locale === 'fa' ? 'شیراز' : 'Shiraz', exact: true })
+      ).toBeVisible();
+      await city.press('ArrowDown');
+      await city.press('Enter');
+      await expect(city).toHaveValue(locale === 'fa' ? 'شیراز' : 'Shiraz');
       await full.fill(' ');
       await postal.fill('0000000000');
       await save.click();

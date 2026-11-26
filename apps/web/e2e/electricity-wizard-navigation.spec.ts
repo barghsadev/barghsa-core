@@ -1,3 +1,4 @@
+import { selectAddressLocation } from './address-location-fixture';
 import { randomUUID } from 'node:crypto';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { approveRiskConfirmation } from './confirmation-fixture';
@@ -425,8 +426,16 @@ for (const locale of ['en', 'fa'] as const) {
     await page
       .getByRole('button', { name: t('electricity.order.addAddress', locale), exact: true })
       .click();
-    await page.locator('#addresses-field-1').selectOption(added.provinceId);
-    await page.locator('#addresses-field-2').selectOption(added.cityId);
+    await selectAddressLocation(
+      page,
+      page.locator('#addresses-field-1'),
+      locale === 'fa' ? 'تهران' : 'Tehran'
+    );
+    await selectAddressLocation(
+      page,
+      page.locator('#addresses-field-2'),
+      locale === 'fa' ? 'تهران' : 'Tehran'
+    );
     await page.locator('#addresses-field-3').fill(added.fullAddress);
     await page.locator('#addresses-field-4').fill(added.postalCode);
     await page
