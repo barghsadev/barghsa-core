@@ -80,7 +80,12 @@ it.each([
   await change(name, value);
   await submit();
   expect(field(name).getAttribute('aria-invalid')).toBe('true');
-  expect(document.getElementById(field(name).getAttribute('aria-describedby')!)).not.toBeNull();
+  const descriptions = field(name)
+    .getAttribute('aria-describedby')!
+    .split(/\s+/)
+    .map((id) => document.getElementById(id));
+  expect(descriptions.every(Boolean)).toBe(true);
+  expect(descriptions.some((element) => element?.getAttribute('role') === 'alert')).toBe(true);
   await act(
     async () =>
       new Promise<void>((resolve) =>
@@ -101,7 +106,10 @@ it('allows text repair at a historical location while catalogues are unavailable
   await render();
   await change('fullAddress', 'Repaired street');
   await submit();
-  expect(document.querySelector('[role=dialog]')?.textContent).toContain('Repaired street');
+  const update = document.querySelector('[role=dialog] [aria-label="Updated address"]');
+  expect(update?.textContent).toContain('Repaired street');
+  expect(update?.textContent).toContain('Original province');
+  expect(update?.textContent).toContain('Original city');
   expect(host.querySelector('fieldset')?.disabled).toBe(true);
 });
 it.each(['en', 'fa'])(

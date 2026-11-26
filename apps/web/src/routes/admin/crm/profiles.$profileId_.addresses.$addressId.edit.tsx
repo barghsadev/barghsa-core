@@ -1,4 +1,5 @@
 import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { CrmAddressEditor } from '../../../components/CrmAddressEditor.js';
 import { StaffRecordLoading } from '../../../components/RouteSkeleton.js';
 
 const Page = lazyRouteComponent(
@@ -8,7 +9,12 @@ const Page = lazyRouteComponent(
 
 function EditProfileAddressRoute() {
   const { profileId, addressId } = Route.useParams();
-  return <Page profileId={profileId} editor={{ kind: 'address', addressId }} />;
+  return (
+    <Page
+      profileId={profileId}
+      editor={{ kind: 'address', addressId, Component: CrmAddressEditor }}
+    />
+  );
 }
 
 export const Route = createFileRoute('/admin/crm/profiles/$profileId_/addresses/$addressId/edit')({

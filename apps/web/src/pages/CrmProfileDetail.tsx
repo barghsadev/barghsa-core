@@ -10,7 +10,7 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useWizardForm as useDraftForm, type WizardFieldBinding } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import type { CrmLegalEditor } from '../components/CrmLegalEditor.js';
-import { CrmAddressEditor } from '../components/CrmAddressEditor.js';
+import type { CrmAddressEditor } from '../components/CrmAddressEditor.js';
 import { CrmLegalDocuments } from '../components/CrmLegalDocuments.js';
 import {
   RecordEditorSection,
@@ -236,7 +236,7 @@ const profileActions = {
 type ProfileEditEntry =
   | { kind: 'contact' }
   | { kind: 'legal'; Component: typeof CrmLegalEditor }
-  | { kind: 'address'; addressId: string }
+  | { kind: 'address'; addressId: string; Component: typeof CrmAddressEditor }
   | { kind: 'action'; action: CrmProfileAction }
   | { kind: 'verification' };
 
@@ -899,7 +899,7 @@ function CrmProfileDetailContent({
               />
             )}
             {editor.kind === 'address' && address && (
-              <CrmAddressEditor
+              <editor.Component
                 profileId={profile.id}
                 address={address}
                 onCancel={returnToProfile}

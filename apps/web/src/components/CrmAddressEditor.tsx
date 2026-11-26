@@ -35,6 +35,12 @@ type AddressFields = Pick<
   EditableCrmAddress,
   'provinceId' | 'cityId' | 'fullAddress' | 'postalCode'
 >;
+type AddressReview = {
+  current: EditableCrmAddress;
+  fields: AddressFields;
+  provinceName: PlaceName | null;
+  cityName: PlaceName | null;
+};
 function placeName(value: unknown): value is PlaceName {
   if (!value || typeof value !== 'object') return false;
   const name = value as Partial<PlaceName>;
@@ -109,7 +115,7 @@ export function CrmAddressEditor({
     messages,
     t('crm.profile.error.generic', locale)
   );
-  const [pending, setPending] = useState<AddressFields | null>(null);
+  const [pending, setPending] = useState<AddressReview | null>(null);
   const provinces = useGeographyOptions('/api/geography/provinces');
   const cities = useGeographyOptions(
     fields.provinceId ? '/api/geography/provinces/' + fields.provinceId + '/cities' : null,
@@ -130,9 +136,18 @@ export function CrmAddressEditor({
   const review = draft.form.handleSubmit((values) => {
     if (!changed || pending) return;
     setPending({
-      ...values,
-      fullAddress: values.fullAddress.trim(),
-      postalCode: normalizeProfileDigits(values.postalCode.trim()),
+      current: address,
+      fields: {
+        ...values,
+        fullAddress: values.fullAddress.trim(),
+        postalCode: normalizeProfileDigits(values.postalCode.trim()),
+      },
+      provinceName:
+        provinces.options.find((option) => option.id === values.provinceId) ??
+        (values.provinceId === address.provinceId ? address.provinceName : null),
+      cityName:
+        cities.options.find((option) => option.id === values.cityId) ??
+        (values.cityId === address.cityId ? address.cityName : null),
     });
   });
   async function saved(value: unknown) {
@@ -150,8 +165,8 @@ export function CrmAddressEditor({
       typeof result.profile.updatedAt !== 'string' ||
       !Number.isFinite(Date.parse(result.profile.updatedAt)) ||
       !current ||
-      current.id !== address.id ||
-      current.mainAddress !== address.mainAddress ||
+      current.id !== pending.current.id ||
+      current.mainAddress !== pending.current.mainAddress ||
       typeof current.updatedAt !== 'string' ||
       !/\.\d{6}Z$/.test(current.updatedAt) ||
       !Number.isFinite(Date.parse(current.updatedAt)) ||
@@ -159,7 +174,9 @@ export function CrmAddressEditor({
       !Number.isFinite(Date.parse(current.createdAt)) ||
       !placeName(current.provinceName) ||
       !placeName(current.cityName) ||
-      (Object.keys(pending) as (keyof AddressFields)[]).some((key) => current[key] !== pending[key])
+      (Object.keys(pending.fields) as (keyof AddressFields)[]).some(
+        (key) => current[key] !== pending.fields[key]
+      )
     )
       throw new Error('Invalid CRM address acknowledgement');
     onSaved(current, result.profile.updatedAt);
@@ -336,25 +353,71 @@ export function CrmAddressEditor({
       </Button>
       {pending && (
         <TeamActionDialog
+          focusSummary
           action={{
             title: t('crm.address.confirm', locale),
-            description: [
-              profileId,
-              address.fullAddress,
-              '→',
-              pending.fullAddress,
-              pending.postalCode,
-              label(
-                provinces.options.find((p) => p.id === pending.provinceId) ?? address.provinceName
-              ),
-              label(cities.options.find((c) => c.id === pending.cityId) ?? address.cityName),
-            ].join(' · '),
+            description: t('crm.address.reviewHelp', locale),
             path: '/api/crm/profiles/' + profileId,
             method: 'PUT',
-            body: { address: { id: address.id, expectedUpdatedAt: address.updatedAt, ...pending } },
+            body: {
+              address: {
+                id: pending.current.id,
+                expectedUpdatedAt: pending.current.updatedAt,
+                ...pending.fields,
+              },
+            },
             forbiddenMessage: t('crm.profile.error.accessDenied', locale),
             conflictMessage: t('crm.profile.conflict', locale),
           }}
+          summary={
+            <div className="grid gap-3 sm:grid-cols-2">
+              {[
+                { key: 'currentAddress', value: pending.current },
+                {
+                  key: 'updatedAddress',
+                  value: {
+                    ...pending.fields,
+                    provinceName: pending.provinceName,
+                    cityName: pending.cityName,
+                  },
+                },
+              ].map(({ key, value }) => {
+                const heading = t(`crm.address.${key}`, locale);
+                return (
+                  <section
+                    key={key}
+                    aria-label={heading}
+                    className={`min-w-0 space-y-2 rounded-lg border p-3 [overflow-wrap:anywhere] ${key === 'updatedAddress' ? 'border-primary/25 bg-primary/5' : 'bg-muted/25'}`}
+                  >
+                    <h3 className="text-sm font-semibold">{heading}</h3>
+                    <p dir="auto" className="whitespace-pre-wrap text-sm">
+                      {value.fullAddress}
+                    </p>
+                    <dl className="grid grid-cols-[minmax(0,1fr)_minmax(0,auto)] gap-3 border-t pt-2 text-xs">
+                      <div>
+                        <dt className="text-muted-foreground">
+                          {t('crm.address.locationDetails', locale)}
+                        </dt>
+                        <dd>
+                          <bdi>{label(value.provinceName)}</bdi>
+                          {' · '}
+                          <bdi>{label(value.cityName)}</bdi>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">
+                          {t('crm.profile.field.postalCode', locale)}
+                        </dt>
+                        <dd>
+                          <bdi dir="ltr">{value.postalCode}</bdi>
+                        </dd>
+                      </div>
+                    </dl>
+                  </section>
+                );
+              })}
+            </div>
+          }
           onClose={() => setPending(null)}
           onSuccess={saved}
           onValidationError={onValidationError}

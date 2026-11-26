@@ -223,9 +223,24 @@ for (const locale of ['fa', 'en'] as const) {
     });
     await save.click();
     const dialog = page.getByRole('dialog');
-    await expect(dialog).toContainText('Original street');
-    await expect(dialog).toContainText('New street');
-    await expect(dialog).toContainText(locale === 'fa' ? fixture.next.nameFa : fixture.next.nameEn);
+    await expect(
+      dialog.getByRole('heading', { name: t('crm.address.confirm', locale) })
+    ).toBeFocused();
+    const currentAddress = dialog.getByRole('region', {
+      name: locale === 'fa' ? 'آدرس فعلی' : 'Current address',
+    });
+    const updatedAddress = dialog.getByRole('region', {
+      name: locale === 'fa' ? 'آدرس جدید' : 'Updated address',
+    });
+    await expect(currentAddress).toContainText('Original street');
+    await expect(currentAddress).toContainText('1234567890');
+    await expect(currentAddress).toContainText(locale === 'fa' ? 'محل قبلی' : 'Original place');
+    await expect(updatedAddress).toContainText('New street');
+    await expect(updatedAddress).toContainText('2345678901');
+    await expect(updatedAddress).toContainText(
+      locale === 'fa' ? fixture.next.nameFa : fixture.next.nameEn
+    );
+    await expect(dialog).not.toContainText(profileId);
     const confirm = dialog.getByRole('button', {
       name: locale === 'fa' ? 'تأیید' : 'Confirm',
       exact: true,

@@ -443,7 +443,9 @@ for (const locale of ['en', 'fa'] as const)
           .getByRole('alert')
           .filter({ hasText: t('settings.addresses.validation.fullAddress', locale) })
       ).toBeVisible();
-      await expect(postal).toHaveAttribute('aria-describedby', 'addresses-field-4-message');
+      await expect(postal).toHaveAccessibleDescription(
+        `${tSettingsForms('postalCodeHelp', locale)} ${t('settings.addresses.validation.postalCode', locale)}`
+      );
       expect(state.writes).toHaveLength(0);
       await full.fill('  Retained address correction  ');
       await postal.fill('2345678901');
