@@ -73,8 +73,10 @@ it.each(['en', 'fa'] as const)(
       }
       expect(host.textContent).toContain('Bank Mellat');
       expect(host.textContent).toContain('—');
-      if (view === 'table') expect(host.querySelectorAll('th[scope="col"]')).toHaveLength(8);
-      else expect(host.querySelectorAll('li dl')).toHaveLength(2);
+      if (view === 'table') {
+        expect(host.querySelectorAll('th[scope="col"]')).toHaveLength(5);
+        expect(host.querySelectorAll('tbody td dl')).toHaveLength(receipts.length);
+      } else expect(host.querySelectorAll('li dl')).toHaveLength(2);
       await act(async () => host.querySelectorAll<HTMLButtonElement>('button')[1]!.click());
       expect(onOpen).toHaveBeenLastCalledWith(receipts[1]!.receiptId);
     }

@@ -174,7 +174,8 @@ it('switches receipt views without refetching or clearing an open rejection draf
   });
   const count = fetcher.mock.calls.length;
   await click('Table');
-  expect(container.querySelectorAll('th[scope="col"]')).toHaveLength(8);
+  expect(container.querySelectorAll('th[scope="col"]')).toHaveLength(5);
+  expect(container.querySelector('tbody tr td dl')).not.toBeNull();
   expect(container.querySelector<HTMLTextAreaElement>('#invoice-receipt-reason')!.value).toBe(
     'Retain bank investigation'
   );

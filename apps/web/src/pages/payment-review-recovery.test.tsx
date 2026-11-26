@@ -206,7 +206,7 @@ it('an obsolete financial denial cannot clear a newer selected receipt', async (
   hold = true;
   await click('Review latest details');
   const select = [...container.querySelectorAll<HTMLButtonElement>('nav button')].find((b) =>
-    b.textContent?.includes('TRK-second')
+    b.getAttribute('aria-label')?.endsWith('TRK-second')
   )!;
   await approveVisibleConfirmation();
   await act(async () => select.click());

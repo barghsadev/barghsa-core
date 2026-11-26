@@ -80,7 +80,10 @@ it.each(['en', 'fa'] as const)(
         }).format(new Date('2026-09-01T00:00:00Z'))
       );
       expect(host.querySelectorAll('button[aria-current="true"]')).toHaveLength(1);
-      if (view === 'table') expect(host.querySelectorAll('th[scope="col"]')).toHaveLength(10);
+      if (view === 'table') {
+        expect(host.querySelectorAll('th[scope="col"]')).toHaveLength(5);
+        expect(host.querySelectorAll('tbody td dl')).toHaveLength(2);
+      }
       await act(async () => host.querySelectorAll<HTMLButtonElement>('button')[1]!.click());
       expect(onSelect).toHaveBeenLastCalledWith(second.transactionId);
     }
