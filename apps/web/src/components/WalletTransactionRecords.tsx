@@ -177,8 +177,12 @@ export function WalletTransactionRecords({
       : t(`invoices.activity.description.${item.state}`, locale);
   };
   const description = (item: WalletTransaction) => (
-    <div className="flex min-w-0 flex-col gap-2">
-      <p className="text-foreground">{descriptionText(item)}</p>
+    <div
+      className={
+        staff ? 'flex min-w-0 flex-col gap-2' : 'min-w-0 space-y-1 text-xs text-muted-foreground'
+      }
+    >
+      <p className={staff ? 'text-foreground' : undefined}>{descriptionText(item)}</p>
       {item.description && (
         <p className="break-words [overflow-wrap:anywhere]" dir="auto">
           {item.description}
@@ -275,27 +279,56 @@ export function WalletTransactionRecords({
         rowKey={(item) => item.id}
         renderExpandedRow={(item) => opened.has(item.id) && details(item)}
         columns={[
-          { id: 'date', label: word('date'), render: date },
-          { id: 'type', label: word('type'), render: type },
-          { id: 'state', label: word('state'), render: state },
-          { id: 'amount', label: word('amount'), render: amount },
-          { id: 'id', label: word('transactionId'), render: (item) => identity(item.id) },
-          { id: 'reference', label: word('reference'), render: reference },
-          { id: 'description', label: word('description'), render: description },
           {
-            id: 'bank',
-            label: receiptLabel('bankName'),
-            render: (item: WalletTransaction) => (
-              <span className="break-words [overflow-wrap:anywhere]" dir="auto">
-                {item.bankReceipt?.bankName ?? '—'}
-              </span>
+            id: 'type',
+            label: word('type'),
+            render: (item) => (
+              <div className="min-w-0 space-y-1">
+                {type(item)}
+                {description(item)}
+              </div>
             ),
           },
-          { id: 'deposit', label: receiptLabel('paymentDate'), render: deposit },
+          { id: 'state', label: word('state'), render: state },
+          { id: 'amount', label: word('amount'), render: amount },
           {
-            id: 'transfer',
-            label: receiptLabel('payerReference'),
-            render: (item: WalletTransaction) => identity(item.bankReceipt?.payerReference),
+            id: 'activity',
+            label: t('recordTable.activity', locale),
+            render: (item) => (
+              <TableCellDetails
+                fields={[
+                  { id: 'date', label: word('date'), value: date(item) },
+                  { id: 'transaction', label: word('transactionId'), value: identity(item.id) },
+                  ...(item.refId
+                    ? [{ id: 'reference', label: word('reference'), value: reference(item) }]
+                    : []),
+                ]}
+              />
+            ),
+          },
+          {
+            id: 'receipt',
+            label: word('source.bank_receipt'),
+            render: (item) =>
+              item.bankReceipt ? (
+                <TableCellDetails
+                  fields={[
+                    {
+                      id: 'bank',
+                      label: receiptLabel('bankName'),
+                      value: item.bankReceipt.bankName ?? '—',
+                    },
+                    { id: 'deposit', label: receiptLabel('paymentDate'), value: deposit(item) },
+                    {
+                      id: 'transfer',
+                      label: receiptLabel('payerReference'),
+                      value: identity(item.bankReceipt.payerReference),
+                    },
+                  ]}
+                />
+              ) : (
+                '—'
+              ),
           },
           {
             id: 'details',
@@ -347,7 +380,12 @@ export function WalletTransactionRecords({
               ) : (
                 description(item)
               )}
-              <dl className="grid min-w-0 gap-3 text-sm sm:grid-cols-2">
+              <dl
+                className={cn(
+                  'grid min-w-0 gap-3 text-sm sm:grid-cols-2',
+                  !staff && 'border-t pt-3'
+                )}
+              >
                 <div>
                   <dt className="text-muted-foreground">{word('transactionId')}</dt>
                   <dd>{identity(item.id)}</dd>

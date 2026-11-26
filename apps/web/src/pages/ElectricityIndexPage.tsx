@@ -5,11 +5,12 @@ import {
 } from '../lib/electricity-catalogue.js';
 import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { Badge, Button, ListPage, PageLoading, buttonVariants } from '@barghsa/ui';
+import { Badge, Button, ListPage, PageHeader, buttonVariants } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/workspace';
 import { shellText } from '@barghsa/i18n/shell';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 
 export default function ElectricityIndexPage() {
   const locale = useLocale();
@@ -46,39 +47,42 @@ export default function ElectricityIndexPage() {
   }, [revision]);
 
   return (
-    <div className="flex flex-col gap-6" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
-      <header className="space-y-5 rounded-2xl border bg-card p-5 sm:p-8">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          {shellText('buyElectricity', locale)}
-        </h1>
-        <div className="flex flex-wrap items-center gap-2">
-          {offersStandardOrder && state === 'ready' && (
+    <div
+      className="mx-auto flex w-full max-w-5xl flex-col gap-6"
+      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+    >
+      <PageHeader
+        title={shellText('buyElectricity', locale)}
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            {offersStandardOrder && state === 'ready' && (
+              <Link
+                to="/electricity/orders/new"
+                className={buttonVariants({ className: 'min-h-11' })}
+              >
+                {t('electricity.catalogue.createDraft', locale)}
+              </Link>
+            )}
+            {offersStandardOrder && state === 'loading' && (
+              <Button disabled className="min-h-11">
+                {t('electricity.catalogue.createDraft', locale)}
+              </Button>
+            )}
             <Link
-              to="/electricity/orders/new"
-              className={buttonVariants({ className: 'min-h-11' })}
+              to="/electricity/orders/new/advanced"
+              className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
             >
-              {t('electricity.catalogue.createDraft', locale)}
+              {t('electricity.catalogue.advancedOrder', locale)}
             </Link>
-          )}
-          {offersStandardOrder && state === 'loading' && (
-            <Button disabled className="min-h-11">
-              {t('electricity.catalogue.createDraft', locale)}
-            </Button>
-          )}
-          <Link
-            to="/electricity/orders/new/advanced"
-            className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
-          >
-            {t('electricity.catalogue.advancedOrder', locale)}
-          </Link>
-          <Link
-            to="/electricity/orders"
-            className={buttonVariants({ variant: 'ghost', className: 'min-h-11' })}
-          >
-            {t('electricity.orders.title', locale)}
-          </Link>
-        </div>
-      </header>
+            <Link
+              to="/electricity/orders"
+              className={buttonVariants({ variant: 'ghost', className: 'min-h-11' })}
+            >
+              {t('electricity.orders.title', locale)}
+            </Link>
+          </div>
+        }
+      />
       <ListPage role="region" aria-labelledby="electricity-comparison">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 id="electricity-comparison" className="text-xl font-semibold">
@@ -101,7 +105,13 @@ export default function ElectricityIndexPage() {
           empty={false}
           emptyView={null}
           retainContent={!!products.length && state !== 'denied'}
-          loadingView={<PageLoading label={t('electricity.catalogue.loading', locale)} />}
+          loadingView={
+            <RecordListSkeleton
+              label={t('electricity.catalogue.loading', locale)}
+              view="card"
+              headings={[]}
+            />
+          }
           errorView={
             state === 'denied' ? (
               <p role="alert">{t('electricity.catalogue.denied', locale)}</p>
@@ -137,7 +147,7 @@ export default function ElectricityIndexPage() {
                       <h3 className="text-base font-semibold" dir="auto">
                         {title}
                       </h3>
-                      <Badge variant={product.orderable ? 'secondary' : 'outline'}>
+                      <Badge variant={product.orderable ? 'success' : 'outline'}>
                         {t(
                           product.orderable
                             ? 'electricity.catalogue.available'
@@ -162,7 +172,7 @@ export default function ElectricityIndexPage() {
                         </p>
                       )}
                   </div>
-                  <dl className="grid grid-cols-2 gap-3 text-sm">
+                  <dl className="grid grid-cols-2 gap-3 border-t pt-3 text-sm lg:border-s lg:border-t-0 lg:ps-5 lg:pt-0">
                     <div className="min-w-0 space-y-1">
                       <dt className="text-muted-foreground">
                         {t('electricity.catalogue.price', locale)}

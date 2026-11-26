@@ -99,7 +99,7 @@ it.each(['table', 'card'] as const)(
       host.querySelector('[data-slot=badge][data-variant=destructive]')?.textContent
     ).toContain('Rejected');
     if (view === 'table') {
-      expect(host.querySelectorAll('th[scope=col]')).toHaveLength(11);
+      expect(host.querySelectorAll('th[scope=col]')).toHaveLength(6);
       expect(host.querySelector('caption')?.textContent).toBe('Transaction history · Table');
     } else
       expect(host.querySelector('ol')?.getAttribute('aria-label')).toBe(

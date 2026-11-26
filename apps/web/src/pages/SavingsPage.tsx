@@ -2,13 +2,14 @@ import { Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 import { tSaving } from '@barghsa/i18n/saving';
 import {
-  LoadingStatus,
+  Badge,
   Button,
   Card,
   CardContent,
   ListPage,
   ListRefreshButton,
   PageHeader,
+  Skeleton,
   buttonVariants,
 } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
@@ -101,7 +102,28 @@ export function SavingsPage() {
           error={state === 'error' || state === 'denied'}
           empty={!plans.length}
           retainContent={!!plans.length && state !== 'denied'}
-          loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+          loadingView={
+            <div role="status" aria-label={copy('loading')} data-slot="saving-catalogue-skeleton">
+              <span className="sr-only">{copy('loading')}</span>
+              <div aria-hidden="true" className="grid gap-5 lg:grid-cols-2">
+                {[1, 2].map((card) => (
+                  <div key={card} className="space-y-4 rounded-xl border bg-card p-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <Skeleton className="h-5 w-2/3 max-w-52" />
+                      <Skeleton className="h-5 w-20 rounded-full" />
+                    </div>
+                    <Skeleton className="h-4 w-3/4" />
+                    <div className="space-y-2 border-t pt-4">
+                      <Skeleton className="h-3 w-24" />
+                      <Skeleton className="h-6 w-36" />
+                    </div>
+                    <Skeleton className="h-24 rounded-lg" />
+                    <Skeleton className="h-11 w-32" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          }
           errorView={
             state === 'denied' ? (
               <p role="alert">{copy('catalogueDenied')}</p>
@@ -127,20 +149,22 @@ export function SavingsPage() {
                         <p className="mt-1 text-sm text-muted-foreground">{description(plan)}</p>
                       )}
                     </div>
-                    <span className="shrink-0 rounded-full bg-muted px-3 py-1 text-xs">
+                    <Badge variant={plan.available ? 'success' : 'outline'}>
                       {copy(plan.available ? 'available' : 'unavailable')}
-                    </span>
+                    </Badge>
                   </div>
-                  <p>
-                    <span className="text-muted-foreground">{copy('planPrice')}:</span>{' '}
-                    <bdi className="font-semibold">{price(plan.price)}</bdi>
-                  </p>
+                  <dl className="border-t pt-4">
+                    <dt className="text-sm text-muted-foreground">{copy('planPrice')}</dt>
+                    <dd className="text-lg font-semibold">
+                      <bdi>{price(plan.price)}</bdi>
+                    </dd>
+                  </dl>
                   <section className="space-y-2">
                     <h3 className="font-medium">{copy('equipment')}</h3>
                     <ul className="divide-y rounded-md border px-3">
                       {plan.hardware.map((item) => (
                         <li key={item.id} className="py-3">
-                          <div className="flex flex-wrap justify-between gap-3">
+                          <div className="flex flex-wrap justify-between gap-x-3 gap-y-1">
                             <span className="font-medium">{title(item)}</span>
                             <bdi>{price(item.price)}</bdi>
                           </div>
@@ -149,16 +173,18 @@ export function SavingsPage() {
                               {description(item)}
                             </p>
                           )}
-                          {item.status !== 'active' && (
-                            <p className="text-xs text-muted-foreground">{copy('inactive')}</p>
-                          )}
-                          <p className="text-xs text-muted-foreground">
-                            {item.stock_tracking
-                              ? (item.available_count ?? 0) > 0
-                                ? copy('inStock')
-                                : copy('outOfStock')
-                              : copy('subjectToConfirmation')}
-                          </p>
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {item.status !== 'active' && (
+                              <Badge variant="outline">{copy('inactive')}</Badge>
+                            )}
+                            <Badge variant="outline">
+                              {item.stock_tracking
+                                ? (item.available_count ?? 0) > 0
+                                  ? copy('inStock')
+                                  : copy('outOfStock')
+                                : copy('subjectToConfirmation')}
+                            </Badge>
+                          </div>
                         </li>
                       ))}
                     </ul>

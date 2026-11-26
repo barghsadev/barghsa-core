@@ -276,7 +276,7 @@ for (const locale of ['en', 'fa'] as const)
           exact: true,
         });
         await expect(table).toBeVisible();
-        await expect(table.getByRole('columnheader')).toHaveCount(11);
+        await expect(table.getByRole('columnheader')).toHaveCount(6);
         await expect(table).toContainText('TRK-123');
         await expect(table).toContainText('بانک ملی');
         await expect(details).toHaveAttribute('open', '');

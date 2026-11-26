@@ -1,6 +1,6 @@
 import { RecordListSkeleton } from './RecordListSkeleton.js';
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
-import { LoadingStatus, Button, ListPage, ListViewToggle, type ListView } from '@barghsa/ui';
+import { Button, ListPage, ListViewToggle, type ListView } from '@barghsa/ui';
 import { useListQuery, type ListQueryBinding } from '../hooks/useListQuery.js';
 import {
   walletHistoryQueryOptions,
@@ -9,6 +9,7 @@ import {
 } from '../lib/wallet-history-query.js';
 import { WalletHistoryFilters } from './WalletHistoryFilters.js';
 import { t, type Locale } from '@barghsa/i18n/workspace';
+import { tWalletReceipts } from '@barghsa/i18n/wallet-receipts';
 import { WalletTransactionRecords, type WalletTransaction } from './WalletTransactionRecords.js';
 import { useListView } from '../hooks/useListView.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -322,21 +323,18 @@ function HistoryPage({
         empty={!page?.transactions.length}
         retainContent={!!page?.transactions.length}
         loadingView={
-          staff ? (
-            <RecordListSkeleton
-              label={label('loading')}
-              view={view}
-              headings={[
-                label('type'),
-                label('state'),
-                label('amount'),
-                t('recordTable.activity', locale),
-                label('source'),
-              ]}
-            />
-          ) : (
-            <LoadingStatus>{label('loading')}</LoadingStatus>
-          )
+          <RecordListSkeleton
+            label={label('loading')}
+            view={view}
+            headings={[
+              label('type'),
+              label('state'),
+              label('amount'),
+              t('recordTable.activity', locale),
+              staff ? label('source') : label('source.bank_receipt'),
+              ...(!staff ? [tWalletReceipts('wallet.receipt.details', locale)] : []),
+            ]}
+          />
         }
         errorView={
           <div className="flex flex-col gap-2">
