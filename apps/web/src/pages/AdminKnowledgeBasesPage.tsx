@@ -1,4 +1,5 @@
 import {
+  ChevronDownIcon,
   Eye as TableEyeIcon,
   Pencil as TablePencilIcon,
   Trash2 as TableTrash2Icon,
@@ -27,6 +28,7 @@ import {
   type MembershipCommand,
 } from '../lib/catalogue-membership.js';
 import { CatalogueQueryEditor } from '../components/CatalogueQueryEditor.js';
+import { boundedCatalogueInteger } from '../lib/catalogue-form.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { FormField } from '@barghsa/ui/form';
 import { RecordListField } from '../components/RecordListField.js';
@@ -266,6 +268,7 @@ function OwnedKnowledgeBasesPage({
   const recordId = workspace?.recordId;
   const isList = !workspace || workspace.view === 'list';
   const heading = useRef<HTMLHeadingElement>(null);
+  const passageSettings = useRef<HTMLDetailsElement>(null);
   const editorInitialized = useRef(false);
   const linkTo = (id: string, action?: 'edit' | 'documents' | 'ingestion') => ({
     to:
@@ -294,6 +297,18 @@ function OwnedKnowledgeBasesPage({
   const ownedFields = useActionFieldErrors(form.form, messages, copy('invalid'));
   const [draftOpen, setDraftOpen] = useState(false);
   const draft = draftOpen ? form.values : null;
+  const passageSize = draft ? boundedCatalogueInteger(draft.chunkSize, 100, 4000) : null;
+  const passageOverlap = draft ? boundedCatalogueInteger(draft.chunkOverlap, 0, 1000) : null;
+  const passageSummary =
+    passageSize === null ||
+    passageOverlap === null ||
+    passageOverlap >= passageSize ||
+    form.errors.chunkSize ||
+    form.errors.chunkOverlap
+      ? copy('reviewPassageSettings')
+      : copy('passageSummary')
+          .replace('{size}', numbers.number(passageSize))
+          .replace('{overlap}', numbers.number(passageOverlap));
   const resetForm = form.form.reset;
   const setDraft = useCallback(
     (value: Draft | null) => {
@@ -635,6 +650,14 @@ function OwnedKnowledgeBasesPage({
       errorMessages: { 'VALIDATION:PARSE:ZOD_ERROR': label('invalid') },
     });
   }
+  function revealPassageErrors(fields: unknown[]) {
+    if (
+      passageSettings.current &&
+      fields.some((field) => field === 'chunkSize' || field === 'chunkOverlap')
+    ) {
+      passageSettings.current.open = true;
+    }
+  }
   async function save(event: FormEvent) {
     event.preventDefault();
     if (
@@ -651,22 +674,32 @@ function OwnedKnowledgeBasesPage({
     validationBusy.current = true;
     form.setValidationPending(true);
     try {
-      await form.form.handleSubmit((value) => {
-        if (epoch !== generation.current || work.current.disabled || actionRef.current || uncertain)
-          return;
-        validationBusy.current = false;
-        const body = knowledgeBody(value, kindRef.current);
-        formCapture.current = { body, ...(value.id ? { id: value.id } : {}) };
-        propose(
-          `/api/admin/${kind}${value.id ? `/${value.id}` : ''}`,
-          value.id ? 'PUT' : 'POST',
-          label('save'),
-          kind === 'knowledge-bases' && value.audience !== 'admin'
-            ? `${label('confirmSave')} ${label('audienceWarning')}`
-            : label('confirmSave'),
-          body
-        );
-      })();
+      await form.form.handleSubmit(
+        (value) => {
+          if (
+            epoch !== generation.current ||
+            work.current.disabled ||
+            actionRef.current ||
+            uncertain
+          )
+            return;
+          validationBusy.current = false;
+          const body = knowledgeBody(value, kindRef.current);
+          formCapture.current = { body, ...(value.id ? { id: value.id } : {}) };
+          propose(
+            `/api/admin/${kind}${value.id ? `/${value.id}` : ''}`,
+            value.id ? 'PUT' : 'POST',
+            label('save'),
+            kind === 'knowledge-bases' && value.audience !== 'admin'
+              ? `${label('confirmSave')} ${label('audienceWarning')}`
+              : label('confirmSave'),
+            body
+          );
+        },
+        (errors) => {
+          if (epoch === generation.current) revealPassageErrors(Object.keys(errors));
+        }
+      )();
     } finally {
       if (epoch === generation.current) {
         validationBusy.current = false;
@@ -1289,62 +1322,7 @@ function OwnedKnowledgeBasesPage({
                           </div>
                         )}
                       </RecordEditorSection>
-                      <RecordEditorSection
-                        title={copy('indexing')}
-                        description={copy('indexingHelp')}
-                      >
-                        <div className={recordEditorGrid}>
-                          <div className={recordEditorField}>
-                            <Label htmlFor="kb-chunk-size">{label('chunkSize')}</Label>
-                            <Input
-                              {...form.bind('chunkSize')}
-                              id="kb-chunk-size"
-                              type="text"
-                              inputMode="numeric"
-                              dir="ltr"
-                              min={100}
-                              max={4000}
-                              required
-                              aria-required="true"
-                              value={draft.chunkSize}
-                              onChange={(event) =>
-                                form.field('chunkSize')[1](event.target.value as Draft['chunkSize'])
-                              }
-                            />
-                            <CatalogueFieldFeedback
-                              compact
-                              id={form.errorId('chunkSize')}
-                              error={form.errors.chunkSize}
-                              message={messages.chunkSize}
-                            />
-                          </div>
-                          <div className={recordEditorField}>
-                            <Label htmlFor="kb-chunk-overlap">{label('chunkOverlap')}</Label>
-                            <Input
-                              {...form.bind('chunkOverlap')}
-                              id="kb-chunk-overlap"
-                              type="text"
-                              inputMode="numeric"
-                              dir="ltr"
-                              min={0}
-                              max={1000}
-                              required
-                              aria-required="true"
-                              value={draft.chunkOverlap}
-                              onChange={(event) =>
-                                form.field('chunkOverlap')[1](
-                                  event.target.value as Draft['chunkOverlap']
-                                )
-                              }
-                            />
-                            <CatalogueFieldFeedback
-                              compact
-                              id={form.errorId('chunkOverlap')}
-                              error={form.errors.chunkOverlap}
-                              message={messages.chunkOverlap}
-                            />
-                          </div>
-                        </div>
+                      <RecordEditorSection title={copy('indexing')}>
                         <div className={recordEditorField}>
                           <Label htmlFor="kb-embedding-model">{label('embeddingModel')}</Label>
                           <Input
@@ -1352,11 +1330,10 @@ function OwnedKnowledgeBasesPage({
                             id="kb-embedding-model"
                             dir="auto"
                             maxLength={120}
+                            aria-describedby={form.errorId('vectorEmbeddingModel')}
                             value={draft.vectorEmbeddingModel}
                             onChange={(event) =>
-                              form.field('vectorEmbeddingModel')[1](
-                                event.target.value as Draft['vectorEmbeddingModel']
-                              )
+                              form.field('vectorEmbeddingModel')[1](event.target.value)
                             }
                           />
                           <CatalogueFieldFeedback
@@ -1364,8 +1341,86 @@ function OwnedKnowledgeBasesPage({
                             id={form.errorId('vectorEmbeddingModel')}
                             error={form.errors.vectorEmbeddingModel}
                             message={messages.vectorEmbeddingModel}
+                            hint={copy('embeddingModelHint')}
                           />
                         </div>
+                        <details
+                          key={draft.id ?? 'new'}
+                          id="kb-indexing"
+                          ref={passageSettings}
+                          className="group rounded-lg border bg-muted/25"
+                        >
+                          <summary
+                            className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-lg px-3 py-2 hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden"
+                            aria-labelledby="kb-indexing-label"
+                            aria-describedby="kb-indexing-summary"
+                          >
+                            <span className="min-w-0">
+                              <span id="kb-indexing-label" className="block text-sm font-medium">
+                                {copy('adjustPassageSize')}
+                              </span>
+                              <span
+                                id="kb-indexing-summary"
+                                className="block text-xs text-muted-foreground"
+                              >
+                                {passageSummary}
+                              </span>
+                            </span>
+                            <ChevronDownIcon
+                              aria-hidden="true"
+                              className="size-4 shrink-0 transition-transform group-open:rotate-180 motion-reduce:transition-none"
+                            />
+                          </summary>
+                          <div className="space-y-3 rounded-b-lg border-t bg-card p-3">
+                            <p className="text-xs text-muted-foreground">{copy('indexingHelp')}</p>
+                            <div className={recordEditorGrid}>
+                              <div className={recordEditorField}>
+                                <Label htmlFor="kb-chunk-size">{copy('passageSize')}</Label>
+                                <Input
+                                  {...form.bind('chunkSize')}
+                                  id="kb-chunk-size"
+                                  inputMode="numeric"
+                                  dir="ltr"
+                                  className="max-w-36"
+                                  required
+                                  aria-required="true"
+                                  value={draft.chunkSize}
+                                  onChange={(event) =>
+                                    form.field('chunkSize')[1](event.target.value)
+                                  }
+                                />
+                                <CatalogueFieldFeedback
+                                  compact
+                                  id={form.errorId('chunkSize')}
+                                  error={form.errors.chunkSize}
+                                  message={messages.chunkSize}
+                                />
+                              </div>
+                              <div className={recordEditorField}>
+                                <Label htmlFor="kb-chunk-overlap">{copy('passageOverlap')}</Label>
+                                <Input
+                                  {...form.bind('chunkOverlap')}
+                                  id="kb-chunk-overlap"
+                                  inputMode="numeric"
+                                  dir="ltr"
+                                  className="max-w-36"
+                                  required
+                                  aria-required="true"
+                                  value={draft.chunkOverlap}
+                                  onChange={(event) =>
+                                    form.field('chunkOverlap')[1](event.target.value)
+                                  }
+                                />
+                                <CatalogueFieldFeedback
+                                  compact
+                                  id={form.errorId('chunkOverlap')}
+                                  error={form.errors.chunkOverlap}
+                                  message={messages.chunkOverlap}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </details>
                       </RecordEditorSection>
                     </>
                   )}
@@ -2085,10 +2140,13 @@ function OwnedKnowledgeBasesPage({
           }
           onPendingChange={onPendingChange}
           onDenied={scope.deny}
-          onValidationError={(fields) =>
-            (operationCapture.current?.owner ?? documentCapture.current?.owner)?.fields(fields) ??
-            (formCapture.current ? ownedFields(fields) : false)
-          }
+          onValidationError={(fields) => {
+            const owner = operationCapture.current?.owner ?? documentCapture.current?.owner;
+            if (owner) return owner.fields(fields);
+            if (!formCapture.current || !ownedFields(fields)) return false;
+            revealPassageErrors(fields);
+            return true;
+          }}
           onUnconfirmed={unconfirmed}
           summary={
             actionContext ? (

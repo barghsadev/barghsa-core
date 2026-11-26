@@ -1363,12 +1363,16 @@ for (const locale of ['en', 'fa'])
       .click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(name);
     await page.getByLabel(fa ? 'توضیحات' : 'Description', { exact: true }).fill('Meter guidance');
+    await expect(page.locator('#kb-chunk-size')).toBeHidden();
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
     await confirm();
     await page
       .getByRole('link', { name: `${fa ? 'ویرایش' : 'Edit'} ${name}`, exact: true })
       .click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(renamed);
+    await page.locator('#kb-indexing > summary').press('Enter');
+    await page.locator('#kb-chunk-size').fill(fa ? '۱۲۰۰' : '1200');
+    await page.locator('#kb-chunk-overlap').fill(fa ? '۱۸۰' : '180');
     await page.getByRole('button', { name: fa ? 'ذخیره' : 'Save', exact: true }).click();
     await confirm();
     await settleLiveRequests();
@@ -1380,6 +1384,10 @@ for (const locale of ['en', 'fa'])
     ).json()) as Array<{ id: string; title: string; description: string }>;
     const kb = kbs.find((item) => item.title === renamed)!;
     expect(kb.description).toBe('Meter guidance');
+    expect(kb).toMatchObject({
+      chunkingStrategy: { size: 1200, overlap: 180 },
+      vectorEmbeddingModel: null,
+    });
     await expect(page).toHaveURL(`/admin/knowledge-bases/${kb.id}`);
     await page.getByRole('link', { name: fa ? 'اسناد' : 'Documents', exact: true }).click();
     await page

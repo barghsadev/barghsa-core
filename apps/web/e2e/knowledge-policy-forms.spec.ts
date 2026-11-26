@@ -88,7 +88,17 @@ for (const locale of ['en', 'fa'] as const)
       const kbTitle = page.locator('#kb-title'),
         size = page.locator('#kb-chunk-size'),
         overlap = page.locator('#kb-chunk-overlap'),
-        source = page.locator('#kb-source-url');
+        source = page.locator('#kb-source-url'),
+        indexing = page.locator('#kb-indexing'),
+        adjustPassages = indexing.locator('summary');
+      await expect(size).toBeHidden();
+      await expect(page.locator('#kb-embedding-model')).toHaveAccessibleDescription(
+        copy('embeddingModelHint')
+      );
+      await expect(adjustPassages).toHaveAccessibleName(copy('adjustPassageSize'));
+      await expect(adjustPassages).toHaveAccessibleDescription(/800|۸۰۰/);
+      await adjustPassages.press('Enter');
+      await expect(size).toBeVisible();
       for (const field of [
         kbTitle,
         size,
@@ -121,6 +131,8 @@ for (const locale of ['en', 'fa'] as const)
       await button(copy('reset')).click();
       await expect(kbTitle).toHaveValue('Changed stored knowledge');
       await size.fill('');
+      await adjustPassages.press('Enter');
+      await expect(size).toBeHidden();
       await button(kbText('save')).click();
       await expect(size).toBeFocused();
       await size.fill(locale === 'fa' ? '۸۰۰' : '800');
@@ -150,6 +162,8 @@ for (const locale of ['en', 'fa'] as const)
       const secondAddress = page.locator('#kb-source-url-2');
       await expect(secondAddress).toBeFocused();
       await secondAddress.fill('https://two.example.test');
+      await adjustPassages.press('Enter');
+      await expect(size).toBeHidden();
       await button(kbText('save')).click();
       await confirm();
       await expect(size).toBeFocused();
