@@ -125,7 +125,7 @@ for (const locale of ['en', 'fa'] as const)
     await first.click();
     await record.getByRole('link', { name: word('resolve'), exact: true }).click();
     await page.getByLabel(word('resolutionNote'), { exact: true }).fill('Review note');
-    await page.getByRole('button', { name: fa ? 'رفع مغایرت' : 'Resolve', exact: true }).click();
+    await record.getByRole('button', { name: word('reviewResolution'), exact: true }).click();
     await page
       .getByRole('dialog')
       .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })

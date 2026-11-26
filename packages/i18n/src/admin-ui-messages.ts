@@ -508,6 +508,8 @@ export const fa: Record<string, string> = {
   'admin.reconciliation.backToQueue': 'بازگشت به صف مغایرت‌ها',
   'admin.reconciliation.backToCase': 'بازگشت به جزئیات مغایرت',
   'admin.reconciliation.balanceEvidence': 'مقایسه موجودی کیف پول و دفتر گردش',
+  'admin.reconciliation.postedDifference': 'اختلاف موجودی ثبت‌شده',
+  'admin.reconciliation.reservedDifference': 'اختلاف موجودی رزروشده',
   'admin.reconciliation.actionUnavailable': 'این اقدام در وضعیت فعلی مغایرت قابل انجام نیست.',
   'admin.reconciliation.reviewedStatus': 'وضعیت ثبت‌شده را بررسی کردم',
   'admin.reconciliation.reviewTitle': 'بررسی مغایرت مالی',
@@ -552,6 +554,8 @@ export const fa: Record<string, string> = {
   'admin.reconciliation.investigate': 'شروع بررسی',
   'admin.reconciliation.resolve': 'رفع مغایرت',
   'admin.reconciliation.close': 'بستن مغایرت',
+  'admin.reconciliation.reviewResolution': 'بازبینی رفع مغایرت',
+  'admin.reconciliation.reviewClosure': 'بازبینی بستن مغایرت',
   'admin.reconciliation.dismiss': 'بستن جزئیات',
   'admin.reconciliation.note': 'توضیح',
   'admin.reconciliation.resolutionNote': 'شرح رفع مغایرت',
@@ -568,6 +572,8 @@ export const fa: Record<string, string> = {
     'دلیل بستن را بنویسید. توضیح رفع مغایرت در سابقه پرونده می‌ماند.',
   'admin.reconciliation.closureOpenHelp':
     'توضیح دهید چرا این مغایرت به بررسی یا اصلاح بیشتری نیاز ندارد.',
+  'admin.reconciliation.closureOpenExample':
+    'برای نمونه، بررسی صورت‌حساب بانک نشان داد که مبلغ دفتر گردش درست است.',
   'admin.reconciliation.closureExample': 'برای نمونه، نتیجه با صورت‌حساب بانک کنترل شد.',
   'admin.reconciliation.confirm': 'این اقدام برای مغایرت انتخاب‌شده ثبت می‌شود.',
   'admin.reconciliation.changed':
@@ -1532,7 +1538,7 @@ export const en: Record<string, string> = {
   'admin.reconciliation.accessRetry': 'Retry access check',
   'admin.reconciliation.tableTitle': 'Reconciliation results',
   'admin.reconciliation.invalidChoice': 'Choose a valid option.',
-  'admin.reconciliation.invalidNote': 'Enter an explanation of 1–1000 characters.',
+  'admin.reconciliation.invalidNote': 'Enter 1–1000 characters.',
   'admin.reconciliation.validationUnavailable':
     'Validation could not load. Your draft is preserved; retry.',
   'admin.reconciliation.unconfirmed':
@@ -1547,6 +1553,8 @@ export const en: Record<string, string> = {
   'admin.reconciliation.backToQueue': 'Back to reconciliation queue',
   'admin.reconciliation.backToCase': 'Back to exception',
   'admin.reconciliation.balanceEvidence': 'Compare wallet and ledger balances',
+  'admin.reconciliation.postedDifference': 'Recorded posted difference',
+  'admin.reconciliation.reservedDifference': 'Recorded reserved difference',
   'admin.reconciliation.actionUnavailable':
     'This action is unavailable for the exception’s current status.',
   'admin.reconciliation.reviewedStatus': 'I reviewed the saved status',
@@ -1592,6 +1600,8 @@ export const en: Record<string, string> = {
   'admin.reconciliation.investigate': 'Investigate',
   'admin.reconciliation.resolve': 'Resolve',
   'admin.reconciliation.close': 'Close exception',
+  'admin.reconciliation.reviewResolution': 'Review resolution',
+  'admin.reconciliation.reviewClosure': 'Review closure',
   'admin.reconciliation.dismiss': 'Close details',
   'admin.reconciliation.note': 'Explanation',
   'admin.reconciliation.resolutionNote': 'Resolution note',
@@ -1609,6 +1619,8 @@ export const en: Record<string, string> = {
     'Explain why you’re closing the review. The previous resolution stays in the case history.',
   'admin.reconciliation.closureOpenHelp':
     'Explain why this exception needs no further review or correction.',
+  'admin.reconciliation.closureOpenExample':
+    'For example, the ledger and bank statement already agree.',
   'admin.reconciliation.closureExample':
     'For example, the resolution was verified against the bank statement.',
   'admin.reconciliation.confirm': 'Record this action for the selected exception.',

@@ -1,6 +1,7 @@
 import { test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { t } from '@barghsa/i18n/admin-ui';
+import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import AxeBuilder from '@axe-core/playwright';
 import {
   reconciliationItem,
@@ -206,6 +207,8 @@ for (const locale of ['en', 'fa'] as const) {
     await s.openAction('close');
     const closure = page.getByLabel(s.word('closureReason'), { exact: true });
     await expect(closure).toHaveValue('');
+    await expect(closure).toHaveAccessibleDescription(s.word('closureOpenHelp'));
+    await expect(closure).toHaveAttribute('placeholder', s.word('closureOpenExample'));
     await closure.fill('Closure draft belongs to this action');
     await page.getByRole('link', { name: s.word('backToCase'), exact: true }).click();
     await s.button('investigate').click();
@@ -218,16 +221,29 @@ for (const locale of ['en', 'fa'] as const) {
     const note = page.getByLabel(s.word('resolutionNote'), { exact: true });
     await expect(note).toHaveValue('');
     await expect(note).toHaveAttribute('aria-required', 'true');
+    const form = s.record().getByRole('form', { name: s.word('resolve'), exact: true });
+    const balances = form.locator('details');
+    await expect(balances.locator('summary')).toContainText(s.word('postedDifference'));
+    await expect(balances.locator('summary')).toContainText(formatCurrencyIrr('993', locale));
+    await expect(balances.getByText(s.word('walletAmount'), { exact: true })).toBeHidden();
+    await balances.locator('summary').click();
+    await expect(balances.getByText(s.word('walletAmount'), { exact: true })).toBeVisible();
+    await expect(
+      balances.getByText(formatCurrencyIrr('9007199254740993', locale), { exact: true })
+    ).toBeVisible();
+    await balances.locator('summary').click();
     await note.fill('  ');
-    await s.button('resolve').click();
+    await s.button('reviewResolution').click();
     await expect(note).toBeFocused();
     await expect(note).toHaveAttribute('aria-invalid', 'true');
-    await expect(note).toHaveAccessibleDescription(s.word('invalidNote'));
+    await expect(note).toHaveAccessibleDescription(
+      s.word('resolutionHelp') + ' ' + s.word('invalidNote')
+    );
     await expect(note).toHaveValue('  ');
     expect(writes).toEqual([{ verb: 'investigate', body: {} }]);
     await inspect(page, locale, info.project.name, 'validation');
     await note.fill('  Ledger checked  ');
-    await s.button('resolve').click();
+    await s.button('reviewResolution').click();
     await expect(s.dialog().getByText('Ledger checked', { exact: true })).toBeVisible();
     await s.cancel().click();
     await expect(note).toHaveValue('  Ledger checked  ');
@@ -254,12 +270,17 @@ for (const locale of ['en', 'fa'] as const) {
     release();
     await expect(page.getByRole('status').filter({ hasText: s.word('saved') })).toBeVisible();
     await expect(s.record().getByText('Ledger checked', { exact: true })).toBeVisible();
-    await expect(s.button('resolve')).toHaveCount(0);
+    await expect(s.button('reviewResolution')).toHaveCount(0);
     await expect(note).toHaveCount(0);
     await s.openAction('close');
     await expect(closure).toHaveValue('');
+    await expect(closure).toHaveAccessibleDescription(s.word('closureHelp'));
+    await expect(closure).toHaveAttribute('placeholder', s.word('closureExample'));
+    const closureForm = s.record().getByRole('form', { name: s.word('close'), exact: true });
+    await expect(closureForm.getByText(s.word('resolution'), { exact: true })).toBeVisible();
+    await expect(closureForm.getByText('Ledger checked', { exact: true })).toBeVisible();
     await closure.fill('  Close after checking  ');
-    await s.button('close').click();
+    await s.button('reviewClosure').click();
     await expect(s.dialog()).toContainText(s.word('retainedResolution'));
     await expect(s.dialog()).toContainText('Ledger checked');
     await s.confirm().click();
@@ -286,7 +307,7 @@ for (const locale of ['en', 'fa'] as const) {
     await s.openAction('resolve');
     const note = page.getByLabel(s.word('resolutionNote'), { exact: true });
     await note.fill('  Keep this raw draft  ');
-    await s.button('resolve').click();
+    await s.button('reviewResolution').click();
     await s.confirm().click();
     await expect(note).toBeFocused();
     await expect(note).toHaveValue('  Keep this raw draft  ');
@@ -340,7 +361,7 @@ for (const locale of ['en', 'fa'] as const) {
       s.readStatus(503);
       const note = page.getByLabel(s.word('resolutionNote'), { exact: true });
       await note.fill('  Retained raw explanation  ');
-      await s.button('resolve').click();
+      await s.button('reviewResolution').click();
       await s.confirm().click();
       if (result === 'stalled-response') {
         try {
@@ -366,15 +387,15 @@ for (const locale of ['en', 'fa'] as const) {
       await s.button('reviewRetry').click();
       await expect(s.record()).toContainText('Saved original');
       await expect(note).toBeDisabled();
-      await expect(s.button('resolve')).toBeDisabled();
+      await expect(s.button('reviewResolution')).toBeDisabled();
       await s.button('reviewedStatus').click();
       await expect(note).toHaveCount(0);
-      await expect(s.button('resolve')).toHaveCount(0);
+      await expect(s.button('reviewResolution')).toHaveCount(0);
       await s.openAction('close');
       const reason = page.getByLabel(s.word('closureReason'), { exact: true });
       await expect(reason).toHaveValue('');
       await reason.fill('Verified the saved resolution');
-      await s.button('close').click();
+      await s.button('reviewClosure').click();
       await expect(s.dialog()).toContainText(s.word('retainedResolution'));
       await s.confirm().click();
       await expect(page.getByRole('status').filter({ hasText: s.word('saved') })).toBeVisible();
@@ -395,7 +416,7 @@ for (const locale of ['en', 'fa'] as const) {
     await s.openAction('resolve');
     s.readStatus(403);
     await page.getByLabel(s.word('resolutionNote'), { exact: true }).fill('Private raw draft');
-    await s.button('resolve').click();
+    await s.button('reviewResolution').click();
     await s.confirm().click();
     await expect(s.dialog()).toHaveCount(0);
     await expect(page.getByRole('table')).toHaveCount(0);

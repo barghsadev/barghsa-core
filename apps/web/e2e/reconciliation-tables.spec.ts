@@ -117,7 +117,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect.poll(() => !!held).toBe(true);
     await held!.fulfill({ status: 503, json: {} });
     await expect(detail.getByRole('alert')).toBeVisible();
-    await expect(detail.getByRole('button', { name: word('resolve'), exact: true })).toBeDisabled();
+    await expect(
+      detail.getByRole('button', { name: word('reviewResolution'), exact: true })
+    ).toBeDisabled();
     await page.setViewportSize({ width: 900, height: 900 });
     await expect(page.locator('#rex-note')).toHaveValue('Draft during unavailable read');
     hold = false;

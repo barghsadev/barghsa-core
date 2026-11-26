@@ -2,7 +2,13 @@ import { CommandFeedback } from '../components/CommandFeedback.js';
 import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
-import { ClipboardCheckIcon, SearchCheckIcon, CheckIcon, ArchiveIcon } from 'lucide-react';
+import {
+  ClipboardCheckIcon,
+  SearchCheckIcon,
+  CheckIcon,
+  ArchiveIcon,
+  ChevronDownIcon,
+} from 'lucide-react';
 import { QueueEmptyState, statusAlternatives } from '../components/QueueEmptyState.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
@@ -229,12 +235,13 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
   const reviewed = useRef<Item | null>(null);
   const visibleItems = acceptedScope === query ? items : [];
   const locked = validating !== null || !!action || uncertain;
-  const noteError = notes.formState.errors.note;
+  const { errors: noteErrors, isSubmitting: noteSubmitting } = notes.formState;
+  const noteError = noteErrors.note;
   useEffect(() => {
-    if (locked || !noteError || !invalidNoteNeedsFocus.current) return;
+    if (locked || noteSubmitting || !noteError || !invalidNoteNeedsFocus.current) return;
     invalidNoteNeedsFocus.current = false;
     notes.setFocus('note');
-  }, [locked, noteError, notes]);
+  }, [locked, noteSubmitting, noteError, notes]);
 
   function clearWork() {
     ++workGeneration.current;
@@ -552,6 +559,20 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
   const decisionAvailable =
     selected && recordVerb && reconciliationAllowed(selected.status, recordVerb);
   const closing = recordVerb === 'close' || selected?.status === 'resolved';
+  const showDecisionEditor =
+    selected && canResolve && (decisionAvailable || (!recordId && selected.status !== 'closed'));
+  const showDecisionEvidence = !!(recordVerb && showDecisionEditor);
+  const showResolutionInForm = showDecisionEvidence && closing;
+  const closingWithoutResolution = recordVerb === 'close' && !selected?.resolutionNote;
+  const noteHelp = label(
+    recordVerb === 'resolve'
+      ? 'resolutionHelp'
+      : closing
+        ? closingWithoutResolution
+          ? 'closureOpenHelp'
+          : 'closureHelp'
+        : 'decisionHelp'
+  );
   const recoveryCompletesAction =
     fresh && recordVerb && !reconciliationAllowed(fresh.status, recordVerb);
   const readPending = loading || error || accessLoading || accessError;
@@ -586,6 +607,45 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
       ))}
     </div>
   );
+  const balanceDisclosure = balanceCards && (
+    <details className="group min-w-0 rounded-lg border bg-muted/25 text-sm">
+      <summary className="flex min-h-11 cursor-pointer list-none items-start justify-between gap-3 rounded-lg px-3 py-2.5 focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
+        <span className="min-w-0 space-y-1">
+          <span className="block font-medium">{label('balanceEvidence')}</span>
+          <span className="flex flex-wrap gap-x-4 gap-y-1 text-xs group-open:hidden">
+            {balanceEvidence.map(({ kind, difference }) => (
+              <span key={kind} className="flex min-w-0 flex-wrap gap-x-1">
+                <span className="text-muted-foreground">
+                  {label(kind === 'posted' ? 'postedDifference' : 'reservedDifference')}
+                </span>
+                <bdi className="font-medium tabular-nums [overflow-wrap:anywhere]">
+                  {numbers.money(difference)}
+                </bdi>
+              </span>
+            ))}
+          </span>
+        </span>
+        <ChevronDownIcon
+          aria-hidden="true"
+          className="mt-0.5 size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180 motion-reduce:transition-none"
+        />
+      </summary>
+      <div className="px-3 pb-3">{balanceCards}</div>
+    </details>
+  );
+  const recordedResolution = selected?.resolutionNote && (
+    <div className="space-y-1 rounded-lg border bg-muted/25 p-3 text-sm">
+      <h3 className="font-medium">{label('resolution')}</h3>
+      <p dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
+        {selected.resolutionNote}
+      </p>
+      {selected.resolvedByUsername && (
+        <p className="text-xs text-muted-foreground">
+          <bdi>{selected.resolvedByUsername}</bdi>
+        </p>
+      )}
+    </div>
+  );
   const recordContent = selected ? (
     <>
       {recordId ? (
@@ -615,16 +675,7 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
               <dd>{date(selected.createdAt)}</dd>
             </div>
           </dl>
-          {recordVerb && balanceCards ? (
-            <details className="rounded-lg border px-3 text-sm">
-              <summary className="min-h-11 cursor-pointer py-3 font-medium">
-                {label('balanceEvidence')}
-              </summary>
-              <div className="pb-3">{balanceCards}</div>
-            </details>
-          ) : (
-            balanceCards
-          )}
+          {!showDecisionEvidence && (recordVerb ? balanceDisclosure : balanceCards)}
         </>
       ) : (
         <>
@@ -639,17 +690,7 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
           </pre>
         </>
       )}
-      {selected.resolutionNote && (
-        <div className="space-y-1 rounded-lg border bg-muted/25 p-3 text-sm">
-          <h3 className="font-medium">{label('resolution')}</h3>
-          <p dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
-            {selected.resolutionNote}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            <bdi>{selected.resolvedByUsername}</bdi>
-          </p>
-        </div>
-      )}
+      {!showResolutionInForm && recordedResolution}
       {recoveryView}
       {reconciliationLinks(selected.details).length > 0 && (
         <nav aria-label={label('related')} className="flex flex-wrap gap-3">
@@ -749,7 +790,7 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
             </div>
           </section>
         )}
-      {canResolve && (decisionAvailable || (!recordId && selected.status !== 'closed')) && (
+      {showDecisionEditor && (
         <Form {...notes}>
           <form
             noValidate
@@ -797,32 +838,32 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
                       </Button>
                     )}
                   </div>
-                  <p className="max-w-prose text-sm text-muted-foreground">
-                    {label(
-                      recordVerb === 'resolve'
-                        ? 'resolutionHelp'
-                        : closing
-                          ? selected.resolutionNote || !recordVerb
-                            ? 'closureHelp'
-                            : 'closureOpenHelp'
-                          : 'decisionHelp'
-                    )}
-                  </p>
+                  {!recordVerb && (
+                    <p className="max-w-prose text-sm text-muted-foreground">{noteHelp}</p>
+                  )}
                 </div>
+                {showDecisionEvidence && balanceDisclosure}
+                {showResolutionInForm && recordedResolution}
                 <FormTextarea
                   control={notes.control}
                   name="note"
                   id="rex-note"
                   label={recordVerb ? noteLabel(recordVerb) : label('note')}
-                  itemClassName={
-                    recordVerb ? 'max-w-prose' : 'max-w-prose [&_[data-slot=form-message]]:min-h-5'
-                  }
+                  {...(recordVerb ? { description: noteHelp } : {})}
+                  // Blur validation can run between pointer down and click on the review action.
+                  itemClassName={'max-w-prose [&_[data-slot=form-message]]:min-h-[1lh]'}
                   inputProps={{
                     maxLength: 1000,
                     rows: 2,
                     dir: 'auto',
                     className: 'min-h-14 resize-y',
-                    placeholder: label(closing ? 'closureExample' : 'noteExample'),
+                    placeholder: label(
+                      closingWithoutResolution
+                        ? 'closureOpenExample'
+                        : closing
+                          ? 'closureExample'
+                          : 'noteExample'
+                    ),
                     'aria-required': true,
                   }}
                 />
@@ -838,7 +879,7 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
                     loading={validating === 'note'}
                     disabled={locked || loading || error || accessLoading || accessError}
                   >
-                    {label('resolve')}
+                    {label(recordVerb ? 'reviewResolution' : 'resolve')}
                   </FormSubmit>
                 )}
                 {recordVerb !== 'resolve' && (
@@ -849,7 +890,7 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
                     loading={validating === 'note'}
                     disabled={locked || loading || error || accessLoading || accessError}
                   >
-                    {label('close')}
+                    {label(recordVerb ? 'reviewClosure' : 'close')}
                   </FormSubmit>
                 )}
               </RecordEditorActions>
