@@ -1,9 +1,10 @@
 import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { RecordFields } from './RecordFields.js';
-import type { HistoryColumn } from './HistoryTable.js';
+import { TableCellDetails, type HistoryColumn } from './HistoryTable.js';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
+import { RecordDetailSkeleton } from './RecordSkeleton.js';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  LoadingStatus,
   Button,
   CardListView,
   Label,
@@ -407,10 +408,17 @@ function OwnedInvoiceLedger({
   const openInvoice = (item: InvoiceRow) => {
     const label = {
       className:
-        'inline-flex min-h-11 min-w-11 items-center font-mono text-primary underline underline-offset-2 pointer-coarse:min-h-[45px]!',
-      dir: 'ltr',
+        'touch-action min-h-11 text-start font-semibold text-primary underline-offset-4 hover:underline',
       'aria-label': `${word('detail')}: ${item.invoiceId}`,
     };
+    const text = (
+      <span className="block">
+        {invoiceType(item.type)}
+        <bdi dir="ltr" className="mt-1 block text-xs font-normal text-muted-foreground">
+          {item.invoiceId.slice(0, 8)}…
+        </bdi>
+      </span>
+    );
     return recordSearch ? (
       <Link
         to="/admin/invoices/$invoiceId"
@@ -418,16 +426,15 @@ function OwnedInvoiceLedger({
         search={recordSearch}
         {...label}
       >
-        {item.invoiceId.slice(0, 8)}…
+        {text}
       </Link>
     ) : (
       <button type="button" onClick={() => selectDetail(item.invoiceId)} {...label}>
-        {item.invoiceId.slice(0, 8)}…
+        {text}
       </button>
     );
   };
-  const columns: HistoryColumn<InvoiceRow>[] = [
-    { id: 'type', label: word('type'), render: (item) => invoiceType(item.type) },
+  const columns: (HistoryColumn<InvoiceRow> & { label: string })[] = [
     {
       id: 'state',
       label: word('state'),
@@ -435,16 +442,36 @@ function OwnedInvoiceLedger({
         <StatusBadge state={item.state} label={appText(`invoices.state.${item.state}`, locale)} />
       ),
     },
-    { id: 'amount', label: word('amount'), render: (item) => numbers.money(item.totalAmount) },
-    { id: 'paid', label: word('paid'), render: (item) => numbers.money(item.paidAmount) },
-    { id: 'due', label: word('due'), render: (item) => time.format(item.dueAt) },
     {
-      id: 'period',
-      label: word('period'),
-      render: (item) =>
-        item.periodStart && item.periodEnd
-          ? formatInvoiceServicePeriod(item.periodStart, item.periodEnd, time.format)
-          : '—',
+      id: 'amount',
+      label: word('amount'),
+      render: (item) => (
+        <TableCellDetails
+          fields={[
+            {
+              id: 'total',
+              label: word('amount'),
+              value: <bdi className="font-semibold">{numbers.money(item.totalAmount)}</bdi>,
+            },
+            { id: 'paid', label: word('paid'), value: <bdi>{numbers.money(item.paidAmount)}</bdi> },
+          ]}
+        />
+      ),
+    },
+    {
+      id: 'due',
+      label: word('due'),
+      render: (item) => (
+        <div className="space-y-1">
+          <p>{time.format(item.dueAt)}</p>
+          {item.periodStart && item.periodEnd && (
+            <p className="text-xs text-muted-foreground">
+              {word('period')}{' '}
+              {formatInvoiceServicePeriod(item.periodStart, item.periodEnd, time.format)}
+            </p>
+          )}
+        </div>
+      ),
     },
   ];
 
@@ -480,7 +507,9 @@ function OwnedInvoiceLedger({
           </button>
         )}
       </div>
-      {detailStatus === 'loading' ? <LoadingStatus>{word('loadingDetail')}</LoadingStatus> : null}
+      {detailStatus === 'loading' && (
+        <RecordDetailSkeleton label={word('loadingDetail')} layout="payment" />
+      )}
       {detailStatus === 'unavailable' ? (
         <p role="alert">{loadingText('recordUnavailable', locale)}</p>
       ) : null}
@@ -499,7 +528,7 @@ function OwnedInvoiceLedger({
       ) : null}
       {detail ? (
         <>
-          <dl className="grid gap-x-4 gap-y-3 rounded-lg bg-muted/60 p-4 text-sm [overflow-wrap:anywhere] sm:grid-cols-2 xl:grid-cols-4">
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-xl bg-muted/50 p-4 text-sm wrap-anywhere xl:grid-cols-4">
             <div>
               <dt className="text-muted-foreground">{word('amount')}</dt>
               <dd className="mt-1 font-semibold tabular-nums">
@@ -777,7 +806,13 @@ function OwnedInvoiceLedger({
           error={status === 'error' || status === 'forbidden'}
           empty={items.length === 0}
           retainContent={items.length > 0 && status !== 'forbidden'}
-          loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
+          loadingView={
+            <RecordListSkeleton
+              label={word('loading')}
+              view={compact ? 'card' : 'table'}
+              headings={[word('invoice'), ...columns.map((column) => column.label)]}
+            />
+          }
           errorView={
             status === 'forbidden' ? (
               <p role="alert">{word('forbidden')}</p>
@@ -815,9 +850,9 @@ function OwnedInvoiceLedger({
                 scrollbarOrientation="horizontal"
                 role="group"
                 aria-label={word('title')}
-                className="min-w-0 max-w-full"
+                className="min-w-0 max-w-full rounded-xl border bg-card"
               >
-                <table className="w-full min-w-[700px] text-start text-sm">
+                <table className="w-full min-w-[560px] text-start text-sm">
                   <caption className="sr-only">{word('title')}</caption>
                   <thead className="border-b text-muted-foreground">
                     <tr>

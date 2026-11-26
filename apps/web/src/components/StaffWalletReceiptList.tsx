@@ -9,7 +9,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { ReceiptDepositDate } from './ReceiptDepositDate.js';
-import { HistoryTable } from './HistoryTable.js';
+import { HistoryTable, TableCellDetails, type HistoryColumn } from './HistoryTable.js';
 
 interface WalletReceiptSummary {
   transactionId: string;
@@ -49,78 +49,69 @@ export function StaffWalletReceiptList({
       {value ?? '—'}
     </bdi>
   );
-  const fields = [
-    {
-      id: 'receipt',
-      label: invoiceText('receipt'),
-      render: (row: WalletReceiptSummary) => id(row.transactionId),
-    },
-    {
-      id: 'wallet',
-      label: word('walletId'),
-      render: (row: WalletReceiptSummary) => id(row.walletId),
-    },
-    {
-      id: 'invoice',
-      label: invoiceText('invoice'),
-      render: (row: WalletReceiptSummary) =>
-        id(row.dualApproval?.invoiceId ?? row.overpayment?.invoiceId),
-    },
-    {
-      id: 'amount',
-      label: word('amount'),
-      render: (row: WalletReceiptSummary) => (
-        <>
-          {numbers.irrDigits(row.amount)} {row.currency}
-        </>
-      ),
-    },
-    {
-      id: 'deposit',
-      label: word('paymentDate'),
-      render: (row: WalletReceiptSummary) => (
-        <ReceiptDepositDate value={row.paymentDate} locale={locale} />
-      ),
-    },
-    {
-      id: 'reference',
-      label: word('payerReference'),
-      render: (row: WalletReceiptSummary) => id(row.payerReference),
-    },
-    {
-      id: 'bank',
-      label: invoiceText('bankName'),
-      render: (row: WalletReceiptSummary) => (
-        <span className="break-words">{row.bankName ?? '—'}</span>
-      ),
-    },
-    {
-      id: 'state',
-      label: invoiceText('historyState'),
-      render: (row: WalletReceiptSummary) => (
-        <StatusBadge label={appText(`wallet.history.state.${row.state}`, locale)} />
-      ),
-    },
-    {
-      id: 'submitted',
-      label: word('submittedAt'),
-      render: (row: WalletReceiptSummary) => (
-        <time dateTime={row.submittedAt}>{time.format(row.submittedAt)}</time>
-      ),
-    },
+  const identity = (row: WalletReceiptSummary) => (
+    <div className="min-w-0 space-y-1">
+      <p className="wrap-anywhere font-semibold">{row.bankName ?? '—'}</p>
+      <p className="text-xs font-normal text-muted-foreground">{id(row.transactionId)}</p>
+      {row.payerReference && (
+        <p className="text-xs font-normal text-muted-foreground">{id(row.payerReference)}</p>
+      )}
+    </div>
+  );
+  const status = (row: WalletReceiptSummary) => (
+    <StatusBadge
+      state={row.state === 'Released' ? 'approved' : row.state}
+      label={appText(`wallet.history.state.${row.state}`, locale)}
+    />
+  );
+  const amount = (row: WalletReceiptSummary) => (
+    <bdi className="font-semibold whitespace-nowrap">
+      {numbers.irrDigits(row.amount)} {row.currency}
+    </bdi>
+  );
+  const related = (row: WalletReceiptSummary) => (
+    <TableCellDetails
+      fields={[
+        { id: 'wallet', label: word('walletId'), value: id(row.walletId) },
+        {
+          id: 'invoice',
+          label: invoiceText('invoice'),
+          value: id(row.dualApproval?.invoiceId ?? row.overpayment?.invoiceId),
+        },
+        {
+          id: 'deposit',
+          label: word('paymentDate'),
+          value: <ReceiptDepositDate value={row.paymentDate} locale={locale} />,
+        },
+        {
+          id: 'submitted',
+          label: word('submittedAt'),
+          value: <time dateTime={row.submittedAt}>{time.format(row.submittedAt)}</time>,
+        },
+      ]}
+    />
+  );
+  const fields: HistoryColumn<WalletReceiptSummary>[] = [
+    { id: 'receipt', label: invoiceText('receipt'), render: identity },
+    { id: 'state', label: invoiceText('historyState'), render: status },
+    { id: 'amount', label: word('amount'), render: amount },
+    { id: 'activity', label: appText('recordTable.activity', locale), render: related },
   ];
   const selectProps = (row: WalletReceiptSummary) => ({
     disabled,
     'aria-current': row.transactionId === selectedId ? ('true' as const) : undefined,
     onClick: () => onSelect(row.transactionId),
   });
-  const cardFields = (row: WalletReceiptSummary) =>
-    fields.map((field) => (
-      <span key={field.id} className="block min-w-0">
-        <span className="block text-xs text-muted-foreground">{field.label}</span>
-        {field.render(row)}
-      </span>
-    ));
+  const cardFields = (row: WalletReceiptSummary) => (
+    <>
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        {identity(row)}
+        {status(row)}
+      </div>
+      <div className="border-t pt-3">{amount(row)}</div>
+      {related(row)}
+    </>
+  );
   if (view === 'table')
     return (
       <HistoryTable
@@ -166,18 +157,22 @@ export function StaffWalletReceiptList({
               to="/admin/wallet-receipts/$receiptId/{-$action}"
               params={{ receiptId: row.transactionId, action: undefined }}
               search={receiptSearch}
-              className="grid grid-cols-2 gap-3 rounded-lg border bg-card p-3 text-sm hover:bg-muted sm:grid-cols-3"
+              className="block space-y-3 rounded-xl border bg-card p-4 text-sm hover:bg-muted"
             >
               {cardFields(row)}
             </Link>
           ) : (
-            <button
-              type="button"
-              {...selectProps(row)}
-              className={`w-full min-w-0 space-y-2 rounded-lg border border-border p-3 text-start text-sm disabled:opacity-50 ${row.transactionId === selectedId ? 'bg-muted text-foreground' : 'bg-card text-card-foreground hover:bg-muted'}`}
-            >
+            <div className="space-y-3 rounded-xl border bg-card p-4 text-sm">
               {cardFields(row)}
-            </button>
+              <Button
+                type="button"
+                variant="outline"
+                {...selectProps(row)}
+                aria-label={`${invoiceText('open')}: ${row.payerReference ?? row.transactionId}`}
+              >
+                {invoiceText('open')}
+              </Button>
+            </div>
           )}
         </li>
       ))}

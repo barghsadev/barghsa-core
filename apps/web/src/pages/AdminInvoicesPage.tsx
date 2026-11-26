@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Link } from '@tanstack/react-router';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { tManualInvoice } from '@barghsa/i18n/manual-invoice';
-import { Button, buttonVariants, PageLoading } from '@barghsa/ui';
+import { Button, buttonVariants, PageHeader, PageLoading } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import type { ReceiptHistoryQuery } from '../components/InvoiceBankReceiptQueue.js';
@@ -36,26 +36,28 @@ export default function AdminInvoicesPage({
   const locale = useLocale();
   return (
     <div className="min-w-0 space-y-6">
-      <header className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold">{t('admin.invoices.nav', locale)}</h1>
-        <div className="flex flex-wrap gap-2">
-          <Link
-            to="/admin/invoices/tools/{-$section}/{-$service}"
-            params={{ section: undefined, service: undefined }}
-            search={recordSearch}
-            className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
-          >
-            {t('admin.invoices.tools', locale)}
-          </Link>
-          <Link
-            className={buttonVariants({ className: 'min-h-11' })}
-            to="/admin/invoices/new"
-            search={recordSearch}
-          >
-            {tManualInvoice('admin.manualInvoice.new', locale)}
-          </Link>
-        </div>
-      </header>
+      <PageHeader
+        title={t('admin.invoices.nav', locale)}
+        actions={
+          <>
+            <Link
+              to="/admin/invoices/tools/{-$section}/{-$service}"
+              params={{ section: undefined, service: undefined }}
+              search={recordSearch}
+              className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+            >
+              {t('admin.invoices.tools', locale)}
+            </Link>
+            <Link
+              className={buttonVariants({ className: 'min-h-11' })}
+              to="/admin/invoices/new"
+              search={recordSearch}
+            >
+              {tManualInvoice('admin.manualInvoice.new', locale)}
+            </Link>
+          </>
+        }
+      />
       <InvoiceLedger
         query={queries.ledger}
         recordSearch={recordSearch}

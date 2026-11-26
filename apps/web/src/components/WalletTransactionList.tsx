@@ -1,3 +1,4 @@
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { LoadingStatus, Button, ListPage, ListViewToggle, type ListView } from '@barghsa/ui';
 import { useListQuery, type ListQueryBinding } from '../hooks/useListQuery.js';
@@ -320,7 +321,23 @@ function HistoryPage({
         error={error}
         empty={!page?.transactions.length}
         retainContent={!!page?.transactions.length}
-        loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+        loadingView={
+          staff ? (
+            <RecordListSkeleton
+              label={label('loading')}
+              view={view}
+              headings={[
+                label('type'),
+                label('state'),
+                label('amount'),
+                t('recordTable.activity', locale),
+                label('source'),
+              ]}
+            />
+          ) : (
+            <LoadingStatus>{label('loading')}</LoadingStatus>
+          )
+        }
         errorView={
           <div className="flex flex-col gap-2">
             <p role="alert">

@@ -1,5 +1,6 @@
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import { useEffect, useMemo, useState } from 'react';
-import { Button, ListPage, ListViewToggle, PageLoading } from '@barghsa/ui';
+import { Button, ListPage, ListViewToggle } from '@barghsa/ui';
 import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
@@ -150,7 +151,19 @@ function OwnedHistory({ onOpen, revision, binding }: HistoryProps) {
           error={loadState === 'error' || loadState === 'forbidden'}
           empty={page.items.length === 0}
           retainContent={page.items.length > 0 && loadState !== 'forbidden'}
-          loadingView={<PageLoading label={word('loading')} />}
+          loadingView={
+            <RecordListSkeleton
+              label={word('loading')}
+              view={view}
+              headings={[
+                word('receipt'),
+                word('historyState'),
+                word('amount'),
+                appText('recordTable.activity', locale),
+                word('open'),
+              ]}
+            />
+          }
           errorView={
             loadState === 'forbidden' ? (
               <p role="alert">{word('forbidden')}</p>

@@ -1,3 +1,5 @@
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { useReceiptRejectionForm } from '../hooks/useReceiptRejectionForm.js';
 import { useWalletReceiptConfirmationForms } from '../hooks/useWalletReceiptConfirmationForms.js';
 import { inputErrorFields } from '../lib/input-error-fields.js';
@@ -21,6 +23,7 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
+import { tWorkspace as adminText } from '@barghsa/i18n/workspace-admin';
 import { tWalletReceipts as t } from '@barghsa/i18n/wallet-receipts';
 import { receiptEditorMessages } from '@barghsa/i18n/receipt-editor';
 import type { Locale } from '@barghsa/i18n/app';
@@ -46,6 +49,7 @@ import {
   ListRefreshButton,
   ListViewToggle,
   ScrollArea,
+  StatusBadge,
   Textarea,
 } from '@barghsa/ui';
 import { t as appText } from '@barghsa/i18n/app';
@@ -1132,14 +1136,14 @@ function WalletReceiptsWorkspace({
           <dl
             className={
               recordId
-                ? 'grid grid-cols-2 gap-3 rounded-lg bg-muted/40 p-3 text-sm sm:p-4'
+                ? 'grid grid-cols-2 gap-3 rounded-xl bg-muted/40 p-4 text-sm sm:grid-cols-3'
                 : 'grid grid-cols-1 gap-2 text-sm'
             }
           >
             {receiptDetail(
               copy('amount'),
               `${numbers.irrDigits(selected.amount)} ${selected.currency}`,
-              'font-medium'
+              'text-lg font-semibold'
             )}
             {receiptDetail(copy('paymentDate'), formatPaymentDate(selected.paymentDate, locale))}
             {receiptDetail(
@@ -1160,7 +1164,10 @@ function WalletReceiptsWorkspace({
             {recordId &&
               receiptDetail(
                 copy('recordState'),
-                appText(`wallet.history.state.${selected.state}`, locale)
+                <StatusBadge
+                  state={selected.state === 'Released' ? 'approved' : selected.state}
+                  label={appText(`wallet.history.state.${selected.state}`, locale)}
+                />
               )}
           </dl>
           {recordId && selected.canDecide && (
@@ -1561,7 +1568,13 @@ function WalletReceiptsWorkspace({
 
       {recordId && (
         <>
-          {!selected && detailLoading && <LoadingStatus>{copy('detail.loading')}</LoadingStatus>}
+          {!selected &&
+            detailLoading &&
+            (recordAction ? (
+              <LoadingStatus>{copy('detail.loading')}</LoadingStatus>
+            ) : (
+              <RecordDetailSkeleton label={copy('detail.loading')} layout="payment" />
+            ))}
           {!selected && (denied || detailError) && (
             <div role="alert" className="space-y-2">
               <p>{copy(denied ? 'queue.forbidden' : 'detail.error')}</p>
@@ -1615,7 +1628,19 @@ function WalletReceiptsWorkspace({
               error={!!queueError || denied}
               empty={!items.length}
               retainContent={!!items.length && !denied}
-              loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+              loadingView={
+                <RecordListSkeleton
+                  label={copy('loading')}
+                  view={view}
+                  headings={[
+                    adminText('admin.invoiceReceipts.receipt', locale),
+                    copy('recordState'),
+                    copy('amount'),
+                    appText('recordTable.activity', locale),
+                    adminText('admin.invoiceReceipts.open', locale),
+                  ]}
+                />
+              }
               errorView={
                 <div role="alert" className="space-y-2">
                   <p>{denied ? copy('queue.forbidden') : queueError}</p>
@@ -1628,10 +1653,7 @@ function WalletReceiptsWorkspace({
               }
               emptyView={<p role="status">{copy('empty')}</p>}
             >
-              <nav
-                aria-label={copy('queueLabel')}
-                className="bg-card text-card-foreground rounded-lg border border-border p-3 space-y-1"
-              >
+              <nav aria-label={copy('queueLabel')} className="min-w-0 space-y-1">
                 <StaffWalletReceiptList
                   items={items}
                   view={view}

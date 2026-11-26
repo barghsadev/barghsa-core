@@ -172,7 +172,7 @@ for (const locale of ['en', 'fa'] as const)
         submitted
       );
       await panel.getByRole('button', { name: tableLabel, exact: true }).click();
-      await expect(queue.getByRole('columnheader')).toHaveCount(10);
+      await expect(queue.getByRole('columnheader')).toHaveCount(5);
       const viewport = queue.locator('[data-slot="scroll-area-viewport"]');
       await viewport.focus();
       await page.keyboard.press(locale === 'fa' ? 'ArrowLeft' : 'ArrowRight');
@@ -249,7 +249,7 @@ for (const locale of ['en', 'fa'] as const)
         });
       }
       await page.getByRole('link', { name: word('backToQueue'), exact: true }).click();
-      await expect(queue.getByRole('columnheader')).toHaveCount(10);
+      await expect(queue.getByRole('columnheader')).toHaveCount(5);
       await expect(confirm).toHaveCount(0);
       queueStatus = 503;
       await panel.getByRole('button', { name: word('queue.refresh'), exact: true }).click();
@@ -262,7 +262,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(queue.getByText(receiptId, { exact: true })).toBeVisible();
       await panel.getByRole('button', { name: tableLabel, exact: true }).click();
       await page.reload();
-      await expect(queue.getByRole('columnheader')).toHaveCount(10);
+      await expect(queue.getByRole('columnheader')).toHaveCount(5);
       await expect(panel.getByRole('button', { name: tableLabel, exact: true })).toHaveAttribute(
         'aria-pressed',
         'true'

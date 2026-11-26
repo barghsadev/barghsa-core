@@ -29,7 +29,7 @@ import {
 import { Currency } from './Currency.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
 import type { useAccountTime } from '../hooks/useAccountTime.js';
-import { HistoryTable } from './HistoryTable.js';
+import { HistoryTable, TableCellDetails } from './HistoryTable.js';
 import { TableActionIcon } from './TableActionIcon.js';
 import { ReceiptDepositDate } from './ReceiptDepositDate.js';
 import { WalletReceiptHistoryDetails } from './WalletReceiptHistoryDetails.js';
@@ -227,13 +227,53 @@ export function WalletTransactionRecords({
         onOpenChange={(open) => changeDetails(item.id, open)}
       />
     ) : null;
+  if (view === 'table' && staff)
+    return (
+      <HistoryTable
+        caption={`${word('title')} · ${t('historyView.table', locale)}`}
+        items={items}
+        rowKey={(item) => item.id}
+        columns={[
+          {
+            id: 'type',
+            label: word('type'),
+            render: (item) => (
+              <div className="min-w-0 space-y-1">
+                {type(item)}
+                {item.description && (
+                  <p className="wrap-anywhere text-xs font-normal text-muted-foreground" dir="auto">
+                    {item.description}
+                  </p>
+                )}
+              </div>
+            ),
+          },
+          { id: 'state', label: word('state'), render: state },
+          { id: 'amount', label: word('amount'), render: amount },
+          {
+            id: 'activity',
+            label: t('recordTable.activity', locale),
+            render: (item) => (
+              <TableCellDetails
+                fields={[
+                  { id: 'date', label: word('date'), value: date(item) },
+                  { id: 'transaction', label: word('transactionId'), value: identity(item.id) },
+                  { id: 'reference', label: word('reference'), value: reference(item) },
+                ]}
+              />
+            ),
+          },
+          { id: 'source', label: word('source'), render: source },
+        ]}
+      />
+    );
   if (view === 'table')
     return (
       <HistoryTable
         caption={`${word('title')} · ${t('historyView.table', locale)}`}
         items={items}
         rowKey={(item) => item.id}
-        renderExpandedRow={staff ? undefined : (item) => opened.has(item.id) && details(item)}
+        renderExpandedRow={(item) => opened.has(item.id) && details(item)}
         columns={[
           { id: 'date', label: word('date'), render: date },
           { id: 'type', label: word('type'), render: type },
@@ -242,48 +282,44 @@ export function WalletTransactionRecords({
           { id: 'id', label: word('transactionId'), render: (item) => identity(item.id) },
           { id: 'reference', label: word('reference'), render: reference },
           { id: 'description', label: word('description'), render: description },
-          ...(staff
-            ? [{ id: 'source', label: word('source'), render: source }]
-            : [
-                {
-                  id: 'bank',
-                  label: receiptLabel('bankName'),
-                  render: (item: WalletTransaction) => (
-                    <span className="break-words [overflow-wrap:anywhere]" dir="auto">
-                      {item.bankReceipt?.bankName ?? '—'}
-                    </span>
-                  ),
-                },
-                { id: 'deposit', label: receiptLabel('paymentDate'), render: deposit },
-                {
-                  id: 'transfer',
-                  label: receiptLabel('payerReference'),
-                  render: (item: WalletTransaction) => identity(item.bankReceipt?.payerReference),
-                },
-                {
-                  id: 'details',
-                  label: <span className="sr-only">{receiptLabel('details')}</span>,
-                  actions: true,
-                  render: (item: WalletTransaction) => {
-                    if (!item.bankReceipt) return null;
-                    const open = opened.has(item.id);
-                    return (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        aria-expanded={open}
-                        aria-controls={open ? detailsId(item) : undefined}
-                        data-table-action-tooltip={receiptLabel('details')}
-                        onClick={() => changeDetails(item.id, !open)}
-                      >
-                        <TableActionIcon icon={open ? EyeOff : Eye}>
-                          {receiptLabel('details')}
-                        </TableActionIcon>
-                      </Button>
-                    );
-                  },
-                },
-              ]),
+          {
+            id: 'bank',
+            label: receiptLabel('bankName'),
+            render: (item: WalletTransaction) => (
+              <span className="break-words [overflow-wrap:anywhere]" dir="auto">
+                {item.bankReceipt?.bankName ?? '—'}
+              </span>
+            ),
+          },
+          { id: 'deposit', label: receiptLabel('paymentDate'), render: deposit },
+          {
+            id: 'transfer',
+            label: receiptLabel('payerReference'),
+            render: (item: WalletTransaction) => identity(item.bankReceipt?.payerReference),
+          },
+          {
+            id: 'details',
+            label: <span className="sr-only">{receiptLabel('details')}</span>,
+            actions: true,
+            render: (item: WalletTransaction) => {
+              if (!item.bankReceipt) return null;
+              const open = opened.has(item.id);
+              return (
+                <Button
+                  type="button"
+                  variant="outline"
+                  aria-expanded={open}
+                  aria-controls={open ? detailsId(item) : undefined}
+                  data-table-action-tooltip={receiptLabel('details')}
+                  onClick={() => changeDetails(item.id, !open)}
+                >
+                  <TableActionIcon icon={open ? EyeOff : Eye}>
+                    {receiptLabel('details')}
+                  </TableActionIcon>
+                </Button>
+              );
+            },
+          },
         ]}
       />
     );
@@ -304,7 +340,13 @@ export function WalletTransactionRecords({
                 {state(item)}
                 {date(item)}
               </div>
-              {description(item)}
+              {staff && item.description ? (
+                <p className="wrap-anywhere text-sm text-muted-foreground" dir="auto">
+                  {item.description}
+                </p>
+              ) : (
+                description(item)
+              )}
               <dl className="grid min-w-0 gap-3 text-sm sm:grid-cols-2">
                 <div>
                   <dt className="text-muted-foreground">{word('transactionId')}</dt>

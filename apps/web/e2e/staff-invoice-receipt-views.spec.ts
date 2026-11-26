@@ -267,7 +267,7 @@ for (const locale of ['en', 'fa'] as const)
       };
       await checkMetadata();
       await pending.getByRole('button', { name: tableLabel, exact: true }).click();
-      await expect(pending.getByRole('table').getByRole('columnheader')).toHaveCount(8);
+      await expect(pending.getByRole('table').getByRole('columnheader')).toHaveCount(5);
       await checkMetadata();
       const viewport = pending.locator('[data-slot="scroll-area-viewport"]');
       await viewport.focus();
@@ -342,7 +342,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(history.getByText(receiptId, { exact: true })).toHaveCount(1);
       await history.getByRole('button', { name: tableLabel, exact: true }).click();
       expect(historyReads).toHaveLength(1);
-      await expect(history.getByRole('table').getByRole('columnheader')).toHaveCount(8);
+      await expect(history.getByRole('table').getByRole('columnheader')).toHaveCount(5);
       await history.getByRole('button', { name: word('historyNext'), exact: true }).click();
       await expect(history.getByRole('alert')).toBeVisible();
       await expect(history.getByText(receiptId, { exact: true })).toHaveCount(1);

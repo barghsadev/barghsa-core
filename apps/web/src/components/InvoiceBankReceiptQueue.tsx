@@ -1,3 +1,5 @@
+import { RecordListSkeleton } from './RecordListSkeleton.js';
+import { RecordDetailSkeleton } from './RecordSkeleton.js';
 import { useOwnedInvoiceReview } from '../hooks/useOwnedInvoiceReview.js';
 import { Link } from '@tanstack/react-router';
 import type { InvoiceReceiptDecision } from '../lib/invoice-receipt-decision.js';
@@ -563,7 +565,19 @@ function OwnedInvoiceBankReceiptQueue({
               error={listState === 'error' || listState === 'forbidden'}
               empty={items.length === 0}
               retainContent={items.length > 0 && listState !== 'forbidden'}
-              loadingView={<PageLoading label={word('loading')} />}
+              loadingView={
+                <RecordListSkeleton
+                  label={word('loading')}
+                  view={view}
+                  headings={[
+                    word('receipt'),
+                    word('historyState'),
+                    word('amount'),
+                    appText('recordTable.activity', locale),
+                    word('open'),
+                  ]}
+                />
+              }
               errorView={
                 listState === 'forbidden' ? (
                   <p role="alert">{word('forbidden')}</p>
@@ -654,7 +668,12 @@ function OwnedInvoiceBankReceiptQueue({
               </Button>
             )}
           </div>
-          {detailState === 'loading' ? <PageLoading label={word('loading')} /> : null}
+          {detailState === 'loading' &&
+            (recordDecision ? (
+              <PageLoading label={word('loading')} />
+            ) : (
+              <RecordDetailSkeleton label={word('loading')} layout="payment" />
+            ))}
           {detailState === 'forbidden' ? <p role="alert">{word('forbidden')}</p> : null}
           {detailState === 'error' || (allocationError && recordDecision !== 'reject') ? (
             <div className="space-y-2">
@@ -703,7 +722,13 @@ function OwnedInvoiceBankReceiptQueue({
                 </dl>
               ) : (
                 <>
-                  <dl className="grid gap-2 text-sm sm:grid-cols-2">
+                  <dl className="grid grid-cols-2 gap-3 rounded-xl bg-muted/40 p-4 text-sm sm:grid-cols-3">
+                    <div>
+                      <dt className="text-muted-foreground">{word('amount')}</dt>
+                      <dd className="mt-1 text-lg font-semibold">
+                        <bdi>{numbers.money(detail.amount)}</bdi>
+                      </dd>
+                    </div>
                     <div>
                       <dt className="text-muted-foreground">{word('receipt')}</dt>
                       <dd className="break-all">
@@ -715,10 +740,6 @@ function OwnedInvoiceBankReceiptQueue({
                       <dd className="break-all">
                         <bdi>{detail.invoiceId}</bdi>
                       </dd>
-                    </div>
-                    <div>
-                      <dt className="text-muted-foreground">{word('amount')}</dt>
-                      <dd>{numbers.money(detail.amount)}</dd>
                     </div>
                     <div>
                       <dt className="text-muted-foreground">{word('paymentDate')}</dt>

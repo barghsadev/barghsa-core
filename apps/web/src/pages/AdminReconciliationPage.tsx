@@ -1,3 +1,6 @@
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
@@ -115,6 +118,7 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
   const noteNeedsFocus = useRef(false);
   const invalidNoteNeedsFocus = useRef(false);
   const listHeading = useRef<HTMLHeadingElement>(null);
+  const compact = useCompactRecords();
   const locale = useLocale(),
     label = (key: string) => t(`admin.reconciliation.${key}`, locale);
   const numbers = useNumberFormatting(locale);
@@ -663,7 +667,7 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
               label={label(selected.severity)}
             />
           </div>
-          <dl className="grid grid-cols-2 gap-3 text-sm">
+          <dl className="grid grid-cols-2 gap-3 rounded-lg bg-muted/30 p-3 text-sm">
             <div>
               <dt className="text-muted-foreground">{label('assigned')}</dt>
               <dd className="[overflow-wrap:anywhere]">
@@ -682,12 +686,14 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
           <p>
             {label(selected.status)} · {label(selected.severity)}
           </p>
-          <pre
-            dir="ltr"
-            className="overflow-auto whitespace-pre-wrap break-all rounded bg-muted p-3 text-xs"
-          >
-            {JSON.stringify(selected.details ?? {}, null, 2)}
-          </pre>
+          <details className="rounded-lg border p-3">
+            <summary className="touch-action cursor-pointer font-medium">
+              {label('details')}
+            </summary>
+            <pre dir="ltr" className="mt-2 overflow-auto whitespace-pre-wrap break-all text-xs">
+              {JSON.stringify(selected.details ?? {}, null, 2)}
+            </pre>
+          </details>
         </>
       )}
       {!showResolutionInForm && recordedResolution}
@@ -950,18 +956,21 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
         <h1
           ref={listHeading}
           tabIndex={-1}
-          className="text-2xl font-semibold focus-visible:shadow-none! focus-visible:outline-hidden!"
+          className="text-3xl leading-snug font-semibold focus-visible:shadow-none! focus-visible:outline-hidden!"
         >
           {label(recordVerb ?? (recordId ? 'reviewTitle' : 'title'))}
         </h1>
-        {!recordId && <p className="text-muted-foreground">{label('description')}</p>}
       </header>
       {recordId && (
         <>
           <CommandFeedback message={saved ? label('saved') : null} />
           {!selected &&
             (accessLoading || loading ? (
-              <LoadingStatus>{label('loading')}</LoadingStatus>
+              recordVerb ? (
+                <LoadingStatus>{label('loading')}</LoadingStatus>
+              ) : (
+                <RecordDetailSkeleton label={label('loading')} layout="payment" />
+              )
             ) : (
               recoveryView || (!canView && <p role="alert">{label('forbidden')}</p>)
             ))}
@@ -1090,7 +1099,13 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
             error={error || (!accessLoading && !accessError && !canView)}
             empty={!visibleItems.length}
             retainContent={!!visibleItems.length && canView}
-            loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+            loadingView={
+              <RecordListSkeleton
+                label={label('loading')}
+                view={compact ? 'card' : 'table'}
+                headings={[label('details'), label('status'), label('assigned')]}
+              />
+            }
             errorView={
               <div role="alert" className="space-y-2">
                 <p>{label(canView ? 'error' : 'forbidden')}</p>
@@ -1137,6 +1152,7 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
                   fields: ['status', 'severity'],
                   icon: ClipboardCheckIcon,
                 },
+                { label: label('assigned'), fields: ['assigned', 'created'] },
               ]}
               nameHeader={label('details')}
               renderName={(item) => (
@@ -1185,7 +1201,18 @@ function OwnedReconciliation({ queries, recordId, recordVerb, recordSearch }: Re
                 {
                   id: 'severity',
                   label: label('severity'),
-                  render: (item) => <>{label(item.severity)}</>,
+                  render: (item) => (
+                    <StatusBadge
+                      tone={
+                        item.severity === 'critical'
+                          ? 'destructive'
+                          : item.severity === 'high'
+                            ? 'warning'
+                            : 'default'
+                      }
+                      label={label(item.severity)}
+                    />
+                  ),
                 },
                 {
                   id: 'status',

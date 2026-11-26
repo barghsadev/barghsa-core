@@ -25,10 +25,7 @@ export default function StaffWalletLedgerPage({
       >
         {t('admin.walletLedger.back', locale)}
       </Link>
-      <PageHeader
-        title={t('admin.walletLedger.title', locale)}
-        description={t('admin.walletLedger.description', locale)}
-      />
+      <PageHeader title={t('admin.walletLedger.title', locale)} />
       <bdi dir="ltr" className="break-all text-sm text-muted-foreground">
         {profileId}
       </bdi>

@@ -6,7 +6,7 @@ import { t as appText } from '@barghsa/i18n/workspace';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { HistoryTable } from './HistoryTable.js';
+import { HistoryTable, TableCellDetails, type HistoryColumn } from './HistoryTable.js';
 import { ReceiptDepositDate } from './ReceiptDepositDate.js';
 
 interface ReceiptSummary {
@@ -34,7 +34,10 @@ export function StaffInvoiceReceiptList({
   const numbers = useNumberFormatting(locale);
   const word = (key: string) => adminText(`admin.invoiceReceipts.${key}`, locale);
   const status = (item: ReceiptSummary) => (
-    <StatusBadge label={appText(`invoices.activity.state.${item.state}`, locale)} />
+    <StatusBadge
+      state={item.state === 'Confirmed' ? 'approved' : item.state}
+      label={appText(`invoices.activity.state.${item.state}`, locale)}
+    />
   );
   const open = (item: ReceiptSummary) => (
     <Button
@@ -45,105 +48,69 @@ export function StaffInvoiceReceiptList({
       <TableActionIcon icon={TableEyeIcon}>{word('open')}</TableActionIcon>
     </Button>
   );
+  const amount = (item: ReceiptSummary) => (
+    <bdi className="font-semibold whitespace-nowrap">{numbers.money(item.amount)}</bdi>
+  );
+  const identity = (item: ReceiptSummary) => (
+    <div className="min-w-0 space-y-1">
+      <p className="wrap-anywhere font-semibold">{item.bankName ?? '—'}</p>
+      <p className="text-xs font-normal text-muted-foreground">
+        <bdi dir="ltr" className="wrap-anywhere">
+          {item.receiptId}
+        </bdi>
+      </p>
+    </div>
+  );
+  const related = (item: ReceiptSummary) => (
+    <TableCellDetails
+      fields={[
+        { id: 'invoice', label: word('invoice'), value: <bdi dir="ltr">{item.invoiceId}</bdi> },
+        {
+          id: 'deposit',
+          label: word('paymentDate'),
+          value: <ReceiptDepositDate value={item.paymentDate} locale={locale} calendar="gregory" />,
+        },
+        {
+          id: 'submitted',
+          label: word('submitted'),
+          value: <time dateTime={item.submittedAt}>{time.format(item.submittedAt)}</time>,
+        },
+      ]}
+    />
+  );
+  const columns: HistoryColumn<ReceiptSummary>[] = [
+    { id: 'receipt', label: word('receipt'), render: identity },
+    { id: 'state', label: word('historyState'), render: status },
+    { id: 'amount', label: word('amount'), render: amount },
+    { id: 'activity', label: appText('recordTable.activity', locale), render: related },
+    { id: 'open', label: word('open'), render: open, actions: true },
+  ];
+
   if (view === 'table')
     return (
       <HistoryTable
         caption={`${caption} · ${appText('historyView.table', locale)}`}
         items={items}
         rowKey={(item) => item.receiptId}
-        columns={[
-          {
-            id: 'receipt',
-            label: word('receipt'),
-            render: (item) => (
-              <bdi dir="ltr" className="break-all">
-                {item.receiptId}
-              </bdi>
-            ),
-          },
-          {
-            id: 'invoice',
-            label: word('invoice'),
-            render: (item) => (
-              <bdi dir="ltr" className="break-all">
-                {item.invoiceId}
-              </bdi>
-            ),
-          },
-          { id: 'amount', label: word('amount'), render: (item) => numbers.money(item.amount) },
-          {
-            id: 'bank',
-            label: word('bankName'),
-            render: (item) => <span className="break-words">{item.bankName ?? '—'}</span>,
-          },
-          {
-            id: 'deposit',
-            label: word('paymentDate'),
-            render: (item) => (
-              <ReceiptDepositDate value={item.paymentDate} locale={locale} calendar="gregory" />
-            ),
-          },
-          { id: 'state', label: word('historyState'), render: status },
-          {
-            id: 'submitted',
-            label: word('submitted'),
-            render: (item) => (
-              <time dateTime={item.submittedAt}>{time.format(item.submittedAt)}</time>
-            ),
-          },
-          { id: 'open', label: word('open'), render: open, actions: true },
-        ]}
+        columns={columns}
       />
     );
   return (
-    <ul className="divide-y rounded-lg border">
+    <ul className="grid gap-3">
       {items.map((item) => (
         <li
           key={item.receiptId}
-          className="flex min-w-0 flex-wrap items-center justify-between gap-3 p-3"
+          className="min-w-0 space-y-3 rounded-xl border bg-card p-4 text-sm"
         >
-          <dl className="min-w-0 space-y-2 text-sm">
-            <div>
-              <dt className="text-muted-foreground">{word('receipt')}</dt>
-              <dd>
-                <bdi dir="ltr" className="break-all">
-                  {item.receiptId}
-                </bdi>
-              </dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">{word('invoice')}</dt>
-              <dd>
-                <bdi dir="ltr" className="break-all">
-                  {item.invoiceId}
-                </bdi>
-              </dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">{word('amount')}</dt>
-              <dd className="font-medium">{numbers.money(item.amount)}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">{word('bankName')}</dt>
-              <dd className="break-words">{item.bankName ?? '—'}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">{word('paymentDate')}</dt>
-              <dd>
-                <ReceiptDepositDate value={item.paymentDate} locale={locale} calendar="gregory" />
-              </dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">{word('submitted')}</dt>
-              <dd>
-                <time dateTime={item.submittedAt}>{time.format(item.submittedAt)}</time>
-              </dd>
-            </div>
-          </dl>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-start justify-between gap-2">
+            {identity(item)}
             {status(item)}
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-3">
+            {amount(item)}
             {open(item)}
           </div>
+          {related(item)}
         </li>
       ))}
     </ul>

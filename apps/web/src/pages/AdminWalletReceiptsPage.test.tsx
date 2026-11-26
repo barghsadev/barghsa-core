@@ -895,7 +895,7 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
       await flush();
       await act(async () => {
         Array.from(container.querySelectorAll('nav button'))
-          .find((button) => button.textContent?.includes('TRK-bbbb'))!
+          .find((button) => button.getAttribute('aria-label')?.endsWith('TRK-bbbb'))!
           .dispatchEvent(new MouseEvent('click', { bubbles: true }));
       });
       await flush();
