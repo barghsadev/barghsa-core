@@ -94,7 +94,7 @@ export function CatalogueChoicePicker({
           <ComboBoxItem
             key={option.id}
             value={option}
-            className="min-h-11"
+            className="min-h-11 data-highlighted:bg-primary/10 data-highlighted:text-foreground"
             aria-label={option.title}
             aria-description={option.detail}
           >

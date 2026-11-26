@@ -29,7 +29,6 @@ export function usePickerSearch(selectedLabel: string, onBlur?: () => void) {
         if (
           event.key === 'Enter' &&
           !event.nativeEvent.isComposing &&
-          (open || searching) &&
           !event.currentTarget.getAttribute('aria-activedescendant')
         ) {
           event.preventDefault();

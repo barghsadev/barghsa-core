@@ -35,6 +35,7 @@ import {
   recordEditorGrid,
   recordEditorSurface,
 } from './RecordEditorLayout.js';
+import { CatalogueChoicePicker } from './CatalogueChoicePicker.js';
 import { TicketFileField } from './TicketFileField.js';
 import type { TicketRelatedRecord } from '../lib/support-list-query.js';
 const empty: TicketIntakeValues = {
@@ -46,6 +47,7 @@ const empty: TicketIntakeValues = {
   record: '',
   files: [],
 };
+const noLinkedRecord = 'none';
 export function TicketIntakeForm({
   actor,
   scope,
@@ -167,6 +169,16 @@ export function TicketIntakeForm({
   const records = options?.records ?? priorRecords;
   const selectedRecord = records.find((r) => r.type + ':' + r.id === selectedRecordKey);
   const loading = optionsKey !== null && !result;
+  const recordChoices = records.map((record) => {
+    const reference = record.contractNumber ?? `…${record.id.slice(-8)}`;
+    const date = formatDate(record.created_at);
+    return {
+      id: record.type + ':' + record.id,
+      title: `${text(record.type)} · \u2066${reference}\u2069`,
+      detail: date,
+      searchText: `${record.id} ${record.created_at.slice(0, 10)} ${date}`,
+    };
+  });
   const profiles =
     open && actor && error !== 'forbidden' && profileResult?.key === profileKey
       ? profileResult.profiles
@@ -361,7 +373,7 @@ export function TicketIntakeForm({
     }
   }
   function field(
-    name: Exclude<keyof TicketIntakeValues, 'files'>,
+    name: Exclude<keyof TicketIntakeValues, 'files' | 'record'>,
     label: string,
     choices?: { value: string; label: string }[],
     context?: { disabled?: boolean; help?: ReactNode }
@@ -488,44 +500,66 @@ export function TicketIntakeForm({
               )}
               {profileId && (
                 <div className="min-w-0 space-y-1.5">
-                  {field(
-                    'record',
-                    'related',
-                    records.length
-                      ? [
-                          { value: '', label: text('none') },
-                          ...records.map((r) => {
-                            const reference = r.contractNumber ?? `…${r.id.slice(-8)}`;
-                            return {
-                              value: r.type + ':' + r.id,
-                              label: `${text(r.type)} · \u2066${reference}\u2069 · ${formatDate(r.created_at)}`,
-                            };
-                          }),
-                        ]
-                      : [
-                          {
-                            value: '',
-                            label: copy(
-                              loading
-                                ? 'recordsLoading'
-                                : error
-                                  ? 'recordsUnavailable'
-                                  : 'recordsEmpty'
-                            ),
-                          },
-                        ],
-                    {
-                      disabled: !options || !records.length,
-                      help: selectedRecord && !selectedRecord.contractNumber && (
-                        <>
-                          {copy('recordReference')}{' '}
-                          <bdi dir="ltr" className="[overflow-wrap:anywhere]">
-                            {selectedRecord.id}
-                          </bdi>
-                        </>
-                      ),
-                    }
-                  )}
+                  <FormField
+                    control={form.control}
+                    name="record"
+                    render={({ field }) => (
+                      <FormItem id="ticket-record" className="min-w-0">
+                        <FormLabel>{text('related')}</FormLabel>
+                        <FormControl>
+                          {recordChoices.length ? (
+                            <CatalogueChoicePicker
+                              id="ticket-record"
+                              field={field}
+                              locale={locale}
+                              options={
+                                field.value
+                                  ? [
+                                      ...recordChoices,
+                                      { id: noLinkedRecord, title: copy('recordNone') },
+                                    ]
+                                  : recordChoices
+                              }
+                              selected={field.value}
+                              required={false}
+                              disabled={pending || !options}
+                              labels={{
+                                search: copy('recordSearch'),
+                                noMatches: copy('recordNoMatches'),
+                                empty: copy('recordsEmpty'),
+                                unavailable: copy('recordsUnavailable'),
+                              }}
+                              onChange={(id) => {
+                                if (!coordination.isLocked())
+                                  field.onChange(id === noLinkedRecord ? '' : id);
+                              }}
+                            />
+                          ) : (
+                            <Input
+                              disabled
+                              className="text-muted-foreground disabled:opacity-100"
+                              value={copy(
+                                loading
+                                  ? 'recordsLoading'
+                                  : error
+                                    ? 'recordsUnavailable'
+                                    : 'recordsEmpty'
+                              )}
+                            />
+                          )}
+                        </FormControl>
+                        {selectedRecord && !selectedRecord.contractNumber && (
+                          <FormDescription>
+                            {copy('recordReference')}{' '}
+                            <bdi dir="ltr" className="[overflow-wrap:anywhere]">
+                              {selectedRecord.id}
+                            </bdi>
+                          </FormDescription>
+                        )}
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   {!error &&
                     (recordPage > 1 || options?.hasMoreRecords) &&
                     (options && !options.hasMoreRecords ? (

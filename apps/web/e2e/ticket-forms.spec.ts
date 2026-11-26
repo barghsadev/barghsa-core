@@ -30,6 +30,10 @@ const form = (page: Page, slot: string) => page.locator(`[data-slot=${slot}]`);
 const retry = (page: Page, locale: 'en' | 'fa') =>
   page.getByRole('button', { name: tTicketForms('retryOriginal', locale), exact: true });
 const submit = (owner: Locator) => owner.locator('button[type=submit]');
+async function chooseRecord(page: Page, name: string | RegExp) {
+  await page.locator('#ticket-record').click();
+  await page.getByRole('option', { name, exact: true }).click();
+}
 async function linkedError(field: Locator, message: string) {
   await expect(field).toBeFocused();
   await expect(field).toHaveAttribute('aria-invalid', 'true');
@@ -278,20 +282,20 @@ for (const [locale, theme] of [
     await expect(profile).toBeFocused();
     await expect(profile).toHaveValue(profileId);
     await expect(record).toBeDisabled();
-    await expect(record.locator('..')).toHaveCSS('opacity', '1');
-    await expect(record.locator('option')).toHaveText(tTicketForms('recordsLoading', locale));
+    await expect(record).toHaveCSS('opacity', '1');
+    await expect(record).toHaveValue(tTicketForms('recordsLoading', locale));
     await expect(submit(intake)).toBeDisabled();
 
     state.holdOptions = false;
     await profile.selectOption(otherProfileId);
-    await expect(record.locator('option')).toHaveText(tTicketForms('recordsEmpty', locale));
+    await expect(record).toHaveValue(tTicketForms('recordsEmpty', locale));
     await fixture.releaseOldOptionsDenied();
     await expect(profile).toHaveValue(otherProfileId);
     await expect(intake.locator('#ticket-subject')).toHaveValue('Private request in progress');
 
     state.optionsMode = 'failed';
     await profile.selectOption(profileId);
-    await expect(record.locator('option')).toHaveText(tTicketForms('recordsUnavailable', locale));
+    await expect(record).toHaveValue(tTicketForms('recordsUnavailable', locale));
     await expect(profile).toBeEnabled();
     await expect(submit(intake)).toBeDisabled();
     state.optionsMode = 'success';
@@ -339,23 +343,44 @@ for (const [locale, theme] of [
     await intake.locator('#ticket-subject').fill('Contract question');
     await intake.locator('#ticket-body').fill('Please explain the delivery charge.');
     await intake.locator('#ticket-profile').selectOption(profileId);
-    await record.selectOption('contract:' + relatedId);
+    await expect(record).toHaveAttribute('placeholder', tTicketForms('recordSearch', locale));
+    await record.click();
+    await record.fill(locale === 'fa' ? '۱۰۴۸۲' : '10482');
+    const contractOption = page.getByRole('option', { name: /10482/ });
+    await expect(contractOption).toBeVisible();
+    await record.press('Enter');
+    await expect(record).toHaveValue(/10482/);
+    await record.press('Enter');
+    expect(state.writes).toEqual([]);
+    await record.click();
+    await record.fill('No matching record');
+    await expect(
+      page.getByText(tTicketForms('recordNoMatches', locale), { exact: true })
+    ).toBeVisible();
+    await record.press('Enter');
+    await record.press('Escape');
+    await expect(record).toHaveValue(/10482/);
+    expect(state.writes).toEqual([]);
     await intake
       .getByRole('button', { name: tTicketForms('loadOlderRecords', locale), exact: true })
       .click();
     const retryRead = intake.getByRole('button', { name: text('retry'), exact: true });
     await expect(retryRead).toBeVisible();
-    await expect(record).toHaveValue('contract:' + relatedId);
+    await expect(record).toHaveValue(/10482/);
     await expect(record).toBeDisabled();
     await expect(submit(intake)).toBeDisabled();
     failOlder = false;
     await retryRead.click();
-    await expect(record.locator('option[value="invoice:' + older + '"]')).toHaveCount(1);
     await expect(
       intake.getByRole('status').filter({ hasText: tTicketForms('allRecordsLoaded', locale) })
     ).toBeVisible();
-    await expect(record.locator('option[value="contract:' + relatedId + '"]')).toHaveCount(1);
-    await expect(record).toHaveValue('contract:' + relatedId);
+    await record.click();
+    await expect(contractOption).toHaveCount(1);
+    await record.fill('2026-08-20');
+    await expect(page.getByRole('option', { name: /00000099/ })).toBeVisible();
+    await expect(contractOption).toHaveCount(0);
+    await record.press('Escape');
+    await expect(record).toHaveValue(/10482/);
     await expect(intake.locator('#ticket-body')).toHaveValue('Please explain the delivery charge.');
     expect(reads).toEqual([1, 2, 2]);
     expect(state.writes).toEqual([]);
@@ -399,13 +424,17 @@ for (const [locale, theme] of [
     await intake.locator('#ticket-subject').fill('  Ticket form journey  ');
     await intake.locator('#ticket-category').selectOption('orders');
     await intake.locator('#ticket-profile').selectOption(profileId);
-    await intake.locator('#ticket-record').selectOption(`contract:${relatedId}`);
-    await expect(intake.locator('#ticket-record option:checked')).toContainText('10482');
-    await intake.locator('#ticket-profile').selectOption(otherProfileId);
+    await chooseRecord(page, /10482/);
+    await expect(intake.locator('#ticket-record')).toHaveValue(/10482/);
+    await chooseRecord(page, tTicketForms('recordNone', locale));
     await expect(intake.locator('#ticket-record')).toHaveValue('');
-    await expect(intake.locator('#ticket-record')).not.toContainText('10482');
+    await chooseRecord(page, /10482/);
+    await intake.locator('#ticket-profile').selectOption(otherProfileId);
+    await expect(intake.locator('#ticket-record')).toHaveValue(
+      tTicketForms('recordsEmpty', locale)
+    );
     await intake.locator('#ticket-profile').selectOption(profileId);
-    await intake.locator('#ticket-record').selectOption(`contract:${relatedId}`);
+    await chooseRecord(page, /10482/);
     await intake
       .locator('#ticket-files')
       .setInputFiles([pdf('first-proof.pdf'), pdf('second-proof.pdf')]);

@@ -582,7 +582,7 @@ test('new support requests select only context returned by the owner-scoped opti
   });
   await page.goto('/tickets/new?relatedType=invoice&relatedId=' + ticketId);
   await expect(page.locator('#ticket-profile')).toHaveValue(profileId);
-  await expect(page.locator('#ticket-record')).toHaveValue('invoice:' + ticketId);
+  await expect(page.locator('#ticket-record')).toHaveValue(new RegExp(ticketId.slice(-8)));
   await expect(page.locator('#ticket-record')).toHaveAccessibleDescription(
     `${tTicketForms('recordReference', 'en')} ${ticketId}`
   );
@@ -703,7 +703,8 @@ for (const locale of ['en', 'fa'])
     await expect(page.locator('#ticket-category')).toHaveValue('general');
     await page.locator('#ticket-category').selectOption(category);
     await page.locator('#ticket-profile').selectOption(profileId);
-    await page.locator('#ticket-record').selectOption(`contract:${profileId}`);
+    await page.locator('#ticket-record').click();
+    await page.getByRole('option', { name: new RegExp(profileId.slice(-8)) }).click();
     await page.locator('#ticket-files').setInputFiles({
       name: 'help.pdf',
       mimeType: 'application/pdf',
