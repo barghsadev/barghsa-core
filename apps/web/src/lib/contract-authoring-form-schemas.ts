@@ -1,5 +1,6 @@
 import { z } from 'zod/mini';
 import type { ContractDraftValues, ContractContextValues } from './contract-authoring-form.js';
+import { parseContractCommercialValue } from './contracts.js';
 export const inactiveContractDraftSchema = z.custom<ContractDraftValues>();
 export const inactiveContractContextSchema = z.custom<ContractContextValues>();
 export function contractDraftSchema(
@@ -22,10 +23,10 @@ export function contractDraftSchema(
     if (!values.changeDescription.trim() || values.changeDescription.trim().length > 1000)
       issue('changeDescription', 'reasonInvalid');
     if (values.commercialValueKind === 'unsupported') issue('commercialValueKind', 'valueInvalid');
+    const content = contentFor(values);
     if (
       values.commercialValueKind === 'fixed' &&
-      (!/^(0|[1-9][0-9]{0,18})$/.test(values.commercialValueAmountIrr.trim()) ||
-        BigInt(values.commercialValueAmountIrr.trim()) > 9_223_372_036_854_775_807n)
+      parseContractCommercialValue(content.commercialValue)?.kind !== 'fixed'
     )
       issue('commercialValueAmountIrr', 'amountInvalid');
     if (
@@ -34,7 +35,6 @@ export function contractDraftSchema(
         values.commercialValueDescription.trim().length > 500)
     )
       issue('commercialValueDescription', 'descriptionInvalid');
-    const content = contentFor(values);
     if (
       !Object.keys(content).length ||
       new TextEncoder().encode(JSON.stringify(content)).length > 65536

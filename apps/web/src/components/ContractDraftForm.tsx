@@ -17,7 +17,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { useContractAuthoringCommand } from '../hooks/useContractAuthoringCommand.js';
-import { parseContractCommercialValue } from '../lib/contracts.js';
+import { parseContractCommercialValue, type ContractCommercialValue } from '../lib/contracts.js';
 import {
   contractAuthoringSource,
   contractDraftContent,
@@ -137,6 +137,23 @@ export default function DraftForm({
   const values = form.watch(),
     content = contractDraftContent(original, values);
   const changed = !existing || JSON.stringify(content) !== JSON.stringify(original);
+  const draftValue = parseContractCommercialValue(content.commercialValue);
+  const body = command.action?.body;
+  const reviewedContent =
+    body && typeof body === 'object' && 'content' in body ? body.content : null;
+  const reviewedValue = parseContractCommercialValue(
+    reviewedContent && typeof reviewedContent === 'object' && 'commercialValue' in reviewedContent
+      ? reviewedContent.commercialValue
+      : undefined
+  );
+  const unsupportedSavedValue = original.commercialValue !== undefined && !commercial;
+  const compareValue =
+    !!existing &&
+    (unsupportedSavedValue || JSON.stringify(commercial) !== JSON.stringify(reviewedValue));
+  const displayValue = (value: ContractCommercialValue | null) =>
+    value?.kind === 'fixed'
+      ? numbers.money(value.amountIrr)
+      : (value?.description ?? word('noValue'));
   async function save(event: FormEvent) {
     event.preventDefault();
     if (!actor || withdrawn || current.current !== scope || !command.begin()) return;
@@ -242,7 +259,17 @@ export default function DraftForm({
                 />
               )}
             </FormControl>
-            {help && <FormDescription>{copy(help)}</FormDescription>}
+            {help && (
+              <FormDescription>
+                {name === 'commercialValueAmountIrr' && draftValue?.kind === 'fixed' ? (
+                  <bdi className="font-medium text-foreground [overflow-wrap:anywhere]">
+                    {displayValue(draftValue)}
+                  </bdi>
+                ) : (
+                  copy(help)
+                )}
+              </FormDescription>
+            )}
             <FormMessage />
           </FormItem>
         )}
@@ -407,7 +434,7 @@ export default function DraftForm({
                 control={form.control}
                 name="commercialValueKind"
                 render={({ field }) => (
-                  <FormItem id="contract-draft-value-kind">
+                  <FormItem id="contract-draft-value-kind" className={recordEditorField}>
                     <FormLabel>{word('statedContractValue')}</FormLabel>
                     <FormControl>
                       <NativeSelect {...field} className="w-full" disabled={command.frozen}>
@@ -421,6 +448,7 @@ export default function DraftForm({
                         <option value="variable">{word('variableContractValue')}</option>
                       </NativeSelect>
                     </FormControl>
+                    <FormDescription>{copy('valueKindHelp.' + field.value)}</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -481,7 +509,41 @@ export default function DraftForm({
         </Button>
       )}
       {command.action && command.dialog && (
-        <TeamActionDialog action={command.action} {...command.dialog} />
+        <TeamActionDialog
+          action={command.action}
+          {...command.dialog}
+          summary={
+            <section
+              id="contract-draft-value-review"
+              aria-labelledby="contract-draft-value-heading"
+              className="space-y-2 rounded-lg border bg-muted/35 p-3"
+            >
+              <h3 id="contract-draft-value-heading" className="text-sm font-semibold">
+                {copy('contractValue')}
+              </h3>
+              <dl className="grid gap-2 text-sm">
+                {compareValue && (
+                  <div>
+                    <dt className="text-xs text-muted-foreground">{copy('savedContractValue')}</dt>
+                    <dd className="[overflow-wrap:anywhere]">
+                      <bdi>
+                        {unsupportedSavedValue
+                          ? copy('unsupportedSavedValue')
+                          : displayValue(commercial)}
+                      </bdi>
+                    </dd>
+                  </div>
+                )}
+                <div>
+                  <dt className="text-xs text-muted-foreground">{copy('proposedContractValue')}</dt>
+                  <dd className="font-medium [overflow-wrap:anywhere]">
+                    <bdi>{displayValue(reviewedValue)}</bdi>
+                  </dd>
+                </div>
+              </dl>
+            </section>
+          }
+        />
       )}
     </>
   );

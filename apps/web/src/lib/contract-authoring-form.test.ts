@@ -6,6 +6,7 @@ import {
   contractActivationData,
   matchedContractAuthoringReceipt,
   type ContractAuthoringEvidence,
+  type ContractDraftValues,
 } from './contract-authoring-form.js';
 import {
   contractDraftSchema,
@@ -106,6 +107,16 @@ it('enforces original int8/commercial/UTF8 rules while accepting structured impo
       commercialValueAmountIrr: '9223372036854775808',
     }).success
   ).toBe(false);
+  const localizedAmount: ContractDraftValues = {
+    ...values,
+    commercialValueKind: 'fixed',
+    commercialValueAmountIrr: '٩۲۲۳۳۷۲۰۳۶۸۵۴۷۷۵۸۰۷',
+  };
+  expect(schema.safeParse(localizedAmount).success).toBe(true);
+  expect(contractDraftContent({}, localizedAmount).commercialValue).toEqual({
+    kind: 'fixed',
+    amountIrr: '9223372036854775807',
+  });
   expect(schema.safeParse({ ...values, text: 'ب'.repeat(33000) }).success).toBe(false);
   expect(
     contractDraftSchema(

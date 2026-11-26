@@ -79,7 +79,11 @@ for (const [locale, theme] of [
   ['fa', 'dark'],
 ] as const) {
   const word = (key: string) => contractText(key, locale);
+  const authoring = (key: string) => tContractAuthoring(key, locale);
   const dialog = (page: Page) => page.getByRole('dialog');
+  const reviewValue = (page: Page) =>
+    dialog(page).getByRole('region', { name: authoring('contractValue') });
+  const exactAmount = locale === 'fa' ? '۹٬۰۰۷٬۱۹۹٬۲۵۴٬۷۴۰٬۹۹۳' : '9,007,199,254,740,993';
   const draftForm = (page: Page) => page.getByTestId('contract-draft-form');
   const contextForm = (page: Page) => page.getByTestId('contract-context-form');
   const terms = (page: Page) => page.getByRole('region', { name: word('terms'), exact: true });
@@ -174,7 +178,12 @@ for (const [locale, theme] of [
     await draftField(page, 'draftTerms').fill('  New staff terms\n  ');
     await draftField(page, 'statedContractValue').selectOption('fixed');
     await expect(draftField(page, 'fixedContractAmount')).toHaveAttribute('aria-required', 'true');
-    await draftField(page, 'fixedContractAmount').fill('9007199254740993');
+    await draftField(page, 'fixedContractAmount').fill(
+      locale === 'fa' ? '۹۰۰۷۱۹۹۲۵۴۷۴۰۹۹۳' : '9007199254740993'
+    );
+    await expect(draftField(page, 'fixedContractAmount')).toHaveAccessibleDescription(
+      new RegExp(exactAmount)
+    );
     await draftField(page, 'statedContractValue').selectOption('variable');
     await expect(draftField(page, 'fixedContractAmount')).toHaveCount(0);
     await expect(draftField(page, 'variableContractDescription')).toHaveAttribute(
@@ -219,6 +228,10 @@ for (const [locale, theme] of [
     await expect(draftForm(page).locator('..')).not.toContainText('PRIVATE_AUTHORING_SERVER_TEXT');
     state.writeMode = 'held';
     await draftSubmit(page).click();
+    await expect(reviewValue(page)).toContainText(exactAmount);
+    await expect(reviewValue(page).getByRole('term')).toHaveText(
+      authoring('proposedContractValue')
+    );
     await confirm(page);
     await dialog(page).locator('form').dispatchEvent('submit');
     await expect.poll(() => !!state.heldWrite).toBe(true);
@@ -251,6 +264,7 @@ for (const [locale, theme] of [
     expect(state.writes).toHaveLength(count);
     state.heldWrite = undefined;
     await retry(page).click();
+    await expect(reviewValue(page)).toContainText(exactAmount);
     await confirm(page);
     await expect.poll(() => !!state.heldWrite).toBe(true);
     const foreign = structuredClone(receipt);
@@ -298,6 +312,10 @@ for (const [locale, theme] of [
     await draftField(page, 'draftTerms').fill('  Revised imported delivery terms  ');
     await draftField(page, 'contextReason').fill('  Correct the imported delivery  ');
     await draftSubmit(page).click();
+    await expect(reviewValue(page).getByRole('term')).toHaveText(
+      authoring('proposedContractValue')
+    );
+    await expect(reviewValue(page)).toContainText(exactAmount);
     await confirm(page);
     await expect(dialog(page)).toHaveCount(0);
     const revised = state.writes.at(-1)!;
@@ -471,6 +489,12 @@ for (const [locale, theme] of [
     state.writeMode = 'held';
     state.heldWrite = undefined;
     await draftSubmit(page).click();
+    await expect(reviewValue(page).getByRole('term')).toHaveText([
+      authoring('savedContractValue'),
+      authoring('proposedContractValue'),
+    ]);
+    await expect(reviewValue(page)).toContainText(exactAmount);
+    await expect(reviewValue(page)).toContainText('Indexed delivery value');
     await confirm(page);
     await expect.poll(() => !!state.heldWrite).toBe(true);
     const amendmentCommand = state.writes.at(-1)!;

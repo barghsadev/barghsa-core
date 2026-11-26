@@ -6,6 +6,7 @@ import {
 } from './contracts.js';
 import { sameContractEvidence } from './contract-review-signature-form.js';
 import { datetimeLocalToIso, isoToDatetimeLocal } from './due-at-override.js';
+import { normalizeProfileDigits } from './profile-digits.js';
 export const authoringUuid = (value: unknown): value is string =>
   typeof value === 'string' &&
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
@@ -48,7 +49,10 @@ export function contractDraftContent(
     )
       content[name] = values[name] === original[name] ? values[name] : values[name].trim();
   if (values.commercialValueKind === 'fixed')
-    content.commercialValue = { kind: 'fixed', amountIrr: values.commercialValueAmountIrr.trim() };
+    content.commercialValue = {
+      kind: 'fixed',
+      amountIrr: normalizeProfileDigits(values.commercialValueAmountIrr.trim()),
+    };
   else if (values.commercialValueKind === 'variable')
     content.commercialValue = {
       kind: 'variable',
