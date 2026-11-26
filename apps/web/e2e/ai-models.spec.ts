@@ -234,29 +234,47 @@ for (const locale of ['en', 'fa'] as const)
       route.fulfill({ json: model })
     );
     await page.route(`**/api/admin/ai-models/${model.id}/budget`, (route) => {
-      saved = route.request().postDataJSON();
-      model.budget = {
-        ...(saved as object),
-        usedInputTokens: 200,
-        usedOutputTokens: 50,
-        usedCostMicros: 125_000,
-        periodStart: '2026-09-01T00:00:00.000Z',
-        alertedAt: null,
-      };
+      const body = route.request().postDataJSON();
+      saved = body;
+      model.budget =
+        body.monthlyTokenLimit === null && body.monthlyCostLimitMicros === null
+          ? null
+          : {
+              ...body,
+              usedInputTokens: 200,
+              usedOutputTokens: 50,
+              usedCostMicros: 125_000,
+              periodStart: '2026-09-01T00:00:00.000Z',
+              alertedAt: null,
+            };
       return route.fulfill({ json: model });
     });
+    const copy = (key: Parameters<typeof aiModelFormText>[0]) => aiModelFormText(key, locale);
+    const usage = page.getByRole('region', { name: copy('budgetUsage'), exact: true });
+    const tokens = page.getByLabel(copy('tokenLimit'), { exact: true });
+    const cost = page.getByLabel(copy('costLimit'), { exact: true });
+    const budgetLink = page.getByRole('link', { name: label('budgetEdit'), exact: true });
+    const save = page.getByRole('button', { name: label('budgetSave'), exact: true });
+    const dialog = page.getByRole('dialog');
+    const review = dialog.getByRole('region', { name: copy('budgetReview'), exact: true });
+    const confirm = dialog.getByRole('button', {
+      name: locale === 'fa' ? 'تأیید' : 'Confirm',
+      exact: true,
+    });
     await page.goto('/admin/ai-models');
-    await page.getByRole('link', { name: label('budgetEdit'), exact: true }).click();
-    await page.getByLabel(aiModelFormText('tokenLimit', locale), { exact: true }).fill('10000');
-    await page.getByLabel(aiModelFormText('costLimit', locale), { exact: true }).fill('2.5');
-    await page.getByLabel(label('budgetInputPrice'), { exact: true }).fill('0.3');
-    await page.getByLabel(label('budgetOutputPrice'), { exact: true }).fill('0.9');
-    await page.getByRole('button', { name: label('budgetSave'), exact: true }).click();
-    await page
-      .getByRole('dialog')
-      .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
-      .click();
-    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await budgetLink.click();
+    await expect(usage).toContainText(copy('budgetUsageNone'));
+    await tokens.fill('10000');
+    await cost.fill('2.5');
+    const price = page.getByLabel(copy('budgetInputUsd'), { exact: true });
+    await expect(price).toHaveAccessibleDescription(copy('budgetPricingHelp'));
+    await price.fill('0.3');
+    await page.getByLabel(copy('budgetOutputUsd'), { exact: true }).fill('0.9');
+    await save.click();
+    await expect(review).toContainText(new Intl.NumberFormat(locale).format(10_000));
+    await expect(review).toContainText(label('budgetInputPrice'));
+    await confirm.click();
+    await expect(dialog).toHaveCount(0);
     expect(saved).toEqual({
       monthlyTokenLimit: 10_000,
       monthlyCostLimitMicros: 2_500_000,
@@ -267,6 +285,30 @@ for (const locale of ['en', 'fa'] as const)
     await expect(page.getByRole('main')).toContainText(
       new Intl.NumberFormat(locale).format(10_000)
     );
+    await budgetLink.click();
+    await expect(usage).toContainText(new Intl.NumberFormat(locale).format(250));
+    await tokens.fill('200');
+    await expect(
+      page.getByRole('status').filter({ hasText: copy('budgetLimitReached') })
+    ).toBeVisible();
+    await save.click();
+    await expect(review).toContainText(copy('budgetLimitReached'));
+    await confirm.click();
+    await expect(page).toHaveURL(`/admin/ai-models/${model.id}`);
+    expect(saved).toMatchObject({ monthlyTokenLimit: 200, monthlyCostLimitMicros: 2_500_000 });
+    await budgetLink.click();
+    await expect(tokens).toHaveValue('200');
+    await tokens.fill('');
+    await cost.fill('');
+    await expect(page.getByRole('status').filter({ hasText: copy('budgetRemove') })).toBeVisible();
+    await save.click();
+    await expect(dialog).toContainText(copy('budgetRemove'));
+    await expect(review.getByText(copy('budgetNoLimit'), { exact: true })).toHaveCount(2);
+    await expect(review).not.toContainText(label('budgetInputPrice'));
+    await confirm.click();
+    await expect(page).toHaveURL(`/admin/ai-models/${model.id}`);
+    expect(saved).toMatchObject({ monthlyTokenLimit: null, monthlyCostLimitMicros: null });
+    await expect(page.getByRole('main')).toContainText(label('budgetNone'));
   });
 
 test('model test allows the worker budget and recovers a stalled reply without resending', async ({

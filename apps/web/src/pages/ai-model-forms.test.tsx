@@ -131,9 +131,9 @@ for (const domain of ['model', 'budget'] as const) {
     await vi.waitFor(() => expect(document.activeElement).toBe(field(domain)));
     expect(field(domain).getAttribute('aria-invalid')).toBe('true');
     expect(harness.action).toBeNull();
-    expect(
-      document.getElementById(field(domain).getAttribute('aria-describedby')!)?.textContent
-    ).toBeTruthy();
+    const descriptions = field(domain).getAttribute('aria-describedby')?.split(/\s+/) ?? [];
+    expect(descriptions).toContainEqual(expect.stringMatching(/-error$/));
+    for (const id of descriptions) expect(document.getElementById(id)?.textContent).toBeTruthy();
   });
   it(`${domain} retries unavailable validation without losing input`, async () => {
     await mount();

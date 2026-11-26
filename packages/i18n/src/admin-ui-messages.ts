@@ -370,7 +370,7 @@ export const fa: Record<string, string> = {
   'admin.aiModels.budgetForm': 'تنظیمات بودجه مدل',
   'admin.aiModels.budgetNone': 'محدودیتی تنظیم نشده است.',
   'admin.aiModels.budgetHelp':
-    'برای حذف محدودیت، هر دو سقف را خالی بگذارید. هزینه‌ها به دلار آمریکا هستند و مصرف در آغاز هر ماه UTC صفر می‌شود.',
+    'سقف توکن مجموع ورودی و خروجی را در نظر می‌گیرد. برای اعمال نکردن هر سقف، فیلد آن را خالی بگذارید.',
   'admin.aiModels.budgetConfirm': 'سقف و قیمت مدل برای درخواست‌های بعدی ذخیره شود؟',
   'admin.aiModels.budgetTokens': 'توکن مصرف‌شده / سقف',
   'admin.aiModels.budgetCost': 'هزینه مصرف‌شده / سقف (دلار)',
@@ -1408,7 +1408,7 @@ export const en: Record<string, string> = {
   'admin.aiModels.budgetForm': 'Model budget settings',
   'admin.aiModels.budgetNone': 'No limit configured.',
   'admin.aiModels.budgetHelp':
-    'Leave both limits blank to remove the budget. Costs are in US dollars; usage resets at the start of each UTC month.',
+    'The token limit counts input and output together. Leave a field blank to skip that limit.',
   'admin.aiModels.budgetConfirm': 'Save this model budget and prices for future requests?',
   'admin.aiModels.budgetTokens': 'Tokens used / limit',
   'admin.aiModels.budgetCost': 'Cost used / limit (USD)',

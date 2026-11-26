@@ -34,8 +34,23 @@ const en = {
   responseSettings: 'Response defaults',
   budgetLimits: 'Monthly limits',
   budgetPricing: 'Token pricing',
-  tokenLimit: 'Monthly token limit',
-  costLimit: 'Monthly cost limit (USD)',
+  tokenLimit: 'Token limit',
+  costLimit: 'Cost limit (USD)',
+  budgetUsage: 'Usage this month',
+  budgetUsedTokens: 'Tokens used',
+  budgetUsedCost: 'Estimated cost',
+  budgetUsageHelp: 'Usage starts over at the beginning of each UTC month.',
+  budgetUsageNone: 'Save at least one limit to start tracking usage for this model.',
+  budgetPricingHelp: 'USD per million tokens. A cost limit requires both prices to be above zero.',
+  budgetInputUsd: 'Input price',
+  budgetOutputUsd: 'Output price',
+  budgetReview: 'Monthly budget after saving',
+  budgetNoLimit: 'No limit',
+  budgetLimitReached:
+    'A proposed limit is at or below this month’s usage. New requests may be blocked.',
+  budgetRemove:
+    'Saving with both limits blank removes the budget, its prices, and its tracked usage.',
+  budgetNoSettings: 'Leave at least one limit set to save pricing and start tracking usage.',
 };
 const fa: Record<keyof typeof en, string> = {
   list: 'جدول مدل‌های هوش مصنوعی',
@@ -74,8 +89,23 @@ const fa: Record<keyof typeof en, string> = {
   responseSettings: 'پیش‌فرض‌های پاسخ',
   budgetLimits: 'سقف‌های ماهانه',
   budgetPricing: 'قیمت توکن',
-  tokenLimit: 'سقف ماهانه توکن',
-  costLimit: 'سقف هزینه ماهانه (دلار)',
+  tokenLimit: 'سقف توکن',
+  costLimit: 'سقف هزینه (دلار)',
+  budgetUsage: 'مصرف این ماه',
+  budgetUsedTokens: 'توکن مصرف‌شده',
+  budgetUsedCost: 'هزینه برآوردشده',
+  budgetUsageHelp: 'شمارش مصرف در آغاز هر ماه به وقت UTC از صفر شروع می‌شود.',
+  budgetUsageNone: 'برای شروع ثبت مصرف این مدل، دست‌کم یک سقف تعیین و ذخیره کنید.',
+  budgetPricingHelp:
+    'به دلار آمریکا برای هر یک میلیون توکن. برای تعیین سقف هزینه، هر دو قیمت باید بیشتر از صفر باشند.',
+  budgetInputUsd: 'قیمت ورودی',
+  budgetOutputUsd: 'قیمت خروجی',
+  budgetReview: 'بودجه ماهانه پس از ذخیره',
+  budgetNoLimit: 'بدون سقف',
+  budgetLimitReached:
+    'یکی از سقف‌های پیشنهادی برابر با مصرف این ماه یا کمتر از آن است. ممکن است درخواست‌های جدید مسدود شوند.',
+  budgetRemove: 'ذخیره با هر دو سقف خالی، بودجه، قیمت‌ها و مصرف ثبت‌شده آن را حذف می‌کند.',
+  budgetNoSettings: 'برای ذخیره قیمت‌ها و شروع ثبت مصرف، دست‌کم یکی از سقف‌ها را تعیین کنید.',
 };
 export function aiModelFormText(key: keyof typeof en, locale: Locale): string {
   return (locale === 'fa' ? fa : en)[key];

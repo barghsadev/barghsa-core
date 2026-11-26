@@ -183,15 +183,20 @@ function OwnedAiModelsPage({
   );
   const modelFields = useActionFieldErrors(modelForm.form, modelMessages, copy('invalid'));
   const budgetFields = useActionFieldErrors(budgetForm.form, budgetMessages, copy('invalid'));
+  const invalidBudgetFocus = useRef<keyof BudgetDraft | null>(null);
   const [draftOpen, setDraftOpen] = useState(false),
     [budgetOpen, setBudgetOpen] = useState(false);
   const draft = draftOpen ? modelForm.values : null,
     budgetDraft = budgetOpen ? budgetForm.values : null;
+  const storedBudget = budgetDraft
+    ? models.find((model) => model.id === budgetDraft.modelId)?.budget
+    : null;
   function setDraft(value: Draft | null) {
     modelForm.form.reset(value ?? blank());
     setDraftOpen(!!value);
   }
   function setBudgetDraft(value: BudgetDraft | null) {
+    invalidBudgetFocus.current = null;
     budgetForm.form.reset(
       value ?? {
         modelId: '',
@@ -352,6 +357,13 @@ function OwnedAiModelsPage({
   const unavailable = loading || error || denied || missing;
   const disabled = unavailable || changed || uncertain;
   const busy = modelForm.pending || budgetForm.pending || !!action;
+  const setBudgetFocus = budgetForm.form.setFocus;
+  useEffect(() => {
+    if (busy || !invalidBudgetFocus.current) return;
+    const field = invalidBudgetFocus.current;
+    invalidBudgetFocus.current = null;
+    setBudgetFocus(field);
+  }, [busy, budgetForm.errors, setBudgetFocus]);
   const currentModel = modelId ? models[0] : undefined;
   useEffect(() => {
     if (workspace && workspace.view !== 'list') heading.current?.focus({ preventScroll: true });
@@ -507,25 +519,37 @@ function OwnedAiModelsPage({
     budgetForm.setValidationPending(true);
     setResult(null);
     try {
-      await budgetForm.form.handleSubmit((value) => {
-        if (epoch !== generation.current) return;
-        commandGeneration.current = epoch;
-        commandBasis.current = null;
-        capture.current = { kind: 'budget', value: { ...value } };
-        const next: TeamAction = {
-          title: `${label('budgetSave')}: ${value.modelTitle}`,
-          description: label('budgetConfirm'),
-          path: `/api/admin/ai-models/${value.modelId}/budget`,
-          method: 'PUT',
-          responseDeadline: true,
-          body: budgetBody(value),
-          successStatus: 200,
-          forbiddenMessage: label('forbidden'),
-          errorMessages: errors,
-        };
-        actionRef.current = next;
-        setAction(next);
-      })();
+      await budgetForm.form.handleSubmit(
+        (value) => {
+          if (epoch !== generation.current) return;
+          commandGeneration.current = epoch;
+          commandBasis.current = null;
+          capture.current = { kind: 'budget', value: { ...value } };
+          const body = budgetBody(value);
+          const hasLimit = body.monthlyTokenLimit !== null || body.monthlyCostLimitMicros !== null;
+          const next: TeamAction = {
+            title: `${label('budgetSave')}: ${value.modelTitle}`,
+            description: hasLimit
+              ? label('budgetConfirm')
+              : copy(storedBudget ? 'budgetRemove' : 'budgetNoSettings'),
+            path: `/api/admin/ai-models/${value.modelId}/budget`,
+            method: 'PUT',
+            responseDeadline: true,
+            body,
+            successStatus: 200,
+            forbiddenMessage: label('forbidden'),
+            errorMessages: errors,
+          };
+          actionRef.current = next;
+          setAction(next);
+        },
+        (errors) => {
+          if (epoch !== generation.current) return;
+          invalidBudgetFocus.current =
+            (Object.keys(errors).find((field) => field in budgetMessages) as keyof BudgetDraft) ??
+            null;
+        }
+      )();
     } finally {
       if (epoch === generation.current) {
         validating.current = false;
@@ -547,6 +571,25 @@ function OwnedAiModelsPage({
     numberingSystem: numeralSystem,
     maximumFractionDigits: 6,
   });
+  const usedTokens = storedBudget
+    ? storedBudget.usedInputTokens + storedBudget.usedOutputTokens
+    : 0;
+  const reviewBudget =
+    action && capture.current?.kind === 'budget' ? budgetBody(capture.current.value) : null;
+  const plannedBudget =
+    reviewBudget ??
+    (budgetDraft && !invalidBudgetFields(budgetDraft).length ? budgetBody(budgetDraft) : null);
+  const limitReached =
+    storedBudget &&
+    plannedBudget &&
+    ((plannedBudget.monthlyTokenLimit !== null && plannedBudget.monthlyTokenLimit <= usedTokens) ||
+      (plannedBudget.monthlyCostLimitMicros !== null &&
+        plannedBudget.monthlyCostLimitMicros <= storedBudget.usedCostMicros));
+  const clearingLimits =
+    storedBudget &&
+    budgetDraft &&
+    !budgetDraft.monthlyTokenLimit.trim() &&
+    !budgetDraft.monthlyCostUsd.trim();
   const modelActions = (model: Model) => (
     <>
       {workspace && !disabled && !busy ? (
@@ -967,9 +1010,37 @@ function OwnedAiModelsPage({
                 )}
                 <fieldset disabled={busy} className="min-w-0">
                   <legend className="sr-only">{label('budgetForm')}</legend>
+                  <RecordEditorSection title={copy('budgetUsage')} anchorId="model-budget-usage">
+                    {storedBudget ? (
+                      <>
+                        <dl className="grid min-w-0 grid-cols-2 gap-2 rounded-lg border bg-muted/35 p-3 text-sm">
+                          <div className="min-w-0">
+                            <dt className="text-xs text-muted-foreground">
+                              {copy('budgetUsedTokens')}
+                            </dt>
+                            <dd className="font-medium [overflow-wrap:anywhere]">
+                              <bdi>{numbers.number(usedTokens)}</bdi>
+                            </dd>
+                          </div>
+                          <div className="min-w-0">
+                            <dt className="text-xs text-muted-foreground">
+                              {copy('budgetUsedCost')}
+                            </dt>
+                            <dd className="font-medium [overflow-wrap:anywhere]">
+                              <bdi>{dollar.format(storedBudget.usedCostMicros / 1_000_000)}</bdi>
+                            </dd>
+                          </div>
+                        </dl>
+                        <p className="text-xs text-muted-foreground">{copy('budgetUsageHelp')}</p>
+                      </>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">{copy('budgetUsageNone')}</p>
+                    )}
+                  </RecordEditorSection>
                   {(
                     [
                       {
+                        key: 'limits',
                         title: copy('budgetLimits'),
                         description: label('budgetHelp'),
                         fields: [
@@ -978,21 +1049,31 @@ function OwnedAiModelsPage({
                         ],
                       },
                       {
+                        key: 'pricing',
                         title: copy('budgetPricing'),
+                        description: copy('budgetPricingHelp'),
                         fields: [
-                          ['inputPriceUsd', label('budgetInputPrice'), '0', '1000', '0.000001'],
-                          ['outputPriceUsd', label('budgetOutputPrice'), '0', '1000', '0.000001'],
+                          ['inputPriceUsd', copy('budgetInputUsd'), '0', '1000', '0.000001'],
+                          ['outputPriceUsd', copy('budgetOutputUsd'), '0', '1000', '0.000001'],
                         ],
                       },
                     ] as const
-                  ).map(({ title, fields, ...section }) => (
-                    <RecordEditorSection key={title} title={title} {...section}>
-                      <div className={recordEditorGrid}>
+                  ).map(({ key: sectionKey, title, fields, description }) => (
+                    <RecordEditorSection key={sectionKey} title={title}>
+                      <p
+                        id={`model-budget-${sectionKey}-help`}
+                        className="text-sm text-muted-foreground"
+                      >
+                        {description}
+                      </p>
+                      {/* Validate the paired limits and prices on Save so errors cannot move the button mid-press. */}
+                      <div className="grid min-w-0 grid-cols-2 gap-x-3 sm:gap-x-5">
                         {fields.map(([key, fieldLabel, min, max, step]) => (
                           <div className={recordEditorField} key={key}>
                             <Label htmlFor={`ai-model-${key}`}>{fieldLabel}</Label>
                             <RecordNumberInput
                               {...budgetForm.bind(key)}
+                              onBlur={undefined}
                               id={`ai-model-${key}`}
                               locale={locale}
                               min={min}
@@ -1002,6 +1083,12 @@ function OwnedAiModelsPage({
                               aria-required={
                                 key === 'inputPriceUsd' || key === 'outputPriceUsd' || undefined
                               }
+                              aria-describedby={[
+                                budgetForm.errors[key] && budgetForm.errorId(key),
+                                `model-budget-${sectionKey}-help`,
+                              ]
+                                .filter(Boolean)
+                                .join(' ')}
                               value={budgetDraft[key]}
                               onChange={(value) => budgetForm.field(key)[1](value)}
                             />
@@ -1014,6 +1101,14 @@ function OwnedAiModelsPage({
                           </div>
                         ))}
                       </div>
+                      {sectionKey === 'limits' && (limitReached || clearingLimits) && (
+                        <p
+                          role="status"
+                          className="rounded-md border bg-muted/35 px-3 py-2 text-sm"
+                        >
+                          {copy(clearingLimits ? 'budgetRemove' : 'budgetLimitReached')}
+                        </p>
+                      )}
                     </RecordEditorSection>
                   ))}
                 </fieldset>
@@ -1194,7 +1289,59 @@ function OwnedAiModelsPage({
               setModels([]);
               setDenied(true);
             }}
-            summary={recovery}
+            summary={
+              reviewBudget ? (
+                <>
+                  <section
+                    id="model-budget-review"
+                    aria-label={copy('budgetReview')}
+                    className="space-y-2 rounded-lg border bg-muted/35 p-3"
+                  >
+                    <h3 className="text-sm font-medium">{copy('budgetReview')}</h3>
+                    <dl className="grid min-w-0 grid-cols-2 gap-x-3 gap-y-2 text-sm">
+                      {[
+                        [
+                          copy('tokenLimit'),
+                          reviewBudget.monthlyTokenLimit === null
+                            ? copy('budgetNoLimit')
+                            : numbers.number(reviewBudget.monthlyTokenLimit),
+                        ],
+                        [
+                          copy('costLimit'),
+                          reviewBudget.monthlyCostLimitMicros === null
+                            ? copy('budgetNoLimit')
+                            : dollar.format(reviewBudget.monthlyCostLimitMicros / 1_000_000),
+                        ],
+                        ...(reviewBudget.monthlyTokenLimit !== null ||
+                        reviewBudget.monthlyCostLimitMicros !== null
+                          ? [
+                              [
+                                label('budgetInputPrice'),
+                                dollar.format(reviewBudget.inputPricePerMillionMicros / 1_000_000),
+                              ],
+                              [
+                                label('budgetOutputPrice'),
+                                dollar.format(reviewBudget.outputPricePerMillionMicros / 1_000_000),
+                              ],
+                            ]
+                          : []),
+                      ].map(([fieldLabel, value]) => (
+                        <div key={fieldLabel} className="min-w-0">
+                          <dt className="text-xs text-muted-foreground">{fieldLabel}</dt>
+                          <dd className="font-medium [overflow-wrap:anywhere]">
+                            <bdi>{value}</bdi>
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                    {limitReached && <p className="text-sm">{copy('budgetLimitReached')}</p>}
+                  </section>
+                  {recovery}
+                </>
+              ) : (
+                recovery
+              )
+            }
             onClose={withdraw}
             onSuccess={((command, commandVersion) => async (value: unknown) => {
               if (commandVersion !== generation.current || actionRef.current !== command) return;

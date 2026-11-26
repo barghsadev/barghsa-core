@@ -1218,7 +1218,7 @@ for (const locale of ['en', 'fa'])
     await page.screenshot({ path: `/tmp/contract-limits-${locale}.png`, fullPage: true });
   });
 
-for (const locale of ['en', 'fa'])
+for (const locale of ['en', 'fa'] as const)
   test(`AI model UI persists through the migrated API (${locale})`, async ({ page }) => {
     await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     const modelWrites: string[] = [];
@@ -1325,6 +1325,37 @@ for (const locale of ['en', 'fa'])
       await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
     ).toBe(true);
     await page.screenshot({ path: `/tmp/ai-models-mobile-${locale}.png`, fullPage: true });
+    const configureBudget = card.getByRole('link', {
+      name: adminText('admin.aiModels.budgetEdit', locale),
+      exact: true,
+    });
+    const saveBudget = card.getByRole('button', {
+      name: adminText('admin.aiModels.budgetSave', locale),
+      exact: true,
+    });
+    const tokenLimit = page.locator('#ai-model-monthlyTokenLimit');
+    const budgetEndpoint = `${http.base}/api/admin/ai-models/${stored.id}`;
+    await configureBudget.click();
+    await tokenLimit.fill(fa ? '۱۰۰۰' : '1000');
+    await saveBudget.click();
+    await expect(page.getByRole('dialog').locator('#model-budget-review')).toContainText(
+      aiModelFormText('budgetReview', locale)
+    );
+    await confirm();
+    await expect(page).toHaveURL(recordUrl);
+    const budgetReceipt = await page.request.get(budgetEndpoint, { headers });
+    expect(await budgetReceipt.json()).toMatchObject({
+      budget: { monthlyTokenLimit: 1000, monthlyCostLimitMicros: null, usedInputTokens: 0 },
+    });
+    await configureBudget.click();
+    await expect(tokenLimit).toHaveValue('1000');
+    await tokenLimit.fill('');
+    await saveBudget.click();
+    await expect(page.getByRole('dialog')).toContainText(aiModelFormText('budgetRemove', locale));
+    await confirm();
+    await expect(page).toHaveURL(recordUrl);
+    const removedBudgetReceipt = await page.request.get(budgetEndpoint, { headers });
+    expect(await removedBudgetReceipt.json()).toMatchObject({ budget: null });
     await card.getByRole('button', { name: fa ? 'حذف' : 'Delete', exact: true }).click();
     await confirmDestructiveAction(page, fa ? 'fa' : 'en');
     await expect(page).toHaveURL('/admin/ai-models');

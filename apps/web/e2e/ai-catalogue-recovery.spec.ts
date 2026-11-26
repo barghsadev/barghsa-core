@@ -248,7 +248,7 @@ for (const locale of ['en', 'fa'] as const) {
     expect(listReads).toBe(listsBefore);
     await expect(page.locator('#agent-system-prompt')).toHaveValue('Retained system prompt');
     const withdrawn = page.getByRole('checkbox', {
-      name: `${a('unavailable')} (${aiOptions.kbs[0]!.id})`,
+      name: `${a('unavailable')} (${aiDetail.kbs[0]!.title})`,
       exact: true,
     });
     await withdrawn.click();
