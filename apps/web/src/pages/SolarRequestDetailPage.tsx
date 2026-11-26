@@ -577,12 +577,12 @@ function SolarRequestDetail({
         editorHeader(documentChangeBlocked)
       )}
       {time.notice}
-      {loading &&
-        (view === 'detail' ? (
-          <RecordDetailSkeleton label={copy('loading')} layout="order" />
-        ) : (
-          <LoadingStatus>{copy('loading')}</LoadingStatus>
-        ))}
+      {loading && (
+        <RecordDetailSkeleton
+          label={copy('loading')}
+          layout={view === 'detail' ? 'order' : 'thread'}
+        />
+      )}
       {detailError && (
         <div className="space-y-2">
           <p role="alert">
@@ -684,8 +684,11 @@ function SolarRequestDetail({
             </div>
           ) : showDocuments ? (
             <>
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1.5 rounded-xl border bg-card px-4 py-3 text-sm sm:px-6">
-                <p className="font-semibold">{copy(`status_${request.status}`)}</p>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-xl border bg-card px-4 py-3 text-sm sm:px-6">
+                <StatusBadge
+                  label={copy(`status_${request.status}`)}
+                  tone={statusFilterTone(request.status)}
+                />
                 {request.site_address && (
                   <p dir="auto" className="text-muted-foreground wrap-anywhere">
                     {request.site_address}
@@ -706,10 +709,10 @@ function SolarRequestDetail({
                 aria-label={copy(reviewDocuments ? 'reviewDocumentSet' : 'documentGuidance')}
               >
                 {!reviewDocuments && (
-                  <div className="space-y-1 border-b bg-muted/25 px-4 py-3 sm:px-6">
+                  <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2 border-b bg-muted/25 px-4 py-3 sm:px-6">
                     <h2 className="text-base font-semibold">{copy('documentGuidance')}</h2>
                     {documentsInfo && (
-                      <p className="text-sm whitespace-pre-wrap wrap-anywhere">
+                      <p className="basis-full text-sm whitespace-pre-wrap wrap-anywhere text-muted-foreground">
                         {documentsInfo.guidance[locale]}
                       </p>
                     )}

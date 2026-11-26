@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { getRouteApi, Link, Navigate, notFound } from '@tanstack/react-router';
-import { Alert, AlertDescription, Button, PageLoading } from '@barghsa/ui';
+import { Alert, AlertDescription, Button } from '@barghsa/ui';
 import { contractText } from '@barghsa/i18n/contracts';
 import { documentText } from '@barghsa/i18n/documents';
 import { tContractReviewSignature } from '@barghsa/i18n/contract-review-signature';
 import { DocumentDetail } from '../components/DocumentDetail.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { RelatedDocumentEditor } from '../components/RelatedDocumentEditor.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -254,7 +255,7 @@ function ContractDocumentRecord({
               )}
             </Alert>
           ) : (
-            <PageLoading label={word('loading')} />
+            <RecordDetailSkeleton label={word('loading')} />
           )}
         </>
       )}

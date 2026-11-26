@@ -25,9 +25,11 @@ import {
   Input,
   ListRefreshButton,
   NativeSelect,
+  StatusBadge,
   buttonVariants,
   datePickerCalendarDate,
 } from '@barghsa/ui';
+import { RecordDetailSkeleton } from './RecordSkeleton.js';
 import { CompactFieldFeedback } from './CompactFieldFeedback.js';
 import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
 import { Form, FormControl, FormField, FormItem, FormLabel, useZodForm } from '@barghsa/ui/form';
@@ -487,12 +489,11 @@ function OwnedSolarPostalPanel({
           <div className="space-y-0.5">
             <h2 className="text-base font-semibold">{copy('postalStage')}</h2>
             {visible && (
-              <p role="status" className="text-sm text-muted-foreground">
-                {copy('postalStatus')}{' '}
-                <span className="ms-1 font-medium text-foreground">
-                  {copy(`postal_${visible.postal?.status ?? 'waiting_for_shipment'}`)}
-                </span>
-              </p>
+              <div role="status" aria-label={copy('postalStatus')}>
+                <StatusBadge
+                  label={copy(`postal_${visible.postal?.status ?? 'waiting_for_shipment'}`)}
+                />
+              </div>
             )}
           </div>
           <ListRefreshButton
@@ -503,9 +504,34 @@ function OwnedSolarPostalPanel({
             }}
           />
         </header>
-        {!visible && !loadError && <LoadingStatus>{copy('loading')}</LoadingStatus>}
+        {!visible && !loadError && <RecordDetailSkeleton label={copy('loading')} />}
         {visible && (
           <>
+            {!editable && visible.postal && (
+              <div className="space-y-2 rounded-xl border bg-card p-4 sm:p-5">
+                <h3 className="font-semibold">{copy('postalShipment')}</h3>
+                {visible.postal.courier && (
+                  <dl className="text-sm">
+                    <dt className="text-muted-foreground">{copy('postalCourier')}</dt>
+                    <dd className="font-medium">
+                      <bdi>{visible.postal.courier}</bdi>
+                    </dd>
+                  </dl>
+                )}
+                <SolarPostalTrackingSummary
+                  key={`${requestId}:${revision}`}
+                  tracking={{
+                    postalStatus: visible.postal.status,
+                    trackingNumber: visible.postal.tracking_number,
+                    sendDate: visible.postal.send_date,
+                    estimatedArrivalDate: visible.postal.estimated_arrival_date ?? null,
+                    trackingUrl: visible.postal.tracking_url ?? null,
+                    note: visible.postal.tracking_note ?? null,
+                    recordedAt: visible.postal.tracking_recorded_at ?? null,
+                  }}
+                />
+              </div>
+            )}
             <div className="space-y-3 rounded-xl border bg-card px-4 py-3.5 text-sm sm:px-5">
               <p className="whitespace-pre-wrap wrap-anywhere">{visible.guidance[locale]}</p>
               {(visible.guidance.destinationAddress || visible.guidance.contactDetails) && (
@@ -554,27 +580,6 @@ function OwnedSolarPostalPanel({
                   {visible.postal.staff_notes}
                 </p>
               </div>
-            )}
-            {!editable && visible.postal && (
-              <>
-                {visible.postal.courier && (
-                  <p>
-                    {copy('postalCourier')}: <bdi>{visible.postal.courier}</bdi>
-                  </p>
-                )}
-                <SolarPostalTrackingSummary
-                  key={`${requestId}:${revision}`}
-                  tracking={{
-                    postalStatus: visible.postal.status,
-                    trackingNumber: visible.postal.tracking_number,
-                    sendDate: visible.postal.send_date,
-                    estimatedArrivalDate: visible.postal.estimated_arrival_date ?? null,
-                    trackingUrl: visible.postal.tracking_url ?? null,
-                    note: visible.postal.tracking_note ?? null,
-                    recordedAt: visible.postal.tracking_recorded_at ?? null,
-                  }}
-                />
-              </>
             )}
           </>
         )}

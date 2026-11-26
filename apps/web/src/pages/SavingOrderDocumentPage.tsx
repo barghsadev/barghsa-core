@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { getRouteApi, Navigate, notFound } from '@tanstack/react-router';
-import { Button, LoadingStatus } from '@barghsa/ui';
+import { Button, Skeleton } from '@barghsa/ui';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
 import { tSaving } from '@barghsa/i18n/saving';
 import SavingOrderDocumentScreen from '../components/SavingOrderDocumentScreen.js';
@@ -145,7 +145,10 @@ function SavingDocumentOrder({
             )}
           </div>
         ) : (
-          <LoadingStatus>{loadingText('loading', locale)}</LoadingStatus>
+          <div role="status" aria-label={loadingText('loading', locale)} className="space-y-3">
+            <Skeleton className="h-20 rounded-xl" />
+            <Skeleton className="h-36 rounded-xl" />
+          </div>
         )
       }
     />
