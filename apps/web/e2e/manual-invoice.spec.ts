@@ -7,6 +7,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { fullNavigation } from './navigation-fixture';
 
 const profileId = '11111111-1111-7111-8111-111111111111';
+const homonymId = '33333333-3333-7333-8333-333333333333';
 const invoiceId = '22222222-2222-7222-8222-222222222222';
 for (const locale of ['fa', 'en'] as const)
   for (const darkMode of [false, true])
@@ -66,6 +67,11 @@ for (const locale of ['fa', 'en'] as const)
         route.fulfill({
           json: {
             items: [
+              {
+                id: homonymId,
+                title: fa ? 'شرکت نمونه' : 'Example company',
+                profileType: 'INDIVIDUAL',
+              },
               { id: profileId, title: fa ? 'شرکت نمونه' : 'Example company', profileType: 'LEGAL' },
             ],
           },
@@ -195,6 +201,12 @@ for (const locale of ['fa', 'en'] as const)
         name: fa ? 'پروفایل مشتری' : 'Customer profile',
       });
       await expect(profile).toHaveAttribute('aria-required', 'true');
+      await expect(profile.locator(`option[value="${homonymId}"]`)).toContainText(
+        fa ? 'حقیقی' : 'Individual'
+      );
+      const billedOption = profile.locator(`option[value="${profileId}"]`);
+      await expect(billedOption).toContainText(fa ? 'حقوقی' : 'Legal Entity');
+      await expect(billedOption).toContainText('…11111111');
       await profile.selectOption(profileId);
       const description = panel.getByRole('textbox', {
         name: fa ? 'شرح ردیف' : 'Description',
@@ -270,6 +282,10 @@ for (const locale of ['fa', 'en'] as const)
       });
       await expect(reviewDialog).toBeVisible();
       await expect(reviewDialog).toContainText(fa ? 'شرکت نمونه' : 'Example company');
+      await expect(
+        reviewDialog.getByText(fa ? 'حقوقی' : 'Legal Entity', { exact: true })
+      ).toBeVisible();
+      await expect(reviewDialog.getByText('…11111111', { exact: true })).toBeVisible();
       await expect(reviewDialog).toContainText(total);
       await expect(
         reviewDialog.getByText(tManualInvoice('admin.manualInvoice.total', locale), { exact: true })

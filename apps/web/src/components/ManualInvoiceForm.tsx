@@ -39,6 +39,7 @@ import {
   NativeSelectOption,
 } from '@barghsa/ui';
 import { tManualInvoice as t } from '@barghsa/i18n/manual-invoice';
+import { t as appText, type Locale } from '@barghsa/i18n/app';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   type InvoiceAdjustmentReview,
@@ -81,6 +82,17 @@ interface Profile {
   title: string;
   profileType: string;
 }
+
+function profileTypeText(type: string, locale: Locale) {
+  return type === 'INDIVIDUAL' || type === 'LEGAL'
+    ? appText(`settings.profile.profileType.${type}`, locale)
+    : '';
+}
+
+function profileReference(id: string) {
+  return `…${id.slice(-8)}`;
+}
+
 export interface InvoiceCorrectionSource {
   invoiceId: string;
   profileId: string;
@@ -951,11 +963,20 @@ function OwnedManualInvoiceForm({
                   <NativeSelectOption value="" disabled>
                     {text('chooseProfile')}
                   </NativeSelectOption>
-                  {profiles.map((profile) => (
-                    <NativeSelectOption key={profile.id} value={profile.id}>
-                      {profile.title || text('untitled')}
-                    </NativeSelectOption>
-                  ))}
+                  {profiles.map((profile) => {
+                    const label = [
+                      profile.title || text('untitled'),
+                      profileTypeText(profile.profileType, locale),
+                      `\u2066${profileReference(profile.id)}\u2069`,
+                    ]
+                      .filter(Boolean)
+                      .join(' · ');
+                    return (
+                      <NativeSelectOption key={profile.id} value={profile.id}>
+                        {label}
+                      </NativeSelectOption>
+                    );
+                  })}
                 </NativeSelect>
                 <InvoiceFieldFeedback
                   reserveSpace={false}
@@ -1233,7 +1254,26 @@ function OwnedManualInvoiceForm({
               amount={manualReview.data.totals.total}
               detailsLabel={text('manualReviewDetails')}
               facts={[
-                { id: 'profile', label: text('profile'), value: manualReview.data.profile.title },
+                {
+                  id: 'profile',
+                  label: text('profile'),
+                  value: (
+                    <span
+                      className="flex min-w-0 flex-col gap-1"
+                      dir={locale === 'fa' ? 'rtl' : 'ltr'}
+                    >
+                      <bdi>{manualReview.data.profile.title || text('untitled')}</bdi>
+                      <span className="flex flex-wrap gap-x-2 text-xs text-muted-foreground">
+                        <span>
+                          {profileTypeText(manualReview.data.profile.profileType, locale)}
+                        </span>
+                        <bdi dir="ltr" className="font-mono">
+                          {profileReference(manualReview.data.profile.id)}
+                        </bdi>
+                      </span>
+                    </span>
+                  ),
+                },
                 {
                   id: 'due',
                   label: text('manualReviewDueRule'),
