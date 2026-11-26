@@ -50,7 +50,7 @@ async function shell(page: Page, locale: 'en' | 'fa', baseURL: string) {
     })
   );
   await page.route('**/api/admin/sms-providers/template-event-keys', (route) =>
-    route.fulfill({ json: ['auth.otp', 'invoice.created'] })
+    route.fulfill({ json: ['auth.otp', 'invoice.created', 'custom.reminder'] })
   );
   await page.goto('/admin/providers');
 }
@@ -155,6 +155,17 @@ for (const locale of ['en', 'fa'] as const) {
     await openDraft(page);
     const panel = page.getByRole('main');
     await panel.getByRole('link', { name: text('edit'), exact: true }).click();
+    await expect(page).toHaveURL(/\/admin\/providers\/sms\/sms-draft\/edit$/);
+    const firstMappingEvent = page.getByRole('combobox', {
+      name: `${text('event')} 1`,
+      exact: true,
+    });
+    const otpLabel = locale === 'fa' ? 'کد یک‌بارمصرف تأیید' : 'One-time verification code';
+    await expect(firstMappingEvent.locator('option:checked')).toHaveText(otpLabel);
+    await expect(firstMappingEvent).toHaveAccessibleDescription(/auth\.otp/);
+    await expect(firstMappingEvent.locator('option[value="custom.reminder"]')).toHaveText(
+      'custom.reminder'
+    );
     await page
       .getByRole('combobox', { name: `${text('language')} 1`, exact: true })
       .selectOption('fa');
@@ -166,8 +177,14 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('combobox', { name: `${text('language')} 2`, exact: true })
       .selectOption('en');
     await page.getByRole('textbox', { name: `${text('template')} 2`, exact: true }).fill('43');
-    await page.getByRole('combobox', { name: `${text('variable')} 2.1`, exact: true }).fill('code');
-    await page.getByRole('textbox', { name: `${text('parameter')} 2.1`, exact: true }).fill('CODE');
+    await panel.getByRole('button', { name: `${text('addVariable')} code`, exact: true }).click();
+    await expect(
+      page.getByRole('combobox', { name: `${text('variable')} 2.1`, exact: true })
+    ).toHaveValue('code');
+    const parameter = page.getByRole('textbox', { name: `${text('parameter')} 2.1`, exact: true });
+    await expect(parameter).toBeFocused();
+    await expect(parameter).toHaveValue('');
+    await parameter.fill('CODE');
     await panel.getByRole('button', { name: text('save'), exact: true }).click();
     await expect(panel.getByRole('alert').filter({ hasText: text('unavailable') })).toBeVisible();
     await expect(
@@ -195,9 +212,9 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(panel.getByRole('status').filter({ hasText: text('saved') })).toBeVisible();
     await panel.getByRole('link', { name: text('preview'), exact: true }).click();
     await expect(page.locator('#sms-test-event option')).toHaveCount(1);
-    await expect(
-      panel.getByRole('heading', { level: 3 }).filter({ hasText: 'auth.otp' })
-    ).toHaveCount(2);
+    await expect(panel.getByRole('heading', { level: 3, name: otpLabel, exact: true })).toHaveCount(
+      2
+    );
     await panel
       .getByRole('link', { name: providerText('admin.providers.backToDetail', locale) })
       .click();
@@ -439,13 +456,15 @@ for (const locale of ['en', 'fa'] as const) {
     const previewLink = panel.getByRole('link', { name: text('preview'), exact: true });
     await expect(panel.getByRole('button', { name: text('activate'), exact: true })).toBeDisabled();
     await press(previewLink);
+    await expect(page).toHaveURL(/\/admin\/providers\/sms\/sms-draft\/test$/);
     await page.locator('#sms-test-event').selectOption('invoice.created');
     const preview = page.locator('section[aria-labelledby="sms-preview-title"]');
+    await expect(page.locator('#sms-test-event')).toHaveAccessibleDescription(/invoice\.created/);
     await expect(preview).toContainText(
       text('testNotice').replace('{count}', new Intl.NumberFormat(locale).format(2))
     );
     await expect(preview.getByRole('heading', { level: 3 }).first()).toContainText(
-      'invoice.created'
+      locale === 'fa' ? 'ایجاد صورتحساب' : 'Invoice created'
     );
     await expect(preview).toContainText('INVOICE_CODE');
     await expect(preview).toContainText('test-code');

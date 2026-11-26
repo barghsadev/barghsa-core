@@ -62,7 +62,7 @@ import {
   keepRecordFieldVisible,
   recordEditorFormSurface,
 } from '../components/StickyRecordEditorActions.js';
-import { providerFormText } from '@barghsa/i18n/provider-forms';
+import { providerFormText, smsProviderEventLabel } from '@barghsa/i18n/provider-forms';
 import {
   editorFor,
   configFor,
@@ -298,6 +298,7 @@ export default function AdminSmsProvidersPage({
     </div>
   );
   const testProvider = providers.find((p) => p.id === selected);
+  const firstEventLabel = smsProviderEventLabel(firstEvent, locale);
   const testContactBasis = testProvider ? rowBasis(testProvider, false) : '';
   const testRecipient = testContact?.basis === testContactBasis ? testContact.value : '';
   const validTestRecipient = /^\+?[1-9][0-9]{9,14}$/.test(testRecipient.trim());
@@ -1016,6 +1017,16 @@ export default function AdminSmsProvidersPage({
               {editor.mappings.map((m, index) => {
                 const id = `sms-mapping-${m.id}`;
                 const title = `${providerFormText('mappingTitle', locale)} ${new Intl.NumberFormat(locale).format(index + 1)}`;
+                const eventLabel = smsProviderEventLabel(m.event, locale);
+                const eventKeyId = eventLabel !== m.event ? `${id}-event-key` : undefined;
+                const variableChoices = smsVariableChoices(
+                  templateVariables.data ?? [],
+                  m.event,
+                  m.locale
+                );
+                const unusedVariables = variableChoices.filter(
+                  (name) => !m.variables.some((entry) => entry.internal.trim() === name)
+                );
                 return (
                   <div
                     key={m.id}
@@ -1043,7 +1054,7 @@ export default function AdminSmsProvidersPage({
                         <TableTrash2Icon aria-hidden="true" />
                       </Button>
                     </div>
-                    <div className="grid min-w-0 gap-3 sm:grid-cols-3">
+                    <div className="grid min-w-0 gap-3 sm:grid-cols-[minmax(0,2fr)_repeat(2,minmax(0,1fr))]">
                       <div className={recordEditorField}>
                         <Label htmlFor={`${id}-event`}>{text('event')}</Label>
                         <NativeSelect
@@ -1052,7 +1063,12 @@ export default function AdminSmsProvidersPage({
                           className="w-full min-w-0"
                           aria-invalid={form.errors.mappings ? true : undefined}
                           aria-describedby={
-                            form.errors.mappings ? form.errorId('mappings') : undefined
+                            [
+                              eventKeyId,
+                              form.errors.mappings ? form.errorId('mappings') : undefined,
+                            ]
+                              .filter(Boolean)
+                              .join(' ') || undefined
                           }
                           aria-label={`${text('event')} ${index + 1}`}
                           disabled={!eventsReady}
@@ -1066,16 +1082,21 @@ export default function AdminSmsProvidersPage({
                           </option>
                           {m.event && !events.includes(m.event) && (
                             <option value={m.event} disabled>
-                              {m.event}
+                              {eventLabel}
                               {eventsReady && ` · ${providerFormText('unavailableEvent', locale)}`}
                             </option>
                           )}
                           {events.map((event) => (
                             <option key={event} value={event}>
-                              {event}
+                              {smsProviderEventLabel(event, locale)}
                             </option>
                           ))}
                         </NativeSelect>
+                        {eventKeyId && (
+                          <p id={eventKeyId} className="text-xs text-muted-foreground">
+                            {providerFormText('eventKey', locale)} <bdi dir="ltr">{m.event}</bdi>
+                          </p>
+                        )}
                       </div>
                       <div className={recordEditorField}>
                         <Label htmlFor={`${id}-language`}>{text('language')}</Label>
@@ -1110,11 +1131,9 @@ export default function AdminSmsProvidersPage({
                       </div>
                     </div>
                     <datalist id={`sms-variables-${m.id}`}>
-                      {smsVariableChoices(templateVariables.data ?? [], m.event, m.locale).map(
-                        (name) => (
-                          <option key={name} value={name} />
-                        )
-                      )}
+                      {variableChoices.map((name) => (
+                        <option key={name} value={name} />
+                      ))}
                     </datalist>
                     <div className="space-y-2 border-t pt-3">
                       <p className="text-sm font-medium">
@@ -1126,6 +1145,47 @@ export default function AdminSmsProvidersPage({
                       >
                         {text('variablesHint')}
                       </p>
+                      {eventsReady &&
+                        events.includes(m.event) &&
+                        !templateVariables.error &&
+                        unusedVariables.length > 0 && (
+                          <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
+                            <span className="text-xs text-muted-foreground">
+                              {providerFormText('availableVariables', locale)}
+                            </span>
+                            {unusedVariables.map((name) => (
+                              <Button
+                                key={name}
+                                type="button"
+                                variant="secondary"
+                                size="sm"
+                                className="max-w-full bg-primary/10 text-primary hover:bg-primary/15"
+                                aria-label={`${text('addVariable')} ${name}`}
+                                onClick={() => {
+                                  const blank = m.variables.find(
+                                    (entry) => !entry.internal && !entry.parameter
+                                  );
+                                  const pair = { ...(blank ?? variable()), internal: name };
+                                  changeMapping(m.id, {
+                                    variables: blank
+                                      ? m.variables.map((entry) =>
+                                          entry.id === blank.id ? pair : entry
+                                        )
+                                      : [...m.variables, pair],
+                                  });
+                                  requestAnimationFrame(() =>
+                                    document.getElementById(`${id}-parameter-${pair.id}`)?.focus()
+                                  );
+                                }}
+                              >
+                                <TablePlusIcon aria-hidden="true" />
+                                <bdi dir="ltr" className="min-w-0 truncate font-mono text-xs">
+                                  {name}
+                                </bdi>
+                              </Button>
+                            ))}
+                          </div>
+                        )}
                       {m.variables.map((v, vi) => (
                         <div
                           key={v.id}
@@ -1246,6 +1306,7 @@ export default function AdminSmsProvidersPage({
               <Label htmlFor="sms-test-event">{text('firstEvent')}</Label>
               <NativeSelect
                 id="sms-test-event"
+                aria-describedby={firstEventLabel !== firstEvent ? 'sms-test-event-key' : undefined}
                 disabled={disabled}
                 value={firstEvent}
                 onChange={(e) => setFirstEvent(e.target.value)}
@@ -1254,11 +1315,16 @@ export default function AdminSmsProvidersPage({
                 {[...new Set(testProvider.config.template_mappings.map((m) => m.event_key))].map(
                   (event) => (
                     <option key={event} value={event}>
-                      {event}
+                      {smsProviderEventLabel(event, locale)}
                     </option>
                   )
                 )}
               </NativeSelect>
+              {firstEventLabel !== firstEvent && (
+                <p id="sms-test-event-key" className="text-xs text-muted-foreground">
+                  {providerFormText('eventKey', locale)} <bdi dir="ltr">{firstEvent}</bdi>
+                </p>
+              )}
             </div>
             <p className="text-sm text-muted-foreground">
               {text('testNotice').replace(
@@ -1272,14 +1338,21 @@ export default function AdminSmsProvidersPage({
                 className="space-y-2 rounded-lg border bg-muted/35 p-3"
               >
                 <h3 className="text-sm font-medium [overflow-wrap:anywhere]">
-                  {m.event_key} · {m.template_id} ·{' '}
+                  {smsProviderEventLabel(m.event_key, locale)}
+                </h3>
+                <p className="text-xs text-muted-foreground [overflow-wrap:anywhere]">
+                  {text('template')} <bdi dir="ltr">{m.template_id}</bdi> ·{' '}
                   {text(
                     m.locale === 'fa' ? 'persian' : m.locale === 'en' ? 'english' : 'allLanguages'
                   )}
-                </h3>
-                <dl>
+                </p>
+                <dl className="space-y-1">
                   {buildSmsTestParameters(m.variables).map((p) => (
-                    <div key={p.name} className="flex gap-4 font-mono" dir="ltr">
+                    <div
+                      key={p.name}
+                      className="grid grid-cols-2 gap-3 font-mono text-xs [overflow-wrap:anywhere] text-start"
+                      dir="ltr"
+                    >
                       <dt>{p.name}</dt>
                       <dd>{p.value}</dd>
                     </div>

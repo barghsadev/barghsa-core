@@ -10,8 +10,10 @@ const en = {
   mappingTitle: 'Template mapping',
   noMappings: 'Add a mapping to connect an application event to a provider template.',
   chooseEvent: 'Choose an event',
+  eventKey: 'Event key',
   unavailableEvent: 'Unavailable',
   variablePairs: 'Template variables',
+  availableVariables: 'Available variables',
   label: 'Enter a name between 1 and 120 characters.',
   host: 'Enter an SMTP host up to 253 characters.',
   port: 'Enter a whole port number from 1 to 65535.',
@@ -58,8 +60,10 @@ const fa: Record<keyof typeof en, string> = {
   mappingTitle: 'نگاشت قالب',
   noMappings: 'برای اتصال یک رویداد به قالب ارائه‌دهنده، نگاشت اضافه کنید.',
   chooseEvent: 'انتخاب رویداد',
+  eventKey: 'کلید رویداد',
   unavailableEvent: 'در دسترس نیست',
   variablePairs: 'متغیرهای قالب',
+  availableVariables: 'متغیرهای در دسترس',
   label: 'نام را با ۱ تا ۱۲۰ نویسه وارد کنید.',
   host: 'میزبان SMTP را حداکثر با ۲۵۳ نویسه وارد کنید.',
   port: 'شماره درگاه را به صورت عدد صحیح از ۱ تا ۶۵۵۳۵ وارد کنید.',
@@ -98,4 +102,17 @@ const fa: Record<keyof typeof en, string> = {
 export type ProviderFormKey = keyof typeof en;
 export function providerFormText(key: ProviderFormKey, locale: Locale): string {
   return (locale === 'fa' ? fa : en)[key];
+}
+
+const smsEventLabels = new Map<string, Record<Locale, string>>([
+  ['auth.otp', { en: 'One-time verification code', fa: 'کد یک‌بارمصرف تأیید' }],
+  ['auth.password_changed', { en: 'Password changed', fa: 'تغییر گذرواژه' }],
+  ['invoice.created', { en: 'Invoice created', fa: 'ایجاد صورتحساب' }],
+  ['order.submitted', { en: 'Order submitted', fa: 'ثبت سفارش' }],
+  ['order.awaiting_staff', { en: 'Order ready for staff review', fa: 'سفارش آماده بررسی کارکنان' }],
+  ['document.review_completed', { en: 'Document review completed', fa: 'پایان بررسی مدرک' }],
+]);
+
+export function smsProviderEventLabel(event: string, locale: Locale): string {
+  return smsEventLabels.get(event)?.[locale] ?? event;
 }
