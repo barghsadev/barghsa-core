@@ -29,7 +29,6 @@ import {
   Label,
   ListPage,
   ListRefreshButton,
-  NativeSelect,
   Textarea,
   SizedAvatar,
   Badge,
@@ -190,6 +189,22 @@ function OwnedAiAgentsPage({
         ])
       ) as Record<(typeof sets)[number][0], (node: HTMLFieldSetElement | null) => void>,
     [register, focusEpoch]
+  );
+  const linkModeRef = useCallback(
+    (node: HTMLFieldSetElement | null) => {
+      register('linkMode').ref(
+        node
+          ? {
+              focus: () =>
+                (
+                  node.querySelector<HTMLInputElement>('input:checked') ??
+                  node.querySelector('input')
+                )?.focus(),
+            }
+          : null
+      );
+    },
+    [register]
   );
   const [changed, setChanged] = useState(false),
     [uncertain, setUncertain] = useState(false),
@@ -691,6 +706,45 @@ function OwnedAiAgentsPage({
       </Button>
     </>
   );
+  function linkChoice(draft: Draft, [field, source]: (typeof sets)[number]) {
+    return (
+      <fieldset
+        key={field}
+        id={`agent-links-${field}`}
+        ref={groupRefs[field]}
+        tabIndex={-1}
+        aria-invalid={!!form.errors[field] || undefined}
+        aria-describedby={form.errors[field] ? form.errorId(field) : undefined}
+        className="min-w-0 rounded-lg border px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-foreground"
+      >
+        <legend className="px-1 font-semibold">{label(source)}</legend>
+        <AgentLinkChoiceList
+          key={focusEpoch}
+          locale={locale}
+          group={label(source)}
+          options={[
+            ...choices[source],
+            ...draft[field]
+              .filter((id) => !choices[source].some((item) => item.id === id))
+              .map((id) => ({
+                id,
+                title: `${label('unavailable')} (${savedDetail.current?.[source].find((item) => item.id === id)?.title ?? id})`,
+              })),
+          ]}
+          selected={draft[field]}
+          disabled={optionsLoading || optionsError}
+          noOptions={label('noChoices')}
+          onChange={form.field(field)[1]}
+        />
+        <CatalogueFieldFeedback
+          compact
+          id={form.errorId(field)}
+          error={form.errors[field]}
+          message={messages[field]}
+        />
+      </fieldset>
+    );
+  }
   const isEditor = workspace?.view === 'create' || workspace?.view === 'edit';
   const refreshButton = (
     <ListRefreshButton
@@ -982,67 +1036,81 @@ function OwnedAiAgentsPage({
                       ))}
                     </div>
                   </RecordEditorSection>
-                  <RecordEditorSection title={copy('sources')} description={label('selectionHelp')}>
-                    <div className={`${recordEditorField} sm:max-w-[50%]`}>
-                      <Label htmlFor="agent-link-mode">{label('linkMode')}</Label>
-                      <NativeSelect
-                        {...form.bind('linkMode')}
-                        id="agent-link-mode"
-                        aria-required="true"
-                        className="w-full"
-                        value={draft.linkMode}
-                        onChange={(event) =>
-                          form.field('linkMode')[1](event.target.value as Draft['linkMode'])
-                        }
-                      >
-                        <option value="any_kb">{label('anyKb')}</option>
-                        <option value="all_kbs">{label('allKbs')}</option>
-                      </NativeSelect>
+                  <RecordEditorSection
+                    title={copy('sources')}
+                    description={copy('sourceSelectionHelp')}
+                  >
+                    <fieldset
+                      {...form.bind('linkMode')}
+                      id="agent-link-mode"
+                      ref={linkModeRef}
+                      role="radiogroup"
+                      aria-labelledby="agent-link-mode-label"
+                      aria-required="true"
+                      className="min-w-0 space-y-2"
+                    >
+                      <legend id="agent-link-mode-label" className="mb-2 text-sm font-medium">
+                        {label('linkMode')}
+                      </legend>
+                      <div className={recordEditorGrid}>
+                        {(
+                          [
+                            ['any_kb', 'anyKb', 'anyBaseHelp'],
+                            ['all_kbs', 'allKbs', 'allBasesHelp'],
+                          ] as const
+                        ).map(([value, title, help]) => (
+                          <label
+                            key={value}
+                            className="flex min-w-0 cursor-pointer items-start gap-2.5 rounded-lg border px-3 py-2.5 hover:bg-muted/40 has-checked:border-primary/45 has-checked:bg-primary/5 has-disabled:cursor-not-allowed has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"
+                          >
+                            <input
+                              name="linkMode"
+                              type="radio"
+                              value={value}
+                              checked={draft.linkMode === value}
+                              onChange={() => form.field('linkMode')[1](value)}
+                              aria-labelledby={`agent-mode-${value}-label`}
+                              aria-describedby={`agent-mode-${value}-help${form.errors.linkMode ? ` ${form.errorId('linkMode')}` : ''}`}
+                              className="mt-1 size-4 shrink-0 accent-primary"
+                            />
+                            <span className="min-w-0 space-y-1">
+                              <span
+                                id={`agent-mode-${value}-label`}
+                                className="block text-sm font-medium"
+                              >
+                                {label(title)}
+                              </span>
+                              <span
+                                id={`agent-mode-${value}-help`}
+                                className="block text-xs text-muted-foreground"
+                              >
+                                {copy(help)}
+                              </span>
+                            </span>
+                          </label>
+                        ))}
+                      </div>
                       <CatalogueFieldFeedback
                         compact
                         id={form.errorId('linkMode')}
                         error={form.errors.linkMode}
                         message={messages.linkMode}
                       />
-                    </div>
+                    </fieldset>
                     <div className={recordEditorGrid}>
-                      {sets.map(([field, source]) => (
-                        <fieldset
-                          key={field}
-                          id={`agent-links-${field}`}
-                          ref={groupRefs[field]}
-                          tabIndex={-1}
-                          aria-invalid={!!form.errors[field] || undefined}
-                          aria-describedby={form.errors[field] ? form.errorId(field) : undefined}
-                          className="min-w-0 rounded-lg border px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-foreground"
-                        >
-                          <legend className="px-1 font-semibold">{label(source)}</legend>
-                          <AgentLinkChoiceList
-                            key={focusEpoch}
-                            locale={locale}
-                            group={label(source)}
-                            options={[
-                              ...choices[source],
-                              ...draft[field]
-                                .filter((id) => !choices[source].some((item) => item.id === id))
-                                .map((id) => ({
-                                  id,
-                                  title: `${label('unavailable')} (${savedDetail.current?.[source].find((item) => item.id === id)?.title ?? id})`,
-                                })),
-                            ]}
-                            selected={draft[field]}
-                            disabled={optionsLoading || optionsError}
-                            noOptions={label('noChoices')}
-                            onChange={form.field(field)[1]}
-                          />
-                          <CatalogueFieldFeedback
-                            compact
-                            id={form.errorId(field)}
-                            error={form.errors[field]}
-                            message={messages[field]}
-                          />
-                        </fieldset>
-                      ))}
+                      {sets
+                        .filter(([field]) => field === 'kbIds' || field === 'kbGroupIds')
+                        .map((choice) => linkChoice(draft, choice))}
+                    </div>
+                  </RecordEditorSection>
+                  <RecordEditorSection
+                    title={copy('responsePolicies')}
+                    description={copy('policySelectionHelp')}
+                  >
+                    <div className={recordEditorGrid}>
+                      {sets
+                        .filter(([field]) => field === 'policyIds' || field === 'policyGroupIds')
+                        .map((choice) => linkChoice(draft, choice))}
                     </div>
                   </RecordEditorSection>
                 </fieldset>

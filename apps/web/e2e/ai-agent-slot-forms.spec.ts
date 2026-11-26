@@ -90,6 +90,16 @@ for (const locale of ['en', 'fa'] as const)
         await expect(field).toHaveAccessibleName(/\S/);
         await expect(field).toHaveAttribute('aria-required', 'true');
       }
+      const retrieval = page.getByRole('radiogroup', { name: agentText('linkMode') });
+      const available = retrieval.getByRole('radio', { name: agentText('anyKb'), exact: true });
+      const required = retrieval.getByRole('radio', { name: agentText('allKbs'), exact: true });
+      await expect(available).toBeChecked();
+      await expect(available).toHaveAccessibleDescription(copy('anyBaseHelp'));
+      await expect(required).toHaveAccessibleDescription(copy('allBasesHelp'));
+      await available.press('ArrowDown');
+      await expect(required).toBeChecked();
+      await expect(required).toBeFocused();
+      await expect(page.getByRole('region', { name: copy('responsePolicies') })).toBeVisible();
       await expect(prompt).not.toHaveAttribute('aria-required', 'true');
       const count = copy('promptCount')
         .replace('{used}', locale === 'fa' ? '۱۸' : '18')
@@ -112,6 +122,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(group).toHaveAttribute('aria-invalid', 'true');
       await expect(group).toHaveAccessibleDescription(copy('kbIds'));
       await expect(page.getByRole('checkbox', { name: 'Tariffs', exact: true })).toBeChecked();
+      await expect(required).toBeChecked();
       await expect(prompt).toHaveValue('Preserve my instructions');
       await expect(page.locator('main[data-area=admin]')).not.toContainText('private-server-value');
       expect(
@@ -146,7 +157,7 @@ for (const locale of ['en', 'fa'] as const)
           systemPrompt: 'Preserve my instructions',
           temperature: null,
           maxTokens: 512,
-          linkMode: 'any_kb',
+          linkMode: 'all_kbs',
           enabled: true,
           kbIds: [aiOptions.kbs[0]!.id],
           policyIds: [],

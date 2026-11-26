@@ -43,7 +43,13 @@ const en = {
   promptExample:
     '## Role\n- Explain electricity plans.\n- Use the linked sources.\n- Ask for missing details.',
   promptCount: '{used} of {limit} characters',
-  sources: 'Knowledge and policies',
+  sources: 'Knowledge sources',
+  sourceSelectionHelp: 'Link up to 200 knowledge bases and 200 groups.',
+  anyBaseHelp: 'Use eligible linked bases when some sources are unavailable.',
+  allBasesHelp:
+    'Every linked base must be ready and available to the audience for a knowledge-backed answer.',
+  responsePolicies: 'Response policies',
+  policySelectionHelp: 'Link up to 200 policies and 200 policy groups to guide responses.',
   responseSettings: 'Response settings',
   descriptionPlaceholder: 'Summarize what this agent helps with.',
   promptHelp: 'Markdown headings, lists, links and code are highlighted.',
@@ -97,7 +103,12 @@ const fa: Record<keyof typeof en, string> = {
   promptExample:
     '## نقش عامل\n- طرح‌های برق را توضیح دهید.\n- از منابع متصل استفاده کنید.\n- سؤال تکمیلی بپرسید.',
   promptCount: '{used} از {limit} نویسه',
-  sources: 'دانش و سیاست‌ها',
+  sources: 'منابع دانش',
+  sourceSelectionHelp: 'حداکثر ۲۰۰ پایگاه دانش و ۲۰۰ گروه را به عامل متصل کنید.',
+  anyBaseHelp: 'اگر برخی منابع در دسترس نباشند، عامل از پایگاه‌های مجاز و در دسترس استفاده می‌کند.',
+  allBasesHelp: 'برای پاسخ مبتنی بر دانش، همه پایگاه‌های متصل باید آماده و در دسترس مخاطب باشند.',
+  responsePolicies: 'سیاست‌های پاسخ‌گویی',
+  policySelectionHelp: 'برای هدایت پاسخ‌ها حداکثر ۲۰۰ سیاست و ۲۰۰ گروه سیاست را انتخاب کنید.',
   responseSettings: 'تنظیمات پاسخ',
   descriptionPlaceholder: 'کوتاه بنویسید این عامل در چه کاری کمک می‌کند.',
   promptHelp: 'عنوان‌ها، فهرست‌ها، پیوندها و کدهای Markdown مشخص می‌شوند.',
