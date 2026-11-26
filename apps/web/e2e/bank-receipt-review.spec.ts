@@ -53,6 +53,7 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await shell(page, locale);
+    const copy = receiptEditorMessages[locale];
     const candidate = {
       invoiceId,
       profileId: receipt.walletId,
@@ -60,14 +61,19 @@ for (const locale of ['en', 'fa'] as const) {
       totalAmount: '100000',
       paidAmount: '0',
       createdAt: '2026-09-01T10:00:00Z',
+      dueAt: '2026-09-08T10:00:00Z',
     };
     const foreignInvoiceId = '11111111-1111-7111-8111-111111111119';
+    const otherInvoiceId = '33333333-3333-7333-8333-333333333333';
+    let listReads = 0;
     await page.route('**/api/admin/invoices/ledger?*', (route) => {
       expect(new URL(route.request().url()).searchParams.get('profileId')).toBe(receipt.walletId);
+      if (++listReads === 1) return route.fulfill({ status: 503, json: { message: 'private' } });
       return route.fulfill({
         json: {
           items: [
             candidate,
+            { ...candidate, invoiceId: otherInvoiceId, totalAmount: '270000' },
             { ...candidate, invoiceId: foreignInvoiceId, profileId: foreignInvoiceId },
           ],
           nextCursor: null,
@@ -75,8 +81,10 @@ for (const locale of ['en', 'fa'] as const) {
       });
     });
     let hash = 'a'.repeat(64);
+    const reviewed: Array<string | null> = [];
     await page.route(`**${base}/${receiptId}/review**`, (route) => {
       const id = new URL(route.request().url()).searchParams.get('invoiceId');
+      reviewed.push(id);
       const review = bankReceiptReview(receiptId, id);
       review.hash = hash;
       return route.fulfill({ json: review });
@@ -95,12 +103,36 @@ for (const locale of ['en', 'fa'] as const) {
     await page.goto(`/admin/wallet-receipts/${receiptId}`);
     await openWalletReceiptAction(page, 'confirm');
     const confirm = page.getByTestId('wallet-receipt-confirm');
-    const selection = page.getByLabel(receiptEditorMessages[locale].invoiceDestination);
+    const selection = page.getByRole('combobox', { name: copy.invoiceDestination });
     await expect(confirm).toBeEnabled();
-    await expect(selection.locator(`option[value="${invoiceId}"]`)).toHaveCount(1);
-    await expect(selection.locator(`option[value="${foreignInvoiceId}"]`)).toHaveCount(0);
-    await selection.selectOption(invoiceId);
+    await expect(
+      page.getByRole('alert').filter({ hasText: copy.invoiceChoiceError })
+    ).toBeVisible();
+    await page.getByRole('button', { name: copy.retryInvoices, exact: true }).click();
+    await expect(selection).toBeFocused();
+    expect(listReads).toBe(2);
+    expect(bodies).toHaveLength(0);
+    await selection.click();
+    const option = page.getByRole('option', { name: /222222222222/ });
+    const other = page.getByRole('option', { name: /333333333333/ });
+    await expect(option).toBeVisible();
+    await expect(option).toHaveAccessibleDescription(new RegExp(copy.invoiceChoiceDue));
+    await expect(other).toBeVisible();
+    await expect(page.getByRole('option', { name: /111111111119/ })).toHaveCount(0);
+    const reviewCount = reviewed.length;
+    await selection.fill(locale === 'fa' ? '۱۰۰۰۰۰' : '100000');
+    await expect(other).toHaveCount(0);
+    await expect(option).toBeVisible();
+    expect(reviewed).toHaveLength(reviewCount);
+    await option.click();
+    await expect(selection).toHaveValue(/222222222222/);
     await expect(confirm).toBeEnabled();
+    const selectedReviewCount = reviewed.length;
+    await selection.fill('000000000000');
+    await expect(page.getByText(copy.invoiceChoiceNoMatches, { exact: true })).toBeVisible();
+    await selection.press('Escape');
+    await expect(selection).toHaveValue(/222222222222/);
+    expect(reviewed).toHaveLength(selectedReviewCount);
     await expect(page.getByTestId('admin-wallet-receipts-page')).toHaveAttribute(
       'dir',
       locale === 'fa' ? 'rtl' : 'ltr'
@@ -127,7 +159,7 @@ for (const locale of ['en', 'fa'] as const) {
       })
       .click();
     await expect(confirm).toBeEnabled();
-    await selection.selectOption(invoiceId);
+    await expect(selection).toHaveValue(/222222222222/);
     await expect(confirm).toBeEnabled();
     await confirm.click();
     await confirmFinancialReview(page, locale);

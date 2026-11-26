@@ -1,5 +1,5 @@
-import { useEffect, useId, useState } from 'react';
-import { Button, Label, NativeSelect } from '@barghsa/ui';
+import { useEffect, useId, useRef, useState } from 'react';
+import { Button, Label } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { receiptEditorMessages } from '@barghsa/i18n/receipt-editor';
 import {
@@ -13,6 +13,8 @@ import { staffQueryJson, useStaffQueryRead } from '../hooks/useStaffQueryRead.js
 import type { WizardFieldBinding } from '../hooks/useWizardForm.js';
 import { isTransactionUuid } from '../lib/bank-receipt-confirmation.js';
 import { decodeFinanceCursor, type FinanceCursor } from '../lib/finance-list-query.js';
+import { ServerQueryError } from '../lib/server-query-client.js';
+import { CatalogueChoicePicker } from './CatalogueChoicePicker.js';
 import { recordEditorField } from './RecordEditorLayout.js';
 
 interface InvoiceChoice {
@@ -22,7 +24,10 @@ interface InvoiceChoice {
   totalAmount: string;
   paidAmount: string;
   createdAt: string;
+  dueAt?: string | null;
 }
+
+const wallet = 'wallet';
 
 function eligibleInvoice(value: unknown, profileId: string): value is InvoiceChoice {
   const invoice = value as Partial<InvoiceChoice> | null;
@@ -67,7 +72,17 @@ export function WalletReceiptInvoicePicker({
   const [choices, setChoices] = useState<InvoiceChoice[]>([]);
   const [nextCursor, setNextCursor] = useState<FinanceCursor | null>(null);
   const [cursor, setCursor] = useState<FinanceCursor | null>(null);
-  const [status, setStatus] = useState<'loading' | 'unavailable' | 'ready'>('loading');
+  const [attempt, setAttempt] = useState(0);
+  const [status, setStatus] = useState<'loading' | 'unavailable' | 'denied' | 'ready'>('loading');
+  const refocus = useRef(false);
+  const retryButton = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!refocus.current || status === 'loading') return;
+    refocus.current = false;
+    if (status === 'ready') document.getElementById(id)?.focus();
+    else if (status === 'unavailable') retryButton.current?.focus();
+  }, [id, status]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -93,14 +108,42 @@ export function WalletReceiptInvoicePicker({
         setNextCursor(next?.beforeId === cursor?.beforeId ? null : next);
         setStatus('ready');
       })
-      .catch(() => {
+      .catch((error: unknown) => {
         if (controller.signal.aborted) return;
-        setChoices([]);
-        setNextCursor(null);
-        setStatus('unavailable');
+        if (error instanceof ServerQueryError && [401, 403, 404].includes(error.status)) {
+          setChoices([]);
+          setNextCursor(null);
+          setStatus('denied');
+        } else {
+          setStatus('unavailable');
+        }
       });
     return () => controller.abort();
-  }, [profileId, read, cursor]);
+  }, [profileId, read, cursor, attempt]);
+
+  const options = [
+    { id: wallet, title: copy.walletCredit },
+    ...choices.map((invoice) => {
+      const remaining = remainingForBankReceiptSettlement({
+        state: invoice.state,
+        totalAmount: BigInt(invoice.totalAmount),
+        paidAmount: BigInt(invoice.paidAmount),
+      });
+      const dueAt =
+        typeof invoice.dueAt === 'string' && Number.isFinite(Date.parse(invoice.dueAt))
+          ? invoice.dueAt
+          : null;
+      const stamp = dueAt ?? invoice.createdAt;
+      const date = format(stamp, { dateStyle: 'medium' });
+      const state = t(`invoices.state.${invoice.state}`, locale);
+      return {
+        id: invoice.invoiceId,
+        title: `${money(remaining)} · …${invoice.invoiceId.slice(-12)}`,
+        detail: `${state} · ${dueAt ? copy.invoiceChoiceDue : copy.invoiceChoiceCreated} ${date}`,
+        searchText: `${invoice.invoiceId} ${remaining} ${stamp.slice(0, 10)} ${date} ${state}`,
+      };
+    }),
+  ];
 
   return (
     <div className={recordEditorField}>
@@ -116,34 +159,28 @@ export function WalletReceiptInvoicePicker({
           {copy.useInvoiceId}
         </Button>
       </div>
-      <NativeSelect
-        {...field}
+      <CatalogueChoicePicker
         id={id}
-        className="w-full"
-        value={value}
-        onChange={(event) => onValueChange(event.target.value)}
+        locale={locale}
+        options={options}
+        selected={value || wallet}
         disabled={disabled}
-        aria-invalid={Boolean(error) || undefined}
-        aria-describedby={`${id}-hint${error ? ` ${id}-error` : ''}`}
-      >
-        <option value="">{copy.walletCredit}</option>
-        {value && !choices.some((invoice) => invoice.invoiceId === value) && (
-          <option value={value}>…{value.trim().slice(-12)}</option>
-        )}
-        {choices.map((invoice) => {
-          const remaining = remainingForBankReceiptSettlement({
-            state: invoice.state,
-            totalAmount: BigInt(invoice.totalAmount),
-            paidAmount: BigInt(invoice.paidAmount),
-          });
-          return (
-            <option
-              key={invoice.invoiceId}
-              value={invoice.invoiceId}
-            >{`…${invoice.invoiceId.slice(-12)} · ${format(invoice.createdAt, { dateStyle: 'short' })} · ${t(`invoices.state.${invoice.state}`, locale)} · ${money(remaining)}`}</option>
-          );
-        })}
-      </NativeSelect>
+        required={false}
+        field={{
+          ...field,
+          'aria-invalid': Boolean(error) || undefined,
+          'aria-describedby': `${id}-hint${error ? ` ${id}-error` : ''}`,
+        }}
+        labels={{
+          search: copy.invoiceChoiceSearch,
+          noMatches: copy.invoiceChoiceNoMatches,
+          empty: copy.invoiceChoiceNone,
+          unavailable: `…${value.trim().slice(-12)}`,
+        }}
+        onChange={(invoiceId) => {
+          if (invoiceId) onValueChange(invoiceId === wallet ? '' : invoiceId);
+        }}
+      />
       <p id={`${id}-hint`} className="text-xs text-muted-foreground">
         {copy.invoiceChoiceHelp}
       </p>
@@ -158,8 +195,30 @@ export function WalletReceiptInvoicePicker({
         </p>
       )}
       {status === 'unavailable' && (
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-destructive/20 bg-danger-soft p-2.5">
+          <p role="alert" className="min-w-0 text-sm text-destructive">
+            {copy.invoiceChoiceError}
+          </p>
+          <Button
+            ref={retryButton}
+            type="button"
+            size="sm"
+            variant="outline"
+            className="min-h-11"
+            disabled={disabled}
+            onClick={() => {
+              refocus.current = true;
+              setStatus('loading');
+              setAttempt((value) => value + 1);
+            }}
+          >
+            {copy.retryInvoices}
+          </Button>
+        </div>
+      )}
+      {status === 'denied' && (
         <p role="status" className="text-sm text-muted-foreground">
-          {copy.invoiceChoiceError}
+          {copy.invoiceChoiceDenied}
         </p>
       )}
       {status === 'ready' && choices.length === 0 && (
@@ -167,7 +226,7 @@ export function WalletReceiptInvoicePicker({
           {copy.invoiceChoiceNone}
         </p>
       )}
-      {nextCursor && (
+      {nextCursor && status !== 'unavailable' && (
         <Button
           type="button"
           variant="link"

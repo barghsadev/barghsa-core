@@ -4,7 +4,12 @@ import { ComboBox, ComboBoxInput, ComboBoxItem, ComboBoxPopup } from '@barghsa/u
 import type { WizardFieldBinding } from '../hooks/useWizardForm.js';
 import { catalogueSearchText } from '../lib/catalogue-search.js';
 
-export type CatalogueChoice = { id: string; title: string; detail?: string | undefined };
+export type CatalogueChoice = {
+  id: string;
+  title: string;
+  detail?: string | undefined;
+  searchText?: string;
+};
 
 export function CatalogueChoicePicker({
   id,
@@ -39,7 +44,9 @@ export function CatalogueChoicePicker({
       items={options}
       filteredItems={
         query
-          ? options.filter((option) => catalogueSearchText(option.title).includes(query))
+          ? options.filter((option) =>
+              catalogueSearchText(`${option.title} ${option.searchText ?? ''}`).includes(query)
+            )
           : options
       }
       value={selectedOption}

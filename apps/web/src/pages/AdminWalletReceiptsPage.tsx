@@ -1229,6 +1229,7 @@ function WalletReceiptsWorkspace({
               <RecordEditorSection title={receiptEditorMessages[locale].applyPayment}>
                 {recordAction && !selected.dualApproval && !manualInvoice ? (
                   <WalletReceiptInvoicePicker
+                    key={`${selected.transactionId}:${selected.walletId}`}
                     profileId={selected.walletId}
                     field={confirmation.invoice.bind('invoiceId')}
                     value={invoiceId}
