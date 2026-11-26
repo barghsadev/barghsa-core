@@ -22,6 +22,7 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   LoadingStatus,
+  Badge,
   Button,
   DateCell,
   TextCell,
@@ -32,6 +33,8 @@ import {
   buttonVariants,
 } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import {
   Form,
@@ -675,7 +678,26 @@ function OwnedAdminDocumentTemplatesPage({
                   error={state === 'error' || state === 'denied'}
                   empty={!visibleRows?.length}
                   retainContent={!!visibleRows?.length && state !== 'denied'}
-                  loadingView={<LoadingStatus>{word('loading')}</LoadingStatus>}
+                  loadingView={
+                    <>
+                      <div className="md:hidden">
+                        <RecordListSkeleton label={word('loading')} view="card" headings={[]} />
+                      </div>
+                      <div className="hidden md:block">
+                        <RecordListSkeleton
+                          label={word('loading')}
+                          view="table"
+                          headings={[
+                            word('name'),
+                            word('category'),
+                            word('details'),
+                            word('versionCount'),
+                            word('updated'),
+                          ]}
+                        />
+                      </div>
+                    </>
+                  }
                   errorView={
                     <div role="alert" className="space-y-2">
                       <p>{word(state === 'denied' ? 'denied' : 'error')}</p>
@@ -737,7 +759,7 @@ function OwnedAdminDocumentTemplatesPage({
                       {
                         id: 'category',
                         label: word('category'),
-                        render: (row) => <>{word(row.category)}</>,
+                        render: (row) => <Badge variant="secondary">{word(row.category)}</Badge>,
                       },
                       {
                         id: 'description',
@@ -776,7 +798,12 @@ function OwnedAdminDocumentTemplatesPage({
               aria-label={word('workspaceTitle')}
               tabIndex={-1}
             >
-              {detailState === 'loading' && <LoadingStatus>{word('loadingDetail')}</LoadingStatus>}
+              {detailState === 'loading' &&
+                (detail ? (
+                  <LoadingStatus>{word('loadingDetail')}</LoadingStatus>
+                ) : (
+                  <RecordDetailSkeleton label={word('loadingDetail')} />
+                ))}
               {detailState === 'error' && (
                 <div role="alert" className="space-y-2">
                   <p>{word(missing ? 'missingTemplate' : 'detailError')}</p>
@@ -794,22 +821,22 @@ function OwnedAdminDocumentTemplatesPage({
               )}
               {versionChanged && <p role="status">{word('versionChanged')}</p>}
               {detail && !draft && (!view || view === 'detail' || view === 'publish') ? (
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
+                <div className="flex flex-wrap items-start justify-between gap-4 rounded-xl border bg-card p-4 sm:p-5">
+                  <div className="min-w-0 space-y-2">
                     {!view && (
                       <h2 className="text-xl font-semibold" dir="auto">
                         {detail.title}
                       </h2>
                     )}
+                    {view && <Badge variant="secondary">{word(detail.category)}</Badge>}
                     {detail.description ? (
                       <p
-                        className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground"
+                        className="wrap-anywhere whitespace-pre-wrap text-sm text-muted-foreground"
                         dir="auto"
                       >
                         {detail.description}
                       </p>
                     ) : null}
-                    {view && <p className="mt-1 text-sm font-medium">{word(detail.category)}</p>}
                   </div>
                   {view === 'detail' ? (
                     <div className="flex flex-wrap gap-2">
@@ -1191,7 +1218,7 @@ function OwnedAdminDocumentTemplatesPage({
                   )}
                   {historyView && (
                     <section
-                      className="min-w-0 space-y-4 rounded-lg border bg-card p-4"
+                      className="min-w-0 space-y-4 rounded-xl border bg-card p-4 sm:p-5"
                       aria-label={word('history')}
                     >
                       {view === 'version' ? (
@@ -1208,7 +1235,7 @@ function OwnedAdminDocumentTemplatesPage({
                       {visibleVersions.length ? (
                         visibleVersions.map((version) => (
                           <div key={version.id} className="space-y-3 border-b pb-5 last:border-0">
-                            <div className="flex flex-wrap items-baseline gap-3">
+                            <div className="flex flex-wrap items-baseline justify-between gap-3">
                               {view === 'detail' ? (
                                 <h3 className="font-semibold">
                                   <Link
@@ -1239,13 +1266,18 @@ function OwnedAdminDocumentTemplatesPage({
                                 {version.changeSummary}
                               </p>
                             ) : null}
-                            <ul className="space-y-2 text-sm">
+                            <ul className="divide-y rounded-lg bg-muted/45 px-3 text-sm">
                               {version.files.map((file) => {
                                 const key = `${version.id}:${file.id}`;
                                 const pending = pendingLinks.includes(key);
                                 return (
-                                  <li key={file.id} className="flex flex-wrap items-center gap-2">
-                                    <span dir="auto">{file.originalName}</span>
+                                  <li
+                                    key={file.id}
+                                    className="flex flex-wrap items-center justify-between gap-2 py-2"
+                                  >
+                                    <bdi className="wrap-anywhere font-medium">
+                                      {file.originalName}
+                                    </bdi>
                                     {view !== 'detail' && (
                                       <Button
                                         type="button"
@@ -1276,16 +1308,32 @@ function OwnedAdminDocumentTemplatesPage({
                                 );
                               })}
                             </ul>
-                            <div className="text-sm">
-                              <span className="font-medium">{word('placeholders')}: </span>
-                              {version.placeholders.length ? (
-                                <span dir="ltr">
-                                  {version.placeholders.map((name) => `{{${name}}}`).join(', ')}
-                                </span>
-                              ) : (
-                                word('noPlaceholders')
-                              )}
-                            </div>
+                            {view === 'detail' ? (
+                              version.placeholders.length > 0 && (
+                                <p className="text-xs text-muted-foreground">
+                                  {word('placeholders')} ·{' '}
+                                  {numbers.number(version.placeholders.length)}
+                                </p>
+                              )
+                            ) : (
+                              <div className="space-y-2 text-sm">
+                                <p className="font-medium">{word('placeholders')}</p>
+                                {version.placeholders.length ? (
+                                  <ul className="flex flex-wrap gap-2">
+                                    {version.placeholders.map((name) => (
+                                      <li
+                                        key={name}
+                                        className="wrap-anywhere rounded bg-muted px-2 py-1"
+                                      >
+                                        <code dir="ltr">{`{{${name}}}`}</code>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                ) : (
+                                  <p className="text-muted-foreground">{word('noPlaceholders')}</p>
+                                )}
+                              </div>
+                            )}
                             {version.missingRequired.length ? (
                               <p className="text-sm text-amber-700 dark:text-amber-300">
                                 {word('missingRequired')}:{' '}

@@ -26,6 +26,7 @@ import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
 import {
   Button,
+  Badge,
   DateCell,
   TextCell,
   Input,
@@ -37,6 +38,8 @@ import {
   buttonVariants,
 } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import {
   RecordEditorActions,
   RecordEditorSection,
@@ -544,7 +547,27 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
           loading={catalogue.loading}
           error={catalogue.error}
           retainContent={catalogue.data !== null}
-          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+          loadingView={
+            <>
+              <div className="md:hidden">
+                <RecordListSkeleton label={label('loading')} view="card" headings={[]} />
+              </div>
+              <div className="hidden md:block">
+                <RecordListSkeleton
+                  label={label('loading')}
+                  view="table"
+                  headings={[
+                    label('name'),
+                    label('description'),
+                    label('status'),
+                    label('versions'),
+                    label('latestFile'),
+                    label('actions'),
+                  ]}
+                />
+              </div>
+            </>
+          }
           errorView={
             <div role="alert">
               {label('error')}{' '}
@@ -574,7 +597,12 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
                   )}
                 </ListPage.Toolbar>
               )}
-              {history.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
+              {history.loading &&
+                (detail ? (
+                  <LoadingStatus>{label('loading')}</LoadingStatus>
+                ) : (
+                  <RecordDetailSkeleton label={label('loading')} />
+                ))}
               {history.error && (
                 <div role="alert">
                   {label(history.missing ? 'missing' : 'error')}{' '}
@@ -715,15 +743,15 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
                 <section aria-label={label('history')} className="flex flex-col gap-4">
                   {view === 'detail' && (
                     <div className="space-y-4 rounded-xl border bg-card p-4 sm:p-6">
+                      <Badge variant={detail.status === 'active' ? 'secondary' : 'outline'}>
+                        {label(detail.status)}
+                      </Badge>
                       {detail.description && (
                         <p className="whitespace-pre-wrap [overflow-wrap:anywhere]">
                           {detail.description}
                         </p>
                       )}
                       <div className="flex min-w-0 flex-wrap items-center gap-3">
-                        <span className="rounded-full bg-muted px-3 py-1 text-sm font-medium">
-                          {label(detail.status)}
-                        </span>
                         <Link
                           to={routes.edit}
                           params={{ templateId: detail.id }}
@@ -766,12 +794,15 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
                                   {label('version')} {numbers.number(version.versionNumber)}
                                 </Link>
                               </h3>
-                              <p className="text-sm">{version.fileName}</p>
-                              <p className="text-sm text-muted-foreground" dir="auto">
-                                {version.placeholders
-                                  .map((value) => '{{' + value + '}}')
-                                  .join(', ') || label('noPlaceholders')}
+                              <p className="text-sm" dir="auto">
+                                {version.fileName}
                               </p>
+                              {version.placeholders.length > 0 && (
+                                <p className="text-xs text-muted-foreground">
+                                  {label('placeholders')} ·{' '}
+                                  {numbers.number(version.placeholders.length)}
+                                </p>
+                              )}
                             </div>
                             <time
                               dateTime={version.createdAt}
@@ -938,6 +969,7 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
                       <TextCell value={row.name} />
                     )
                   }
+                  fieldGroups={[{ label: label('latestFile'), fields: ['file', 'created'] }]}
                   fields={[
                     {
                       id: 'description',
@@ -951,7 +983,11 @@ function OwnedContractTemplatesPage({ view, templateId, onSettled }: WorkspacePr
                     {
                       id: 'status',
                       label: label('status'),
-                      render: (row) => <>{label(row.status)}</>,
+                      render: (row) => (
+                        <Badge variant={row.status === 'active' ? 'secondary' : 'outline'}>
+                          {label(row.status)}
+                        </Badge>
+                      ),
                     },
                     {
                       id: 'versions',

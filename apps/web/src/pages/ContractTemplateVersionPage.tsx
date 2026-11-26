@@ -1,12 +1,13 @@
 import { useCallback } from 'react';
 import { Link } from '@tanstack/react-router';
-import { Alert, Button, LoadingStatus } from '@barghsa/ui';
+import { Alert, Button } from '@barghsa/ui';
 import { contractTemplatesText } from '@barghsa/i18n/contract-templates';
 import { useLocale } from '../hooks/useLocale.js';
 import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueResource.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { contractTemplateRoutes } from '../lib/template-catalogue-routes.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 
 interface VersionPreview {
   templateId: string;
@@ -72,15 +73,16 @@ export default function ContractTemplateVersionPage({
           {label('version')} {numbers.number(versionNumber)}
         </h1>
         {preview && (
-          <p className="text-sm text-muted-foreground [overflow-wrap:anywhere]">
-            {preview.fileName}
-          </p>
+          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm text-muted-foreground">
+            <bdi className="wrap-anywhere font-medium">{preview.fileName}</bdi>
+            <time dateTime={preview.createdAt}>{time.format(preview.createdAt)}</time>
+          </div>
         )}
       </header>
       {scope.denied ? (
         <Alert variant="destructive">{label('denied')}</Alert>
       ) : resource.loading ? (
-        <LoadingStatus>{label('loading')}</LoadingStatus>
+        <RecordDetailSkeleton label={label('loading')} />
       ) : resource.error ? (
         <Alert variant="destructive">
           <p>{label('previewUnavailable')}</p>
@@ -93,12 +95,7 @@ export default function ContractTemplateVersionPage({
           <>
             {time.notice}
             <article className="space-y-4 rounded-xl border bg-card p-4 sm:p-6">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="text-lg font-semibold">{label('sourcePreview')}</h2>
-                <time dateTime={preview.createdAt} className="text-sm text-muted-foreground">
-                  {time.format(preview.createdAt)}
-                </time>
-              </div>
+              <h2 className="text-lg font-semibold">{label('sourcePreview')}</h2>
               <pre
                 dir="auto"
                 className="whitespace-pre-wrap rounded-lg bg-muted p-4 text-sm leading-relaxed [overflow-wrap:anywhere]"
