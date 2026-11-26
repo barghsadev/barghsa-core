@@ -17,6 +17,15 @@ const en = {
   refresh: 'Refresh requests',
   clearChecks: 'Checks with no outstanding items ({count})',
   noRequests: 'Your export and closure requests will appear here.',
+  activeProfile: 'Active profile',
+  submittedNow: 'Just now',
+  exportNext:
+    'Prepare a copy of this profile’s data. Track progress and download it in Recent requests.',
+  closureNext:
+    'Support reviews the request first. Approval ends access to this profile. Financial and legal records are retained.',
+  downloadBeforeClosure: 'Request and download any data export before closure is approved.',
+  closureSubmitted: 'Follow progress and reply to support in the existing request.',
+  openClosureRequest: 'View closure request',
   consequencesTitle: 'What closure changes',
   closureReady: 'Send your request to support for final review.',
   openClosureReview: 'Review profile closure',
@@ -47,6 +56,16 @@ const fa: Record<keyof typeof en, string> = {
   refresh: 'تازه‌سازی درخواست‌ها',
   clearChecks: 'بررسی‌های بدون مانع ({count})',
   noRequests: 'درخواست‌های دریافت داده و بستن پروفایل اینجا نمایش داده می‌شوند.',
+  activeProfile: 'پروفایل فعال',
+  submittedNow: 'همین حالا',
+  exportNext:
+    'نسخه‌ای از داده‌های این پروفایل آماده کنید. وضعیت آماده‌سازی و دریافت فایل را در درخواست‌های اخیر ببینید.',
+  closureNext:
+    'پشتیبانی ابتدا درخواست را بررسی می‌کند. پس از تأیید، دسترسی به این پروفایل پایان می‌یابد. سوابق مالی و حقوقی حفظ می‌شوند.',
+  downloadBeforeClosure:
+    'اگر به داده‌ها نیاز دارید، پیش از تأیید بستن پروفایل درخواست دهید و فایل را دریافت کنید.',
+  closureSubmitted: 'وضعیت را از درخواست ثبت‌شده پیگیری کنید و همان‌جا به پشتیبانی پاسخ دهید.',
+  openClosureRequest: 'مشاهده درخواست بستن پروفایل',
   consequencesTitle: 'پیامدهای بستن پروفایل',
   closureReady: 'درخواست را برای بررسی نهایی به پشتیبانی بفرستید.',
   openClosureReview: 'بررسی بستن پروفایل',

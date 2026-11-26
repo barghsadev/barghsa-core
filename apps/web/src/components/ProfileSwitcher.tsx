@@ -1,21 +1,18 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  type ReactNode,
-  type ComponentType,
-} from 'react';
+import { useContext, useEffect, useRef, useState, type ReactNode, type ComponentType } from 'react';
 import { Link, useLocation } from '@tanstack/react-router';
-import { Building2, Check, ChevronDown, UserRound } from 'lucide-react';
+import { Building, ChevronDown, UserRound } from 'lucide-react';
 import { t, type Locale } from '@barghsa/i18n/workspace';
-import { Badge, Button, Popover, PopoverContent, PopoverTitle, PopoverTrigger } from '@barghsa/ui';
+import { Button, Popover, PopoverContent, PopoverTitle, PopoverTrigger } from '@barghsa/ui';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useOwnedProfileRead } from '../hooks/useOwnedProfileRead.js';
 import { useSettingsCommand } from '../hooks/useSettingsCommand.js';
 import { settingsContext, type SettingsProfileSummary } from '../lib/settings-profile-directory.js';
-import { refreshProfileContext, useProfileContextRevision } from '../lib/profile-context.js';
+import {
+  ProfileContext,
+  refreshProfileContext,
+  useProfileContextRevision,
+  useWorkspaceActiveProfile,
+} from '../lib/profile-context.js';
 
 import { profileName, ProfileAvatar, ProfileTypeBadge } from './ProfileIdentity.js';
 import type { ProfileSwitchProgressProps } from './ProfileSwitchProgress.js';
@@ -26,14 +23,6 @@ export interface ProfileSwitchResponse {
   activeProfileId: string | null;
 }
 type Profiles = NonNullable<ReturnType<typeof settingsContext>>;
-const ProfileContext = createContext<{
-  data: Profiles | null;
-  loading: boolean;
-  error: boolean;
-  locked: boolean;
-  load: () => Promise<void>;
-  select: (id: string) => Promise<void>;
-} | null>(null);
 
 /** One current, account-owned directory serves the picker and compact badge. */
 export function ProfileWorkspaceProvider({
@@ -199,12 +188,9 @@ export function ProfileWorkspaceProvider({
 
 /** Visible in compact headers; the same directory/identity owns both presentations. */
 export function ProfileBadge({ locale }: { locale: Locale }) {
-  const workspace = useContext(ProfileContext);
-  const profile = workspace?.data?.profiles.find(
-    (row) => row.id === workspace.data?.activeProfileId
-  );
+  const profile = useWorkspaceActiveProfile();
   if (!profile) return null;
-  const Icon = profile.profileType === 'LEGAL' ? Building2 : UserRound;
+  const Icon = profile.profileType === 'LEGAL' ? Building : UserRound;
   return (
     <span
       className="flex min-w-0 items-center gap-1"
@@ -290,35 +276,7 @@ export function ProfileSwitcher({ locale = 'fa' }: { locale?: Locale }) {
         >
           <PopoverTitle>{t('dashboard.profile.switchLabel', locale)}</PopoverTitle>
           {Choices ? (
-            <Choices
-              data={data}
-              label={t('dashboard.profile.switchLabel', locale)}
-              onSelect={workspace.select}
-              renderProfile={(profile) => (
-                <>
-                  <ProfileAvatar profile={profile} locale={locale} />
-                  <span className="min-w-0 flex-1 space-y-1">
-                    <span className="block break-words font-medium">
-                      {profileName(profile, locale)}
-                    </span>
-                    <span className="flex flex-wrap gap-1">
-                      <ProfileTypeBadge profile={profile} locale={locale} />
-                      <Badge variant="outline">
-                        {t(
-                          profile.status === 'VERIFIED'
-                            ? 'dashboard.profile.verified'
-                            : 'dashboard.profile.unverified',
-                          locale
-                        )}
-                      </Badge>
-                    </span>
-                  </span>
-                  {profile.id === data.activeProfileId && (
-                    <Check className="size-4 shrink-0 text-primary" aria-hidden="true" />
-                  )}
-                </>
-              )}
-            />
+            <Choices data={data} locale={locale} onSelect={workspace.select} />
           ) : (
             <div className="space-y-2">
               <p role={choiceError ? 'alert' : 'status'}>

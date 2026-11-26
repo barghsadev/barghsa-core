@@ -1,5 +1,20 @@
-import { useEffect, useRef, useSyncExternalStore } from 'react';
+import { createContext, useContext, useEffect, useRef, useSyncExternalStore } from 'react';
+import type { settingsContext } from './settings-profile-directory.js';
 import { toast } from './toast-api.js';
+
+export const ProfileContext = createContext<{
+  data: ReturnType<typeof settingsContext>;
+  loading: boolean;
+  error: boolean;
+  locked: boolean;
+  load: () => Promise<void>;
+  select: (id: string) => Promise<void>;
+} | null>(null);
+
+export function useWorkspaceActiveProfile() {
+  const data = useContext(ProfileContext)?.data;
+  return data?.profiles.find((row) => row.id === data.activeProfileId);
+}
 
 let revision = 0;
 export const getProfileContextRevision = () => revision;

@@ -7,6 +7,7 @@ import {
   ticketId,
   otherTicketId,
   profileId,
+  otherProfileId,
   customerActor,
 } from './ticket-forms-fixture';
 import {
@@ -52,6 +53,37 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }, info) => {
     await setupTicketForms(page, locale, false);
+    const name = locale === 'fa' ? 'شرکت سپهر' : 'Sepehr Energy';
+    await page.route('**/api/profiles', (route) =>
+      route.fulfill({
+        json: {
+          hasDefault: true,
+          activeProfileId: profileId,
+          profiles: [
+            {
+              id: profileId,
+              profileType: 'LEGAL',
+              status: 'ACTIVE',
+              title: name,
+              firstName: null,
+              lastName: null,
+              nationalId: null,
+              isDefault: true,
+            },
+            {
+              id: otherProfileId,
+              profileType: 'LEGAL',
+              status: 'ACTIVE',
+              title: 'Other workspace',
+              firstName: null,
+              lastName: null,
+              nationalId: null,
+              isDefault: false,
+            },
+          ],
+        },
+      })
+    );
     const value = { ...actualLifecyclePreview(), profileId },
       writes: Record<string, unknown>[] = [];
     let previews = 0;
@@ -97,6 +129,14 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(owner.getByRole('status')).toContainText(t('settings.privacy.loading', locale));
     await expect(owner.getByRole('alert')).toHaveCount(0);
     await retry!.fulfill({ json: value });
+    await expect(owner.getByText(name, { exact: true })).toBeVisible();
+    await expect(owner.getByText('Other workspace', { exact: true })).toHaveCount(0);
+    const requestHeadings = await owner.getByRole('heading', { level: 2 }).allTextContents();
+    expect(requestHeadings).toEqual([
+      t('settings.privacy.export.title', locale),
+      t('settings.privacy.closure.title', locale),
+      t('settings.privacy.requests', locale),
+    ]);
     const clear = owner.locator('details');
     const activeOrder = owner.getByText(t('settings.privacy.blocker.activeOrder', locale), {
       exact: true,
@@ -137,7 +177,13 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await expect(resume).toBeFocused();
     await resume.press('Enter');
-    await expect(owner.locator(`a[href="/tickets/${ticketId}"]`)).toBeVisible();
+    const closureRequest = owner.getByRole('link', {
+      name: lifecycleFormText('openClosureRequest', locale),
+      exact: true,
+    });
+    await expect(closureRequest).toHaveAttribute('href', `/tickets/${ticketId}`);
+    await expect(closureRequest).toBeFocused();
+    await expect(closure).toHaveCount(0);
     await expect(
       owner.getByText(lifecycleFormText('noRequests', locale), { exact: true })
     ).toHaveCount(0);
@@ -146,6 +192,14 @@ for (const locale of ['en', 'fa'] as const) {
     expect(writes[1]).toEqual(writes[0]);
     expect(writes[0]).toMatchObject({ type: 'closure', locale });
     await capture(page, owner, info.outputPath('customer-confirmed.png'));
+    await page.reload();
+    await expect(closureRequest).toBeVisible();
+    await expect(closure).toHaveCount(0);
+    expect(writes).toHaveLength(2);
+    value.requests[0]!.status = 'closed';
+    await page.reload();
+    await expect(closure).toBeEnabled();
+    await expect(closureRequest).toHaveCount(0);
   });
   test(`lifecycle ${locale}: saved export ticket retry and confirmed live job`, async ({
     page,

@@ -5,14 +5,27 @@ import { queryKeys } from '../lib/query-keys.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { useEffect, useId, useRef, useState } from 'react';
 import { ArrowDownToLine, CheckCircle2, TriangleAlert } from 'lucide-react';
-import { Alert, AlertDescription, Badge, Button, LoadingStatus, PageHeader } from '@barghsa/ui';
+import {
+  Alert,
+  AlertDescription,
+  Badge,
+  Button,
+  buttonVariants,
+  LoadingStatus,
+  PageHeader,
+} from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
 import { lifecycleFormText } from '@barghsa/i18n/profile-lifecycle-forms';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
-import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
+import {
+  getProfileContextRevision,
+  useProfileContextRevision,
+  useWorkspaceActiveProfile,
+} from '../lib/profile-context.js';
 import { withCsrf } from '../lib/csrf.js';
+import { formatRelativeTime } from '../lib/relative-time.js';
 import {
   lifecyclePreview,
   lifecycleRequestReceipt,
@@ -21,6 +34,7 @@ import {
   type LifecycleType,
 } from '../lib/profile-lifecycle-form.js';
 import { JobProgress } from './jobs/JobProgress.js';
+import { profileName } from './ProfileIdentity.js';
 import {
   RecordEditorActions,
   RecordEditorSection,
@@ -52,6 +66,7 @@ interface Command {
 function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
   const client = useQueryClient();
   const actor = useAccountUser();
+  const workspaceProfile = useWorkspaceActiveProfile();
   const revision = useProfileContextRevision();
   const reader = useId();
   const readSequence = useRef(0);
@@ -68,6 +83,12 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
     alive = useRef(true);
   const commandRequest = useRef<AbortController | null>(null);
   const retryButton = useRef<HTMLButtonElement>(null);
+  const closureLink = useRef<HTMLAnchorElement>(null);
+  const focusClosureTicket = useRef<string | null>(null);
+  const closureRequest = preview?.requests.find(
+    (request) =>
+      request.type === 'closure' && request.status !== 'resolved' && request.status !== 'closed'
+  );
   const permitted = () => alive.current && authorized();
   function denied(response: Response) {
     if (![401, 403].includes(response.status) || !permitted()) return false;
@@ -141,6 +162,11 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
   useEffect(() => {
     if (submitError && !submitting) retryButton.current?.focus();
   }, [submitError, submitting]);
+  useEffect(() => {
+    if (submitting || pending || !focusClosureTicket.current) return;
+    if (focusClosureTicket.current === closureRequest?.ticketId) closureLink.current?.focus();
+    focusClosureTicket.current = null;
+  }, [submitting, pending, closureRequest?.ticketId]);
   async function run(next?: Command) {
     if (busy.current || !permitted() || (next && (command.current || state !== 'ready'))) return;
     if (next) command.current = next;
@@ -202,6 +228,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
       )
         throw new Error('Request not visible');
       command.current = null;
+      if (captured.type === 'closure') focusClosureTicket.current = captured.ticketId;
       setPending(false);
       toast.success(confirmationText('recorded', locale));
     } catch {
@@ -221,6 +248,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
   }
   function request(type: LifecycleType) {
     if (!preview || command.current || busy.current || !permitted()) return;
+    if (type === 'closure' && closureRequest) return;
     void run({
       type,
       profileId: preview.profileId,
@@ -258,10 +286,7 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
       className="mx-auto flex max-w-5xl flex-col gap-4 sm:gap-5"
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
-      <PageHeader
-        title={t('settings.privacy.title', locale)}
-        description={t('settings.privacy.intro', locale)}
-      />
+      <PageHeader title={t('settings.privacy.profileRequests', locale)} />
       {state === 'loading' && (
         <LoadingStatus>{t('settings.privacy.loading', locale)}</LoadingStatus>
       )}
@@ -298,6 +323,20 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
       )}
       {state === 'ready' && preview && (
         <>
+          <div className="min-w-0 rounded-lg border bg-card px-4 py-3">
+            <dl className="min-w-0">
+              <dt className="text-xs text-muted-foreground">
+                {lifecycleFormText('activeProfile', locale)}
+              </dt>
+              <dd className="text-sm font-medium [overflow-wrap:anywhere]">
+                {workspaceProfile?.id === preview.profileId ? (
+                  <bdi>{profileName(workspaceProfile, locale)}</bdi>
+                ) : (
+                  <bdi dir="ltr">{preview.profileId.slice(-8)}</bdi>
+                )}
+              </dd>
+            </dl>
+          </div>
           {pending && (
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-warning/25 bg-warning-soft px-4 py-3">
               {submitError && (
@@ -316,89 +355,46 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
               </Button>
             </div>
           )}
-          <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-            <div className="min-w-0 space-y-4">
-              <div className={recordEditorSurface}>
-                <div>
-                  <RecordEditorSection
-                    title={t('settings.privacy.export.title', locale)}
-                    description={t('settings.privacy.export.description', locale)}
-                  />
-                </div>
-                <RecordEditorActions>
-                  <Button
-                    type="button"
-                    disabled={submitting !== null || pending}
-                    loading={submitting === 'export' && !pending && !!command.current?.body}
-                    onClick={() => request('export')}
-                  >
-                    <ArrowDownToLine aria-hidden="true" />
-                    {t('settings.privacy.export.action', locale)}
-                  </Button>
-                </RecordEditorActions>
-              </div>
-              <div className={recordEditorSurface}>
-                <RecordEditorSection title={t('settings.privacy.requests', locale)}>
-                  {preview.requests.length ? (
-                    <ul className="divide-y">
-                      {preview.requests.map((item) => (
-                        <li key={item.ticketId} className="space-y-2 py-2 first:pt-0 last:pb-0">
-                          <a
-                            className="flex min-h-11 flex-wrap items-center justify-between gap-2 rounded-sm"
-                            href={`/tickets/${encodeURIComponent(item.ticketId)}`}
-                          >
-                            <span className="text-sm text-primary underline underline-offset-4">
-                              {t(`settings.privacy.${item.type}.title`, locale)}
-                            </span>
-                            <Badge>{t(`tickets.${item.status}`, locale)}</Badge>
-                          </a>
-                          {item.type === 'export' &&
-                            item.exportJobId &&
-                            (item.exportExpiresAt &&
-                            new Date(item.exportExpiresAt).getTime() <= Date.now() ? (
-                              <p className="text-sm text-muted-foreground">
-                                {t('settings.privacy.export.expired', locale)}
-                              </p>
-                            ) : (
-                              <JobProgress jobId={item.exportJobId} />
-                            ))}
-                          {item.type === 'export' && !item.exportJobId && (
-                            <Button
-                              type="button"
-                              variant="outline"
-                              disabled={submitting !== null || pending}
-                              loading={
-                                submitting === 'export' &&
-                                !pending &&
-                                command.current?.body === null &&
-                                command.current.ticketId === item.ticketId
-                              }
-                              onClick={() => startExport(item.ticketId)}
-                            >
-                              {t('settings.privacy.export.prepare', locale)}
-                            </Button>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      {lifecycleFormText('noRequests', locale)}
-                    </p>
-                  )}
-                </RecordEditorSection>
-              </div>
-            </div>
+          <div className="grid items-start gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:grid-rows-[max-content_1fr]">
             <div className={recordEditorSurface}>
               <div>
                 <RecordEditorSection
-                  title={t('settings.privacy.closure.title', locale)}
-                  description={
-                    blockers.length > 0
-                      ? t('settings.privacy.closure.description', locale)
-                      : lifecycleFormText('closureReady', locale)
-                  }
+                  title={t('settings.privacy.export.title', locale)}
+                  description={lifecycleFormText('exportNext', locale)}
                 >
+                  <p className="text-sm text-muted-foreground">
+                    {lifecycleFormText('downloadBeforeClosure', locale)}
+                  </p>
+                </RecordEditorSection>
+              </div>
+              <RecordEditorActions>
+                <Button
+                  type="button"
+                  disabled={submitting !== null || pending}
+                  loading={submitting === 'export' && !pending && !!command.current?.body}
+                  onClick={() => request('export')}
+                >
+                  <ArrowDownToLine aria-hidden="true" />
+                  {t('settings.privacy.export.action', locale)}
+                </Button>
+              </RecordEditorActions>
+            </div>
+            <div className={`${recordEditorSurface} md:col-start-2 md:row-span-2 md:row-start-1`}>
+              <div>
+                <RecordEditorSection
+                  title={t('settings.privacy.closure.title', locale)}
+                  description={lifecycleFormText('closureNext', locale)}
+                >
+                  {blockers.length > 0 && !closureRequest && (
+                    <p className="text-sm text-muted-foreground">
+                      {t('settings.privacy.closure.description', locale)}
+                    </p>
+                  )}
+                  {closureRequest && (
+                    <p className="text-sm text-muted-foreground">
+                      {lifecycleFormText('closureSubmitted', locale)}
+                    </p>
+                  )}
                   {blockers.length > 0 ? (
                     <ul className="divide-y rounded-lg border bg-muted/25 px-3">
                       {blockers.map((blocker) => (
@@ -455,17 +451,94 @@ function LifecyclePanel({ authorized }: { authorized: () => boolean }) {
                   )}
                 </RecordEditorSection>
               </div>
-              <RecordEditorActions>
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={submitting !== null || pending}
-                  loading={submitting === 'closure' && !pending}
-                  onClick={() => request('closure')}
-                >
-                  {t('settings.privacy.closure.action', locale)}
-                </Button>
+              <RecordEditorActions
+                secondary={
+                  closureRequest && <Badge>{t(`tickets.${closureRequest.status}`, locale)}</Badge>
+                }
+              >
+                {closureRequest ? (
+                  <a
+                    ref={closureLink}
+                    href={`/tickets/${encodeURIComponent(closureRequest.ticketId)}`}
+                    className={buttonVariants({
+                      variant: 'outline',
+                      className: 'h-auto min-h-11 whitespace-normal',
+                    })}
+                  >
+                    {lifecycleFormText('openClosureRequest', locale)}
+                  </a>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={submitting !== null || pending}
+                    loading={submitting === 'closure' && !pending}
+                    onClick={() => request('closure')}
+                  >
+                    {t('settings.privacy.closure.action', locale)}
+                  </Button>
+                )}
               </RecordEditorActions>
+            </div>
+            <div className={`${recordEditorSurface} md:col-start-1 md:row-start-2`}>
+              <RecordEditorSection title={t('settings.privacy.requests', locale)}>
+                {preview.requests.length ? (
+                  <ul className="divide-y">
+                    {preview.requests.map((item) => (
+                      <li key={item.ticketId} className="space-y-2 py-2 first:pt-0 last:pb-0">
+                        <a
+                          className="flex min-h-11 flex-wrap items-center justify-between gap-2 rounded-sm"
+                          href={`/tickets/${encodeURIComponent(item.ticketId)}`}
+                        >
+                          <span className="grid min-w-0 gap-0.5">
+                            <span className="text-sm text-primary underline underline-offset-4">
+                              {t(`settings.privacy.${item.type}.title`, locale)}
+                            </span>
+                            <time
+                              dateTime={item.createdAt}
+                              className="text-xs text-muted-foreground"
+                            >
+                              {formatRelativeTime(item.createdAt, locale) ||
+                                lifecycleFormText('submittedNow', locale)}
+                            </time>
+                          </span>
+                          <Badge>{t(`tickets.${item.status}`, locale)}</Badge>
+                        </a>
+                        {item.type === 'export' &&
+                          item.exportJobId &&
+                          (item.exportExpiresAt &&
+                          new Date(item.exportExpiresAt).getTime() <= Date.now() ? (
+                            <p className="text-sm text-muted-foreground">
+                              {t('settings.privacy.export.expired', locale)}
+                            </p>
+                          ) : (
+                            <JobProgress jobId={item.exportJobId} />
+                          ))}
+                        {item.type === 'export' && !item.exportJobId && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            disabled={submitting !== null || pending}
+                            loading={
+                              submitting === 'export' &&
+                              !pending &&
+                              command.current?.body === null &&
+                              command.current.ticketId === item.ticketId
+                            }
+                            onClick={() => startExport(item.ticketId)}
+                          >
+                            {t('settings.privacy.export.prepare', locale)}
+                          </Button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    {lifecycleFormText('noRequests', locale)}
+                  </p>
+                )}
+              </RecordEditorSection>
             </div>
           </div>
         </>
