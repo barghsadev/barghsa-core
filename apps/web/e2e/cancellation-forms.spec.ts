@@ -3,6 +3,7 @@ import type { Route } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { contractText } from '@barghsa/i18n/contracts';
+import { cancellationEditorMessages } from '@barghsa/i18n/cancellation-editor';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { t } from '@barghsa/i18n/app';
 import { test, expect, type Page } from './coverage-fixture';
@@ -308,6 +309,8 @@ for (const surface of ['customer', 'rejection', 'decision'] as const)
         page,
       }, testInfo) => {
         const w = (key: string) => contractText(key, locale);
+        const copy = cancellationEditorMessages[locale];
+        const readError = surface === 'decision' ? copy.refundReadError : copy.requestReadError;
         const f = await fixture(page, locale, dark, surface);
         await expect(page.locator('html')).toHaveClass(dark ? /dark/ : /^(?!.*\bdark\b)/);
         const region = page.getByRole('region', {
@@ -367,12 +370,21 @@ for (const surface of ['customer', 'rejection', 'decision'] as const)
           await amount.fill('40');
           await page.locator(`#destination-${invoiceId}`).selectOption('external_bank');
         }
-        await region
-          .getByRole('button', {
-            name: w(surface === 'decision' ? 'cancellationRefresh' : 'refresh'),
-            exact: true,
-          })
-          .click();
+        const refresh = region.getByRole('button', {
+          name: w(surface === 'decision' ? 'cancellationRefresh' : 'refresh'),
+          exact: true,
+        });
+        f.setReadFailure(true);
+        await refresh.click();
+        const recovery = region.getByRole('alert').filter({ hasText: readError });
+        const retry = recovery.getByRole('button', { name: copy.retryRead, exact: true });
+        await expect(retry).toBeVisible();
+        await expect(refresh).toHaveCount(0);
+        expect(f.writes).toHaveLength(0);
+        f.setReadFailure(false);
+        await retry.click();
+        await expect(reason).toBeFocused();
+        await expect(refresh).toBeEnabled();
         await expect(reason).toHaveValue('  Raw reason  ');
         if (surface === 'decision') {
           await expect(amount).toHaveValue('40');
@@ -437,7 +449,13 @@ for (const surface of ['customer', 'rejection', 'decision'] as const)
         await expect(reason).toBeDisabled();
         f.setReadFailure(true);
         await check.click();
-        await expect(region.getByText(w('error'), { exact: true })).toBeVisible();
+        await expect(recovery).toContainText(confirmationText('unconfirmed', locale));
+        await expect(
+          recovery.getByRole('button', {
+            name: confirmationText('checkStatus', locale),
+            exact: true,
+          })
+        ).toBeFocused();
         expect(f.writes).toHaveLength(4);
         f.setReadFailure(false);
         await check.click();

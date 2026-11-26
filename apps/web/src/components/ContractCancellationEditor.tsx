@@ -32,6 +32,7 @@ import type {
   CancellationRefund,
 } from '../lib/contract-cancellation.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { CancellationReadNotice } from './CancellationReadNotice.js';
 import {
   RecordEditorActions,
   RecordEditorSection,
@@ -378,50 +379,47 @@ function OwnedCancellationEditor({
   );
   const copy = cancellationEditorMessages[locale];
   const refresh = () => setReload((n) => n + 1);
+  const recovering = error || needsRead;
   return (
     <div
       className={
         versionId ? 'flex min-w-0 flex-col gap-3' : 'flex min-w-0 flex-col gap-3 border-t pt-3'
       }
     >
-      <div
-        className={`flex flex-wrap items-center justify-between gap-2${versionId && preview ? ' rounded-xl border bg-card px-4 py-2.5 sm:px-6' : ''}`}
-      >
-        {preview && (
-          <dl
-            className={
-              versionId ? 'min-w-0 text-sm' : 'min-w-0 rounded-lg bg-muted/45 px-3 py-2 text-sm'
-            }
-          >
-            <dt className="text-muted-foreground">{word('cancellationAvailable')}</dt>
-            <dd className="break-words text-lg font-semibold tabular-nums">
-              <bdi>{money(preview.refundableAmount)}</bdi> {word('irr')}
-            </dd>
-          </dl>
-        )}
-        {needsRead ? (
-          <Button disabled={busy} variant="outline" onClick={refresh}>
-            {confirmationText('checkStatus', locale)}
-          </Button>
-        ) : (
-          <ListRefreshButton
-            label={word('cancellationRefresh')}
-            disabled={busy}
-            onClick={refresh}
-          />
-        )}
-      </div>
-      {needsRead && (
-        <Alert variant="destructive">
-          <AlertDescription>{confirmationText('unconfirmed', locale)}</AlertDescription>
-        </Alert>
+      <CancellationReadNotice
+        error={error ? copy.refundReadError : null}
+        needsRead={needsRead}
+        loading={loading}
+        disabled={busy}
+        reasonId="cancellation-reason"
+        onRefresh={refresh}
+      />
+      {(preview || !recovering) && (
+        <div
+          className={`flex flex-wrap items-center justify-between gap-2${versionId && preview ? ' rounded-xl border bg-card px-4 py-2.5 sm:px-6' : ''}`}
+        >
+          {preview && (
+            <dl
+              className={
+                versionId ? 'min-w-0 text-sm' : 'min-w-0 rounded-lg bg-muted/45 px-3 py-2 text-sm'
+              }
+            >
+              <dt className="text-muted-foreground">{word('cancellationAvailable')}</dt>
+              <dd className="break-words text-lg font-semibold tabular-nums">
+                <bdi>{money(preview.refundableAmount)}</bdi> {word('irr')}
+              </dd>
+            </dl>
+          )}
+          {!recovering && (
+            <ListRefreshButton
+              label={word('cancellationRefresh')}
+              disabled={busy}
+              onClick={refresh}
+            />
+          )}
+        </div>
       )}
       {denied ? <p role="status">{word('denied')}</p> : null}
-      {error ? (
-        <Alert variant="destructive">
-          <AlertDescription>{word('error')}</AlertDescription>
-        </Alert>
-      ) : null}
       {!preview ? (
         !error && !denied ? (
           <PageLoading label={word('loading')} />

@@ -5,6 +5,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { cleanup, fireEvent, render as renderWithTestingLibrary } from '@testing-library/react';
 import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { en, fa } from '@barghsa/i18n/contracts';
+import { cancellationEditorMessages } from '@barghsa/i18n/cancellation-editor';
 import type * as Documents from '../lib/documents.js';
 import CancellationEditor from './ContractCancellationEditor.js';
 import { ContractCancellationPanel } from './ContractCancellationPanel.js';
@@ -33,6 +34,7 @@ vi.mock('../lib/documents.js', async (original) => ({
   documentRequest: vi.fn(async (path: string) => {
     if (h.fail) throw new Error('offline');
     if (path.endsWith('cancellation-status')) return h.status;
+    if (path.endsWith('cancellation-requests')) return { request: null };
     if (path.includes('cancellation-preview')) return h.preview;
     return { intent: h.intent };
   }),
@@ -155,7 +157,9 @@ async function click(label: string) {
     await vi.waitFor(() => {
       expect(
         [...container.querySelectorAll('button')].some(
-          (button) => button.textContent === w.cancellationRefresh
+          (button) =>
+            button.textContent === w.cancellationRefresh ||
+            button.textContent === cancellationEditorMessages[h.locale].retryRead
         )
       ).toBe(true);
       expect(container.textContent).not.toContain(w.loading);
@@ -330,11 +334,14 @@ it('recovers an unavailable financial preview without allowing a decision first'
   await render();
   h.fail = true;
   await click(en.cancellationReview);
-  expect(container.textContent).toContain(en.error);
+  expect(container.textContent).toContain(cancellationEditorMessages.en.refundReadError);
   expect(container.querySelector('form')).toBeNull();
   h.fail = false;
-  await click(en.cancellationRefresh);
-  expect(container.querySelector('form')).toBeTruthy();
+  await click(cancellationEditorMessages.en.retryRead);
+  await vi.waitFor(() => {
+    expect(container.querySelector('form')).toBeTruthy();
+    expect(document.activeElement).toBe(container.querySelector('textarea'));
+  });
 });
 it('requires a reason even for an explicit zero discretionary return', async () => {
   h.preview!.serviceType = 'solar';
@@ -467,7 +474,10 @@ it('keeps drafts through a failed financial read and ordinary dismissal', async 
   expect(container.querySelector('textarea')?.value).toBe('  Raw cancellation draft  ');
   expect(container.querySelector<HTMLButtonElement>('button[type=submit]')?.disabled).toBe(true);
   h.fail = false;
-  await click(en.cancellationRefresh);
+  await click(cancellationEditorMessages.en.retryRead);
+  await vi.waitFor(() =>
+    expect(container.querySelector<HTMLButtonElement>('button[type=submit]')?.disabled).toBe(false)
+  );
   await submitDecision();
   await click('Dismiss');
   expect(container.querySelector('textarea')?.value).toBe('  Raw cancellation draft  ');

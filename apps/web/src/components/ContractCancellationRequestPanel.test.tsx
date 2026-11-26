@@ -3,6 +3,7 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { en, fa } from '@barghsa/i18n/contracts';
+import { cancellationEditorMessages } from '@barghsa/i18n/cancellation-editor';
 import type * as Documents from '../lib/documents.js';
 import { documentRequest, DocumentRequestError } from '../lib/documents.js';
 import {
@@ -228,9 +229,10 @@ it.each(['Closed', 'Fulfilled'] as const)(
 it('recovers failed reads and dismisses a confirmation without reporting success', async () => {
   request.mockRejectedValueOnce(new Error('offline'));
   await render();
-  expect(container.textContent).toContain(en.error);
+  expect(container.textContent).toContain(cancellationEditorMessages.en.requestReadError);
   request.mockResolvedValue({ request: null, canRequest: true });
-  await click(en.refresh);
+  await click(cancellationEditorMessages.en.retryRead);
+  expect(document.activeElement).toBe(container.querySelector('textarea'));
   await reason('End service');
   await submit();
   await click('Dismiss');

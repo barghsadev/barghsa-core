@@ -23,6 +23,7 @@ import { DocumentRequestError } from '../lib/documents.js';
 import { contractBase } from '../lib/contracts.js';
 import type { ContractCancellationView } from '../lib/contract-cancellation.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
+import { CancellationReadNotice } from './CancellationReadNotice.js';
 import {
   RecordEditorActions,
   recordEditorGrid,
@@ -263,32 +264,25 @@ function RequestWorkspace({
       className={`${recordEditorSurface} flex flex-col gap-3 p-3 sm:p-4`}
       aria-label={word('cancellationRequestTitle')}
     >
-      {!inlineRefresh && (!renderReview || needsRead || error) && (
+      {!inlineRefresh && !renderReview && !needsRead && !error && (
         <div className="flex items-center justify-between gap-3">
           {(!view || !!request) && (
             <h4 className="font-medium">{word('cancellationRequestTitle')}</h4>
           )}
-          {needsRead ? (
-            <Button variant="outline" disabled={busy} onClick={refresh}>
-              {confirmationText('checkStatus', locale)}
-            </Button>
-          ) : (
-            <ListRefreshButton label={word('refresh')} disabled={busy} onClick={refresh} />
-          )}
+          <ListRefreshButton label={word('refresh')} disabled={busy} onClick={refresh} />
         </div>
       )}
-      {needsRead && (
-        <Alert variant="destructive">
-          <AlertDescription>{confirmationText('unconfirmed', locale)}</AlertDescription>
-        </Alert>
-      )}
+      <CancellationReadNotice
+        error={error ? copy.requestReadError : null}
+        needsRead={needsRead}
+        loading={loading}
+        disabled={busy}
+        reasonId={`request-reason-${id}`}
+        onRefresh={refresh}
+      />
       {denied ? (
         <p role="status">{word('denied')}</p>
-      ) : error ? (
-        <Alert variant="destructive">
-          <AlertDescription>{word('error')}</AlertDescription>
-        </Alert>
-      ) : !data || loading ? (
+      ) : error ? null : !data || loading ? (
         <PageLoading label={word('loading')} />
       ) : (
         <>

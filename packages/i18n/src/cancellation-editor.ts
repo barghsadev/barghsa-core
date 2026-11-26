@@ -13,6 +13,9 @@ export const cancellationEditorMessages = {
     declineHelp: 'The customer will receive your explanation.',
     requestUnavailable: 'This request is unavailable for the selected action.',
     declineExample: 'For example, please resubmit this request on the current contract.',
+    requestReadError: 'Could not load the current cancellation request.',
+    refundReadError: 'Could not load the latest refund amounts and cancellation decision.',
+    retryRead: 'Retry loading',
   },
   fa: {
     refundPlan: 'برنامه بازپرداخت',
@@ -27,5 +30,8 @@ export const cancellationEditorMessages = {
     declineHelp: 'توضیح شما برای مشتری ارسال می‌شود.',
     requestUnavailable: 'این درخواست برای اقدام انتخاب‌شده در دسترس نیست.',
     declineExample: 'مثلاً لطفاً درخواست را برای نسخه فعلی ثبت کنید.',
+    requestReadError: 'بارگذاری درخواست فعلی لغو ناموفق بود.',
+    refundReadError: 'بارگذاری آخرین مبالغ بازپرداخت و تصمیم لغو ناموفق بود.',
+    retryRead: 'بارگذاری دوباره',
   },
 };
