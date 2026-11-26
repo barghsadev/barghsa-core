@@ -209,7 +209,13 @@ for (const locale of ['en', 'fa'] as const)
       const individual = page.locator('#slot-individual_chatbot'),
         website = page.locator('#slot-website_chatbot'),
         saveSlot = button(`${slotText('save')} ${slotText('individual_chatbot')}`);
-      await individual.selectOption(assignmentAgent.id);
+      await individual.fill(assignmentAgent.title);
+      await page.getByRole('option', { name: assignmentAgent.title, exact: true }).click();
+      await individual.fill('No matching agent name');
+      await expect(page.getByText(copy('slotAgentNoMatches'), { exact: true })).toBeVisible();
+      await individual.fill('');
+      await individual.press('Escape');
+      await expect(individual).toHaveValue(assignmentAgent.title);
       await expect(website).toHaveCount(0);
       await expect(page.getByText(slotText('disabledHelp'), { exact: true }).first()).toBeVisible();
       await expect(
@@ -232,14 +238,16 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.getByText(copy('uncertain'), { exact: true })).toBeVisible();
       await expect(button(copy('reset'))).toBeDisabled();
       await expect(saveSlot).toBeDisabled();
-      await expect(individual).toHaveValue(assignmentAgent.id);
+      await expect(individual).toHaveValue(assignmentAgent.title);
       await expect(website).toHaveCount(0);
       slotsStatus = 200;
       await button(slotText('refresh')).click();
       await expect(button(copy('reset'))).toBeEnabled();
       await button(copy('reset')).click();
       await expect(website).toHaveCount(0);
-      await individual.selectOption('');
+      await button(copy('clearAssignment')).click();
+      await expect(individual).toHaveValue('');
+      await expect(individual).toBeFocused();
       await saveSlot.click();
       await expect(page.getByRole('dialog').locator('button[type=submit]')).toBeDisabled();
       await approveRiskConfirmation(page, locale, 'destructive');
@@ -255,5 +263,5 @@ for (const locale of ['en', 'fa'] as const)
       await expect(individual).toBeVisible();
       agentsStatus = 403;
       await button(slotText('refresh')).click();
-      await expect(page.locator('select[id^=slot-]')).toHaveCount(0);
+      await expect(page.locator('input[id^=slot-]')).toHaveCount(0);
     });

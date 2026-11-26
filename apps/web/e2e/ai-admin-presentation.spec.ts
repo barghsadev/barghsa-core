@@ -260,15 +260,16 @@ for (const locale of ['en', 'fa'] as const)
         .click();
       await expect(page).toHaveURL('/admin/agent-slots/individual_chatbot/edit');
       const choice = page.locator('#slot-individual_chatbot');
-      await choice.selectOption(assignmentAgent.id);
-      await expect(choice).toHaveValue(assignmentAgent.id);
+      await choice.fill(assignmentAgent.title);
+      await page.getByRole('option', { name: assignmentAgent.title, exact: true }).click();
+      await expect(choice).toHaveValue(assignmentAgent.title);
       expect([...reads].sort()).toEqual(['agents', 'slots', 'slots']);
       zoneFailed = false;
       await page.getByRole('button', { name: timezoneText('retry', locale), exact: true }).click();
       await expect(page.getByRole('main').locator('time')).not.toHaveText(
         timezoneText('display.pending', locale)
       );
-      await expect(choice).toHaveValue(assignmentAgent.id);
+      await expect(choice).toHaveValue(assignmentAgent.title);
       expect([...reads].sort()).toEqual(['agents', 'slots', 'slots']);
       await expect(
         page.getByRole('main').getByRole('button', {

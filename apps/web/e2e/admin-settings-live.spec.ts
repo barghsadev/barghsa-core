@@ -1,6 +1,7 @@
 import { brandingText } from '@barghsa/i18n/branding';
 import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
+import { aiAgentFormText } from '@barghsa/i18n/ai-agent-forms';
 import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { t as adminText } from '@barghsa/i18n/admin-ui';
 import { tStaffTeams } from '@barghsa/i18n/staff-team-forms';
@@ -1651,11 +1652,9 @@ for (const locale of ['en', 'fa'])
       await expect(page.getByRole('dialog')).toHaveCount(0);
     };
     await page.goto('/admin/agent-slots/individual_chatbot/edit');
-    const individual = page.getByLabel(
-      fa ? 'عامل · گفت‌وگوی شخص حقیقی' : 'Agent · Individual chatbot',
-      { exact: true }
-    );
-    await individual.selectOption(agent.id);
+    const individual = page.locator('#slot-individual_chatbot');
+    await individual.fill(agent.title);
+    await page.getByRole('option', { name: agent.title, exact: true }).click();
     await page
       .getByRole('button', {
         name: fa ? 'ذخیره تخصیص گفت‌وگوی شخص حقیقی' : 'Save assignment Individual chatbot',
@@ -1668,9 +1667,8 @@ for (const locale of ['en', 'fa'])
     await page.reload();
     await expect(page.getByRole('main')).toContainText(agent.title);
     await page.goto('/admin/agent-slots/staff_chatbot/edit');
-    await page
-      .getByLabel(fa ? 'عامل · گفت‌وگوی کارکنان' : 'Agent · Staff chatbot', { exact: true })
-      .selectOption(agent.id);
+    await page.locator('#slot-staff_chatbot').fill(agent.title);
+    await page.getByRole('option', { name: agent.title, exact: true }).click();
     await expect(
       page.getByText(
         fa ? 'تخصیص‌یافته به: گفت‌وگوی شخص حقیقی' : 'Also assigned to: Individual chatbot',
@@ -1697,8 +1695,13 @@ for (const locale of ['en', 'fa'])
     );
     await page.screenshot({ path: `/tmp/agent-slots-${locale}.png`, fullPage: true });
     await page.goto('/admin/agent-slots/individual_chatbot/edit');
-    await expect(individual).toHaveValue(agent.id);
-    await individual.selectOption('');
+    await expect(individual).toHaveValue(agent.title);
+    await page
+      .getByRole('button', {
+        name: aiAgentFormText('clearAssignment', fa ? 'fa' : 'en'),
+        exact: true,
+      })
+      .click();
     await page
       .getByRole('button', {
         name: fa ? 'ذخیره تخصیص گفت‌وگوی شخص حقیقی' : 'Save assignment Individual chatbot',

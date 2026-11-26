@@ -1,4 +1,5 @@
 import { QueryProvider } from '../test/query-provider.js';
+import { chooseComboboxOption } from '../test/choose-combobox-option.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -73,11 +74,8 @@ it('shows audited slot timestamps and retries timezone independently without los
   expect(stamps()).toHaveLength(5);
   expect(stamps()[0]!.getAttribute('datetime')).toBe(assignmentSlots()[0]!.updatedAt);
   expect(stamps()[0]!.textContent).toBe(timezoneText('display.pending', 'en'));
-  const choice = host.querySelector<HTMLSelectElement>('#slot-individual_chatbot')!;
-  await act(async () => {
-    choice.value = assignmentAgent.id;
-    choice.dispatchEvent(new Event('change', { bubbles: true }));
-  });
+  const choice = host.querySelector<HTMLInputElement>('#slot-individual_chatbot')!;
+  await chooseComboboxOption(choice, assignmentAgent.title);
   const dataReads = fetches.mock.calls.filter(([u]) => !String(u).endsWith('/timezone')).length;
   unavailable = false;
   await click(timezoneText('retry', 'en'));
@@ -86,7 +84,7 @@ it('shows audited slot timestamps and retries timezone independently without los
   timezone = 'Asia/Tehran';
   await act(async () => window.dispatchEvent(new Event('barghsa:timezone-changed')));
   expect(stamps()[0]!.textContent).not.toBe(old);
-  expect(choice.value).toBe(assignmentAgent.id);
+  expect(choice.value).toBe(assignmentAgent.title);
   expect(fetches.mock.calls.filter(([u]) => !String(u).endsWith('/timezone'))).toHaveLength(
     dataReads
   );

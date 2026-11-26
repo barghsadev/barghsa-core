@@ -1,4 +1,5 @@
 import { QueryProvider } from '../test/query-provider.js';
+import { chooseComboboxOption } from '../test/choose-combobox-option.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -142,11 +143,13 @@ async function openAgent() {
 }
 for (const domain of ['agent', 'slot'] as const) {
   const selector = domain === 'agent' ? '#agent-max-tokens' : '#slot-individual_chatbot';
-  const changedValue = domain === 'agent' ? '512' : assignmentAgent.id;
+  const changedValue = domain === 'agent' ? '512' : assignmentAgent.title;
   async function open() {
     if (domain === 'agent') await openAgent();
     else await act(async () => root.render(<QueryProvider>{<Slots />}</QueryProvider>));
-    await fill(selector, changedValue);
+    if (domain === 'slot')
+      await chooseComboboxOption(node(selector) as HTMLInputElement, changedValue);
+    else await fill(selector, changedValue);
   }
   it(`${domain} retries failed validation while preserving its input`, async () => {
     await open();

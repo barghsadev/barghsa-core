@@ -249,8 +249,8 @@ export function CatalogueRelationEditor(props: Props) {
                   unavailable: props.labels.unavailable,
                 }}
                 onChange={(id) => {
-                  form.field('memberId')[1](id);
-                  props.onChange(id, form.values.priorityOverride);
+                  form.field('memberId')[1](id ?? '');
+                  props.onChange(id ?? '', form.values.priorityOverride);
                 }}
               />
               <CatalogueFieldFeedback

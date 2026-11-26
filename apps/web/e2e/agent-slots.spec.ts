@@ -72,7 +72,12 @@ for (const locale of ['en', 'fa'])
 
     const summary = page.locator('[data-slot=slot-assignment-summary]');
     await expect(summary.locator('dt')).toHaveCount(1);
-    await page.getByLabel(fa ? 'عامل' : 'Agent', { exact: true }).selectOption(agent.id);
+    const picker = page.getByLabel(fa ? 'عامل' : 'Agent', { exact: true });
+    await picker.fill('support');
+    const option = page.getByRole('option', { name: agent.title, exact: true });
+    await expect(option).toHaveAccessibleDescription(fa ? 'غیرفعال' : 'Disabled');
+    await picker.press('Enter');
+    await expect(picker).toHaveValue(agent.title);
     await expect(summary.locator('dt')).toHaveCount(2);
     await expect(summary).toContainText(agent.title);
     await expect(
@@ -112,5 +117,5 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByRole('alert')).toContainText(
       fa ? 'اجازه مدیریت' : 'permission to manage'
     );
-    await expect(page.locator('select[id^=slot-]')).toHaveCount(0);
+    await expect(page.locator('input[id^=slot-]')).toHaveCount(0);
   });

@@ -100,8 +100,10 @@ for (const locale of ['en', 'fa'] as const)
         const input = page.locator(
           domain === 'slots' ? '#slot-individual_chatbot' : '#target-consultation'
         );
-        if (domain === 'slots') await input.selectOption(agent.id);
-        else await input.fill('72');
+        if (domain === 'slots') {
+          await input.fill(agent.title);
+          await page.getByRole('option', { name: agent.title, exact: true }).click();
+        } else await input.fill('72');
         const form = page.locator('form').filter({ has: input });
         await form.locator('button[type=submit]').click();
         const dialog = page.getByRole('dialog'),
@@ -112,7 +114,7 @@ for (const locale of ['en', 'fa'] as const)
         failed = true;
         await dialog.getByRole('button', { name: refresh, exact: true }).click();
         await expect(confirm).toBeDisabled();
-        await expect(input).toHaveValue(domain === 'slots' ? agent.id : '72');
+        await expect(input).toHaveValue(domain === 'slots' ? agent.title : '72');
         await expect(dialog.locator('input[type=password]')).toHaveValue('synthetic-password');
         failed = false;
         await dialog.getByRole('button', { name: refresh, exact: true }).click();
@@ -140,10 +142,13 @@ for (const locale of ['en', 'fa'] as const)
         await dialog.getByRole('button', { name: refresh, exact: true }).click();
         await expect(dialog).toHaveCount(0);
         await expect(page.getByRole('alert').filter({ hasText: text('stale') })).toBeVisible();
-        await expect(input).toHaveValue(domain === 'slots' ? agent.id : '72');
+        await expect(input).toHaveValue(domain === 'slots' ? agent.title : '72');
         await expect(form.locator('button[type=submit]')).toBeDisabled();
         await expect(page.getByRole('button', { name: refresh, exact: true })).toBeFocused();
-        for (const node of await form.locator('input, select, button').all()) {
+        // The combobox also renders a visually hidden input for native form integration.
+        for (const node of await form
+          .locator('input:not([aria-hidden="true"]), select, button')
+          .all()) {
           const box = await node.boundingBox();
           if (box) {
             expect(box.x).toBeGreaterThanOrEqual(0);

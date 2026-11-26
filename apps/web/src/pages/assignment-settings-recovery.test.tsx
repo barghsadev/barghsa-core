@@ -1,5 +1,6 @@
 import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider } from '../test/query-provider.js';
+import { chooseComboboxOption } from '../test/choose-combobox-option.js';
 import { act, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -37,12 +38,17 @@ async function click(name: string, dialog = false) {
   await approveVisibleConfirmation();
   await act(async () => button!.click());
 }
-async function choose(key = 'individual_chatbot', value = agent.id) {
-  await act(async () => {
-    const node = host.querySelector<HTMLSelectElement>(`#slot-${key}`)!;
-    node.value = value;
-    node.dispatchEvent(new Event('change', { bubbles: true }));
-  });
+async function choose(key = 'individual_chatbot', title = agent.title) {
+  const input = host.querySelector<HTMLInputElement>(`#slot-${key}`)!;
+  if (title) {
+    await chooseComboboxOption(input, title);
+  } else {
+    const clear = [...input.form!.querySelectorAll('button')].find(
+      (button) => button.textContent?.trim() === 'Clear assignment'
+    );
+    expect(clear).toBeDefined();
+    await act(async () => clear!.click());
+  }
 }
 async function fill(selector: string, value: string) {
   await act(async () => {
@@ -63,7 +69,7 @@ async function submit(selector = 'form') {
 }
 const confirm = () =>
   document.querySelector<HTMLButtonElement>('[role=dialog] button[type=submit]')!;
-const choices = () => host.querySelector<HTMLSelectElement>('#slot-individual_chatbot')!;
+const choices = () => host.querySelector<HTMLInputElement>('#slot-individual_chatbot')!;
 function slotReads(
   options: {
     slots?: () => Response | Promise<Response>;
@@ -102,7 +108,7 @@ it('slot choices and password survive independent read retries', async () => {
   // Read recovery must not erase the draft or password.
   fail = true;
   await click('Refresh', true);
-  expect(choices().value).toBe(agent.id);
+  expect(choices().value).toBe(agent.title);
   expect(confirm().disabled).toBe(true);
   const agentReads = requests.mock.calls.filter(([u]) => String(u).endsWith('/agents')).length;
   fail = false;
@@ -145,7 +151,7 @@ it('fresh slot version invalidates review and retains a stale choice until expli
   changed = true;
   await click('Refresh', true);
   expect(document.querySelector('[role=dialog]')).toBeNull();
-  expect(choices().value).toBe(agent.id);
+  expect(choices().value).toBe(agent.title);
   expect(host.textContent).toContain('The saved assignment changed');
   expect(host.querySelector<HTMLButtonElement>('form button[type=submit]')!.disabled).toBe(true);
   await click('Reset to current assignment');
@@ -160,8 +166,7 @@ it('withdrawn agent remains visible in the choice without sending an obsolete as
   withdrawn = true;
   await click('Retry agents', true);
   expect(document.querySelector('[role=dialog]')).toBeNull();
-  expect(choices().value).toBe(agent.id);
-  expect(choices().selectedOptions[0]!.textContent).toBe('Selected agent unavailable');
+  expect(choices().value).toBe('Selected agent unavailable');
   await submit();
   expect(requests.mock.calls.some(([, init]) => init?.method === 'PUT')).toBe(false);
 });
@@ -177,7 +182,7 @@ it('changed agent configuration invalidates review even when its displayed name 
   changed = true;
   await click('Retry agents', true);
   expect(document.querySelector('[role=dialog]')).toBeNull();
-  expect(choices().value).toBe(agent.id);
+  expect(choices().value).toBe(agent.title);
 });
 it('slot save requires an exact acknowledgement and preserves unrelated choices', async () => {
   let valid = false,
@@ -207,20 +212,20 @@ it('slot save requires an exact acknowledgement and preserves unrelated choices'
   });
   await renderSlots();
   await choose();
-  await choose('website_chatbot', other.id);
+  await choose('website_chatbot', other.title);
   await submit();
   await submit('[role=dialog] form');
   expect(document.querySelector('[role=dialog]')).toBeNull();
   expect(host.textContent).toContain('The save could not be verified.');
-  expect(choices().value).toBe(agent.id);
+  expect(choices().value).toBe(agent.title);
   valid = true;
   await click('Reset to saved settings');
   await choose();
   await submit();
   await submit('[role=dialog] form');
   expect(document.querySelector('[role=dialog]')).toBeNull();
-  expect(host.querySelector<HTMLSelectElement>('#slot-website_chatbot')!.value).toBe(other.id);
-  expect(choices().value).toBe(agent.id);
+  expect(host.querySelector<HTMLInputElement>('#slot-website_chatbot')!.value).toBe(other.title);
+  expect(choices().value).toBe(agent.title);
   expect(host.textContent).toContain('Assignment saved.');
 });
 it.each(['renamed', 'enabled', 'sharing'])(
@@ -244,7 +249,7 @@ it.each(['renamed', 'enabled', 'sharing'])(
     await submit('[role=dialog] form');
     expect(document.querySelector('[role=dialog]')).toBeNull();
     expect(host.textContent).toContain('The save could not be verified.');
-    expect(choices().value).toBe(agent.id);
+    expect(choices().value).toBe(agent.title);
     expect(host.textContent).not.toContain('Assignment saved.');
   }
 );
@@ -266,7 +271,7 @@ it('slot unassignment acknowledgement must confirm null for the chosen slot', as
   await approveVisibleConfirmation();
   await act(async () =>
     host
-      .querySelector<HTMLSelectElement>('#slot-staff_chatbot')!
+      .querySelector<HTMLInputElement>('#slot-staff_chatbot')!
       .form!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
   await submit('[role=dialog] form');
@@ -278,14 +283,14 @@ it('slot unassignment acknowledgement must confirm null for the chosen slot', as
   await approveVisibleConfirmation();
   await act(async () =>
     host
-      .querySelector<HTMLSelectElement>('#slot-staff_chatbot')!
+      .querySelector<HTMLInputElement>('#slot-staff_chatbot')!
       .form!.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
   );
   await vi.dynamicImportSettled();
   await act(async () => {});
   await submit('[role=dialog] form');
   expect(document.querySelector('[role=dialog]')).toBeNull();
-  expect(host.querySelector<HTMLSelectElement>('#slot-staff_chatbot')!.value).toBe('');
+  expect(host.querySelector<HTMLInputElement>('#slot-staff_chatbot')!.value).toBe('');
 });
 function targetReads(
   options: {

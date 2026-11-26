@@ -1,5 +1,5 @@
 import { useEffect, useRef, type FormEvent } from 'react';
-import { Badge, Button, Label, NativeSelect } from '@barghsa/ui';
+import { Badge, Button, Label } from '@barghsa/ui';
 import type { Locale } from '@barghsa/i18n/app';
 import { aiAgentFormText } from '@barghsa/i18n/ai-agent-forms';
 import { useWizardForm } from '../hooks/useWizardForm.js';
@@ -10,6 +10,7 @@ import {
   catalogueRootMessage,
 } from './CatalogueEditorFeedback.js';
 import type { AgentSlot, AssignmentAgent } from '../lib/assignment-settings.js';
+import { CatalogueChoicePicker } from './CatalogueChoicePicker.js';
 import {
   RecordEditorActions,
   RecordEditorSection,
@@ -86,6 +87,10 @@ export function AgentSlotChoiceForm({
   useEffect(() => {
     if (!draft) reset({ agentId: choice });
   }, [draft, choice, reset]);
+  function changeChoice(id: string) {
+    form.field('agentId')[1](id);
+    onChange(id);
+  }
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (!ready || blocked || stale || !changed) return;
@@ -154,29 +159,47 @@ export function AgentSlotChoiceForm({
             <Label htmlFor={`slot-${slot.slotKey}`}>
               {dedicatedEditor ? label('agent') : `${label('agent')} · ${label(slot.slotKey)}`}
             </Label>
-            <NativeSelect
-              {...form.bind('agentId')}
-              id={`slot-${slot.slotKey}`}
-              className="w-full"
-              value={choice}
-              onChange={(event) => {
-                form.field('agentId')[1](event.target.value);
-                onChange(event.target.value);
-              }}
-            >
-              <option value="">{label('unassigned')}</option>
-              {missing && (
-                <option value={choice}>
-                  {slot.agent?.id === choice ? slot.agent.title : label('unavailableChoice')}
-                </option>
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              <div className="min-w-0 flex-1 basis-52">
+                <CatalogueChoicePicker
+                  id={`slot-${slot.slotKey}`}
+                  locale={locale}
+                  options={agents.map((agent) => ({
+                    id: agent.id,
+                    title: agent.title,
+                    detail: agent.enabled ? undefined : label('disabled'),
+                  }))}
+                  selected={choice}
+                  required={false}
+                  disabled={locked}
+                  field={form.bind('agentId')}
+                  labels={{
+                    search: copy('slotAgentSearch'),
+                    noMatches: copy('slotAgentNoMatches'),
+                    empty: copy('slotAgentNone'),
+                    unavailable:
+                      slot.agent?.id === choice ? slot.agent.title : label('unavailableChoice'),
+                  }}
+                  onChange={(id) => {
+                    if (id !== null) changeChoice(id);
+                  }}
+                />
+              </div>
+              {choice && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="min-h-11 shrink-0 text-primary"
+                  onClick={() => {
+                    changeChoice('');
+                    form.form.setFocus('agentId');
+                  }}
+                >
+                  {copy('clearAssignment')}
+                </Button>
               )}
-              {agents.map((agent) => (
-                <option key={agent.id} value={agent.id}>
-                  {agent.title}
-                  {agent.enabled ? '' : ` (${label('disabled')})`}
-                </option>
-              ))}
-            </NativeSelect>
+            </div>
             <CatalogueFieldFeedback
               compact
               id={form.errorId('agentId')}

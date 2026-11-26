@@ -4,13 +4,14 @@ import { ComboBox, ComboBoxInput, ComboBoxItem, ComboBoxPopup } from '@barghsa/u
 import type { WizardFieldBinding } from '../hooks/useWizardForm.js';
 import { catalogueSearchText } from '../lib/catalogue-search.js';
 
-export type CatalogueChoice = { id: string; title: string };
+export type CatalogueChoice = { id: string; title: string; detail?: string | undefined };
 
 export function CatalogueChoicePicker({
   id,
   locale,
   options,
   selected,
+  required = true,
   disabled,
   field,
   labels,
@@ -20,10 +21,11 @@ export function CatalogueChoicePicker({
   locale: 'en' | 'fa';
   options: CatalogueChoice[];
   selected: string;
+  required?: boolean;
   disabled: boolean;
   field: WizardFieldBinding;
   labels: { search: string; noMatches: string; empty: string; unavailable: string };
-  onChange: (id: string) => void;
+  onChange: (id: string | null) => void;
 }) {
   const [search, setSearch] = useState('');
   // Use the latest input even when reopening interrupts a popup close.
@@ -55,7 +57,7 @@ export function CatalogueChoicePicker({
       disabled={disabled}
       onValueChange={(option) => {
         if (!disabled && (!option || options.some((row) => row.id === option.id)))
-          onChange(option?.id ?? '');
+          onChange(option?.id ?? null);
       }}
     >
       <SearchIcon
@@ -67,7 +69,7 @@ export function CatalogueChoicePicker({
         ref={field.ref}
         onBlur={field.onBlur}
         placeholder={labels.search}
-        aria-required="true"
+        aria-required={required || undefined}
         aria-invalid={field['aria-invalid']}
         aria-describedby={field['aria-describedby']}
         className="h-11 ps-9 aria-invalid:border-destructive"
@@ -78,8 +80,21 @@ export function CatalogueChoicePicker({
         className="max-h-[min(18rem,var(--available-height))] w-(--anchor-width) min-w-0 p-1 data-closed:animate-none"
       >
         {(option: CatalogueChoice) => (
-          <ComboBoxItem key={option.id} value={option} className="min-h-11">
-            <bdi className="min-w-0 [overflow-wrap:anywhere]">{option.title}</bdi>
+          <ComboBoxItem
+            key={option.id}
+            value={option}
+            className="min-h-11"
+            aria-label={option.title}
+            aria-description={option.detail}
+          >
+            <span className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-x-2 gap-y-1">
+              <bdi className="min-w-0 [overflow-wrap:anywhere]">{option.title}</bdi>
+              {option.detail && (
+                <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                  {option.detail}
+                </span>
+              )}
+            </span>
           </ComboBoxItem>
         )}
       </ComboBoxPopup>
