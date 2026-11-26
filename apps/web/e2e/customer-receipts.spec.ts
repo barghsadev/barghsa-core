@@ -228,6 +228,9 @@ async function setup(
     await page
       .getByTestId(`${prefix}-amount`)
       .fill(locale === 'fa' ? '۱۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۱' : '10,000,000,000,000,001');
+    await expect(page.getByTestId(`${prefix}-toman`)).toContainText(
+      locale === 'fa' ? '۱٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۰٬۰۰۰٫۱' : '1,000,000,000,000,000.1'
+    );
     await selectCalendarDate(
       page,
       kind === 'wallet' ? 'receipt-date' : 'invoice-receipt-date',
@@ -235,7 +238,10 @@ async function setup(
       locale
     );
     await page.getByTestId(`${prefix}-payer-ref`).fill('  TRACK-123  ');
-    await page.getByTestId(`${prefix}-note`).fill('  Customer note  ');
+    const note = page.getByTestId(`${prefix}-note`);
+    await expect(note).toBeHidden();
+    await form.locator('details').filter({ has: note }).locator('summary').press('Enter');
+    await note.fill('  Customer note  ');
     await page.getByTestId(`${prefix}-file`).setInputFiles(pdf);
   }
   return {
@@ -709,7 +715,9 @@ for (const locale of ['en', 'fa'] as const)
         else await expect(page.locator('html')).not.toHaveClass(/dark/);
         const payer = page.getByTestId(`${prefix}-payer-ref`),
           bank = page.getByTestId(`${prefix}-bank-name`),
+          note = page.getByTestId(`${prefix}-note`),
           submit = page.getByTestId(`${prefix}-submit`);
+        const noteToggle = form.locator('details').filter({ has: note }).locator('summary');
         const date = form.getByLabel(
           t(
             kind === 'wallet'
@@ -756,13 +764,13 @@ for (const locale of ['en', 'fa'] as const)
         let confirmations = 0;
         await page.route(`**${endpoint}`, (route) => {
           confirmations++;
-          return confirmations === 1
+          return confirmations <= 2
             ? route.fulfill({
                 status: 400,
                 json: {
                   error: {
                     code: 'VALIDATION:INPUT:INVALID',
-                    fields: ['payerReference'],
+                    fields: [confirmations === 1 ? 'payerReference' : 'customerNote'],
                     message: 'private server copy',
                   },
                 },
@@ -798,12 +806,21 @@ for (const locale of ['en', 'fa'] as const)
         await expect(file).toBeFocused();
         expect(uploads).toHaveLength(1);
         await expect(file).not.toHaveValue('');
+        await noteToggle.press('Enter');
+        await expect(note).toBeHidden();
+        await submit.click();
+        await confirmReceipt(page, locale, 'TRACK-456');
+        await expect(note).toBeFocused();
+        await expect(note).toHaveAttribute('aria-invalid', 'true');
+        await expect(note).toHaveValue('  Customer note  ');
+        await note.fill('Transfer at the branch');
         await submit.click();
         await confirmReceipt(page, locale, 'TRACK-456');
         await expect(page.getByTestId(`${prefix}-success`)).toBeVisible();
         expect(uploads).toHaveLength(2);
         expect(submissions).toHaveLength(1);
         expect(submissions[0]!.body.amount).toBe(amount);
+        expect(submissions[0]!.body.customerNote).toBe('Transfer at the branch');
         expect(submissions[0]!.body.attachmentKey).toBe('receipts/upload-2.pdf');
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
           true

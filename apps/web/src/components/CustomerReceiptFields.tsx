@@ -1,10 +1,16 @@
-import type { ReactNode, RefObject } from 'react';
+import { useCallback, type RefObject } from 'react';
 import { DatePicker, Input, Label, Textarea, cn, datePickerCalendarDate } from '@barghsa/ui';
 import { FormField } from '@barghsa/ui/form';
 import { t } from '@barghsa/i18n/workspace';
-import { INVOICE_BANK_RECEIPT_FILE_ACCEPT } from '@barghsa/shared/finance/browser';
-import { FileCheck, Paperclip } from 'lucide-react';
+import { receiptUploadMessages } from '@barghsa/i18n/receipt-editor';
+import { formatToman } from '@barghsa/i18n/numbers';
+import {
+  INVOICE_BANK_RECEIPT_FILE_ACCEPT,
+  parseBankReceiptTopUpAmountIrR,
+} from '@barghsa/shared/finance/browser';
+import { ChevronDown, FileCheck, Paperclip } from 'lucide-react';
 import { useLocale } from '../hooks/useLocale.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import type { useReceiptForm } from '../hooks/useReceiptForm.js';
 import type { ReceiptFormValues } from '../lib/customer-finance-form-schemas.js';
 import { normalizeIrrAmountDigits } from '../lib/invoice-bank-receipt-fields.js';
@@ -18,7 +24,6 @@ export function CustomerReceiptFields({
   maxDate,
   fileInput,
   onEdit,
-  amountHint,
 }: {
   kind: 'wallet' | 'invoice';
   draft: ReturnType<typeof useReceiptForm>;
@@ -26,15 +31,37 @@ export function CustomerReceiptFields({
   maxDate: string;
   fileInput: RefObject<HTMLInputElement | null>;
   onEdit: (name: ReceiptField) => void;
-  amountHint?: ReactNode;
 }) {
   const locale = useLocale();
+  const { numberStyle } = useNumberFormatting(locale);
+  const copy = receiptUploadMessages[locale];
   const prefix = kind === 'wallet' ? 'wallet.page' : 'invoices.details';
   const label = (key: string) => t(`${prefix}.${key}`, locale);
   const id = kind === 'wallet' ? 'receipt' : 'invoice-receipt';
   const testId = `${kind}-receipt`;
   const file = draft.values.file;
   const AttachmentIcon = file ? FileCheck : Paperclip;
+  const amountIrR = parseBankReceiptTopUpAmountIrR(normalizeIrrAmountDigits(draft.values.amount));
+  const amountHelp =
+    amountIrR === null
+      ? copy.amountHelp
+      : copy.tomanEquivalent.replace('{amount}', formatToman(amountIrR, locale, { numberStyle }));
+  const { register } = draft.form;
+  const noteRef = useCallback(
+    (element: HTMLTextAreaElement | null) =>
+      register('customerNote').ref(
+        element
+          ? {
+              focus: () => {
+                const disclosure = element.closest('details');
+                if (disclosure) disclosure.open = true;
+                element.focus();
+              },
+            }
+          : null
+      ),
+    [register]
+  );
 
   function feedback(name: ReceiptField) {
     const error = draft.errors[name];
@@ -54,6 +81,7 @@ export function CustomerReceiptFields({
     const [value, setValue] = draft.field(name);
     const amount = name === 'amount';
     const date = name === 'paymentDate';
+    const help = amount ? amountHelp : name === 'payerReference' ? copy.bankReferenceHelp : null;
     const { onBlur, ...binding } = draft.bind(name);
     return (
       <div className="min-w-0 space-y-1">
@@ -96,7 +124,7 @@ export function CustomerReceiptFields({
             maxLength={!date && !amount ? 128 : undefined}
             aria-required={name !== 'bankName' || undefined}
             aria-describedby={
-              [amount && amountHint ? `${fieldId}-hint` : null, binding['aria-describedby']]
+              [help ? `${fieldId}-hint` : null, binding['aria-describedby']]
                 .filter(Boolean)
                 .join(' ') || undefined
             }
@@ -109,11 +137,18 @@ export function CustomerReceiptFields({
           />
         )}
         {feedback(name)}
-        {amount && amountHint ? (
-          <div id={`${fieldId}-hint`} className="text-xs text-muted-foreground">
-            {amountHint}
-          </div>
-        ) : null}
+        {help && (
+          <p
+            id={`${fieldId}-hint`}
+            data-testid={amount && amountIrR !== null ? `${testId}-toman` : undefined}
+            className={cn(
+              'text-xs text-muted-foreground',
+              amount && amountIrR !== null && 'font-medium text-foreground'
+            )}
+          >
+            <bdi>{help}</bdi>
+          </p>
+        )}
       </div>
     );
   }
@@ -122,7 +157,7 @@ export function CustomerReceiptFields({
     <div className="grid min-w-0 gap-x-4 gap-y-3 sm:grid-cols-2">
       {textInput('amount', 'amount', label('receiptAmountLabel'))}
       {textInput('paymentDate', 'date', label('receiptDateLabel'))}
-      {textInput('payerReference', 'payer-ref', label('receiptPayerRefLabel'))}
+      {textInput('payerReference', 'payer-ref', copy.bankReference)}
       {textInput('bankName', 'bank-name', t('invoices.details.receiptBankNameLabel', locale))}
       <div className="min-w-0 space-y-1 sm:col-span-2">
         <Label htmlFor={`${id}-file`}>{label('receiptFileLabel')}</Label>
@@ -184,31 +219,58 @@ export function CustomerReceiptFields({
         {feedback('file')}
       </div>
       <div className="min-w-0 space-y-1 sm:col-span-2">
-        <Label htmlFor={`${id}-note`}>{label('receiptNoteLabel')}</Label>
-        <Textarea
-          {...draft.bind('customerNote')}
-          id={`${id}-note`}
-          data-testid={`${testId}-note`}
-          rows={2}
-          dir="auto"
-          maxLength={2000}
-          value={draft.values.customerNote}
-          disabled={disabled}
-          className="min-h-14"
-          aria-describedby={[
-            `${id}-note-hint`,
-            draft.errors.customerNote ? draft.errorId('customerNote') : null,
-          ]
-            .filter(Boolean)
-            .join(' ')}
-          onChange={(event) => {
-            draft.field('customerNote')[1](event.target.value);
-            onEdit('customerNote');
-          }}
-        />
-        <p id={`${id}-note-hint`} className="text-xs text-muted-foreground">
-          {t('invoices.details.receiptNoteHint', locale)}
-        </p>
+        <details className="group min-w-0 rounded-lg border bg-muted/20">
+          <summary
+            aria-labelledby={`${id}-note-label`}
+            aria-describedby={draft.errors.customerNote ? draft.errorId('customerNote') : undefined}
+            className="flex min-h-11 min-w-0 cursor-pointer list-none items-center justify-between gap-2 rounded-lg px-3 py-2 text-sm hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden"
+          >
+            <span className="min-w-0">
+              <span id={`${id}-note-label`} className="block font-medium text-primary">
+                {label('receiptNoteLabel')}
+              </span>
+              {draft.values.customerNote.trim() && (
+                <bdi className="mt-0.5 line-clamp-1 text-xs text-muted-foreground [overflow-wrap:anywhere] group-open:hidden">
+                  {draft.values.customerNote}
+                </bdi>
+              )}
+            </span>
+            <ChevronDown
+              aria-hidden="true"
+              className="size-4 shrink-0 text-primary transition-transform group-open:rotate-180 motion-reduce:transition-none"
+            />
+          </summary>
+          <div className="min-w-0 space-y-1 px-3 pb-2">
+            <Label htmlFor={`${id}-note`} className="sr-only">
+              {label('receiptNoteLabel')}
+            </Label>
+            <Textarea
+              {...draft.bind('customerNote')}
+              ref={noteRef}
+              id={`${id}-note`}
+              data-testid={`${testId}-note`}
+              rows={2}
+              dir="auto"
+              maxLength={2000}
+              value={draft.values.customerNote}
+              disabled={disabled}
+              className="min-h-14"
+              aria-describedby={[
+                `${id}-note-hint`,
+                draft.errors.customerNote ? draft.errorId('customerNote') : null,
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              onChange={(event) => {
+                draft.field('customerNote')[1](event.target.value);
+                onEdit('customerNote');
+              }}
+            />
+            <p id={`${id}-note-hint`} className="text-xs text-muted-foreground">
+              {t('invoices.details.receiptNoteHint', locale)}
+            </p>
+          </div>
+        </details>
         {feedback('customerNote')}
       </div>
     </div>

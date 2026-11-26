@@ -196,10 +196,6 @@ function CustomerWalletPage({
       ? null
       : Math.round(amountValue / 10);
 
-  const receiptAmountDigits = normalizeIrrAmountDigits(receipt.values.amount);
-  const receiptAmountIrR = parseBankReceiptTopUpAmountIrR(receiptAmountDigits);
-  const receiptTomanPreview = receiptAmountIrR === null ? null : receiptAmountIrR / 10n;
-
   const handleSubmit = online.form.handleSubmit(async (values) => {
     if (
       !profileId ||
@@ -700,13 +696,6 @@ function CustomerWalletPage({
                     setReceiptUploaded(null);
                     if (receiptError === 'upload') setReceiptError(null);
                   }}
-                  amountHint={
-                    receiptTomanPreview === null ? null : (
-                      <p data-testid="wallet-receipt-toman">
-                        {tomanPreviewText(receiptTomanPreview)}
-                      </p>
-                    )
-                  }
                 />
               </div>
               <RecordEditorActions className="max-sm:justify-start">

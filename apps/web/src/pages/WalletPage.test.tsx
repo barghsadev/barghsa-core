@@ -607,6 +607,7 @@ describe('WalletPage (T-04.2.02.01 / T-04.2.02.03)', () => {
             container.querySelector('[data-testid="wallet-receipt-bank-name"]') as HTMLInputElement,
             `  ${bankName}  `
           );
+        note.closest('details')!.querySelector('summary')!.click();
         setTextAreaValue(note, 'Branch transfer');
         const file = new File(['%PDF-1.4 receipt'], 'receipt.pdf', { type: 'application/pdf' });
         Object.defineProperty(fileInput, 'files', { configurable: true, value: [file] });

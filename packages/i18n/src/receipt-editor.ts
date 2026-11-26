@@ -13,6 +13,21 @@ export const invoiceReceiptPageMessages = {
   },
 };
 
+export const receiptUploadMessages = {
+  en: {
+    amountHelp: 'Enter the amount shown on your bank receipt.',
+    tomanEquivalent: 'Equivalent to {amount} toman',
+    bankReference: 'Bank reference',
+    bankReferenceHelp: 'Copy the tracking number or payment reference from your bank receipt.',
+  },
+  fa: {
+    amountHelp: 'مبلغ درج‌شده روی رسید بانکی را وارد کنید.',
+    tomanEquivalent: 'معادل {amount} تومان',
+    bankReference: 'مرجع واریز',
+    bankReferenceHelp: 'شماره پیگیری یا مرجع پرداخت روی رسید بانکی را وارد کنید.',
+  },
+};
+
 export const receiptEditorMessages = {
   en: {
     applyPayment: 'Allocate the payment',
