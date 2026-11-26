@@ -624,6 +624,50 @@ test('saving distinguishes blocked and acknowledged duplicates and allows manual
   expect(state.orders).toHaveLength(0);
 });
 
+test('optional saving bill verification lets customers edit and continue to review', async ({
+  page,
+}) => {
+  const locale = 'en';
+  const state = await fixture(page, 'saving', locale);
+  const completed: string[] = [];
+  const checks = new Map<string, () => void>();
+  await page.route('**/api/saving/orders/verify-bill', async (route) => {
+    const body = route.request().postDataJSON();
+    expect(body.profileId).toBe(profileId);
+    await new Promise<void>((resolve) => checks.set(body.billIdentifier, resolve));
+    await route.fulfill({ json: { status: 'verified' } }).catch(() => undefined);
+    completed.push(body.billIdentifier);
+  });
+
+  try {
+    await open(page, 'saving', locale);
+    const bill = input(page, 'saving', locale);
+    const next = savingReviewButton(page, locale);
+    const check = page.getByRole('button', { name: tSaving('verifyBill', locale), exact: true });
+    const originalBill = savingData.billIdentifier;
+    const revisedBill = '1234567890456';
+    const verified = page.getByText(tSaving('verified', locale), { exact: true });
+    await expect(next).toBeEnabled();
+    expect(checks.size).toBe(0);
+    await check.click();
+    await expect.poll(() => checks.has(originalBill)).toBe(true);
+    await expect(next).toBeEnabled();
+    await expect(bill).toBeEditable();
+    await bill.fill(revisedBill);
+    checks.get(originalBill)?.();
+    await expect.poll(() => completed.includes(originalBill)).toBe(true);
+    await expect(verified).toHaveCount(0);
+    await check.click();
+    await expect.poll(() => checks.has(revisedBill)).toBe(true);
+    await next.click();
+    await expect(page.locator('[data-review-section=bill]')).toContainText(revisedBill);
+    expect(state.saves.at(-1)).toMatchObject({ data: { billIdentifier: revisedBill } });
+    expect(state.orders).toHaveLength(0);
+  } finally {
+    for (const release of checks.values()) release();
+  }
+});
+
 for (const mode of ['saving', 'solar'] as const)
   for (const locale of ['en', 'fa'] as const) {
     test(

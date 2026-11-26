@@ -125,6 +125,67 @@ async function postJson<T>(
   return response.json() as Promise<T>;
 }
 
+function OptionalBillVerification({
+  profileId,
+  billIdentifier,
+  valid,
+}: {
+  profileId: string | null;
+  billIdentifier: string;
+  valid: boolean;
+}) {
+  const locale = useLocale();
+  const profileRevision = useProfileContextRevision();
+  const request = useRef<AbortController | null>(null);
+  const [status, setStatus] = useState<'verifyingBill' | 'verified' | 'manualReview'>();
+  useEffect(() => () => request.current?.abort(), []);
+
+  async function verify() {
+    if (!valid || !profileId || request.current || getProfileContextRevision() !== profileRevision)
+      return;
+    const controller = new AbortController();
+    request.current = controller;
+    setStatus('verifyingBill');
+    let outcome: 'verified' | 'manualReview' = 'manualReview';
+    try {
+      const result = await readWithDeadline(controller.signal, (signal) =>
+        postJson<{ status: string }>(
+          '/api/saving/orders/verify-bill',
+          { profileId, billIdentifier },
+          signal
+        )
+      );
+      if (result.status === 'verified') outcome = 'verified';
+    } catch {
+      // The customer can continue while staff review the bill.
+    } finally {
+      request.current = null;
+      if (!controller.signal.aborted && getProfileContextRevision() === profileRevision)
+        setStatus(outcome);
+    }
+  }
+
+  return (
+    <div>
+      <Button
+        type="button"
+        size="sm"
+        variant="link"
+        className="h-auto min-h-8 whitespace-normal px-0 text-start pointer-coarse:min-h-11"
+        disabled={!valid || !profileId || status === 'verifyingBill'}
+        onClick={() => void verify()}
+      >
+        {tSaving('verifyBill', locale)}
+      </Button>
+      {status && (
+        <p role="status" className="text-xs text-muted-foreground">
+          {tSaving(status, locale)}
+        </p>
+      )}
+    </div>
+  );
+}
+
 const LeaveDialog = lazy(() => import('../components/WizardLeaveDialog.js'));
 
 export function SavingsOrderPage({ preferredPlanId }: { preferredPlanId?: string } = {}) {
@@ -154,9 +215,6 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
   const [addressAttempt, setAddressAttempt] = useState(0);
   const wizard = useWizardStep('/savings/orders/new', 3);
   const { step } = wizard;
-  const [verification, setVerification] = useState<'idle' | 'checking' | 'verified' | 'manual'>(
-    'idle'
-  );
   const [duplicate, setDuplicate] = useState<{
     duplicate: boolean;
     preventActiveDuplicates: boolean;
@@ -574,25 +632,6 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
       });
     });
   }
-  async function verifyBill() {
-    if (!profileId || !/^[0-9]{6,13}$/.test(billIdentifier)) return;
-    await protection.run(async (current, alive) => {
-      setVerification('checking');
-      let status: 'verified' | 'manual' = 'manual';
-      try {
-        const result = await postJson<{ status: string }>('/api/saving/orders/verify-bill', {
-          profileId,
-          billIdentifier,
-        });
-        status = result.status === 'verified' ? 'verified' : 'manual';
-      } catch {
-        /* A bill can still be submitted for manual staff verification. */
-      } finally {
-        if (alive()) setVerification(current() ? status : 'idle');
-      }
-    });
-  }
-
   useEffect(() => {
     if (step !== 3 || !profileId || !agreementVersionId || !selectedHardware || !addressId) return;
     const controller = new AbortController();
@@ -1101,51 +1140,39 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                         <h2 className="text-base font-semibold">
                           <label htmlFor="saving-bill-identifier">{copy('billIdentifier')}</label>
                         </h2>
+                        <Input
+                          id="saving-bill-identifier"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          maxLength={13}
+                          {...fields.bind('billIdentifier')}
+                          aria-required="true"
+                          aria-invalid={
+                            invalidBill ||
+                            fields.form.getFieldState('billIdentifier').invalid ||
+                            undefined
+                          }
+                          aria-describedby={
+                            invalidBill
+                              ? 'saving-bill-error'
+                              : fields.form.getFieldState('billIdentifier').invalid
+                                ? fields.errorId('billIdentifier')
+                                : 'saving-bill-hint'
+                          }
+                          value={billIdentifier}
+                          onChange={(event) => {
+                            setBillIdentifier(
+                              normalizeProfileDigits(event.target.value).replace(/[^0-9]/g, '')
+                            );
+                            setDuplicate(null);
+                            setDuplicateAcknowledged(false);
+                          }}
+                          className="w-full tabular-nums"
+                          dir="ltr"
+                        />
                         <p id="saving-bill-hint" className="text-xs text-muted-foreground">
                           {copy('billIdentifierHint')}
                         </p>
-                        <div className="flex items-start gap-2">
-                          <Input
-                            id="saving-bill-identifier"
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            maxLength={13}
-                            {...fields.bind('billIdentifier')}
-                            aria-required="true"
-                            aria-invalid={
-                              invalidBill ||
-                              fields.form.getFieldState('billIdentifier').invalid ||
-                              undefined
-                            }
-                            aria-describedby={
-                              invalidBill
-                                ? 'saving-bill-error'
-                                : fields.form.getFieldState('billIdentifier').invalid
-                                  ? fields.errorId('billIdentifier')
-                                  : 'saving-bill-hint'
-                            }
-                            value={billIdentifier}
-                            onChange={(event) => {
-                              setBillIdentifier(
-                                normalizeProfileDigits(event.target.value).replace(/[^0-9]/g, '')
-                              );
-                              setDuplicate(null);
-                              setDuplicateAcknowledged(false);
-                              setVerification('idle');
-                            }}
-                            className="min-w-0 flex-1 tabular-nums"
-                            dir="ltr"
-                          />
-                          <Button
-                            type="button"
-                            variant="outline"
-                            className="min-h-11 shrink-0"
-                            disabled={!validBill || verification === 'checking'}
-                            onClick={() => void verifyBill()}
-                          >
-                            {copy(verification === 'checking' ? 'verifyingBill' : 'verifyBill')}
-                          </Button>
-                        </div>
                         {invalidBill && (
                           <p id="saving-bill-error" className="text-sm text-destructive">
                             {copy('invalidBill')}
@@ -1166,16 +1193,6 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                         {duplicateChecking && (
                           <p role="status" className="text-sm text-muted-foreground">
                             {copy('duplicateChecking')}
-                          </p>
-                        )}
-                        {verification === 'verified' && (
-                          <p role="status" className="text-sm font-medium">
-                            {copy('verified')}
-                          </p>
-                        )}
-                        {verification === 'manual' && (
-                          <p role="status" className="text-sm text-muted-foreground">
-                            {copy('manualReview')}
                           </p>
                         )}
                         {duplicate?.duplicate && (
@@ -1217,6 +1234,12 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                             )}
                           </div>
                         )}
+                        <OptionalBillVerification
+                          key={JSON.stringify([profileId, billIdentifier])}
+                          profileId={profileId}
+                          billIdentifier={billIdentifier}
+                          valid={validBill}
+                        />
                       </section>
                       <section className="min-w-0 space-y-2 border-t pt-3 lg:border-s lg:border-t-0 lg:ps-4 lg:pt-0">
                         <h2

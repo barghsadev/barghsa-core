@@ -43,9 +43,8 @@ const en: Record<string, string> = {
   stockPending: 'Availability to be confirmed',
   confirmHardware: 'I confirm this equipment choice',
   billIdentifier: 'Electricity bill identifier',
-  billIdentifierHint:
-    'Use the 6–13-digit ID on your electricity bill. Checking it here is optional.',
-  verifyBill: 'Check identifier',
+  billIdentifierHint: 'Enter the 6–13 digits printed on your electricity bill.',
+  verifyBill: 'Verify bill (optional)',
   verified: 'Identifier verified',
   manualReview: 'Automatic verification is unavailable. Staff will review this order.',
   invalidBill: 'Enter 6–13 digits.',
@@ -285,9 +284,8 @@ const fa: Record<string, string> = {
   stockPending: 'موجودی نیازمند تأیید',
   confirmHardware: 'انتخاب این دستگاه را تأیید می‌کنم',
   billIdentifier: 'شناسه قبض برق',
-  billIdentifierHint:
-    'شناسه ۶ تا ۱۳ رقمی روی قبض برق را وارد کنید. بررسی شناسه در این مرحله اختیاری است.',
-  verifyBill: 'بررسی شناسه',
+  billIdentifierHint: 'شناسه ۶ تا ۱۳ رقمی روی قبض برق را وارد کنید.',
+  verifyBill: 'بررسی شناسه (اختیاری)',
   verified: 'شناسه تأیید شد',
   manualReview: 'بررسی خودکار در دسترس نیست. کارکنان این سفارش را بررسی می‌کنند.',
   invalidBill: '۶ تا ۱۳ رقم وارد کنید.',
