@@ -1,3 +1,5 @@
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { TableCellDetails } from '../components/HistoryTable.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useQueryClient } from '@tanstack/react-query';
 import { getRouteApi, Link, Navigate, notFound } from '@tanstack/react-router';
@@ -663,6 +665,40 @@ export default function AdminSavingOrdersPage({
     ((editorKind === 'installation-address' && !detail.canAmendAddress) ||
       (editorKind === 'hardware' && !detail.canAmendHardware) ||
       (editorKind === 'cancel-upgrade' && !upgrade));
+  const operationForm = detail && (!editor || operation) && (
+    <SavingStaffOperationForm
+      key={operationScope}
+      order={detail}
+      workflow={recordId ? { orderId: recordId, search: queueSearch ?? {}, operation } : undefined}
+      draft={
+        recordId
+          ? (operation && operationDrafts.current[operation]) || { note: '', handover: '' }
+          : { note, handover }
+      }
+      onDraft={(value) => {
+        if (operationCurrentScope.current !== operationScope) return;
+        if (operation) operationDrafts.current[operation] = value;
+        else if (!recordId) {
+          setNote(value.note);
+          setHandover(value.handover);
+        }
+      }}
+      owner={addressOwner}
+      scope={operationScope}
+      currentScope={operationCurrentScope}
+      notify={() => setAddressLockRevision((value) => value + 1)}
+      onPending={() => {
+        ++readEpoch.current;
+        queueAbort.current?.abort();
+        detailAbort.current?.abort();
+        setState(acceptedCurrent ? 'ready' : 'error');
+      }}
+      onSuccess={refreshQueue}
+      onWithdraw={(reason) => withdrawSelected(reason, detail.id)}
+      prerequisites={(stage) => stagePrerequisites(stage, detail).map((reason) => copy(reason))}
+      summary={(review) => <SavingStaffOperationSummary review={review} />}
+    />
+  );
   const Content = showQueue ? ListPage : 'div';
   return (
     <section
@@ -741,12 +777,7 @@ export default function AdminSavingOrdersPage({
           </header>
         </>
       ) : (
-        <header className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-semibold">{copy('staffTitle')}</h1>
-            <p className="text-muted-foreground">{copy('staffDescription')}</p>
-          </div>
-        </header>
+        <h1 className="text-3xl font-semibold">{copy('staffTitle')}</h1>
       )}
       {time.notice}
       <Content>
@@ -806,7 +837,9 @@ export default function AdminSavingOrdersPage({
                 error={state === 'error' || state === 'forbidden'}
                 empty={orders.length === 0}
                 retainContent={orders.length > 0 && state !== 'forbidden'}
-                loadingView={<LoadingStatus>{copy('staffLoading')}</LoadingStatus>}
+                loadingView={
+                  <RecordListSkeleton label={copy('staffLoading')} view="card" headings={[]} />
+                }
                 errorView={
                   state === 'forbidden' ? (
                     <p role="alert">{copy('staffForbidden')}</p>
@@ -858,17 +891,27 @@ export default function AdminSavingOrdersPage({
               >
                 {orders.map((order) => {
                   const className =
-                    'h-auto min-h-11 w-full justify-start whitespace-normal p-4 text-start';
+                    'h-auto min-h-11 w-full justify-start whitespace-normal rounded-xl bg-card p-4 text-start';
                   const text = (
-                    <span>
-                      <strong className="block" dir="auto">
-                        {order.customerName}
-                      </strong>
-                      <span className="block text-sm" dir="auto">
+                    <span className="min-w-0 w-full space-y-2">
+                      <span className="flex flex-wrap items-start justify-between gap-2">
+                        <strong className="wrap-anywhere" dir="auto">
+                          {order.customerName}
+                        </strong>
+                        <StatusBadge
+                          state={order.status}
+                          label={statusLabel(order.status)}
+                          tone={statusTone(order.status)}
+                        />
+                      </span>
+                      <span
+                        className="block wrap-anywhere text-sm text-muted-foreground"
+                        dir="auto"
+                      >
                         {order.pricingSnapshot.plan?.title?.[locale] ?? order.id}
                       </span>
-                      <span className="block text-xs">
-                        {statusLabel(order.status)} · <bdi>{order.billIdentifier}</bdi>
+                      <span className="block text-xs text-muted-foreground">
+                        {copy('staffBill')} <bdi>{order.billIdentifier}</bdi>
                       </span>
                     </span>
                   );
@@ -935,7 +978,16 @@ export default function AdminSavingOrdersPage({
             </div>
           )}
           {recordId && state === 'forbidden' && <p role="alert">{copy('staffForbidden')}</p>}
-          {selected && !detail && !detailError && <p role="status">{copy('staffLoading')}</p>}
+          {selected &&
+            !detail &&
+            !detailError &&
+            (editor ? (
+              <LoadingStatus>{copy('staffLoading')}</LoadingStatus>
+            ) : (
+              <div data-slot="record-detail-skeleton" className="rounded-xl border bg-card p-4">
+                <LoadingStatus>{copy('staffLoading')}</LoadingStatus>
+              </div>
+            ))}
           {selected && detailError && !(recordId && state === 'forbidden') && (
             <div role="alert" className="space-y-2">
               <p>{copy('staffError')}</p>
@@ -950,44 +1002,7 @@ export default function AdminSavingOrdersPage({
               </Button>
             </div>
           )}
-          {detail && (!editor || operation) && (
-            <SavingStaffOperationForm
-              key={operationScope}
-              order={detail}
-              workflow={
-                recordId ? { orderId: recordId, search: queueSearch ?? {}, operation } : undefined
-              }
-              draft={
-                recordId
-                  ? (operation && operationDrafts.current[operation]) || { note: '', handover: '' }
-                  : { note, handover }
-              }
-              onDraft={(value) => {
-                if (operationCurrentScope.current !== operationScope) return;
-                if (operation) operationDrafts.current[operation] = value;
-                else if (!recordId) {
-                  setNote(value.note);
-                  setHandover(value.handover);
-                }
-              }}
-              owner={addressOwner}
-              scope={operationScope}
-              currentScope={operationCurrentScope}
-              notify={() => setAddressLockRevision((value) => value + 1)}
-              onPending={() => {
-                ++readEpoch.current;
-                queueAbort.current?.abort();
-                detailAbort.current?.abort();
-                setState(acceptedCurrent ? 'ready' : 'error');
-              }}
-              onSuccess={refreshQueue}
-              onWithdraw={(reason) => withdrawSelected(reason, detail.id)}
-              prerequisites={(stage) =>
-                stagePrerequisites(stage, detail).map((reason) => copy(reason))
-              }
-              summary={(review) => <SavingStaffOperationSummary review={review} />}
-            />
-          )}
+          {editor && operationForm}
           {formUnavailable && (
             <p role="status" className="rounded-lg border bg-card p-4 text-sm">
               {selectedUpgrade?.status === 'cancelled'
@@ -1005,45 +1020,69 @@ export default function AdminSavingOrdersPage({
           {detail && !editor && (
             <Card>
               <CardContent className="space-y-5 pt-6">
-                <div>
-                  <h2 className="text-xl font-semibold" dir="auto">
-                    {detail.customerName}
-                  </h2>
-                  {recordId && detail.pricingSnapshot.plan?.title?.[locale] && (
-                    <p dir="auto">{detail.pricingSnapshot.plan.title[locale]}</p>
-                  )}
-                  <p className="wrap-anywhere text-sm text-muted-foreground">
-                    {statusLabel(detail.status)} · <bdi dir="ltr">{detail.id}</bdi>
-                  </p>
+                <div className="flex flex-wrap justify-between gap-2">
+                  <div className="min-w-0">
+                    <h2 className="wrap-anywhere text-xl font-semibold" dir="auto">
+                      {detail.customerName}
+                    </h2>
+                    {recordId && detail.pricingSnapshot.plan?.title?.[locale] && (
+                      <p dir="auto">{detail.pricingSnapshot.plan.title[locale]}</p>
+                    )}
+                    <p className="wrap-anywhere text-xs text-muted-foreground">
+                      <bdi>{detail.id}</bdi>
+                    </p>
+                  </div>
+                  <StatusBadge
+                    state={detail.status}
+                    label={statusLabel(detail.status)}
+                    tone={statusTone(detail.status)}
+                  />
                 </div>
-                <dl className="grid gap-3 text-sm sm:grid-cols-2">
-                  <div>
-                    <dt>{copy('staffBill')}</dt>
-                    <dd>
-                      <bdi>{detail.billIdentifier}</bdi>
-                    </dd>
+                <div className="grid items-start gap-4 border-y py-4 lg:grid-cols-2">
+                  <div className="text-sm">
+                    <TableCellDetails
+                      fields={[
+                        { id: 'bill', label: copy('staffBill'), value: detail.billIdentifier },
+                        {
+                          id: 'equipment',
+                          label: copy('stepHardware'),
+                          value: detail.hardwareTitle[locale],
+                        },
+                        {
+                          id: 'address',
+                          label: copy('staffAddress'),
+                          value: detail.addressSnapshot.full_address,
+                        },
+                      ]}
+                    />
                   </div>
-                  <div>
-                    <dt>{copy('staffAddress')}</dt>
-                    <dd>{detail.addressSnapshot.full_address}</dd>
+                  <div className="space-y-3 rounded-lg bg-muted/40 p-4 text-sm">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p>{copy('staffInvoice')}</p>
+                      <StatusBadge state={detail.invoiceState} label={copy(detail.invoiceState)} />
+                    </div>
+                    <TableCellDetails
+                      fields={[
+                        {
+                          id: 'total',
+                          label: copy('staffTotal'),
+                          value: money.money(detail.totalIrR),
+                        },
+                        {
+                          id: 'paid',
+                          label: copy('staffPaid'),
+                          value: money.money(detail.paidIrR),
+                        },
+                        {
+                          id: 'contract',
+                          label: copy('staffContract'),
+                          value: copy(detail.contractState),
+                        },
+                      ]}
+                    />
                   </div>
-                  <div>
-                    <dt>{copy('stepHardware')}</dt>
-                    <dd>{detail.hardwareTitle[locale]}</dd>
-                  </div>
-                  <div>
-                    <dt>{copy('staffInvoice')}</dt>
-                    <dd>
-                      {copy(detail.invoiceState)} · {copy('staffTotal')}{' '}
-                      {money.money(detail.totalIrR)} · {copy('staffPaid')}{' '}
-                      {money.money(detail.paidIrR)}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>{copy('staffContract')}</dt>
-                    <dd>{copy(detail.contractState)}</dd>
-                  </div>
-                </dl>
+                </div>
+                {operationForm}
                 <OrderWalletBalance
                   profileId={detail.profileId}
                   total={

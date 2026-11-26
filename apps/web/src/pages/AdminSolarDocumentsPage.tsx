@@ -1,3 +1,5 @@
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
@@ -14,6 +16,8 @@ import {
   Input,
   ListPage,
   ListRefreshButton,
+  PageHeader,
+  StatusBadge,
   Textarea,
 } from '@barghsa/ui';
 import {
@@ -31,6 +35,7 @@ import { tSolar } from '@barghsa/i18n/solar';
 import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import { documentText } from '@barghsa/i18n/documents';
 import { useLocale } from '../hooks/useLocale.js';
+import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { DocumentDetail } from '../components/DocumentDetail.js';
 import {
@@ -311,6 +316,7 @@ function OwnedAdminSolarDocumentsPage({
   const readStaff = useOwnedStaffServiceRead(readActor, readProfileRevision);
   const locale = useLocale();
   const time = useAccountTime(locale);
+  const numbers = useNumberFormatting(locale);
   const copy = (key: string) => tSolar(key, locale);
   const [requests, setRequests] = useState<RequestRow[]>([]);
   const [pendingDocuments, setPendingDocuments] = useState<PendingDocumentRow[]>([]);
@@ -955,19 +961,21 @@ function OwnedAdminSolarDocumentsPage({
           }
         />
       ) : (
-        <header className="flex flex-wrap items-center justify-between gap-2">
-          <h1 className="text-2xl font-semibold">{copy('staffTitle')}</h1>
-          {queueSearch !== undefined && (
-            <Link
-              to="/admin/solar-requests/$requestId/{-$operation}/{-$documentId}"
-              params={{ requestId: 'guidance', operation: undefined, documentId: undefined }}
-              search={queueSearch}
-              className={buttonVariants({ variant: 'outline', size: 'sm' })}
-            >
-              {tSolarStaffRecord('editDocumentGuidance', locale)}
-            </Link>
-          )}
-        </header>
+        <PageHeader
+          title={copy('staffTitle')}
+          actions={
+            queueSearch && (
+              <Link
+                to="/admin/solar-requests/$requestId/{-$operation}/{-$documentId}"
+                params={{ requestId: 'guidance', operation: undefined, documentId: undefined }}
+                search={queueSearch}
+                className={buttonVariants({ variant: 'outline' })}
+              >
+                {tSolarStaffRecord('editDocumentGuidance', locale)}
+              </Link>
+            )
+          }
+        />
       )}
       {time.notice}
       {recordId &&
@@ -998,7 +1006,7 @@ function OwnedAdminSolarDocumentsPage({
       )}
       {showQueue && (
         <>
-          <section className="space-y-3 rounded-xl border p-5">
+          <section className="space-y-3">
             <h2 className="text-xl font-semibold">{copy('staffPendingFiles')}</h2>
             <ListPage>
               <ListPage.Content
@@ -1006,7 +1014,9 @@ function OwnedAdminSolarDocumentsPage({
                 error={documentsError || documentsDenied}
                 empty={!pendingDocuments.length}
                 retainContent={!!pendingDocuments.length && !documentsDenied}
-                loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+                loadingView={
+                  <RecordListSkeleton label={copy('loading')} view="card" headings={[]} />
+                }
                 errorView={
                   documentsDenied ? (
                     <p role="alert">{copy('staffQueueForbidden')}</p>
@@ -1019,7 +1029,11 @@ function OwnedAdminSolarDocumentsPage({
                     </div>
                   )
                 }
-                emptyView={<p>{copy('staffNoPendingFiles')}</p>}
+                emptyView={
+                  <p className="rounded-xl border bg-card p-3 text-sm text-muted-foreground">
+                    {copy('staffNoPendingFiles')}
+                  </p>
+                }
               >
                 <ul className="space-y-2">
                   {pendingDocuments.map((document) => (
@@ -1031,15 +1045,20 @@ function OwnedAdminSolarDocumentsPage({
                         disabled={commandPending}
                         open={() => selectRequest(document.request_id, document.document_id)}
                       >
-                        <span className="block font-medium" dir="auto">
-                          {document.file_name}
+                        <span className="flex flex-wrap items-start justify-between gap-2">
+                          <bdi className="min-w-0 wrap-anywhere font-semibold">
+                            {document.file_name}
+                          </bdi>
+                          <StatusBadge label={copy('staffPending')} tone="warning" />
                         </span>
-                        <span className="block text-sm text-muted-foreground">
-                          {copy('staffUploader')}: {document.uploaded_by_name} ·{' '}
-                          {time.format(document.uploaded_at)} · {copy('staffPending')}
+                        <span className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                          <bdi>{document.uploaded_by_name}</bdi>
+                          <time dateTime={document.uploaded_at}>
+                            {time.format(document.uploaded_at)}
+                          </time>
                         </span>
-                        <span className="block text-xs text-muted-foreground">
-                          {copy('staffRequest')}: <bdi>{document.request_id}</bdi>
+                        <span className="mt-1 block wrap-anywhere text-xs text-muted-foreground">
+                          {copy('staffRequest')} <bdi dir="ltr">{document.request_id}</bdi>
                         </span>
                       </SolarQueueRecord>
                     </li>
@@ -1067,7 +1086,7 @@ function OwnedAdminSolarDocumentsPage({
               />
             </ListPage>
           </section>
-          <section className="space-y-3 rounded-xl border p-5">
+          <section className="space-y-3">
             <h2 className="text-xl font-semibold">{copy('staffQueue')}</h2>
             <ListPage>
               <ListPage.Content
@@ -1075,7 +1094,9 @@ function OwnedAdminSolarDocumentsPage({
                 error={queueError || queueDenied}
                 empty={!requests.length}
                 retainContent={!!requests.length && !queueDenied}
-                loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+                loadingView={
+                  <RecordListSkeleton label={copy('loading')} view="card" headings={[]} />
+                }
                 errorView={
                   queueDenied ? (
                     <p role="alert">{copy('staffQueueForbidden')}</p>
@@ -1099,18 +1120,27 @@ function OwnedAdminSolarDocumentsPage({
                         disabled={commandPending}
                         open={() => selectRequest(row.id)}
                       >
-                        <span className="block font-medium" dir="auto">
-                          {row.profile_name}
+                        <span className="flex flex-wrap items-start justify-between gap-2">
+                          <bdi className="min-w-0 wrap-anywhere font-semibold">
+                            {row.profile_name}
+                          </bdi>
+                          <StatusBadge state={row.status} label={copy(`status_${row.status}`)} />
                         </span>
-                        <span className="block text-sm text-muted-foreground">
-                          {copy(
-                            row.building_type === 'non_household' ? 'nonHousehold' : 'building'
-                          )}{' '}
-                          · {copy(`status_${row.status}`)} · {row.document_count} ·{' '}
-                          {time.format(row.created_at, { dateStyle: 'medium' })}
+                        <span className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                          <span>
+                            {copy(
+                              row.building_type === 'non_household' ? 'nonHousehold' : 'building'
+                            )}
+                          </span>
+                          <span>
+                            {copy('staffDocuments')} <bdi>{numbers.number(row.document_count)}</bdi>
+                          </span>
+                          <time dateTime={row.created_at}>
+                            {time.format(row.created_at, { dateStyle: 'medium' })}
+                          </time>
                         </span>
-                        <span className="block text-xs text-muted-foreground">
-                          {copy('staffRequest')}: <bdi>{row.id}</bdi>
+                        <span className="mt-1 block wrap-anywhere text-xs text-muted-foreground">
+                          {copy('staffRequest')} <bdi dir="ltr">{row.id}</bdi>
                         </span>
                       </SolarQueueRecord>
                     </li>
@@ -1140,7 +1170,14 @@ function OwnedAdminSolarDocumentsPage({
           </section>
         </>
       )}
-      {selected && !detail && !detailError && <p role="status">{copy('loading')}</p>}
+      {selected &&
+        !detail &&
+        !detailError &&
+        (editor ? (
+          <LoadingStatus>{copy('loading')}</LoadingStatus>
+        ) : (
+          <RecordDetailSkeleton label={copy('loading')} />
+        ))}
       {selected && detailError && (
         <div role="alert" className="space-y-2">
           <p>{copy('staffDetailLoadError')}</p>
@@ -1284,27 +1321,24 @@ function OwnedAdminSolarDocumentsPage({
         <section role="group" aria-label={copy('staffDocuments')} className="space-y-3">
           <div className={recordEditorSurface}>
             <RecordEditorSection title={copy('staffDocuments')}>
-              <p className="text-sm text-muted-foreground">
-                {copy(`status_${detail.request.status}`)}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+                <StatusBadge
+                  state={detail.request.status}
+                  label={copy(`status_${detail.request.status}`)}
+                />
                 {detail.request.building_type && (
-                  <>
-                    {' '}
-                    ·{' '}
+                  <span className="text-muted-foreground">
                     {copy(
                       detail.request.building_type === 'non_household' ? 'nonHousehold' : 'building'
                     )}
-                  </>
+                  </span>
                 )}
                 {typeof detail.request.created_at === 'string' && (
-                  <>
-                    {' '}
-                    ·{' '}
-                    <time dateTime={detail.request.created_at}>
-                      {time.format(detail.request.created_at, { dateStyle: 'medium' })}
-                    </time>
-                  </>
+                  <time dateTime={detail.request.created_at} className="text-muted-foreground">
+                    {time.format(detail.request.created_at, { dateStyle: 'medium' })}
+                  </time>
                 )}
-              </p>
+              </div>
               {recoveryNotice}
               {unmatchedRecovery === selected && (
                 <p role="alert">{copy('documentDecisionNotFound')}</p>
@@ -1337,10 +1371,20 @@ function OwnedAdminSolarDocumentsPage({
                       <p className="wrap-anywhere font-medium" dir="auto">
                         {document.file_name}
                       </p>
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+                        <StatusBadge
+                          state={document.staff_status}
+                          label={copy(`documentReview_${document.staff_status}`)}
+                        />
+                        <span className="text-muted-foreground">
+                          {documentText(document.state, locale)}
+                        </span>
+                      </div>
                       <p className="text-sm text-muted-foreground">
-                        {document.uploaded_by} · {time.format(document.uploaded_at)} ·{' '}
-                        {documentText(document.state, locale)} ·{' '}
-                        {copy(`documentReview_${document.staff_status}`)}
+                        <bdi>{document.uploaded_by}</bdi> ·{' '}
+                        <time dateTime={document.uploaded_at}>
+                          {time.format(document.uploaded_at)}
+                        </time>
                       </p>
                       {document.staff_reason && (
                         <p dir="auto" className="whitespace-pre-wrap wrap-anywhere">

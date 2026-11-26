@@ -1,3 +1,5 @@
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { Eye as TableEyeIcon } from 'lucide-react';
 import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import { CompactFieldFeedback } from '../components/CompactFieldFeedback.js';
@@ -1720,7 +1722,26 @@ function OwnedAdminConsultationsPage({
                 error={queueError || queueDenied}
                 empty={rows.length === 0}
                 retainContent={rows.length > 0 && !queueDenied}
-                loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+                loadingView={
+                  <>
+                    <div className="hidden md:block">
+                      <RecordListSkeleton
+                        label={copy('loading')}
+                        view="table"
+                        headings={[
+                          copy('queueRequest'),
+                          workspaceText('recordTable.progress', locale),
+                          copy('submittedAt'),
+                          copy('queueAssignment'),
+                          copy('queueActions'),
+                        ]}
+                      />
+                    </div>
+                    <div className="md:hidden">
+                      <RecordListSkeleton label={copy('loading')} view="card" headings={[]} />
+                    </div>
+                  </>
+                }
                 errorView={
                   queueDenied ? (
                     <p role="alert">{copy('queueForbidden')}</p>
@@ -1782,18 +1803,18 @@ function OwnedAdminConsultationsPage({
                   nameHeader={copy('queueRequest')}
                   renderName={(row) => (
                     <>
-                      <TextCell value={row.product_snapshot.title[locale]} />
-                      <span className="block font-mono text-xs font-normal">
-                        <TextCell value={row.id} />
+                      <TextCell value={row.profile_name} />
+                      <span className="block text-sm font-normal text-muted-foreground">
+                        <TextCell value={row.product_snapshot.title[locale]} />
+                      </span>
+                      <span className="block text-xs font-normal text-muted-foreground">
+                        <bdi dir="ltr" className="wrap-anywhere">
+                          {row.id}
+                        </bdi>
                       </span>
                     </>
                   )}
                   fields={[
-                    {
-                      id: 'profile',
-                      label: copy('profile'),
-                      render: (row) => <TextCell value={row.profile_name} />,
-                    },
                     {
                       id: 'status',
                       label: copy('status'),
@@ -1878,7 +1899,7 @@ function OwnedAdminConsultationsPage({
                   cardHeading="h2"
                   loading={queueLoading}
                   emptyMessage={copy('noWork')}
-                  tableClassName="min-w-[50rem]"
+                  tableClassName="min-w-[42rem]"
                   fieldGroups={[
                     {
                       label: workspaceText('recordTable.progress', locale),
@@ -1935,9 +1956,15 @@ function OwnedAdminConsultationsPage({
               )}
               {!selectedId && <p className="text-muted-foreground">{copy('selectRequest')}</p>}
               {requestId && queueDenied && <p role="alert">{copy('requestUnavailable')}</p>}
-              {selectedId && !current && !detailError && !queueDenied && (
-                <p role="status">{copy('loading')}</p>
-              )}
+              {selectedId &&
+                !current &&
+                !detailError &&
+                !queueDenied &&
+                (routedEditor ? (
+                  <LoadingStatus>{copy('loading')}</LoadingStatus>
+                ) : (
+                  <RecordDetailSkeleton label={copy('loading')} layout="order" />
+                ))}
               {selectedId && detailError && (
                 <div role="alert" className="space-y-2">
                   <p>{copy('detailLoadError')}</p>
@@ -1992,16 +2019,15 @@ function OwnedAdminConsultationsPage({
                             {current.product_snapshot.title[locale]}
                           </h2>
                         )}
-                        <p>
-                          {copy('customer')}: <span dir="auto">{current.profile_name}</span>
-                        </p>
-                        <p className="my-2 flex flex-wrap items-center gap-2">
-                          {copy('status')}:{' '}
+                        <div className="flex flex-wrap items-center gap-2">
+                          <bdi className="text-sm text-muted-foreground">
+                            {current.profile_name}
+                          </bdi>
                           <StatusBadge
                             state={current.status}
                             {...consultationStatus(current.status, copy)}
                           />
-                        </p>
+                        </div>
                         <ConsultationAssignment request={current} copy={copy} />
                         {requestId && (
                           <p className="text-sm text-muted-foreground">
@@ -2013,7 +2039,7 @@ function OwnedAdminConsultationsPage({
                         )}
                       </div>
                       {requestId && (
-                        <div className="self-start rounded-lg border border-primary/20 bg-primary/5 p-4">
+                        <div className="self-start rounded-xl border bg-muted/40 p-4">
                           <h2 className="font-semibold">{copy('nextStep')}</h2>
                           <p className="mt-1 text-sm">{copy(consultationStaffNextStep(current))}</p>
                         </div>
