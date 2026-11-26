@@ -3,6 +3,7 @@ import { Link, useBlocker, useLocation, useNavigate } from '@tanstack/react-rout
 import { Bell, CalendarDays, ChevronRight, FileSearch } from 'lucide-react';
 import { Button, Field, FieldLabel, Input, NativeSelect, PageLoading } from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
+import { t as appText } from '@barghsa/i18n/workspace';
 import { tInvoiceCorrections } from '@barghsa/i18n/invoice-corrections';
 import { SERVICE_DUE_PERIOD_TYPES } from '@barghsa/shared/finance/browser';
 import { RouteNotFound } from '../components/RouteErrorBoundary.js';
@@ -26,7 +27,16 @@ const settings = [
   { section: 'due-periods', title: 'duePeriods', icon: CalendarDays },
 ] as const;
 
-type RecentInvoice = { invoiceId: string; createdAt: string; totalAmount: string };
+type RecentInvoice = {
+  invoiceId: string;
+  createdAt: string;
+  totalAmount: string;
+  state: string;
+};
+
+function invoiceReference(invoiceId: string) {
+  return `\u2066${invoiceId.slice(0, 8).toUpperCase()}…\u2069`;
+}
 
 function isRecentInvoice(value: unknown): value is RecentInvoice {
   const row = value as Partial<RecentInvoice> | null;
@@ -36,7 +46,8 @@ function isRecentInvoice(value: unknown): value is RecentInvoice {
     typeof row.createdAt === 'string' &&
     Number.isFinite(Date.parse(row.createdAt)) &&
     typeof row.totalAmount === 'string' &&
-    /^-?\d+$/.test(row.totalAmount)
+    /^-?\d+$/.test(row.totalAmount) &&
+    typeof row.state === 'string'
   );
 }
 
@@ -97,11 +108,14 @@ function RecentInvoicePicker({
 
   const options = (rows ?? []).map((row) => {
     const date = format(row.createdAt, { dateStyle: 'medium' });
+    const stateKey = `invoices.state.${row.state}`;
+    const state = appText(stateKey, locale);
+    const detail = state === stateKey ? date : `${date} · ${state}`;
     return {
       id: row.invoiceId,
-      title: `${money(row.totalAmount)} · …${row.invoiceId.slice(-8)}`,
-      detail: date,
-      searchText: `${row.invoiceId} ${row.totalAmount} ${row.createdAt.slice(0, 10)} ${date}`,
+      title: `${money(row.totalAmount)} · ${invoiceReference(row.invoiceId)}`,
+      detail,
+      searchText: `${row.invoiceId} ${row.totalAmount} ${row.createdAt.slice(0, 10)} ${detail}`,
     };
   });
 
@@ -118,7 +132,7 @@ function RecentInvoicePicker({
           search: word('chooseRecent'),
           noMatches: word('noMatches'),
           empty: word('noRecent'),
-          unavailable: `…${value.slice(-8)}`,
+          unavailable: invoiceReference(value),
         }}
         onChange={onChange}
       />
@@ -158,7 +172,7 @@ function InvoiceLocator({ search }: { search: Record<string, unknown> }) {
   const navigate = useNavigate();
   const hash = useLocation({ select: (location) => location.hash });
   const [invalid, setInvalid] = useState(false);
-  const [recent, setRecent] = useState(false);
+  const [recent, setRecent] = useState(true);
   const [recentId, setRecentId] = useState('');
   const [manualId, setManualId] = useState('');
   const word = (key: string) => t(`admin.invoices.tools.${key}`, locale);
@@ -231,11 +245,10 @@ function InvoiceLocator({ search }: { search: Record<string, unknown> }) {
         </h2>
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           size="sm"
-          aria-expanded={recent}
           aria-controls="tools-invoice-choice"
-          className="border-border"
+          className="min-h-10 text-primary pointer-coarse:min-h-11"
           onClick={() => {
             setRecent((value) => !value);
             setRecentId('');
@@ -245,8 +258,8 @@ function InvoiceLocator({ search }: { search: Record<string, unknown> }) {
           {invoiceToolsText(recent ? 'enterId' : 'browseRecent', locale)}
         </Button>
       </div>
-      <form noValidate onSubmit={open} className="space-y-3 p-4 sm:p-5">
-        <div className="grid items-end gap-3 sm:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_auto]">
+      <form noValidate onSubmit={open} className="space-y-4 p-4 sm:p-5">
+        <div className="grid items-start gap-4 sm:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
           <div id="tools-invoice-choice" className="min-w-0">
             {recent ? (
               <RecentInvoicePicker value={recentId} onChange={setRecentId} />
@@ -276,6 +289,14 @@ function InvoiceLocator({ search }: { search: Record<string, unknown> }) {
                     setInvalid(entered !== '' && !isInvoiceUuid(entered));
                   }}
                 />
+                {invalid && (
+                  <p id="tools-id-error" role="alert" className="text-xs text-destructive">
+                    {word('invalidId')}
+                  </p>
+                )}
+                <p id="tools-id-hint" className="text-xs text-muted-foreground">
+                  {word('idHelp')}
+                </p>
               </Field>
             )}
           </div>
@@ -295,27 +316,18 @@ function InvoiceLocator({ search }: { search: Record<string, unknown> }) {
               ))}
             </NativeSelect>
           </Field>
-          <Button type="submit" className="min-h-11" disabled={recent && !recentId}>
+        </div>
+        <div className="flex flex-col gap-1.5 border-t pt-3 sm:flex-row-reverse sm:items-center sm:justify-between">
+          <Button type="submit" className="min-h-11 sm:min-w-28" disabled={recent && !recentId}>
             {word('open')}
           </Button>
-        </div>
-        {invalid && (
-          <p id="tools-id-error" role="alert" className="text-xs text-destructive">
-            {word('invalidId')}
-          </p>
-        )}
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
-          {!recent && (
-            <p id="tools-id-hint" className="text-muted-foreground">
-              {word('idHelp')}
-            </p>
-          )}
           <Link
             to="/admin/invoices"
             search={search}
-            className="touch-action text-primary underline underline-offset-4"
+            className="inline-flex min-h-9 w-fit items-center gap-1.5 text-xs font-medium text-primary underline-offset-4 hover:underline pointer-coarse:min-h-11"
           >
             {recent ? invoiceToolsText('findOlder', locale) : word('find')}
+            <ChevronRight className="size-3.5 shrink-0 rtl:rotate-180" aria-hidden="true" />
           </Link>
         </div>
       </form>

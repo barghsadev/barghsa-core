@@ -6,6 +6,7 @@ import { approveRiskConfirmation } from './confirmation-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { tManualInvoice as manualText } from '../../../packages/i18n/src/manual-invoice';
 import { tInvoiceCorrections as correctionText } from '../../../packages/i18n/src/invoice-corrections';
+import { invoiceToolsText } from '../src/pages/invoice-tools-text';
 import {
   manualInvoiceReviewFixture,
   type ManualReviewCommand,
@@ -252,6 +253,7 @@ for (const locale of ['fa', 'en'] as const)
       });
       await page.goto('/admin/invoices#invoice-corrections-panel');
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
+      await page.getByRole('button', { name: invoiceToolsText('enterId', locale) }).click();
       const locator = page.locator('form').filter({ has: page.locator('#tools-invoice-id') });
       const lookup = locator.locator('#tools-invoice-id');
       const open = locator.locator('button[type=submit]');

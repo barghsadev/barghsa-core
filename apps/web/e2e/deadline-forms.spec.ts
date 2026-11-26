@@ -9,6 +9,7 @@ import { tDuePeriods } from '../../../packages/i18n/src/invoice-due-periods';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { tWorkspace as staffText } from '@barghsa/i18n/workspace-admin';
 import { defaultReminderOffsetToggles } from '@barghsa/shared/finance';
+import { invoiceToolsText } from '../src/pages/invoice-tools-text';
 const invoiceId = '11111111-1111-4111-8111-111111111111';
 const source = {
   invoiceId,
@@ -72,12 +73,13 @@ async function setup(page: Page, locale: 'fa' | 'en', darkMode: boolean) {
   );
 }
 
-test('invoice tools choose a recent invoice without losing the selected action or typed ID', async ({
+test('invoice tools start with searchable recent invoices and preserve manual entry', async ({
   page,
 }) => {
   await setup(page, 'en', false);
   const settings = '/admin/invoices/tools';
   const draftId = '22222222-2222-4222-8222-222222222222';
+  const listedId = 'abcdef01-1111-4111-8111-111111111111';
   let reads = 0;
   let status = 503;
   const writes: string[] = [];
@@ -87,13 +89,22 @@ test('invoice tools choose a recent invoice without losing the selected action o
       status,
       json:
         status === 200
-          ? { items: [{ invoiceId, createdAt: source.issuedAt, totalAmount: '14850000' }] }
+          ? {
+              items: [
+                {
+                  invoiceId: listedId,
+                  createdAt: source.issuedAt,
+                  totalAmount: '14850000',
+                  state: 'Unpaid',
+                },
+              ],
+            }
           : {},
     });
   });
-  await page.route(`**/api/admin/invoices/${invoiceId}/due-at`, (route) => {
+  await page.route(`**/api/admin/invoices/${listedId}/due-at`, (route) => {
     if (route.request().method() !== 'GET') writes.push(route.request().method());
-    return route.fulfill({ json: source });
+    return route.fulfill({ json: { ...source, invoiceId: listedId } });
   });
   await page.goto(settings);
   const region = page.getByRole('region', { name: 'Open an invoice', exact: true });
@@ -105,12 +116,11 @@ test('invoice tools choose a recent invoice without losing the selected action o
   const retry = region.getByRole('button', { name: 'Try again', exact: true });
   const open = region.getByRole('button', { name: 'Continue', exact: true });
 
-  await manual.fill(draftId);
-  await action.selectOption('deadline');
-  expect(reads).toBe(0);
-  await browse.click();
+  await expect(manual).toHaveCount(0);
   await expect(region.getByRole('alert')).toHaveText('Recent invoices could not be loaded.');
   await expect(open).toBeDisabled();
+  expect(reads).toBe(1);
+  await action.selectOption('deadline');
   status = 200;
   await retry.click();
   await expect(choices).toBeFocused();
@@ -118,10 +128,11 @@ test('invoice tools choose a recent invoice without losing the selected action o
   await choices.click();
   await choices.fill('14850000');
   await expect(region.locator('button[type=submit]')).toBeDisabled();
-  const invoiceOption = page.getByRole('option', { name: /11111111/ });
+  const invoiceOption = page.getByRole('option', { name: /ABCDEF01/ });
   await expect(invoiceOption).toBeVisible();
+  await expect(invoiceOption).toHaveAccessibleDescription(/Unpaid/);
   await invoiceOption.click();
-  await expect(choices).toHaveValue(/11111111/);
+  await expect(choices).toHaveValue(/ABCDEF01/);
   await expect(action).toHaveValue('deadline');
   await choices.click();
   await choices.fill('No matching reference');
@@ -130,8 +141,12 @@ test('invoice tools choose a recent invoice without losing the selected action o
   ).toBeVisible();
   await choices.press('Enter');
   await expect(page).toHaveURL(settings);
-  await expect(choices).toHaveValue(/11111111/);
+  await expect(choices).toHaveValue(/ABCDEF01/);
   await expect(action).toHaveValue('deadline');
+  await enter.click();
+  await manual.fill(draftId);
+  await browse.click();
+  await expect(choices).toBeEnabled();
   await enter.click();
   await expect(manual).toHaveValue(draftId);
   await expect(action).toHaveValue('deadline');
@@ -139,17 +154,16 @@ test('invoice tools choose a recent invoice without losing the selected action o
   await expect(choices).toHaveValue('');
   await expect(choices).toBeEnabled();
   await choices.click();
-  await choices.fill(invoiceId);
+  await choices.fill('abcdef01');
   await invoiceOption.click();
   await open.click();
-  await expect(page).toHaveURL(`/admin/invoices/${invoiceId}/deadline`);
+  await expect(page).toHaveURL(`/admin/invoices/${listedId}/deadline`);
   await expect(page.locator('#invoice-deadline-panel')).toBeVisible();
-  expect(reads).toBe(3);
+  expect(reads).toBe(4);
   expect(writes).toEqual([]);
 
   status = 403;
   await page.goto(settings);
-  await browse.click();
   await expect(region.getByRole('alert')).toHaveText(
     'You do not have permission to view invoices.'
   );
@@ -204,6 +218,7 @@ for (const locale of ['fa', 'en'] as const)
       });
       await page.goto('/admin/invoices/tools');
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*dark)/);
+      await page.getByRole('button', { name: invoiceToolsText('enterId', locale) }).click();
       const locator = page.locator('form').filter({ has: page.locator('#tools-invoice-id') });
       const lookup = locator.locator('#tools-invoice-id');
       const open = locator.locator('button[type=submit]');

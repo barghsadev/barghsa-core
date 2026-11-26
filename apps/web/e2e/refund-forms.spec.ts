@@ -9,6 +9,7 @@ import { test, expect, type Page } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { fullNavigation } from './navigation-fixture';
 import { refundDecisionReviewFixture, refundReviewFixture } from './refund-review-fixture';
+import { invoiceToolsText } from '../src/pages/invoice-tools-text';
 const invoiceId = '11111111-1111-4111-8111-111111111111',
   refundId = '22222222-2222-4222-8222-222222222222';
 async function shell(page: Page, locale: 'en' | 'fa', dark: boolean) {
@@ -618,6 +619,7 @@ for (const locale of ['en', 'fa'] as const)
       return route.fulfill({ status: 500, json: {} });
     });
     await page.goto('/admin/invoices/tools');
+    await page.getByRole('button', { name: invoiceToolsText('enterId', locale) }).click();
     const locator = page.locator('form').filter({ has: page.locator('#tools-invoice-id') });
     await expect(locator).toBeVisible();
     await expect(page.locator('#wallet-refunds-panel')).toHaveCount(0);
