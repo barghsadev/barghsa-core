@@ -1597,6 +1597,27 @@ for (const locale of ['en', 'fa'])
       true
     );
     await page.screenshot({ path: `/tmp/ai-policies-${locale}.png`, fullPage: true });
+    const rateTitle = `Policy rate ${locale}`;
+    await page.goto('/admin/policies/new');
+    await page.locator('#policy-title').fill(rateTitle);
+    await page.locator('#policy-type').selectOption('rate_limit');
+    await page.locator('#policy-max-requests').fill(fa ? '۷' : '7');
+    await page.getByRole('button', { name: fa ? /^[۵5] دقیقه$/ : /^[۵5] min$/ }).click();
+    await expect(page.locator('#policy-window-seconds')).toHaveValue('300');
+    const rateSummary = await page.locator('#policy-rate-preview').innerText();
+    await savePolicy.click();
+    await expect(page.getByRole('dialog')).toContainText(rateSummary);
+    await confirm();
+    await expect(page.getByRole('heading', { name: rateTitle, exact: true })).toBeVisible();
+    const rateId = new URL(page.url()).pathname.split('/').at(-1);
+    const rateReceipt = await page.request.get(`${http.base}/api/admin/policies/${rateId}`, {
+      headers,
+    });
+    expect(rateReceipt.status()).toBe(200);
+    expect(await rateReceipt.json()).toMatchObject({
+      policyType: 'rate_limit',
+      rules: { maxRequests: 7, windowSeconds: 300 },
+    });
     await page.goto('/admin/policies?kind=policy-groups');
     await page.getByRole('link', { name: fa ? 'افزودن گروه' : 'Add group', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(groupName);

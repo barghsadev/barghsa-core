@@ -26,6 +26,7 @@ import { useWizardForm } from '../hooks/useWizardForm.js';
 import { FormField } from '@barghsa/ui/form';
 import { RecordListField } from '../components/RecordListField.js';
 import { PolicyScopeField } from '../components/PolicyScopeField.js';
+import { boundedCatalogueInteger } from '../lib/catalogue-form.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
   CatalogueFieldFeedback,
@@ -198,6 +199,26 @@ function OwnedAiPoliciesPage({
   const listSearch = kind === 'policy-groups' ? { kind: 'policy-groups' as const } : {};
   const copy = (key: Parameters<typeof knowledgePolicyFormText>[0]) =>
     knowledgePolicyFormText(key, locale);
+  function rateWindowLabel(total: number) {
+    if (total === 3600) return copy('rateHour').replace('{count}', numbers.number(1));
+    const minutes = Math.floor(total / 60);
+    const seconds = total % 60;
+    const minuteLabel = copy('rateMinutes').replace('{count}', numbers.number(minutes));
+    const secondLabel = copy('rateSeconds').replace('{count}', numbers.number(seconds));
+    if (!minutes) return secondLabel;
+    if (!seconds) return minuteLabel;
+    return copy('rateMinutesSeconds')
+      .replace('{minutes}', minuteLabel)
+      .replace('{seconds}', secondLabel);
+  }
+  function rateLimitSummary(value: Draft) {
+    const requests = boundedCatalogueInteger(value.maxRequests, 1, 100);
+    const windowSeconds = boundedCatalogueInteger(value.windowSeconds, 1, 3600);
+    if (requests === null || windowSeconds === null) return null;
+    return copy(requests === 1 ? 'rateSummaryOne' : 'rateSummary')
+      .replace('{count}', numbers.number(requests))
+      .replace('{window}', rateWindowLabel(windowSeconds));
+  }
   const kindRef = useRef(kind);
   kindRef.current = kind;
   const messages = Object.fromEntries(
@@ -215,6 +236,10 @@ function OwnedAiPoliciesPage({
   const ownedFields = useActionFieldErrors(form.form, messages, copy('invalid'));
   const [draftOpen, setDraftOpen] = useState(false);
   const draft = draftOpen ? form.values : null;
+  const rateWindow =
+    draft?.policyType === 'rate_limit'
+      ? boundedCatalogueInteger(draft.windowSeconds, 1, 3600)
+      : null;
   const resetForm = form.form.reset;
   const setDraft = useCallback(
     (value: Draft | null) => {
@@ -597,11 +622,15 @@ function OwnedAiPoliciesPage({
         validationBusy.current = false;
         const body = policyBody(value, kindRef.current);
         formCapture.current = { body, ...(value.id ? { id: value.id } : {}) };
+        const rateReview =
+          kindRef.current === 'policies' && value.policyType === 'rate_limit'
+            ? rateLimitSummary(value)
+            : null;
         propose(
           `/api/admin/${kind}${value.id ? `/${value.id}` : ''}`,
           value.id ? 'PUT' : 'POST',
           label('save'),
-          label('confirmSave'),
+          rateReview ? `${label('confirmSave')} ${rateReview}` : label('confirmSave'),
           body
         );
       })();
@@ -1179,60 +1208,96 @@ function OwnedAiPoliciesPage({
                           />
                         </div>
                       ) : draft.policyType === 'rate_limit' ? (
-                        <div className={recordEditorGrid}>
-                          <div className={recordEditorField}>
-                            <Label htmlFor="policy-max-requests">{label('maxRequests')}</Label>
-                            <Input
-                              {...form.bind('maxRequests')}
-                              id="policy-max-requests"
-                              type="text"
-                              inputMode="numeric"
-                              dir="ltr"
-                              min={1}
-                              max={100}
-                              step={1}
-                              required
-                              aria-required="true"
-                              value={draft.maxRequests}
-                              onChange={(event) =>
-                                form.field('maxRequests')[1](
-                                  event.target.value as Draft['maxRequests']
-                                )
-                              }
-                            />
-                            <CatalogueFieldFeedback
-                              compact
-                              id={form.errorId('maxRequests')}
-                              error={form.errors.maxRequests}
-                              message={messages.maxRequests}
-                            />
+                        <div className="min-w-0 space-y-2.5">
+                          <div className="grid min-w-0 grid-cols-2 gap-x-3 sm:gap-x-5">
+                            <div className={recordEditorField}>
+                              <Label htmlFor="policy-max-requests">{label('maxRequests')}</Label>
+                              <Input
+                                {...form.bind('maxRequests')}
+                                id="policy-max-requests"
+                                type="text"
+                                inputMode="numeric"
+                                dir="ltr"
+                                min={1}
+                                max={100}
+                                step={1}
+                                required
+                                aria-required="true"
+                                value={draft.maxRequests}
+                                onChange={(event) =>
+                                  form.field('maxRequests')[1](
+                                    event.target.value as Draft['maxRequests']
+                                  )
+                                }
+                              />
+                              <CatalogueFieldFeedback
+                                compact
+                                id={form.errorId('maxRequests')}
+                                error={form.errors.maxRequests}
+                                message={messages.maxRequests}
+                              />
+                            </div>
+                            <div className={recordEditorField}>
+                              <Label htmlFor="policy-window-seconds">
+                                {label('windowSeconds')}
+                              </Label>
+                              <Input
+                                {...form.bind('windowSeconds')}
+                                id="policy-window-seconds"
+                                type="text"
+                                inputMode="numeric"
+                                dir="ltr"
+                                min={1}
+                                max={3600}
+                                step={1}
+                                required
+                                aria-required="true"
+                                value={draft.windowSeconds}
+                                onChange={(event) =>
+                                  form.field('windowSeconds')[1](
+                                    event.target.value as Draft['windowSeconds']
+                                  )
+                                }
+                              />
+                              <CatalogueFieldFeedback
+                                compact
+                                id={form.errorId('windowSeconds')}
+                                error={form.errors.windowSeconds}
+                                message={messages.windowSeconds}
+                              />
+                            </div>
                           </div>
-                          <div className={recordEditorField}>
-                            <Label htmlFor="policy-window-seconds">{label('windowSeconds')}</Label>
-                            <Input
-                              {...form.bind('windowSeconds')}
-                              id="policy-window-seconds"
-                              type="text"
-                              inputMode="numeric"
-                              dir="ltr"
-                              min={1}
-                              max={3600}
-                              step={1}
-                              required
-                              aria-required="true"
-                              value={draft.windowSeconds}
-                              onChange={(event) =>
-                                form.field('windowSeconds')[1](
-                                  event.target.value as Draft['windowSeconds']
-                                )
-                              }
-                            />
-                            <CatalogueFieldFeedback
-                              compact
-                              id={form.errorId('windowSeconds')}
-                              error={form.errors.windowSeconds}
-                              message={messages.windowSeconds}
-                            />
+                          <fieldset className="min-w-0">
+                            <legend className="mb-1 text-xs text-muted-foreground">
+                              {copy('rateWindowPresets')}
+                            </legend>
+                            <div className="flex flex-wrap gap-1.5">
+                              {[60, 300, 3600].map((seconds) => (
+                                <Button
+                                  key={seconds}
+                                  type="button"
+                                  variant={rateWindow === seconds ? 'secondary' : 'outline'}
+                                  size="sm"
+                                  aria-pressed={rateWindow === seconds}
+                                  aria-controls="policy-window-seconds"
+                                  onClick={() => form.field('windowSeconds')[1](String(seconds))}
+                                >
+                                  {rateWindowLabel(seconds)}
+                                </Button>
+                              ))}
+                            </div>
+                          </fieldset>
+                          <div className="space-y-1 rounded-lg border bg-muted/35 px-3 py-2.5">
+                            <p
+                              id="policy-rate-preview"
+                              className="text-sm font-medium"
+                              role="status"
+                            >
+                              {rateLimitSummary(draft) ?? copy('rateSummaryEmpty')}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {copy('rateRollingHelp')}
+                            </p>
                           </div>
                         </div>
                       ) : (

@@ -103,6 +103,8 @@ for (const locale of ['en', 'fa'] as const)
     page,
   }) => {
     const label = (key: string) => t(`admin.policies.${key}`, locale);
+    const copy = (key: Parameters<typeof knowledgePolicyFormText>[0]) =>
+      knowledgePolicyFormText(key, locale);
     await page.addInitScript((value) => {
       localStorage.setItem('barghsa.locale', value);
     }, locale);
@@ -281,19 +283,49 @@ for (const locale of ['en', 'fa'] as const)
     await page.goto('/admin/policies/new');
     await page.getByLabel(label('name'), { exact: true }).fill('Limit');
     await page.getByLabel(label('type'), { exact: true }).selectOption('rate_limit');
-    await page.getByLabel(label('maxRequests'), { exact: true }).fill('3');
-    await page.getByLabel(label('windowSeconds'), { exact: true }).fill('120');
+    const requests = page.getByLabel(label('maxRequests'), { exact: true });
+    const windowSeconds = page.getByLabel(label('windowSeconds'), { exact: true });
+    const preview = page.locator('#policy-rate-preview');
+    const fiveMinutes = page.getByRole('button', {
+      name: copy('rateMinutes').replace('{count}', locale === 'fa' ? '۵' : '5'),
+      exact: true,
+    });
+    await fiveMinutes.click();
+    await expect(fiveMinutes).toHaveAttribute('aria-pressed', 'true');
+    await expect(windowSeconds).toHaveValue('300');
+    await requests.fill('0');
+    await expect(preview).toHaveText(copy('rateSummaryEmpty'));
     await click('save');
+    await expect(requests).toBeFocused();
+    await requests.fill(locale === 'fa' ? '۳' : '3');
+    await windowSeconds.fill(locale === 'fa' ? '۹۵' : '95');
+    await expect(fiveMinutes).toHaveAttribute('aria-pressed', 'false');
+    const mixedDuration = copy('rateMinutesSeconds')
+      .replace('{minutes}', copy('rateMinutes').replace('{count}', locale === 'fa' ? '۱' : '1'))
+      .replace('{seconds}', copy('rateSeconds').replace('{count}', locale === 'fa' ? '۳۵' : '35'));
+    const rateSummary = copy('rateSummary')
+      .replace('{count}', locale === 'fa' ? '۳' : '3')
+      .replace('{window}', mixedDuration);
+    await expect(preview).toHaveText(rateSummary);
+    await click('save');
+    await expect(page.getByRole('dialog')).toContainText(rateSummary);
     await confirm();
     expect(writes.at(-1)).toMatchObject({
       policyType: 'rate_limit',
-      rules: { maxRequests: 3, windowSeconds: 120 },
+      rules: { maxRequests: 3, windowSeconds: 95 },
     });
+    const rateId = policies.find((row) => row.title === 'Limit')?.id;
+    await page.goto(`/admin/policies/${rateId}/edit`);
+    await expect(windowSeconds).toHaveValue('95');
+    await expect(preview).toHaveText(rateSummary);
+    await fiveMinutes.press('Enter');
+    await expect(windowSeconds).toHaveValue('300');
+    await click('save');
+    await confirm();
+    expect(writes.at(-1)).toMatchObject({ rules: { maxRequests: 3, windowSeconds: 300 } });
     await page.goto('/admin/policies/new');
     await page.getByLabel(label('name'), { exact: true }).fill('Reference access');
     await page.getByLabel(label('type'), { exact: true }).selectOption('data_access_scope');
-    const copy = (key: Parameters<typeof knowledgePolicyFormText>[0]) =>
-      knowledgePolicyFormText(key, locale);
     const picker = page.getByRole('combobox', { name: copy('addKnowledgeMember'), exact: true });
     const picked = page.getByRole('list', { name: copy('scopeSelected'), exact: true });
     const allSources = page.getByRole('checkbox', { name: copy('scopeAll'), exact: true });
