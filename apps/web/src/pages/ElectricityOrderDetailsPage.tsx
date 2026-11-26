@@ -10,7 +10,7 @@ import { ConfirmationFields } from '@barghsa/ui';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { toast } from '../lib/toast-api.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
-import { stripPostalCodeSeparators } from '../lib/profile-digits.js';
+import { stripDigitSeparators } from '../lib/profile-digits.js';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { useOwnedManualServerRead, useServerDetailQuery } from '../hooks/useServerQuery.js';
@@ -1171,7 +1171,7 @@ export function ElectricityOrderDetailsPage({
                                   onChange={(event) =>
                                     field.onChange(
                                       name === 'postalCode'
-                                        ? stripPostalCodeSeparators(event.target.value)
+                                        ? stripDigitSeparators(event.target.value)
                                         : event.target.value
                                     )
                                   }

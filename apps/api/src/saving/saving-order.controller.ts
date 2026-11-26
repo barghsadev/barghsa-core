@@ -76,7 +76,8 @@ const draftInput = z
       .object({
         planId: z.string().max(36),
         hardwareId: z.string().max(36),
-        billIdentifier: z.string().max(13),
+        // Keep a mistyped identifier at the bill step so it can be corrected on resume.
+        billIdentifier: z.string().max(64),
         addressId: z.string().max(36),
         giftCode: z.string().max(100),
       })

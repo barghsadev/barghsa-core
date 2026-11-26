@@ -8,7 +8,7 @@ import { tSettingsForms } from '@barghsa/i18n/settings-forms';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 import { useLocale } from '../hooks/useLocale.js';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
-import { normalizeProfileDigits, stripPostalCodeSeparators } from '../lib/profile-digits.js';
+import { normalizeProfileDigits, stripDigitSeparators } from '../lib/profile-digits.js';
 import { GeographyLoadError } from './GeographyLoadError.js';
 import { GeographyPicker } from './GeographyPicker.js';
 import { TeamActionDialog } from './TeamActionDialog.js';
@@ -263,7 +263,7 @@ export function CrmLegalEditor({
       ) =>
         change(
           field,
-          kind === 'postal' ? stripPostalCodeSeparators(event.target.value) : event.target.value
+          kind === 'postal' ? stripDigitSeparators(event.target.value) : event.target.value
         ),
     };
     const dependencyField =

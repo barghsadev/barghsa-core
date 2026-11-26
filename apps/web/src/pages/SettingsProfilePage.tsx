@@ -37,7 +37,7 @@ import {
 import { useProfileSettingsEditor } from '../hooks/useProfileSettingsEditor.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { addressesText } from '@barghsa/i18n/addresses';
-import { stripPostalCodeSeparators } from '../lib/profile-digits.js';
+import { stripDigitSeparators } from '../lib/profile-digits.js';
 import { RecordEditorSection, recordEditorGrid } from '../components/RecordEditorLayout.js';
 import { GeographyPicker } from '../components/GeographyPicker.js';
 import {
@@ -806,7 +806,7 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
                           disabled={locked}
                           value={postalCode}
                           onChange={(e) =>
-                            change('postalCode', stripPostalCodeSeparators(e.target.value))
+                            change('postalCode', stripDigitSeparators(e.target.value))
                           }
                           className="text-sm"
                         />

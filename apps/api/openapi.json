@@ -45481,7 +45481,7 @@
                         "type": "string"
                       },
                       "billIdentifier": {
-                        "maxLength": 13,
+                        "maxLength": 64,
                         "type": "string"
                       },
                       "giftCode": {
@@ -46337,7 +46337,7 @@
                     "additionalProperties": false,
                     "properties": {
                       "billIdentifier": {
-                        "maxLength": 13,
+                        "maxLength": 64,
                         "type": "string"
                       },
                       "buildingCompletionDate": {

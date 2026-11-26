@@ -616,7 +616,12 @@ for (const locale of ['en', 'fa'] as const)
     await expect(bill).toHaveAccessibleDescription(
       `${solarCopy('billIdentifier', locale)}: ${solarIntakeText('billFormat', locale)}`
     );
-    await bill.fill('۱۲۳۴۵۶۷۸۹');
+    await bill.fill('۰۱۲۳۴-۵۶۷۸-۹۰۱۲۳');
+    await bill.blur();
+    await expect(bill).toHaveValue('01234567890123');
+    await expect(bill).toHaveAttribute('aria-invalid', 'true');
+    await bill.fill('۰۱۲۳۴-۵۶۷۸-۹۰۱۲');
+    await expect(bill).toHaveValue('0123456789012');
     await offGrid.check();
     await expect(bill).toHaveCount(0);
     await expect(connection).toHaveAccessibleDescription(solarIntakeText('offGridOutage', locale));
@@ -628,7 +633,7 @@ for (const locale of ['en', 'fa'] as const)
       propertyForm: 'villa',
       structuralFrame: 'steel',
       gridType: 'off_grid',
-      billIdentifier: '123456789',
+      billIdentifier: '0123456789012',
     });
 
     await page.reload();

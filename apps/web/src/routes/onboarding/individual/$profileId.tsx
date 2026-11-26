@@ -14,7 +14,7 @@ import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../../../components/GeographyLoadError.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../../hooks/useLocale.js';
-import { normalizeProfileDigits, stripPostalCodeSeparators } from '../../../lib/profile-digits.js';
+import { normalizeProfileDigits, stripDigitSeparators } from '../../../lib/profile-digits.js';
 import { useCallback } from 'react';
 import { createFileRoute, useRouter, useParams } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
@@ -509,9 +509,7 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       aria-required="true"
                       value={postalCode}
                       onChange={(e) =>
-                        setPostalCode(
-                          normalizeProfileDigits(stripPostalCodeSeparators(e.target.value))
-                        )
+                        setPostalCode(normalizeProfileDigits(stripDigitSeparators(e.target.value)))
                       }
                       onBlur={() => handleBlur('postalCode')}
                       disabled={locked}

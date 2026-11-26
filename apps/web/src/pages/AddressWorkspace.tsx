@@ -8,7 +8,7 @@ import {
   type SavedAddressView,
 } from '../hooks/useSavedAddressSettingsEditor.js';
 import type { SavedAddress as Address } from '../lib/settings-form.js';
-import { stripPostalCodeSeparators } from '../lib/profile-digits.js';
+import { stripDigitSeparators } from '../lib/profile-digits.js';
 import { t } from '@barghsa/i18n/app';
 import { addressesText } from '@barghsa/i18n/addresses';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
@@ -588,7 +588,7 @@ export function AddressWorkspace({
                           {...field}
                           value={field.value ?? ''}
                           onChange={(event) =>
-                            field.onChange(stripPostalCodeSeparators(event.target.value))
+                            field.onChange(stripDigitSeparators(event.target.value))
                           }
                           aria-required="true"
                           inputMode="numeric"

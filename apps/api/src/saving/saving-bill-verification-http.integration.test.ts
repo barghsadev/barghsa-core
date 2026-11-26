@@ -257,6 +257,23 @@ describe('saving submission during a provider outage', () => {
         giftCode: '',
       },
     };
+    const pendingBill = '01234567890123';
+    const incompleteDraft = { ...draft, data: { ...draft.data, billIdentifier: pendingBill } };
+    const savedIncomplete = await post(`/draft?profileId=${profileId}`, incompleteDraft, 'PUT');
+    expect(savedIncomplete.status, http.logs()).toBe(200);
+    expect(await savedIncomplete.json()).toMatchObject({ data: incompleteDraft.data });
+    const restored = await fetch(`${http.base}/api/saving/orders/draft?profileId=${profileId}`, {
+      headers,
+    });
+    expect(await restored.json()).toMatchObject({ currentStep: 3, data: incompleteDraft.data });
+    expect((await post('/draft', { ...incompleteDraft, currentStep: 4 }, 'PUT')).status).toBe(400);
+    expect((await post('/verify-bill', { profileId, billIdentifier: pendingBill })).status).toBe(
+      400
+    );
+    expect(
+      (await post('/duplicate', { profileId, savingPlanId: plan, billIdentifier: pendingBill }))
+        .status
+    ).toBe(400);
     expect((await post(`/draft?profileId=${profileId}`, draft, 'PUT')).status, http.logs()).toBe(
       200
     );

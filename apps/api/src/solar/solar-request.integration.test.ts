@@ -112,6 +112,7 @@ it('saves and resumes a scoped solar draft without losing incomplete fields', as
     installationSurface: '',
     siteRelationship: '',
     gridType: '',
+    billIdentifier: '01234567890123',
   };
   expect(
     (
@@ -222,6 +223,14 @@ it('submits both solar request types, captures agreement, and creates no contrac
     billIdentifier: undefined,
   });
   expect(badBill.status).toBe(400);
+  expect(
+    (
+      await request('/api/solar/requests/review', 'POST', {
+        ...buildingInput,
+        billIdentifier: '01234567890123',
+      })
+    ).status
+  ).toBe(400);
   expect(
     (
       await request('/api/solar/requests/review', 'POST', {

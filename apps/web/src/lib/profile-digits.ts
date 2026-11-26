@@ -6,6 +6,6 @@ export function normalizeProfileDigits(value: string): string {
 }
 
 /** Remove grouping separators between digits without discarding other input. */
-export function stripPostalCodeSeparators(value: string): string {
+export function stripDigitSeparators(value: string): string {
   return value.trim().replace(/([0-9۰-۹٠-٩])[\s\p{Pd}]+(?=[0-9۰-۹٠-٩])/gu, '$1');
 }

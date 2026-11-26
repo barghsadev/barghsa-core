@@ -40,7 +40,7 @@ import { tSolar } from '@barghsa/i18n/solar';
 import { solarIntakeText } from '@barghsa/i18n/solar-intake';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
-import { normalizeProfileDigits } from '../lib/profile-digits.js';
+import { normalizeProfileDigits, stripDigitSeparators } from '../lib/profile-digits.js';
 import { useFormDraft, type DraftSchema } from '../hooks/useFormDraft.js';
 import {
   defaultIntakeAddressId,
@@ -1295,9 +1295,7 @@ export function SolarRequestPage() {
                         <Input
                           id="solar-bill"
                           inputMode="numeric"
-                          pattern="[0-9۰-۹٠-٩]{6,13}"
-                          minLength={6}
-                          maxLength={13}
+                          pattern="[0-9]{6,13}"
                           dir="ltr"
                           {...fields.bind('billIdentifier')}
                           aria-describedby={
@@ -1307,7 +1305,9 @@ export function SolarRequestPage() {
                           }
                           value={billIdentifier}
                           onChange={(e) =>
-                            setBillIdentifier(normalizeProfileDigits(e.target.value))
+                            setBillIdentifier(
+                              normalizeProfileDigits(stripDigitSeparators(e.target.value))
+                            )
                           }
                           required
                           aria-required="true"

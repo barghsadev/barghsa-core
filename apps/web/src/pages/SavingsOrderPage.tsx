@@ -33,7 +33,7 @@ import { useReviewedSubmission } from '../hooks/useReviewedSubmission.js';
 import { uuidReference } from '../lib/form-receipt.js';
 import { tSaving } from '@barghsa/i18n/saving';
 import { withCsrf } from '../lib/csrf.js';
-import { normalizeProfileDigits, stripPostalCodeSeparators } from '../lib/profile-digits.js';
+import { normalizeProfileDigits, stripDigitSeparators } from '../lib/profile-digits.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useFormDraft, type DraftSchema } from '../hooks/useFormDraft.js';
@@ -88,6 +88,7 @@ interface Draft {
   giftCode: string;
 }
 type AddressDraftField = 'provinceId' | 'cityId' | 'fullAddress' | 'postalCode';
+const billIdentifierPattern = /^[0-9]{6,13}$/;
 const draftSchema: DraftSchema<Draft> = {
   safeParse(value) {
     if (!value || typeof value !== 'object') return { success: false };
@@ -220,7 +221,7 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
         planId: z.string(),
         hardwareId: z.string(),
         hardwareConfirmed: z.boolean(),
-        billIdentifier: z.string().regex(/^[0-9]{6,13}$/, copy('invalidBill')),
+        billIdentifier: z.string().regex(billIdentifierPattern, copy('invalidBill')),
         duplicateAcknowledged: z.boolean(),
         addressId: z
           .string()
@@ -285,8 +286,9 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
   const [hardwareId, setHardwareId] = fields.field('hardwareId');
   const [hardwareConfirmed, setHardwareConfirmed] = fields.field('hardwareConfirmed');
   const [billIdentifier, setBillIdentifier] = fields.field('billIdentifier');
-  const validBill = /^[0-9]{6,13}$/.test(billIdentifier);
-  const invalidBill = billIdentifier !== '' && !validBill;
+  const validBill = billIdentifierPattern.test(billIdentifier);
+  const invalidBill =
+    (billIdentifier !== '' && !validBill) || fields.form.getFieldState('billIdentifier').invalid;
   const [duplicateAcknowledged, setDuplicateAcknowledged] = fields.field('duplicateAcknowledged');
   const [duplicateChecking, setDuplicateChecking] = useState(false);
   const [duplicateError, setDuplicateError] = useState(false);
@@ -403,9 +405,13 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
     save: saveDraft,
     retry: retryDraft,
   } = useFormDraft(draftKey, draftSchema);
-  // Persist the completed stages using the existing server draft numbers.
+  // Server step 3 records completed hardware selection while the bill is still being entered.
   const saveWizardDraft = useCallback(
-    (stage: number, data: Draft) => saveDraft(stage * 2, data),
+    (stage: number, data: Draft) =>
+      saveDraft(
+        stage === 2 && !billIdentifierPattern.test(data.billIdentifier) ? 3 : stage * 2,
+        data
+      ),
     [saveDraft]
   );
   const currentDraft = useMemo(
@@ -704,7 +710,7 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
     setDuplicate(null);
     setDuplicateAcknowledged(false);
     setDuplicateError(false);
-    if (!profileId || !planId || !/^[0-9]{6,13}$/.test(billIdentifier)) {
+    if (!profileId || !planId || !validBill) {
       setDuplicateChecking(false);
       return;
     }
@@ -736,7 +742,7 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
       clearTimeout(timer);
       controller.abort();
     };
-  }, [step, profileId, planId, billIdentifier, duplicateRevision]);
+  }, [step, profileId, planId, billIdentifier, duplicateRevision, validBill]);
 
   const canNext =
     step === 1
@@ -943,7 +949,7 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
               { name: 'hardwareConfirmed', label: copy('confirmHardware') },
             ],
             [
-              { name: 'billIdentifier', label: copy('billIdentifier') },
+              { name: 'billIdentifier', label: copy('billIdentifier'), inlineError: true },
               { name: 'duplicateAcknowledged', label: copy('acknowledgeDuplicate') },
               { name: 'addressId', label: copy('chooseAddress') },
             ],
@@ -1177,26 +1183,15 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                         <Input
                           id="saving-bill-identifier"
                           inputMode="numeric"
-                          pattern="[0-9]*"
-                          maxLength={13}
+                          pattern="[0-9]{6,13}"
                           {...fields.bind('billIdentifier')}
                           aria-required="true"
-                          aria-invalid={
-                            invalidBill ||
-                            fields.form.getFieldState('billIdentifier').invalid ||
-                            undefined
-                          }
-                          aria-describedby={
-                            invalidBill
-                              ? 'saving-bill-error'
-                              : fields.form.getFieldState('billIdentifier').invalid
-                                ? fields.errorId('billIdentifier')
-                                : 'saving-bill-hint'
-                          }
+                          aria-invalid={invalidBill || undefined}
+                          aria-describedby={invalidBill ? 'saving-bill-error' : 'saving-bill-hint'}
                           value={billIdentifier}
                           onChange={(event) => {
                             setBillIdentifier(
-                              normalizeProfileDigits(event.target.value).replace(/[^0-9]/g, '')
+                              normalizeProfileDigits(stripDigitSeparators(event.target.value))
                             );
                             setDuplicate(null);
                             setDuplicateAcknowledged(false);
@@ -1439,9 +1434,7 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                                 value={postalCode}
                                 onChange={(event) =>
                                   setPostalCode(
-                                    normalizeProfileDigits(
-                                      stripPostalCodeSeparators(event.target.value)
-                                    )
+                                    normalizeProfileDigits(stripDigitSeparators(event.target.value))
                                   )
                                 }
                               />

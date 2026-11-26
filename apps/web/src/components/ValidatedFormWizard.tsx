@@ -18,7 +18,7 @@ export function ValidatedFormWizard<Input extends FieldValues>({
   ...wizard
 }: Omit<FormWizardProps, 'children' | 'onNext' | 'onSubmit'> & {
   form: UseFormReturn<Input, unknown, Input>;
-  fields: readonly (readonly { name: FieldPath<Input>; label: string }[])[];
+  fields: readonly (readonly { name: FieldPath<Input>; label: string; inlineError?: boolean }[])[];
   errorId: (name: FieldPath<Input>) => string;
   disabled: boolean;
   onInvalidStep: (step: number) => Promise<unknown>;
@@ -80,7 +80,7 @@ export function ValidatedFormWizard<Input extends FieldValues>({
             {children(validating, actions)}
             <div className="my-3 space-y-1" aria-live="polite">
               {(fields[wizard.step - 1] ?? [])
-                .filter(({ name }) => form.getFieldState(name).invalid)
+                .filter(({ name, inlineError }) => !inlineError && form.getFieldState(name).invalid)
                 .map(({ name, label }) => (
                   <p key={name} id={errorId(name)} className="text-sm text-destructive">
                     {label}:{' '}

@@ -5,7 +5,7 @@ import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { Button, Input, Label, Textarea } from '@barghsa/ui';
 import { tCrmForm as t } from '@barghsa/i18n/crm-forms';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
-import { normalizeProfileDigits, stripPostalCodeSeparators } from '../lib/profile-digits.js';
+import { normalizeProfileDigits, stripDigitSeparators } from '../lib/profile-digits.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from './GeographyLoadError.js';
@@ -316,7 +316,7 @@ export function CrmAddressEditor({
                 dir="ltr"
                 value={fields.postalCode}
                 onChange={(event) =>
-                  draft.field('postalCode')[1](stripPostalCodeSeparators(event.target.value))
+                  draft.field('postalCode')[1](stripDigitSeparators(event.target.value))
                 }
               />
               <p id={fieldId + '-postal-help'} className="text-xs text-muted-foreground">

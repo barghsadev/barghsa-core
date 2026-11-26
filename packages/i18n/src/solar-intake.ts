@@ -18,7 +18,7 @@ const en = {
   chooseGridType: 'Choose a connection type.',
   offGridOutage:
     'Power may be available during grid outages, depending on the final system design and installed storage equipment.',
-  billFormat: 'Enter the 6–13-digit identifier printed on your electricity bill.',
+  billFormat: 'Enter or paste the 6–13 digits from your bill.',
   acceptedTerms: 'Accepted terms',
 };
 
@@ -42,7 +42,7 @@ const fa: Record<keyof typeof en, string> = {
   chooseGridType: 'نوع اتصال را انتخاب کنید.',
   offGridOutage:
     'امکان استفاده از برق هنگام قطعی شبکه به طراحی نهایی سامانه و تجهیزات ذخیره‌سازی نصب‌شده بستگی دارد.',
-  billFormat: 'شناسه ۶ تا ۱۳ رقمی درج‌شده روی قبض برق را وارد کنید.',
+  billFormat: 'شناسه ۶ تا ۱۳ رقمی قبض را وارد یا جای‌گذاری کنید.',
   acceptedTerms: 'شرایط پذیرفته‌شده',
 };
 

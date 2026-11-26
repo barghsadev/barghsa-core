@@ -18,7 +18,7 @@ import { uploadLegalProfileDocument } from '../../../lib/invoice-bank-receipt-up
 import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
 import { t } from '@barghsa/i18n/app';
 import { settingsDateEntryText } from '@barghsa/i18n/settings-forms';
-import { normalizeProfileDigits, stripPostalCodeSeparators } from '../../../lib/profile-digits.js';
+import { normalizeProfileDigits, stripDigitSeparators } from '../../../lib/profile-digits.js';
 import { useState, useCallback, useRef, useMemo } from 'react';
 import { createFileRoute, useRouter, useParams } from '@tanstack/react-router';
 import { useLocale } from '../../../hooks/useLocale.js';
@@ -788,7 +788,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                             setRepresentative((previous) => ({
                               ...previous,
                               representativePostalCode: normalizeProfileDigits(
-                                stripPostalCodeSeparators(value)
+                                stripDigitSeparators(value)
                               ),
                             })),
                           {
@@ -1148,7 +1148,7 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         value={officialPostalCode}
                         onChange={(e) =>
                           setOfficialPostalCode(
-                            normalizeProfileDigits(stripPostalCodeSeparators(e.target.value))
+                            normalizeProfileDigits(stripDigitSeparators(e.target.value))
                           )
                         }
                         onBlur={() => handleBlur('officialPostalCode')}

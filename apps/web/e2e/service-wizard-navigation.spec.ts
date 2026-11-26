@@ -660,7 +660,21 @@ test('optional saving bill verification lets customers edit and continue to revi
     await expect.poll(() => checks.has(originalBill)).toBe(true);
     await expect(next).toBeEnabled();
     await expect(bill).toBeEditable();
-    await bill.fill(revisedBill);
+    await bill.fill('12345-67890-4567');
+    await expect(bill).toHaveValue('12345678904567');
+    await expect(bill).toHaveAttribute('aria-invalid', 'true');
+    await expect(next).toBeDisabled();
+    await page
+      .getByRole('button', { name: t('electricity.order.saveDraft', locale), exact: true })
+      .click();
+    await expect
+      .poll(() => state.saves.at(-1))
+      .toMatchObject({
+        currentStep: 3,
+        data: { billIdentifier: '12345678904567' },
+      });
+    await bill.fill('12345-67890-456');
+    await expect(bill).toHaveValue(revisedBill);
     checks.get(originalBill)?.();
     await expect.poll(() => completed.includes(originalBill)).toBe(true);
     await expect(verified).toHaveCount(0);
