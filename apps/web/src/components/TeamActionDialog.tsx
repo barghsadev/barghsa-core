@@ -470,7 +470,7 @@ export function TeamActionDialog({
     >
       <DialogContent
         size={focusSummary ? 'lg' : 'default'}
-        className="max-h-[90dvh] overflow-y-auto"
+        className="max-h-[90dvh] overflow-y-auto [overflow-wrap:anywhere]"
         showCloseButton={!busy}
         dir={locale === 'fa' ? 'rtl' : 'ltr'}
         finalFocus={finalFocus}

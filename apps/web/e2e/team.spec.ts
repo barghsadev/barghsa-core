@@ -15,6 +15,7 @@ import { teamCatalogue, teamInvitation } from '../src/test/team-catalogue-fixtur
 
 const profileId = '00000000-0000-4000-8000-000000000001';
 const transferId = '00000000-0000-4000-8000-000000000002';
+const namedMemberContact = `m***@${'long-department-'.repeat(5)}example.test`;
 async function shell(
   page: Page,
   locale = 'en',
@@ -65,13 +66,28 @@ async function shell(
             id: 'member-one',
             type: 'agent',
             userId: 'member',
-            username: 'm***@example.test',
+            username: memberName ? namedMemberContact : 'm***@example.test',
             name: memberName,
             role: 'Manager',
             status: 'Active',
             joinedAt: '2026-08-01T01:00:00Z',
             createdAt: '2026-08-01T01:00:00Z',
           },
+          ...(memberName
+            ? [
+                {
+                  id: 'member-two',
+                  type: 'agent',
+                  userId: 'other-member',
+                  username: 'other@example.test',
+                  name: memberName,
+                  role: 'Finance',
+                  status: 'Active',
+                  joinedAt: '2026-08-01T01:00:00Z',
+                  createdAt: '2026-08-01T01:00:00Z',
+                },
+              ]
+            : []),
           {
             id: 'invitation-one',
             type: 'invitation',
@@ -1240,11 +1256,13 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(picker).toHaveValue('');
     await expect(picker.getByRole('option')).toHaveText([
       fa ? 'انتخاب مالک جدید' : 'Select the new owner',
-      recipientName,
+      `${recipientName} (${namedMemberContact})`,
+      `${recipientName} (o***@example.test)`,
     ]);
     const next = dialog.getByRole('button', { name: fa ? 'ادامه' : 'Continue', exact: true });
     await expect(next).toBeDisabled();
-    await picker.selectOption('member');
+    await picker.selectOption({ label: `${recipientName} (${namedMemberContact})` });
+    await expect(dialog.getByText(namedMemberContact, { exact: true })).toBeVisible();
     for (const dark of [false, true]) {
       await page.evaluate(async (value) => {
         document.documentElement.classList.toggle('dark', value);
@@ -1262,6 +1280,11 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(dialog).toHaveAttribute('dir', fa ? 'rtl' : 'ltr');
     await next.click();
     await expect(dialog).toContainText(recipientName);
+    await expect(dialog).toContainText(namedMemberContact);
+    await expect(dialog).not.toContainText('o***@example.test');
+    expect(
+      await dialog.evaluate((node) => node.scrollWidth - node.clientWidth)
+    ).toBeLessThanOrEqual(1);
     await expect(password).toHaveCount(0);
     expect(attempts).toHaveLength(0);
     await authorizeAction(page, locale);

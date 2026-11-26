@@ -50,7 +50,6 @@ import { normalizeUsername } from '@barghsa/shared/username-normalization';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
-import { maskDestination } from '../lib/mask-destination.js';
 import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { withCsrf } from '../lib/csrf.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
@@ -68,6 +67,7 @@ import {
   TeamRoleFields,
   useTeamRoleDraft,
   teamMemberLabel,
+  teamMemberName,
 } from '../components/TeamMemberFields.js';
 
 import { useCatalogueScope, useCatalogueResource } from '../hooks/useCatalogueResource.js';
@@ -811,6 +811,7 @@ function TeamMembers({
       !member.roles.includes('Owner') &&
       member.roles.some((role) => ROLES.some((eligible) => eligible === role))
   );
+  const selectedOwner = eligibleOwners.find(([id]) => id === recipientId)?.[1].entry;
   const detailedMember = detail?.type === 'agent' ? members.get(detail.id) : undefined;
   const detailedEntry =
     detailedMember?.entry ??
@@ -1519,24 +1520,27 @@ function TeamMembers({
                       className="space-y-4"
                       onSubmit={(event) => {
                         event.preventDefault();
-                        const member = eligibleOwners.find(([id]) => id === recipientId)?.[1];
-                        if (!ready || !transferAllowed || !team?.canTransferOwnership || !member)
+                        if (
+                          !ready ||
+                          !transferAllowed ||
+                          !team?.canTransferOwnership ||
+                          !selectedOwner
+                        )
                           return;
-                        const name =
-                          member.entry.name ??
-                          (member.entry.username
-                            ? maskDestination(member.entry.username)
-                            : word('unnamed'));
                         setOwnershipStep('confirm');
                         openAction({
                           risk: 'destructive',
                           title: word('transfer'),
-                          description: word('transferWarning').replace('{name}', name),
+                          description: word('transferWarning').replace('{name}', () =>
+                            teamMemberLabel(selectedOwner, word('unnamed'))
+                          ),
                           path: `${base}/transfer-ownership`,
                           method: 'POST',
                           successStatus: 201,
                           body: { newOwnerUserId: recipientId },
-                          successMessage: word('transferSent').replace('{name}', name),
+                          successMessage: word('transferSent').replace('{name}', () =>
+                            teamMemberName(selectedOwner, word('unnamed'))
+                          ),
                         });
                       }}
                     >
@@ -1546,15 +1550,14 @@ function TeamMembers({
                       </DialogHeader>
                       <div className="space-y-2">
                         <Label htmlFor="ownership-recipient">{word('newOwner')}</Label>
-                        <select
+                        <NativeSelect
                           id="ownership-recipient"
                           tabIndex={0}
                           ref={recipientSelect}
-                          // eslint-disable-next-line jsx-a11y/no-autofocus -- Focus the agent picker when the modal advances after step-up.
                           autoFocus
                           required
                           aria-required="true"
-                          className="w-full rounded border border-input bg-background text-foreground p-2"
+                          className="w-full"
                           value={recipientId}
                           onChange={(event) => setRecipientId(event.target.value)}
                         >
@@ -1563,19 +1566,24 @@ function TeamMembers({
                           </option>
                           {eligibleOwners.map(([id, member]) => (
                             <option key={id} value={id}>
-                              {member.entry.name ??
-                                (member.entry.username
-                                  ? maskDestination(member.entry.username)
-                                  : word('unnamed'))}
+                              {teamMemberLabel(member.entry, word('unnamed'))}
                             </option>
                           ))}
-                        </select>
+                        </NativeSelect>
                       </div>
+                      {selectedOwner && (
+                        <div className="rounded-lg border bg-muted/35 px-3 py-2.5">
+                          <TeamIdentity entry={selectedOwner} />
+                        </div>
+                      )}
                       <DialogFooter>
                         <Button type="button" variant="outline" onClick={closeOwnership}>
                           {word('cancel')}
                         </Button>
-                        <Button type="submit" disabled={!ready || !transferAllowed || !recipientId}>
+                        <Button
+                          type="submit"
+                          disabled={!ready || !transferAllowed || !selectedOwner}
+                        >
                           {word('continue')}
                         </Button>
                       </DialogFooter>

@@ -133,11 +133,9 @@ const fa: Record<string, string> = {
   'team.transferWarning':
     'درخواست انتقال مالکیت برای {name} ارسال شود؟ تا زمان پذیرش، مالک باقی می‌مانید.',
   'team.transferSent': 'درخواست انتقال مالکیت برای {name} ارسال شد. گیرنده باید آن را بپذیرد.',
-  'team.transferVerify':
-    'ابتدا رمز عبور خود را تأیید کنید. سپس مالک جدید را از میان نمایندگان انتخاب کنید.',
+  'team.transferVerify': 'برای انتخاب مالک جدید، رمز عبور خود را تأیید کنید.',
   'team.selectOwner': 'انتخاب مالک جدید',
-  'team.selectOwnerHint':
-    'یکی از نمایندگان فعلی را انتخاب کنید. پیش از ارسال، درخواست را تأیید خواهید کرد.',
+  'team.selectOwnerHint': 'نام و راه ارتباطی عضو را بررسی کنید.',
   'team.newOwner': 'مالک جدید',
   'team.continue': 'ادامه',
   'team.pending': 'در انتظار',
@@ -282,11 +280,9 @@ const en: Record<string, string> = {
   'team.transferWarning':
     'Send an ownership request to {name}? You remain the owner until they accept.',
   'team.transferSent': 'Transfer request sent to {name}. They must accept.',
-  'team.transferVerify':
-    'Confirm your password first, then choose the new owner from the existing agents.',
+  'team.transferVerify': 'Confirm your password to choose a new owner.',
   'team.selectOwner': 'Select the new owner',
-  'team.selectOwnerHint':
-    'Choose an existing agent. You will confirm the request before it is sent.',
+  'team.selectOwnerHint': 'Check the member’s name and contact details.',
   'team.newOwner': 'New owner',
   'team.continue': 'Continue',
   'team.pending': 'Pending',
