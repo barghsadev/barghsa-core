@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect } from './coverage-fixture';
 import { en, fa } from '../../../packages/i18n/src/admin-ui';
 import { t as appText } from '../../../packages/i18n/src/app';
+import { refundEditorMessages } from '../../../packages/i18n/src/refund-editor';
 import { refundDecisionReviewFixture, refundReviewFixture } from './refund-review-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 
@@ -14,6 +15,7 @@ for (const locale of ['en', 'fa'] as const)
     const copy = locale === 'fa' ? fa : en;
     const word = (key: string) => copy[`admin.invoices.externalRefunds.${key}`]!;
     const shared = (key: string) => copy[`admin.invoices.walletRefunds.${key}`]!;
+    const editor = refundEditorMessages[locale];
     await page.addInitScript(
       (language) => localStorage.setItem('barghsa.locale', language),
       locale
@@ -167,7 +169,12 @@ for (const locale of ['en', 'fa'] as const)
     expect(
       (await new AxeBuilder({ page }).include('#external-refunds-panel').analyze()).violations
     ).toEqual([]);
-    await panel.getByLabel(shared('requestAmount')).fill('40');
+    const amountField = panel.getByLabel(shared('requestAmount'));
+    await amountField.fill(locale === 'fa' ? '۴۱' : '41');
+    await expect(amountField).toHaveAccessibleDescription(
+      editor.tomanEquivalent.replace('{amount}', locale === 'fa' ? '۴٫۱' : '4.1')
+    );
+    await amountField.fill('40');
     await panel.getByLabel(shared('reason'), { exact: true }).fill('Customer return');
     await panel.getByRole('button', { name: word('request'), exact: true }).click();
     const confirm = async () => {
@@ -184,6 +191,9 @@ for (const locale of ['en', 'fa'] as const)
     await panel.getByRole('button', { name: shared('approve') }).click();
     await confirm();
     await page.getByTestId(`invoice-refund-record-transfer-${refundId}`).click();
+    await expect(panel.getByLabel(word('bankReference'))).toHaveAccessibleDescription(
+      editor.recordTransferHelp
+    );
     await panel.getByLabel(word('bankReference')).fill(bankReference);
     await panel.getByRole('button', { name: word('record-transfer') }).click();
     await confirm();
@@ -202,8 +212,11 @@ for (const locale of ['en', 'fa'] as const)
     await page.reload();
     await exactRead;
     await expect(panel.getByText(word('secondReviewer'))).toBeVisible();
-    await expect(panel.getByLabel(word('bankReference'))).toHaveValue('');
-    await panel.getByLabel(word('bankReference')).fill(bankReference);
+    const reconcileReference = panel.getByLabel(editor.reconcileReference);
+    await expect(reconcileReference).toHaveValue('');
+    await expect(panel.locator('form').getByText(bankReference, { exact: true })).toBeVisible();
+    await expect(reconcileReference).toHaveAccessibleDescription(word('secondReviewer'));
+    await reconcileReference.fill(bankReference);
     await panel.getByRole('button', { name: word('reconcile') }).click();
     await confirm();
     await expect(panel.getByText(shared('state.Completed'))).toBeVisible();

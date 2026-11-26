@@ -3,6 +3,7 @@ import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { t as appText } from '@barghsa/i18n/workspace';
 import { contractText } from '@barghsa/i18n/contracts';
 import { refundEditorMessages } from '@barghsa/i18n/refund-editor';
+import { formatToman } from '@barghsa/i18n/numbers';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   LoadingStatus,
@@ -546,7 +547,7 @@ function RefundWorkspace({
           actionTools.current = {
             apply,
             reset: () => {
-              delete cachedDrafts.current[refund.id];
+              delete cachedDrafts.current[decision ? refund.id + ':' + operation : refund.id];
               form.form.reset({ reason: '', bankReference: '' });
             },
             receipt: (result) =>
@@ -583,13 +584,26 @@ function RefundWorkspace({
         : []
       : refundOperations(focusedRefund)
     : [];
+  const decisionDraftKey = decision ? decision.refundId + ':' + decision.operation : '';
+  const showReferenceInForm =
+    decision?.operation === 'reconcile' && decisionOperations.includes('reconcile');
   const decisionMessage =
     decisionError === 'unconfirmed'
       ? confirmationText('unconfirmed', locale)
       : decisionError
         ? word(decisionError)
         : undefined;
+  const amountField = draft.bind('amount');
   const reasonField = draft.bind('reason');
+  const amountId = fieldPrefix + '-amount';
+  const normalizedAmount = normalizeProfileDigits(amount);
+  const equivalent =
+    requestView && /^\d{1,19}$/.test(normalizedAmount) && BigInt(normalizedAmount) > 0n
+      ? editorText.tomanEquivalent.replace(
+          '{amount}',
+          formatToman(normalizedAmount, locale, { numberStyle: numbers.numberStyle })
+        )
+      : null;
   const ReasonInput = requestView ? Textarea : Input;
   return (
     <section
@@ -719,7 +733,7 @@ function RefundWorkspace({
                   />
                 </div>
               </div>
-              {focusedRefund.bankReference && (
+              {focusedRefund.bankReference && !showReferenceInForm && (
                 <dl className="mt-2 flex min-w-0 flex-wrap items-baseline gap-x-2 border-t pt-2">
                   <dt className="text-sm text-muted-foreground">{word('recordedReference')}</dt>
                   <dd className="break-all text-sm font-medium" dir="auto">
@@ -757,15 +771,15 @@ function RefundWorkspace({
       </div>
       {decision && focusedRefund && decisionOperations.includes(decision.operation) && (
         <RefundDecisionControls
-          key={decision.refundId + ':' + decision.operation}
+          key={decisionDraftKey}
           row={focusedRefund}
           operation={decision.operation}
           prefix={fieldPrefix}
           word={decisionWord}
           disabled={unavailable}
-          initial={cachedDrafts.current[focusedRefund.id] ?? { reason: '', bankReference: '' }}
+          initial={cachedDrafts.current[decisionDraftKey] ?? { reason: '', bankReference: '' }}
           saveDraft={(values) => {
-            cachedDrafts.current[focusedRefund.id] = values;
+            cachedDrafts.current[decisionDraftKey] = values;
           }}
           onChoose={(operation, form) => decide(focusedRefund, operation, form)}
         />
@@ -802,7 +816,7 @@ function RefundWorkspace({
                   <div className={requestView ? 'min-w-0 space-y-3' : recordEditorGrid}>
                     <Field className={requestView ? 'min-w-0 gap-1 sm:max-w-sm' : 'min-w-0 gap-1'}>
                       <div className="flex flex-wrap items-center justify-between gap-x-2">
-                        <FieldLabel htmlFor={fieldPrefix + '-amount'}>
+                        <FieldLabel htmlFor={amountId}>
                           {word('requestAmount')}{' '}
                           <span className="font-normal text-muted-foreground">
                             ({editorText.amountUnit})
@@ -821,14 +835,29 @@ function RefundWorkspace({
                         )}
                       </div>
                       <Input
-                        id={fieldPrefix + '-amount'}
+                        id={amountId}
                         dir="ltr"
                         inputMode="numeric"
                         value={amount}
-                        {...draft.bind('amount')}
+                        {...amountField}
+                        aria-describedby={
+                          equivalent
+                            ? [amountId + '-equivalent', amountField['aria-describedby']]
+                                .filter(Boolean)
+                                .join(' ')
+                            : amountField['aria-describedby']
+                        }
                         disabled={unavailable}
                         onChange={(event) => setAmount(event.target.value)}
                       />
+                      {equivalent && (
+                        <p
+                          id={amountId + '-equivalent'}
+                          className="break-words text-sm tabular-nums text-muted-foreground"
+                        >
+                          {equivalent}
+                        </p>
+                      )}
                       <RefundFieldFeedback
                         id={draft.errorId('amount')}
                         error={draft.errors.amount}

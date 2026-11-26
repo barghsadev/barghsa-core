@@ -68,6 +68,7 @@ export function RefundDecisionControls({
   const reasonId = prefix + '-reason-' + row.id;
   const reasonField = draft.bind('reason');
   const bankField = draft.bind('bankReference');
+  const recordedReference = operation === 'reconcile' ? row.bankReference : null;
   const ReasonInput = operation ? Textarea : Input;
   const buttons = operations.map((choice) => (
     <Button
@@ -105,6 +106,11 @@ export function RefundDecisionControls({
       }}
     >
       <div className={operation ? 'space-y-2.5 px-4 py-4 sm:px-6' : 'space-y-2'}>
+        {operation === 'reconcile' && (
+          <p id={bankId + '-help'} className="text-sm text-muted-foreground">
+            {word('secondReviewer')}
+          </p>
+        )}
         <div className={reasonVisible && referenceVisible ? recordEditorGrid : 'space-y-2'}>
           {reasonVisible && (
             <Field className="min-w-0 gap-1">
@@ -147,42 +153,59 @@ export function RefundDecisionControls({
             </Field>
           )}
           {referenceVisible && (
-            <Field className="min-w-0 gap-1">
-              <FieldLabel htmlFor={bankId}>{word('bankReference')}</FieldLabel>
-              {operation === 'record-transfer' && (
-                <p id={bankId + '-help'} className="text-sm text-muted-foreground">
-                  {editorText.recordTransferHelp}
-                </p>
+            <div className={recordedReference ? recordEditorGrid : undefined}>
+              <Field className="min-w-0 gap-1">
+                <FieldLabel htmlFor={bankId}>
+                  {operation === 'reconcile'
+                    ? editorText.reconcileReference
+                    : word('bankReference')}
+                </FieldLabel>
+                {operation === 'record-transfer' && (
+                  <p id={bankId + '-help'} className="text-sm text-muted-foreground">
+                    {editorText.recordTransferHelp}
+                  </p>
+                )}
+                <Input
+                  id={bankId}
+                  dir="ltr"
+                  autoComplete="off"
+                  spellCheck={false}
+                  required={!!operation}
+                  maxLength={200}
+                  value={reference}
+                  {...bankField}
+                  aria-describedby={
+                    operation
+                      ? [bankId + '-help', bankField['aria-describedby']].filter(Boolean).join(' ')
+                      : bankField['aria-describedby']
+                  }
+                  disabled={disabled}
+                  onChange={(event) => setReference(event.target.value)}
+                />
+                <RefundFieldFeedback
+                  id={draft.errorId('bankReference')}
+                  error={draft.errors.bankReference}
+                  message={contractText('refundBankReferenceInvalid', locale)}
+                  reserveSpace={!operation}
+                />
+                {!operation && row.state === 'Processing' && (
+                  <p className="text-sm text-muted-foreground">{word('secondReviewer')}</p>
+                )}
+              </Field>
+              {recordedReference && (
+                <dl className="min-w-0 space-y-1">
+                  <dt className="text-sm font-medium text-muted-foreground">
+                    {word('recordedReference')}
+                  </dt>
+                  <dd
+                    dir="auto"
+                    className="flex min-h-11 items-center rounded-lg bg-muted/50 px-3 py-2 font-mono text-sm [overflow-wrap:anywhere]"
+                  >
+                    {recordedReference}
+                  </dd>
+                </dl>
               )}
-              {operation === 'reconcile' && (
-                <p id={bankId + '-help'} className="text-sm text-muted-foreground">
-                  {word('secondReviewer')}
-                </p>
-              )}
-              <Input
-                id={bankId}
-                dir="ltr"
-                maxLength={200}
-                value={reference}
-                {...bankField}
-                aria-describedby={
-                  operation
-                    ? [bankId + '-help', bankField['aria-describedby']].filter(Boolean).join(' ')
-                    : bankField['aria-describedby']
-                }
-                disabled={disabled}
-                onChange={(event) => setReference(event.target.value)}
-              />
-              <RefundFieldFeedback
-                id={draft.errorId('bankReference')}
-                error={draft.errors.bankReference}
-                message={contractText('refundBankReferenceInvalid', locale)}
-                reserveSpace={!operation}
-              />
-              {!operation && row.state === 'Processing' && (
-                <p className="text-sm text-muted-foreground">{word('secondReviewer')}</p>
-              )}
-            </Field>
+            </div>
           )}
           {operation && !reasonVisible && !referenceVisible && (
             <p className="text-sm text-muted-foreground">{editorText.reviewDecisionHelp}</p>

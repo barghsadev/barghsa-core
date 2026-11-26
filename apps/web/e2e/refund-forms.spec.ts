@@ -531,11 +531,16 @@ for (const locale of ['en', 'fa'] as const)
       await expect(
         queue.getByText(confirmationText('unconfirmed', locale), { exact: true })
       ).toBeVisible();
-      await expect(
-        queue.getByRole('link', { name: word('cancellation.queue.reconcile'), exact: true })
-      ).toBeVisible();
+      const reconcileLink = queue.getByRole('link', {
+        name: word('cancellation.queue.reconcile'),
+        exact: true,
+      });
+      await expect(reconcileLink).toBeVisible();
       releaseReply();
       expect(commandAttempts).toBe(2);
+      await reconcileLink.click();
+      await expect(reference).toBeEditable();
+      await expect(reference).toHaveValue('');
       await expect(page.locator('html')).toHaveClass(dark ? /dark/ : /^(?!.*\bdark\b)/);
       await finishLayout(page, '#external-refunds-panel', locale);
       if (locale === 'fa' && dark && test.info().project.name === 'mobile-safari')

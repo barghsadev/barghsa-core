@@ -1,6 +1,7 @@
 import { test, expect } from './coverage-fixture';
 import { en, fa } from '../../../packages/i18n/src/admin-ui';
 import { t as appText } from '../../../packages/i18n/src/app';
+import { tWorkspace } from '@barghsa/i18n/workspace-admin';
 import { refundDecisionReviewFixture, refundReviewFixture } from './refund-review-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { refundEditorMessages } from '@barghsa/i18n/refund-editor';
@@ -146,11 +147,13 @@ for (const locale of ['en', 'fa'] as const)
       });
 
     const editor = refundEditorMessages[locale];
+    const openBankRefund = tWorkspace('admin.invoices.refunds.newBankRefund', locale);
+    const openWalletRefund = tWorkspace('admin.invoices.refunds.newWalletRefund', locale);
     await page.goto(`/admin/invoices/${invoiceId}/refunds`);
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
-    await expect(page.getByRole('link', { name: editor.newBankRefund, exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: openBankRefund, exact: true })).toBeVisible();
     await expect(page.locator('#wallet-refunds-panel, #external-refunds-panel')).toHaveCount(0);
-    await page.getByRole('link', { name: editor.newWalletRefund, exact: true }).click();
+    await page.getByRole('link', { name: openWalletRefund, exact: true }).click();
     await expect(page).toHaveURL(new RegExp(`/admin/invoices/${invoiceId}/refunds/wallet/new$`));
     const panel = page.getByRole('region', { name: word('title'), exact: true });
     await expect(panel.getByText(word('available'), { exact: true })).toBeVisible();
