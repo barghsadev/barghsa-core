@@ -219,17 +219,23 @@ for (const locale of ['en', 'fa'] as const) {
     const owner = form(page, 'username');
     const destination = page.locator('#new-username');
     await expect(destination).toBeFocused();
-    await destination.fill('  NEXT@example.test  ');
+    const typed = locale === 'fa' ? '۰۹۱۲۱۲۳۴۵۶۷' : '  NEXT@example.test  ';
+    const canonical = locale === 'fa' ? '+989121234567' : 'next@example.test';
+    await destination.fill(typed);
+    await expect(destination).toHaveAccessibleDescription(
+      [copy('usernameFormat', locale), copy('normalizedDestination', locale), canonical].join(' ')
+    );
+    await expect(submit(owner)).toHaveAccessibleName(copy('sendUsernameCodes', locale));
     await submit(owner).click();
     await expect.poll(() => !!state.held).toBe(true);
     const original = state.writes[0];
     expect(original).toMatchObject({
       path: '/api/auth/change-username/send-otp',
-      body: { newUsername: 'next@example.test' },
+      body: { newUsername: canonical },
     });
     await page.clock.fastForward(15_001);
     await expect(action(page, locale, 'confirm')).toBeEnabled({ timeout: 2_000 });
-    await expect(destination).toHaveValue('  NEXT@example.test  ');
+    await expect(destination).toHaveValue(typed);
     await expect(submit(owner)).toBeDisabled();
     await owner.dispatchEvent('submit');
     expect(state.writes).toEqual([original]);
@@ -238,6 +244,9 @@ for (const locale of ['en', 'fa'] as const) {
     state.sendMode = 'success';
     await submit(owner).click();
     await expect(page.locator('#previous-otp')).toBeFocused();
+    await expect(page.locator('#change-otp')).toHaveAccessibleDescription(
+      locale === 'fa' ? copy('mobileEnding', locale) + ' 4567' : 'n***@example.test'
+    );
     expect(state.writes).toEqual([original, original]);
   });
 
@@ -247,6 +256,8 @@ for (const locale of ['en', 'fa'] as const) {
     const fixture = await setup(page, locale),
       { state } = fixture,
       release = await holdSchema(page);
+    state.user.username = 'new@old.example.test';
+    state.user.email = state.user.username;
     await page.goto('/settings/username');
     await page
       .getByRole('button', { name: t('settings.username.change', locale), exact: true })
@@ -276,10 +287,14 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#previous-otp')).toBeVisible();
     await expect(page.locator('#previous-otp')).toHaveAttribute('aria-required', 'true');
     await expect(page.locator('#change-otp')).toHaveAttribute('aria-required', 'true');
+    await expect(page.locator('#previous-otp')).toHaveAccessibleDescription(
+      'n***@old.example.test'
+    );
+    await expect(page.locator('#change-otp')).toHaveAccessibleDescription('n***@example.test');
     expect(state.writes[0]!.body).toEqual({ newUsername: 'new@example.test' });
-    await page.locator('#change-otp').fill('123456');
+    await page.locator('#change-otp').fill(locale === 'fa' ? '۱۲۳۴۵۶' : '123456');
     await expect(submit(owner)).toBeDisabled();
-    await page.locator('#previous-otp').fill('112233');
+    await page.locator('#previous-otp').fill(locale === 'fa' ? '۱۱۲۲۳۳' : '112233');
     state.verifyMode = 'otp';
     await submit(owner).click();
     await expect(submit(owner)).toBeEnabled();

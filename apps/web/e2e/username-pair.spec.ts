@@ -1,5 +1,6 @@
 import { dismissMessages } from './dismiss-messages';
 import { test, expect } from './coverage-fixture';
+import { tAccountSettingsForms as copy } from '@barghsa/i18n/account-settings-forms';
 
 for (const locale of ['en', 'fa'] as const) {
   test(`username change requires both codes and preserves them after rejection (${locale})`, async ({
@@ -63,7 +64,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#new-username').fill('NEW@example.test');
     await page
       .getByRole('button', {
-        name: locale === 'en' ? 'Send Verification Code' : 'ارسال کد تأیید',
+        name: copy('sendUsernameCodes', locale),
         exact: true,
       })
       .click();
@@ -166,13 +167,22 @@ for (const locale of ['en', 'fa'] as const) {
       ).toBeVisible();
       await action.click();
       await expect(page.locator('#new-contact')).toHaveValue(contactValue);
+      if (contactType === 'mobile' && locale === 'fa') {
+        await page.locator('#new-contact').fill('۰۹۱۲۰۰۰۰۰۱۰');
+        await expect(page.locator('#new-contact')).toHaveAccessibleDescription(
+          [copy('mobileFormat', locale), copy('normalizedDestination', locale), mobile].join(' ')
+        );
+      }
       await page
         .getByRole('button', {
           name: locale === 'en' ? 'Send Verification Code' : 'ارسال کد تأیید',
           exact: true,
         })
         .click();
-      await page.locator('#contact-otp').fill('123456');
+      await expect(page.locator('#contact-otp')).toHaveAccessibleDescription(
+        contactType === 'email' ? 'l***@example.test' : copy('mobileEnding', locale) + ' 0010'
+      );
+      await page.locator('#contact-otp').fill(locale === 'fa' ? '۱۲۳۴۵۶' : '123456');
       const submit = page.getByRole('button', {
         name: locale === 'en' ? 'Verify & Save' : 'تأیید و ذخیره',
         exact: true,

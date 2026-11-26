@@ -1,4 +1,5 @@
 import { isE164, normalizeUsername } from '@barghsa/shared/username-normalization';
+import { normalizeProfileDigits } from './profile-digits.js';
 import { settingsUuid } from './settings-profile-directory.js';
 
 export type ContactType = 'email' | 'mobile';
@@ -31,7 +32,7 @@ const object = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === 'object' && !Array.isArray(value);
 export function accountDestination(raw: string, type?: ContactType): string | null {
   if (raw.length > 255) return null;
-  const value = normalizeUsername(raw);
+  const value = normalizeUsername(raw.includes('@') ? raw : normalizeProfileDigits(raw));
   if (!value || value.length > 255) return null;
   const normalizedType = isE164(value) ? 'mobile' : 'email';
   return type && type !== normalizedType ? null : value;

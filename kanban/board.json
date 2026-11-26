@@ -16769,8 +16769,8 @@
             265486068191239,
             2434857569620413,
             3713076278634235,
-            2948682100931698,
-            1835404489281453,
+            1490782710851506,
+            1610602706796068,
             291155172802995,
             2892802776267328,
             632932711821610,
@@ -16778,7 +16778,11 @@
             1299440719271867,
             913193208462959,
             4208899529561123,
-            3108623938713492
+            3108623938713492,
+            1455012684599571,
+            4376264799342260,
+            3471351408769610,
+            157929646017224
           ],
           "checks": [
             951702645418932,
@@ -16789,7 +16793,8 @@
             3175983088388938,
             951305325835911,
             4001011493356895,
-            2007711430603789
+            2007711430603789,
+            1712356329198246
           ],
           "source_renewals": [
             1757021867272212,
@@ -40341,10 +40346,10 @@
             2393600654190753,
             715094815214906,
             2099363386566033,
-            2804260948817682,
+            4376264799342260,
             2444870327207558,
             383421367741657,
-            3495921171572850,
+            3471351408769610,
             3108623938713492,
             3473138481892198,
             2986954024632692,
@@ -40364,7 +40369,11 @@
             234601553209502,
             1499669892738514,
             3092736784003532,
-            611289283542267
+            611289283542267,
+            1455012684599571,
+            1490782710851506,
+            1610602706796068,
+            157929646017224
           ],
           "checks": [
             2379886278478597,
@@ -40402,7 +40411,8 @@
             2560446033636596,
             2184152703681103,
             3175983088388938,
-            951305325835911
+            951305325835911,
+            1712356329198246
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/account-preferences-acceptance",
           "limitations": [
@@ -401904,7 +401914,7 @@
             4416263492157986,
             2301471494644168,
             1089476042445857,
-            3495921171572850,
+            3471351408769610,
             2619018701892959,
             1721493326883833,
             4410012910049702,
@@ -402537,7 +402547,7 @@
           "source_evidence": [
             1501764925946930,
             3720992361315982,
-            3285581854635167,
+            1455012684599571,
             2701557295755577,
             3785659752336039,
             44468052440137,
@@ -430213,7 +430223,7 @@
             4198543266741263,
             4097873975886547,
             377476945082671,
-            3495921171572850,
+            3471351408769610,
             2920708756963303,
             4445845135494420,
             3543042154179874,
@@ -450757,7 +450767,7 @@
             2298525357747668,
             81943344094645,
             3720992361315982,
-            3285581854635167,
+            1455012684599571,
             4267585062906176,
             3294640592346325,
             671441203279292,
@@ -451076,7 +451086,7 @@
             4097873975886547,
             377476945082671,
             3860461563992307,
-            3495921171572850,
+            3471351408769610,
             2737223158188849,
             3276722398800717,
             381516753846968,
@@ -484874,7 +484884,7 @@
             81943344094645,
             2833258522912203,
             3720992361315982,
-            3285581854635167,
+            1455012684599571,
             2464082089874603,
             1256130124586782,
             2375379338253127,
@@ -485542,7 +485552,7 @@
             377476945082671,
             269018907305458,
             3860461563992307,
-            3495921171572850,
+            3471351408769610,
             2737223158188849,
             3276722398800717,
             82601238675596,
@@ -500463,7 +500473,7 @@
             377476945082671,
             4460881776019823,
             3860461563992307,
-            3495921171572850,
+            3471351408769610,
             4358323859189496,
             31164825818013,
             901313330439448,
@@ -582271,7 +582281,7 @@
             377476945082671,
             4460881776019823,
             3860461563992307,
-            3495921171572850,
+            3471351408769610,
             4358323859189496,
             31164825818013,
             901313330439448,
@@ -583099,7 +583109,7 @@
             4097873975886547,
             377476945082671,
             3860461563992307,
-            3495921171572850,
+            3471351408769610,
             2737223158188849,
             3813712748202203,
             3276722398800717,
@@ -789642,6 +789652,7 @@
       "980341398800238": "The account_login_identifiers primary key reserves normalized destinations across primary and verified secondary logins. The eight compiled PostgreSQL HTTP cases cover national/international registration deduplication, verified alias login and recovery, shared attempt limits, reservation races and username change with correlated audit and active-session boundaries.",
       "3350269053887473": "Thirty-four shared cases, 70 web unit cases and 24 production browser cases passed. Chromium and mobile Safari in Persian and English covered login, registration, password recovery and mobile/email masking before OTP navigation.",
       "2892671675547246": "All 33 package export and declaration checks, 102 route budgets and the exact generated OpenAPI comparison passed. Shared, API and web type checks and changed-file lint, formatting and diff checks passed. No dependencies, migrations or lockfile changed.",
+      "1712356329198246": "Username and recovery phone forms accept Persian and Arabic digits and preview the canonical destination in international format when it differs. Email digit spelling is preserved and verification shows a separate masked destination for each code. Both existing username codes are still required with exact route, actor and challenge ownership. Validation on 320 px WebKit returns focus after tapping submit with an invalid value. Fifty-six browser cases passed; the final rebuild passed 24 focused browser cases, 26 unit cases, and 212 budgets. 32 API integration cases passed. Final Farsi and English captures reach 320 px. Logs are in /tmp/barghsa-form-review/sign-in-address-*.",
       "2170048570220846": "Shared password rules drive the registration minimum and the distinct 128-character reset and forced-change cap. The browser consumes the same constants without loading the server schema runtime. The generated OpenAPI matches the committed contract exactly, including the existing error and pattern representations. The pre-change and final schemas also matched for 38 success and ordered-error cases.",
       "1840154407543648": "All 31 shared validation cases and 47 affected web tests passed. Twelve compiled PostgreSQL HTTP cases passed, covering email and mobile registration plus invalid reset and forced-change passwords with no persistent mutation. Other cases in those suites were intentionally unselected in this exact run.",
       "2737157956788082": "Twelve production-build browser checks passed on Chromium and mobile Safari in Persian and English. They verified weak patterns, strong values, interaction-only loading, stale input protection, retry after a failed chunk, and no password transmission during strength evaluation.",
@@ -794761,13 +794772,13 @@
         "path": "apps/web/e2e/registration-native-forms.spec.ts",
         "sha256": "81a09fe345c532bccad1f4940382af2bfbeef10ddc3b89926501b1e1d1243ca7"
       },
-      "2948682100931698": {
+      "1490782710851506": {
         "path": "apps/web/src/lib/account-settings-form.test.ts",
-        "sha256": "b150d77281ecf8b28ce2e0e5e059b4a947823ee8b7948c5bf0744b04fc14866e"
+        "sha256": "6ac1d4b6ec051a7bb04da41b7905d42da7cff2a73832918a8aaada1d6ca52235"
       },
-      "1835404489281453": {
+      "1610602706796068": {
         "path": "apps/web/src/lib/account-settings-form.ts",
-        "sha256": "9cc9eaad251abd0fa47f08ac15a8b7d8d81a4a5c0843762fde89c69784d12552"
+        "sha256": "a0230a647f491787cff293ac67936e5cbaa7f330db9fca953b71bce013189438"
       },
       "291155172802995": {
         "path": "apps/web/src/lib/auth-username.ts",
@@ -794792,6 +794803,22 @@
       "4208899529561123": {
         "path": "packages/shared/src/validation/validation.test.ts",
         "sha256": "2c32b76f1fdccb77b1bef95deb93bb4815c358960b89348b2f39028be5df1860"
+      },
+      "1455012684599571": {
+        "path": "apps/web/e2e/account-settings-forms.spec.ts",
+        "sha256": "a613142c65756b23d0b945ed772779d16abf444c714a76b95a4809cef9c96559"
+      },
+      "4376264799342260": {
+        "path": "apps/web/e2e/username-pair.spec.ts",
+        "sha256": "e4f7273a614cf85d9d51a19bde77f45a63bafb12439c93e97d3ae54ce1373b17"
+      },
+      "3471351408769610": {
+        "path": "apps/web/src/routes/_app/settings/username.tsx",
+        "sha256": "2e56bf4e7e3597d22a16647dca113739cd3f870522b96477a3fe86b11738566e"
+      },
+      "157929646017224": {
+        "path": "packages/i18n/src/account-settings-forms.ts",
+        "sha256": "4b553e8b1967b779f0bf1e41b06f355da01744b55cb661f09bc6d0946c4b26dc"
       },
       "4250281943852466": {
         "path": "apps/api/src/auth/dto/force-change-password.dto.ts",
@@ -797184,14 +797211,6 @@
       "383421367741657": {
         "path": "apps/web/src/lib/settings-form.ts",
         "sha256": "dca1990f5f05789275b65e4d35702e3050743365f29f6cdf37c88fd409599c32"
-      },
-      "2804260948817682": {
-        "path": "apps/web/e2e/username-pair.spec.ts",
-        "sha256": "3585379bf4bc55c369e077e761863dc0c8199e9fd6de7684f6a2cc20588469be"
-      },
-      "3495921171572850": {
-        "path": "apps/web/src/routes/_app/settings/username.tsx",
-        "sha256": "559506ddf6d9723d7fb34c734b217c43ea7bcf20eac5b9b09b7d03990411a5e8"
       },
       "798664278507078": {
         "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
@@ -805444,10 +805463,6 @@
       "2693702163047073": {
         "path": "apps/web/src/test/staff-directory-fixtures.ts",
         "sha256": "0ddeb100432a4fa4374ed9b00e4d6a37ee881027d1fdfe4daa69b7a50640550c"
-      },
-      "3285581854635167": {
-        "path": "apps/web/e2e/account-settings-forms.spec.ts",
-        "sha256": "5ddb7b795bb8db3efbc6fe22ff098cd2c83e625727997eafbbaede1a68cfc309"
       },
       "1401543572231778": {
         "path": "apps/web/e2e/contract-review-signature-forms.spec.ts",

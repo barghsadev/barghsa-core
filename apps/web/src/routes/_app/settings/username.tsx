@@ -1,5 +1,5 @@
 import { Skeleton } from '@barghsa/ui';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { MailIcon, PhoneIcon, AlertCircleIcon, KeyIcon } from 'lucide-react';
@@ -10,6 +10,7 @@ import {
   FormItem,
   FormLabel,
   FormControl,
+  FormDescription,
   FormMessage,
   type FieldValues,
   type FieldPath,
@@ -18,6 +19,8 @@ import {
 import { useLocale } from '../../../hooks/useLocale.js';
 import { useAccountSettingsEditor } from '../../../hooks/useAccountSettingsEditor.js';
 import { maskDestination } from '../../../lib/mask-destination.js';
+import { accountDestination, type ContactType } from '../../../lib/account-settings-form.js';
+import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
 import {
   RecordEditorActions,
   recordEditorSurface,
@@ -40,6 +43,7 @@ function AccountField<Values extends FieldValues>({
   focusOnOpen = false,
   type = 'text',
   placeholder,
+  description,
 }: {
   form: UseFormReturn<Values>;
   name: FieldPath<Values>;
@@ -51,6 +55,7 @@ function AccountField<Values extends FieldValues>({
   focusOnOpen?: boolean;
   type?: 'text' | 'email' | 'tel';
   placeholder?: string;
+  description?: ReactNode;
 }) {
   const focusPending = useRef(focusOnOpen);
   const setFocus = form.setFocus;
@@ -59,13 +64,24 @@ function AccountField<Values extends FieldValues>({
     focusPending.current = false;
     setFocus(name);
   }, [locked, name, setFocus]);
+  const hint = description && (
+    <FormDescription className="text-xs leading-4 [overflow-wrap:anywhere]">
+      {description}
+    </FormDescription>
+  );
   return (
     <FormField
       control={form.control}
       name={name}
       render={({ field }) => (
-        <FormItem id={id} className="space-y-1.5">
+        <FormItem
+          id={id}
+          className={
+            otp ? 'min-w-0 space-y-1.5 rounded-lg border bg-card px-3 py-2' : 'space-y-1.5'
+          }
+        >
           <FormLabel htmlFor={id}>{label}</FormLabel>
+          {otp && hint}
           <FormControl>
             <Input
               {...field}
@@ -78,7 +94,8 @@ function AccountField<Values extends FieldValues>({
               autoCapitalize="none"
               spellCheck={false}
               onChange={(event) => {
-                if (canEdit()) field.onChange(event);
+                if (canEdit())
+                  field.onChange(otp ? normalizeProfileDigits(event.target.value) : event);
               }}
               {...(otp
                 ? { inputMode: 'numeric' as const, autoComplete: 'one-time-code', maxLength: 6 }
@@ -87,7 +104,8 @@ function AccountField<Values extends FieldValues>({
               dir="ltr"
             />
           </FormControl>
-          <FormMessage reserveSpace className="min-h-8 text-xs leading-4" />
+          {!otp && hint}
+          <FormMessage reserveSpace className="min-h-4 text-xs leading-4" />
         </FormItem>
       )}
     />
@@ -134,11 +152,40 @@ function SettingsUsernamePage() {
       </Button>
     );
   }
-  function submit(verify: boolean, disabled: boolean) {
+  function submit(family: 'username' | 'contact', verify: boolean, disabled: boolean) {
     return (
       <Button type="submit" loading={busy} disabled={locked || disabled}>
-        {t(verify ? 'settings.contact.verify' : 'settings.contact.sendOtp', locale)}
+        {verify
+          ? t('settings.contact.verify', locale)
+          : family === 'username'
+            ? copy('sendUsernameCodes')
+            : t('settings.contact.sendOtp', locale)}
       </Button>
+    );
+  }
+  function destinationHint(raw: string, help: string, type?: ContactType) {
+    const destination = accountDestination(raw, type);
+    return (
+      <>
+        {help}
+        {destination && destination !== raw.trim() && (
+          <span className="mt-0.5 block">
+            {copy('normalizedDestination')}{' '}
+            <bdi dir="ltr" className="font-medium text-foreground">
+              {destination}
+            </bdi>
+          </span>
+        )}
+      </>
+    );
+  }
+  function codeDestination(destination: string) {
+    return destination.startsWith('+') ? (
+      <>
+        {copy('mobileEnding')} <bdi dir="ltr">{destination.slice(-4)}</bdi>
+      </>
+    ) : (
+      <bdi dir="ltr">{maskDestination(destination)}</bdi>
     );
   }
   return (
@@ -240,7 +287,10 @@ function SettingsUsernamePage() {
                           name="newUsername"
                           id="new-username"
                           label={t('settings.username.newLabel', locale)}
-                          placeholder={t('settings.username.newPlaceholder', locale)}
+                          description={destinationHint(
+                            usernameValues.newUsername,
+                            copy('usernameFormat')
+                          )}
                           locked={locked}
                           canEdit={editor.canEdit}
                           focusOnOpen
@@ -254,17 +304,15 @@ function SettingsUsernamePage() {
                             {t('settings.username.pairSent', locale)}
                           </p>
                         </div>
-                        <div className="grid min-w-0 gap-x-4 gap-y-1 min-[380px]:grid-cols-2">
+                        <div className="grid min-w-0 gap-2 [grid-template-columns:repeat(auto-fit,minmax(min(100%,11rem),1fr))]">
                           <AccountField
                             form={usernameForm}
                             name="previousOtp"
                             id="previous-otp"
                             otp
                             focusOnOpen
-                            label={t('settings.username.previousOtp', locale).replace(
-                              '{destination}',
-                              maskUsername(usernameChallenge.previousDestination!)
-                            )}
+                            label={copy('previousUsernameCode')}
+                            description={codeDestination(usernameChallenge.previousDestination!)}
                             locked={locked}
                             canEdit={editor.canEdit}
                           />
@@ -273,10 +321,8 @@ function SettingsUsernamePage() {
                             name="otp"
                             id="change-otp"
                             otp
-                            label={t('settings.username.newOtp', locale).replace(
-                              '{destination}',
-                              maskUsername(usernameChallenge.destination)
-                            )}
+                            label={copy('newUsernameCode')}
+                            description={codeDestination(usernameChallenge.destination)}
                             locked={locked}
                             canEdit={editor.canEdit}
                           />
@@ -292,6 +338,7 @@ function SettingsUsernamePage() {
                   <RecordEditorActions>
                     {cancel('username')}
                     {submit(
+                      'username',
                       !!usernameChallenge,
                       !!usernameChallenge &&
                         (usernameValues.otp.length !== 6 || usernameValues.previousOtp.length !== 6)
@@ -391,6 +438,15 @@ function SettingsUsernamePage() {
                               id="new-contact"
                               type={type === 'email' ? 'email' : 'tel'}
                               label={t('settings.contact.' + type, locale)}
+                              description={
+                                type === 'mobile'
+                                  ? destinationHint(
+                                      contactValues.contactValue,
+                                      copy('mobileFormat'),
+                                      'mobile'
+                                    )
+                                  : undefined
+                              }
                               placeholder={t(
                                 type === 'email'
                                   ? 'settings.contact.newEmailPlaceholder'
@@ -405,12 +461,6 @@ function SettingsUsernamePage() {
                             <>
                               <div className="space-y-1">
                                 <h3 className="text-sm font-semibold">{copy('contactCode')}</h3>
-                                <p className="text-sm text-muted-foreground [overflow-wrap:anywhere]">
-                                  {t('settings.contact.otpSent', locale).replace(
-                                    '{destination}',
-                                    maskDestination(contactChallenge.destination)
-                                  )}
-                                </p>
                               </div>
                               <AccountField
                                 form={contactForm}
@@ -418,6 +468,7 @@ function SettingsUsernamePage() {
                                 id="contact-otp"
                                 otp
                                 label={t('settings.contact.otpLabel', locale)}
+                                description={codeDestination(contactChallenge.destination)}
                                 locked={locked}
                                 canEdit={editor.canEdit}
                                 focusOnOpen
@@ -433,6 +484,7 @@ function SettingsUsernamePage() {
                         <RecordEditorActions>
                           {cancel('contact')}
                           {submit(
+                            'contact',
                             !!contactChallenge,
                             !!contactChallenge && contactValues.otp.length !== 6
                           )}

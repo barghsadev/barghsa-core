@@ -28,6 +28,9 @@ const user = {
 it('normalizes supported destinations without accepting a different contact type or unsafe number', () => {
   expect(accountDestination('  NEW@example.test  ')).toBe('new@example.test');
   expect(accountDestination('09120000001', 'mobile')).toBe('+989120000001');
+  expect(accountDestination('۰۹١۲۰۰۰۰۰۰١')).toBe('+989120000001');
+  expect(accountDestination('۰۹۱۲۰۰۰۰۰۰۱', 'mobile')).toBe('+989120000001');
+  expect(accountDestination('user۲@EXAMPLE.test', 'email')).toBe('user۲@example.test');
   expect(accountDestination('+0123456789')).toBeNull();
   expect(accountDestination('a@b.test', 'mobile')).toBeNull();
   expect(accountDestination('+989120000001', 'email')).toBeNull();
