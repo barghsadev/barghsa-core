@@ -1,3 +1,4 @@
+import { CheckoutGiftCode } from '../components/CheckoutGiftCode.js';
 import { electricityDraftPath } from '../lib/electricity-draft.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { serviceFeedback } from '@barghsa/i18n/service-feedback';
@@ -1849,56 +1850,26 @@ function OwnedSimpleElectricityOrderPage() {
                             )}
                           </div>
                         )}
-                        <details
-                          open={giftCode !== '' || undefined}
-                          className="group border-t pt-1"
+                        <CheckoutGiftCode
+                          disclosureId="electricity-gift-details"
+                          inputId="electricity-gift"
+                          summary={t('electricity.order.giftCode', locale)}
+                          label={t('electricity.order.giftCode', locale)}
+                          applyLabel={t('electricity.order.applyGift', locale)}
+                          field={fields.bind('giftCode')}
+                          value={giftCode}
+                          applied={appliedGiftCode}
+                          disabled={submitting}
+                          onChange={setGiftCode}
+                          onApply={setAppliedGiftCode}
                         >
-                          <summary
-                            id="electricity-gift-details"
-                            className="flex min-h-11 cursor-pointer items-center gap-1.5 rounded-sm text-sm font-medium text-primary"
-                          >
-                            {t('electricity.order.giftCode', locale)}
-                            <ChevronDownIcon
-                              aria-hidden="true"
-                              className="size-4 motion-safe:transition-transform group-open:rotate-180"
-                            />
-                          </summary>
-                          <div className="space-y-2">
-                            <div>
-                              <label
-                                htmlFor="electricity-gift"
-                                className="mb-1 block text-sm font-medium"
-                              >
-                                {t('electricity.order.giftCode', locale)}
-                              </label>
-                              <div className="flex gap-2">
-                                <input
-                                  id="electricity-gift"
-                                  {...fields.bind('giftCode')}
-                                  type="text"
-                                  value={giftCode}
-                                  disabled={submitting}
-                                  onChange={(event) => setGiftCode(event.target.value)}
-                                  className="min-w-0 flex-1 rounded-lg border border-input bg-background px-3 py-2 text-sm"
-                                />
-                                <Button
-                                  type="button"
-                                  variant="outline"
-                                  disabled={submitting}
-                                  onClick={() => setAppliedGiftCode(giftCode.trim())}
-                                >
-                                  {t('electricity.order.applyGift', locale)}
-                                </Button>
-                              </div>
-                            </div>
-                            {appliedGiftCode && quote && (
-                              <p className="text-sm text-primary">
-                                {t('electricity.order.discount', locale)}:{' '}
-                                {numbers.money(quote.discountIrR)}
-                              </p>
-                            )}
-                          </div>
-                        </details>
+                          {appliedGiftCode && quote && (
+                            <p className="text-sm text-primary">
+                              {t('electricity.order.discount', locale)}:{' '}
+                              {numbers.money(quote.discountIrR)}
+                            </p>
+                          )}
+                        </CheckoutGiftCode>
                       </CardContent>
                     </Card>
                     <Card size="sm">

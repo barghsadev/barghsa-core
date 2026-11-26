@@ -1100,6 +1100,18 @@ for (const locale of ['en', 'fa'] as const)
           await expect(
             page.getByRole('textbox', { name: tSaving('giftCode', locale), exact: true })
           ).not.toBeVisible();
+          await disclosure.click();
+          const clearing = page.waitForRequest('**/api/saving/orders/quote');
+          await page
+            .getByRole('button', {
+              name: locale === 'fa' ? 'پاک کردن کد' : 'Clear code',
+              exact: true,
+            })
+            .click();
+          expect((await clearing).postDataJSON()).not.toHaveProperty('giftCode');
+          await expect(gift).toHaveValue('');
+          await expect(page.locator('[data-review-section=gift]')).toHaveCount(0);
+          expect(state.orders).toEqual([]);
         } else {
           await expect(page).toHaveURL(/step=1$/);
           await page

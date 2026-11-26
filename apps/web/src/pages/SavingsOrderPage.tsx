@@ -1,3 +1,4 @@
+import { CheckoutGiftCode } from '../components/CheckoutGiftCode.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { toast } from '../lib/toast-api.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
@@ -1493,43 +1494,20 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                         />
                         {copy('acceptAgreement')}
                       </label>
-                      <div className="space-y-2">
-                        <details className="group rounded-lg border [&[open]>div]:px-3 [&[open]>div]:pb-3">
-                          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 rounded-lg px-3 text-sm font-medium text-primary hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
-                            {copy('giftOptional')}
-                            <ChevronDownIcon
-                              aria-hidden="true"
-                              className="size-4 shrink-0 group-open:rotate-180 motion-safe:transition-transform"
-                            />
-                          </summary>
-                          <div className="flex flex-wrap items-end gap-2">
-                            <label className="min-w-0 flex-1 basis-32 text-sm">
-                              {copy('giftCode')}
-                              <input
-                                className="mt-1 w-full rounded-md border bg-background p-2"
-                                {...fields.bind('giftCode')}
-                                value={giftCode}
-                                onChange={(event) => setGiftCode(event.target.value)}
-                              />
-                            </label>
-                            <Button
-                              variant="outline"
-                              onClick={() => {
-                                setAppliedGiftCode(giftCode.trim());
-                                setQuoteRevision((value) => value + 1);
-                                submission.resetPreparation();
-                              }}
-                            >
-                              {copy('apply')}
-                            </Button>
-                          </div>
-                        </details>
-                        {giftCode.trim() !== appliedGiftCode && (
-                          <p role="status" className="text-sm">
-                            {t('electricity.order.applyGiftFirst', locale)}
-                          </p>
-                        )}
-                      </div>
+                      <CheckoutGiftCode
+                        summary={copy('giftOptional')}
+                        label={copy('giftCode')}
+                        applyLabel={copy('apply')}
+                        field={fields.bind('giftCode')}
+                        value={giftCode}
+                        applied={appliedGiftCode}
+                        onChange={setGiftCode}
+                        onApply={(value) => {
+                          setAppliedGiftCode(value);
+                          setQuoteRevision((revision) => revision + 1);
+                          submission.resetPreparation();
+                        }}
+                      />
                       {profileId && (
                         <div className="rounded-lg border p-3 [&_button]:self-start">
                           <OrderWalletBalance

@@ -623,6 +623,37 @@ const next = (page: Page, mode: Mode, locale: Locale) =>
 const back = (page: Page, mode: Mode, locale: Locale) =>
   button(page, mode === 'simple' ? 'electricity.order.edit' : 'electricity.order.back', locale);
 
+test('simple electricity applies and clears the gift code without advancing checkout', async ({
+  page,
+}) => {
+  const locale = 'en';
+  const state = await fixture(page, 'simple', locale, 1);
+  await page.goto('/electricity/orders/new');
+  const review = next(page, 'simple', locale);
+  await expect(review).toBeEnabled();
+  const disclosure = page.locator('#electricity-gift-details');
+  const gift = page.locator('#electricity-gift');
+  const hint = page.getByText(t('electricity.order.applyGiftFirst', locale), { exact: true });
+  await disclosure.click();
+  await gift.fill('POWER-START');
+  await expect(gift).toHaveAccessibleDescription(t('electricity.order.applyGiftFirst', locale));
+  await expect(review).toBeDisabled();
+  await disclosure.click();
+  await expect(hint).toBeVisible();
+  await disclosure.click();
+  const applying = page.waitForRequest('**/api/electricity/preview/simple');
+  await gift.press('Enter');
+  expect((await applying).postDataJSON()).toMatchObject({ giftCode: 'POWER-START' });
+  await expect(review).toBeEnabled();
+  const clearing = page.waitForRequest('**/api/electricity/preview/simple');
+  await page.getByRole('button', { name: 'Clear code', exact: true }).click();
+  expect((await clearing).postDataJSON()).not.toHaveProperty('giftCode');
+  await expect(gift).toHaveValue('');
+  await expect(review).toBeEnabled();
+  expect(state.saves).toEqual([]);
+  expect(state.orders).toEqual([]);
+});
+
 test('advanced electricity updates the visible total after a quantity edit', async ({ page }) => {
   await fixture(page, 'advanced', 'fa');
   await page.goto('/electricity/orders/new/advanced');
