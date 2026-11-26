@@ -30,6 +30,7 @@ import {
 import type { UploadPolicyCategory, UploadPolicyDto } from '@barghsa/shared/admin';
 import {
   LoadingStatus,
+  Badge,
   Button,
   buttonVariants,
   Dialog,
@@ -48,6 +49,8 @@ import {
   Alert,
 } from '@barghsa/ui';
 import { OperationalQueueTable, QueueRecordDetails } from '../components/OperationalQueueTable.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { staffQueryJson, useStaffQueryRead } from '../hooks/useStaffQueryRead.js';
@@ -599,16 +602,24 @@ export default function AdminUploadPoliciesPage({
   });
   const subAction = buttonVariants({ variant: 'outline', className: 'min-h-11' });
   const valuesSummary = (extensions: string[], bytes: number) => (
-    <dl className="grid gap-3 text-sm sm:grid-cols-2">
+    <dl className="grid gap-3 rounded-lg bg-muted/45 p-3 text-sm sm:grid-cols-2">
       <div>
         <dt className="text-muted-foreground">{label('formats')}</dt>
         <dd className="mt-1 font-medium [overflow-wrap:anywhere]">
-          <bdi>{extensions.join(', ') || '—'}</bdi>
+          <span className="flex flex-wrap gap-1.5">
+            {extensions.length
+              ? extensions.map((extension) => (
+                  <Badge variant="outline" key={extension}>
+                    <bdi dir="ltr">{extension}</bdi>
+                  </Badge>
+                ))
+              : '—'}
+          </span>
         </dd>
       </div>
       <div>
         <dt className="text-muted-foreground">{label('maxSize')}</dt>
-        <dd className="mt-1 font-medium">
+        <dd className="mt-1 text-lg font-semibold">
           {Number.isSafeInteger(bytes) && bytes > 0 ? size(bytes) : '—'}
         </dd>
         {Number.isSafeInteger(bytes) && bytes > 0 && (
@@ -621,7 +632,9 @@ export default function AdminUploadPoliciesPage({
     <dl className="grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
       <div>
         <dt className="text-muted-foreground">{label('status')}</dt>
-        <dd>{label(`status.${policy.status}`)}</dd>
+        <dd className="mt-1">
+          <Badge variant="secondary">{label(`status.${policy.status}`)}</Badge>
+        </dd>
       </div>
       <div>
         <dt className="text-muted-foreground">{label('from')}</dt>
@@ -917,7 +930,17 @@ export default function AdminUploadPoliciesPage({
             error={error}
             empty={limits.length === 0}
             retainContent={accepted.current && limits.length > 0}
-            loadingView={<LoadingStatus>{t('admin.jobs.loading', locale)}</LoadingStatus>}
+            loadingView={
+              routedRecord && view !== 'history' ? (
+                <RecordDetailSkeleton label={t('admin.jobs.loading', locale)} />
+              ) : (
+                <RecordListSkeleton
+                  label={t('admin.jobs.loading', locale)}
+                  view="card"
+                  headings={[]}
+                />
+              )
+            }
             errorView={
               <div role="alert" className="space-y-2">
                 <p>{label('loadError')}</p>
@@ -977,7 +1000,13 @@ export default function AdminUploadPoliciesPage({
                     <li key={policy.id} className="min-w-0 space-y-3 p-4 sm:p-5">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <p className="font-semibold">
-                          {label(`status.${policy.status}`)} · {date(policy.effectiveFrom)}
+                          <Badge variant="secondary">{label(`status.${policy.status}`)}</Badge>{' '}
+                          <time
+                            className="text-sm font-normal text-muted-foreground"
+                            dateTime={policy.effectiveFrom}
+                          >
+                            {date(policy.effectiveFrom)}
+                          </time>
                         </p>
                         <Link {...versionRoute(policy)} className={subAction}>
                           {label('version')}
@@ -992,10 +1021,8 @@ export default function AdminUploadPoliciesPage({
               ))}
             {category && scopedLimit && selectedVersion && view === 'version' && (
               <div className="space-y-4 rounded-xl border bg-card p-4 sm:p-6">
-                {versionMetadata(selectedVersion)}
-                <div className="border-t pt-4">
-                  {valuesSummary(selectedVersion.allowedExtensions, selectedVersion.maxSizeBytes)}
-                </div>
+                {valuesSummary(selectedVersion.allowedExtensions, selectedVersion.maxSizeBytes)}
+                <div className="border-t pt-4">{versionMetadata(selectedVersion)}</div>
                 <div className="flex flex-wrap gap-2">
                   <Link {...categoryRoute(category, 'history')} className={subAction}>
                     {label('history')}
@@ -1070,7 +1097,11 @@ export default function AdminUploadPoliciesPage({
                   {
                     id: 'source',
                     label: label('source'),
-                    render: ({ current }) => label(current ? 'configured' : 'deployment'),
+                    render: ({ current }) => (
+                      <Badge variant={current ? 'secondary' : 'outline'}>
+                        {label(current ? 'configured' : 'deployment')}
+                      </Badge>
+                    ),
                   },
                 ]}
                 actionHeader={label('actions')}

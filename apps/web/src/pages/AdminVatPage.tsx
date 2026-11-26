@@ -21,6 +21,8 @@ import {
   TextCell,
 } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import {
   RecordEditorActions,
   recordEditorField,
@@ -893,7 +895,13 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
               )}
             </div>
           )}
-          {readPending && <LoadingStatus>{label('loading')}</LoadingStatus>}
+          {readPending &&
+            page &&
+            (selectedRecord ? (
+              <LoadingStatus>{label('loading')}</LoadingStatus>
+            ) : (
+              <RecordDetailSkeleton label={label('loading')} layout="payment" />
+            ))}
           {readError && (
             <div role="alert" className="space-y-2">
               <p>{label(rateRead.error ? 'ratesError' : 'overridesError')}</p>
@@ -912,15 +920,30 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
                 aria-label={label('recordWindow')}
                 className="rounded-lg border bg-card p-4 md:p-6"
               >
-                <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+                <dl className="grid gap-4 sm:grid-cols-2">
                   {windowFields.map((field) => (
-                    <div key={field.id}>
+                    <div
+                      key={field.id}
+                      className={field.id === 'percent' ? 'rounded-lg bg-muted/45 p-3' : 'p-3'}
+                    >
                       <dt className="text-sm text-muted-foreground">{field.label}</dt>
-                      <dd className="mt-1 font-medium">{field.render(selectedRecord)}</dd>
+                      <dd
+                        className={
+                          field.id === 'percent'
+                            ? 'mt-1 text-xl font-semibold tabular-nums'
+                            : 'mt-1 font-medium'
+                        }
+                      >
+                        {field.id === 'status' ? (
+                          <Badge variant="secondary">{field.render(selectedRecord)}</Badge>
+                        ) : (
+                          field.render(selectedRecord)
+                        )}
+                      </dd>
                     </div>
                   ))}
                   {linkedRate && (
-                    <div>
+                    <div className="border-t px-3 pt-3 sm:col-span-2">
                       <dt className="text-sm text-muted-foreground">{label('rate')}</dt>
                       <dd className="mt-1">
                         <Link
@@ -1288,7 +1311,9 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
                     error={rateRead.error}
                     empty={!rates.length}
                     retainContent={rates.length > 0}
-                    loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+                    loadingView={
+                      <RecordListSkeleton label={label('loading')} view="card" headings={[]} />
+                    }
                     emptyView={<p>{label('empty')}</p>}
                     errorView={
                       <div role="alert">
@@ -1372,7 +1397,9 @@ export default function AdminVatPage({ workspace }: { workspace?: VatWorkspace }
                     error={overrideRead.error}
                     empty={!overrides.length}
                     retainContent={overrides.length > 0}
-                    loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+                    loadingView={
+                      <RecordListSkeleton label={label('loading')} view="card" headings={[]} />
+                    }
                     emptyView={<p>{label('empty')}</p>}
                     errorView={
                       <div role="alert">

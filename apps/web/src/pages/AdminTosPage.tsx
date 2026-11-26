@@ -16,7 +16,7 @@ import {
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
-import { LoadingStatus, Alert } from '@barghsa/ui';
+import { Alert } from '@barghsa/ui';
 import { adminTosText } from './admin-tos-text.js';
 import {
   RecordEditorActions,
@@ -29,6 +29,7 @@ import { useLocale } from '../hooks/useLocale.js';
 import { Link } from '@tanstack/react-router';
 import {
   Button,
+  Badge,
   Input,
   Label,
   ListRefreshButton,
@@ -45,6 +46,8 @@ import {
   TabsTrigger,
 } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { withCsrf } from '../lib/csrf.js';
 import { useState, useEffect, useLayoutEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { useCatalogueScope } from '../hooks/useCatalogueResource.js';
@@ -871,12 +874,12 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
       <dl className="grid gap-4 rounded-xl border bg-muted/30 p-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <dt className="text-muted-foreground">{text.status}</dt>
-          <dd className="font-medium">
-            {text[viewVersion.status]}
+          <dd className="mt-1 flex flex-wrap gap-2">
+            <Badge variant="outline">{text[viewVersion.status]}</Badge>
             {viewVersion.isActive && (
-              <span className="ms-2 rounded-full bg-success-soft px-2 py-0.5 text-xs text-success">
+              <Badge variant="secondary" className="bg-success-soft text-success">
                 {text.active}
-              </span>
+              </Badge>
             )}
           </dd>
         </div>
@@ -897,7 +900,9 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
             {viewVersion.publishedAt ? text.published : text.created}
           </dt>
           <dd className="font-medium">
-            {time.format(viewVersion.publishedAt ?? viewVersion.createdAt)}
+            <time dateTime={viewVersion.publishedAt ?? viewVersion.createdAt}>
+              {time.format(viewVersion.publishedAt ?? viewVersion.createdAt)}
+            </time>
           </dd>
         </div>
       </dl>
@@ -1042,7 +1047,31 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
           empty={false}
           emptyView={null}
           retainContent={historyAccepted}
-          loadingView={<LoadingStatus>{text.loading}</LoadingStatus>}
+          loadingView={
+            recordRoute ? (
+              <RecordDetailSkeleton label={text.loading} />
+            ) : (
+              <>
+                <div className="md:hidden">
+                  <RecordListSkeleton label={text.loading} view="card" headings={[]} />
+                </div>
+                <div className="hidden md:block">
+                  <RecordListSkeleton
+                    view="table"
+                    label={text.loading}
+                    headings={[
+                      text.version,
+                      text.status,
+                      text.change,
+                      text.published,
+                      text.author,
+                      text.actions,
+                    ]}
+                  />
+                </div>
+              </>
+            )
+          }
           errorView={scope.denied ? <p role="alert">{text.denied}</p> : null}
         >
           {historyAccepted && !scope.denied && (
@@ -1429,15 +1458,16 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
                       id: 'status',
                       label: text.status,
                       render: (v) => (
-                        <span
-                          className={`inline-block px-2 py-0.5 text-xs rounded ${
+                        <Badge
+                          variant="outline"
+                          className={
                             v.status === 'draft'
                               ? 'bg-warning-soft text-warning'
                               : 'bg-success-soft text-success'
-                          }`}
+                          }
                         >
                           {text[v.status]}
-                        </span>
+                        </Badge>
                       ),
                     },
                     {

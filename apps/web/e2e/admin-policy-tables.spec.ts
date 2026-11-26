@@ -196,12 +196,15 @@ for (const locale of ['en', 'fa'] as const) {
     await inspect(page);
     if (locale === 'fa' && info.project.name === 'mobile-safari')
       await products.screenshot({ path: `${screenshotRoot}/vat-card-fa.png` });
-    await page.getByRole('button', { name: label('addRate'), exact: true }).click();
+    expect(reads).toBe(3);
+    await page.getByRole('link', { name: label('addRate'), exact: true }).click();
+    await expect(page).toHaveURL('/admin/vat/rates/new');
     await page.locator('#vat-percent').fill(' 7.25 ');
+    const editorReads = reads;
     await page.setViewportSize({ width: 900, height: 900 });
     await expect(page.locator('#vat-percent')).toHaveValue(' 7.25 ');
     await page.setViewportSize({ width: 390, height: 844 });
-    expect(reads).toBe(3);
+    expect(reads).toBe(editorReads);
     expect(writes).toEqual([]);
     await page
       .getByRole('form', { name: label('editor'), exact: true })
@@ -212,14 +215,16 @@ for (const locale of ['en', 'fa'] as const) {
     await page.setViewportSize({ width: 900, height: 900 });
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(dialog).toHaveCount(1);
-    expect(reads).toBe(3);
+    expect(reads).toBe(editorReads);
     expect(writes).toEqual([]);
     await dialog
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
       .click();
     await expect(dialog).toHaveCount(0);
+    await expect(page).toHaveURL('/admin/vat/rates/saved-rate');
     await expect(page.locator('#vat-percent')).toHaveCount(0);
     expect(writes).toEqual([{ category: 'electricity', rateBasisPoints: 725 }]);
+    await page.locator('main a[href="/admin/vat"]').click();
     await expect(rates.locator(':scope > li')).toHaveCount(3);
     status = 403;
     await page.getByRole('button', { name: label('refresh'), exact: true }).click();
