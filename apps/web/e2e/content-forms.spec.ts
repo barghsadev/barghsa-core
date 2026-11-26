@@ -60,6 +60,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(history).toBeVisible();
       if (operation === 'update') {
         await edit.click();
+        await page.getByRole('tab', { name: text.english, exact: true }).click();
         await english.fill(updated.contentEn);
         await page.clock.install();
         await page.getByRole('button', { name: text.updateDraft, exact: true }).click();
@@ -157,6 +158,7 @@ for (const locale of ['en', 'fa'] as const)
       await page.goto('/admin/tos');
       await expect(page.locator('html')).toHaveClass(dark ? /\bdark\b/ : /^(?!.*\bdark\b)/);
       await page.getByRole('link', { name: text.edit, exact: true }).click();
+      await page.getByRole('tab', { name: text.english, exact: true }).click();
       const editor = page.getByRole('textbox', { name: text.english, exact: true });
       const link = editor.getByRole('link', { name: 'Barghsa help' });
       await expect(link).toHaveAttribute('href', 'https://example.test/help');
@@ -221,6 +223,11 @@ for (const locale of ['en', 'fa'] as const)
         id = page.locator('#admintospage-field-1'),
         fa = form.getByRole('textbox', { name: text.persian, exact: true }),
         en = form.getByRole('textbox', { name: text.english, exact: true });
+      const languages = form.getByRole('tablist', { name: text.draftLanguage });
+      const englishTab = languages.getByRole('tab', { name: text.english, exact: true });
+      const persianTab = languages.getByRole('tab', { name: text.persian, exact: true });
+      await englishTab.click();
+      await expect(fa).toHaveCount(0);
       await en.fill('Retained English terms');
       await form.getByRole('button', { name: text.createDraft, exact: true }).click();
       await expect(id).toBeFocused();
@@ -229,11 +236,16 @@ for (const locale of ['en', 'fa'] as const)
       await id.fill('v2');
       await form.getByRole('button', { name: text.createDraft, exact: true }).click();
       await expect(fa).toBeFocused();
+      await expect(persianTab).toHaveAttribute('aria-selected', 'true');
       await expect(fa).toHaveAttribute('aria-invalid', 'true');
-      await expect(en).toContainText('Retained English terms');
       await fa.fill('شرایط محلی');
+      await persianTab.press('End');
+      await expect(englishTab).toBeFocused();
+      await englishTab.press('Enter');
+      await expect(en).toContainText('Retained English terms');
       await form.getByRole('button', { name: text.createDraft, exact: true }).click();
       await expect(fa).toBeFocused();
+      await expect(persianTab).toHaveAccessibleDescription(text.checkContent);
       await expect(form).not.toContainText('private-untrusted-content');
       expect(termsWrites).toHaveLength(1);
       const errorId = await fa.getAttribute('aria-describedby');
@@ -247,6 +259,7 @@ for (const locale of ['en', 'fa'] as const)
       invalid = false;
       await fa.fill('شرایط اصلاح‌شده');
       await form.getByRole('button', { name: text.createDraft, exact: true }).click();
+      await expect(page).toHaveURL(`/admin/tos/versions/${termsVersion().id}`);
       await expect(form).toHaveCount(0);
       expect(termsWrites).toHaveLength(2);
       await page.route('**/api/admin/contract-templates', (route) =>
@@ -328,7 +341,11 @@ for (const locale of ['en', 'fa'] as const)
     await page.goto('/admin/tos');
     await page.getByRole('link', { name: text.newDraft, exact: true }).click();
     await page.locator('#admintospage-field-1').fill('v2');
+    const persianTab = page.getByRole('tab', { name: text.persian, exact: true });
+    const englishTab = page.getByRole('tab', { name: text.english, exact: true });
+    await persianTab.click();
     await page.getByRole('textbox', { name: text.persian, exact: true }).fill('شرایط');
+    await englishTab.click();
     await page.getByRole('textbox', { name: text.english, exact: true }).fill('Retained terms');
     await page.locator('form button[type=submit]').click();
     await expect(page.locator('form button[type=submit]')).toBeDisabled();
@@ -337,7 +354,9 @@ for (const locale of ['en', 'fa'] as const)
     await page.getByRole('button', { name: text.refresh, exact: true }).click();
     await page.getByRole('button', { name: contentFormText('reset', locale), exact: true }).click();
     await expect(page.locator('#admintospage-field-1')).toHaveValue('');
+    await persianTab.click();
     await expect(page.getByRole('textbox', { name: text.persian, exact: true })).toHaveText('');
+    await englishTab.click();
     await expect(page.getByRole('textbox', { name: text.english, exact: true })).toHaveText('');
     await page.route('**/api/admin/contract-templates', (route) =>
       route.fulfill({ json: [contractTemplate] })

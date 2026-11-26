@@ -120,6 +120,7 @@ for (const locale of ['en', 'fa'] as const) {
     if (locale === 'fa' && info.project.name === 'mobile-safari')
       await card.screenshot({ path: `${screenshotRoot}/terms-card-fa.png` });
     await cards.getByRole('link', { name: text.edit, exact: true }).click();
+    await page.getByRole('tab', { name: text.english, exact: true }).click();
     const raw = page.getByRole('textbox', { name: text.english, exact: true });
     await raw.fill('  Local unpublished terms  ');
     const form = page.locator('form').filter({ has: raw });

@@ -2829,13 +2829,35 @@ for (const locale of ['en', 'fa'])
     await acceptTermsIfRequired();
     await page.getByRole('link', { name: fa ? 'پیش‌نویس جدید' : 'New Draft', exact: true }).click();
     await page.getByLabel(fa ? 'شناسه نسخه' : 'Version ID').fill(versionId);
-    await page
-      .getByRole('textbox', { name: fa ? 'محتوای فارسی' : 'Persian content', exact: true })
-      .fill('شرایط انتشار');
+    const editLanguages = page.getByRole('tablist', {
+      name: fa ? 'زبان پیش‌نویس' : 'Draft language',
+    });
+    const persianTab = editLanguages.getByRole('tab', {
+      name: fa ? 'محتوای فارسی' : 'Persian content',
+    });
+    const englishTab = editLanguages.getByRole('tab', {
+      name: fa ? 'محتوای انگلیسی' : 'English content',
+    });
+    const persian = page.getByRole('textbox', {
+      name: fa ? 'محتوای فارسی' : 'Persian content',
+      exact: true,
+    });
     const english = page.getByRole('textbox', {
       name: fa ? 'محتوای انگلیسی' : 'English content',
       exact: true,
     });
+    const createDraft = page.getByRole('button', {
+      name: fa ? 'ایجاد پیش‌نویس' : 'Create Draft',
+      exact: true,
+    });
+    await persianTab.click();
+    await expect(english).toHaveCount(0);
+    await persian.fill('شرایط انتشار');
+    await expect(persianTab).toHaveAccessibleDescription(fa ? 'متن وارد شده' : 'Text added');
+    await createDraft.click();
+    await expect(englishTab).toHaveAttribute('aria-selected', 'true');
+    await expect(english).toBeFocused();
+    await expect(english).toHaveAttribute('aria-invalid', 'true');
     await english.fill('Published terms');
     await english.focus();
     await english.evaluate((element) => {
@@ -2852,12 +2874,25 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'پررنگ' : 'Bold', exact: true })
       .click();
     await expect(english.locator('strong')).toHaveText('Published terms');
+    await persianTab.click();
+    await expect(persian).toHaveText('شرایط انتشار');
+    await englishTab.click();
+    await expect(english.locator('strong')).toHaveText('Published terms');
+    await createDraft.click();
+    const editDraft = page.getByRole('link', {
+      name: fa ? 'ویرایش پیش‌نویس' : 'Edit Draft',
+      exact: true,
+    });
+    await editDraft.click();
+    await persianTab.click();
+    await expect(persian).toHaveText('شرایط انتشار');
+    await persian.fill('شرایط انتشار نهایی');
+    await englishTab.click();
+    await expect(english.locator('strong')).toHaveText('Published terms');
     await page
-      .getByRole('button', { name: fa ? 'ایجاد پیش‌نویس' : 'Create Draft', exact: true })
+      .getByRole('button', { name: fa ? 'ذخیره پیش‌نویس' : 'Update Draft', exact: true })
       .click();
-    await expect(
-      page.getByRole('link', { name: fa ? 'ویرایش پیش‌نویس' : 'Edit Draft', exact: true })
-    ).toBeVisible();
+    await expect(editDraft).toBeVisible();
     await settleLiveRequests();
     await page.reload();
     await page.getByRole('link', { name: fa ? 'انتشار' : 'Publish', exact: true }).click();
@@ -2898,9 +2933,11 @@ for (const locale of ['en', 'fa'])
       .click();
     await page.getByRole('link', { name: fa ? 'پیش‌نویس جدید' : 'New Draft', exact: true }).click();
     await page.getByLabel(fa ? 'شناسه نسخه' : 'Version ID').fill(versionId);
+    await persianTab.click();
     await page
       .getByRole('textbox', { name: fa ? 'محتوای فارسی' : 'Persian content', exact: true })
       .fill('پیش‌نویس موقت');
+    await englishTab.click();
     await page
       .getByRole('textbox', { name: fa ? 'محتوای انگلیسی' : 'English content', exact: true })
       .fill('Temporary draft');

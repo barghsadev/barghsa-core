@@ -39,6 +39,10 @@ import {
   DialogTitle,
   DateCell,
   TextCell,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
 } from '@barghsa/ui';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { withCsrf } from '../lib/csrf.js';
@@ -54,6 +58,7 @@ import type { FormEvent } from 'react';
 const TosRichText = lazy(() => import('./TosRichText.js'));
 const TosPreview = lazy(() => import('./TosPreview.js'));
 const TosContent = lazy(() => import('../components/TosContent.js'));
+const termsFields = ['versionId', 'contentFa', 'contentEn'] as const;
 
 type MessageKey = keyof ReturnType<typeof adminTosText>;
 class TosUiError extends Error {
@@ -158,7 +163,38 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
   const [versionId] = editor.field('versionId');
   const [contentFa, setContentFa] = editor.field('contentFa');
   const [contentEn, setContentEn] = editor.field('contentEn');
+  const [contentLanguage, setContentLanguage] = useState(locale);
   const [saving, setSaving] = useState(false);
+  const draftLocked = saving || !historyReady || loading || editConflict || uncertainSave;
+  const invalidFocus = useRef<keyof TermsDraft | null>(null);
+  useEffect(() => {
+    if (saving || !invalidFocus.current) return;
+    const field = invalidFocus.current;
+    invalidFocus.current = null;
+    editor.form.setFocus(field);
+  }, [saving, editor.errors, editor.form]);
+
+  const translations = [
+    {
+      language: 'fa',
+      field: 'contentFa',
+      label: text.persian,
+      value: contentFa,
+      change: setContentFa,
+    },
+    {
+      language: 'en',
+      field: 'contentEn',
+      label: text.english,
+      value: contentEn,
+      change: setContentEn,
+    },
+  ] as const;
+
+  function revealField(field: keyof TermsDraft | undefined) {
+    if (field === 'contentFa') setContentLanguage('fa');
+    if (field === 'contentEn') setContentLanguage('en');
+  }
 
   // Publish dialog state
   const [publishVersion, setPublishVersion] = useState<TosVersion | null>(null);
@@ -396,6 +432,7 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
     setEditConflict(false);
     resetTerms(emptyTermsDraft());
     setUncertainSave(false);
+    setContentLanguage(locale);
     setShowEditor(true);
     if (publish) navigateEditor('new');
   }
@@ -413,6 +450,7 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
     setEditConflict(false);
     resetTerms({ versionId: v.versionId, contentFa: v.contentFa, contentEn: v.contentEn });
     setUncertainSave(false);
+    if (editId !== v.id) setContentLanguage(locale);
     setShowEditor(true);
     if (publish) navigateEditor(v.id);
   }
@@ -512,9 +550,17 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
     let requestSent = false;
     try {
       let captured: TermsDraft | undefined;
-      await editor.form.handleSubmit((value) => {
-        captured = value;
-      })();
+      await editor.form.handleSubmit(
+        (value) => {
+          captured = value;
+        },
+        (errors) => {
+          if (!current()) return;
+          const field = termsFields.find((name) => errors[name]);
+          revealField(field);
+          invalidFocus.current = field ?? null;
+        }
+      )();
       if (!current() || !captured) return;
       editor.setValidationPending(false);
       const { versionId, contentFa, contentEn } = captured;
@@ -565,7 +611,10 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
             'fields' in body.error
               ? body.error.fields
               : null;
-          if (Array.isArray(fields) && applyFieldErrors(fields)) return;
+          if (Array.isArray(fields) && applyFieldErrors(fields)) {
+            revealField(termsFields.find((name) => fields.includes(name)));
+            return;
+          }
         }
         throw new TosUiError('saveFailed', status);
       }
@@ -1017,10 +1066,7 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
                         {formText('reset')}
                       </Button>
                     )}
-                    <fieldset
-                      disabled={saving || !historyReady || loading || editConflict || uncertainSave}
-                      className="m-0 min-w-0 space-y-3 border-0 p-0"
-                    >
+                    <fieldset className="m-0 min-w-0 space-y-3 border-0 p-0">
                       <div className={recordEditorField}>
                         <Label htmlFor="admintospage-field-1">
                           {text.versionId}{' '}
@@ -1041,7 +1087,7 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
                           maxLength={50}
                           required
                           aria-required="true"
-                          disabled={!!editId || saving}
+                          disabled={!!editId || draftLocked}
                         />
                         {editor.errors.versionId && (
                           <p
@@ -1055,60 +1101,71 @@ export default function AdminTosPage({ workspace }: { workspace?: TosWorkspace }
                       </div>
 
                       <Suspense fallback={<p role="status">{text.editorLoading}</p>}>
-                        <div className="grid min-w-0 items-start gap-4 border-t pt-3 lg:grid-cols-2">
-                          <div className="min-w-0 space-y-2">
-                            <p className="text-sm font-semibold">
-                              {text.persian} <span aria-hidden="true">*</span>
-                            </p>
-                            <TosRichText
-                              text={text}
-                              key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-fa`}
-                              binding={editor.bind('contentFa')}
-                              value={contentFa}
-                              onChange={setContentFa}
-                              label={text.persian}
-                              language="fa"
-                              disabled={
-                                saving || !historyReady || loading || editConflict || uncertainSave
-                              }
-                            />
-                            {editor.errors.contentFa && (
-                              <p
-                                id={editor.errorId('contentFa')}
-                                role="alert"
-                                className="text-sm text-destructive"
+                        <Tabs
+                          value={contentLanguage}
+                          onValueChange={setContentLanguage}
+                          className="min-w-0 gap-3 border-t pt-3"
+                        >
+                          <TabsList
+                            aria-label={text.draftLanguage}
+                            variant="line"
+                            className="grid w-full grid-cols-2 gap-1 group-data-[orientation=horizontal]/tabs:h-auto sm:w-fit"
+                          >
+                            {translations.map(({ language, field, label, value }) => (
+                              <TabsTrigger
+                                key={language}
+                                value={language}
+                                aria-label={label}
+                                aria-describedby={`terms-${language}-status`}
+                                className="h-auto min-h-11 flex-col gap-0 px-2 py-1 text-xs sm:min-w-36 sm:text-sm"
                               >
-                                {editor.errors.contentFa.message}
-                              </p>
-                            )}
-                          </div>
-                          <div className="min-w-0 space-y-2">
-                            <p className="text-sm font-semibold">
-                              {text.english} <span aria-hidden="true">*</span>
-                            </p>
-                            <TosRichText
-                              text={text}
-                              key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-en`}
-                              binding={editor.bind('contentEn')}
-                              value={contentEn}
-                              onChange={setContentEn}
-                              label={text.english}
-                              language="en"
-                              disabled={
-                                saving || !historyReady || loading || editConflict || uncertainSave
-                              }
-                            />
-                            {editor.errors.contentEn && (
-                              <p
-                                id={editor.errorId('contentEn')}
-                                role="alert"
-                                className="text-sm text-destructive"
-                              >
-                                {editor.errors.contentEn.message}
-                              </p>
-                            )}
-                          </div>
-                        </div>
+                                {label}
+                                <span
+                                  id={`terms-${language}-status`}
+                                  className={
+                                    editor.errors[field]
+                                      ? 'text-destructive'
+                                      : 'text-muted-foreground'
+                                  }
+                                >
+                                  {editor.errors[field]
+                                    ? text.checkContent
+                                    : value.trim()
+                                      ? text.contentAdded
+                                      : text.contentMissing}
+                                </span>
+                              </TabsTrigger>
+                            ))}
+                          </TabsList>
+                          {translations.map(({ language, field, label, value, change }) => (
+                            <TabsContent
+                              key={language}
+                              value={language}
+                              keepMounted
+                              className="min-w-0 space-y-2"
+                            >
+                              <TosRichText
+                                text={text}
+                                key={`${editId ?? 'new'}-${editRevision}-${editorGeneration.current}-${language}`}
+                                binding={editor.bind(field)}
+                                value={value}
+                                onChange={change}
+                                label={label}
+                                language={language}
+                                disabled={draftLocked}
+                              />
+                              {editor.errors[field] && (
+                                <p
+                                  id={editor.errorId(field)}
+                                  role="alert"
+                                  className="text-sm text-destructive"
+                                >
+                                  {editor.errors[field].message}
+                                </p>
+                              )}
+                            </TabsContent>
+                          ))}
+                        </Tabs>
                       </Suspense>
                     </fieldset>
 

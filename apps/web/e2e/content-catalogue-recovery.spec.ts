@@ -26,13 +26,17 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(main.getByRole('heading', { level: 1 })).toContainText(row.versionId);
     await main.getByRole('link', { name: text.editDraft, exact: true }).click();
     await expect(page).toHaveURL(path + '/edit');
-    const english = page.getByRole('textbox', { name: text.english, exact: true });
-    await expect(english).toContainText(row.contentEn);
+    const draft = page.getByRole('textbox', {
+      name: locale === 'fa' ? text.persian : text.english,
+      exact: true,
+    });
+    const originalText = locale === 'fa' ? row.contentFa : row.contentEn;
+    await expect(draft).toContainText(originalText);
     await page.reload();
-    await expect(english).toContainText(row.contentEn);
+    await expect(draft).toContainText(originalText);
     await page.goBack();
     await expect(main.getByRole('heading', { level: 1 })).toContainText(row.versionId);
-    await expect(english).toHaveCount(0);
+    await expect(draft).toHaveCount(0);
     expect(collectionReads).toBe(0);
     await main.getByRole('link', { name: text.history, exact: true }).click();
     await expect(page.getByRole('list', { name: text.history, exact: true })).toBeVisible();
@@ -111,6 +115,8 @@ for (const domain of ['templates', 'terms'] as const)
             exact: true,
           })
           .click();
+        if (domain === 'terms')
+          await page.getByRole('tab', { name: tos.english, exact: true }).click();
         const input =
           domain === 'templates'
             ? page.locator('#notification-template-bodyTemplate')

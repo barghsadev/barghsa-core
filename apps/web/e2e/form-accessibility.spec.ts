@@ -3457,9 +3457,19 @@ for (const locale of ['en', 'fa']) {
       name: locale === 'fa' ? 'محتوای انگلیسی' : 'English content',
       exact: true,
     });
+    const persianTab = page.getByRole('tab', {
+      name: locale === 'fa' ? 'محتوای فارسی' : 'Persian content',
+      exact: true,
+    });
+    const englishTab = page.getByRole('tab', {
+      name: locale === 'fa' ? 'محتوای انگلیسی' : 'English content',
+      exact: true,
+    });
+    await persianTab.click();
     await expect(persian).toHaveAttribute('dir', 'rtl');
-    await expect(english).toHaveAttribute('dir', 'ltr');
     await persian.fill('شرایط جدید');
+    await englishTab.click();
+    await expect(english).toHaveAttribute('dir', 'ltr');
     await english.fill('Important terms');
     // Linux WebKit can map Control+A to the start of the line.
     await expect
@@ -3500,7 +3510,9 @@ for (const locale of ['en', 'fa']) {
       });
       await expect(page.getByLabel(locale === 'fa' ? 'شناسه نسخه' : 'Version ID')).toBeDisabled();
       await expect(english).toHaveAttribute('contenteditable', 'false');
+      await persianTab.click();
       await expect(persian).toHaveAttribute('contenteditable', 'false');
+      await englishTab.click();
       await expect(
         page.getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
       ).toBeDisabled();
@@ -3545,9 +3557,13 @@ test('TOS editor preserves unsupported existing formatting when editing another 
   await page.getByRole('link', { name: 'Edit', exact: true }).click();
   const source = page.getByRole('textbox', { name: 'English content', exact: true });
   const rich = page.getByRole('textbox', { name: 'Persian content', exact: true });
+  const englishTab = page.getByRole('tab', { name: 'English content', exact: true });
+  const persianTab = page.getByRole('tab', { name: 'Persian content', exact: true });
   await expect(page.locator('#admintospage-field-1')).toHaveAttribute('aria-required', 'true');
   await expect(source).toHaveAttribute('aria-required', 'true');
+  await persianTab.click();
   await expect(rich).toHaveAttribute('aria-required', 'true');
+  await englishTab.click();
   await expect(source).toHaveAccessibleDescription(/\S/);
   await expect(source).toHaveValue(original);
   await source.fill('');
@@ -3556,7 +3572,9 @@ test('TOS editor preserves unsupported existing formatting when editing another 
   await expect(source).toHaveAccessibleDescription(/\S/);
   expect(saved).toBeUndefined();
   await source.fill(original);
+  await persianTab.click();
   await rich.fill('شرایط جدید');
+  await englishTab.click();
   await page.getByRole('button', { name: 'Update Draft', exact: true }).click();
   await expect.poll(() => saved?.contentEn).toBe(original);
   await expect(page.getByRole('textbox', { name: 'English content', exact: true })).toHaveValue(
@@ -3702,7 +3720,9 @@ test('TOS creation does not report malformed success as a saved draft', async ({
   await page.goto('/admin/tos');
   await page.getByRole('link', { name: 'New Draft', exact: true }).click();
   await page.getByLabel('Version ID').fill('uncertain-save');
+  await page.getByRole('tab', { name: 'Persian content', exact: true }).click();
   await page.getByRole('textbox', { name: 'Persian content', exact: true }).fill('Terms');
+  await page.getByRole('tab', { name: 'English content', exact: true }).click();
   await page.getByRole('textbox', { name: 'English content', exact: true }).fill('Unsaved terms');
   await page.getByRole('button', { name: 'Create Draft', exact: true }).click();
   await expect(page.getByRole('alert').filter({ hasText: 'could not be confirmed' })).toBeVisible();
@@ -3747,7 +3767,9 @@ test('TOS draft creation conflicts retain local content until explicit replaceme
   await page.goto('/admin/tos');
   await page.getByRole('link', { name: 'New Draft', exact: true }).click();
   await page.getByLabel('Version ID').fill('local-v1');
+  await page.getByRole('tab', { name: 'Persian content', exact: true }).click();
   await page.getByRole('textbox', { name: 'Persian content', exact: true }).fill('شرایط من');
+  await page.getByRole('tab', { name: 'English content', exact: true }).click();
   const english = page.getByRole('textbox', { name: 'English content', exact: true });
   await english.fill('Keep my local text');
   await page.getByRole('button', { name: 'Create Draft', exact: true }).click();
