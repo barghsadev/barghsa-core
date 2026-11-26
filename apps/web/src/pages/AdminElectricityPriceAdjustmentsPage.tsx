@@ -21,6 +21,7 @@ import {
 } from '../components/StickyRecordEditorActions.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
+import { useOwnedContractRead } from '../hooks/useOwnedContractRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { OrderWalletBalance } from '../components/OrderWalletBalance.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
@@ -72,8 +73,10 @@ import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
 import { withCsrf } from '../lib/csrf.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { staffOrderId } from '../lib/staff-order-list-query.js';
+import type { ContractSummary } from '../lib/contracts.js';
 import {
   percentToBps,
+  priceContractNumber,
   priceEffectiveFrom,
   parseStaffPriceState,
   boundPriceReview,
@@ -159,6 +162,7 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
   const locale = useLocale();
   const actor = useAccountUser();
   const canBrowseContracts = useNavigation()?.paths.includes('/admin/contracts');
+  const revision = useProfileContextRevision();
   const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
   const formCopy = (key: string) => appText(`electricity.priceForm.${key}`, locale);
   const initial =
@@ -170,8 +174,10 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
     routeContractId ?? (queries ? (queries.query.filters.contractId ?? '') : localContractId)
   ).toLowerCase();
   const scope = JSON.stringify([actor, contractId]);
-  const currentScope = useRef(scope);
-  currentScope.current = scope;
+  const lookupScope = JSON.stringify([scope, !!canBrowseContracts]);
+  const currentScope = useRef(lookupScope);
+  currentScope.current = lookupScope;
+  const readContract = useOwnedContractRead(actor, revision, undefined, lookupScope);
   const currentActor = useRef(actor);
   currentActor.current = actor;
   const owner = useRef<WorkspaceOwner | null>(null);
@@ -185,8 +191,11 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
     async () => {
       const raw = form.getValues('contractId');
       const schemas = await import('../lib/electricity-price-form-schemas.js');
-      return currentScope.current === scope && form.getValues('contractId') === raw
-        ? schemas.priceContractSchema(formCopy('contractInvalid'))
+      return currentScope.current === lookupScope && form.getValues('contractId') === raw
+        ? schemas.priceContractSchema(
+            formCopy(canBrowseContracts ? 'referenceInvalid' : 'contractInvalid'),
+            canBrowseContracts
+          )
         : schemas.inactivePriceContractSchema;
     },
     {
@@ -290,7 +299,7 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
             onSubmit={(event) => {
               event.preventDefault();
               if (
-                currentScope.current !== scope ||
+                currentScope.current !== lookupScope ||
                 owner.current?.stage === 'picker' ||
                 (control.current?.actor === actor && control.current.blocked()) ||
                 selectionLocked
@@ -307,16 +316,53 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
               owner.current = token;
               notify();
               const raw = form.getValues('contractId');
+              const current = () =>
+                currentScope.current === lookupScope &&
+                owner.current === token &&
+                form.getValues('contractId') === raw;
               void form
-                .handleSubmit((draft) => {
-                  if (
-                    currentScope.current !== scope ||
-                    owner.current !== token ||
-                    form.getValues('contractId') !== raw ||
-                    draft.contractId !== raw
-                  )
-                    return;
-                  const selected = staffOrderId(draft.contractId.trim()).toLowerCase();
+                .handleSubmit(async (draft) => {
+                  if (!current() || draft.contractId !== raw) return;
+                  let selected = staffOrderId(raw.trim()).toLowerCase();
+                  if (!selected) {
+                    const number = canBrowseContracts ? priceContractNumber(raw) : '';
+                    if (!number) return;
+                    const query = new URLSearchParams({
+                      serviceType: 'electricity',
+                      contractNumber: number,
+                      limit: '2',
+                    });
+                    let error = 'contractNotFound';
+                    try {
+                      const result = await readContract<{
+                        contracts: ContractSummary[];
+                        nextBefore: string | null;
+                      }>(`/api/admin/contracts?${query}`);
+                      if (
+                        result?.nextBefore === null &&
+                        Array.isArray(result.contracts) &&
+                        result.contracts.length === 1
+                      ) {
+                        const contract = result.contracts[0];
+                        if (
+                          contract?.serviceType === 'electricity' &&
+                          contract.contractNumber === number
+                        )
+                          selected = staffOrderId(contract.id).toLowerCase();
+                      }
+                    } catch {
+                      error = 'lookupFailed';
+                    }
+                    if (!current()) return;
+                    if (!selected) {
+                      form.setError(
+                        'contractId',
+                        { type: 'server', message: formCopy(error) },
+                        { shouldFocus: true }
+                      );
+                      return;
+                    }
+                  }
                   if (onOpenContract) onOpenContract(selected);
                   else if (queries) queries.setQuery({ filters: { contractId: selected } });
                   else setLocalContractId(selected);
@@ -329,28 +375,6 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
                 });
             }}
           >
-            {canBrowseContracts && (
-              <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-b bg-muted/30 px-4 py-4 sm:px-6">
-                <div className="min-w-0 space-y-1">
-                  <h2 className="flex items-center gap-2 text-base font-semibold">
-                    <FileSearch className="size-4 shrink-0 text-primary" aria-hidden="true" />
-                    {formCopy('findContract')}
-                  </h2>
-                  <p className="text-sm text-muted-foreground">{formCopy('browseHelp')}</p>
-                </div>
-                <Link
-                  to="/admin/contracts"
-                  search={{ serviceType: 'electricity' }}
-                  className={buttonVariants()}
-                  aria-disabled={selectionLocked || form.formState.isSubmitting || undefined}
-                  onClick={(event) => {
-                    if (navigationBlocked() || form.formState.isSubmitting) event.preventDefault();
-                  }}
-                >
-                  {formCopy('browseContracts')}
-                </Link>
-              </div>
-            )}
             <FormField
               control={form.control}
               name="contractId"
@@ -359,8 +383,12 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
                   id="electricity-price-contract"
                   className="min-w-0 space-y-2 px-4 py-4 sm:px-6"
                 >
-                  <FormLabel>{copy('contractId')}</FormLabel>
-                  <FormDescription>{formCopy('contractHelp')}</FormDescription>
+                  <FormLabel>
+                    {canBrowseContracts ? formCopy('contractReference') : copy('contractId')}
+                  </FormLabel>
+                  <FormDescription>
+                    {formCopy(canBrowseContracts ? 'referenceHelp' : 'contractHelp')}
+                  </FormDescription>
                   <div className="grid min-w-0 items-start gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
                     <FormControl>
                       <Input
@@ -375,7 +403,6 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
                     </FormControl>
                     <Button
                       type="submit"
-                      variant={canBrowseContracts ? 'outline' : 'default'}
                       disabled={selectionLocked || form.formState.isSubmitting}
                       aria-busy={form.formState.isSubmitting || undefined}
                     >
@@ -397,6 +424,22 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
                 {formCopy('validationUnavailable')}
               </p>
             ) : null}
+            {canBrowseContracts && (
+              <div className="border-t px-4 py-1 sm:px-6">
+                <Link
+                  to="/admin/contracts"
+                  search={{ serviceType: 'electricity' }}
+                  className="touch-action inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                  aria-disabled={selectionLocked || form.formState.isSubmitting || undefined}
+                  onClick={(event) => {
+                    if (navigationBlocked() || form.formState.isSubmitting) event.preventDefault();
+                  }}
+                >
+                  <FileSearch className="size-4 shrink-0" aria-hidden="true" />
+                  {formCopy('browseContracts')}
+                </Link>
+              </div>
+            )}
           </form>
         </Form>
       )}

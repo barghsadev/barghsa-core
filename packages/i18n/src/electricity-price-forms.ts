@@ -7,7 +7,11 @@ export const fa: I18nDictionary = {
   'electricity.priceForm.contractInvalid': 'شناسه معتبر قرارداد را وارد کنید.',
   'electricity.priceForm.contractHelp': 'شناسه کامل را از جزئیات قرارداد وارد کنید.',
   'electricity.priceForm.findContract': 'قرارداد برق را پیدا کنید',
-  'electricity.priceForm.browseHelp': 'در فهرست قراردادها، تعدیل قیمت قرارداد موردنظر را باز کنید.',
+  'electricity.priceForm.contractReference': 'شماره یا شناسه قرارداد برق',
+  'electricity.priceForm.referenceHelp': 'شماره روی قرارداد یا شناسه کامل آن را وارد کنید.',
+  'electricity.priceForm.referenceInvalid': 'شماره معتبر یا شناسه کامل قرارداد را وارد کنید.',
+  'electricity.priceForm.contractNotFound': 'قرارداد برقی با این شماره پیدا نشد.',
+  'electricity.priceForm.lookupFailed': 'جست‌وجوی قرارداد انجام نشد. دوباره تلاش کنید.',
   'electricity.priceForm.browseContracts': 'مشاهده قراردادهای برق',
   'electricity.priceForm.percentageInvalid':
     'درصد غیرصفر با حداکثر دو رقم اعشار وارد کنید. کاهش باید کمتر از ۱۰۰ درصد باشد.',
@@ -26,8 +30,11 @@ export const englishMessages = {
   'electricity.priceForm.contractInvalid': 'Enter a valid contract ID.',
   'electricity.priceForm.contractHelp': 'Enter the full ID from the contract details.',
   'electricity.priceForm.findContract': 'Find an electricity contract',
-  'electricity.priceForm.browseHelp':
-    'Open a contract’s price adjustments from the contracts list.',
+  'electricity.priceForm.contractReference': 'Electricity contract number or ID',
+  'electricity.priceForm.referenceHelp': 'Enter the number shown on the contract or its full ID.',
+  'electricity.priceForm.referenceInvalid': 'Enter a valid contract number or full ID.',
+  'electricity.priceForm.contractNotFound': 'No electricity contract matches this number.',
+  'electricity.priceForm.lookupFailed': 'Could not find the contract. Try again.',
   'electricity.priceForm.browseContracts': 'Browse electricity contracts',
   'electricity.priceForm.percentageInvalid':
     'Enter a nonzero percentage with at most two decimals. A decrease must be less than 100%.',
@@ -71,7 +78,7 @@ export const adminFA: I18nDictionary = {
   'admin.electricityPrice.source.price_adjustment': 'تعدیل قیمت قبلی',
   'admin.electricityPrice.dateZone': 'زمان ورودی به تقویم میلادی در منطقه زمانی حساب',
   'admin.electricityPrice.description':
-    'پیشنهاد قیمت آینده را برای مشتری منتشر کنید، سپس فاکتور افزایش یا بستانکاری را صادر کنید.',
+    'قرارداد را برای بررسی تعدیل‌های قیمت یا ثبت پیشنهاد جدید باز کنید.',
   'admin.electricityPrice.contractId': 'شناسه قرارداد برق',
   'admin.electricityPrice.open': 'باز کردن قرارداد',
   'admin.electricityPrice.contractHistory': 'تعدیل‌های قیمت قرارداد',
@@ -154,7 +161,7 @@ export const adminEN: I18nDictionary = {
   'admin.electricityPrice.source.price_adjustment': 'Earlier price adjustment',
   'admin.electricityPrice.dateZone': 'Gregorian input in the account timezone',
   'admin.electricityPrice.description':
-    'Publish a future price proposal for the customer, then issue the charge or credit.',
+    'Open a contract to review price adjustments or start a proposal.',
   'admin.electricityPrice.contractId': 'Electricity contract ID',
   'admin.electricityPrice.open': 'Open contract',
   'admin.electricityPrice.contractHistory': 'Contract price adjustments',

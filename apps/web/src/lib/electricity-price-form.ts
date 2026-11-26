@@ -8,6 +8,7 @@ import {
   sameElectricityPriceCalculation,
   type ElectricityPriceAdjustmentRow,
 } from './electricity-price-adjustment-row.js';
+import { normalizeProfileDigits } from './profile-digits.js';
 export { increaseEffectiveFrom as priceEffectiveFrom } from './electricity-increase-decision-form.js';
 
 export type PriceDraft = {
@@ -17,6 +18,13 @@ export type PriceDraft = {
   basis: string;
 };
 export type PriceContractDraft = { contractId: string };
+export function priceContractNumber(value: string): string {
+  const number = normalizeProfileDigits(value.trim());
+  return /^[1-9][0-9]{0,18}$/.test(number) && BigInt(number) <= 9_223_372_036_854_775_807n
+    ? number
+    : '';
+}
+
 export interface StaffPriceState {
   contractId: string;
   profileId: string;

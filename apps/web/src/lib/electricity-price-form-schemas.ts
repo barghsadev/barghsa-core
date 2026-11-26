@@ -1,6 +1,7 @@
 import { z } from 'zod/mini';
 import {
   percentToBps,
+  priceContractNumber,
   priceEffectiveFrom,
   type PriceDraft,
   type PriceContractDraft,
@@ -8,10 +9,13 @@ import {
 import { staffOrderId } from './staff-order-list-query.js';
 export const inactivePriceSchema = z.custom<PriceDraft>();
 export const inactivePriceContractSchema = z.custom<PriceContractDraft>();
-export function priceContractSchema(message: string) {
+export function priceContractSchema(message: string, allowNumber = false) {
   return z.custom<PriceContractDraft>().check((ctx) => {
     const value = ctx.value?.contractId;
-    if (typeof value !== 'string' || !staffOrderId(value.trim()))
+    if (
+      typeof value !== 'string' ||
+      (!staffOrderId(value.trim()) && !(allowNumber && priceContractNumber(value)))
+    )
       ctx.issues.push({ code: 'custom', input: value, path: ['contractId'], message });
   });
 }

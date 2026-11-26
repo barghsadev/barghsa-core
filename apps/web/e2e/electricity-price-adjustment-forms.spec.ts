@@ -82,10 +82,61 @@ test('staff can open a price adjustment history from the filtered contracts list
   await page.goto(lookup);
   const picker = page.locator('#electricity-price-contract');
   await expect(browse).toHaveCount(0);
+  await picker.fill('120482');
+  await picker.press('Enter');
+  await focusedError(picker);
   await picker.fill(contractId);
   await picker.press('Enter');
   await expect(page).toHaveURL(`${lookup}/${contractId}`);
   expect(types).toEqual(['electricity']);
+  expect(state.writes).toEqual([]);
+});
+
+test('staff can look up an exact electricity contract number in Farsi', async ({ page }) => {
+  const state = await setupElectricityPriceAdjustmentForms(page, 'fa', false);
+  state.auth.context = 'staff';
+  const lookup = '/admin/electricity-price-adjustments';
+  const references: string[] = [];
+  await page.route('**/api/admin/contracts?*', (route) => {
+    const query = new URL(route.request().url()).searchParams;
+    expect(route.request().method()).toBe('GET');
+    expect(query.get('serviceType')).toBe('electricity');
+    const number = query.get('contractNumber')!;
+    references.push(number);
+    return route.fulfill({
+      json: {
+        contracts: [{ id: contractId, contractNumber: '120482', serviceType: 'electricity' }],
+        nextBefore: null,
+      },
+    });
+  });
+
+  await page.goto(lookup);
+  const picker = page.locator('#electricity-price-contract');
+  await expect(picker).toHaveAccessibleName(
+    priceFormText('electricity.priceForm.contractReference', 'fa')
+  );
+  await picker.fill('۹۲۲۳۳۷۲۰۳۶۸۵۴۷۷۵۸۰۸');
+  await picker.press('Enter');
+  await focusedError(picker);
+  expect(references).toEqual([]);
+  await picker.fill('۱۲۰۴۸۳');
+  await picker.press('Enter');
+  await focusedError(picker);
+  await expect(
+    page.getByText(priceFormText('electricity.priceForm.contractNotFound', 'fa'))
+  ).toBeVisible();
+  await expect(page).toHaveURL(lookup);
+  await expect(picker).toHaveValue('۱۲۰۴۸۳');
+  expect(state.staffReads).toBe(0);
+
+  await picker.fill(' ١٢٠٤٨٢ ');
+  await picker.press('Enter');
+  await expect(page).toHaveURL(`${lookup}/${contractId}`);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    adminText('admin.electricityPrice.contractHistory', 'fa')
+  );
+  expect(references).toEqual(['120483', '120482']);
   expect(state.writes).toEqual([]);
 });
 
