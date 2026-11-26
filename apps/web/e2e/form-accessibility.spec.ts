@@ -1969,7 +1969,7 @@ for (const locale of ['en', 'fa']) {
   }) => {
     await tosShell(page, locale);
     await page.goto('/admin/geography');
-    const search = page.getByRole('textbox', {
+    const search = page.getByRole('searchbox', {
       name: locale === 'fa' ? 'جستجوی استان‌ها' : 'Search provinces',
       exact: true,
     });

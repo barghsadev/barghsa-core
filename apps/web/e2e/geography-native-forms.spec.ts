@@ -144,8 +144,10 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(rows).toHaveAttribute('aria-invalid', 'true');
     await expect(rows).toBeFocused();
     expect(writes).toHaveLength(0);
+    const firstRow = '  شهر نخست\t First City  ';
     const invalidRow = 'شهر دوم\tFirst City';
-    await rows.fill(`شهر نخست\tFirst City\n\n${invalidRow}`);
+    const rawDraft = `${firstRow}\n\n${invalidRow}`;
+    await rows.fill(rawDraft);
     const preview = dialog.getByRole('table');
     await expect(preview).toContainText(t('importDuplicate'));
     const editRow = preview.getByRole('button', {
@@ -154,20 +156,36 @@ for (const locale of ['en', 'fa'] as const) {
     });
     await expect(editRow).toHaveAccessibleDescription(t('importDuplicate'));
     await editRow.click();
-    await expect(rows).toBeFocused();
-    expect(
-      await rows.evaluate((element: HTMLTextAreaElement) =>
-        element.value.slice(element.selectionStart, element.selectionEnd)
-      )
-    ).toBe(invalidRow);
+    const correction = preview.getByRole('group', {
+      name: t('importEditRow').replace('{row}', new Intl.NumberFormat(locale).format(3)),
+    });
+    const cityName = correction.getByLabel(t('nameEn'), { exact: true });
+    await expect(cityName).toBeFocused();
+    await expect(cityName).toHaveValue('First City');
+    await expect(cityName).toHaveAccessibleDescription(t('importDuplicate'));
+    const submit = dialog.getByRole('button', { name: t('importCities'), exact: true });
+    await expect(submit).toBeDisabled();
+    await cityName.fill('Discarded correction');
+    await cityName.press('Escape');
+    await expect(editRow).toBeFocused();
+    await expect(rows).toHaveValue(rawDraft);
+    await editRow.click();
+    await cityName.fill('Second City 2');
+    await cityName.press('Enter');
+    await expect(cityName).toBeFocused();
+    await expect(cityName).toHaveAccessibleDescription(t('invalidEn'));
     expect(writes).toHaveLength(0);
     expect(
       await preview.evaluate((table) => table.scrollWidth <= table.parentElement!.clientWidth + 1)
     ).toBe(true);
-    await dialog.getByRole('button', { name: t('importCities'), exact: true }).click();
+    await cityName.fill(' Second City ');
+    await correction.getByRole('button', { name: t('importApplyRow'), exact: true }).click();
+    await expect(correction).toHaveCount(0);
+    await expect(submit).toBeFocused();
+    const draft = `${firstRow}\n\nشهر دوم\t Second City `;
+    await expect(rows).toHaveValue(draft);
+    await expect(preview).toContainText('Second City');
     expect(writes).toHaveLength(0);
-    const draft = '  شهر نخست\t First City  \n شهر دوم\t Second City  ';
-    await rows.fill(draft);
     await dialog.evaluate((element) => {
       element.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
       element.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));

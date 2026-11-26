@@ -4,7 +4,16 @@ import {
   Pencil as TablePencilIcon,
 } from 'lucide-react';
 import { TableActionIcon } from '../components/TableActionIcon.js';
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+} from 'react';
 import { Link } from '@tanstack/react-router';
 import {
   LoadingStatus,
@@ -20,6 +29,7 @@ import {
   DialogTitle,
   Field,
   FieldLabel,
+  Input,
   ListPage,
   ListRefreshButton,
   ListSearchInput,
@@ -46,7 +56,11 @@ import {
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
-import { inspectCityRows, parseCityRows } from '../lib/geography-form-values.js';
+import {
+  inspectCityRows,
+  parseCityRows,
+  validGeographyName,
+} from '../lib/geography-form-values.js';
 import {
   CatalogueFieldFeedback,
   CatalogueSaveButton,
@@ -57,6 +71,110 @@ import {
   keepRecordFieldVisible,
   recordEditorFormSurface,
 } from '../components/StickyRecordEditorActions.js';
+
+type CityImportRow = NonNullable<ReturnType<typeof inspectCityRows>>[number];
+
+function CityImportRowEditor({
+  row,
+  title,
+  t,
+  onApply,
+  onCancel,
+}: {
+  row: CityImportRow;
+  title: string;
+  t: (key: GeographyTextKey) => string;
+  onApply: (nameFa: string, nameEn: string) => GeographyTextKey | null;
+  onCancel: () => void;
+}) {
+  const [nameFa, setNameFa] = useState(row.nameFa);
+  const [nameEn, setNameEn] = useState(row.nameEn);
+  const [issue, setIssue] = useState<GeographyTextKey | null>(row.issue);
+  const persian = useRef<HTMLInputElement>(null);
+  const english = useRef<HTMLInputElement>(null);
+  const invalidEn = issue === 'invalidEn' || issue === 'importDuplicate';
+  useEffect(() => {
+    const editEnglish =
+      row.issue === 'invalidEn' ||
+      row.issue === 'importDuplicate' ||
+      (row.issue === 'importColumns' && validGeographyName(row.nameFa, 'nameFa') && !row.nameEn);
+    (editEnglish ? english : persian).current?.focus();
+  }, [row.issue, row.nameFa, row.nameEn]);
+
+  function apply() {
+    const nextIssue = onApply(nameFa, nameEn);
+    if (!nextIssue) return;
+    setIssue(nextIssue);
+    (nextIssue === 'invalidEn' || nextIssue === 'importDuplicate'
+      ? english
+      : persian
+    ).current?.focus();
+  }
+
+  function handleNameKey(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.nativeEvent.isComposing) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      onCancel();
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      apply();
+    }
+  }
+
+  return (
+    <fieldset className="min-w-0 space-y-2 rounded-lg border bg-card px-3 pb-3 pt-1">
+      <legend className="px-1 text-sm font-semibold">{title}</legend>
+      <div className="grid min-w-0 gap-2 sm:grid-cols-2">
+        <Field className="min-w-0 gap-1">
+          <FieldLabel htmlFor="city-row-name-fa">{t('nameFa')}</FieldLabel>
+          <Input
+            id="city-row-name-fa"
+            ref={persian}
+            dir="rtl"
+            lang="fa"
+            value={nameFa}
+            maxLength={100}
+            aria-required="true"
+            aria-invalid={issue === 'invalidFa' || undefined}
+            aria-describedby={issue === 'invalidFa' ? 'city-row-issue' : undefined}
+            onKeyDown={handleNameKey}
+            onChange={(event) => setNameFa(event.target.value)}
+          />
+        </Field>
+        <Field className="min-w-0 gap-1">
+          <FieldLabel htmlFor="city-row-name-en">{t('nameEn')}</FieldLabel>
+          <Input
+            id="city-row-name-en"
+            ref={english}
+            dir="ltr"
+            lang="en"
+            value={nameEn}
+            maxLength={100}
+            aria-required="true"
+            aria-invalid={invalidEn || undefined}
+            aria-describedby={invalidEn ? 'city-row-issue' : undefined}
+            onKeyDown={handleNameKey}
+            onChange={(event) => setNameEn(event.target.value)}
+          />
+        </Field>
+      </div>
+      {issue && (
+        <p id="city-row-issue" role="status" className="text-xs text-destructive sm:text-sm">
+          {t(issue)}
+        </p>
+      )}
+      <div className="flex flex-wrap gap-2">
+        <Button type="button" size="sm" onClick={apply}>
+          {t('importApplyRow')}
+        </Button>
+        <Button type="button" size="sm" variant="ghost" onClick={onCancel}>
+          {t('cancel')}
+        </Button>
+      </div>
+    </fieldset>
+  );
+}
 
 export function ImportCitiesDialog({
   province,
@@ -80,7 +198,9 @@ export function ImportCitiesDialog({
   const locale = useLocale();
   const { number } = useNumberFormatting(locale);
   const t = (key: GeographyTextKey) => geographyText(key, locale);
+  const importForm = useRef<HTMLFormElement>(null);
   const field = useRef<HTMLTextAreaElement>(null);
+  const [editingRow, setEditingRow] = useState<number | null>(null);
   const native = useWizardForm<{ rows: string }>(
     async () =>
       (await import('../lib/geography-form-schemas.js')).cityImportSchema(t('importInvalid')),
@@ -129,18 +249,34 @@ export function ImportCitiesDialog({
   }, [busy, native.errors, native.form]);
   const preview = useMemo(() => inspectCityRows(text), [text]);
   const issues = preview?.filter((row) => row.issue).length ?? 0;
-  function editRow(row: number) {
-    const input = field.current;
-    if (!input || inFlight.current) return;
-    const lines = input.value.split('\n');
-    const start = lines.slice(0, row - 1).reduce((offset, line) => offset + line.length + 1, 0);
-    input.focus();
-    input.setSelectionRange(start, start + (lines[row - 1]?.length ?? 0));
-    input.scrollTop = (row - 1) * Number.parseFloat(getComputedStyle(input).lineHeight);
+  function closeRow(focusRow?: number) {
+    setEditingRow(null);
+    requestAnimationFrame(() => {
+      const form = importForm.current;
+      if (!form) return;
+      const selector = focusRow ? `[data-city-import-line="${focusRow}"]` : 'button[type="submit"]';
+      const target = form.querySelector<HTMLButtonElement>(selector);
+      (target && !target.disabled ? target : field.current)?.focus();
+    });
+  }
+  function applyRow(row: number, nameFa: string, nameEn: string): GeographyTextKey | null {
+    if (!validGeographyName(nameFa, 'nameFa') || nameFa.includes('\t')) return 'invalidFa';
+    if (!validGeographyName(nameEn, 'nameEn') || nameEn.includes('\t')) return 'invalidEn';
+    const lines = text.split('\n');
+    lines[row - 1] = `${nameFa}\t${nameEn}`;
+    const next = lines.join('\n');
+    const nextRows = inspectCityRows(next);
+    const updated = nextRows?.find((candidate) => candidate.number === row);
+    if (!nextRows || !updated) return 'importInvalid';
+    if (updated.issue) return updated.issue;
+    setRejectedRows(false);
+    setText(next);
+    closeRow(nextRows.find((candidate) => candidate.issue)?.number);
+    return null;
   }
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (busy || inFlight.current || !readReady) return;
+    if (busy || inFlight.current || !readReady || editingRow !== null) return;
     inFlight.current = true;
     const generation = latest.current.generation;
     native.setValidationPending(true);
@@ -201,12 +337,13 @@ export function ImportCitiesDialog({
       <CatalogueSaveButton
         label={t(busy ? 'saving' : 'importCities')}
         pending={busy}
-        disabled={busy || !readReady}
+        disabled={busy || !readReady || editingRow !== null}
       />
     </>
   );
   const form = (
     <form
+      ref={importForm}
       onSubmit={submit}
       noValidate
       aria-label={t('importCities')}
@@ -267,6 +404,7 @@ export function ImportCitiesDialog({
             className="max-h-56 min-h-24 overflow-auto leading-6 whitespace-pre [tab-size:4]"
             maxLength={41000}
             disabled={busy}
+            readOnly={editingRow !== null}
             onBlur={() => {
               if (!native.isPending()) native.bind('rows').onBlur();
             }}
@@ -339,46 +477,60 @@ export function ImportCitiesDialog({
                 </tr>
               </thead>
               <tbody>
-                {preview.map((row) => (
-                  <Fragment key={row.number}>
-                    <tr className="border-t align-top [overflow-wrap:anywhere]">
-                      <th scope="row" className="p-2 text-start font-medium tabular-nums">
-                        {number(row.number)}
-                      </th>
-                      <td className="p-2">
-                        <bdi lang="fa" dir="rtl">
-                          {row.nameFa.slice(0, 100) || '—'}
-                        </bdi>
-                      </td>
-                      <td className="p-2">
-                        <bdi lang="en" dir="ltr">
-                          {row.nameEn.slice(0, 100) || '—'}
-                        </bdi>
+                {preview.map((row) =>
+                  editingRow === row.number ? (
+                    <tr key={row.number} className="border-t bg-muted/40">
+                      <td colSpan={3} className="p-2">
+                        <CityImportRowEditor
+                          row={row}
+                          title={t('importEditRow').replace('{row}', number(row.number))}
+                          t={t}
+                          onApply={(nameFa, nameEn) => applyRow(row.number, nameFa, nameEn)}
+                          onCancel={() => closeRow(row.number)}
+                        />
                       </td>
                     </tr>
-                    {row.issue && (
-                      <tr className="bg-destructive/5">
-                        <td colSpan={3} className="px-2 text-destructive">
-                          <div className="flex flex-wrap items-center justify-between gap-x-2 text-xs sm:text-sm">
-                            <span id={`city-import-issue-${row.number}`}>{t(row.issue)}</span>
-                            <Button
-                              type="button"
-                              variant="link"
-                              size="sm"
-                              className="min-h-10 px-1"
-                              disabled={busy}
-                              aria-describedby={`city-import-issue-${row.number}`}
-                              data-city-import-line={row.number}
-                              onClick={() => editRow(row.number)}
-                            >
-                              {t('importEditRow').replace('{row}', number(row.number))}
-                            </Button>
-                          </div>
+                  ) : (
+                    <Fragment key={row.number}>
+                      <tr className="border-t align-top [overflow-wrap:anywhere]">
+                        <th scope="row" className="p-2 text-start font-medium tabular-nums">
+                          {number(row.number)}
+                        </th>
+                        <td className="p-2">
+                          <bdi lang="fa" dir="rtl">
+                            {row.nameFa.slice(0, 100) || '—'}
+                          </bdi>
+                        </td>
+                        <td className="p-2">
+                          <bdi lang="en" dir="ltr">
+                            {row.nameEn.slice(0, 100) || '—'}
+                          </bdi>
                         </td>
                       </tr>
-                    )}
-                  </Fragment>
-                ))}
+                      {row.issue && (
+                        <tr className="bg-destructive/5">
+                          <td colSpan={3} className="px-2 text-destructive">
+                            <div className="flex flex-wrap items-center justify-between gap-x-2 text-xs sm:text-sm">
+                              <span id={`city-import-issue-${row.number}`}>{t(row.issue)}</span>
+                              <Button
+                                type="button"
+                                variant="link"
+                                size="sm"
+                                className="min-h-10 px-1"
+                                disabled={busy || editingRow !== null}
+                                aria-describedby={`city-import-issue-${row.number}`}
+                                data-city-import-line={row.number}
+                                onClick={() => setEditingRow(row.number)}
+                              >
+                                {t('importEditRow').replace('{row}', number(row.number))}
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
+                  )
+                )}
               </tbody>
             </table>
           </div>
