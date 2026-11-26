@@ -1194,133 +1194,172 @@ function OwnedKnowledgeBasesPage({
                   {kind === 'knowledge-bases' && (
                     <>
                       <RecordEditorSection title={copy('sourceSettings')}>
-                        <div className={recordEditorGrid}>
-                          <div className={recordEditorField}>
-                            <Label htmlFor="kb-audience">{label('audience')}</Label>
-                            <NativeSelect
-                              {...form.bind('audience')}
-                              id="kb-audience"
-                              aria-required="true"
-                              aria-describedby={
-                                form.errors.audience
-                                  ? `${form.errorId('audience')} kb-audience-help`
-                                  : 'kb-audience-help'
-                              }
-                              className="w-full"
-                              value={draft.audience}
-                              onChange={(event) =>
-                                form.field('audience')[1](event.target.value as Draft['audience'])
-                              }
-                            >
-                              {(['admin', 'staff', 'customer', 'public'] as const).map((value) => (
-                                <option key={value} value={value}>
-                                  {label(`audience${value}`)}
-                                </option>
-                              ))}
-                            </NativeSelect>
-                            <CatalogueFieldFeedback
-                              compact
-                              id={form.errorId('audience')}
-                              error={form.errors.audience}
-                              message={messages.audience}
-                            />
-                            <p id="kb-audience-help" className="text-xs text-muted-foreground">
-                              {label('audienceHelp')}
-                            </p>
-                          </div>
-                          <div className={recordEditorField}>
-                            <Label htmlFor="kb-source-type">{label('sourceType')}</Label>
-                            <NativeSelect
-                              {...form.bind('sourceType')}
-                              id="kb-source-type"
-                              aria-required="true"
-                              className="w-full"
-                              value={draft.sourceType}
-                              onChange={(event) => {
-                                form.field('sourceType')[1](
-                                  event.target.value as Draft['sourceType']
-                                );
-                                form.form.clearErrors('sourceUrl');
-                              }}
-                            >
-                              <option value="document">{label('sourceDocument')}</option>
-                              <option value="url">{label('sourceUrl')}</option>
-                              <option value="api">{label('sourceApi')}</option>
-                            </NativeSelect>
-                            <CatalogueFieldFeedback
-                              compact
-                              id={form.errorId('sourceType')}
-                              error={form.errors.sourceType}
-                              message={messages.sourceType}
-                            />
+                        <div className="@container">
+                          <div className="grid items-start gap-3 @min-[36rem]:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] @min-[36rem]:gap-6">
+                            <div className="min-w-0 space-y-2.5">
+                              <fieldset
+                                role="radiogroup"
+                                aria-labelledby="kb-source-type"
+                                aria-required="true"
+                                aria-describedby={
+                                  [
+                                    form.errors.sourceType && form.errorId('sourceType'),
+                                    draft.sourceType === 'document' && 'kb-document-source-help',
+                                  ]
+                                    .filter(Boolean)
+                                    .join(' ') || undefined
+                                }
+                                className="min-w-0 space-y-2"
+                              >
+                                <legend
+                                  id="kb-source-type"
+                                  className="mb-1 text-sm leading-none font-medium"
+                                >
+                                  {label('sourceType')}
+                                </legend>
+                                <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                                  {(
+                                    [
+                                      ['document', 'sourceFilesChoice'],
+                                      ['url', 'sourceWebChoice'],
+                                      ['api', 'sourceApiChoice'],
+                                    ] as const
+                                  ).map(([type, title]) => (
+                                    <label
+                                      key={type}
+                                      className="flex min-h-11 min-w-0 cursor-pointer flex-col items-center justify-center gap-x-1.5 gap-y-1 rounded-lg border px-1.5 py-2 text-center text-sm leading-tight font-medium hover:bg-muted/40 has-checked:border-primary/45 has-checked:bg-primary/5 has-disabled:cursor-not-allowed has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring sm:flex-row"
+                                    >
+                                      <input
+                                        {...form.bind('sourceType')}
+                                        id={`kb-source-choice-${type}`}
+                                        type="radio"
+                                        value={type}
+                                        checked={draft.sourceType === type}
+                                        className="size-3.5 shrink-0 accent-primary"
+                                        onChange={() => {
+                                          form.field('sourceType')[1](type);
+                                          form.form.clearErrors('sourceUrl');
+                                        }}
+                                      />
+                                      <span>{copy(title)}</span>
+                                    </label>
+                                  ))}
+                                </div>
+                                {form.errors.sourceType && (
+                                  <CatalogueFieldFeedback
+                                    compact
+                                    id={form.errorId('sourceType')}
+                                    error={form.errors.sourceType}
+                                    message={messages.sourceType}
+                                  />
+                                )}
+                                {draft.sourceType === 'document' && (
+                                  <p
+                                    id="kb-document-source-help"
+                                    className="text-xs text-muted-foreground"
+                                  >
+                                    {copy('sourceFilesNext')}
+                                  </p>
+                                )}
+                              </fieldset>
+                              {draft.sourceType !== 'document' && (
+                                <div className={recordEditorField}>
+                                  {draft.sourceType === 'url' ? (
+                                    <>
+                                      <FormField
+                                        control={form.form.control}
+                                        name="sourceUrl"
+                                        render={({ field }) => (
+                                          <RecordListField
+                                            id="kb-source-url"
+                                            label={copy('sourceWebAddresses')}
+                                            value={field.value}
+                                            focusRef={field.ref}
+                                            onBlur={form.bind('sourceUrl').onBlur}
+                                            onChange={form.field('sourceUrl')[1]}
+                                            limit={20}
+                                            rowHelp={copy('urlRowsHelp')}
+                                            bulkHelp={label('sourceUrlsHelp')}
+                                            descriptionId={
+                                              form.errors.sourceUrl
+                                                ? form.errorId('sourceUrl')
+                                                : undefined
+                                            }
+                                            invalid={!!form.errors.sourceUrl}
+                                            urls
+                                          />
+                                        )}
+                                      />
+                                      <CatalogueFieldFeedback
+                                        compact
+                                        id={form.errorId('sourceUrl')}
+                                        error={form.errors.sourceUrl}
+                                        message={messages.sourceUrl}
+                                      />
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Label htmlFor="kb-source-url">{label('sourceApi')}</Label>
+                                      <Input
+                                        {...form.bind('sourceUrl')}
+                                        id="kb-source-url"
+                                        type="url"
+                                        dir="ltr"
+                                        required
+                                        aria-required="true"
+                                        aria-describedby={form.errorId('sourceUrl')}
+                                        maxLength={2048}
+                                        placeholder="https://"
+                                        value={draft.sourceUrl}
+                                        onChange={(event) =>
+                                          form.field('sourceUrl')[1](
+                                            event.target.value as Draft['sourceUrl']
+                                          )
+                                        }
+                                      />
+                                      <CatalogueFieldFeedback
+                                        compact
+                                        id={form.errorId('sourceUrl')}
+                                        error={form.errors.sourceUrl}
+                                        message={messages.sourceUrl}
+                                        hint={copy('apiSourceHint')}
+                                      />
+                                    </>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                            <div className={recordEditorField}>
+                              <Label htmlFor="kb-audience">{label('audience')}</Label>
+                              <NativeSelect
+                                {...form.bind('audience')}
+                                id="kb-audience"
+                                aria-required="true"
+                                aria-describedby={form.errorId('audience')}
+                                className="w-full"
+                                value={draft.audience}
+                                onChange={(event) =>
+                                  form.field('audience')[1](event.target.value as Draft['audience'])
+                                }
+                              >
+                                {(['admin', 'staff', 'customer', 'public'] as const).map(
+                                  (value) => (
+                                    <option key={value} value={value}>
+                                      {label(`audience${value}`)}
+                                    </option>
+                                  )
+                                )}
+                              </NativeSelect>
+                              <CatalogueFieldFeedback
+                                compact
+                                id={form.errorId('audience')}
+                                error={form.errors.audience}
+                                message={messages.audience}
+                                hint={label('audienceHelp')}
+                              />
+                            </div>
                           </div>
                         </div>
-                        {draft.sourceType !== 'document' && (
-                          <div className={recordEditorField}>
-                            {draft.sourceType === 'url' ? (
-                              <>
-                                <FormField
-                                  control={form.form.control}
-                                  name="sourceUrl"
-                                  render={({ field }) => (
-                                    <RecordListField
-                                      id="kb-source-url"
-                                      label={label('sourceAddress')}
-                                      value={field.value}
-                                      focusRef={field.ref}
-                                      onBlur={form.bind('sourceUrl').onBlur}
-                                      onChange={form.field('sourceUrl')[1]}
-                                      limit={20}
-                                      rowHelp={copy('urlRowsHelp')}
-                                      bulkHelp={label('sourceUrlsHelp')}
-                                      descriptionId={
-                                        form.errors.sourceUrl
-                                          ? form.errorId('sourceUrl')
-                                          : undefined
-                                      }
-                                      invalid={!!form.errors.sourceUrl}
-                                      urls
-                                    />
-                                  )}
-                                />
-                                <CatalogueFieldFeedback
-                                  compact
-                                  id={form.errorId('sourceUrl')}
-                                  error={form.errors.sourceUrl}
-                                  message={messages.sourceUrl}
-                                />
-                              </>
-                            ) : (
-                              <>
-                                <Label htmlFor="kb-source-url">{label('sourceAddress')}</Label>
-                                <Input
-                                  {...form.bind('sourceUrl')}
-                                  id="kb-source-url"
-                                  type="url"
-                                  dir="ltr"
-                                  required
-                                  aria-required="true"
-                                  aria-describedby={form.errorId('sourceUrl')}
-                                  maxLength={2048}
-                                  placeholder="https://"
-                                  value={draft.sourceUrl}
-                                  onChange={(event) =>
-                                    form.field('sourceUrl')[1](
-                                      event.target.value as Draft['sourceUrl']
-                                    )
-                                  }
-                                />
-                                <CatalogueFieldFeedback
-                                  compact
-                                  id={form.errorId('sourceUrl')}
-                                  error={form.errors.sourceUrl}
-                                  message={messages.sourceUrl}
-                                  hint={copy('apiSourceHint')}
-                                />
-                              </>
-                            )}
-                          </div>
-                        )}
                       </RecordEditorSection>
                       <RecordEditorSection title={copy('indexing')}>
                         <div className={recordEditorField}>

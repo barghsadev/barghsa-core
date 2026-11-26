@@ -104,7 +104,7 @@ for (const locale of ['en', 'fa'] as const)
         size,
         overlap,
         page.locator('#kb-audience'),
-        page.locator('#kb-source-type'),
+        page.getByRole('radiogroup', { name: kbText('sourceType'), exact: true }),
       ]) {
         await expect(field).toHaveAccessibleName(/\S/);
         await expect(field).toHaveAttribute('aria-required', 'true');
@@ -137,8 +137,17 @@ for (const locale of ['en', 'fa'] as const)
       await expect(size).toBeFocused();
       await size.fill(locale === 'fa' ? '۸۰۰' : '800');
       await overlap.fill(locale === 'fa' ? '١٠٠' : '100');
-      await page.locator('#kb-source-type').selectOption('api');
+      const files = page.getByRole('radio', { name: copy('sourceFilesChoice'), exact: true });
+      const webPages = page.getByRole('radio', { name: copy('sourceWebChoice'), exact: true });
+      const api = page.getByRole('radio', { name: copy('sourceApiChoice'), exact: true });
+      await expect(webPages).toBeChecked();
+      await expect(source).toHaveValue(knowledgeBase.sourceConfig.urls[0]!);
+      await expect(files).toBeVisible();
+      await expect(webPages).toBeVisible();
+      await expect(api).toBeVisible();
+      await api.check();
       await expect(source).toHaveAttribute('aria-required', 'true');
+      await expect(source).toHaveAccessibleName(kbText('sourceApi'));
       await expect(source).toHaveAccessibleDescription(copy('apiSourceHint'));
       await source.fill('https://one.example.test https://two.example.test');
       await button(kbText('save')).click();
@@ -146,9 +155,12 @@ for (const locale of ['en', 'fa'] as const)
       await expect(source).toHaveAttribute('aria-invalid', 'true');
       await expect(source).toHaveAccessibleDescription(copy('sourceUrl'));
       await page.screenshot({ path: info.outputPath('knowledge-source-url-feedback.png') });
-      await page.locator('#kb-source-type').selectOption('document');
+      await files.check();
       await expect(source).toHaveCount(0);
-      await page.locator('#kb-source-type').selectOption('url');
+      await expect(page.locator('#kb-document-source-help')).toHaveText(copy('sourceFilesNext'));
+      await files.press('ArrowDown');
+      await expect(webPages).toBeChecked();
+      await expect(source).toHaveAccessibleName(copy('sourceWebAddresses'));
       await expect(source).toHaveAttribute('aria-required', 'true');
       await expect(source).toHaveAccessibleDescription(copy('urlRowsHelp'));
       await source.fill('');

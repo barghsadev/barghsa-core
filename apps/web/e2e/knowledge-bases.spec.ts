@@ -58,9 +58,14 @@ for (const locale of ['en', 'fa'])
     const audience = page.getByLabel(fa ? 'مخاطب پایگاه دانش' : 'Knowledge-base audience');
     await expect(audience).toHaveValue('admin');
     await audience.selectOption('public');
-    await page.getByLabel(fa ? 'نوع منبع' : 'Source type').selectOption('url');
+    await page
+      .getByRole('radio', {
+        name: knowledgePolicyFormText('sourceWebChoice', fa ? 'fa' : 'en'),
+        exact: true,
+      })
+      .check();
     const firstAddress = page.getByLabel(
-      fa ? 'نشانی امن منبع (HTTPS)' : 'Secure source address (HTTPS)',
+      knowledgePolicyFormText('sourceWebAddresses', fa ? 'fa' : 'en'),
       { exact: true }
     );
     await firstAddress.fill('https://example.org/guide');
