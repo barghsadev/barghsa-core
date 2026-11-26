@@ -3,8 +3,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '../lib/query-keys.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import { Button } from '@barghsa/ui';
+import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import { Badge, Button } from '@barghsa/ui';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-crm';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
@@ -213,24 +214,127 @@ function OwnedCrmProfileRecords({
     const translated = t(key, locale);
     return translated === key ? t('crm.records.unknown', locale) : translated;
   }
-  const headers =
+  const copy = (key: string) => t(`crm.records.${key}`, locale);
+  const title = t(
+    kind === 'agents' ? 'crm.profile.tab.agentInvites' : 'crm.profile.tab.verificationHistory',
+    locale
+  );
+  const columns: { id: string; label: string; render: (row: Item) => ReactNode }[] =
     kind === 'agents'
-      ? ['profile', 'contact', 'role', 'type', 'status', 'date', 'expires']
-      : ['event', 'actor', 'before', 'after', 'reason', 'date'];
+      ? [
+          {
+            id: 'contact',
+            label: copy('contact'),
+            render: (row) =>
+              'kind' in row && (
+                <div className="space-y-1">
+                  <bdi className="wrap-anywhere">{row.username ?? '—'}</bdi>
+                  <p className="text-xs font-normal text-muted-foreground">{row.profileTitle}</p>
+                </div>
+              ),
+          },
+          {
+            id: 'role',
+            label: copy('role'),
+            render: (row) =>
+              'kind' in row && (
+                <div className="space-y-1">
+                  <p>{label('role', row.role)}</p>
+                  <p className="text-xs text-muted-foreground">{label('type', row.kind)}</p>
+                </div>
+              ),
+          },
+          {
+            id: 'status',
+            label: copy('status'),
+            render: (row) =>
+              'kind' in row && (
+                <Badge variant={row.status === 'Active' ? 'success' : 'outline'}>
+                  {label('status', row.status)}
+                </Badge>
+              ),
+          },
+          {
+            id: 'date',
+            label: copy('date'),
+            render: (row) =>
+              'kind' in row && (
+                <div className="space-y-1">
+                  <time dateTime={row.createdAt}>{time.format(row.createdAt)}</time>
+                  {row.expiresAt && (
+                    <p className="text-xs text-muted-foreground">
+                      {copy('expires')}{' '}
+                      <time dateTime={row.expiresAt}>{time.format(row.expiresAt)}</time>
+                    </p>
+                  )}
+                </div>
+              ),
+          },
+        ]
+      : [
+          {
+            id: 'event',
+            label: copy('event'),
+            render: (row) =>
+              !('kind' in row) && (
+                <div className="space-y-1">
+                  <p>{label('event', row.event)}</p>
+                  <bdi className="wrap-anywhere text-xs font-normal text-muted-foreground">
+                    {row.actor}
+                  </bdi>
+                </div>
+              ),
+          },
+          {
+            id: 'status',
+            label: copy('status'),
+            render: (row) =>
+              !('kind' in row) && (
+                <dl className="space-y-1">
+                  <div>
+                    <dt className="text-xs text-muted-foreground">{copy('before')}</dt>
+                    <dd>{label('status', row.previousStatus)}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-xs text-muted-foreground">{copy('after')}</dt>
+                    <dd>{label('status', row.newStatus)}</dd>
+                  </div>
+                </dl>
+              ),
+          },
+          {
+            id: 'reason',
+            label: copy('reason'),
+            render: (row) =>
+              !('kind' in row) && (
+                <p dir="auto" className="whitespace-pre-wrap wrap-anywhere">
+                  {row.reason ?? '—'}
+                </p>
+              ),
+          },
+          {
+            id: 'date',
+            label: copy('date'),
+            render: (row) => <time dateTime={row.createdAt}>{time.format(row.createdAt)}</time>,
+          },
+        ];
   return (
-    <section
-      className="space-y-3"
-      aria-label={t(
-        kind === 'agents' ? 'crm.profile.tab.agentInvites' : 'crm.profile.tab.verificationHistory',
-        locale
-      )}
-    >
+    <section className="space-y-3" aria-label={title}>
       <div className="flex justify-end">
         <Button variant="outline" disabled={busy} onClick={() => void load()}>
           {t('crm.records.refresh', locale)}
         </Button>
       </div>
-      {busy && <p role="status">{t('crm.records.loading', locale)}</p>}
+      {busy &&
+        (page?.items.length ? (
+          <p role="status">{copy('loading')}</p>
+        ) : (
+          <RecordListSkeleton
+            label={copy('loading')}
+            view="card"
+            headings={columns.map((column) => column.label)}
+          />
+        ))}
       {error && (
         <div role="alert">
           <p>{t('crm.records.error', locale)}</p>
@@ -241,57 +345,21 @@ function OwnedCrmProfileRecords({
       )}
       {page && !page.items.length && <p>{t('crm.records.empty', locale)}</p>}
       {!!page?.items.length && (
-        <div className="overflow-x-auto rounded border">
-          <table className="w-full text-start text-sm">
-            <caption className="sr-only">
-              {t(
-                kind === 'agents'
-                  ? 'crm.profile.tab.agentInvites'
-                  : 'crm.profile.tab.verificationHistory',
-                locale
-              )}
-            </caption>
-            <thead>
-              <tr>
-                {headers.map((header) => (
-                  <th key={header} scope="col" className="p-3 text-start">
-                    {t(`crm.records.${header}`, locale)}
-                  </th>
+        <ul className="grid gap-3 xl:grid-cols-2" aria-label={title}>
+          {page.items.map((row) => (
+            <li key={row.id} className="space-y-3 rounded-xl border bg-card p-4 text-sm">
+              <div className="font-semibold">{columns[0]?.render(row)}</div>
+              <dl className="space-y-3 border-t pt-3">
+                {columns.slice(1).map((column) => (
+                  <div key={column.id}>
+                    <dt className="text-xs text-muted-foreground">{column.label}</dt>
+                    <dd>{column.render(row)}</dd>
+                  </div>
                 ))}
-              </tr>
-            </thead>
-            <tbody>
-              {page.items.map((row) => (
-                <tr key={row.id} className="border-t align-top">
-                  {'kind' in row ? (
-                    <>
-                      <td className="p-3">{row.profileTitle}</td>
-                      <td className="p-3">
-                        <bdi>{row.username ?? '—'}</bdi>
-                      </td>
-                      <td className="p-3">{label('role', row.role)}</td>
-                      <td className="p-3">{label('type', row.kind)}</td>
-                      <td className="p-3">{label('status', row.status)}</td>
-                      <td className="p-3 whitespace-nowrap">{time.format(row.createdAt)}</td>
-                      <td className="p-3 whitespace-nowrap">{time.format(row.expiresAt)}</td>
-                    </>
-                  ) : (
-                    <>
-                      <td className="p-3">{label('event', row.event)}</td>
-                      <td className="p-3">
-                        <bdi>{row.actor}</bdi>
-                      </td>
-                      <td className="p-3">{label('status', row.previousStatus)}</td>
-                      <td className="p-3">{label('status', row.newStatus)}</td>
-                      <td className="p-3 whitespace-pre-wrap">{row.reason ?? '—'}</td>
-                      <td className="p-3 whitespace-nowrap">{time.format(row.createdAt)}</td>
-                    </>
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </dl>
+            </li>
+          ))}
+        </ul>
       )}
       {page?.nextCursor && !error && (
         <Button variant="outline" disabled={busy} onClick={() => void load(page.nextCursor!)}>

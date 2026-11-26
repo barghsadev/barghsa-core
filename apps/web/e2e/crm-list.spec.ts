@@ -323,7 +323,7 @@ for (const locale of ['fa', 'en'])
           table = main.getByRole('table');
         await expect(table).toBeVisible();
         expect(customerProfileChecks).toBe(0);
-        await expect(table.getByRole('columnheader')).toHaveCount(6);
+        await expect(table.getByRole('columnheader')).toHaveCount(5);
         await expect(
           table.getByRole('rowheader', { name: user.username, exact: true })
         ).toBeVisible();
@@ -332,7 +332,12 @@ for (const locale of ['fa', 'en'])
           .filter({ has: page.getByRole('rowheader', { name: user.username, exact: true }) });
         await expect(types).toContainText(locale === 'fa' ? 'حقیقی' : 'Individual');
         await expect(types).toContainText(locale === 'fa' ? 'حقوقی' : 'Legal');
-        await expect(types.locator('svg')).toHaveCount(2);
+        await expect(
+          types.getByText(locale === 'fa' ? 'حقیقی' : 'Individual', { exact: true }).locator('svg')
+        ).toHaveCount(1);
+        await expect(
+          types.getByText(locale === 'fa' ? 'حقوقی' : 'Legal', { exact: true }).locator('svg')
+        ).toHaveCount(1);
         await expect(
           table
             .getByRole('row')

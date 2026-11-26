@@ -11,7 +11,7 @@ import { useSearch } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/crm';
 import { t as workspaceText } from '@barghsa/i18n/workspace';
 import {
-  LoadingStatus,
+  Badge,
   Button,
   CardListView,
   Label,
@@ -24,6 +24,7 @@ import {
   datePickerCalendarDate,
   datePickerDayBounds,
 } from '@barghsa/ui';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { useTimezone } from '../hooks/useTimezone.js';
 import { useLocale } from '../hooks/useLocale.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
@@ -47,10 +48,9 @@ const emptyFilters = {
 };
 const columns = [
   ['username', 'username'],
-  ['', 'type'],
+  ['', 'verification'],
   ['createdAt', 'registered'],
   ['lastLogin', 'lastLogin'],
-  ['', 'verification'],
   ['profileCount', 'profiles'],
 ] as const;
 export default function CrmProfileList(props: { query?: ListQueryBinding } = {}) {
@@ -388,14 +388,15 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
       </div>
     );
   }
-  const verification = (user: User) =>
-    label(
-      user.hasVerifiedProfile
-        ? 'VERIFIED'
-        : user.profiles.some((profile) => profile.status === 'PENDING_VERIFICATION')
-          ? 'PENDING'
-          : 'UNVERIFIED'
+  const verification = (user: User) => {
+    const verified = user.hasVerifiedProfile;
+    const pending = user.profiles.some((profile) => profile.status === 'PENDING_VERIFICATION');
+    return (
+      <Badge variant={verified ? 'success' : pending ? 'secondary' : 'outline'}>
+        {label(verified ? 'VERIFIED' : pending ? 'PENDING' : 'UNVERIFIED')}
+      </Badge>
     );
+  };
   function toggleProfiles(user: User, id: string) {
     return (
       <Button
@@ -624,7 +625,13 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
             error={error}
             empty={!result?.users.length}
             retainContent={!!result?.users.length}
-            loadingView={<LoadingStatus>{t('crm.list.loading', locale)}</LoadingStatus>}
+            loadingView={
+              <RecordListSkeleton
+                label={label('loading')}
+                view={compact ? 'card' : 'table'}
+                headings={columns.map(([, name]) => label(name))}
+              />
+            }
             emptyView={preference.status === 'ready' ? <p>{t('crm.list.empty', locale)}</p> : null}
             errorView={
               <div role="alert">
@@ -648,14 +655,16 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
                       const id = 'profiles-card-' + encodeURIComponent(user.userId);
                       return (
                         <div className="space-y-3 [overflow-wrap:anywhere]">
-                          <h2 className="font-semibold" dir="auto">
-                            {user.username}
-                          </h2>
-                          <dl className="space-y-2 text-sm">
-                            <div>
-                              <dt className="font-medium">{label('type')}</dt>
-                              <dd>{types(user)}</dd>
+                          <div className="flex flex-wrap items-start justify-between gap-2">
+                            <div className="min-w-0 space-y-1">
+                              <h2 className="font-semibold" dir="auto">
+                                {user.username}
+                              </h2>
+                              <div className="text-xs text-muted-foreground">{types(user)}</div>
                             </div>
+                            {verification(user)}
+                          </div>
+                          <dl className="grid grid-cols-2 gap-3 border-t pt-3 text-sm">
                             <div>
                               <dt className="font-medium">{label('registered')}</dt>
                               <dd>{date(user.registrationDate)}</dd>
@@ -663,10 +672,6 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
                             <div>
                               <dt className="font-medium">{label('lastLogin')}</dt>
                               <dd>{date(user.lastLogin)}</dd>
-                            </div>
-                            <div>
-                              <dt className="font-medium">{label('verification')}</dt>
-                              <dd>{verification(user)}</dd>
                             </div>
                           </dl>
                           {toggleProfiles(user, id)}
@@ -719,10 +724,14 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
                                   {user.username}
                                 </span>
                               </th>
-                              <td className="p-3">{types(user)}</td>
+                              <td className="p-3">
+                                <div className="space-y-1">
+                                  {verification(user)}
+                                  <div className="text-xs text-muted-foreground">{types(user)}</div>
+                                </div>
+                              </td>
                               <td className="p-3">{date(user.registrationDate)}</td>
                               <td className="p-3">{date(user.lastLogin)}</td>
-                              <td className="p-3">{verification(user)}</td>
                               <td data-table-actions="" className="p-3">
                                 <div className="flex items-center justify-end gap-2">
                                   <span aria-hidden="true" className="tabular-nums">
@@ -734,7 +743,7 @@ function OwnedCrmProfileList({ query }: { query?: ListQueryBinding } = {}) {
                             </tr>
                             {expanded[user.userId] && (
                               <tr className="border-b">
-                                <td colSpan={6} className="p-3">
+                                <td colSpan={columns.length} className="p-3">
                                   <div className="sticky start-0 w-fit max-w-[calc(100vw-4rem)]">
                                     {profileLinks(user, id)}
                                   </div>

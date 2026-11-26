@@ -29,7 +29,7 @@ import { CrmProfileRecords } from '../components/CrmProfileRecords.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
-import { LoadingStatus, Button, Label, Textarea, buttonVariants, inputVariants } from '@barghsa/ui';
+import { Button, Label, Skeleton, Textarea, buttonVariants, inputVariants } from '@barghsa/ui';
 import { useState, useCallback, useEffect, useId, useRef, type ReactNode } from 'react';
 import { useBlocker, useParams, useNavigate, Link } from '@tanstack/react-router';
 import { Lock } from 'lucide-react';
@@ -630,11 +630,12 @@ function CrmProfileDetailContent({
   if (loading) {
     return (
       <>
-        <h1 className="text-2xl font-bold">{t('crm.profile.title', locale)}</h1>
-        <div className="flex items-center justify-center min-h-[300px]">
-          <LoadingStatus className="text-muted-foreground">
-            {t('crm.profile.loading', locale)}
-          </LoadingStatus>
+        <h1 className="sr-only">{t('crm.profile.title', locale)}</h1>
+        <div role="status" aria-label={t('crm.profile.loading', locale)} className="space-y-4">
+          <span className="sr-only">{t('crm.profile.loading', locale)}</span>
+          <Skeleton className="h-32 rounded-xl" />
+          <Skeleton className="h-11 rounded-lg" />
+          <Skeleton className="h-36 rounded-xl" />
         </div>
       </>
     );
@@ -1032,66 +1033,67 @@ function CrmProfileDetailContent({
   return (
     <div dir={locale === 'fa' ? 'rtl' : undefined}>
       {time.notice}
-      {/* Breadcrumb / Header */}
-      <div className="mb-6">
+      <header className="mb-5 space-y-3">
         <Link
           to="/admin/crm/"
-          className="touch-action text-blue-700 dark:text-blue-300 hover:underline text-sm"
+          className="touch-action inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
         >
           {t('crm.profile.backToUsers', locale)}
         </Link>
-        <div className="mt-2 flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-bold [overflow-wrap:anywhere]">
-            <bdi>{displayName}</bdi>
-          </h1>
-          <span
-            className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusBadgeClass(profile.archived ? 'ARCHIVED' : profile.status)}`}
-          >
-            {profile.archived
-              ? t('crm.profile.archived', locale)
-              : t(`crm.list.${profile.status}`, locale)}
-          </span>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-foreground">
-            {getProfileTypeLabel(profile.profileType, locale)}
-          </span>
-        </div>
-        <p className="mt-1 text-sm text-muted-foreground [overflow-wrap:anywhere]">
-          <bdi dir="ltr">{user.username}</bdi>
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {data.viewerPermissions?.canEdit && !profile.archived && (
-            <Link
-              to="/admin/crm/profiles/$profileId/$operation"
-              params={{ profileId, operation: 'edit' }}
-              className={buttonVariants()}
+        <div className="rounded-xl border bg-card p-4 sm:p-6">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            <h1 className="text-2xl leading-tight font-semibold wrap-anywhere sm:text-3xl">
+              <bdi>{displayName}</bdi>
+            </h1>
+            <span
+              className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusBadgeClass(profile.archived ? 'ARCHIVED' : profile.status)}`}
             >
-              {t('crm.profile.edit', locale)}
-            </Link>
-          )}
-          {verificationAllowed && profileType && (
-            <Link
-              to="/admin/crm/profiles/$profileId/$operation"
-              params={{ profileId, operation: 'verification' }}
-              className={buttonVariants({ variant: 'outline' })}
-            >
-              {verificationConfigText('identityReview', locale)}
-            </Link>
-          )}
-          {data.viewerPermissions?.canManageUser &&
-            (Object.keys(profileActions) as CrmProfileAction[]).map((action) =>
-              action === 'archive' && profile.archived ? null : (
-                <Link
-                  key={action}
-                  to="/admin/crm/profiles/$profileId/$operation"
-                  params={{ profileId, operation: action }}
-                  className={buttonVariants({ variant: 'outline' })}
-                >
-                  {t(profileActions[action].title, locale)}
-                </Link>
-              )
+              {profile.archived
+                ? t('crm.profile.archived', locale)
+                : t(`crm.list.${profile.status}`, locale)}
+            </span>
+            <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-foreground">
+              {getProfileTypeLabel(profile.profileType, locale)}
+            </span>
+          </div>
+          <p className="mt-1 text-sm text-muted-foreground [overflow-wrap:anywhere]">
+            <bdi dir="ltr">{user.username}</bdi>
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {data.viewerPermissions?.canEdit && !profile.archived && (
+              <Link
+                to="/admin/crm/profiles/$profileId/$operation"
+                params={{ profileId, operation: 'edit' }}
+                className={buttonVariants()}
+              >
+                {t('crm.profile.edit', locale)}
+              </Link>
             )}
+            {verificationAllowed && profileType && (
+              <Link
+                to="/admin/crm/profiles/$profileId/$operation"
+                params={{ profileId, operation: 'verification' }}
+                className={buttonVariants({ variant: 'outline' })}
+              >
+                {verificationConfigText('identityReview', locale)}
+              </Link>
+            )}
+            {data.viewerPermissions?.canManageUser &&
+              (Object.keys(profileActions) as CrmProfileAction[]).map((action) =>
+                action === 'archive' && profile.archived ? null : (
+                  <Link
+                    key={action}
+                    to="/admin/crm/profiles/$profileId/$operation"
+                    params={{ profileId, operation: action }}
+                    className={buttonVariants({ variant: 'outline' })}
+                  >
+                    {t(profileActions[action].title, locale)}
+                  </Link>
+                )
+              )}
+          </div>
         </div>
-      </div>
+      </header>
 
       {data.viewerPermissions?.canEditIdentity && !profile.archived && (
         <p className="mb-4">
@@ -1137,7 +1139,7 @@ function CrmProfileDetailContent({
               }}
               className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.id
-                  ? 'border-blue-600 text-blue-700 dark:text-blue-300'
+                  ? 'border-primary text-primary'
                   : 'border-transparent text-muted-foreground hover:text-foreground hover:border-input'
               }`}
             >
@@ -1147,12 +1149,16 @@ function CrmProfileDetailContent({
         </div>
       </div>
 
-      {/* Tab: Overview */}
       {activeTab === 'overview' && (
-        <div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            <SummaryCard
-              title={t('crm.profile.summary.verification', locale)}
+        <div
+          id="panel-overview"
+          role="tabpanel"
+          aria-labelledby="tab-overview"
+          className="space-y-4"
+        >
+          <Section title={t('crm.profile.title', locale)}>
+            <DetailRow
+              label={t('crm.profile.summary.verification', locale)}
               value={
                 profile.status === 'VERIFIED'
                   ? t('crm.profile.verified', locale)
@@ -1160,43 +1166,38 @@ function CrmProfileDetailContent({
                     ? t('crm.profile.unverified', locale)
                     : t(`crm.list.${profile.status}`, locale)
               }
-              colorClass={profile.status === 'VERIFIED' ? 'text-success' : 'text-warning'}
             />
-            <SummaryCard
-              title={t('crm.profile.summary.activeSessions', locale)}
+            <DetailRow
+              label={t('crm.profile.summary.addresses', locale)}
+              value={numbers.number(addresses.length)}
+            />
+            <DetailRow
+              label={t('crm.profile.summary.otherProfiles', locale)}
+              value={numbers.number(siblingProfiles.length)}
+            />
+          </Section>
+          <Section title={t('crm.profile.section.userInfo', locale)}>
+            <DetailRow
+              label={t('crm.profile.summary.activeSessions', locale)}
               value={numbers.number(sessions.count)}
-              colorClass="text-blue-700 dark:text-blue-300"
             />
-            <SummaryCard
-              title={t('crm.profile.summary.lastLogin', locale)}
+            <DetailRow
+              label={t('crm.profile.summary.lastLogin', locale)}
               value={user.lastLogin ? time.format(user.lastLogin) : '—'}
-              colorClass="text-muted-foreground"
             />
-            <SummaryCard
-              title={t('crm.profile.summary.lastPasswordChange', locale)}
+            <DetailRow
+              label={t('crm.profile.summary.lastActivity', locale)}
+              value={sessions.lastActive ? time.format(sessions.lastActive) : '—'}
+            />
+            <DetailRow
+              label={t('crm.profile.summary.lastPasswordChange', locale)}
               value={
                 user.lastPasswordChange
                   ? time.format(user.lastPasswordChange)
                   : t('crm.profile.passwordChangeUnknown', locale)
               }
-              colorClass="text-muted-foreground"
             />
-            <SummaryCard
-              title={t('crm.profile.summary.addresses', locale)}
-              value={numbers.number(addresses.length)}
-              colorClass="text-purple-700 dark:text-purple-300"
-            />
-            <SummaryCard
-              title={t('crm.profile.summary.otherProfiles', locale)}
-              value={numbers.number(siblingProfiles.length)}
-              colorClass="text-teal-700 dark:text-teal-300"
-            />
-            <SummaryCard
-              title={t('crm.profile.summary.lastActivity', locale)}
-              value={sessions.lastActive ? time.format(sessions.lastActive) : '—'}
-              colorClass="text-muted-foreground"
-            />
-          </div>
+          </Section>
         </div>
       )}
 
@@ -1627,23 +1628,6 @@ function CrmProfileDetailContent({
 }
 
 /* ── sub-components ── */
-
-function SummaryCard({
-  title,
-  value,
-  colorClass,
-}: {
-  title: string;
-  value: string;
-  colorClass: string;
-}) {
-  return (
-    <div className="border border-border rounded-lg p-4 bg-card text-card-foreground shadow-sm">
-      <p className="text-sm text-muted-foreground mb-1">{title}</p>
-      <p className={`text-2xl font-bold ${colorClass}`}>{value}</p>
-    </div>
-  );
-}
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
