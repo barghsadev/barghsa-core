@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { ChevronDownIcon } from 'lucide-react';
 import { Alert, AlertDescription, Button, Input, NativeSelect, Textarea } from '@barghsa/ui';
 import {
   Form,
@@ -139,13 +140,23 @@ export default function DraftForm({
   const changed = !existing || JSON.stringify(content) !== JSON.stringify(original);
   const draftValue = parseContractCommercialValue(content.commercialValue);
   const body = command.action?.body;
-  const reviewedContent =
+  const capturedContent =
     body && typeof body === 'object' && 'content' in body ? body.content : null;
-  const reviewedValue = parseContractCommercialValue(
-    reviewedContent && typeof reviewedContent === 'object' && 'commercialValue' in reviewedContent
-      ? reviewedContent.commercialValue
-      : undefined
-  );
+  const reviewedContent =
+    capturedContent && typeof capturedContent === 'object'
+      ? (capturedContent as Record<string, unknown>)
+      : {};
+  const reviewedValue = parseContractCommercialValue(reviewedContent.commercialValue);
+  const reviewedNote =
+    body && typeof body === 'object' && 'changeDescription' in body ? body.changeDescription : null;
+  const compareTitle =
+    !!existing &&
+    (original.title === undefined || typeof original.title === 'string') &&
+    original.title !== reviewedContent.title;
+  const compareTerms =
+    !!existing &&
+    (original.text === undefined || typeof original.text === 'string') &&
+    original.text !== reviewedContent.text;
   const unsupportedSavedValue = original.commercialValue !== undefined && !commercial;
   const compareValue =
     !!existing &&
@@ -154,6 +165,12 @@ export default function DraftForm({
     value?.kind === 'fixed'
       ? numbers.money(value.amountIrr)
       : (value?.description ?? word('noValue'));
+  function displayText(value: unknown) {
+    if (typeof value === 'string' && value.trim()) return value;
+    return copy(
+      value === undefined || typeof value === 'string' ? 'emptyDraftText' : 'importedDraftText'
+    );
+  }
   async function save(event: FormEvent) {
     event.preventDefault();
     if (!actor || withdrawn || current.current !== scope || !command.begin()) return;
@@ -421,7 +438,7 @@ export default function DraftForm({
               <p className="text-sm text-muted-foreground">{word('draftStructuredNotice')}</p>
             )}
             {textField('title', 'titleField')}
-            {textField('text', 'draftTerms', undefined, 'termsExample')}
+            {textField('text', 'draftTerms', 'termsHelp')}
           </RecordEditorSection>
           <RecordEditorSection
             title={copy('contractValue')}
@@ -513,35 +530,104 @@ export default function DraftForm({
           action={command.action}
           {...command.dialog}
           summary={
-            <section
-              id="contract-draft-value-review"
-              aria-labelledby="contract-draft-value-heading"
-              className="space-y-2 rounded-lg border bg-muted/35 p-3"
-            >
-              <h3 id="contract-draft-value-heading" className="text-sm font-semibold">
-                {copy('contractValue')}
-              </h3>
-              <dl className="grid gap-2 text-sm">
-                {compareValue && (
+            <div className="space-y-3">
+              <section
+                aria-labelledby="contract-draft-text-heading"
+                className="min-w-0 space-y-2 rounded-lg border px-3 pt-3"
+              >
+                <h3 id="contract-draft-text-heading" className="text-sm font-semibold">
+                  {copy('termsSection')}
+                </h3>
+                <dl className="space-y-2 text-sm">
+                  {compareTitle && (
+                    <div>
+                      <dt className="text-xs text-muted-foreground">{copy('savedTitle')}</dt>
+                      <dd dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
+                        {displayText(original.title)}
+                      </dd>
+                    </div>
+                  )}
                   <div>
-                    <dt className="text-xs text-muted-foreground">{copy('savedContractValue')}</dt>
-                    <dd className="[overflow-wrap:anywhere]">
-                      <bdi>
-                        {unsupportedSavedValue
-                          ? copy('unsupportedSavedValue')
-                          : displayValue(commercial)}
-                      </bdi>
+                    <dt className="text-xs text-muted-foreground">{word('titleField')}</dt>
+                    <dd
+                      dir="auto"
+                      className="font-medium whitespace-pre-wrap [overflow-wrap:anywhere]"
+                    >
+                      {displayText(reviewedContent.title)}
                     </dd>
                   </div>
-                )}
-                <div>
-                  <dt className="text-xs text-muted-foreground">{copy('proposedContractValue')}</dt>
-                  <dd className="font-medium [overflow-wrap:anywhere]">
-                    <bdi>{displayValue(reviewedValue)}</bdi>
-                  </dd>
-                </div>
-              </dl>
-            </section>
+                  {typeof reviewedNote === 'string' && (
+                    <div>
+                      <dt className="text-xs text-muted-foreground">{copy('reviewSection')}</dt>
+                      <dd dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
+                        {reviewedNote}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+                <details className="group border-t">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 rounded-md text-sm font-medium text-primary hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
+                    {copy('reviewTerms')}
+                    <ChevronDownIcon
+                      aria-hidden="true"
+                      className="size-4 shrink-0 group-open:rotate-180 motion-safe:transition-transform"
+                    />
+                  </summary>
+                  <dl className="divide-y text-sm">
+                    {compareTerms && (
+                      <div className="pb-3">
+                        <dt className="text-xs text-muted-foreground">{copy('savedTerms')}</dt>
+                        <dd
+                          dir="auto"
+                          className="mt-1 whitespace-pre-wrap [overflow-wrap:anywhere]"
+                        >
+                          {displayText(original.text)}
+                        </dd>
+                      </div>
+                    )}
+                    <div className="py-3">
+                      <dt className="text-xs text-muted-foreground">{copy('proposedTerms')}</dt>
+                      <dd dir="auto" className="mt-1 whitespace-pre-wrap [overflow-wrap:anywhere]">
+                        {displayText(reviewedContent.text)}
+                      </dd>
+                    </div>
+                  </dl>
+                </details>
+              </section>
+              <section
+                id="contract-draft-value-review"
+                aria-labelledby="contract-draft-value-heading"
+                className="space-y-2 rounded-lg border bg-muted/35 p-3"
+              >
+                <h3 id="contract-draft-value-heading" className="text-sm font-semibold">
+                  {copy('contractValue')}
+                </h3>
+                <dl className="grid gap-2 text-sm">
+                  {compareValue && (
+                    <div>
+                      <dt className="text-xs text-muted-foreground">
+                        {copy('savedContractValue')}
+                      </dt>
+                      <dd className="[overflow-wrap:anywhere]">
+                        <bdi>
+                          {unsupportedSavedValue
+                            ? copy('unsupportedSavedValue')
+                            : displayValue(commercial)}
+                        </bdi>
+                      </dd>
+                    </div>
+                  )}
+                  <div>
+                    <dt className="text-xs text-muted-foreground">
+                      {copy('proposedContractValue')}
+                    </dt>
+                    <dd className="font-medium [overflow-wrap:anywhere]">
+                      <bdi>{displayValue(reviewedValue)}</bdi>
+                    </dd>
+                  </div>
+                </dl>
+              </section>
+            </div>
           }
         />
       )}

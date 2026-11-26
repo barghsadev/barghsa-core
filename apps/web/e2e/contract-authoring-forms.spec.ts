@@ -161,6 +161,8 @@ for (const [locale, theme] of [
   const dialog = (page: Page) => page.getByRole('dialog');
   const reviewValue = (page: Page) =>
     dialog(page).getByRole('region', { name: authoring('contractValue') });
+  const reviewTerms = (page: Page) =>
+    dialog(page).getByRole('region', { name: authoring('termsSection') });
   const exactAmount = locale === 'fa' ? '۹٬۰۰۷٬۱۹۹٬۲۵۴٬۷۴۰٬۹۹۳' : '9,007,199,254,740,993';
   const draftForm = (page: Page) => page.getByTestId('contract-draft-form');
   const contextForm = (page: Page) => page.getByTestId('contract-context-form');
@@ -309,7 +311,8 @@ for (const [locale, theme] of [
     await draftField(page, 'serviceType').selectOption('electricity');
     await draftField(page, 'draftOrder').selectOption(linkedOrderId);
     await draftField(page, 'titleField').fill('  New staff contract  ');
-    await draftField(page, 'draftTerms').fill('  New staff terms\n  ');
+    const newTerms = 'New staff terms\n\nMeter readings are recorded monthly.';
+    await draftField(page, 'draftTerms').fill(`  ${newTerms}\n  `);
     await draftField(page, 'statedContractValue').selectOption('fixed');
     await expect(draftField(page, 'fixedContractAmount')).toHaveAttribute('aria-required', 'true');
     await draftField(page, 'fixedContractAmount').fill(
@@ -366,6 +369,18 @@ for (const [locale, theme] of [
     await expect(reviewValue(page).getByRole('term')).toHaveText(
       authoring('proposedContractValue')
     );
+    const createReview = reviewTerms(page);
+    await expect(createReview.getByText('New staff contract', { exact: true })).toBeVisible();
+    await expect(
+      createReview.getByText('Create the staff contract', { exact: true })
+    ).toBeVisible();
+    const disclosure = createReview.locator('summary');
+    const writesBeforePreview = state.writes.length;
+    await disclosure.press('Enter');
+    await expect(createReview.locator('details')).toHaveAttribute('open', '');
+    await expect(createReview.getByText(authoring('savedTerms'), { exact: true })).toHaveCount(0);
+    expect(await createReview.locator('details dd').textContent()).toBe(newTerms);
+    expect(state.writes).toHaveLength(writesBeforePreview);
     await confirm(page);
     await dialog(page).locator('form').dispatchEvent('submit');
     await expect.poll(() => !!state.heldWrite).toBe(true);
@@ -377,7 +392,7 @@ for (const [locale, theme] of [
       orderId: linkedOrderId,
       content: {
         title: 'New staff contract',
-        text: 'New staff terms',
+        text: newTerms,
         commercialValue: { kind: 'fixed', amountIrr: '9007199254740993' },
       },
       changeDescription: 'Create the staff contract',
@@ -399,6 +414,8 @@ for (const [locale, theme] of [
     state.heldWrite = undefined;
     await retry(page).click();
     await expect(reviewValue(page)).toContainText(exactAmount);
+    await reviewTerms(page).locator('summary').click();
+    expect(await reviewTerms(page).locator('details dd').textContent()).toBe(newTerms);
     await confirm(page);
     await expect.poll(() => !!state.heldWrite).toBe(true);
     const foreign = structuredClone(receipt);
@@ -450,6 +467,11 @@ for (const [locale, theme] of [
       authoring('proposedContractValue')
     );
     await expect(reviewValue(page)).toContainText(exactAmount);
+    await reviewTerms(page).locator('summary').click();
+    expect(await reviewTerms(page).locator('details dd').allTextContents()).toEqual([
+      originalContent.text,
+      'Revised imported delivery terms',
+    ]);
     await confirm(page);
     await expect(dialog(page)).toHaveCount(0);
     const revised = state.writes.at(-1)!;
