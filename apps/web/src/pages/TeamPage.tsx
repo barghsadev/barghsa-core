@@ -46,11 +46,12 @@ import {
 import { useLocale } from '../hooks/useLocale.js';
 import { z } from 'zod';
 import { Loader2 } from 'lucide-react';
-import { normalizeUsername } from '@barghsa/shared/validation';
+import { normalizeUsername } from '@barghsa/shared/username-normalization';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { maskDestination } from '../lib/mask-destination.js';
+import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { withCsrf } from '../lib/csrf.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
 import { teamRecordLink, type TeamWorkspace } from '../lib/team-workspace.js';
@@ -82,6 +83,10 @@ import {
   type TeamEntry as Entry,
   type Team,
 } from '../lib/team-catalogue.js';
+
+function invitationDestination(value: string): string | null {
+  return normalizeUsername(value.includes('@') ? value : normalizeProfileDigits(value));
+}
 
 export function TeamPage({ workspace }: { workspace?: TeamWorkspace } = {}) {
   const revision = useProfileContextRevision();
@@ -469,7 +474,10 @@ function TeamMembers({
         .string()
         .trim()
         .max(254, t('team.invalidInvitation', locale))
-        .refine((value) => normalizeUsername(value) !== null, t('team.invalidInvitation', locale)),
+        .refine(
+          (value) => invitationDestination(value) !== null,
+          t('team.invalidInvitation', locale)
+        ),
       role: z.enum(ROLES, { error: t('team.invalidRole', locale) }),
       message: z
         .string()
@@ -479,6 +487,7 @@ function TeamMembers({
     { username: '', role: 'Manager', message: '' }
   );
   const [username, setUsername] = invitation.field('username');
+  const inviteDestination = invitationDestination(username);
   const [role, setRole] = invitation.field('role');
   const [message, setMessage] = invitation.field('message');
   const resetInvitation = invitation.form.reset;
@@ -679,7 +688,7 @@ function TeamMembers({
     try {
       await invitation.form.handleSubmit(async (values) => {
         if (!current()) return;
-        const normalized = normalizeUsername(values.username);
+        const normalized = invitationDestination(values.username);
         if (!normalized) return;
         const message = values.message.trim() || null;
         const controller = new AbortController();
@@ -705,7 +714,7 @@ function TeamMembers({
               signal,
               headers: withCsrf({ 'Content-Type': 'application/json' }),
               body: JSON.stringify({
-                username: values.username.trim(),
+                username: values.username.includes('@') ? values.username : normalized,
                 role: values.role,
                 ...(message ? { message } : {}),
               }),
@@ -955,6 +964,11 @@ function TeamMembers({
     setAction(null);
   };
 
+  const invitePreviewFields: Record<string, string | null> = {
+    '{username}': inviteDestination,
+    '{role}': word(role),
+    '{entity}': team?.profileName ?? word('legalEntity'),
+  };
   const inviteForm = invitationOpen ? (
     <form
       noValidate
@@ -984,14 +998,21 @@ function TeamMembers({
               dir="ltr"
               autoCapitalize="none"
               spellCheck={false}
-              placeholder="name@example.com"
               required
               aria-required="true"
+              aria-describedby={
+                invitation.errors.username
+                  ? `team-username-help ${invitation.errorId('username')}`
+                  : 'team-username-help'
+              }
               maxLength={254}
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               disabled={inviting || !!inviteRecovery}
             />
+            <p id="team-username-help" className="text-sm text-muted-foreground">
+              {word('inviteDestination')} <bdi dir="ltr">09… / +98…</bdi>
+            </p>
             {invitation.errors.username && (
               <p
                 id={invitation.errorId('username')}
@@ -1062,15 +1083,14 @@ function TeamMembers({
             </p>
           )}
         </div>
-        {username.trim() && (
-          <p
-            role="status"
-            className="rounded-md bg-muted/60 px-3 py-2 text-sm [overflow-wrap:anywhere]"
-          >
+        {inviteDestination && (
+          <p className="rounded-md bg-muted/60 px-3 py-2 text-sm [overflow-wrap:anywhere]">
             {word('invitePreview')
-              .replace('{username}', username.trim())
-              .replace('{role}', word(role))
-              .replace('{entity}', team?.profileName ?? word('legalEntity'))}
+              .split(/(\{\w+\})/)
+              .map((part) => {
+                const value = invitePreviewFields[part];
+                return value ? <bdi key={part}>{value}</bdi> : part;
+              })}
           </p>
         )}
       </div>

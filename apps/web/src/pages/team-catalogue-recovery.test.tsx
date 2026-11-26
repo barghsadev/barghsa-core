@@ -805,7 +805,7 @@ it('validates invitation destinations on blur and before sending, retaining corr
   await submit();
   expect(
     JSON.parse(String(requests.mock.calls.find(([, init]) => init?.method === 'POST')![1]!.body))
-  ).toEqual({ username: '09121234567', role: 'Manager' });
+  ).toEqual({ username: '+989121234567', role: 'Manager' });
   expect(document.querySelector('[role=dialog]')).toBeNull();
 });
 it.each(['username', 'role', 'message'] as const)(

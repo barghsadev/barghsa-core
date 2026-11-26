@@ -254,7 +254,7 @@ for (const locale of ['fa', 'en'] as const) {
     const dialog = page.getByRole('form', { name: teamText('team.invite', locale) });
     await dialog.getByLabel(fa ? 'ایمیل یا شماره موبایل' : 'Email or mobile number').fill(username);
     await dialog.locator('#invite-role').selectOption('Legal');
-    await expect(dialog.getByRole('status')).toContainText(company);
+    await expect(dialog.getByText(company, { exact: true })).toBeVisible();
     await dialog.getByRole('button', { name: fa ? 'ارسال دعوت‌نامه' : 'Send invitation' }).click();
     await expect(dialog).toHaveCount(0);
     expect(steps).toEqual(['invited']);
@@ -477,7 +477,7 @@ for (const locale of ['fa', 'en'] as const) {
     const role = dialog.getByLabel(fa ? 'نقش' : 'Role', { exact: true });
     await role.selectOption('Finance');
     await expect(role).toHaveValue('Finance');
-    await expect(dialog.getByRole('status')).toContainText('Example company');
+    await expect(dialog.getByText('Example company', { exact: true })).toBeVisible();
     await input.click();
     await expect(input).toBeFocused();
     await dialog
@@ -540,7 +540,8 @@ for (const locale of ['fa', 'en'] as const) {
     const address = dialog.locator('#team-username');
     const message = dialog.locator('#invite-message');
     const submit = dialog.getByRole('button', { name: word('sendInvite'), exact: true });
-    await address.fill(' 09121234567 ');
+    const enteredAddress = locale === 'fa' ? ' ۰۹١۲١۲۳۴۵٦۷ ' : ' 09121234567 ';
+    await address.fill(enteredAddress);
     await dialog.locator('#invite-role').selectOption('Finance');
     await message.fill('  Reviewed invitation  ');
     await page.clock.install();
@@ -550,14 +551,14 @@ for (const locale of ['fa', 'en'] as const) {
     await page.clock.fastForward(15_001);
     await expect(dialog.getByRole('alert')).toContainText(confirmationText('unconfirmed', locale));
     await expect.poll(() => !!heldDirectory).toBe(true);
-    await expect(address).toHaveValue(' 09121234567 ');
+    await expect(address).toHaveValue(enteredAddress);
     await expect(message).toHaveValue('  Reviewed invitation  ');
     await expect(submit).toBeDisabled();
     await heldInvite!
       .fulfill({ status: 201, json: { id: 'recovered-invitation' } })
       .catch(() => {});
     expect(writes).toEqual([
-      { username: '09121234567', role: 'Finance', message: 'Reviewed invitation' },
+      { username: '+989121234567', role: 'Finance', message: 'Reviewed invitation' },
     ]);
     const failedRead = heldDirectory!;
     await failedRead.fulfill({ status: 503, json: {} });
@@ -730,9 +731,10 @@ for (const locale of ['fa', 'en'] as const) {
     await shell(page, locale);
     const requests: unknown[] = [];
     let verified = false;
+    const enteredEmail = 'New@Example.test';
     await page.route(`**/api/profiles/${profileId}/invitations`, (route) => {
       expect(route.request().postDataJSON()).toEqual({
-        username: 'new@example.test',
+        username: enteredEmail,
         role: 'Legal',
       });
       return route.fulfill({ status: 201, json: { id: 'new-invite' } });
@@ -762,15 +764,17 @@ for (const locale of ['fa', 'en'] as const) {
       .click();
     await page
       .getByLabel(locale === 'fa' ? 'ایمیل یا شماره موبایل' : 'Email or mobile number')
-      .fill('new@example.test');
+      .fill(enteredEmail);
     await page.locator('#invite-role').selectOption('Legal');
-    await expect(
-      page.getByRole('form', { name: teamText('team.invite', locale) }).getByRole('status')
-    ).toHaveText(
+    const invitationPreview =
       locale === 'fa'
         ? 'دعوت new@example.test به عنوان حقوقی برای Example company.'
-        : 'Invite new@example.test as Legal to Example company.'
-    );
+        : 'Invite new@example.test as Legal to Example company.';
+    await expect(
+      page
+        .getByRole('form', { name: teamText('team.invite', locale) })
+        .getByText(invitationPreview, { exact: true })
+    ).toBeVisible();
     await page
       .getByRole('button', { name: locale === 'fa' ? 'ارسال دعوت‌نامه' : 'Send invitation' })
       .click();

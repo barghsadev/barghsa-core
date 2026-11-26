@@ -89,6 +89,7 @@ for (const locale of ['en', 'fa'] as const)
       const username = dialog.locator('#team-username'),
         message = dialog.locator('#invite-message');
       await expect(username).toHaveAttribute('aria-required', 'true');
+      await expect(username).toHaveAccessibleDescription(/09.*\+98/);
       await expect(dialog.locator('#invite-role')).toHaveAttribute('aria-required', 'true');
       await expect(dialog.locator('#invite-role')).toHaveAccessibleDescription(
         t('team.roleEffect.Manager', locale)
@@ -101,20 +102,25 @@ for (const locale of ['en', 'fa'] as const)
       await username.fill('bad-destination');
       await message.focus();
       await expect(username).toHaveAttribute('aria-invalid', 'true');
+      await expect(dialog.getByText(/bad-destination/)).toHaveCount(0);
       await submit.click();
       await expect(username).toBeFocused();
       expect(bodies).toHaveLength(0);
       expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
-      await username.fill(' 09121234567 ');
+      await username.fill('person{role}@example.test');
+      await expect(dialog.getByText('person{role}@example.test', { exact: true })).toBeVisible();
+      const enteredUsername = fa ? ' ۰۹١۲١۲۳۴۵٦۷ ' : ' 09121234567 ';
+      await username.fill(enteredUsername);
+      await expect(dialog.getByText('+989121234567', { exact: true })).toBeVisible();
       await message.fill('Retained invitation note');
       await submit.click();
       await expect(message).toBeFocused();
       await expect(message).toHaveAttribute('aria-invalid', 'true');
-      await expect(username).toHaveValue(' 09121234567 ');
+      await expect(username).toHaveValue(enteredUsername);
       await expect(message).toHaveValue('Retained invitation note');
       await expect(dialog).not.toContainText('raw server text');
       expect(bodies[0]).toEqual({
-        username: '09121234567',
+        username: '+989121234567',
         role: 'Manager',
         message: 'Retained invitation note',
       });
