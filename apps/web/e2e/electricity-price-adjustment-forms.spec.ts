@@ -3,8 +3,9 @@ import { productionManifest } from './production-manifest';
 import AxeBuilder from '@axe-core/playwright';
 import type { Locator, Page, Route } from '@playwright/test';
 import { t } from '@barghsa/i18n/app';
-import { adminText } from '@barghsa/i18n/electricity-price-forms';
+import { adminText, t as priceFormText } from '@barghsa/i18n/electricity-price-forms';
 import { test, expect } from './coverage-fixture';
+import { fullNavigation } from './navigation-fixture';
 import {
   creditAdjustmentId,
   cancelledAdjustmentId,
@@ -19,6 +20,75 @@ import {
   cancelledPrice,
   setupElectricityPriceAdjustmentForms,
 } from './electricity-price-adjustment-form-fixture';
+
+test('staff can open a price adjustment history from the filtered contracts list', async ({
+  page,
+}) => {
+  const state = await setupElectricityPriceAdjustmentForms(page, 'en', false);
+  state.auth.context = 'staff';
+  const lookup = '/admin/electricity-price-adjustments';
+  const types: (string | null)[] = [];
+  await page.route('**/api/admin/contracts?*', (route) => {
+    types.push(new URL(route.request().url()).searchParams.get('serviceType'));
+    return route.fulfill({
+      json: {
+        contracts: [
+          {
+            id: contractId,
+            contractNumber: '120482',
+            serviceType: 'electricity',
+            state: 'Active',
+            versionId,
+            versionNumber: 1,
+          },
+        ],
+        nextBefore: null,
+      },
+    });
+  });
+  await page.goto(lookup);
+  const browse = page.getByRole('link', {
+    name: priceFormText('electricity.priceForm.browseContracts', 'en'),
+    exact: true,
+  });
+  await browse.click();
+  await expect(page).toHaveURL('/admin/contracts?serviceType=electricity');
+  const history = page.locator(`main a[href="${lookup}/${contractId}"]:visible`);
+  await expect(history).toHaveCount(1);
+  expect(types).toEqual(['electricity']);
+  await history.click();
+  await expect(page).toHaveURL(`${lookup}/${contractId}`);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    adminText('admin.electricityPrice.contractHistory', 'en')
+  );
+  expect(state.writes).toEqual([]);
+
+  const navigation = fullNavigation('staff');
+  await page.route('**/api/auth/user', (route) =>
+    route.fulfill({
+      json: {
+        userId: 'price-reviewer',
+        isStaff: true,
+        operatingContext: 'staff',
+        canSwitchContext: false,
+        requiresTosAcceptance: false,
+        navigation: {
+          ...navigation,
+          paths: navigation.paths.filter((path) => path !== '/admin/contracts'),
+        },
+      },
+    })
+  );
+  await page.goto(lookup);
+  const picker = page.locator('#electricity-price-contract');
+  await expect(browse).toHaveCount(0);
+  await picker.fill(contractId);
+  await picker.press('Enter');
+  await expect(page).toHaveURL(`${lookup}/${contractId}`);
+  expect(types).toEqual(['electricity']);
+  expect(state.writes).toEqual([]);
+});
+
 async function focusedError(field: Locator) {
   await expect(field).toBeFocused();
   await expect(field).toHaveAttribute('aria-invalid', 'true');

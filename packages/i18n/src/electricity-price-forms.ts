@@ -5,8 +5,10 @@ import type { I18nDictionary, Locale } from './app.js';
 
 export const fa: I18nDictionary = {
   'electricity.priceForm.contractInvalid': 'شناسه معتبر قرارداد را وارد کنید.',
-  'electricity.priceForm.contractHelp':
-    'شناسه قرارداد برق را برای مشاهده و بررسی تغییر قیمت وارد کنید.',
+  'electricity.priceForm.contractHelp': 'شناسه کامل را از جزئیات قرارداد وارد کنید.',
+  'electricity.priceForm.findContract': 'قرارداد برق را پیدا کنید',
+  'electricity.priceForm.browseHelp': 'در فهرست قراردادها، تعدیل قیمت قرارداد موردنظر را باز کنید.',
+  'electricity.priceForm.browseContracts': 'مشاهده قراردادهای برق',
   'electricity.priceForm.percentageInvalid':
     'درصد غیرصفر با حداکثر دو رقم اعشار وارد کنید. کاهش باید کمتر از ۱۰۰ درصد باشد.',
   'electricity.priceForm.dateInvalid': 'تاریخ و زمان معتبر را انتخاب کنید.',
@@ -22,8 +24,11 @@ export const fa: I18nDictionary = {
 };
 export const englishMessages = {
   'electricity.priceForm.contractInvalid': 'Enter a valid contract ID.',
-  'electricity.priceForm.contractHelp':
-    'Enter an electricity contract ID to view and review price adjustments.',
+  'electricity.priceForm.contractHelp': 'Enter the full ID from the contract details.',
+  'electricity.priceForm.findContract': 'Find an electricity contract',
+  'electricity.priceForm.browseHelp':
+    'Open a contract’s price adjustments from the contracts list.',
+  'electricity.priceForm.browseContracts': 'Browse electricity contracts',
   'electricity.priceForm.percentageInvalid':
     'Enter a nonzero percentage with at most two decimals. A decrease must be less than 100%.',
   'electricity.priceForm.dateInvalid': 'Choose a valid date and time.',

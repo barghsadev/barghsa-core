@@ -1,6 +1,7 @@
 import {
   Calculator as TableCalculatorIcon,
   Check as TableCheckIcon,
+  FileSearch,
   X as TableXIcon,
 } from 'lucide-react';
 import { TableActionIcon } from '../components/TableActionIcon.js';
@@ -64,6 +65,7 @@ import {
 } from '@barghsa/shared/finance';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useLocale } from '../hooks/useLocale.js';
+import { useNavigation } from '../hooks/useNavigation.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { useFinancialFormatting } from '../hooks/useFinancialFormatting.js';
@@ -156,6 +158,7 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
 } = {}) {
   const locale = useLocale();
   const actor = useAccountUser();
+  const canBrowseContracts = useNavigation()?.paths.includes('/admin/contracts');
   const copy = (key: string) => t(`admin.electricityPrice.${key}`, locale);
   const formCopy = (key: string) => appText(`electricity.priceForm.${key}`, locale);
   const initial =
@@ -269,7 +272,9 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
   return (
     <section
       className={
-        view === 'new' || decision ? 'mx-auto min-w-0 max-w-3xl space-y-3' : 'min-w-0 space-y-5'
+        view === 'new' || decision || (!view && onOpenContract)
+          ? 'mx-auto min-w-0 max-w-3xl space-y-3'
+          : 'min-w-0 space-y-5'
       }
       dir={locale === 'fa' ? 'rtl' : 'ltr'}
     >
@@ -280,7 +285,8 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
           <form
             noValidate
             data-testid="electricity-price-contract-form"
-            className="flex flex-wrap items-end gap-3"
+            aria-label={formCopy('findContract')}
+            className={`${recordEditorSurface} max-w-3xl`}
             onSubmit={(event) => {
               event.preventDefault();
               if (
@@ -323,35 +329,71 @@ function OwnedAdminElectricityPriceAdjustmentsPage({
                 });
             }}
           >
+            {canBrowseContracts && (
+              <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-b bg-muted/30 px-4 py-4 sm:px-6">
+                <div className="min-w-0 space-y-1">
+                  <h2 className="flex items-center gap-2 text-base font-semibold">
+                    <FileSearch className="size-4 shrink-0 text-primary" aria-hidden="true" />
+                    {formCopy('findContract')}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">{formCopy('browseHelp')}</p>
+                </div>
+                <Link
+                  to="/admin/contracts"
+                  search={{ serviceType: 'electricity' }}
+                  className={buttonVariants()}
+                  aria-disabled={selectionLocked || form.formState.isSubmitting || undefined}
+                  onClick={(event) => {
+                    if (navigationBlocked() || form.formState.isSubmitting) event.preventDefault();
+                  }}
+                >
+                  {formCopy('browseContracts')}
+                </Link>
+              </div>
+            )}
             <FormField
               control={form.control}
               name="contractId"
               render={({ field }) => (
-                <FormItem id="electricity-price-contract" className="min-w-0 flex-1 basis-64">
+                <FormItem
+                  id="electricity-price-contract"
+                  className="min-w-0 space-y-2 px-4 py-4 sm:px-6"
+                >
                   <FormLabel>{copy('contractId')}</FormLabel>
-                  <FormControl>
-                    <Input {...field} aria-required="true" dir="ltr" disabled={selectionLocked} />
-                  </FormControl>
                   <FormDescription>{formCopy('contractHelp')}</FormDescription>
-                  <FormMessage reserveSpace />
+                  <div className="grid min-w-0 items-start gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+                    <FormControl>
+                      <Input
+                        {...field}
+                        aria-required="true"
+                        dir="ltr"
+                        autoComplete="off"
+                        autoCapitalize="none"
+                        spellCheck={false}
+                        disabled={selectionLocked}
+                      />
+                    </FormControl>
+                    <Button
+                      type="submit"
+                      variant={canBrowseContracts ? 'outline' : 'default'}
+                      disabled={selectionLocked || form.formState.isSubmitting}
+                      aria-busy={form.formState.isSubmitting || undefined}
+                    >
+                      {form.formState.isSubmitting ? (
+                        <span
+                          aria-hidden="true"
+                          className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
+                        />
+                      ) : null}
+                      {copy('open')}
+                    </Button>
+                  </div>
+                  <FormMessage />
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              disabled={selectionLocked || form.formState.isSubmitting}
-              aria-busy={form.formState.isSubmitting || undefined}
-            >
-              {form.formState.isSubmitting ? (
-                <span
-                  aria-hidden="true"
-                  className="size-4 animate-spin motion-reduce:animate-none rounded-full border-2 border-current border-t-transparent"
-                />
-              ) : null}
-              {copy('open')}
-            </Button>
             {form.formState.errors.root?.validation ? (
-              <p role="alert" className="w-full">
+              <p role="alert" className="px-4 pb-4 text-sm text-destructive sm:px-6">
                 {formCopy('validationUnavailable')}
               </p>
             ) : null}
