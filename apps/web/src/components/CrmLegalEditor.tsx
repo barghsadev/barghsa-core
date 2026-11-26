@@ -4,9 +4,11 @@ import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { Button, Input, Label, NativeSelect, Textarea } from '@barghsa/ui';
 import { tCrmForm as t } from '@barghsa/i18n/crm-forms';
+import { tSettingsForms } from '@barghsa/i18n/settings-forms';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 import { useLocale } from '../hooks/useLocale.js';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
+import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { GeographyLoadError } from './GeographyLoadError.js';
 import { GeographyPicker } from './GeographyPicker.js';
 import { TeamActionDialog } from './TeamActionDialog.js';
@@ -173,8 +175,9 @@ export function CrmLegalEditor({
     for (const field of fields) {
       if (values[field] === (legalInfo[field] ?? '')) continue;
       const [max, kind, nullable] = specs[field];
-      const text =
-        field === 'officialEmail' ? values[field].trim().toLowerCase() : values[field].trim();
+      let text = values[field].trim();
+      if (kind === 'national' || kind === 'postal') text = normalizeProfileDigits(text);
+      if (kind === 'email') text = text.toLowerCase();
       const value = nullable && !text ? null : text;
       if (value === (legalInfo[field] ?? null) || (!text && legalInfo[field] === null)) continue;
       changes[field] = value;
@@ -247,6 +250,8 @@ export function CrmLegalEditor({
       invalid = !!errors[field];
     const list = options[field as keyof typeof options];
     const binding = draft.bind(field);
+    const help =
+      kind === 'national' ? 'nationalIdHelp' : kind === 'postal' ? 'postalCodeHelp' : null;
     const currentName = display(field, legalInfo[field]);
     const inputProps = {
       ...binding,
@@ -328,6 +333,10 @@ export function CrmLegalEditor({
         ) : (
           <Input
             {...inputProps}
+            aria-describedby={
+              [help && fieldId + '-help', binding['aria-describedby']].filter(Boolean).join(' ') ||
+              undefined
+            }
             maxLength={max}
             dir={
               kind === 'date' ||
@@ -341,7 +350,13 @@ export function CrmLegalEditor({
             inputMode={kind === 'postal' || kind === 'national' ? 'numeric' : undefined}
             autoComplete="off"
             type={kind === 'date' || kind === 'email' || kind === 'tel' ? kind : 'text'}
+            className={help ? 'max-w-xs' : undefined}
           />
+        )}
+        {help && (
+          <p id={fieldId + '-help'} className="text-xs text-muted-foreground">
+            {tSettingsForms(help, locale)}
+          </p>
         )}
         {invalid && (
           <p id={draft.errorId(field)} role="alert" className="text-sm text-destructive">

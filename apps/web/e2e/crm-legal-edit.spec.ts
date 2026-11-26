@@ -298,6 +298,8 @@ for (const locale of ['fa', 'en'] as const) {
           const control = form.getByLabel(label(field, locale), { exact: true });
           if (isLocationField(field)) await selectAddressLocation(page, control, placeName);
           else if (field === 'companyTypeId') await control.selectOption(value);
+          else if (locale === 'fa' && /(?:PostalCode|NationalId)$/.test(field))
+            await control.fill(value.replace(/\d/g, (digit) => '٠١٢٣٤٥٦٧٨٩'[Number(digit)]!));
           else await control.fill(value);
           if (field === 'officialProvinceId') {
             await expect(
@@ -319,7 +321,7 @@ for (const locale of ['fa', 'en'] as const) {
         await save.click();
         await expect(postal).toHaveAttribute('aria-invalid', 'true');
         expect(writes).toEqual([]);
-        await postal.fill(changes.officialPostalCode);
+        await postal.fill(locale === 'fa' ? '۲۳۴۵۶۷۸۹۰۱' : changes.officialPostalCode);
         const widths = await form.evaluate((element) => ({
           editor: element.clientWidth,
           available:

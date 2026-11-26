@@ -11,6 +11,7 @@ import type {
   SavedAddress,
   SettingsPatch,
 } from './settings-form.js';
+import { normalizeProfileDigits } from './profile-digits.js';
 type Copy = (key: string) => string;
 const issue = (path: string, message: string, input: unknown) => ({
   code: 'custom' as const,
@@ -38,7 +39,8 @@ function addressIssues(
     add('cityId', raw.cityId);
   if (!raw.fullAddress.trim() || raw.fullAddress.trim().length > 500)
     add('fullAddress', raw.fullAddress);
-  if (!validatePostalCode(raw.postalCode.trim())) add('postalCode', raw.postalCode);
+  if (!validatePostalCode(normalizeProfileDigits(raw.postalCode.trim())))
+    add('postalCode', raw.postalCode);
 }
 export const settingsInactiveSchema = z.custom<never>().check((ctx) => {
   ctx.issues.push(issue('root', '', ctx.value));

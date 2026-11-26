@@ -10,6 +10,7 @@ import {
 import type { SavedAddress as Address } from '../lib/settings-form.js';
 import { t } from '@barghsa/i18n/app';
 import { addressesText } from '@barghsa/i18n/addresses';
+import { tSettingsForms } from '@barghsa/i18n/settings-forms';
 import { MapPinIcon, PlusIcon, PencilIcon, Trash2Icon, StarIcon } from 'lucide-react';
 import {
   Button,
@@ -579,6 +580,7 @@ export function AddressWorkspace({
                   name="postalCode"
                   id="addresses-field-4"
                   label={t('settings.addresses.form.postalCode', locale)}
+                  description={tSettingsForms('postalCodeHelp', locale)}
                   itemClassName="max-w-xs"
                   reserveMessageSpace
                   inputProps={{

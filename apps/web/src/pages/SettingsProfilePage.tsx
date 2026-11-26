@@ -26,7 +26,14 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@barghsa/ui';
-import { Form, FormField, FormItem, FormControl, FormMessage } from '@barghsa/ui/form';
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from '@barghsa/ui/form';
 import { useProfileSettingsEditor } from '../hooks/useProfileSettingsEditor.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { addressesText } from '@barghsa/i18n/addresses';
@@ -476,7 +483,7 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
                           control={form.control}
                           name="nationalIdentifier"
                           render={({ field }) => (
-                            <FormItem id="profile-nationalIdentifier">
+                            <FormItem id="profile-nationalIdentifier" className="max-w-xs">
                               <FormControl>
                                 <Input
                                   {...field}
@@ -490,6 +497,9 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
                                   disabled={locked}
                                 />
                               </FormControl>
+                              <FormDescription className="text-xs">
+                                {copy('nationalIdentifierHelp')}
+                              </FormDescription>
                               <FormMessage reserveSpace />
                             </FormItem>
                           )}
@@ -587,7 +597,7 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
                     </div>
 
                     {/* National ID */}
-                    <div className="space-y-1.5 max-w-sm">
+                    <div className="space-y-1.5 max-w-xs">
                       <Label htmlFor="profile-national-id" className="text-xs">
                         {t('settings.profile.nationalId', locale)}
                       </Label>
@@ -609,6 +619,9 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
                                 className="text-sm"
                               />
                             </FormControl>
+                            <FormDescription className="text-xs">
+                              {copy('nationalIdHelp')}
+                            </FormDescription>
                             <FormMessage reserveSpace />
                           </FormItem>
                         )}
@@ -779,7 +792,7 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
                   control={form.control}
                   name="postalCode"
                   render={({ field }) => (
-                    <FormItem id="profile-postal-code">
+                    <FormItem id="profile-postal-code" className="max-w-xs">
                       <FormControl>
                         <Input
                           {...field}
@@ -795,6 +808,9 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
                           className="text-sm"
                         />
                       </FormControl>
+                      <FormDescription className="text-xs">
+                        {copy('postalCodeHelp')}
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

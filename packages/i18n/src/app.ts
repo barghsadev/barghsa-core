@@ -817,8 +817,7 @@ export const fa: I18nDictionary = {
   'settings.addresses.validation.province': 'یک استان فعال انتخاب کنید.',
   'settings.addresses.validation.city': 'یک شهر فعال از استان انتخاب‌شده انتخاب کنید.',
   'settings.addresses.validation.fullAddress': 'آدرس کامل باید بین ۱ تا ۵۰۰ نویسه باشد.',
-  'settings.addresses.validation.postalCode':
-    'کد پستی باید ۱۰ رقم انگلیسی باشد و با صفر شروع نشود.',
+  'settings.addresses.validation.postalCode': 'کد پستی باید ۱۰ رقم باشد و با صفر شروع نشود.',
   'settings.addresses.form.editTitle': 'ویرایش آدرس',
   ...addressFormMessages.fa,
   'settings.addresses.form.save': 'ذخیره',
@@ -1744,8 +1743,7 @@ export const englishMessages = {
   'settings.addresses.validation.province': 'Select an active province.',
   'settings.addresses.validation.city': 'Select an active city in the selected province.',
   'settings.addresses.validation.fullAddress': 'Enter a full address between 1 and 500 characters.',
-  'settings.addresses.validation.postalCode':
-    'Enter a 10-digit postal code using English digits, starting with 1–9.',
+  'settings.addresses.validation.postalCode': 'Enter a 10-digit postal code starting with 1–9.',
   'settings.addresses.form.editTitle': 'Edit Address',
   ...addressFormMessages.en,
   'settings.addresses.form.save': 'Save',

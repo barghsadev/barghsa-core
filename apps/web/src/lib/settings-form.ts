@@ -3,6 +3,7 @@ import {
   settingsUuid,
   type SettingsProfileSummary,
 } from './settings-profile-directory.js';
+import { normalizeProfileDigits } from './profile-digits.js';
 
 export {
   settingsContext,
@@ -189,9 +190,23 @@ export function profilePatch(raw: ProfileFormValues, source: SettingsProfile): S
   if (profileCanEditIdentity(source)) fields.push('firstName', 'lastName', 'nationalId');
   if (source.profileType === 'LEGAL' && source.status !== 'VERIFIED' && source.legalInfo)
     fields.push('legalName', 'nationalIdentifier');
-  for (const key of fields) if (raw[key] !== previous[key]) patch[key] = raw[key].trim();
-  if (addressFormFields.some((key) => raw[key] !== previous[key]))
-    for (const key of addressFormFields) patch[key] = raw[key].trim();
+  for (const key of fields) {
+    if (key === 'nationalId' || key === 'nationalIdentifier') {
+      const value = normalizeProfileDigits(raw[key].trim());
+      if (value !== normalizeProfileDigits(previous[key].trim())) patch[key] = value;
+    } else if (raw[key] !== previous[key]) patch[key] = raw[key].trim();
+  }
+  const postalCode = normalizeProfileDigits(raw.postalCode.trim());
+  if (
+    addressFormFields.some((key) =>
+      key === 'postalCode'
+        ? postalCode !== normalizeProfileDigits(previous.postalCode.trim())
+        : raw[key] !== previous[key]
+    )
+  ) {
+    for (const key of addressFormFields)
+      patch[key] = key === 'postalCode' ? postalCode : raw[key].trim();
+  }
   return patch;
 }
 export function addressPatch(
@@ -199,8 +214,12 @@ export function addressPatch(
   source: SavedAddress | null
 ): AddressFormValues | Partial<AddressFormValues> {
   const patch: Partial<AddressFormValues> = {};
-  for (const key of addressFormFields)
-    if (!source || raw[key] !== source[key]) patch[key] = raw[key].trim();
+  for (const key of addressFormFields) {
+    if (key === 'postalCode') {
+      const value = normalizeProfileDigits(raw[key].trim());
+      if (!source || value !== normalizeProfileDigits(source[key].trim())) patch[key] = value;
+    } else if (!source || raw[key] !== source[key]) patch[key] = raw[key].trim();
+  }
   return patch;
 }
 export function profilePatchAuthorized(source: SettingsProfile, patch: SettingsPatch) {

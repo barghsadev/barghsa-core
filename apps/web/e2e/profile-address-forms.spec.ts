@@ -274,6 +274,7 @@ for (const locale of ['en', 'fa'] as const) {
     const owner = form(page, 'profile');
     const title = page.locator('#profile-title'),
       legal = page.locator('#profile-legalName');
+    const national = page.locator('#profile-nationalIdentifier');
     const full = page.locator('#profile-address'),
       postal = page.locator('#profile-postal-code');
     const addressFields = [
@@ -299,7 +300,11 @@ for (const locale of ['en', 'fa'] as const) {
     for (const field of addressFields)
       await expect(field).not.toHaveAttribute('aria-required', 'true');
     await full.fill('  Retained main address  ');
-    await postal.fill('2345678901');
+    await postal.fill(locale === 'fa' ? '۲۳۴۵۶۷۸۹۰۱' : '2345678901');
+    await national.fill(locale === 'fa' ? '۱۰۱۲۳۴۵۶۷۸۹' : '10123456789');
+    await expect(national).toHaveAccessibleDescription(
+      tSettingsForms('nationalIdentifierHelp', locale)
+    );
     await owner
       .getByRole('button', { name: tSettingsForms('refreshProfile', locale), exact: true })
       .click();
@@ -326,6 +331,10 @@ for (const locale of ['en', 'fa'] as const) {
     await title.press('Enter');
     await confirm(page, locale);
     await expect.poll(() => state.writes.length).toBe(1);
+    expect(state.writes[0]!.body).toMatchObject({
+      nationalIdentifier: '10123456789',
+      postalCode: '2345678901',
+    });
     await linkedError(legal, tSettingsForms('legalNameInvalid', locale));
     await expect(commandToast(page, 'error', tSettingsForms('error', locale))).toHaveCount(1);
     await expect(full).toHaveValue('  Retained main address  ');
@@ -385,6 +394,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(action(page, locale, 'refreshConfirmation')).toHaveCount(0);
     await expect(page.getByRole('dialog')).toHaveCount(0);
     await expect(legal).toHaveValue('Captured Company');
+    await expect(national).toHaveValue('10123456789');
     await expect(
       commandToast(page, 'success', crmText('settings.profile.success', locale))
     ).toHaveCount(1);
@@ -497,11 +507,13 @@ for (const locale of ['en', 'fa'] as const) {
     );
 
     await full.fill('  First saved address  ');
-    await postal.fill('2345678901');
+    await postal.fill(locale === 'fa' ? '۲۳۴۵۶۷۸۹۰۱' : '2345678901');
+    await expect(postal).toHaveAccessibleDescription(tSettingsForms('postalCodeHelp', locale));
     state.ownedFields = ['postalCode'];
     state.modes.create = 'owned';
     await submit(owner).click();
     await expect.poll(() => state.writes.length).toBe(1);
+    expect(state.writes[0]!.body.postalCode).toBe('2345678901');
     await linkedError(postal, t('settings.addresses.validation.postalCode', locale));
     await expect(commandToast(page, 'error', tSettingsForms('error', locale))).toHaveCount(1);
     await expect(full).toHaveValue('  First saved address  ');
@@ -559,13 +571,14 @@ for (const locale of ['en', 'fa'] as const) {
       .click();
     await expect(full).toHaveValue('First saved address');
     await full.fill('  Edited saved address  ');
-    await postal.fill('3456789012');
+    await postal.fill(locale === 'fa' ? '٣٤٥٦٧٨٩٠١٢' : '3456789012');
     state.modes.edit = 'hold';
     await submit(owner).click();
     await expect.poll(() => state.writes.length).toBe(5);
     await addressCompanions(page, locale, state);
     expect(state.writes[4]!.body).not.toHaveProperty('provinceId');
     expect(state.writes[4]!.body).not.toHaveProperty('cityId');
+    expect(state.writes[4]!.body.postalCode).toBe('3456789012');
     const edited = fixture.commitHeld();
     await fixture.finishHeld(edited, true);
     await expect(action(page, locale, 'retryOriginal')).toBeVisible();

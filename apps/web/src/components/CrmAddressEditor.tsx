@@ -4,6 +4,8 @@ import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { Button, Input, Label, Textarea } from '@barghsa/ui';
 import { tCrmForm as t } from '@barghsa/i18n/crm-forms';
+import { tSettingsForms } from '@barghsa/i18n/settings-forms';
+import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from './GeographyLoadError.js';
@@ -90,7 +92,7 @@ export function CrmAddressEditor({
             path: ['fullAddress'],
             message: messages.fullAddress,
           });
-        if (!/^[1-9][0-9]{9}$/.test(values.postalCode.trim()))
+        if (!/^[1-9][0-9]{9}$/.test(normalizeProfileDigits(values.postalCode.trim())))
           context.addIssue({ code: 'custom', path: ['postalCode'], message: messages.postalCode });
       }),
     {
@@ -115,9 +117,13 @@ export function CrmAddressEditor({
   );
   const provinceField = draft.bind('provinceId');
   const cityField = draft.bind('cityId');
+  const postalField = draft.bind('postalCode');
+  const postalCode = normalizeProfileDigits(fields.postalCode.trim());
   const disabled = pending !== null || draft.form.formState.isSubmitting;
-  const changed = (Object.keys(fields) as (keyof AddressFields)[]).some(
-    (key) => fields[key].trim() !== address[key]
+  const changed = (Object.keys(fields) as (keyof AddressFields)[]).some((key) =>
+    key === 'postalCode'
+      ? postalCode !== normalizeProfileDigits(address.postalCode.trim())
+      : fields[key].trim() !== address[key]
   );
   const label = (name: PlaceName | null) =>
     (locale === 'fa' ? name?.nameFa : name?.nameEn) || t('crm.records.unknown', locale);
@@ -126,7 +132,7 @@ export function CrmAddressEditor({
     setPending({
       ...values,
       fullAddress: values.fullAddress.trim(),
-      postalCode: values.postalCode.trim(),
+      postalCode: normalizeProfileDigits(values.postalCode.trim()),
     });
   });
   async function saved(value: unknown) {
@@ -281,10 +287,13 @@ export function CrmAddressEditor({
                 {t('crm.profile.field.postalCode', locale)}
               </Label>
               <Input
-                {...draft.bind('postalCode')}
+                {...postalField}
                 id={fieldId + '-postal'}
                 required
                 aria-required="true"
+                aria-describedby={[fieldId + '-postal-help', postalField['aria-describedby']]
+                  .filter(Boolean)
+                  .join(' ')}
                 inputMode="numeric"
                 maxLength={10}
                 className="max-w-xs"
@@ -292,6 +301,9 @@ export function CrmAddressEditor({
                 value={fields.postalCode}
                 onChange={(event) => draft.field('postalCode')[1](event.target.value)}
               />
+              <p id={fieldId + '-postal-help'} className="text-xs text-muted-foreground">
+                {tSettingsForms('postalCodeHelp', locale)}
+              </p>
               {errors.postalCode && (
                 <p
                   id={draft.errorId('postalCode')}

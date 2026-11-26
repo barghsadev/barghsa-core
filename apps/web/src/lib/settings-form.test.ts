@@ -179,10 +179,39 @@ describe('settings forms confirm actual authorized receipts before clearing draf
       fullAddress: 'Edited',
     });
     expect(addressPatch(values, address)).toEqual({});
+    expect(addressPatch({ ...values, postalCode: '۱۲۳۴۵۱۲۳۴۵' }, address)).toEqual({});
     expect(addressPatch({ ...values, fullAddress: ' New ' }, null)).toEqual({
       ...values,
       fullAddress: 'New',
     });
+  });
+
+  it('accepts localized identity and postal digits while submitting the exact digit strings', () => {
+    const personal = { ...profileValues(profile), nationalId: '۰۰۱۰۳۵۰۸۲۹' };
+    const company = { ...profileValues(legal), nationalIdentifier: '١٠١٢٣٤٥٦٧٨٩' };
+    for (const [source, values] of [
+      [profile, personal],
+      [legal, company],
+    ] as const) {
+      const schema = profileSettingsSchema(
+        copy,
+        () => source,
+        profilePatch,
+        offeredProvince,
+        offeredCity
+      );
+      expect(schema.safeParse(values).success).toBe(true);
+    }
+    expect(profilePatch(personal, profile)).toEqual({ nationalId: '0010350829' });
+    expect(profilePatch(company, legal)).toEqual({ nationalIdentifier: '10123456789' });
+    expect(profilePatch({ ...personal, postalCode: '۱۲۳۴۵۱۲۳۴۵' }, profile)).toEqual({
+      nationalId: '0010350829',
+    });
+    const postal = { ...profileValues(profile), postalCode: '۲۳۴۵۶۷۸۹۰۱' };
+    const schema = savedAddressSchema(copy, () => null, offeredProvince, offeredCity);
+    expect(schema.safeParse(postal).success).toBe(true);
+    expect(schema.safeParse({ ...postal, postalCode: '۲۳۴۵-۶۷۸۹۰۱' }).success).toBe(false);
+    expect(addressPatch(postal, address)).toEqual({ postalCode: '2345678901' });
   });
 
   it('validates only changed permitted profile fields, without blocking title-only legacy records', () => {
