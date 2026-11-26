@@ -42957,7 +42957,7 @@
           "kind": "verified-active-profile-address-crud",
           "reviewed_sha": "97f3425284a6545bbe78356941a8ac1e94a47512",
           "source_evidence": [
-            736692059812723,
+            617203417251800,
             4263626760667813,
             4350526259682883,
             1128846107395392,
@@ -43718,7 +43718,7 @@
             1852083008356265,
             3817337598802695,
             3575483778814441,
-            3641611937229188,
+            1180635779984392,
             352863591363445,
             335271907751690,
             817282171245891,
@@ -43727,7 +43727,7 @@
             493258006362158,
             383421367741657,
             4263626760667813,
-            2039136553862528,
+            4358418465813310,
             1011544371548010,
             2899679434623877,
             4350526259682883,
@@ -43735,7 +43735,7 @@
             3175424522301063,
             3231382612497604,
             4198543266741263,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             3108623938713492,
             738324130165064,
@@ -43868,7 +43868,8 @@
             3988410423463805,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "related_evidence": [
             "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance/review.json",
@@ -44966,7 +44967,7 @@
             4263626760667813,
             562548647231915,
             3612439177903267,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             499991980562011,
@@ -45162,7 +45163,8 @@
             3988410423463805,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -46164,7 +46166,7 @@
             4263626760667813,
             562548647231915,
             3612439177903267,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             499991980562011,
@@ -46360,7 +46362,8 @@
             3988410423463805,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -47370,7 +47373,7 @@
             4263626760667813,
             562548647231915,
             3612439177903267,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             499991980562011,
@@ -47566,7 +47569,8 @@
             3988410423463805,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/terms-acceptance",
           "limitations": [
@@ -293666,7 +293670,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -293826,7 +293830,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Existing saving_order_lines stores UUIDv7 IDs, order FK, descriptions, exact IRR amounts and constrained plan_price/hardware_price/discount/vat types. Atomic submission creates four lines; negative discount and nonnegative other lines enforced.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -294471,7 +294476,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -294631,7 +294636,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Existing saving_fulfillment_stages contains per-order five unique staged rows, status/time/actor/explanation fields and completion constraints. Submission, staff progression, handover and completion exercised in real migrated HTTP and browser journey.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -295278,7 +295284,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -295438,7 +295444,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Catalogue and step1 display localized plan title, description, exact price and active availability; inactive/missing agreement/price plans are unavailable. Current FA/EN component cases and current browser journey cover plan selection.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -296083,7 +296090,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -296243,7 +296250,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Step2 shows only the selected plan hardware association, localized title/full description/price and exactly one radio choice. Active stock admission and explicit hardware confirmation gate advancement and backend submission.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -296888,7 +296896,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -297048,7 +297056,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Step3 normalizes supported digits and locally validates six-to-thirteen digits. Optional backend verify-bill calls deployment-configured adapter only after current individual-profile authorization; valid result uses real authenticated gateway.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -297693,7 +297702,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -297853,7 +297862,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Client verification fallback preserves draft fields and offers another verify action/manual-review flow. Configured provider has bounded timeout/retry; malformed/auth/timeout return advisory unavailable. Current authorization is rechecked after response before exposing result.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -298499,7 +298509,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -298659,7 +298669,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Current duplicate API checks active bill+plan, returns existing reference and configured prevention. Submission locks actor/profile/plan and enforces duplicate policy or explicit acknowledgement. Real staff-policy/concurrent duplicate cases and client existing-order/support path inspected.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -299304,7 +299315,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -299464,7 +299475,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Existing adapter returns source/status/data/attempt timestamp/bounded reason; actual authenticated success, two-attempt timeout, nonretry auth/invalid-data and circuit-open suppression tested. Source jitter100..199ms and2.5-second attempt timeout preserved.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -300109,7 +300121,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -300269,7 +300281,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Existing verification_result JSONB persists the authoritative provider attempt on saving order creation. New configured-provider submission checks exact source/auth_error/unavailable/timestamp metadata; keyed replay preserves original metadata even when provider recovers.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -300914,7 +300927,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -301074,7 +301087,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Explicit submitForStaffReview=true is mandatory. Actual configured auth failure submission succeeds into awaiting_staff_review with failure metadata; missing consent denies without erasing saved draft or creating an order. Exact replay creates one order and retains the original attempt.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -301710,10 +301724,10 @@
           "kind": "verified-saving-installation-address-selection",
           "reviewed_sha": "97f3425284a6545bbe78356941a8ac1e94a47512",
           "source_evidence": [
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             3575483778814441,
-            736692059812723,
+            617203417251800,
             4263626760667813,
             4350526259682883,
             1128846107395392,
@@ -301846,7 +301860,8 @@
             3988410423463805,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-address-acceptance",
           "binding_renewal": {
@@ -302356,7 +302371,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -302516,7 +302531,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Wizard displays editable plan agreement title/body from immutable active version and requires explicit agreement acceptance. Server checks active version at quote/submission; current real agreement publication/new-version test proves original title/body snapshot retained.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -303153,10 +303169,10 @@
           "reviewed_sha": "97f3425284a6545bbe78356941a8ac1e94a47512",
           "base_commit": "a9c2fc2f77b8bb5ef457a8c24f51f45cba68c2db",
           "source_evidence": [
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             3575483778814441,
-            736692059812723,
+            617203417251800,
             4263626760667813,
             4350526259682883,
             1128846107395392,
@@ -303174,7 +303190,7 @@
             3817337598802695,
             738324130165064,
             3108623938713492,
-            3641611937229188,
+            1180635779984392,
             1926007833225293,
             2108766577796935,
             2061875816722936,
@@ -303290,7 +303306,8 @@
             3988410423463805,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-authoritative-review",
           "binding_renewal": {
@@ -303802,7 +303819,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -303962,7 +303979,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Guarded POST /api/saving/orders recalculates locked active plan/hardware, assigned compatibility, version, profile-owned address, price/VAT/gift and quote digest, then atomically creates order/lines, contract/version, unpaid invoice, stages, audit and keyed receipt. Snapshot and redirected detail proven by real HTTP and both browser engines.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -304607,7 +304625,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -304767,7 +304785,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Same user/key/request hash replays original order, contract and invoice; conflicting body and duplicate policy deny atomically. Concurrent submissions serialize actor/profile/product locks and stock/gift assertions, with rollback and immutable original refs tested.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -305412,7 +305431,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -305572,7 +305591,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Commercial authorization locks actual profile and current session/policy; only INDIVIDUAL allowed, legal profile rejected by authoritative backend. Real quote/submission cases retained in current saving HTTP suite; new post-provider ownership/session/archive/suspension withdrawals pass.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -306219,7 +306239,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -306379,7 +306399,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Schema constrains all eight specified commercial states, separate form drafts support draft progression, atomic submission advances to awaiting_staff_review, staff approval/rejection and guarded fulfillment/cancellation implement subsequent stages with audit/notification. Migrated HTTP and complete browser journey pass.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -307024,7 +307045,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -307184,7 +307205,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Separate four-state financial column follows invoice-state sync and cancellation/refund triggers; actual paid/refund_pending/refunded wallet/cancellation progression covered in current real HTTP suite. Financial and commercial histories remain distinct.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -307834,7 +307856,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -307994,7 +308016,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Profile-authorized list and customer history table/cards display saving status, plan/hardware, exact total, submitted time, next action/link and stable filters/pagination. Current list component, real history/profile-isolation and browser journey cases pass.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -308648,7 +308671,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -308808,7 +308831,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Detail displays captured bill/address/price/agreement data, linked contract/invoice states and actionable payment links, five-stage progress, document uploads and comments with visibility isolation. Current real HTTP and browser checks include payment/acceptance, stage/doc/handover and terminal cancellation/refund evidence.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -309462,7 +309486,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -309622,7 +309646,8 @@
             433380315579727,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Customer unpaid change preview binds profile/order/current version/hardware/address and exact quote, atomically replaces invoice/version and moves reservation. Paid changes require staff confirmed audited amendment and financial correction, with repricing basis, stock, replay and stale/authority denial proven in current HTTP suite.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-ordering-acceptance",
@@ -320664,7 +320689,7 @@
             4375944865851522,
             2464405386812399,
             180270143594406,
-            2039136553862528,
+            4358418465813310,
             3900408872731030,
             2682501148731555,
             624058781172857,
@@ -320674,7 +320699,7 @@
             1814478589040737,
             778626130127391,
             1207876837088199,
-            736692059812723,
+            617203417251800,
             3108623938713492,
             464705856149245,
             1677186260693322,
@@ -320785,7 +320810,8 @@
             1013810029644579,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-inventory",
           "limitations": [
@@ -321330,7 +321356,7 @@
             4375944865851522,
             2464405386812399,
             180270143594406,
-            2039136553862528,
+            4358418465813310,
             3900408872731030,
             2682501148731555,
             624058781172857,
@@ -321340,7 +321366,7 @@
             1814478589040737,
             778626130127391,
             1207876837088199,
-            736692059812723,
+            617203417251800,
             3108623938713492,
             464705856149245,
             1677186260693322,
@@ -321451,7 +321477,8 @@
             1013810029644579,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-inventory",
           "limitations": [
@@ -321997,7 +322024,7 @@
             4375944865851522,
             2464405386812399,
             180270143594406,
-            2039136553862528,
+            4358418465813310,
             3900408872731030,
             2682501148731555,
             624058781172857,
@@ -322007,7 +322034,7 @@
             1814478589040737,
             778626130127391,
             1207876837088199,
-            736692059812723,
+            617203417251800,
             3108623938713492,
             464705856149245,
             1677186260693322,
@@ -322118,7 +322145,8 @@
             1013810029644579,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/saving-inventory",
           "limitations": [
@@ -325161,7 +325189,7 @@
             2899679434623877,
             3231382612497604,
             352863591363445,
-            3641611937229188,
+            1180635779984392,
             1709984365713109,
             817282171245891,
             493258006362158,
@@ -325715,7 +325743,7 @@
             2899679434623877,
             3231382612497604,
             352863591363445,
-            3641611937229188,
+            1180635779984392,
             1709984365713109,
             817282171245891,
             493258006362158,
@@ -349521,7 +349549,7 @@
             3387164305949050,
             1631550590596603,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             2824407702229714,
@@ -349737,7 +349765,8 @@
             4454045317824519,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "All applicable simple/advanced/saving order, electricity detail/revision/increase/price, saving detail/change/staff, consultation intake/offer/fee and solar intake/contract reviews display current available balance with existing wallet online/bank-receipt funding where an exact reviewed charge exceeds balance. Staff access requires current finance authorization; denied/malformed/stale reads never disclose old data or masquerade as zero. Existing authoritative wallet payment and confirmation/retry behavior retained.",
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/wallet-review-disclosure",
@@ -402346,7 +402375,8 @@
             1919448631792321,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "source_evidence": [
             1501764925946930,
@@ -402418,7 +402448,7 @@
             1354935107197676,
             4263626760667813,
             562548647231915,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             1529995062262180,
@@ -404585,7 +404615,7 @@
             4340116604412174,
             3061474197260633,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             1127048851499046,
             3451605690707152,
             738324130165064,
@@ -404611,7 +404641,8 @@
             2291110747314973,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "source_renewals": [
             4242622172012557,
@@ -430013,7 +430044,7 @@
             1139145300995230,
             2668198958435323,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1127048851499046,
             79613572085850,
             1011544371548010,
@@ -430183,7 +430214,8 @@
             765322312397149,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-shared-component-closure",
           "limitations": [
@@ -444017,7 +444049,7 @@
             93965129603785,
             526242493799403,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             1127048851499046,
             1011544371548010,
             639064226338136,
@@ -444077,7 +444109,8 @@
             164118268995140,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-consultation-offer-layout/proof.json",
           "scope_dispositions": [
@@ -447091,7 +447124,7 @@
             920419484130760,
             2700408043277990,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             1127048851499046,
             2577893877020127,
             79613572085850,
@@ -447204,7 +447237,8 @@
             765322312397149,
             2273321996836299,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-signature-target-and-fields/proof.json",
           "scope_dispositions": [
@@ -448894,7 +448928,7 @@
             93965129603785,
             526242493799403,
             256168743657061,
-            2039136553862528,
+            4358418465813310,
             3883839257125722,
             4416303949403856,
             2900291234406776,
@@ -448930,7 +448964,8 @@
             433380315579727,
             2777115060869069,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "All eight required widths passed in English and Persian on Chromium and mobile Safari. No rendered text overlap, clipping or horizontal overflow was reported. All additional fractional touch reports retained both 44px computed minima and at least 44 CSS pixels of physical area.",
           "limitations": [
@@ -450851,7 +450886,7 @@
             3387164305949050,
             1631550590596603,
             2700408043277990,
-            2039136553862528,
+            4358418465813310,
             2577893877020127,
             79613572085850,
             2899679434623877,
@@ -451034,7 +451069,8 @@
             2273321996836299,
             2173604582140538,
             1047931288274119,
-            2472385886282026
+            2472385886282026,
+            1419674803659299
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
           "scope_dispositions": [
@@ -451661,7 +451697,7 @@
             93965129603785,
             526242493799403,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             1127048851499046,
             79613572085850,
             1011544371548010,
@@ -451726,7 +451762,8 @@
             164118268995140,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json",
           "scope_dispositions": [
@@ -471367,7 +471404,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -471504,7 +471541,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -471828,7 +471865,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -472404,7 +472442,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -472541,7 +472579,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -472865,7 +472903,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -473442,7 +473481,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -473579,7 +473618,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -473903,7 +473942,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -474449,7 +474489,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -474586,7 +474626,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -474910,7 +474950,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -475482,7 +475523,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -475619,7 +475660,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -475943,7 +475984,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -476524,7 +476566,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -476661,7 +476703,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -476985,7 +477027,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -477539,7 +477582,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -477676,7 +477719,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -478000,7 +478043,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -478518,7 +478562,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -478655,7 +478699,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -478979,7 +479023,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -479497,7 +479542,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -479634,7 +479679,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -479958,7 +480003,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -480477,7 +480523,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -480614,7 +480660,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -480938,7 +480984,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -481456,7 +481503,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -481593,7 +481640,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -481917,7 +481964,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -482593,7 +482641,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -482700,7 +482748,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -482934,7 +482982,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -483637,7 +483686,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -483744,7 +483793,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -483978,7 +484027,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -484692,7 +484742,7 @@
             3734743512583542,
             4092785323283188,
             2335946316021095,
-            3641611937229188,
+            1180635779984392,
             3561029166162151,
             3178660988872663,
             163286295504258,
@@ -485131,7 +485181,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             1127048851499046,
             2577893877020127,
             79613572085850,
@@ -485398,7 +485448,8 @@
             3548178453850502,
             2173604582140538,
             1047931288274119,
-            2472385886282026
+            2472385886282026,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -485813,7 +485864,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -485920,7 +485971,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -486156,7 +486207,8 @@
             765322312397149,
             2273321996836299,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -486859,7 +486911,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -486966,7 +487018,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -487200,7 +487252,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -487903,7 +487956,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -488010,7 +488063,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -488244,7 +488297,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -488947,7 +489001,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -489054,7 +489108,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -489288,7 +489342,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -489991,7 +490046,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -490098,7 +490153,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -490332,7 +490387,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -491035,7 +491091,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -491142,7 +491198,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -491376,7 +491432,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -492079,7 +492136,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -492186,7 +492243,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -492420,7 +492477,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -493123,7 +493181,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -493230,7 +493288,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -493464,7 +493522,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -494167,7 +494226,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -494274,7 +494333,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -494508,7 +494567,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -495211,7 +495271,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -495318,7 +495378,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -495552,7 +495612,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -496255,7 +496316,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -496362,7 +496423,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -496596,7 +496657,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -497805,7 +497867,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -497912,7 +497974,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -498146,7 +498208,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -498849,7 +498912,7 @@
             4423790021144107,
             4022806911934414,
             1139145300995230,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             1011544371548010,
             2899679434623877,
@@ -498956,7 +499019,7 @@
             1485743772255583,
             1079662255570347,
             2686485987759667,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1281868800915589,
             1286651347772341,
@@ -499190,7 +499253,8 @@
             4020406858439137,
             765322312397149,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-notification-recovery-journey",
           "limitations": [
@@ -499887,7 +499951,8 @@
             3548178453850502,
             2173604582140538,
             1047931288274119,
-            2472385886282026
+            2472385886282026,
+            1419674803659299
           ],
           "source_evidence": [
             4426486251880254,
@@ -500061,7 +500126,7 @@
             4423790021144107,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1127048851499046,
             2577893877020127,
             79613572085850,
@@ -500485,7 +500550,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -500622,7 +500687,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -500946,7 +501011,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -501460,7 +501526,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -501597,7 +501663,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -501921,7 +501987,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -502435,7 +502502,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -502572,7 +502639,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -502896,7 +502963,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -503410,7 +503478,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -503547,7 +503615,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -503871,7 +503939,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -504385,7 +504454,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -504522,7 +504591,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -504846,7 +504915,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -505360,7 +505430,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -505497,7 +505567,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -505821,7 +505891,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -506335,7 +506406,7 @@
             4426486251880254,
             1852083008356265,
             2355168525026724,
-            3641611937229188,
+            1180635779984392,
             3471057164537066,
             4320527206848287,
             244783737707374,
@@ -506472,7 +506543,7 @@
             93965129603785,
             3387164305949050,
             1631550590596603,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             639064226338136,
@@ -506796,7 +506867,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-forms-confirmation-journey",
           "limitations": [
@@ -534235,7 +534307,7 @@
             2900291234406776,
             1485743772255583,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1676968729165868,
             3406324480815637,
             381152929901086,
@@ -534626,7 +534698,7 @@
             2900291234406776,
             1485743772255583,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1676968729165868,
             3406324480815637,
             381152929901086,
@@ -535017,7 +535089,7 @@
             2900291234406776,
             1485743772255583,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1676968729165868,
             3406324480815637,
             381152929901086,
@@ -535406,7 +535478,7 @@
             2900291234406776,
             1485743772255583,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1676968729165868,
             3406324480815637,
             381152929901086,
@@ -535795,7 +535867,7 @@
             2900291234406776,
             1485743772255583,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1676968729165868,
             3406324480815637,
             381152929901086,
@@ -536186,7 +536258,7 @@
             2900291234406776,
             1485743772255583,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1676968729165868,
             3406324480815637,
             381152929901086,
@@ -536576,7 +536648,7 @@
             2900291234406776,
             1485743772255583,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1676968729165868,
             3406324480815637,
             381152929901086,
@@ -536966,7 +537038,7 @@
             2900291234406776,
             1485743772255583,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1676968729165868,
             3406324480815637,
             381152929901086,
@@ -537356,7 +537428,7 @@
             2900291234406776,
             1485743772255583,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1676968729165868,
             3406324480815637,
             381152929901086,
@@ -537746,7 +537818,7 @@
             2900291234406776,
             1485743772255583,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1676968729165868,
             3406324480815637,
             381152929901086,
@@ -538136,7 +538208,7 @@
             2900291234406776,
             1485743772255583,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1676968729165868,
             3406324480815637,
             381152929901086,
@@ -538526,7 +538598,7 @@
             2900291234406776,
             1485743772255583,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1676968729165868,
             3406324480815637,
             381152929901086,
@@ -544343,7 +544415,7 @@
             3817337598802695,
             4336739995083235,
             3552859980873815,
-            3641611937229188,
+            1180635779984392,
             244783737707374,
             335271907751690,
             4336355661992457,
@@ -544380,7 +544452,7 @@
             1209672835114970,
             1925113353352711,
             4263626760667813,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             4350526259682883,
@@ -544404,7 +544476,7 @@
             2015704454338385,
             108895082311458,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             381152929901086,
             4338563790015953,
@@ -544455,7 +544527,8 @@
             1192142645580941,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Shared FormWizard/ProgressStepper and FormStep validation provide localized numbered progress, completed/current/pending state, retained Back/Save/Next actions, current-step validation and complete final validation in all service/onboarding callers.",
           "limitations": [
@@ -544800,7 +544873,7 @@
             3817337598802695,
             4336739995083235,
             3552859980873815,
-            3641611937229188,
+            1180635779984392,
             244783737707374,
             335271907751690,
             4336355661992457,
@@ -544837,7 +544910,7 @@
             1209672835114970,
             1925113353352711,
             4263626760667813,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             4350526259682883,
@@ -544861,7 +544934,7 @@
             2015704454338385,
             108895082311458,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             381152929901086,
             4338563790015953,
@@ -544912,7 +544985,8 @@
             1192142645580941,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Every completed step saves owner-bound server progress and validates its receipt before advancing. Resume restores validated values. Shared TTL defaults7 days, config range1..365, admin current permission/step-up/versioned audit, live expiry, invalid settings, rollback and preserved profile/history verified.",
           "limitations": [
@@ -545256,7 +545330,7 @@
             3817337598802695,
             4336739995083235,
             3552859980873815,
-            3641611937229188,
+            1180635779984392,
             244783737707374,
             335271907751690,
             4336355661992457,
@@ -545293,7 +545367,7 @@
             1209672835114970,
             1925113353352711,
             4263626760667813,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             4350526259682883,
@@ -545317,7 +545391,7 @@
             2015704454338385,
             108895082311458,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             381152929901086,
             4338563790015953,
@@ -545368,7 +545442,8 @@
             1192142645580941,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Shared StepReviewPage and SimpleElectricityReview show readonly collected fields and authoritative server financial snapshots. Per-section edit saves progress, returns to the correct panel and invalidates stale review; failed edits preserve the accepted review.",
           "limitations": [
@@ -545714,7 +545789,7 @@
             3817337598802695,
             4336739995083235,
             3552859980873815,
-            3641611937229188,
+            1180635779984392,
             244783737707374,
             335271907751690,
             4336355661992457,
@@ -545751,7 +545826,7 @@
             1209672835114970,
             1925113353352711,
             4263626760667813,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             4350526259682883,
@@ -545775,7 +545850,7 @@
             2015704454338385,
             108895082311458,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             381152929901086,
             4338563790015953,
@@ -545826,7 +545901,8 @@
             1192142645580941,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "WizardLeaveDialog and caller blockers protect unsaved input, unfinished addresses, pending validation/save/review/submission, exact Save-and-leave receipts and private saved-discard authority. Staying, leaving unsaved edits and deleting saved private progress remain distinct.",
           "limitations": [
@@ -546172,7 +546248,7 @@
             3817337598802695,
             4336739995083235,
             3552859980873815,
-            3641611937229188,
+            1180635779984392,
             244783737707374,
             335271907751690,
             4336355661992457,
@@ -546209,7 +546285,7 @@
             1209672835114970,
             1925113353352711,
             4263626760667813,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             4350526259682883,
@@ -546233,7 +546309,7 @@
             2015704454338385,
             108895082311458,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             381152929901086,
             4338563790015953,
@@ -546284,7 +546360,8 @@
             1192142645580941,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Only normalized safe step values enter the URL. Saved-step ceilings, form validation, browser history, reload and current owner/profile fences prevent skipped unsaved stages or private draft/consent leakage.",
           "limitations": [
@@ -546627,7 +546704,7 @@
             3817337598802695,
             4336739995083235,
             3552859980873815,
-            3641611937229188,
+            1180635779984392,
             244783737707374,
             335271907751690,
             4336355661992457,
@@ -546664,7 +546741,7 @@
             1209672835114970,
             1925113353352711,
             4263626760667813,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             4350526259682883,
@@ -546688,7 +546765,7 @@
             2015704454338385,
             108895082311458,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             381152929901086,
             4338563790015953,
@@ -546739,7 +546816,8 @@
             1192142645580941,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Simple electricity five-stage intake verifies weekly/monthly periods, bill suggestions, positive kWh, server price/green composition, optional validated gift code, retained address, complete authoritative review and single exact submission receipt/retry.",
           "limitations": [
@@ -547082,7 +547160,7 @@
             3817337598802695,
             4336739995083235,
             3552859980873815,
-            3641611937229188,
+            1180635779984392,
             244783737707374,
             335271907751690,
             4336355661992457,
@@ -547119,7 +547197,7 @@
             1209672835114970,
             1925113353352711,
             4263626760667813,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             4350526259682883,
@@ -547143,7 +547221,7 @@
             2015704454338385,
             108895082311458,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             381152929901086,
             4338563790015953,
@@ -547194,7 +547272,8 @@
             1192142645580941,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Advanced electricity five-stage intake verifies localized start/end dates, four-product bundle quantities, green derivation, server price, optional gift and complete authoritative review with retained owned progress and exact submission retry.",
           "limitations": [
@@ -547538,7 +547617,7 @@
             3817337598802695,
             4336739995083235,
             3552859980873815,
-            3641611937229188,
+            1180635779984392,
             244783737707374,
             335271907751690,
             4336355661992457,
@@ -547575,7 +547654,7 @@
             1209672835114970,
             1925113353352711,
             4263626760667813,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             4350526259682883,
@@ -547599,7 +547678,7 @@
             2015704454338385,
             108895082311458,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             381152929901086,
             4338563790015953,
@@ -547650,7 +547729,8 @@
             1192142645580941,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Solar four-stage intake verifies property/building data, grid choice and on-grid bill field, contract-preparation/agreement review and owner/profile-bound final snapshot/receipt. Foreign profile/site snapshots, unfinished address and pending departure cannot bypass guards.",
           "limitations": [
@@ -547993,7 +548073,7 @@
             3817337598802695,
             4336739995083235,
             3552859980873815,
-            3641611937229188,
+            1180635779984392,
             244783737707374,
             335271907751690,
             4336355661992457,
@@ -548030,7 +548110,7 @@
             1209672835114970,
             1925113353352711,
             4263626760667813,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             4350526259682883,
@@ -548054,7 +548134,7 @@
             2015704454338385,
             108895082311458,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             381152929901086,
             4338563790015953,
@@ -548105,7 +548185,8 @@
             1192142645580941,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Saving implements every specified logical group: plan, confirmed equipment, bill identifier, dependent address, agreement and authoritative final review. Existing separate agreement and readonly financial-review panels retained. Reload renews consent, changed inputs renew review and mismatched save/final receipts retain retry state.",
           "limitations": [
@@ -548449,7 +548530,7 @@
             3817337598802695,
             4336739995083235,
             3552859980873815,
-            3641611937229188,
+            1180635779984392,
             244783737707374,
             335271907751690,
             4336355661992457,
@@ -548486,7 +548567,7 @@
             1209672835114970,
             1925113353352711,
             4263626760667813,
-            2039136553862528,
+            4358418465813310,
             79613572085850,
             2899679434623877,
             4350526259682883,
@@ -548510,7 +548591,7 @@
             2015704454338385,
             108895082311458,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             381152929901086,
             4338563790015953,
@@ -548561,7 +548642,8 @@
             1192142645580941,
             433380315579727,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "criterion_result": "Onboarding uses the shared wizard for individual/legal identity/address panels and review, with current-step fields, all-field final validation/focus, server drafts, expiry on the same profile, recoverable setup selection and exact owner-bound submission/dashboard receipts.",
           "limitations": [
@@ -555620,7 +555702,7 @@
             3896771590589823,
             4341620894005602,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             1663804118946860,
             381152929901086,
@@ -556132,7 +556214,7 @@
             3896771590589823,
             4341620894005602,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             1663804118946860,
             381152929901086,
@@ -556646,7 +556728,7 @@
             3896771590589823,
             4341620894005602,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             1663804118946860,
             381152929901086,
@@ -557158,7 +557240,7 @@
             3896771590589823,
             4341620894005602,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             1663804118946860,
             381152929901086,
@@ -557670,7 +557752,7 @@
             3896771590589823,
             4341620894005602,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             1663804118946860,
             381152929901086,
@@ -558186,7 +558268,7 @@
             3896771590589823,
             4341620894005602,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             1663804118946860,
             381152929901086,
@@ -558702,7 +558784,7 @@
             3896771590589823,
             4341620894005602,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             1663804118946860,
             381152929901086,
@@ -559214,7 +559296,7 @@
             3896771590589823,
             4341620894005602,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             1663804118946860,
             381152929901086,
@@ -559726,7 +559808,7 @@
             3896771590589823,
             4341620894005602,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             1663804118946860,
             381152929901086,
@@ -560239,7 +560321,7 @@
             3896771590589823,
             4341620894005602,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             1663804118946860,
             381152929901086,
@@ -560757,7 +560839,7 @@
             3896771590589823,
             4341620894005602,
             70321270663769,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             1663804118946860,
             381152929901086,
@@ -569370,7 +569452,7 @@
             3200406403650173,
             70321270663769,
             559939667370223,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             3108623938713492,
             738324130165064,
@@ -571178,7 +571260,7 @@
             3200406403650173,
             70321270663769,
             559939667370223,
-            736692059812723,
+            617203417251800,
             1709984365713109,
             3108623938713492,
             738324130165064,
@@ -574932,7 +575014,7 @@
             3575483778814441,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1746296813809976,
             362598571240704,
             937091813046257,
@@ -575471,7 +575553,8 @@
             765322312397149,
             2273321996836299,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            1419674803659299
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/staff-order-detail-authority",
@@ -581576,7 +581659,8 @@
             2181524575692978,
             2173604582140538,
             1047931288274119,
-            2472385886282026
+            2472385886282026,
+            1419674803659299
           ],
           "source_evidence": [
             4368684968752415,
@@ -581784,7 +581868,7 @@
             4423790021144107,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1127048851499046,
             2577893877020127,
             79613572085850,
@@ -582628,7 +582712,7 @@
             4022806911934414,
             1139145300995230,
             2704888530081186,
-            2039136553862528,
+            4358418465813310,
             1127048851499046,
             2577893877020127,
             79613572085850,
@@ -582694,7 +582778,7 @@
             3897793205776359,
             4269419342894386,
             2329467198924355,
-            736692059812723,
+            617203417251800,
             3478844370321268,
             1676968729165868,
             1709984365713109,
@@ -583035,7 +583119,8 @@
             3548178453850502,
             2173604582140538,
             1047931288274119,
-            2472385886282026
+            2472385886282026,
+            1419674803659299
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -789658,6 +789743,7 @@
       "2549058649447052": "Scoped solar status renewal: /Users/majid/.local/state/barghsa-manual-batches/solar-status-notification-producers. Final 20 new and 128 unchanged source/compiled-bound cases; 42 unrelated members and 366 original assertions preserved. Six existing messages remain exact and one missing status notice is added. Financial/state/review/authorization/session/audit/idempotency/storage bodies are unchanged. Native rollback explicitly verifies removed provisional storage cleanup reservations,not physical deletion. Other task/release/owner/provider/operations criteria retain their unfinished dispositions.",
       "4134468005471887": "Solar-detail read renewal: 36 targeted units, 22 solar browser cases and 88 budgets pass. Original submission function and prior stages/action/full JSX after the two added retry controls are exact; 106 original assertion expressions are exact and browser source remains an exact prefix. Added account/profile/request ownership, local read recovery and current-denial withdrawal. Prior effective criteria/status preserved. Scoped proof: /Users/majid/.local/state/barghsa-manual-batches/server-state-solar-detail.",
       "4161870205570180": "Bindings renewed by release-0.5-route-adoption-matrix: the solar document action has a layout-only change, and the affected browser journeys and solar units pass with existing receipt, authority and financial assertions. Saving browser checks preserve their exact draft and refund assertions after the width probe.",
+      "1419674803659299": "Savings checkout preserves the saved plan and equipment when opened through a link for another plan. An explicit switch clears equipment consent, keeps the bill and address, and waits for the normal draft save. Verified that fresh orders still preselect an available linked plan, and checked English and Persian layouts through 320 px. The web build, 66 browser checks, 29 unit/component checks and 212 bundle budgets passed. Logs are in /tmp/barghsa-form-review/saving-catalogue-draft-*.",
       "3903256865123425": "Reviewed existing public terms, sanitized Markdown/HTML renderer, version identity and FA/EN RTL/LTR dates. Preserved registration and immutable consent transaction; built only demonstrated commercial admission and receipt acknowledgement gaps.",
       "3911729723584501": "180 distinct API cases pass:120 affected core orders/profile draft/solar/consultation/saving/electricity callers (caller-http.json six real suites plus corrected order-units.json; initial failed unit cases not accepted),46 terms service/migrated terms/error-envelope cases,11 registration HTTP cases and3 new cross-service consent HTTP cases. Gate checks after account/session lock, major/minor policy, all four intake entrypoints, existing record access, exact committed consultation retry, Persian denial and publication during lock wait. Immutable acceptance/current-session rollback tests retained.",
       "1275070827393372": "58 frontend cases and26 dictionary cases pass. Seven fetch cases are included in58, not added again: original response body preserved; explicit same-origin terms denial only. Intake functions/dictionary existing entries and unrelated methods proven unchanged by compatibility-proof.json/source-delta-review.json.",
@@ -796978,9 +797064,9 @@
         "path": "apps/web/src/components/CatalogueChoicePicker.tsx",
         "sha256": "60545a9c9bea0e1c80104c9583825b2ae4110efcace8fb8030c938e69d21794b"
       },
-      "736692059812723": {
+      "617203417251800": {
         "path": "packages/i18n/src/saving.ts",
-        "sha256": "b5176145c29fbf08a38a499f6b39ded60b4ab2f1da03139dbcd2c3f5051757f9"
+        "sha256": "fa88b7d40d6c9da13e9a03bf3fa619fcbe1248e88eb73de4649f797e44e95cf5"
       },
       "4350526259682883": {
         "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
@@ -797022,17 +797108,17 @@
         "path": "apps/api/src/solar/solar-request.validation.ts",
         "sha256": "51a6916687c6b5998a90c5511080134a8c297253c8620ceb7612746aa26370c8"
       },
-      "3641611937229188": {
+      "1180635779984392": {
         "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
-        "sha256": "c2021e22e00c456a439135b999cd6a6a793f876944d5a510e9b0538de5d2d53e"
+        "sha256": "3e5ff736b09faecbaa9ba42d5ba0cb2146b92971c8591b4bfe0bf0225f3f6f29"
       },
       "817282171245891": {
         "path": "apps/web/src/hooks/useFormDraft.ts",
         "sha256": "1323dc6eefd9e38d6fff5c7de26ea94e7550b3d418b05121507a82254a79e8a9"
       },
-      "2039136553862528": {
+      "4358418465813310": {
         "path": "apps/web/src/pages/SavingsOrderPage.tsx",
-        "sha256": "f033039d53f9792e93ff38a2141e39486d809f12dc2d6eec79b0127f69f1ca30"
+        "sha256": "087e40fba81a35dc36646713882000a9744c545fafec74b6be62e94ecb12fb96"
       },
       "1011544371548010": {
         "path": "apps/web/src/pages/SolarRequestDetailPage.tsx",

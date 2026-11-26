@@ -47,6 +47,28 @@ const savingData = {
   addressId: address.id,
   giftCode: '',
 };
+const savingPlan = {
+  id: planId,
+  title: { en: 'Home plan', fa: 'طرح خانه' },
+  description: null,
+  price: '100000',
+  status: 'active',
+  available: true,
+  hardware: [
+    {
+      id: hardwareId,
+      title: { en: 'Device', fa: 'دستگاه' },
+      description: null,
+      price: '200000',
+      status: 'active',
+    },
+  ],
+  agreement: {
+    versionId: '55555555-5555-4555-8555-555555555555',
+    title: 'Terms',
+    body: 'Plan terms',
+  },
+};
 const button = (page: Page, key: Parameters<typeof t>[0], locale: Locale) =>
   page.getByRole('button', { name: t(key, locale), exact: true });
 const savingReviewButton = (page: Page, locale: Locale) =>
@@ -147,32 +169,7 @@ async function fixture(page: Page, mode: Mode, locale: Locale, savedStep = 1) {
   );
   await page.route('**/api/saving/plans', (r) =>
     r.fulfill({
-      json: {
-        plans: [
-          {
-            id: planId,
-            title: { en: 'Home plan', fa: 'طرح خانه' },
-            description: null,
-            price: '100000',
-            status: 'active',
-            available: true,
-            hardware: [
-              {
-                id: hardwareId,
-                title: { en: 'Device', fa: 'دستگاه' },
-                description: null,
-                price: '200000',
-                status: 'active',
-              },
-            ],
-            agreement: {
-              versionId: '55555555-5555-4555-8555-555555555555',
-              title: 'Terms',
-              body: 'Plan terms',
-            },
-          },
-        ],
-      },
+      json: { plans: [savingPlan] },
     })
   );
   const endpoint = mode === 'saving' ? '/api/saving/orders/draft' : '/api/solar/requests/draft';
@@ -675,6 +672,69 @@ test('optional saving bill verification lets customers edit and continue to revi
     for (const release of checks.values()) release();
   }
 });
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`saving a linked plan keeps the draft until an explicit plan change (${locale})`, async ({
+    page,
+  }) => {
+    const state = await fixture(page, 'saving', locale, 2);
+    const linkedPlanId = 'a0000000-0000-4000-8000-000000000001';
+    const linkedDeviceId = 'a0000000-0000-4000-8000-000000000002';
+    const linked = {
+      ...savingPlan,
+      id: linkedPlanId,
+      title: { en: 'Workshop plan', fa: 'طرح کارگاه' },
+      hardware: [{ ...savingPlan.hardware[0], id: linkedDeviceId }],
+    };
+    await page.route('**/api/saving/plans', (route) =>
+      route.fulfill({ json: { plans: [savingPlan, linked] } })
+    );
+    await page.goto(`${path('saving')}?plan=${linkedPlanId}`);
+    const savedChoice = page.locator(`input[name=planId][value="${planId}"]`);
+    const linkedChoice = page.locator(`input[name=planId][value="${linkedPlanId}"]`);
+    const savedDevice = page.locator(`input[name=hardwareId][value="${hardwareId}"]`);
+    const linkedDevice = page.locator(`input[name=hardwareId][value="${linkedDeviceId}"]`);
+    const confirmation = page.getByRole('checkbox', {
+      name: tSaving('confirmHardware', locale),
+      exact: true,
+    });
+    const switchLabel = tSaving('switchPlan', locale);
+    expect(switchLabel).not.toBe('switchPlan');
+    const switchButton = page.getByRole('button', { name: switchLabel, exact: true });
+    await expect(savedChoice).toBeChecked();
+    await expect(savedDevice).toBeChecked();
+    await expect(linkedChoice).not.toBeChecked();
+    await expect(confirmation).not.toBeChecked();
+    await expect(switchButton).toBeVisible();
+    expect(state.saves).toEqual([]);
+    await switchButton.click();
+    await expect(linkedChoice).toBeChecked();
+    await expect(linkedChoice).toBeFocused();
+    await expect(linkedDevice).not.toBeChecked();
+    await expect(savedDevice).toHaveCount(0);
+    await expect(switchButton).toHaveCount(0);
+    expect(state.saves).toEqual([]);
+    await linkedDevice.check();
+    await confirmation.check();
+    await page.getByRole('button', { name: tSaving('next', locale), exact: true }).click();
+    await expect(input(page, 'saving', locale)).toHaveValue(savingData.billIdentifier);
+    await expect(page.locator(`input[name=addressId][value="${address.id}"]`)).toBeChecked();
+    expect(state.saves).toEqual([
+      {
+        profileId,
+        currentStep: 4,
+        data: { ...savingData, planId: linkedPlanId, hardwareId: linkedDeviceId },
+      },
+    ]);
+    expect(state.orders).toEqual([]);
+    await page.route('**/api/saving/orders/draft?*', (route) =>
+      route.fulfill({ json: { currentStep: 1, data: null } })
+    );
+    await page.goto(`${path('saving')}?plan=${linkedPlanId}`);
+    await expect(linkedChoice).toBeChecked();
+    await expect(switchButton).toHaveCount(0);
+  });
+}
 
 for (const mode of ['saving', 'solar'] as const)
   for (const locale of ['en', 'fa'] as const) {

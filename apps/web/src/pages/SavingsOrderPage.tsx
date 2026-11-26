@@ -280,6 +280,7 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
     }
   );
   const [planId, setPlanId] = fields.field('planId');
+  const [suggestedPlanId, setSuggestedPlanId] = useState<string>();
   const [hardwareId, setHardwareId] = fields.field('hardwareId');
   const [hardwareConfirmed, setHardwareConfirmed] = fields.field('hardwareConfirmed');
   const [billIdentifier, setBillIdentifier] = fields.field('billIdentifier');
@@ -420,6 +421,7 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
   const savingDraft = protection.busy;
   const draftSaveError = protection.saveError;
   const selectedPlan = useMemo(() => plans.find((plan) => plan.id === planId), [plans, planId]);
+  const suggestedPlan = plans.find((plan) => plan.id === suggestedPlanId && plan.available);
   const selectedHardware = selectedPlan?.hardware.find((item) => item.id === hardwareId);
   const canConfirmHardware =
     selectedHardware?.status === 'active' &&
@@ -523,20 +525,17 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
     hydratedProfile.current = profileId;
     const saved = draft.data;
     const availablePlans = plans.filter((item) => item.available);
-    const initialPlan =
-      availablePlans.find((item) => item.id === preferredPlanId) ??
-      (!saved && availablePlans.length === 1 ? availablePlans[0] : undefined);
+    const linkedPlan = availablePlans.find((item) => item.id === preferredPlanId);
+    const initialPlan = linkedPlan ?? (availablePlans.length === 1 ? availablePlans[0] : undefined);
     if (saved) {
       setPlanId(saved.planId);
       setHardwareId(saved.hardwareId);
       setBillIdentifier(saved.billIdentifier);
       setAddressId((current) => saved.addressId || current);
       setGiftCode(saved.giftCode);
-    }
-    if (initialPlan && initialPlan.id !== saved?.planId) {
+      if (linkedPlan && linkedPlan.id !== saved.planId) setSuggestedPlanId(linkedPlan.id);
+    } else if (initialPlan) {
       setPlanId(initialPlan.id);
-      setHardwareId('');
-      setGiftCode('');
     }
     // Renew equipment confirmation and acceptance when restoring a draft.
     wizard.restore(1);
@@ -555,6 +554,14 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
     wizard.restore,
     protection.markSaved,
   ]);
+  function choosePlan(id: string) {
+    setPlanId(id);
+    setSuggestedPlanId(undefined);
+    setHardwareId('');
+    setHardwareConfirmed(false);
+    setAgreementAccepted(false);
+  }
+
   useEffect(() => {
     if (step > 1 && !hardwareConfirmed) wizard.restore(1);
   }, [step, hardwareConfirmed, wizard.restore]);
@@ -986,6 +993,37 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                   disabled={pending || commandBlocked || !!addressCommand.locked}
                 >
                   <legend className="sr-only">{copy(steps[step - 1] ?? 'orderTitle')}</legend>
+                  {step === 1 && suggestedPlan && (
+                    <section
+                      aria-labelledby="saving-draft-plan-title"
+                      className="flex min-w-0 flex-wrap items-center gap-3 rounded-lg border bg-muted/35 px-3 py-2.5 sm:px-4"
+                    >
+                      <div className="min-w-0 flex-1 basis-48 space-y-1">
+                        <h2 id="saving-draft-plan-title" className="text-sm font-semibold">
+                          {copy('draftPlanHeading')}
+                        </h2>
+                        <p className="text-xs text-muted-foreground wrap-anywhere">
+                          {copy('draftPlanSuggestion').replace('{plan}', () =>
+                            title(suggestedPlan)
+                          )}
+                        </p>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="min-h-11"
+                        onClick={() => {
+                          choosePlan(suggestedPlan.id);
+                          requestAnimationFrame(() =>
+                            document.getElementById(`saving-plan-${suggestedPlan.id}`)?.focus()
+                          );
+                        }}
+                      >
+                        {copy('switchPlan')}
+                      </Button>
+                    </section>
+                  )}
                   {step === 1 && (
                     <div
                       className={
@@ -1009,16 +1047,12 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                               <input
                                 type="radio"
                                 {...fields.bind('planId')}
+                                id={`saving-plan-${plan.id}`}
                                 className={choiceRadio}
                                 value={plan.id}
                                 checked={planId === plan.id}
                                 disabled={!plan.available}
-                                onChange={() => {
-                                  setPlanId(plan.id);
-                                  setHardwareId('');
-                                  setHardwareConfirmed(false);
-                                  setAgreementAccepted(false);
-                                }}
+                                onChange={() => choosePlan(plan.id)}
                               />
                               <span className="min-w-0 flex-1 space-y-1">
                                 <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
