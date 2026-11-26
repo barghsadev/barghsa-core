@@ -2,7 +2,7 @@ import { guidanceErrorPaths } from '../lib/solar-document-form.js';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { useOwnedStaffServiceRead } from '../hooks/useOwnedStaffServiceRead.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import { tSolar } from '@barghsa/i18n/solar';
@@ -10,6 +10,7 @@ import {
   LoadingStatus,
   Alert,
   AlertDescription,
+  Badge,
   Button,
   buttonVariants,
   FinancialReviewSummary,
@@ -44,7 +45,6 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { QueueEmptyState } from '../components/QueueEmptyState.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
-import { DocumentDetail } from '../components/DocumentDetail.js';
 import {
   RecordEditorActions,
   RecordEditorSection,
@@ -58,6 +58,8 @@ import { postalCalendarDate } from '../lib/solar-postal-tracking.js';
 import { SolarContractForm } from '../components/SolarContractForm.js';
 import { SolarGuidanceField, SolarGuidanceItems } from '../components/SolarGuidanceFields.js';
 import { SolarStaffRecordHeader } from '../components/SolarStaffRecordHeader.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { withCsrf } from '../lib/csrf.js';
 import type { ListQueryBinding } from '../hooks/useListQuery.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
@@ -66,6 +68,12 @@ import {
   solarPostalDecisions,
   type SolarPostalOperation,
 } from '../lib/solar-postal-decisions.js';
+
+const DocumentDetail = lazy(() =>
+  import('../components/DocumentDetail.js').then(({ DocumentDetail }) => ({
+    default: DocumentDetail,
+  }))
+);
 
 interface Guidance {
   fa: string;
@@ -627,18 +635,23 @@ function AdminSolarPostalWorkspace({
     }
   }
 
+  const queueRow = 'block w-full rounded-xl border bg-card p-4 text-start hover:border-primary';
   function rowLabel(item: Row) {
     return (
       <>
-        <span className="block font-medium" dir="auto">
-          {item.profile_name}
+        <span className="flex flex-wrap items-start justify-between gap-2">
+          <bdi className="min-w-0 wrap-anywhere font-semibold">{item.profile_name}</bdi>
+          <Badge variant="secondary" className="h-auto whitespace-normal">
+            {copy(`postal_${item.postal_status}`)}
+          </Badge>
         </span>
-        <span className="block text-sm text-muted-foreground">
-          {copy(`postal_${item.postal_status}`)} ·{' '}
-          {time.format(item.created_at, { dateStyle: 'medium' })}
-        </span>
-        <span className="block text-xs text-muted-foreground">
-          {copy('staffRequest')}: <bdi>{item.id}</bdi>
+        <span className="mt-3 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-2 text-xs text-muted-foreground">
+          <span className="wrap-anywhere">
+            <bdi dir="ltr">{item.id}</bdi>
+          </span>
+          <time dateTime={item.created_at}>
+            {time.format(item.created_at, { dateStyle: 'medium' })}
+          </time>
         </span>
       </>
     );
@@ -863,7 +876,7 @@ function AdminSolarPostalWorkspace({
               error={queueError || queueDenied}
               empty={!visibleRows.length}
               retainContent={!!visibleRows.length && !queueDenied}
-              loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+              loadingView={<RecordListSkeleton label={copy('loading')} view="card" headings={[]} />}
               errorView={
                 queueDenied ? (
                   <p role="alert">{copy('staffQueueForbidden')}</p>
@@ -918,7 +931,7 @@ function AdminSolarPostalWorkspace({
                 )
               }
             >
-              <ul className="space-y-2">
+              <ul className="space-y-3">
                 {visibleRows.map((item) => (
                   <li key={item.id}>
                     {queueSearch ? (
@@ -926,7 +939,7 @@ function AdminSolarPostalWorkspace({
                         to="/admin/solar-requests/$requestId/postal/{-$operation}"
                         params={{ requestId: item.id, operation: undefined }}
                         search={queueSearch}
-                        className="block w-full rounded-md border p-3 text-start hover:border-primary"
+                        className={queueRow}
                       >
                         {rowLabel(item)}
                       </Link>
@@ -934,7 +947,7 @@ function AdminSolarPostalWorkspace({
                       <button
                         type="button"
                         disabled={commandPending || contractLocked}
-                        className={`w-full rounded-md border p-3 text-start ${selected === item.id ? 'border-primary' : ''}`}
+                        className={`${queueRow} ${selected === item.id ? 'border-primary' : ''}`}
                         onClick={() => {
                           if (
                             contractOwner.current ||
@@ -986,7 +999,7 @@ function AdminSolarPostalWorkspace({
         !decisionRecorded &&
         !createdContractId &&
         (!row && queueLoading ? (
-          <LoadingStatus>{copy('loading')}</LoadingStatus>
+          <RecordDetailSkeleton label={copy('loading')} />
         ) : queueDenied ? (
           <p role="alert">{copy('staffQueueForbidden')}</p>
         ) : queueError ? (
@@ -1101,19 +1114,25 @@ function AdminSolarPostalWorkspace({
         <section role="group" aria-label={copy('postalShipment')} className="space-y-3">
           <div className={recordEditorSurface}>
             <RecordEditorSection title={copy('postalShipment')}>
-              <dl className={recordEditorGrid}>
-                <div>
+              <dl className="flex flex-wrap gap-x-8 gap-y-3 rounded-lg bg-muted/40 p-3">
+                <div className="min-w-0 space-y-1">
                   <dt className="text-sm text-muted-foreground">{copy('postalStatus')}</dt>
-                  <dd>{copy(`postal_${row.postal_status}`)}</dd>
+                  <dd>
+                    <Badge variant="secondary" className="h-auto whitespace-normal">
+                      {shipmentStatusLabel}
+                    </Badge>
+                  </dd>
                 </div>
                 {recordId && (
-                  <div>
+                  <div className="min-w-0 space-y-1">
                     <dt className="text-sm text-muted-foreground">
                       {copy('solarFinalCurrentStatus')}
                     </dt>
-                    <dd>{copy(`status_${row.request_status}`)}</dd>
+                    <dd className="text-sm font-medium">{requestStatusLabel}</dd>
                   </div>
                 )}
+              </dl>
+              <dl className={recordEditorGrid}>
                 {row.courier && (
                   <div>
                     <dt className="text-sm text-muted-foreground">{copy('postalCourier')}</dt>
@@ -1151,15 +1170,17 @@ function AdminSolarPostalWorkspace({
                 </button>
               )}
               {preview && (!recordId || row.receipt_image_id === preview) && (
-                <DocumentDetail
-                  id={preview}
-                  staff
-                  onClose={() => setPreview(null)}
-                  onChanged={refresh}
-                  onPrevious={setPreview}
-                  onReplace={() => {}}
-                  allowReplacement={false}
-                />
+                <Suspense fallback={<LoadingStatus>{copy('loading')}</LoadingStatus>}>
+                  <DocumentDetail
+                    id={preview}
+                    staff
+                    onClose={() => setPreview(null)}
+                    onChanged={refresh}
+                    onPrevious={setPreview}
+                    onReplace={() => {}}
+                    allowReplacement={false}
+                  />
+                </Suspense>
               )}
             </RecordEditorSection>
           </div>

@@ -4,12 +4,13 @@ import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from '@tanstack/react-router';
 import { tSolar } from '@barghsa/i18n/solar';
+import { contractText } from '@barghsa/i18n/contracts';
 import { tSolarStaffRecord } from '@barghsa/i18n/solar-staff-record';
 import { RefreshCw } from 'lucide-react';
 import {
-  LoadingStatus,
   Alert,
   AlertDescription,
+  Badge,
   Button,
   Input,
   Label,
@@ -50,6 +51,8 @@ import {
 import { withCsrf } from '../lib/csrf.js';
 import { SolarStageProgress } from '../components/SolarStageProgress.js';
 import { SolarStaffRecordHeader } from '../components/SolarStaffRecordHeader.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import {
   RecordEditorActions,
   RecordEditorSection,
@@ -498,21 +501,32 @@ function OwnedAdminSolarConstructionPage({
       : null;
   const lastMilestone = visible?.events.at(-1);
   const locked = preparing || pending || form.formState.isSubmitting || !!action || uncertain;
+  const queueRow =
+    'flex w-full min-w-0 flex-col items-start gap-3 rounded-xl border bg-card p-4 text-start hover:border-primary';
   function constructionQueueLabel(row: Row) {
     return (
       <>
-        <span>
-          {copy('solarViewContract')}: <bdi>{row.contractNumber}</bdi>
+        <span className="flex w-full min-w-0 flex-wrap items-start justify-between gap-2">
+          <span className="flex flex-wrap items-baseline gap-x-2">
+            <span className="text-sm text-muted-foreground">
+              {contractText('contractNumber', locale)}
+            </span>
+            <bdi dir="ltr" className="font-semibold">
+              {row.contractNumber}
+            </bdi>
+          </span>
+          <Badge variant="secondary">
+            {row.stage ? copy(`construction_${row.stage}`) : copy('constructionNoUpdates')}
+          </Badge>
         </span>
-        <span className="text-sm text-muted-foreground">
-          {row.stage ? copy(`construction_${row.stage}`) : copy('constructionNoUpdates')}
+        <span className="flex w-full flex-wrap items-baseline justify-between gap-x-3 gap-y-2 text-xs text-muted-foreground">
+          <span className="wrap-anywhere">
+            <bdi dir="ltr">{row.requestId}</bdi>
+          </span>
+          <time dateTime={row.submittedAt}>
+            {time.format(row.submittedAt, { dateStyle: 'medium' })}
+          </time>
         </span>
-        <span className="text-xs text-muted-foreground break-all">
-          <bdi>{row.requestId}</bdi>
-        </span>
-        <time className="text-xs text-muted-foreground" dateTime={row.submittedAt}>
-          {time.format(row.submittedAt, { dateStyle: 'medium' })}
-        </time>
       </>
     );
   }
@@ -595,7 +609,7 @@ function OwnedAdminSolarConstructionPage({
             error={queueState === 'error' || queueState === 'denied'}
             empty={!rows.length}
             retainContent={!!rows.length}
-            loadingView={<LoadingStatus>{copy('loading')}</LoadingStatus>}
+            loadingView={<RecordListSkeleton label={copy('loading')} view="card" headings={[]} />}
             errorView={
               <div className="space-y-2">
                 <p role="alert">
@@ -610,7 +624,7 @@ function OwnedAdminSolarConstructionPage({
             }
             emptyView={<p>{copy('constructionEmpty')}</p>}
           >
-            <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            <ul className="grid gap-3">
               {rows.map((row) => (
                 <li key={row.requestId}>
                   {queueSearch ? (
@@ -618,7 +632,7 @@ function OwnedAdminSolarConstructionPage({
                       to="/admin/solar-requests/$requestId/construction/{-$operation}"
                       params={{ requestId: row.requestId }}
                       search={queueSearch}
-                      className="flex flex-col items-start gap-2 rounded-lg border bg-card p-4 text-start hover:border-primary"
+                      className={queueRow}
                     >
                       {constructionQueueLabel(row)}
                     </Link>
@@ -626,7 +640,7 @@ function OwnedAdminSolarConstructionPage({
                     <Button
                       type="button"
                       variant="outline"
-                      className="h-auto w-full min-w-0 flex-col items-start gap-2 whitespace-normal p-4 text-start"
+                      className={`${queueRow} h-auto whitespace-normal`}
                       aria-pressed={selected === row.requestId}
                       disabled={pending || !!action}
                       onClick={() => {
@@ -701,16 +715,13 @@ function OwnedAdminSolarConstructionPage({
           </div>
         </Alert>
       )}
-      {selected && !visible && (
+      {selected && !visible && detailState === 'loading' && (
+        <RecordDetailSkeleton label={copy('loading')} />
+      )}
+      {selected && !visible && detailState !== 'loading' && (
         <div className="space-y-2">
-          <p role={detailState === 'loading' ? 'status' : 'alert'}>
-            {copy(
-              detailState === 'loading'
-                ? 'loading'
-                : detailState === 'denied'
-                  ? 'staffQueueForbidden'
-                  : 'constructionDetailError'
-            )}
+          <p role="alert">
+            {copy(detailState === 'denied' ? 'staffQueueForbidden' : 'constructionDetailError')}
           </p>
           {detailState === 'error' && (
             <Button variant="outline" onClick={() => setDetailRevision((v) => v + 1)}>
@@ -721,18 +732,6 @@ function OwnedAdminSolarConstructionPage({
       )}
       {visible && !milestoneEditor && (
         <>
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            {visible.contractId && (
-              <Link
-                className="underline"
-                to="/admin/contracts/$contractId/{-$action}/{-$item}"
-                params={{ contractId: visible.contractId }}
-              >
-                {copy('solarViewContract')}
-              </Link>
-            )}
-            {reloadProgress}
-          </div>
           {selected && !onSelect && canRecord && nextMilestone && (
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-card px-4 py-3 sm:px-6">
               <div className="min-w-0">
@@ -750,6 +749,18 @@ function OwnedAdminSolarConstructionPage({
             </div>
           )}
           <SolarStageProgress progress={visible} showTimeNotice={false} />
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t pt-3">
+            {visible.contractId && (
+              <Link
+                className="touch-action text-sm text-primary underline underline-offset-4"
+                to="/admin/contracts/$contractId/{-$action}/{-$item}"
+                params={{ contractId: visible.contractId }}
+              >
+                {copy('solarViewContract')}
+              </Link>
+            )}
+            {reloadProgress}
+          </div>
         </>
       )}
       {recordedMilestone && (
