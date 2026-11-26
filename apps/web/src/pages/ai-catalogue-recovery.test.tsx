@@ -430,7 +430,9 @@ it('an absent selected model remains visible and blocks agent saving without era
   removed = true;
   await click('Refresh');
   expect(host.querySelector<HTMLTextAreaElement>('#agent-system-prompt')!.value).toBe('Keep text');
-  expect(host.querySelector<HTMLSelectElement>('#agent-model')!.value).toBe(aiModel.id);
+  expect(host.querySelector<HTMLInputElement>('#agent-model')!.value).toBe(
+    `${aiDetail.modelTitle} · Option no longer available`
+  );
   await click('Save agent');
   await vi.waitFor(() =>
     expect(host.querySelector('#agent-model')!.getAttribute('aria-invalid')).toBe('true')

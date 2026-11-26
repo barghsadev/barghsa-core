@@ -114,7 +114,13 @@ for (const locale of ['en', 'fa'] as const)
           models: [{ id: model, title: 'Local model' }],
           kbs: [],
           policies: [],
-          kbGroups: [{ id: kb, title: 'Support knowledge' }],
+          kbGroups: [
+            { id: kb, title: 'Support knowledge' },
+            ...Array.from({ length: 7 }, (_, index) => ({
+              id: `01900000-0000-7000-8000-${String(index + 10).padStart(12, '0')}`,
+              title: `Other source ${index + 1}`,
+            })),
+          ],
           policyGroups: [{ id: policy, title: 'Support policies' }],
         },
       })
@@ -148,7 +154,16 @@ for (const locale of ['en', 'fa'] as const)
     await page.getByRole('button', { name: fa ? 'تازه‌سازی' : 'Refresh', exact: true }).click();
     await page.getByRole('link', { name: fa ? 'افزودن عامل' : 'Add agent', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill('Local assistant');
-    await page.getByLabel(fa ? 'مدل' : 'Model', { exact: true }).selectOption(model);
+    const modelField = page.getByLabel(fa ? 'مدل' : 'Model', { exact: true });
+    await modelField.fill('An unavailable model');
+    await expect(
+      page.getByText(aiAgentFormText('modelNoMatches', locale), { exact: true })
+    ).toBeVisible();
+    await modelField.press('Escape');
+    await modelField.fill('local');
+    await expect(page.getByRole('option', { name: 'Local model', exact: true })).toBeVisible();
+    await modelField.press('Enter');
+    await expect(modelField).toHaveValue('Local model');
     const prompt = page.getByLabel(fa ? 'دستورالعمل سیستم' : 'System instructions');
     const insertExample = page.getByRole('button', {
       name: aiAgentFormText('promptInsertExample', locale),
@@ -167,7 +182,21 @@ for (const locale of ['en', 'fa'] as const)
     await expect(page.locator('#agent-prompt-count')).toContainText(fa ? '۱۶' : '16');
     await page.getByLabel(fa ? 'دما' : 'Temperature', { exact: true }).fill(fa ? '۰٫۴' : '0.4');
     await page.getByLabel(fa ? 'حداکثر توکن' : 'Maximum tokens').fill(fa ? '۵۱۲' : '512');
-    await page.getByLabel('Support knowledge', { exact: true }).check();
+    const support = page.getByLabel('Support knowledge', { exact: true });
+    const knowledge = page.locator('#agent-links-kbGroupIds');
+    const filter = knowledge.getByRole('searchbox');
+    await filter.fill('support');
+    await expect(knowledge.getByRole('checkbox')).toHaveCount(1);
+    await filter.press('Enter');
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await support.check();
+    await filter.fill('other source');
+    await expect(support).toHaveCount(0);
+    await expect(knowledge.getByRole('status')).toHaveText(
+      aiAgentFormText('selectedLinks', locale).replace('{count}', fa ? '۱' : '1')
+    );
+    await filter.fill('');
+    await expect(support).toBeChecked();
     await page.getByLabel('Support policies', { exact: true }).check();
     await page.getByRole('button', { name: fa ? 'ذخیره عامل' : 'Save agent', exact: true }).click();
     const dialog = page.getByRole('dialog'),

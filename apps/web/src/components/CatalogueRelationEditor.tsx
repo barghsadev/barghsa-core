@@ -1,16 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { SearchIcon } from 'lucide-react';
-import {
-  Alert,
-  Button,
-  ComboBox,
-  ComboBoxInput,
-  ComboBoxItem,
-  ComboBoxPopup,
-  Input,
-  Label,
-  ListRefreshButton,
-} from '@barghsa/ui';
+import { Alert, Button, Input, Label, ListRefreshButton } from '@barghsa/ui';
+import { CatalogueChoicePicker, type CatalogueChoice } from './CatalogueChoicePicker.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import {
@@ -20,7 +10,6 @@ import {
 } from './CatalogueEditorFeedback.js';
 import { knowledgePolicyFormText } from '@barghsa/i18n/knowledge-policy-forms';
 import { policyPriority } from '../lib/knowledge-policy-form.js';
-import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import type { MembershipCommand, RelationOwner } from '../lib/catalogue-membership.js';
 import { RecordEditorActions, recordEditorSurface } from './RecordEditorLayout.js';
 
@@ -85,15 +74,6 @@ interface Draft {
   memberId: string;
   priorityOverride: string;
 }
-type MemberOption = { id: string; title: string };
-function matchableMemberName(value: string) {
-  return normalizeProfileDigits(value)
-    .trim()
-    .toLowerCase()
-    .replace(/[يى]/g, 'ی')
-    .replace(/ك/g, 'ک')
-    .replace(/[\s\u200c]+/g, ' ');
-}
 interface Props {
   mode: 'kb' | 'policy' | 'priority';
   headingLevel?: 2 | 3;
@@ -103,7 +83,7 @@ interface Props {
   priority?: string;
   priorityName?: string;
   savedPriority?: string;
-  options?: MemberOption[];
+  options?: CatalogueChoice[];
   basis: string;
   epoch: number;
   disabled: boolean;
@@ -120,7 +100,6 @@ export function CatalogueRelationEditor(props: Props) {
   const mounted = useRef(true),
     baseline = useRef(props.basis);
   const [changed, setChanged] = useState(false);
-  const [memberQuery, setMemberQuery] = useState('');
   const messages = { memberId: copy('member'), priorityOverride: copy('priority') };
   const form = useWizardForm<Draft>(
     async () => {
@@ -226,14 +205,6 @@ export function CatalogueRelationEditor(props: Props) {
   const priorityId = priorityOnly ? props.id : `${props.id}-priority`;
   const hintId = `${priorityId}-hint`;
   const priorityField = form.bind('priorityOverride');
-  const memberField = form.bind('memberId');
-  const { memberId } = form.values;
-  const options = props.options ?? [];
-  // Use the latest input even when reopening interrupts a popup close.
-  const query = matchableMemberName(memberQuery);
-  const selectedMember =
-    options.find((option) => option.id === memberId) ??
-    (memberId ? { id: memberId, title: props.labels.unavailable } : null);
   const disabled = props.disabled || form.pending;
   const resetButton = changed && !props.disabled && (
     <Button type="button" variant="outline" disabled={form.pending} onClick={reset}>
@@ -264,59 +235,24 @@ export function CatalogueRelationEditor(props: Props) {
           {props.mode !== 'priority' && (
             <div className="min-w-0 space-y-1">
               <Label htmlFor={props.id}>{props.labels.member}</Label>
-              <ComboBox
-                items={options}
-                filteredItems={
-                  query
-                    ? options.filter((option) => matchableMemberName(option.title).includes(query))
-                    : options
-                }
-                value={selectedMember}
-                itemToStringLabel={(option) => option.title}
-                itemToStringValue={(option) => option.id}
-                isItemEqualToValue={(option, value) => option.id === value.id}
-                onInputValueChange={(value, { reason }) => {
-                  if (reason === 'input-change') setMemberQuery(value);
-                }}
-                onOpenChange={(open) => {
-                  if (!open) setMemberQuery('');
-                }}
-                openOnInputClick
-                autoHighlight
+              <CatalogueChoicePicker
+                id={props.id}
+                locale={props.locale}
+                options={props.options ?? []}
+                selected={form.values.memberId}
                 disabled={disabled}
-                onValueChange={(option) => {
-                  if (disabled || (option && !options.some((row) => row.id === option.id))) return;
-                  const id = option?.id ?? '';
+                field={form.bind('memberId')}
+                labels={{
+                  search: copy('memberSearch'),
+                  noMatches: copy('memberNoMatches'),
+                  empty: copy('memberNone'),
+                  unavailable: props.labels.unavailable,
+                }}
+                onChange={(id) => {
                   form.field('memberId')[1](id);
                   props.onChange(id, form.values.priorityOverride);
                 }}
-              >
-                <SearchIcon
-                  aria-hidden="true"
-                  className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-                />
-                <ComboBoxInput
-                  id={props.id}
-                  ref={memberField.ref}
-                  onBlur={memberField.onBlur}
-                  placeholder={copy('memberSearch')}
-                  aria-required="true"
-                  aria-invalid={memberField['aria-invalid']}
-                  aria-describedby={memberField['aria-describedby']}
-                  className="h-11 ps-9 aria-invalid:border-destructive"
-                />
-                <ComboBoxPopup
-                  dir={props.locale === 'fa' ? 'rtl' : 'ltr'}
-                  emptyMessage={copy(options.length ? 'memberNoMatches' : 'memberNone')}
-                  className="max-h-[min(18rem,var(--available-height))] w-(--anchor-width) min-w-0 p-1 data-closed:animate-none"
-                >
-                  {(option: MemberOption) => (
-                    <ComboBoxItem key={option.id} value={option} className="min-h-11">
-                      <bdi className="min-w-0 [overflow-wrap:anywhere]">{option.title}</bdi>
-                    </ComboBoxItem>
-                  )}
-                </ComboBoxPopup>
-              </ComboBox>
+              />
               <CatalogueFieldFeedback
                 id={form.errorId('memberId')}
                 error={form.errors.memberId}

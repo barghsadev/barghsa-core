@@ -62,6 +62,8 @@ const TeamActionDialog = lazy(() =>
   }))
 );
 import { AgentPromptTextarea } from '../components/AgentPromptTextarea.js';
+import { CatalogueChoicePicker } from '../components/CatalogueChoicePicker.js';
+import { AgentLinkChoiceList } from '../components/AgentLinkChoiceList.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { AdminAgentTestChat } from '../components/AdminAgentTestChat.js';
 import { StaffKnowledgeAssistant } from '../components/PublicKnowledgeAssistant.js';
@@ -827,27 +829,26 @@ function OwnedAiAgentsPage({
                       </div>
                       <div className={recordEditorField}>
                         <Label htmlFor="agent-model">{label('model')}</Label>
-                        <NativeSelect
-                          {...form.bind('modelId')}
+                        <CatalogueChoicePicker
+                          key={focusEpoch}
                           id="agent-model"
-                          className="w-full"
-                          required
-                          aria-required="true"
-                          value={draft.modelId}
-                          onChange={(event) => form.field('modelId')[1](event.target.value)}
-                        >
-                          <option value="">{label('chooseModel')}</option>
-                          {draft.modelId && !choices.models.some((m) => m.id === draft.modelId) && (
-                            <option value={draft.modelId}>
-                              {label('unavailable')} ({draft.modelId})
-                            </option>
-                          )}
-                          {choices.models.map((model) => (
-                            <option key={model.id} value={model.id}>
-                              {model.title}
-                            </option>
-                          ))}
-                        </NativeSelect>
+                          locale={locale}
+                          options={choices.models}
+                          selected={draft.modelId}
+                          disabled={busy || optionsLoading || optionsError}
+                          field={form.bind('modelId')}
+                          labels={{
+                            search: copy('modelSearch'),
+                            noMatches: copy('modelNoMatches'),
+                            empty: copy('modelNone'),
+                            unavailable:
+                              savedDetail.current?.modelId === draft.modelId &&
+                              savedDetail.current.modelTitle
+                                ? `${savedDetail.current.modelTitle} · ${label('unavailable')}`
+                                : label('unavailable'),
+                          }}
+                          onChange={form.field('modelId')[1]}
+                        />
                         <CatalogueFieldFeedback
                           compact
                           id={form.errorId('modelId')}
@@ -1008,6 +1009,7 @@ function OwnedAiAgentsPage({
                       {sets.map(([field, source]) => (
                         <fieldset
                           key={field}
+                          id={`agent-links-${field}`}
                           ref={groupRefs[field]}
                           tabIndex={-1}
                           aria-invalid={!!form.errors[field] || undefined}
@@ -1015,38 +1017,24 @@ function OwnedAiAgentsPage({
                           className="min-w-0 rounded-lg border px-3 py-2 outline-none focus-visible:ring-2 focus-visible:ring-foreground"
                         >
                           <legend className="px-1 font-semibold">{label(source)}</legend>
-                          {!choices[source].length && !draft[field].length && (
-                            <p className="text-sm text-muted-foreground">{label('noChoices')}</p>
-                          )}
-                          <div className="flex max-h-60 flex-col gap-3 overflow-y-auto">
-                            {[
+                          <AgentLinkChoiceList
+                            key={focusEpoch}
+                            locale={locale}
+                            group={label(source)}
+                            options={[
                               ...choices[source],
                               ...draft[field]
                                 .filter((id) => !choices[source].some((item) => item.id === id))
-                                .map((id) => ({ id, title: `${label('unavailable')} (${id})` })),
-                            ].map((item) => (
-                              <label key={item.id} className="flex items-start gap-2">
-                                <input
-                                  type="checkbox"
-                                  className="mt-1"
-                                  checked={draft[field].includes(item.id)}
-                                  disabled={
-                                    optionsLoading ||
-                                    optionsError ||
-                                    (!draft[field].includes(item.id) && draft[field].length >= 200)
-                                  }
-                                  onChange={(event) =>
-                                    form.field(field)[1](
-                                      event.target.checked
-                                        ? [...draft[field], item.id]
-                                        : draft[field].filter((id) => id !== item.id)
-                                    )
-                                  }
-                                />
-                                <span className="min-w-0 break-words">{item.title}</span>
-                              </label>
-                            ))}
-                          </div>
+                                .map((id) => ({
+                                  id,
+                                  title: `${label('unavailable')} (${savedDetail.current?.[source].find((item) => item.id === id)?.title ?? id})`,
+                                })),
+                            ]}
+                            selected={draft[field]}
+                            disabled={optionsLoading || optionsError}
+                            noOptions={label('noChoices')}
+                            onChange={form.field(field)[1]}
+                          />
                           <CatalogueFieldFeedback
                             compact
                             id={form.errorId(field)}

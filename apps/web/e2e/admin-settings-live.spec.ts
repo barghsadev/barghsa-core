@@ -1765,7 +1765,8 @@ for (const locale of ['en', 'fa'])
     await page.goto('/admin/agents');
     await page.getByRole('link', { name: fa ? 'افزودن عامل' : 'Add agent', exact: true }).click();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(title);
-    await page.getByLabel(fa ? 'مدل' : 'Model', { exact: true }).selectOption(model.id);
+    await page.getByLabel(fa ? 'مدل' : 'Model', { exact: true }).fill(model.title);
+    await page.getByRole('option', { name: model.title, exact: true }).click();
     for (const item of [kb, policy, kbGroup, policyGroup])
       await page.getByLabel(item.title, { exact: true }).check();
     await page.getByRole('button', { name: fa ? 'ذخیره عامل' : 'Save agent', exact: true }).click();
@@ -1792,6 +1793,7 @@ for (const locale of ['en', 'fa'])
     await page
       .getByRole('link', { name: `${fa ? 'ویرایش' : 'Edit'} ${title}`, exact: true })
       .click();
+    await expect(page.locator('#agent-model')).toHaveValue(model.title);
     for (const item of [kb, policy, kbGroup, policyGroup])
       await expect(page.getByLabel(item.title, { exact: true })).toBeChecked();
     await page.getByLabel(fa ? 'عنوان' : 'Title', { exact: true }).fill(renamed);
