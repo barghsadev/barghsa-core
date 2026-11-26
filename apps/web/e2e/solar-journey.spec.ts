@@ -597,18 +597,29 @@ for (const locale of ['en', 'fa'] as const)
     await expect(next).toBeDisabled();
     await frame.selectOption('steel');
     await next.click();
-    await expect(
-      page.getByRole('radiogroup', { name: solarCopy('gridType', locale), exact: true })
-    ).toHaveAttribute('aria-required', 'true');
+    const connection = page.getByRole('radiogroup', {
+      name: solarCopy('gridType', locale),
+      exact: true,
+    });
+    await expect(connection).toHaveAttribute('aria-required', 'true');
+    const onGrid = connection.getByRole('radio', { name: solarCopy('onGrid', locale) });
+    const offGrid = connection.getByRole('radio', { name: solarCopy('offGrid', locale) });
     const bill = page.getByLabel(solarCopy('billIdentifier', locale), { exact: true });
+    await expect(onGrid).not.toBeChecked();
+    await expect(offGrid).not.toBeChecked();
+    await expect(bill).toHaveCount(0);
+    expect(draft?.data).toMatchObject({ gridType: '' });
+    await onGrid.check();
     await expect(bill).toHaveAttribute('aria-required', 'true');
     await bill.focus();
     await bill.blur();
     await expect(bill).toHaveAccessibleDescription(
       `${solarCopy('billIdentifier', locale)}: ${solarIntakeText('billFormat', locale)}`
     );
-    await page.getByLabel(solarCopy('offGrid', locale)).check();
+    await bill.fill('۱۲۳۴۵۶۷۸۹');
+    await offGrid.check();
     await expect(bill).toHaveCount(0);
+    await expect(connection).toHaveAccessibleDescription(solarIntakeText('offGridOutage', locale));
     await page.getByRole('button', { name: solarCopy('saveDraft', locale) }).click();
     await expect(
       page.getByRole('status').filter({ hasText: solarCopy('draftSaved', locale) })
@@ -617,11 +628,12 @@ for (const locale of ['en', 'fa'] as const)
       propertyForm: 'villa',
       structuralFrame: 'steel',
       gridType: 'off_grid',
+      billIdentifier: '123456789',
     });
 
     await page.reload();
     await expect(page).toHaveURL(/step=2$/);
-    await expect(page.getByLabel(solarCopy('offGrid', locale))).toBeChecked();
+    await expect(offGrid).toBeChecked();
     await page
       .getByRole('button', { name: appCopy('electricity.order.back', locale), exact: true })
       .click();
@@ -724,6 +736,7 @@ for (const locale of ['en', 'fa'] as const)
       submissionKey: expect.stringMatching(/^[a-f0-9-]{36}$/),
       expectedReviewHash: 'a'.repeat(64),
     });
+    expect(submissions[0]).not.toHaveProperty('billIdentifier');
 
     await expect(
       page.getByRole('heading', {

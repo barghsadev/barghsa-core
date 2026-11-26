@@ -175,9 +175,8 @@ const en: Record<string, string> = {
   gridType: 'Connection type',
   onGrid: 'On-grid',
   offGrid: 'Off-grid',
-  onGridHelp: 'Electricity is delivered to the grid for sale, without internal consumption.',
-  offGridHelp:
-    'Electricity is used internally. Availability during grid outages depends on the final technical design and installed storage equipment.',
+  onGridHelp: 'Sell all the electricity you generate to the grid. Have your bill identifier ready.',
+  offGridHelp: 'Use the electricity you generate on site.',
   billIdentifier: 'Electricity bill identifier',
   stages: 'Contract preparation stages',
   requestStage: 'Contract request',
@@ -578,9 +577,8 @@ const fa: Record<string, string> = {
   gridType: 'نوع اتصال',
   onGrid: 'متصل به شبکه',
   offGrid: 'مستقل از شبکه',
-  onGridHelp: 'برق تولیدشده بدون مصرف داخلی برای فروش به شبکه تحویل می‌شود.',
-  offGridHelp:
-    'برق تولیدشده مصرف داخلی دارد. استفاده هنگام قطعی شبکه تنها بر اساس طراحی فنی نهایی و تجهیزات ذخیره‌سازی نصب‌شده ممکن است.',
+  onGridHelp: 'همه برق تولیدی را به شبکه بفروشید. شناسه قبض برق لازم است.',
+  offGridHelp: 'برق تولیدی را در محل مصرف کنید.',
   billIdentifier: 'شناسه قبض برق',
   stages: 'مراحل آماده‌سازی قرارداد',
   requestStage: 'درخواست قرارداد',

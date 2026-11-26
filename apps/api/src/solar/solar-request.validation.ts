@@ -92,7 +92,7 @@ export const solarDraftData = z
     siteAddressId: z.string().max(36),
     siteRelationship: z.enum(['', 'owner', 'tenant', 'authorized_operator']),
     siteDescription: z.string().max(2000),
-    gridType: z.enum(['on_grid', 'off_grid']),
+    gridType: z.enum(['', 'on_grid', 'off_grid']),
     billIdentifier: z.string().max(13),
   })
   .strict();

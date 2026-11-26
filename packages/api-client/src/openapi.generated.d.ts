@@ -35260,7 +35260,7 @@ export interface operations {
                         /** @enum {string} */
                         buildingType: "building_apartment" | "non_household";
                         /** @enum {string} */
-                        gridType: "on_grid" | "off_grid";
+                        gridType: "" | "on_grid" | "off_grid";
                         /** @enum {string} */
                         installationSurface: "" | "land" | "rooftop" | "both";
                         /** @enum {string} */

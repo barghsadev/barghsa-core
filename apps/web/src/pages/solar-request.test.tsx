@@ -216,6 +216,10 @@ it.each([
       }
       await act(async () => submit.click());
       expect(container.querySelector('#solar-area')).toBeNull();
+      expect(container.querySelector('#solar-bill')).toBeNull();
+      const onGrid = container.querySelector<HTMLInputElement>('input[value="on_grid"]')!;
+      expect(onGrid.checked).toBe(false);
+      await act(async () => onGrid.click());
       expect(container.querySelector('#solar-bill')).not.toBeNull();
       const bill = container.querySelector<HTMLInputElement>('#solar-bill')!;
       await act(async () => {

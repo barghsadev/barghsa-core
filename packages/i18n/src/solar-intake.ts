@@ -15,6 +15,9 @@ const en = {
   chooseSavedAddress: 'Choose a saved address',
   savedAddressUnavailable: 'The site address in this draft is unavailable.',
   descriptionExample: 'Mention shading or access restrictions that could affect installation.',
+  chooseGridType: 'Choose a connection type.',
+  offGridOutage:
+    'Power may be available during grid outages, depending on the final system design and installed storage equipment.',
   billFormat: 'Enter the 6–13-digit identifier printed on your electricity bill.',
   acceptedTerms: 'Accepted terms',
 };
@@ -36,6 +39,9 @@ const fa: Record<keyof typeof en, string> = {
   chooseSavedAddress: 'یک نشانی ذخیره‌شده انتخاب کنید',
   savedAddressUnavailable: 'نشانی محل در این پیش‌نویس در دسترس نیست.',
   descriptionExample: 'سایه‌اندازی یا محدودیت دسترسی مؤثر بر نصب را شرح دهید.',
+  chooseGridType: 'نوع اتصال را انتخاب کنید.',
+  offGridOutage:
+    'امکان استفاده از برق هنگام قطعی شبکه به طراحی نهایی سامانه و تجهیزات ذخیره‌سازی نصب‌شده بستگی دارد.',
   billFormat: 'شناسه ۶ تا ۱۳ رقمی درج‌شده روی قبض برق را وارد کنید.',
   acceptedTerms: 'شرایط پذیرفته‌شده',
 };

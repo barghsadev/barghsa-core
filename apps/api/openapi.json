@@ -46353,6 +46353,7 @@
                       },
                       "gridType": {
                         "enum": [
+                          "",
                           "on_grid",
                           "off_grid"
                         ],

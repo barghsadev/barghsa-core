@@ -111,6 +111,7 @@ it('saves and resumes a scoped solar draft without losing incomplete fields', as
     siteCategory: '',
     installationSurface: '',
     siteRelationship: '',
+    gridType: '',
   };
   expect(
     (
@@ -204,7 +205,7 @@ it('submits both solar request types, captures agreement, and creates no contrac
     billIdentifier: '123456789',
     agreementAccepted: true,
   };
-  for (const field of ['propertyForm', 'structuralFrame'] as const) {
+  for (const field of ['propertyForm', 'structuralFrame', 'gridType'] as const) {
     const incomplete = { ...buildingInput, [field]: '' };
     expect((await request('/api/solar/requests/review', 'POST', incomplete)).status).toBe(400);
     expect(

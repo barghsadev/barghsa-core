@@ -13,7 +13,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { getProfileContextRevision, useProfileContextRevision } from '../lib/profile-context.js';
 import { SolarRequestReview } from '../components/SolarRequestReview.js';
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDownIcon, PlusIcon } from 'lucide-react';
+import { ChevronDownIcon, Info, PlusIcon } from 'lucide-react';
 import { Link, useNavigate } from '@tanstack/react-router';
 import {
   LoadingStatus,
@@ -68,7 +68,8 @@ export interface SolarReview {
   };
 }
 type BuildingType = 'building_apartment' | 'non_household';
-type GridType = 'on_grid' | 'off_grid';
+const gridTypes = ['on_grid', 'off_grid'] as const;
+type GridType = '' | (typeof gridTypes)[number];
 const propertyForms = ['apartment', 'villa'] as const;
 const structuralFrames = ['concrete', 'steel', 'other'] as const;
 const siteCategories = ['agricultural', 'industrial'] as const;
@@ -101,7 +102,7 @@ const solarDraftSchema: DraftSchema<SolarDraft> = {
       !['', ...siteCategories].includes(String(data.siteCategory)) ||
       !['', ...installationSurfaces].includes(String(data.installationSurface)) ||
       !['', ...siteRelationships].includes(String(data.siteRelationship)) ||
-      !['on_grid', 'off_grid'].includes(String(data.gridType)) ||
+      !['', ...gridTypes].includes(String(data.gridType)) ||
       [
         'buildingCompletionDate',
         'totalUnits',
@@ -188,7 +189,7 @@ export function SolarRequestPage() {
         siteAddressId: z.string(),
         siteRelationship: z.enum(['', ...siteRelationships]),
         siteDescription: z.string(),
-        gridType: z.enum(['on_grid', 'off_grid']),
+        gridType: z.enum(['', ...gridTypes]),
         billIdentifier: z.string(),
         agreementAccepted: z.boolean(),
       })
@@ -215,6 +216,7 @@ export function SolarRequestPage() {
           if (!areaValid(value.usableAreaSqm))
             invalid('usableAreaSqm', solarIntakeText('areaFormat', locale));
         }
+        if (!value.gridType) invalid('gridType', solarIntakeText('chooseGridType', locale));
         if (
           value.gridType === 'on_grid' &&
           !/^[0-9]{6,13}$/.test(normalizeProfileDigits(value.billIdentifier))
@@ -234,7 +236,7 @@ export function SolarRequestPage() {
       siteAddressId: '',
       siteRelationship: '',
       siteDescription: '',
-      gridType: 'on_grid',
+      gridType: '',
       billIdentifier: '',
       agreementAccepted: false,
     }
@@ -393,7 +395,8 @@ export function SolarRequestPage() {
         (value.propertyForm === 'villa' || unitsValid(value.totalUnits)));
   const gridValid = (value: SolarDraft) =>
     value.gridType === 'off_grid' ||
-    /^[0-9]{6,13}$/.test(normalizeProfileDigits(value.billIdentifier));
+    (value.gridType === 'on_grid' &&
+      /^[0-9]{6,13}$/.test(normalizeProfileDigits(value.billIdentifier)));
   useEffect(() => {
     if (!draft || draftHydrated || loading) return;
     const saved = draft.data;
@@ -1246,6 +1249,7 @@ export function SolarRequestPage() {
                     <fieldset
                       role="radiogroup"
                       aria-labelledby="solar-grid-type-label"
+                      aria-describedby={gridType === 'off_grid' ? 'solar-off-grid-note' : undefined}
                       aria-required="true"
                       className="grid min-w-0 gap-2 sm:grid-cols-2"
                     >
@@ -1258,7 +1262,7 @@ export function SolarRequestPage() {
                       >
                         {copy('gridType')}
                       </p>
-                      {(['on_grid', 'off_grid'] as const).map((type) => (
+                      {gridTypes.map((type) => (
                         <label key={type} className={solarChoice}>
                           <input
                             type="radio"
@@ -1279,6 +1283,12 @@ export function SolarRequestPage() {
                         </label>
                       ))}
                     </fieldset>
+                    {gridType === 'off_grid' && (
+                      <div className="flex items-start gap-2 rounded-lg bg-muted/50 p-3 text-xs text-muted-foreground">
+                        <Info aria-hidden="true" className="size-4 shrink-0 text-primary" />
+                        <p id="solar-off-grid-note">{solarIntakeText('offGridOutage', locale)}</p>
+                      </div>
+                    )}
                     {gridType === 'on_grid' && (
                       <div className="max-w-sm space-y-1">
                         <Label htmlFor="solar-bill">{copy('billIdentifier')}</Label>
