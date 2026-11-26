@@ -4,6 +4,8 @@ import { Link, useBlocker, useNavigate, useSearch } from '@tanstack/react-router
 import { t } from '@barghsa/i18n/crm';
 import { tCrmForm } from '@barghsa/i18n/crm-forms';
 import { confirmationText } from '@barghsa/i18n/confirmation';
+import { tSettingsForms } from '@barghsa/i18n/settings-forms';
+import { validateLegalNationalIdentifier, validateNationalId } from '@barghsa/shared/validation';
 import {
   LoadingStatus,
   Button,
@@ -37,6 +39,7 @@ import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueRe
 import { useListQuery, type ListQueryBinding } from '../hooks/useListQuery.js';
 import { crmCorrectionQueryOptions, crmCorrectionSearch } from '../lib/crm-correction-query.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
+import { normalizeProfileDigits } from '../lib/profile-digits.js';
 import {
   uploadVerificationEvidence,
   isAllowedInvoiceReceiptFile,
@@ -252,6 +255,7 @@ function Corrections({
   const [field, setField] = useState('first_name'),
     [value, setValue] = useState(''),
     [reason, setReason] = useState('');
+  const [valueBlurred, setValueBlurred] = useState(false);
   const [fileVersion, setFileVersion] = useState(0),
     [files, setFiles] = useState<File[]>([]);
   const [notes, setNotes] = useState(''),
@@ -292,6 +296,7 @@ function Corrections({
   }, []);
   const clearCreation = useCallback(() => {
     setValue('');
+    setValueBlurred(false);
     setReason('');
     setFiles([]);
     setFileVersion((v) => v + 1);
@@ -598,6 +603,23 @@ function Corrections({
   }
   const invalidEvidence =
     files.length > 5 || files.some((file) => !isAllowedInvoiceReceiptFile(file));
+  const isNationalId = field === 'national_id';
+  const isCompanyIdentifier = field === 'national_identifier';
+  const isIdentifier = isNationalId || isCompanyIdentifier;
+  const requestedValue = isIdentifier ? normalizeProfileDigits(value.trim()) : value.trim();
+  const invalidIdentifier = isNationalId
+    ? !validateNationalId(requestedValue)
+    : isCompanyIdentifier && !validateLegalNationalIdentifier(requestedValue);
+  const valueError =
+    valueBlurred && requestedValue && invalidIdentifier
+      ? tSettingsForms(isNationalId ? 'nationalIdInvalid' : 'nationalIdentifierInvalid', locale)
+      : undefined;
+  const readyToUpload =
+    !!requestedValue &&
+    !invalidIdentifier &&
+    !!reason.trim() &&
+    files.length > 0 &&
+    !invalidEvidence;
   async function create(event: FormEvent) {
     event.preventDefault();
     if (
@@ -614,7 +636,7 @@ function Corrections({
       if (canRetryCreation) captured(creationRecovery.action);
       return;
     }
-    if (!value.trim() || !reason.trim() || !files.length || invalidEvidence) return;
+    if (!readyToUpload) return;
     const current = ++workGeneration.current;
     const transport = new AbortController();
     uploading.current = transport;
@@ -632,13 +654,13 @@ function Corrections({
       setBusy(false);
       captured({
         title: t('crm.corrections.request', locale),
-        description: `${profileId} · ${t(`crm.corrections.${field}`, locale)} · ${value.trim()} · ${reason.trim()}`,
+        description: `${profileId} · ${t(`crm.corrections.${field}`, locale)} · ${requestedValue} · ${reason.trim()}`,
         path: `/api/crm/profiles/${encodeURIComponent(profileId)}/verification-cases`,
         method: 'POST',
         expected: { profileId, status: 'Open' },
         body: {
           fieldName: field,
-          requestedValue: value.trim(),
+          requestedValue,
           reason: reason.trim(),
           evidenceUrls: keys,
           idempotencyKey: crypto.randomUUID(),
@@ -824,7 +846,11 @@ function Corrections({
                         id="correction-field"
                         aria-required="true"
                         value={field}
-                        onChange={(event) => setField(event.target.value)}
+                        onChange={(event) => {
+                          setField(event.target.value);
+                          setValue('');
+                          setValueBlurred(false);
+                        }}
                         className="w-full"
                       >
                         {fieldsFor(profileType).map((key) => (
@@ -836,26 +862,35 @@ function Corrections({
                     </div>
                     <div className={recordEditorField}>
                       <Label htmlFor="correction-value">
-                        {t('crm.corrections.newValue', locale)}
+                        {t(`crm.corrections.${field}`, locale)}
                       </Label>
                       <Input
                         id="correction-value"
                         required
                         aria-required="true"
                         maxLength={512}
-                        inputMode={
-                          field === 'national_id' || field === 'national_identifier'
-                            ? 'numeric'
-                            : undefined
-                        }
-                        dir={
-                          field === 'national_id' || field === 'national_identifier'
-                            ? 'ltr'
-                            : 'auto'
-                        }
+                        inputMode={isIdentifier ? 'numeric' : undefined}
+                        dir={isIdentifier ? 'ltr' : 'auto'}
+                        className={isIdentifier ? 'max-w-56' : undefined}
+                        aria-invalid={valueError ? true : undefined}
+                        aria-describedby={isIdentifier ? 'correction-value-help' : undefined}
                         value={value}
                         onChange={(event) => setValue(event.target.value)}
+                        onBlur={() => setValueBlurred(true)}
                       />
+                      {isIdentifier && (
+                        <div id="correction-value-help">
+                          <p className="text-sm text-muted-foreground">
+                            {tSettingsForms(
+                              isNationalId ? 'nationalIdHelp' : 'nationalIdentifierHelp',
+                              locale
+                            )}
+                          </p>
+                          <p aria-live="polite" className="text-sm text-destructive">
+                            {valueError}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className={recordEditorField}>
@@ -896,14 +931,7 @@ function Corrections({
                   <Button
                     ref={createButton}
                     type="submit"
-                    disabled={
-                      profileRead.loading ||
-                      profileRead.error ||
-                      !value.trim() ||
-                      !reason.trim() ||
-                      !files.length ||
-                      invalidEvidence
-                    }
+                    disabled={profileRead.loading || profileRead.error || !readyToUpload}
                   >
                     {t(busy ? 'crm.corrections.uploading' : 'crm.corrections.upload', locale)}
                   </Button>

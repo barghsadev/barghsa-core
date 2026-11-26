@@ -17,7 +17,7 @@ const fa: I18nDictionary = {
   'crm.evidence.selectedFiles': 'مدارک انتخاب‌شده',
   'crm.evidence.removeFile': 'حذف مدرک {name}',
   'crm.evidence.checkFile': 'این فایل را بررسی کنید',
-  'crm.corrections.reasonExample': 'مثلاً تطبیق نام ثبتی شرکت با آخرین آگهی رسمی.',
+  'crm.corrections.reasonExample': 'مثلاً اشتباه تایپی در پروفایل.',
   'crm.corrections.reviewDecision': 'تصمیم بازبین',
   'crm.corrections.decision': 'تصمیم',
   'crm.corrections.caseDetails': 'جزئیات درخواست',
@@ -65,8 +65,7 @@ const en: I18nDictionary = {
   'crm.evidence.selectedFiles': 'Selected evidence',
   'crm.evidence.removeFile': 'Remove evidence {name}',
   'crm.evidence.checkFile': 'Check this file',
-  'crm.corrections.reasonExample':
-    'For example, match the registered name to the latest official filing.',
+  'crm.corrections.reasonExample': 'For example, a typo in the profile.',
   'crm.corrections.reviewDecision': 'Review decision',
   'crm.corrections.decision': 'Decision',
   'crm.corrections.caseDetails': 'Case details',

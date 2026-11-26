@@ -1,6 +1,7 @@
 import { verifyClippedContrast } from './clipped-contrast';
 import { t as crmText } from '@barghsa/i18n/crm';
 import { confirmationText } from '@barghsa/i18n/confirmation';
+import { tSettingsForms } from '@barghsa/i18n/settings-forms';
 import { crmShell } from './crm-shell-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
@@ -17,12 +18,12 @@ const item = {
   status: 'Under Review',
   createdBy: 'creator',
 };
-async function shell(page: Page, locale = 'en') {
+async function shell(page: Page, locale = 'en', profileType = 'INDIVIDUAL') {
   await crmShell(page, locale);
   await page.route(`**/api/crm/profiles/${profileId}`, (route) =>
     route.fulfill({
       json: {
-        profile: { id: profileId, profileType: 'INDIVIDUAL', archived: false },
+        profile: { id: profileId, profileType, archived: false },
         viewerPermissions: { canEditIdentity: true },
       },
     })
@@ -37,7 +38,15 @@ for (const [locale, darkMode] of [
   test(`correction-only staff retain evidence and target through password confirmation (${locale}, dark=${darkMode})`, async ({
     page,
   }, testInfo) => {
-    await shell(page, locale);
+    const company = locale === 'fa' && darkMode;
+    const fieldName = company
+      ? 'national_identifier'
+      : locale === 'fa'
+        ? 'national_id'
+        : 'first_name';
+    const typedValue = company ? '١۰١۰۰۰١۰۰١٢' : locale === 'fa' ? '۰۰١۲٣۴۵٦۷۹' : 'Corrected';
+    const requestedValue = company ? '10100010012' : locale === 'fa' ? '0012345679' : typedValue;
+    await shell(page, locale, company ? 'LEGAL' : 'INDIVIDUAL');
     await page.route('**/api/public/branding/config', (route) =>
       route.fulfill({
         json: {
@@ -140,7 +149,18 @@ for (const [locale, darkMode] of [
     await expect(page.locator('#correction-reason')).toBeFocused();
     await page.keyboard.press('Tab');
     await expect(page.locator('#correction-file-picker')).toBeFocused();
-    await page.locator('#correction-value').fill('Corrected');
+    const field = page.locator('#correction-field');
+    const value = page.locator('#correction-value');
+    if (locale === 'fa') {
+      await value.fill('Entered for a different field');
+      await field.selectOption(fieldName);
+      await expect(value).toHaveValue('');
+      await expect(value).toHaveAccessibleName(crmText(`crm.corrections.${fieldName}`, locale));
+      await expect(value).toHaveAccessibleDescription(
+        tSettingsForms(company ? 'nationalIdentifierHelp' : 'nationalIdHelp', locale)
+      );
+    }
+    await value.fill(typedValue);
     await page.locator('#correction-reason').fill('Document checked');
     const chooserPromise = page.waitForEvent('filechooser');
     await picker.press('Enter');
@@ -178,7 +198,24 @@ for (const [locale, darkMode] of [
       .evaluate((form: HTMLFormElement) => form.requestSubmit());
     await expect(page.getByRole('dialog')).toHaveCount(0);
     expect(uploads).toBe(0);
-    await page.locator('#correction-value').fill('Corrected');
+    if (locale === 'fa') {
+      await value.fill(company ? '۱۰۱۰۰۰۱۰۰۱' : '۰۰۱۲۳۴۵۶۷۸');
+      await value.press('Tab');
+      await expect(value).toHaveAttribute('aria-invalid', 'true');
+      await expect(value).toHaveAccessibleDescription(
+        new RegExp(
+          tSettingsForms(company ? 'nationalIdentifierInvalid' : 'nationalIdInvalid', locale)
+        )
+      );
+      await expect(create).toBeDisabled();
+      await page
+        .locator('form:has(#correction-value)')
+        .evaluate((form: HTMLFormElement) => form.requestSubmit());
+      expect(uploads).toBe(0);
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+    }
+    await value.fill(typedValue);
+    await expect(value).not.toHaveAttribute('aria-invalid', 'true');
     await page.getByTestId('crm-corrections-workspace').screenshot({
       path:
         '/tmp/barghsa-crm-correction-' +
@@ -192,6 +229,7 @@ for (const [locale, darkMode] of [
     await create.click();
     const dialog = page.getByRole('dialog');
     await expect(dialog).toContainText(profileId);
+    await expect(dialog).toContainText(requestedValue);
     await dialog
       .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
       .click();
@@ -276,7 +314,7 @@ for (const [locale, darkMode] of [
         });
       }
     }
-    await expect(page.locator('#correction-value')).toHaveValue('Corrected');
+    await expect(value).toHaveValue(typedValue);
     await expect(page.locator('#correction-reason')).toHaveValue('Document checked');
     expect(verified).toBe(true);
     expect(verifications).toBe(1);
@@ -311,8 +349,8 @@ for (const [locale, darkMode] of [
     expect(operation).toMatch(/^[a-f0-9-]{36}$/i);
     expect(bodies).toEqual(
       Array.from({ length: 3 }, () => ({
-        fieldName: 'first_name',
-        requestedValue: 'Corrected',
+        fieldName,
+        requestedValue,
         reason: 'Document checked',
         evidenceUrls: [key],
         idempotencyKey: operation,
