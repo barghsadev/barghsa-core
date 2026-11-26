@@ -1,9 +1,29 @@
-import { LoadingStatus, Alert, Button } from '@barghsa/ui';
+import { LoadingStatus, Alert, Button, Skeleton } from '@barghsa/ui';
 import type { CSSProperties, ReactNode } from 'react';
 import { DANGER_TEXT_COLORS } from '../lib/brand-config.js';
 import { getBrandTextColor, useBrandConfig } from '../providers/BrandThemeProvider.js';
 import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 type Copy = (key: string) => string;
+
+export function SettingsValueSkeleton({ label, count = 3 }: { label: string; count?: number }) {
+  return (
+    <div role="status" aria-label={label}>
+      <span className="sr-only">{label}</span>
+      <div
+        aria-hidden="true"
+        className="grid gap-3 sm:grid-cols-[repeat(auto-fit,minmax(min(10rem,100%),1fr))]"
+      >
+        {Array.from({ length: count }, (_, index) => (
+          <div key={index} className="space-y-2 rounded-lg border bg-card p-3">
+            <Skeleton className="h-3 w-24 max-w-full" />
+            <Skeleton className="h-6 w-16 max-w-full" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /** Reserve localized feedback space so blur validation cannot move a tap target. */
 export function CatalogueFieldFeedback({
   id,
@@ -40,6 +60,7 @@ export function CatalogueFieldFeedback({
 export function CatalogueEditorStatus({
   label,
   loading,
+  loadingView,
   error,
   denied,
   saved,
@@ -50,6 +71,7 @@ export function CatalogueEditorStatus({
 }: {
   label: Copy;
   loading: boolean;
+  loadingView?: ReactNode;
   error: boolean;
   denied: boolean;
   saved: boolean;
@@ -72,7 +94,7 @@ export function CatalogueEditorStatus({
   });
   return (
     <>
-      {loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
+      {loading && (loadingView ?? <LoadingStatus>{label('loading')}</LoadingStatus>)}
       {denied && <Alert variant="destructive">{label('forbidden')}</Alert>}
       {error && (
         <div role="alert" className="space-y-2 rounded-md border border-destructive p-3">

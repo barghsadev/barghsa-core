@@ -1,10 +1,11 @@
 import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, useBlocker } from '@tanstack/react-router';
-import { Alert, LoadingStatus, buttonVariants } from '@barghsa/ui';
+import { Alert, buttonVariants } from '@barghsa/ui';
 import { tWorkspace } from '@barghsa/i18n/workspace-admin';
 import { tWalletLimit } from '@barghsa/i18n/wallet-limit';
 import { tWalletReceipts } from '@barghsa/i18n/wallet-receipts';
 import { RecordEditorActions } from '../components/RecordEditorLayout.js';
+import { SettingsValueSkeleton } from '../components/CatalogueEditorFeedback.js';
 import { RouteNotFound } from '../components/RouteErrorBoundary.js';
 import { useLocale } from '../hooks/useLocale.js';
 import type { CatalogueEditorProps } from '../hooks/useCatalogueEditor.js';
@@ -86,7 +87,7 @@ export default function AdminFinancialLimitPage({
       {denied ? (
         <Alert variant="destructive">{label('forbidden')}</Alert>
       ) : (
-        <Suspense fallback={<LoadingStatus>{label('loading')}</LoadingStatus>}>
+        <Suspense fallback={<SettingsValueSkeleton label={label('loading')} count={1} />}>
           <Panel
             view={view}
             onBusyChange={setLocked}

@@ -14,6 +14,7 @@ import {
 } from './RecordEditorLayout.js';
 import {
   CatalogueEditorStatus,
+  SettingsValueSkeleton,
   CatalogueSaveButton,
   catalogueRootMessage,
 } from './CatalogueEditorFeedback.js';
@@ -103,6 +104,9 @@ export default function WalletTopUpLimitConfigPanel({
           {...editor}
           label={label}
           loading={editor.resource.loading}
+          loadingView={
+            current ? undefined : <SettingsValueSkeleton label={label('loading')} count={1} />
+          }
           error={editor.resource.error}
         />
         {error && <Alert variant="destructive">{error}</Alert>}
@@ -110,7 +114,10 @@ export default function WalletTopUpLimitConfigPanel({
       {current && view !== 'edit' && (
         <>
           <div className="space-y-2 border-t px-4 py-4 sm:px-6">
-            <dl data-testid="wallet-top-up-limit-current" className="space-y-1">
+            <dl
+              data-testid="wallet-top-up-limit-current"
+              className="space-y-1 rounded-lg bg-muted/45 p-3"
+            >
               <dt className="sr-only">{label('current')}</dt>
               <dd className="break-words text-xl font-semibold tabular-nums">
                 {numbers.money(current.limitIrR)}

@@ -21,6 +21,7 @@ import {
 } from '../components/RecordEditorLayout.js';
 import {
   CatalogueEditorStatus,
+  SettingsValueSkeleton,
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
@@ -120,6 +121,9 @@ export default function AdminContractLimitsPage({ view }: { view: 'overview' | '
         announceUncertain={false}
         label={label}
         loading={editor.resource.loading}
+        loadingView={
+          current ? undefined : <SettingsValueSkeleton label={label('loading')} count={3} />
+        }
         error={editor.resource.error}
         refresh={refresh}
         busy={editor.pending}
@@ -127,13 +131,15 @@ export default function AdminContractLimitsPage({ view }: { view: 'overview' | '
       {current && !editor.denied && view === 'overview' && (
         <div className={recordEditorSurface}>
           <RecordEditorSection title={label('savedLimits')} description={label('scope')}>
-            <dl className="divide-y">
+            <dl className="grid gap-3 sm:grid-cols-3">
               {contractLimitFields.map(({ key }) => (
-                <div key={key} className="flex items-baseline justify-between gap-4 py-2.5">
-                  <dt className="min-w-0 text-sm">{label(key)}</dt>
-                  <dd className="shrink-0 text-sm font-semibold tabular-nums">
+                <div key={key} className="min-w-0 space-y-2 rounded-lg bg-muted/45 p-3">
+                  <dt className="text-sm text-muted-foreground">{label(key)}</dt>
+                  <dd className="text-lg font-semibold tabular-nums">
                     <bdi>{numbers.number(current[key])}</bdi>{' '}
-                    <span className="text-muted-foreground">{label(`unit.${key}`)}</span>
+                    <span className="text-sm font-normal text-muted-foreground">
+                      {label(`unit.${key}`)}
+                    </span>
                   </dd>
                 </div>
               ))}

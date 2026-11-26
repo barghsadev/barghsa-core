@@ -1,5 +1,5 @@
 import { useCallback, useState, type ReactNode } from 'react';
-import { Alert, Button, LoadingStatus } from '@barghsa/ui';
+import { Alert, Badge, Button } from '@barghsa/ui';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import { useAsyncData } from '../hooks/useAsyncData.js';
@@ -8,6 +8,7 @@ import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { record } from '../lib/catalogue-form.js';
 import { validVersionId } from '../lib/electricity-settings-form.js';
 import { ServerQueryError } from '../lib/server-query-client.js';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 
 type Copy = (key: string) => string;
 type Revision<T> = { id: string; version: number; config: T };
@@ -107,7 +108,7 @@ export default function ConfigRecovery<T>({
     { read }
   );
   if (history.status === 'loading')
-    return <LoadingStatus>{label('recoveryLoading')}</LoadingStatus>;
+    return <RecordListSkeleton label={label('recoveryLoading')} view="card" headings={[]} />;
   if (history.status === 'error') {
     if (history.error.code === 'READ_DENIED')
       return <Alert variant="destructive">{label('forbidden')}</Alert>;
@@ -132,10 +133,10 @@ export default function ConfigRecovery<T>({
   return (
     <section
       aria-label={label('recoveryTitle')}
-      className="space-y-4 rounded-lg border bg-card p-4 text-card-foreground"
+      className="space-y-4 rounded-xl border bg-card p-4 text-card-foreground sm:p-5"
     >
       {showRevisions && baseVersion > 0 && (
-        <p className="text-sm font-medium">{revisionLabel('recoveryCurrent', baseVersion)}</p>
+        <Badge variant="secondary">{revisionLabel('recoveryCurrent', baseVersion)}</Badge>
       )}
       {unconfirmed && <Alert variant="destructive">{label('unverified')}</Alert>}
       {draft && (
@@ -177,7 +178,7 @@ export default function ConfigRecovery<T>({
         {items.map((revision) => (
           <li key={revision.id} className="flex flex-wrap items-start justify-between gap-3 py-3">
             <div className={showRevisions ? 'min-w-0 flex-1 space-y-2' : undefined}>
-              <p className={showRevisions ? 'font-medium' : undefined}>
+              <p className="text-sm font-semibold">
                 {revisionLabel('recoveryRevision', revision.version)}
               </p>
               {showRevisions && renderValues(revision.config, label)}

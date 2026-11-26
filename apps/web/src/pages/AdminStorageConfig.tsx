@@ -30,6 +30,7 @@ import { useCatalogueResource, useCatalogueScope } from '../hooks/useCatalogueRe
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import {
   CatalogueFieldFeedback,
+  SettingsValueSkeleton,
   CatalogueSaveButton,
   catalogueRootMessage,
 } from '../components/CatalogueEditorFeedback.js';
@@ -513,7 +514,12 @@ export default function AdminStorageConfig({ section }: { section?: StorageSecti
           </p>
         </div>
       )}
-      {config.loading && <LoadingStatus>{label('loading')}</LoadingStatus>}
+      {config.loading &&
+        (config.data ? (
+          <LoadingStatus>{label('loading')}</LoadingStatus>
+        ) : (
+          <SettingsValueSkeleton label={label('loading')} count={4} />
+        ))}
       {config.error && (
         <Alert variant="destructive">
           {label('loadError')}{' '}
@@ -533,7 +539,7 @@ export default function AdminStorageConfig({ section }: { section?: StorageSecti
               )}
             </Badge>
           </div>
-          <dl className="grid gap-4 text-sm sm:grid-cols-2">
+          <dl className="grid gap-4 rounded-lg bg-muted/45 p-3 text-sm sm:grid-cols-2">
             {storageConnectionFields.map((field) => (
               <div key={field} className="min-w-0">
                 <dt className="text-muted-foreground">{label(field)}</dt>
@@ -548,6 +554,8 @@ export default function AdminStorageConfig({ section }: { section?: StorageSecti
                 {recoveryLabel(config.data.forcePathStyle ? 'recoveryOn' : 'recoveryOff')}
               </dd>
             </div>
+          </dl>
+          <dl className="grid gap-4 border-t pt-4 text-sm sm:grid-cols-2">
             <div>
               <dt className="text-muted-foreground">{label('accessKeyId')}</dt>
               <dd className="mt-1 font-medium">
@@ -767,7 +775,12 @@ export default function AdminStorageConfig({ section }: { section?: StorageSecti
           </Suspense>
         </div>
       )}
-      {cleanup.loading && <LoadingStatus>{text('cleanupLoading')}</LoadingStatus>}
+      {cleanup.loading &&
+        (cleanup.data ? (
+          <LoadingStatus>{text('cleanupLoading')}</LoadingStatus>
+        ) : (
+          <SettingsValueSkeleton label={text('cleanupLoading')} count={1} />
+        ))}
       {cleanup.error && (
         <Alert variant="destructive">
           {text('cleanupLoadError')}{' '}
