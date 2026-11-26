@@ -147,7 +147,10 @@ for (const { kind, path, api, copy, refresh, retry, denied, title, response } of
       }
       if (kind === 'electricity') await expect(electricityOrder).toBeVisible();
       hold = true;
-      const refreshButton = list.getByRole('button', { name: copy(refresh, locale), exact: true });
+      const refreshButton = (kind === 'consultation' ? main : list).getByRole('button', {
+        name: copy(refresh, locale),
+        exact: true,
+      });
       await refreshButton.click();
       await expect.poll(() => !!held).toBe(true);
       await expect(refreshButton).toBeDisabled();

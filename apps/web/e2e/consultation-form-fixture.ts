@@ -126,6 +126,14 @@ export async function setupConsultationForms(
   );
   const state = {
     productsDenied: false,
+    products: [
+      {
+        id: consultationProduct,
+        systemKey: null,
+        title,
+        description: { en: 'Assess your supply.', fa: 'ارزیابی تأمین انرژی.' },
+      },
+    ],
     intakeMode: 'owned' as 'owned' | 'unsafe' | 'held' | 'malformed' | 'success',
     replyMode: 'owned' as 'owned' | 'unsafe' | 'held' | 'malformed' | 'success' | 'denied',
     detailMode: 'success' as 'success' | 'held' | 'denied' | 'wrong-profile',
@@ -166,16 +174,7 @@ export async function setupConsultationForms(
   await page.route('**/api/consultations/products?*', (route) =>
     route.fulfill({
       status: state.productsDenied ? 403 : 200,
-      json: {
-        products: [
-          {
-            id: consultationProduct,
-            systemKey: null,
-            title,
-            description: { en: 'Assess your supply.', fa: 'ارزیابی تأمین انرژی.' },
-          },
-        ],
-      },
+      json: { products: state.products },
     })
   );
   await page.route('**/api/consultations/requests?*', (route) =>

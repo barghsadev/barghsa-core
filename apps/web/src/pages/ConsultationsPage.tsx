@@ -258,8 +258,10 @@ function ConsultationWorkspace({
   const loading = profileStatus === 'loading';
   const loadError = profileStatus === 'error' || profileStatus === 'denied';
   const [submitError, setSubmitError] = useState(false);
+  const [offeringChanged, setOfferingChanged] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const submissionKey = useRef<string | null>(null);
+  const restoredOffering = useRef(false);
   const intakeTransport = useRef<AbortController | null>(null);
   const pendingIntake = useRef<{
     profileId: string;
@@ -271,6 +273,7 @@ function ConsultationWorkspace({
   const [briefRecovery, setBriefRecovery] = useState<'check' | 'reenter' | null>(null);
   useEffect(() => {
     ++generation.current;
+    restoredOffering.current = false;
     intake.reset(emptyConsultationIntake);
     submissionKey.current = null;
     pendingIntake.current = null;
@@ -278,6 +281,7 @@ function ConsultationWorkspace({
     setBriefRecovery(null);
     setSubmitting(false);
     setSubmitError(false);
+    setOfferingChanged(false);
     return () => intakeTransport.current?.abort();
   }, [scope]);
   useEffect(
@@ -441,6 +445,7 @@ function ConsultationWorkspace({
         if (cause instanceof Error && ['401', '403', '404'].includes(cause.message)) {
           setProducts([]);
           setProductsDenied(true);
+          setOfferingChanged(false);
           writeIntakeSession(offeringKey, null);
           if (!pendingIntake.current) {
             intake.reset(emptyConsultationIntake);
@@ -456,20 +461,6 @@ function ConsultationWorkspace({
   }, [isIntake, profile, productsRevision]);
   useEffect(() => {
     if (
-      !pendingIntake.current &&
-      selectedProductId &&
-      productsScope === scope &&
-      !products.some((product) => product.id === selectedProductId)
-    ) {
-      intake.reset(emptyConsultationIntake);
-      writeIntakeSession(offeringKey, null);
-      setSubmitError(false);
-      submissionKey.current = null;
-    }
-  }, [products, selectedProductId, productsScope, scope, offeringKey]);
-
-  useEffect(() => {
-    if (
       !offeringKey ||
       !pendingKey ||
       !profile ||
@@ -477,9 +468,21 @@ function ConsultationWorkspace({
       productsLoading ||
       productsError ||
       productsDenied ||
-      intake.getValues('productId')
+      pendingIntake.current
     )
       return;
+    const selected = intake.getValues('productId');
+    if (selected) {
+      if (products.some((product) => product.id === selected)) return;
+      intake.reset({ ...emptyConsultationIntake, brief: intake.getValues('brief') });
+      setOfferingChanged(true);
+      writeIntakeSession(offeringKey, null);
+      setSubmitError(false);
+      submissionKey.current = null;
+      return;
+    }
+    if (restoredOffering.current) return;
+    restoredOffering.current = true;
     try {
       const pending = sessionStorage.getItem(pendingKey);
       if (pending) {
@@ -504,12 +507,20 @@ function ConsultationWorkspace({
         return;
       }
       const saved = sessionStorage.getItem(offeringKey);
-      if (!saved) return;
-      if (products.some(({ id }) => id === saved)) intake.setValue('productId', saved);
-      else writeIntakeSession(offeringKey, null);
+      if (saved) {
+        if (products.some(({ id }) => id === saved)) {
+          intake.setValue('productId', saved);
+        } else {
+          writeIntakeSession(offeringKey, null);
+          setOfferingChanged(true);
+        }
+        return;
+      }
     } catch {
       writeIntakeSession(pendingKey, null);
     }
+    const [onlyService] = products;
+    if (products.length === 1 && onlyService) intake.setValue('productId', onlyService.id);
   }, [
     offeringKey,
     pendingKey,
@@ -852,6 +863,7 @@ function ConsultationWorkspace({
     },
   ];
   const showIntakeDetails = !productsDenied && (products.length > 0 || !!pendingIntake.current);
+  const onlyServiceSelected = products.length === 1 && products[0]?.id === selectedProductId;
   return (
     <section
       className={`mx-auto w-full min-w-0 ${isIntake ? 'max-w-3xl space-y-4' : view === 'table' ? 'max-w-7xl space-y-6' : 'max-w-4xl space-y-6'}`}
@@ -929,7 +941,11 @@ function ConsultationWorkspace({
                                 onClick={refreshProducts}
                               />
                             </div>
-                            <FormDescription>{copy('productHelp')}</FormDescription>
+                            <FormDescription>
+                              {onlyServiceSelected
+                                ? briefCopy('singleService')
+                                : copy('productHelp')}
+                            </FormDescription>
                             <FormControl>
                               <div
                                 role="radiogroup"
@@ -987,13 +1003,16 @@ function ConsultationWorkspace({
                                               productsError ||
                                               productsDenied
                                             }
-                                            aria-describedby={
-                                              fieldState.error
-                                                ? 'consultation-product-description consultation-product-message'
-                                                : 'consultation-product-description'
-                                            }
+                                            aria-describedby={[
+                                              'consultation-product-description',
+                                              fieldState.error && 'consultation-product-message',
+                                              offeringChanged && 'consultation-offering-changed',
+                                            ]
+                                              .filter(Boolean)
+                                              .join(' ')}
                                             onChange={() => {
                                               field.onChange(product.id);
+                                              setOfferingChanged(false);
                                               writeIntakeSession(offeringKey, product.id);
                                               submissionKey.current = null;
                                               setSubmitError(false);
@@ -1020,6 +1039,15 @@ function ConsultationWorkspace({
                                 </ListPage>
                               </div>
                             </FormControl>
+                            {offeringChanged && products.length > 0 && (
+                              <p
+                                id="consultation-offering-changed"
+                                role="alert"
+                                className="text-sm"
+                              >
+                                {briefCopy('serviceRemoved')}
+                              </p>
+                            )}
                             <FormMessage />
                           </FormItem>
                         )}

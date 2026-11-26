@@ -81,16 +81,17 @@ for (const locale of ['en', 'fa'] as const)
     const certificateChoice = page.getByRole('radio', {
       name: new RegExp(certificate.title[locale]),
     });
-    await expect(advice).toBeVisible();
+    await expect(advice).toBeChecked();
     await expect(certificateChoice).toHaveCount(0);
     active = legal;
     await page.reload();
     await expect(certificateChoice).toBeVisible();
+    await expect(advice).not.toBeChecked();
     await certificateChoice.click();
     await expect(certificateChoice).toBeChecked();
     active = individual;
     await page.reload();
     await expect(advice).toBeVisible();
     await expect(certificateChoice).toHaveCount(0);
-    await expect(advice).not.toBeChecked();
+    await expect(advice).toBeChecked();
   });

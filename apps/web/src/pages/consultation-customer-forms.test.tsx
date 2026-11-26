@@ -276,7 +276,20 @@ it.each(['en', 'fa'] as const)(
           writes.push(JSON.parse(String(options.body)));
           return Response.json({ requestId: browseRequestId, status: 'submitted' });
         }
-        return Response.json(read(url));
+        return Response.json(
+          url.includes('/products?')
+            ? {
+                products: [
+                  browseConsultation,
+                  {
+                    ...browseConsultation,
+                    id: '86000000-0000-4000-8000-000000000099',
+                    title: { en: 'Installation advice', fa: 'مشاوره نصب' },
+                  },
+                ],
+              }
+            : read(url)
+        );
       },
       locale
     );

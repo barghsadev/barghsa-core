@@ -272,7 +272,7 @@ test('consultation list opens its request detail route', async ({ page }) => {
     return route.fulfill({ status: 201, json: { requestId: consultationId, status: 'submitted' } });
   });
   await page.goto('/consultations/new');
-  await page.getByRole('radio', { name: 'Site advice' }).check();
+  await expect(page.getByRole('radio', { name: 'Site advice' })).toBeChecked();
   await page
     .getByRole('checkbox', { name: 'I confirm this request is for the selected profile.' })
     .check();
@@ -428,6 +428,8 @@ test('accepting a consultation offer opens its invoice without reloading the app
   await page.evaluate(() => {
     (window as Window & { __consultationNavigation?: string }).__consultationNavigation = 'kept';
   });
+  await page.getByRole('link', { name: 'Review offer', exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(`/consultations/${consultationId}/offer$`));
   await page.getByRole('button', { name: 'Accept offer and pay' }).click();
   await approveRiskConfirmation(page, 'en', 'financial');
   await page

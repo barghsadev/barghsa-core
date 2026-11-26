@@ -22,6 +22,12 @@ const settings = [
   ['en', 'light'],
   ['fa', 'dark'],
 ] as const;
+const alternateProduct = {
+  id: '73000000-0000-4000-8000-000000000099',
+  systemKey: null,
+  title: { en: 'Installation consultation', fa: 'مشاوره نصب' },
+  description: { en: 'Plan a new installation.', fa: 'برنامه‌ریزی برای نصب جدید.' },
+};
 async function focusedError(field: Locator, errorOwner: Locator = field) {
   await expect(field).toBeFocused();
   await expect(errorOwner).toHaveAttribute('aria-invalid', 'true');
@@ -59,10 +65,11 @@ for (const [locale, theme] of settings) {
       await expect(
         page.getByRole('radiogroup', { name: copy('available'), exact: true })
       ).toBeVisible();
-      await expect(page.locator(`#consultation-product-${consultationProduct}`)).toBeEnabled();
+      const product = page.locator(`#consultation-product-${consultationProduct}`);
+      await expect(product).toBeChecked();
+      await expect(product).toHaveAccessibleDescription(briefCopy('singleService'));
       await expect(page.locator('html')).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
       await scanCriticalMain(page);
-      await page.locator(`#consultation-product-${consultationProduct}`).check();
       const brief = page.getByRole('textbox', { name: briefCopy('label') });
       await expect(brief).toHaveAccessibleDescription(briefCopy('help'));
       await expect(brief).toHaveAttribute('placeholder', briefCopy('example'));
@@ -77,10 +84,42 @@ for (const [locale, theme] of settings) {
     }
   );
 
+  test(`consultation catalogue changes preserve the unsent brief (${locale}, ${theme})`, async ({
+    page,
+  }) => {
+    const { state } = await setupConsultationForms(page, locale, theme === 'dark', true);
+    await page.goto('/consultations/new');
+    const product = page.locator(`#consultation-product-${consultationProduct}`);
+    const replacement = page.locator(`#consultation-product-${alternateProduct.id}`);
+    const brief = page.getByRole('textbox', { name: briefCopy('label') });
+    const confirm = page.getByRole('checkbox', { name: copy('confirm'), exact: true });
+    const message = page.getByText(briefCopy('serviceRemoved'), { exact: true });
+    await expect(product).toBeChecked();
+    const description =
+      locale === 'fa' ? 'کم کردن مصرف برق کارگاه' : 'Reduce workshop electricity use';
+    await brief.fill(description);
+    await confirm.check();
+    state.products = [alternateProduct];
+    await page.getByRole('button', { name: copy('refreshProducts'), exact: true }).click();
+    await expect(product).toHaveCount(0);
+    await expect(replacement).not.toBeChecked();
+    await expect(message).toBeVisible();
+    await expect(replacement).toHaveAccessibleDescription(
+      `${copy('productHelp')} ${briefCopy('serviceRemoved')}`
+    );
+    await expect(brief).toHaveValue(description);
+    await expect(confirm).not.toBeChecked();
+    await replacement.check();
+    await expect(message).toHaveCount(0);
+    expect(state.intakeWrites).toEqual([]);
+    expect(await page.evaluate(() => JSON.stringify(sessionStorage))).not.toContain(description);
+  });
+
   test(`consultation intake validates lazily and retries the same captured submission (${locale}, ${theme})`, async ({
     page,
   }, info) => {
     const { state } = await setupConsultationForms(page, locale, theme === 'dark', true);
+    state.products.push(alternateProduct);
     const manifest = await productionManifest();
     let release!: () => void;
     const delayed = new Promise<void>((resolve) => {
