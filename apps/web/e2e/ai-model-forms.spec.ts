@@ -13,6 +13,7 @@ for (const locale of ['en', 'fa'] as const)
     }, info) => {
       await setupCatalogueForms(page, locale, dark);
       const label = (key: string) => t(`admin.aiModels.${key}`, locale);
+      const copy = (key: Parameters<typeof aiModelFormText>[0]) => aiModelFormText(key, locale);
       const model = structuredClone(aiModel);
       let readStatus = 200,
         verified = false;
@@ -86,6 +87,7 @@ for (const locale of ['en', 'fa'] as const)
         provider = page.locator('#ai-model-provider');
       for (const field of [max, base, choice, provider])
         await expect(field).toHaveAttribute('aria-required', 'true');
+      await expect(max).toHaveAccessibleDescription(copy('maxTokensHint'));
       await expect(base).toHaveAccessibleDescription(/\/chat\/completions/);
       await provider.selectOption('anthropic');
       await expect(base).toHaveAccessibleDescription(/\/messages/);
@@ -104,6 +106,9 @@ for (const locale of ['en', 'fa'] as const)
         await expect(max).toHaveAttribute('aria-invalid', 'true');
         expect(modelWrites).toHaveLength(0);
       }
+      const preset512 = page
+        .getByRole('group', { name: copy('maxTokensPresets'), exact: true })
+        .getByRole('button', { name: /^(512|۵۱۲)$/ });
       if (locale === 'fa') {
         await max.fill('۵۲');
         await max.evaluate((input: HTMLInputElement) => input.setSelectionRange(1, 1));
@@ -111,11 +116,20 @@ for (const locale of ['en', 'fa'] as const)
         await expect(max).toHaveValue('512');
         await expect(max).toHaveJSProperty('selectionStart', 2);
       } else {
-        await max.fill('512');
+        await preset512.click();
       }
+      await expect(max).toHaveValue('512');
+      await expect(preset512).toHaveAttribute('aria-pressed', 'true');
       const temperature = page.locator('#ai-model-temperature');
-      await temperature.fill(locale === 'fa' ? '٠٫٥' : '0.5');
+      const balanced = page
+        .getByRole('group', { name: copy('temperaturePresets'), exact: true })
+        .getByRole('button', { name: new RegExp(copy('temperatureBalanced')) });
+      await balanced.press('Enter');
       await expect(temperature).toHaveValue('0.5');
+      await expect(balanced).toHaveAttribute('aria-pressed', 'true');
+      await temperature.fill(locale === 'fa' ? '٠٫٣٧٥' : '0.375');
+      await expect(temperature).toHaveValue('0.375');
+      await expect(balanced).toHaveAttribute('aria-pressed', 'false');
       await base.fill('https://changed.example.test/v1');
       await button('save').click();
       await expect(choice).toBeFocused();
@@ -123,6 +137,10 @@ for (const locale of ['en', 'fa'] as const)
       await expect(page.locator('#ai-model-token')).toHaveAttribute('aria-required', 'true');
       await page.locator('#ai-model-token').fill('private-new-token');
       await button('save').click();
+      await expect(page.getByRole('dialog').locator('#model-response-review')).toContainText(
+        '0.375'
+      );
+      await expect(page.getByRole('dialog')).not.toContainText('private-new-token');
       await confirm();
       await expect(max).toBeFocused();
       await expect(max).toHaveAttribute('aria-invalid', 'true');
@@ -143,7 +161,7 @@ for (const locale of ['en', 'fa'] as const)
           providerType: model.providerType,
           baseUrl: model.baseUrl,
           modelName: model.modelName,
-          config: { max_tokens: 512, temperature: 0.5 },
+          config: { max_tokens: 512, temperature: 0.375 },
           apiToken: 'private-new-token',
         })
       );

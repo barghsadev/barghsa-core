@@ -1259,7 +1259,16 @@ for (const locale of ['en', 'fa'] as const)
     await page
       .getByLabel(fa ? 'کلید API' : 'API token', { exact: true })
       .fill('browser-test-private-token');
+    await page
+      .getByRole('group', { name: aiModelFormText('maxTokensPresets', locale), exact: true })
+      .getByRole('button', { name: /^(512|۵۱۲)$/ })
+      .click();
+    await page
+      .getByRole('group', { name: aiModelFormText('temperaturePresets', locale), exact: true })
+      .getByRole('button', { name: new RegExp(aiModelFormText('temperatureBalanced', locale)) })
+      .click();
     await page.getByRole('button', { name: fa ? 'ذخیره مدل' : 'Save model', exact: true }).click();
+    await expect(page.getByRole('dialog').locator('#model-response-review')).toContainText('0.5');
     await confirm();
     const card = page.getByRole('main');
     const heading = card.getByRole('heading', { name: title, exact: true });
@@ -1269,6 +1278,8 @@ for (const locale of ['en', 'fa'] as const)
     await expect(card).not.toContainText('browser-test-private-token');
     await card.getByRole('link', { name: fa ? 'ویرایش' : 'Edit', exact: true }).click();
     await expect(page.locator('#ai-model-token')).toHaveCount(0);
+    await expect(page.locator('#ai-model-max-tokens')).toHaveValue('512');
+    await expect(page.locator('#ai-model-temperature')).toHaveValue('0.5');
     await page
       .getByLabel(fa ? 'نشانی پایه' : 'Base URL', { exact: true })
       .fill('http://127.0.0.1:2/v1');
@@ -1293,6 +1304,7 @@ for (const locale of ['en', 'fa'] as const)
       (model: { title: string }) => model.title === title
     );
     expect(stored.baseUrl).toBe('http://127.0.0.1:1/v1');
+    expect(stored.config).toEqual({ max_tokens: 512, temperature: 0.5 });
     const unsafeDestination = await page.request.put(
       `${http.base}/api/admin/ai-models/${stored.id}`,
       {

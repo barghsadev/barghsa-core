@@ -41,6 +41,7 @@ import {
 import { toast } from '../lib/toast-api.js';
 import type { TeamAction } from '../components/TeamActionDialog.js';
 import { useWizardForm } from '../hooks/useWizardForm.js';
+import { parseRecordNumber } from '../lib/record-number.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
 import { aiModelFormText } from '@barghsa/i18n/ai-model-forms';
 import {
@@ -183,7 +184,9 @@ function OwnedAiModelsPage({
   );
   const modelFields = useActionFieldErrors(modelForm.form, modelMessages, copy('invalid'));
   const budgetFields = useActionFieldErrors(budgetForm.form, budgetMessages, copy('invalid'));
-  const invalidBudgetFocus = useRef<keyof BudgetDraft | null>(null);
+  const invalidFocus = useRef<
+    { kind: 'model'; field: keyof Draft } | { kind: 'budget'; field: keyof BudgetDraft } | null
+  >(null);
   const [draftOpen, setDraftOpen] = useState(false),
     [budgetOpen, setBudgetOpen] = useState(false);
   const draft = draftOpen ? modelForm.values : null,
@@ -192,11 +195,12 @@ function OwnedAiModelsPage({
     ? models.find((model) => model.id === budgetDraft.modelId)?.budget
     : null;
   function setDraft(value: Draft | null) {
+    invalidFocus.current = null;
     modelForm.form.reset(value ?? blank());
     setDraftOpen(!!value);
   }
   function setBudgetDraft(value: BudgetDraft | null) {
-    invalidBudgetFocus.current = null;
+    invalidFocus.current = null;
     budgetForm.form.reset(
       value ?? {
         modelId: '',
@@ -357,13 +361,15 @@ function OwnedAiModelsPage({
   const unavailable = loading || error || denied || missing;
   const disabled = unavailable || changed || uncertain;
   const busy = modelForm.pending || budgetForm.pending || !!action;
+  const setModelFocus = modelForm.form.setFocus;
   const setBudgetFocus = budgetForm.form.setFocus;
   useEffect(() => {
-    if (busy || !invalidBudgetFocus.current) return;
-    const field = invalidBudgetFocus.current;
-    invalidBudgetFocus.current = null;
-    setBudgetFocus(field);
-  }, [busy, budgetForm.errors, setBudgetFocus]);
+    const focus = invalidFocus.current;
+    if (busy || !focus) return;
+    invalidFocus.current = null;
+    if (focus.kind === 'model') setModelFocus(focus.field);
+    else setBudgetFocus(focus.field);
+  }, [busy, modelForm.errors, budgetForm.errors, setModelFocus, setBudgetFocus]);
   const currentModel = modelId ? models[0] : undefined;
   useEffect(() => {
     if (workspace && workspace.view !== 'list') heading.current?.focus({ preventScroll: true });
@@ -446,25 +452,33 @@ function OwnedAiModelsPage({
     modelForm.setValidationPending(true);
     setResult(null);
     try {
-      await modelForm.form.handleSubmit((value) => {
-        if (epoch !== generation.current) return;
-        commandGeneration.current = epoch;
-        commandBasis.current = null;
-        capture.current = { kind: 'model', value: { ...value } };
-        const next: TeamAction = {
-          title: label('save'),
-          description: label('confirmSave'),
-          path: `/api/admin/ai-models${value.id ? `/${value.id}` : ''}`,
-          method: value.id ? 'PUT' : 'POST',
-          responseDeadline: true,
-          body: modelBody(value),
-          successStatus: value.id ? 200 : 201,
-          forbiddenMessage: label('forbidden'),
-          errorMessages: errors,
-        };
-        actionRef.current = next;
-        setAction(next);
-      })();
+      await modelForm.form.handleSubmit(
+        (value) => {
+          if (epoch !== generation.current) return;
+          commandGeneration.current = epoch;
+          commandBasis.current = null;
+          capture.current = { kind: 'model', value: { ...value } };
+          const next: TeamAction = {
+            title: label('save'),
+            description: label('confirmSave'),
+            path: `/api/admin/ai-models${value.id ? `/${value.id}` : ''}`,
+            method: value.id ? 'PUT' : 'POST',
+            responseDeadline: true,
+            body: modelBody(value),
+            successStatus: value.id ? 200 : 201,
+            forbiddenMessage: label('forbidden'),
+            errorMessages: errors,
+          };
+          actionRef.current = next;
+          setAction(next);
+        },
+        (fieldErrors) => {
+          if (epoch !== generation.current) return;
+          const field = Object.keys(fieldErrors).find((key) => key in modelMessages) as
+            keyof Draft | undefined;
+          invalidFocus.current = field ? { kind: 'model', field } : null;
+        }
+      )();
     } finally {
       if (epoch === generation.current) {
         validating.current = false;
@@ -545,9 +559,9 @@ function OwnedAiModelsPage({
         },
         (errors) => {
           if (epoch !== generation.current) return;
-          invalidBudgetFocus.current =
-            (Object.keys(errors).find((field) => field in budgetMessages) as keyof BudgetDraft) ??
-            null;
+          const field = Object.keys(errors).find((key) => key in budgetMessages) as
+            keyof BudgetDraft | undefined;
+          invalidFocus.current = field ? { kind: 'budget', field } : null;
         }
       )();
     } finally {
@@ -576,6 +590,7 @@ function OwnedAiModelsPage({
     : 0;
   const reviewBudget =
     action && capture.current?.kind === 'budget' ? budgetBody(capture.current.value) : null;
+  const reviewModel = action && capture.current?.kind === 'model' ? capture.current.value : null;
   const plannedBudget =
     reviewBudget ??
     (budgetDraft && !invalidBudgetFields(budgetDraft).length ? budgetBody(budgetDraft) : null);
@@ -934,8 +949,12 @@ function OwnedAiModelsPage({
                       {label('tokenHelp')}
                     </p>
                   </RecordEditorSection>
-                  <RecordEditorSection title={copy('responseSettings')}>
-                    <div className={recordEditorGrid}>
+                  <RecordEditorSection
+                    title={copy('responseSettings')}
+                    description={copy('responseInheritance')}
+                  >
+                    {/* Validate these fields on Save so feedback cannot move a pressed control. */}
+                    <div className="grid min-w-0 gap-x-5 gap-y-4 sm:grid-cols-2">
                       <div className={recordEditorField}>
                         <Label htmlFor="ai-model-max-tokens">{label('maxTokens')}</Label>
                         <RecordNumberInput
@@ -947,7 +966,9 @@ function OwnedAiModelsPage({
                           step={1}
                           required
                           aria-required="true"
+                          aria-describedby={modelForm.errorId('maxTokens')}
                           value={draft.maxTokens}
+                          onBlur={undefined}
                           onChange={(value) => modelForm.field('maxTokens')[1](value)}
                         />
                         <CatalogueFieldFeedback
@@ -955,7 +976,30 @@ function OwnedAiModelsPage({
                           id={modelForm.errorId('maxTokens')}
                           error={modelForm.errors.maxTokens}
                           message={modelMessages.maxTokens!}
+                          hint={copy('maxTokensHint')}
                         />
+                        <div
+                          role="group"
+                          aria-label={copy('maxTokensPresets')}
+                          className="flex flex-wrap gap-1.5 pt-1"
+                        >
+                          {[256, 512, 1024].map((tokens) => {
+                            const selected = parseRecordNumber(draft.maxTokens) === tokens;
+                            return (
+                              <Button
+                                key={tokens}
+                                type="button"
+                                variant={selected ? 'secondary' : 'outline'}
+                                size="sm"
+                                aria-controls="ai-model-max-tokens"
+                                aria-pressed={selected}
+                                onClick={() => modelForm.field('maxTokens')[1](String(tokens))}
+                              >
+                                {numbers.number(tokens)}
+                              </Button>
+                            );
+                          })}
+                        </div>
                       </div>
                       <div className={recordEditorField}>
                         <Label htmlFor="ai-model-temperature">{label('temperature')}</Label>
@@ -970,6 +1014,7 @@ function OwnedAiModelsPage({
                           aria-required="true"
                           aria-describedby={modelForm.errorId('temperature')}
                           value={draft.temperature}
+                          onBlur={undefined}
                           onChange={(value) => modelForm.field('temperature')[1](value)}
                         />
                         <CatalogueFieldFeedback
@@ -979,6 +1024,38 @@ function OwnedAiModelsPage({
                           message={modelMessages.temperature!}
                           hint={copy('temperatureHint')}
                         />
+                        <div
+                          role="group"
+                          aria-label={copy('temperaturePresets')}
+                          className="flex flex-wrap gap-1.5 pt-1"
+                        >
+                          {(
+                            [
+                              [0, 'temperatureConsistent'],
+                              [0.5, 'temperatureBalanced'],
+                              [1, 'temperatureVaried'],
+                            ] as const
+                          ).map(([temperature, title]) => {
+                            const selected = parseRecordNumber(draft.temperature) === temperature;
+                            return (
+                              <Button
+                                key={temperature}
+                                type="button"
+                                variant={selected ? 'secondary' : 'outline'}
+                                size="sm"
+                                className="h-auto min-h-11 flex-col gap-0.5 py-1"
+                                aria-controls="ai-model-temperature"
+                                aria-pressed={selected}
+                                onClick={() =>
+                                  modelForm.field('temperature')[1](String(temperature))
+                                }
+                              >
+                                <span>{copy(title)}</span>
+                                <bdi className="text-xs">{numbers.number(temperature)}</bdi>
+                              </Button>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
                   </RecordEditorSection>
@@ -1290,8 +1367,8 @@ function OwnedAiModelsPage({
               setDenied(true);
             }}
             summary={
-              reviewBudget ? (
-                <>
+              <>
+                {reviewBudget && (
                   <section
                     id="model-budget-review"
                     aria-label={copy('budgetReview')}
@@ -1336,11 +1413,34 @@ function OwnedAiModelsPage({
                     </dl>
                     {limitReached && <p className="text-sm">{copy('budgetLimitReached')}</p>}
                   </section>
-                  {recovery}
-                </>
-              ) : (
-                recovery
-              )
+                )}
+                {reviewModel && (
+                  <section
+                    id="model-response-review"
+                    aria-labelledby="model-response-review-title"
+                    className="space-y-2 rounded-lg border bg-muted/35 p-3"
+                  >
+                    <h3 id="model-response-review-title" className="text-sm font-medium">
+                      {copy('responseSettings')}
+                    </h3>
+                    <dl className="grid min-w-0 grid-cols-2 gap-3 text-sm">
+                      <div className="min-w-0">
+                        <dt className="text-xs text-muted-foreground">{label('maxTokens')}</dt>
+                        <dd className="font-medium [overflow-wrap:anywhere]">
+                          <bdi>{numbers.number(parseRecordNumber(reviewModel.maxTokens))}</bdi>
+                        </dd>
+                      </div>
+                      <div className="min-w-0">
+                        <dt className="text-xs text-muted-foreground">{label('temperature')}</dt>
+                        <dd className="font-medium [overflow-wrap:anywhere]">
+                          <bdi>{String(parseRecordNumber(reviewModel.temperature))}</bdi>
+                        </dd>
+                      </div>
+                    </dl>
+                  </section>
+                )}
+                {recovery}
+              </>
             }
             onClose={withdraw}
             onSuccess={((command, commandVersion) => async (value: unknown) => {
