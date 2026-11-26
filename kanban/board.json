@@ -86713,7 +86713,8 @@
             2355528575142242,
             4031767066314520,
             4222381979134313,
-            4177014092591485
+            4177014092591485,
+            1991742494443072
           ],
           "checks": [
             3319060580963466,
@@ -86755,7 +86756,8 @@
             253090249689773,
             2007711430603789,
             2130820834874168,
-            3326211639035195
+            3326211639035195,
+            4041826667040553
           ],
           "limitations": [],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/email-callback-current-acceptance",
@@ -783972,6 +783974,7 @@
       "2185436294280915": "Permanent hard bounce suppresses each normalized destination once; temporary bounce/delay doesnot suppress. Complaint atomically createsone open correction per address, with no profile attribution guessed for ambiguous multi-recipient events. Current staff view/retry permission, session/CSRF/step-up, strict note/pagination, concurrent idempotent completion, authority expiry and audit rollback pass real HTTP. Resolving keeps suppression and sends nothing; later complaints can createfresh task. Upgrade/backfill preserves original timestamps and suppression/correction history after profile deletion.",
       "2098075456750836": "Current FA/EN mobile/RTL/axe queue/recovery and both correction-page callers pass, including malformed response, read-only access,25-row pagination, step-up note retention, wrong acknowledgment, completed history and exactthreewrites. One coherent review/AST proof retains all20 old assertions and addsfour. Only current staff/saved locale/template catalogue/cookie fixtures and verified-session interaction changed; password field absence andone exact password/CSRF verification explicitly asserted. Production code unchanged.",
       "1734517023303943": "Current source/output bytes match the tested baseline, including all compiled API/worker/shared/web outputs, so no rebuild or unrelated regression/budget/SAST runs. Web types and changed fixture lint/format pass; matched prior authority/provider/notification protections retained. Callback functionality accepted, while live signed provider receipts, callback/CSP owner policy, operational receiver evidence and all release/production gates stay unfinished. No release/version/deploy/Telegram/production action.",
+      "4041826667040553": "Reviewed the email complaint follow-up editor with a fixed description and a persistent suppression notice beside the reported address. Twelve Chromium and mobile Safari cases passed, covering Persian and English authorization, step-up, lost acknowledgment reconciliation, and scoped accessibility. Also checked that the form fits at 320 CSS px and Cancel returns to the saved record. The production build and all 212 compiled route and interaction budgets passed. Browser logs and captures are in /tmp/barghsa-form-review/email-correction-*.",
       "1442717005225607": "Current SMS verification has150 distinct fresh cases:38 API units,75 selected real authority/self-test/input cases,2 complete SMS breaker cases,9 shared adapter cases,16 production Chromium cases,8 current credit/metrics cases and2 actual compiled-worker metrics/readiness cases. Initial2 credit passes and repeated scopes excluded. The named SMS sample-parameter test path is absent and did not run; shared receipt9 cases actually ran in2 files. The initial authority filter skipped the breaker file, which was subsequently run completely. No unavailable/skipped check is called passed.",
       "3084419898208200": "Existing configuration/lifecycle/locale mappings, verified mobile self-tests, encryption, current capability/session/CSRF/OTP step-up, exact activation proof, one active provider and tested rollback retain current complete functional evidence. Actual active SMS templates and variable allowlists validate mappings; exact locale wins over shared legacy mapping and never silently substitutes another language. Duplicate identities/parameters and unsupported/undeclared/missing data are rejected. Storage/default/enabled representation disposition remains pending in the detailed entity/mapping tasks.",
       "1425063633118725": "Adapter normalizes Iranian E.164 only at provider boundary, uses application-managed base URL and mapped TemplateId/parameters, demands a real positive message receipt and classifies explicit rejection versus transient failures/uncertain delivery. Snapshots and durable execution preserve recipient/profile/idempotency/template identities; receipts are checked before retry and ambiguous sends are held without blind resend. Quota and circuit checks, cancellation, invalid destination/template/credentials and exact locale contracts pass. Existing worker recipient/receipt proofs remain source-bound; no live SMS is sent.",
@@ -792625,6 +792628,10 @@
       "2588487507754765": {
         "path": "apps/api/src/email-webhook/email-webhook.module.ts",
         "sha256": "bbde45bd887d926ddb50b267314cda5adc83d9b3d4566a54961be40b2a87a0ec"
+      },
+      "1991742494443072": {
+        "path": "apps/web/src/pages/CustomerCorrectionsPage.tsx",
+        "sha256": "fa6684aab80082f609b5fa48fdb98dd43031e022c5fa93cb3edc84c34dd6860a"
       },
       "2579504509920426": {
         "path": "apps/api/src/provider-config/sms-provider-config.controller.test.ts",

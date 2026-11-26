@@ -1,13 +1,18 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ArrowRight, RefreshCw } from 'lucide-react';
-import { Alert, Button, Label, LoadingStatus, Textarea } from '@barghsa/ui';
+import { ArrowRight, MailX, RefreshCw } from 'lucide-react';
+import { Alert, Button, Label, LoadingStatus, Textarea, buttonVariants } from '@barghsa/ui';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { notificationFormText } from '@barghsa/i18n/notification-forms';
 import { tWorkspace as t, type Locale } from '@barghsa/i18n/workspace-admin';
 import CustomerCorrectionsPanel from '../components/CustomerCorrectionsPanel.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import {
+  RecordEditorActions,
+  recordEditorField,
+  recordEditorSurface,
+} from '../components/RecordEditorLayout.js';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -182,6 +187,7 @@ function CorrectionRecord({
       ref={refreshButton}
       variant={recovering ? 'outline' : 'ghost'}
       size={recovering ? 'sm' : 'icon'}
+      className="shrink-0"
       aria-label={label('refresh')}
       title={label('refresh')}
       disabled={phase === 'loading' || review !== null}
@@ -195,12 +201,13 @@ function CorrectionRecord({
   return (
     <section className="min-w-0 space-y-4" aria-label={label('title')}>
       <RecordCommandGuard blocked={() => review !== null} />
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <h1 ref={heading} tabIndex={-1} className="text-2xl font-semibold">
+      <header className="flex flex-wrap items-center justify-between gap-2">
+        <h1 ref={heading} tabIndex={-1} className="min-w-0 text-2xl font-semibold">
           {editing && !row?.resolvedAt
             ? label('resolve')
             : notificationFormText('correctionDetails', locale)}
         </h1>
+        {refreshControl}
       </header>
       {phase === 'loading' && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {phase === 'error' && <Alert variant="destructive">{label('error')}</Alert>}
@@ -210,10 +217,12 @@ function CorrectionRecord({
       {phase === 'ready' && (result?.kind === 'denied' || (editing && row && !canRetry)) && (
         <Alert variant="destructive">{label('denied')}</Alert>
       )}
-      <div className="relative grid gap-3">
-        {row && (
-          <div className="space-y-2 rounded-xl border bg-card p-4 pe-16">
-            <dl className="grid gap-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+      <CommandFeedback message={confirmed ? label('saved') : null} />
+      {recovering && <Alert variant="destructive">{confirmationText('unconfirmed', locale)}</Alert>}
+      {row && (
+        <div className={recordEditorSurface}>
+          <div className="space-y-3 px-4 py-4 sm:px-6">
+            <dl className="grid gap-2.5 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] sm:gap-5">
               <div className="min-w-0">
                 <dt className="text-xs text-muted-foreground">
                   {notificationFormText('correctionAddress', locale)}
@@ -231,21 +240,16 @@ function CorrectionRecord({
                 </dd>
               </div>
             </dl>
+            {showEditor && (
+              <p className="flex items-start gap-2 rounded-md bg-muted/45 px-3 py-2 text-xs text-muted-foreground">
+                <MailX className="size-4 shrink-0" aria-hidden="true" />
+                {notificationFormText('correctionSuppressed', locale)}
+              </p>
+            )}
             {time.notice}
           </div>
-        )}
-        <CommandFeedback message={confirmed ? label('saved') : null} />
-        {recovering && (
-          <Alert variant="destructive">{confirmationText('unconfirmed', locale)}</Alert>
-        )}
-        <div className={row && !recovering ? 'absolute end-2 top-2' : undefined}>
-          {refreshControl}
-        </div>
-      </div>
-      {row && (
-        <>
           {row.resolvedAt ? (
-            <div className="space-y-2 rounded-xl border bg-card p-4">
+            <div className="space-y-2 border-t px-4 py-4 sm:px-6">
               <h2 className="text-sm font-semibold">{label('note')}</h2>
               <p className="whitespace-pre-wrap wrap-anywhere text-sm">{row.resolutionNote}</p>
               <p className="text-xs text-muted-foreground">
@@ -256,7 +260,7 @@ function CorrectionRecord({
           ) : showEditor ? (
             <form
               aria-label={label('resolve')}
-              className="overflow-hidden rounded-xl border bg-card"
+              className="border-t"
               onSubmit={(event) => {
                 event.preventDefault();
                 const outcome = note.trim();
@@ -279,8 +283,13 @@ function CorrectionRecord({
                 });
               }}
             >
-              <div className="space-y-2 px-4 py-4 sm:px-5">
-                <Label htmlFor={fieldId}>{label('note')}</Label>
+              <div className={`${recordEditorField} px-4 py-4 sm:px-6`}>
+                <Label htmlFor={fieldId} className="text-sm font-semibold">
+                  {label('note')}
+                </Label>
+                <p id={`${fieldId}-help`} className="pb-1 text-xs text-muted-foreground">
+                  {notificationFormText('correctionNotePrompt', locale)}
+                </p>
                 <Textarea
                   id={fieldId}
                   ref={noteInput}
@@ -291,34 +300,43 @@ function CorrectionRecord({
                   autoComplete="off"
                   dir="auto"
                   maxLength={2000}
-                  placeholder={notificationFormText('correctionNotePrompt', locale)}
                   value={note}
                   readOnly={Boolean(held) || phase !== 'ready'}
                   disabled={review !== null}
                   className="min-h-16"
                   onChange={(event) => setNote(event.target.value)}
                 />
-                <p id={`${fieldId}-help`} className="text-xs text-muted-foreground">
-                  {notificationFormText('correctionSuppressed', locale)}
-                </p>
               </div>
-              <div className="flex flex-wrap items-center justify-end gap-2 border-t bg-muted/30 px-4 py-3 sm:px-5">
+              <RecordEditorActions
+                secondary={
+                  <Link
+                    to={customerCorrectionsRoute}
+                    params={{ correctionId, action: undefined }}
+                    search={search}
+                    className={buttonVariants({ variant: 'ghost' })}
+                  >
+                    {confirmationText('cancel', locale)}
+                  </Link>
+                }
+              >
                 <Button ref={submitButton} type="submit" disabled={!canReview || !note.trim()}>
                   {notificationFormText('correctionReview', locale)}
                 </Button>
-              </div>
+              </RecordEditorActions>
             </form>
           ) : canRetry && phase === 'ready' ? (
-            <Link
-              to={customerCorrectionsRoute}
-              params={{ correctionId, action: 'resolve' }}
-              search={search}
-              className="touch-action inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground"
-            >
-              {label('resolve')}
-            </Link>
+            <RecordEditorActions>
+              <Link
+                to={customerCorrectionsRoute}
+                params={{ correctionId, action: 'resolve' }}
+                search={search}
+                className={buttonVariants()}
+              >
+                {label('resolve')}
+              </Link>
+            </RecordEditorActions>
           ) : null}
-        </>
+        </div>
       )}
       {review && (
         <TeamActionDialog
