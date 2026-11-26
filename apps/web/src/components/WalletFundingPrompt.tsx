@@ -1,4 +1,5 @@
 import { t } from '@barghsa/i18n/workspace';
+import { buttonVariants } from '@barghsa/ui';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 
@@ -32,18 +33,30 @@ export function WalletFundingPrompt({
           ? t('wallet.funding.unknown', locale)
           : `${t('wallet.funding.shortfall', locale)}: ${numbers.money(shortfall.toString())}`}
       </p>
-      <p>{t(staff ? 'wallet.funding.customerMethods' : 'wallet.funding.methods', locale)}</p>
-      {!staff && (
-        <a
-          className="font-medium underline"
-          href={
-            returnInvoiceId
-              ? `/wallet?returnInvoiceId=${encodeURIComponent(returnInvoiceId)}`
-              : '/wallet'
-          }
-        >
-          {t('wallet.funding.open', locale)}
-        </a>
+      {!staff && returnInvoiceId ? (
+        <div className="flex flex-wrap gap-2">
+          <a
+            className={buttonVariants({ size: 'sm' })}
+            href={`/wallet/top-up/online?returnInvoiceId=${encodeURIComponent(returnInvoiceId)}`}
+          >
+            {t('wallet.page.onlineTitle', locale)}
+          </a>
+          <a
+            className={buttonVariants({ variant: 'outline', size: 'sm' })}
+            href={`/wallet/top-up/bank-receipt?returnInvoiceId=${encodeURIComponent(returnInvoiceId)}`}
+          >
+            {t('wallet.page.receiptTitle', locale)}
+          </a>
+        </div>
+      ) : (
+        <>
+          <p>{t(staff ? 'wallet.funding.customerMethods' : 'wallet.funding.methods', locale)}</p>
+          {!staff && (
+            <a className="font-medium underline" href="/wallet">
+              {t('wallet.funding.open', locale)}
+            </a>
+          )}
+        </>
       )}
     </div>
   );

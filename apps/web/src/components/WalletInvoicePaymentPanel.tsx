@@ -239,7 +239,7 @@ function OwnedWalletInvoicePaymentPanel({
             ) : (
               quote && (
                 <>
-                  <dl className="grid min-w-0 grid-cols-2 gap-3">
+                  <dl className="grid min-w-0 grid-cols-[repeat(auto-fit,minmax(min(100%,8.5rem),1fr))] gap-3">
                     <div className="min-w-0">
                       <dt className="text-xs text-muted-foreground">{text('remaining')}</dt>
                       <dd className="text-base font-semibold tabular-nums [overflow-wrap:anywhere]">

@@ -32,9 +32,10 @@ it('shows the shortfall and wallet funding route only when funds are insufficien
       />
     )
   );
-  expect(container.querySelector('a')?.getAttribute('href')).toBe(
-    '/wallet?returnInvoiceId=11111111-1111-7111-8111-111111111111'
-  );
+  expect(Array.from(container.querySelectorAll('a'), (link) => link.getAttribute('href'))).toEqual([
+    '/wallet/top-up/online?returnInvoiceId=11111111-1111-7111-8111-111111111111',
+    '/wallet/top-up/bank-receipt?returnInvoiceId=11111111-1111-7111-8111-111111111111',
+  ]);
   await act(async () => root.render(<WalletFundingPrompt balance="1000" total="1000" />));
   expect(container.textContent).toBe('');
 });

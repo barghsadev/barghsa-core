@@ -56,7 +56,7 @@ it('displays available balance and exact remaining shortfall with the customer f
   await vi.waitFor(() => expect(container.textContent).toContain('Available wallet balance: 30'));
   expect(container.textContent).toContain('Wallet top-up needed: 50');
   expect(container.querySelector('a')?.getAttribute('href')).toBe(
-    `/wallet?returnInvoiceId=${other}`
+    `/wallet/top-up/online?returnInvoiceId=${other}`
   );
   expect(fetcher).toHaveBeenCalledWith(
     `/api/wallet/${profile}`,
@@ -216,7 +216,8 @@ it.each([false, true])(
       invoiceId: other,
       staff,
     });
-    const funding = () => container.querySelector(`a[href="/wallet?returnInvoiceId=${other}"]`);
+    const funding = () =>
+      container.querySelector(`a[href="/wallet/top-up/online?returnInvoiceId=${other}"]`);
     const refresh = () => act(async () => container.querySelector('button')!.click());
     await vi.waitFor(() =>
       expect(container.textContent).toContain('Available wallet balance: 1000')

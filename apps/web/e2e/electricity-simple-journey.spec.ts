@@ -839,17 +839,7 @@ for (const locale of ['en', 'fa'] as const)
       .addCookies([{ name: 'barghsa_csrf', value: csrf, url: new URL(page.url()).origin }]);
     const wallet = page.locator('#wallet-invoice-payment');
     const payInvoice = wallet.getByRole('button', { name: walletCopy('pay', locale), exact: true });
-    const openWallet = wallet.getByRole('link', {
-      name: appCopy('wallet.funding.open', locale),
-      exact: true,
-    });
-    await expect(openWallet).toHaveAttribute('href', `/wallet?returnInvoiceId=${invoiceId}`);
-    await expect(payInvoice).toBeDisabled();
-    expect(payments).toHaveLength(0);
-    await openWallet.click();
-    const walletBalance = page.getByTestId('wallet-balance');
-    await expect(walletBalance).toContainText(formatCurrencyIrr(openingBalance, locale));
-    const onlineTopUp = page.getByRole('link', {
+    const onlineTopUp = wallet.getByRole('link', {
       name: appCopy('wallet.page.onlineTitle', locale),
       exact: true,
     });
@@ -857,7 +847,14 @@ for (const locale of ['en', 'fa'] as const)
       'href',
       `/wallet/top-up/online?returnInvoiceId=${invoiceId}`
     );
+    await expect(
+      wallet.getByRole('link', { name: appCopy('wallet.page.receiptTitle', locale), exact: true })
+    ).toHaveAttribute('href', `/wallet/top-up/bank-receipt?returnInvoiceId=${invoiceId}`);
+    await expect(payInvoice).toBeDisabled();
+    expect(payments).toHaveLength(0);
     await onlineTopUp.click();
+    const walletBalance = page.getByTestId('wallet-balance');
+    await expect(walletBalance).toContainText(formatCurrencyIrr(openingBalance, locale));
     await page.getByTestId('wallet-amount').fill(String(topUpAmount));
     await page.getByTestId('wallet-submit').click();
     const topUpDialog = page.getByRole('dialog', {

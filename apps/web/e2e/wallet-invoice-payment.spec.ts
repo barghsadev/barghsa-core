@@ -6,7 +6,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { scanCriticalDialog } from './critical-accessibility';
-import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
+import { formatCurrencyIrr, formatToman } from '@barghsa/i18n/numbers';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { createHash } from 'node:crypto';
 import type { WalletPaymentReview, WalletPaymentReviewData } from '@barghsa/shared/finance';
@@ -85,9 +85,14 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }) => {
     await shell(page, locale, false, '100000', () => '15000');
+    let limit: number | null = 100_000;
     await page.route(`**/api/wallet/${profileId}`, (route) =>
       route.fulfill({
-        json: { balance: '15000', currency: 'IRR', onlineTopUpLimit: 100000, configVersion: 1 },
+        json: {
+          balance: '15000',
+          currency: 'IRR',
+          ...(limit === null ? {} : { onlineTopUpLimit: limit, configVersion: 1 }),
+        },
       })
     );
     await page.route(`**/api/wallet/${profileId}/transactions?*`, (route) =>
@@ -115,7 +120,14 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.getByTestId('wallet-receipt-form')).toHaveCount(0);
     await online.click();
     await expect(page).toHaveURL(/\/wallet\/top-up\/online\?history_q=receipt$/);
-    await expect(page.getByTestId('wallet-amount')).toBeVisible();
+    const amount = page.getByTestId('wallet-amount');
+    await expect(amount).toBeVisible();
+    await amount.fill('1e4');
+    await expect(page.getByTestId('wallet-toman')).toHaveCount(0);
+    await amount.fill(locale === 'fa' ? '۱۲٬۵۰۱' : '12,501');
+    await expect(amount).toHaveValue('12501');
+    await expect(page.getByTestId('wallet-toman')).toContainText(formatToman('12501', locale));
+    await expect(amount).toHaveAttribute('aria-describedby', /top-up-amount-preview/);
     await expect(page.getByTestId('wallet-receipt-form')).toHaveCount(0);
     await back.click();
     await bank.click();
@@ -129,6 +141,33 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(
       page.getByRole('heading', { name: t('wallet.history.title', locale), exact: true })
     ).toBeVisible();
+    const invoiceTopUp = `/wallet/top-up/online?returnInvoiceId=${invoiceId}&history_q=receipt`;
+    limit = 0;
+    await page.goto(invoiceTopUp);
+    await expect(amount).toHaveCount(0);
+    await expect(page.getByTestId('wallet-submit')).toHaveCount(0);
+    await bank.click();
+    const destination = new URL(page.url());
+    expect(destination.pathname).toBe('/wallet/top-up/bank-receipt');
+    expect(destination.searchParams.get('returnInvoiceId')).toBe(invoiceId);
+    expect(destination.searchParams.get('history_q')).toBe('receipt');
+    await expect(page.getByTestId('wallet-receipt-form')).toBeVisible();
+
+    limit = null;
+    await page.goto(invoiceTopUp);
+    await expect(page.locator('#top-up-amount-hint')).toHaveText(
+      t('wallet.page.amountHintUnavailable', locale)
+    );
+    await amount.fill('12501');
+    await amount.press('Enter');
+    await expect(amount).not.toHaveAttribute('aria-invalid', 'true');
+    limit = 100_000;
+    await page
+      .getByTestId('wallet-page')
+      .getByRole('button', { name: t('wallet.page.retry', locale), exact: true })
+      .click();
+    await expect(page.getByTestId('wallet-submit')).toBeEnabled();
+    await expect(amount).toHaveValue('12501');
     expect(writes).toEqual([]);
   });
 }
@@ -418,10 +457,22 @@ for (const locale of ['fa', 'en'] as const)
       await refresh.click();
       await expect(pay).toBeDisabled();
       await expect(panel).toContainText(fa ? 'در حال حاضر پرداخت' : 'cannot be paid');
-      const addFunds = panel.getByRole('link', {
-        name: fa ? 'رفتن به کیف پول' : 'Open wallet',
+      const onlineFunding = panel.getByRole('link', {
+        name: t('wallet.page.onlineTitle', locale),
+        exact: true,
       });
-      await expect(addFunds).toHaveAttribute('href', `/wallet?returnInvoiceId=${invoiceId}`);
+      const bankFunding = panel.getByRole('link', {
+        name: t('wallet.page.receiptTitle', locale),
+        exact: true,
+      });
+      await expect(onlineFunding).toHaveAttribute(
+        'href',
+        `/wallet/top-up/online?returnInvoiceId=${invoiceId}`
+      );
+      await expect(bankFunding).toHaveAttribute(
+        'href',
+        `/wallet/top-up/bank-receipt?returnInvoiceId=${invoiceId}`
+      );
       await expect(panel).toContainText(
         formatCurrencyIrr((BigInt(amount) - 500n).toString(), locale, {
           numberStyle: fa ? 'persian' : 'western',
@@ -430,7 +481,8 @@ for (const locale of ['fa', 'en'] as const)
       quoteStage = 'funded';
       await refresh.click();
       await expect(pay).toBeEnabled();
-      await expect(addFunds).toHaveCount(0);
+      await expect(onlineFunding).toHaveCount(0);
+      await expect(bankFunding).toHaveCount(0);
       await expect(panel).toContainText(money);
       await expect(panel.getByText(walletText('reviewTitle', locale), { exact: true })).toHaveCount(
         0

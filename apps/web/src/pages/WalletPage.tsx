@@ -9,7 +9,15 @@ import {
 } from '../hooks/useWalletBalance.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { toast } from '../lib/toast-api.js';
-import { Skeleton, Alert, AlertDescription, Button, Input, Label } from '@barghsa/ui';
+import {
+  Skeleton,
+  Alert,
+  AlertDescription,
+  Button,
+  buttonVariants,
+  Input,
+  Label,
+} from '@barghsa/ui';
 import { CustomerReceiptFields } from '../components/CustomerReceiptFields.js';
 import { RecordEditorActions, recordEditorSurface } from '../components/RecordEditorLayout.js';
 import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
@@ -189,12 +197,8 @@ function CustomerWalletPage({
   const [receiptSuccess, setReceiptSuccess] = useState(false);
   const [receiptIdempotencyKey, setReceiptIdempotencyKey] = useState(() => crypto.randomUUID());
 
-  const amountDigits = normalizeIrrAmountDigits(amountInput);
-  const amountValue = amountDigits === '' ? null : Number(amountDigits);
-  const tomanPreview =
-    amountValue === null || !Number.isSafeInteger(amountValue)
-      ? null
-      : Math.round(amountValue / 10);
+  const amountValue = /^\d+$/.test(amountInput) ? Number(amountInput) : 0;
+  const amountPreview = Number.isSafeInteger(amountValue) && amountValue > 0 ? amountValue : null;
 
   const handleSubmit = online.form.handleSubmit(async (values) => {
     if (
@@ -455,6 +459,9 @@ function CustomerWalletPage({
   const onlineLocked = onlineBusy || !!onlineReview;
   const receiptLocked = receiptBusy || !!receiptReview;
   const advertisedLimit = advertisedOnlineTopUpLimit(wallet);
+  const showReceiptInstead = topUpMethod === 'online' && !advertisedLimit;
+  const amountField = online.bind('amount');
+  const amountError = showReceiptInstead ? undefined : online.errors.amount;
   const onlineSubmitDisabled =
     onlineLocked ||
     maintenance?.active === true ||
@@ -479,8 +486,6 @@ function CustomerWalletPage({
 
   const receiptErrorMessage = receiptError && receiptErrorText(receiptError, locale);
   const reviewLoading = <p role="status">{walletText('reviewLoading')}</p>;
-  const tomanPreviewText = (amount: number | bigint) =>
-    walletText('tomanPreview').replace('{amount}', numbers.irrDigits(amount));
 
   return (
     <div
@@ -579,7 +584,11 @@ function CustomerWalletPage({
           {maintenance?.active && <MaintenanceNotice setting={maintenance} />}
 
           {profileId && !maintenance?.active && topUpMethod !== 'bank-receipt' && (
-            <form noValidate onSubmit={handleSubmit} className={recordEditorSurface}>
+            <form
+              noValidate
+              onSubmit={showReceiptInstead ? (event) => event.preventDefault() : handleSubmit}
+              className={recordEditorSurface}
+            >
               <div className="min-w-0 space-y-3 px-4 py-4 sm:px-6">
                 {(validationError ||
                   (errorMessage && error !== 'load' && error !== 'no-profile')) && (
@@ -591,66 +600,104 @@ function CustomerWalletPage({
                   <h2 className="text-base font-semibold">{walletText('onlineTitle')}</h2>
                 )}
                 <div className="min-w-0 space-y-1">
-                  <Label htmlFor="top-up-amount">{walletText('amountLabel')}</Label>
-                  <Input
-                    {...online.bind('amount')}
-                    id="top-up-amount"
-                    data-testid="wallet-amount"
-                    name="amount"
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="off"
-                    dir="ltr"
-                    value={amountInput}
-                    disabled={onlineLocked}
-                    aria-describedby={
-                      online.errors.amount
-                        ? `top-up-amount-hint ${online.errorId('amount')}`
-                        : 'top-up-amount-hint'
-                    }
-                    onChange={(event) =>
-                      setAmountInput(normalizeIrrAmountDigits(event.target.value))
-                    }
-                    className="sm:max-w-xs"
-                  />
+                  {advertisedLimit !== 0 && (
+                    <>
+                      <Label htmlFor="top-up-amount">{walletText('amountLabel')}</Label>
+                      <Input
+                        {...amountField}
+                        id="top-up-amount"
+                        data-testid="wallet-amount"
+                        name="amount"
+                        type="text"
+                        inputMode="numeric"
+                        autoComplete="off"
+                        dir="ltr"
+                        value={amountInput}
+                        disabled={onlineLocked}
+                        onBlur={showReceiptInstead ? undefined : amountField.onBlur}
+                        aria-invalid={amountError ? true : undefined}
+                        aria-describedby={[
+                          amountPreview !== null && 'top-up-amount-preview',
+                          'top-up-amount-hint',
+                          amountError && online.errorId('amount'),
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
+                        onChange={(event) =>
+                          setAmountInput(normalizeIrrAmountDigits(event.target.value))
+                        }
+                        className="sm:max-w-xs"
+                      />
+                      {amountPreview !== null && (
+                        <p
+                          id="top-up-amount-preview"
+                          data-testid="wallet-toman"
+                          className="w-fit max-w-full rounded-md bg-muted/50 px-2.5 py-1 text-sm font-medium"
+                        >
+                          <Currency amount={amountPreview} showToman locale={locale} />
+                        </p>
+                      )}
+                    </>
+                  )}
                   <p id="top-up-amount-hint" className="text-xs text-muted-foreground">
                     {advertisedLimit === 0
                       ? walletText('amountHintBlocked')
-                      : walletText('amountHint').replace(
-                          '{limit}',
-                          advertisedLimit !== null ? numbers.irrDigits(advertisedLimit) : '—'
-                        )}
+                      : advertisedLimit === null
+                        ? walletText('amountHintUnavailable')
+                        : walletText('amountHint').replace(
+                            '{limit}',
+                            numbers.irrDigits(advertisedLimit)
+                          )}
                   </p>
-                  {online.errors.amount && (
+                  {amountError && (
                     <p
                       id={online.errorId('amount')}
                       role="alert"
                       className="text-sm text-destructive"
                     >
-                      {online.errors.amount.message}
+                      {amountError.message}
                     </p>
                   )}
                 </div>
               </div>
               <RecordEditorActions
                 secondary={
-                  tomanPreview === null ? undefined : (
-                    <p className="text-sm text-muted-foreground" data-testid="wallet-toman">
-                      {tomanPreviewText(tomanPreview)}
-                    </p>
+                  showReceiptInstead &&
+                  advertisedLimit === null && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        heading.current?.focus({ preventScroll: true });
+                        void load();
+                      }}
+                    >
+                      {walletText('retry')}
+                    </Button>
                   )
                 }
               >
-                <Button
-                  type="submit"
-                  data-testid="wallet-submit"
-                  disabled={onlineSubmitDisabled}
-                  aria-busy={onlineBusy || undefined}
-                >
-                  {onlineBusy
-                    ? walletText(onlineReview ? 'submitting' : 'reviewLoading')
-                    : walletText('submit')}
-                </Button>
+                {showReceiptInstead ? (
+                  <Link
+                    to="/wallet/top-up/$method"
+                    params={{ method: 'bank-receipt' }}
+                    search={backSearch ?? {}}
+                    className={buttonVariants({ className: 'h-auto min-h-11 whitespace-normal' })}
+                  >
+                    {walletText('receiptTitle')}
+                  </Link>
+                ) : (
+                  <Button
+                    type="submit"
+                    data-testid="wallet-submit"
+                    disabled={onlineSubmitDisabled}
+                    aria-busy={onlineBusy || undefined}
+                  >
+                    {onlineBusy
+                      ? walletText(onlineReview ? 'submitting' : 'reviewLoading')
+                      : walletText('submit')}
+                  </Button>
+                )}
               </RecordEditorActions>
             </form>
           )}
