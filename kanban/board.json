@@ -481297,7 +481297,7 @@
             3471844218411268,
             3690124995412237,
             748643203981433,
-            3302041785577695,
+            4479660080885103,
             1224689527239650,
             2987223542691101,
             3911567490558984,
@@ -482001,7 +482001,8 @@
             1289010567458119,
             937321349139743,
             799005304311291,
-            3947856090903142
+            3947856090903142,
+            3363501836318359
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -495755,11 +495756,12 @@
             1289010567458119,
             937321349139743,
             799005304311291,
-            3947856090903142
+            3947856090903142,
+            3363501836318359
           ],
           "source_evidence": [
             4426486251880254,
-            3302041785577695,
+            4479660080885103,
             4336739995083235,
             1447861848005394,
             335271907751690,
@@ -575715,12 +575717,13 @@
             3844378570900826,
             937321349139743,
             799005304311291,
-            3947856090903142
+            3947856090903142,
+            3363501836318359
           ],
           "source_evidence": [
             4368684968752415,
             4426486251880254,
-            3302041785577695,
+            4479660080885103,
             4336739995083235,
             833740673997464,
             506015857231667,
@@ -576052,7 +576055,9 @@
             4480880588204533,
             17491757723886,
             4153336002400261,
-            3108623938713492
+            3108623938713492,
+            229684122621605,
+            3224953403051888
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/route-adoption-reconciliation",
           "route_matrix": "/Users/majid/.local/state/barghsa-production-approval/preparation-evidence/layout-and-brand-refresh-20261122/route-adoption-reconciliation/current-route-adoption-receipts.json",
@@ -785879,6 +785884,7 @@
       "4374300058989317": "After a successful read the old review closes without replaying the command. An unauthorized read after an unconfirmed self change returns to sign-in. Normal validated self-role and self-removal receipts still end the current session. The tests retain exact-role, target, typed confirmation and withdrawal identity assertions.",
       "2964572772301160": "Passed 18 native Chromium and mobile Safari cases, six instrumented Chromium cases and 80 targeted unit tests, including the shared success/error hooks. The member detail uses its direct unit measurement because it was not executed in the instrumented browser subset. All nine changed-source coverage groups, all 100 route and interaction budgets, typecheck, lint and formatting passed.",
       "372329535353456": "Closed the remaining feedback criterion using the scoped command feedback adapters and existing current source-bound evidence. Two obsolete electricity submission files were replaced by the tested shared submission recovery modules. All 31 cold-auth assets match the six previously verified browser checks.",
+      "3363501836318359": "Staff Invoice Tools now loads recent invoices on demand through the existing protected ledger endpoint. The chooser displays the invoice date, total and reference and preserves the selected action and draft ID. Sixteen Chromium and mobile Safari cases passed, covering lookup, 320 CSS px layout, permission denial, retry, route selection, and existing deadline and refund feedback. The production build, typecheck, changed-file lint and all 212 route and interaction budgets passed. Actual captures and logs are in /tmp/barghsa-form-review/invoice-tools-picker-*.",
       "927856590293294": "One persistent progress identity. Native warning placement follows current header bounds; it fades in without crossing the header, and yields to open dialogs and popovers. Original click, Escape and focus assertions pass.",
       "3596558235148323": "Scheduled Mobile Safari run 42789410833 job 129738700024 showed repeated toast interception of the cancellation Check current status control. Customer and staff cancellation confirmations now show errors inline, preserving the dialog alert and the persistent recovery notice. Exact command binding, validation, read-before-retry, stale-scope denial, and financial confirmation assertions remain.",
       "609576108216152": "Actual Sonner region is polite, preserves focus, and exposes localized keyboard dismissal. Native feedback cases pass.",
@@ -800886,9 +800892,9 @@
         "path": "apps/web/e2e/customer-request-routes.spec.ts",
         "sha256": "11a73ae76f2d492b9ed9119b240bd0ed69318b61f67ef5e797822b840b9fe85f"
       },
-      "3302041785577695": {
+      "4479660080885103": {
         "path": "apps/web/e2e/deadline-forms.spec.ts",
-        "sha256": "0622ae23ca0f935f9ce764e8f35cb1fbdb8e0de2030dde5b832593d22f0544e9"
+        "sha256": "cc506bdd8a6acb8902b03a929538ee9346a50b4081423786c91a250ed9ecaaa3"
       },
       "416479341860133": {
         "path": "apps/web/e2e/electricity-customer-cancellation-recovery.spec.ts",
@@ -802037,6 +802043,14 @@
       "4340892884368809": {
         "path": "packages/i18n/src/storage-policy-forms.ts",
         "sha256": "38b1c6611287d029730c77393f1bc8b842aff6cd6ac64a1b1b07f993fe7ae96d"
+      },
+      "229684122621605": {
+        "path": "apps/web/src/pages/AdminInvoiceToolsPage.tsx",
+        "sha256": "88b0c3e264b4b5cff63252e2c8a25097af5fe9e2a4506cbc44945b6b3687b508"
+      },
+      "3224953403051888": {
+        "path": "apps/web/src/pages/invoice-tools-text.ts",
+        "sha256": "752245ea7066e30b3a2953f2741441012fefee8e740a478af7722d4136dbe14b"
       },
       "3763410461332763": {
         "path": "apps/api/src/electricity/electricity-draft-revision.ts",

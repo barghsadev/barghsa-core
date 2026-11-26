@@ -71,6 +71,76 @@ async function setup(page: Page, locale: 'fa' | 'en', darkMode: boolean) {
     route.fulfill({ json: periods })
   );
 }
+
+test('invoice tools choose a recent invoice without losing the selected action or typed ID', async ({
+  page,
+}) => {
+  await setup(page, 'en', false);
+  const settings = '/admin/invoices/tools';
+  const draftId = '22222222-2222-4222-8222-222222222222';
+  let reads = 0;
+  let status = 503;
+  const writes: string[] = [];
+  await page.route('**/api/admin/invoices/ledger', (route) => {
+    reads++;
+    return route.fulfill({
+      status,
+      json:
+        status === 200
+          ? { items: [{ invoiceId, createdAt: source.issuedAt, totalAmount: '14850000' }] }
+          : {},
+    });
+  });
+  await page.route(`**/api/admin/invoices/${invoiceId}/due-at`, (route) => {
+    if (route.request().method() !== 'GET') writes.push(route.request().method());
+    return route.fulfill({ json: source });
+  });
+  await page.goto(settings);
+  const region = page.getByRole('region', { name: 'Open an invoice', exact: true });
+  const manual = region.locator('#tools-invoice-id');
+  const action = region.locator('#tools-invoice-action');
+  const choices = region.locator('#tools-recent-invoice');
+  const browse = region.getByRole('button', { name: 'Choose a recent invoice', exact: true });
+  const enter = region.getByRole('button', { name: 'Enter invoice ID', exact: true });
+  const retry = region.getByRole('button', { name: 'Try again', exact: true });
+  const open = region.getByRole('button', { name: 'Continue', exact: true });
+
+  await manual.fill(draftId);
+  await action.selectOption('deadline');
+  expect(reads).toBe(0);
+  await browse.click();
+  await expect(region.getByRole('alert')).toHaveText('Recent invoices could not be loaded.');
+  await expect(open).toBeDisabled();
+  status = 200;
+  await retry.click();
+  await expect(choices).toBeEnabled();
+  await choices.selectOption(invoiceId);
+  await expect(action).toHaveValue('deadline');
+  await enter.click();
+  await expect(manual).toHaveValue(draftId);
+  await expect(action).toHaveValue('deadline');
+  await browse.click();
+  await expect(choices).toHaveValue('');
+  await choices.selectOption(invoiceId);
+  await open.click();
+  await expect(page).toHaveURL(`/admin/invoices/${invoiceId}/deadline`);
+  await expect(page.locator('#invoice-deadline-panel')).toBeVisible();
+  expect(reads).toBe(3);
+  expect(writes).toEqual([]);
+
+  status = 403;
+  await page.goto(settings);
+  await browse.click();
+  await expect(region.getByRole('alert')).toHaveText(
+    'You do not have permission to view invoices.'
+  );
+  await expect(choices.locator('option')).toHaveCount(1);
+  await expect(retry).toHaveCount(0);
+  await expect(open).toBeDisabled();
+  await enter.click();
+  await expect(manual).toBeVisible();
+});
+
 for (const locale of ['fa', 'en'] as const)
   for (const darkMode of [false, true]) {
     const text = (key: string) => t('admin.invoices.' + key, locale),
