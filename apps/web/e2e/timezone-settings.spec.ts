@@ -73,6 +73,16 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(main.getByText(fa ? 'منطقه زمانی ذخیره‌شده' : 'Saved time zone')).toContainText(
       'Asia/Tehran'
     );
+    await search.fill('No matching city');
+    await expect(
+      main.getByText(tPreferenceSettingsForms('timezoneNoMatches', locale), { exact: true })
+    ).toBeVisible();
+    await expect(zones).toBeHidden();
+    await search.press('Enter');
+    await expect(search).toBeFocused();
+    expect(writes).toEqual([]);
+    await search.fill(fa ? 'استانبول' : 'Europe/Istanbul');
+    await expect(zones).toHaveValue('Europe/Istanbul');
     await save.click();
     await expect(
       page.getByText(fa ? 'خطا در ذخیره تنظیمات منطقه زمانی' : 'Failed to save timezone settings', {

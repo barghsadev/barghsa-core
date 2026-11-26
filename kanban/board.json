@@ -17752,14 +17752,15 @@
             2247884006177975,
             938898566832829,
             3374147318275605,
-            2708307904304211,
-            257582767000969,
+            3860461563992307,
+            59404537695061,
             3334263933466081
           ],
           "checks": [
             3453390282486896,
             1965216882789238,
-            2560341060233568
+            2560341060233568,
+            2472385886282026
           ],
           "source_renewals": [
             364523973291016,
@@ -42024,7 +42025,7 @@
             2099363386566033,
             1687499411152891,
             4389833239456302,
-            257582767000969,
+            59404537695061,
             1035413402720586,
             4038715291285337,
             4199333366253674,
@@ -66129,7 +66130,7 @@
             548833335494145,
             1687499411152891,
             4389833239456302,
-            257582767000969,
+            59404537695061,
             1035413402720586,
             433160911139741,
             85369601800892,
@@ -450670,7 +450671,7 @@
             4369484607712820,
             684594492315482,
             3616772385967767,
-            257582767000969,
+            59404537695061,
             953918528677556,
             852627010966933,
             467629475983147,
@@ -450867,7 +450868,7 @@
             2094606214778753,
             4097873975886547,
             377476945082671,
-            2708307904304211,
+            3860461563992307,
             3495921171572850,
             2737223158188849,
             3276722398800717,
@@ -451032,7 +451033,8 @@
             2895134846474211,
             2273321996836299,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            2472385886282026
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
           "scope_dispositions": [
@@ -452904,7 +452906,7 @@
             1447861848005394,
             3766306358322842,
             2613152822935729,
-            257582767000969,
+            59404537695061,
             3896993300233281,
             4246472177189539,
             2672109275198671,
@@ -453577,7 +453579,7 @@
             1447861848005394,
             3766306358322842,
             2613152822935729,
-            257582767000969,
+            59404537695061,
             3896993300233281,
             4246472177189539,
             2672109275198671,
@@ -454672,7 +454674,7 @@
             1447861848005394,
             3766306358322842,
             2613152822935729,
-            257582767000969,
+            59404537695061,
             3896993300233281,
             4246472177189539,
             2672109275198671,
@@ -484725,7 +484727,7 @@
             4369484607712820,
             684594492315482,
             3616772385967767,
-            257582767000969,
+            59404537695061,
             14033541082557,
             467629475983147,
             1513228743187945,
@@ -485241,7 +485243,7 @@
             4097873975886547,
             377476945082671,
             269018907305458,
-            2708307904304211,
+            3860461563992307,
             3495921171572850,
             2737223158188849,
             3276722398800717,
@@ -485395,7 +485397,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            2472385886282026
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -499883,7 +499886,8 @@
             2895134846474211,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            2472385886282026
           ],
           "source_evidence": [
             4426486251880254,
@@ -500099,7 +500103,7 @@
             4097873975886547,
             377476945082671,
             4460881776019823,
-            2708307904304211,
+            3860461563992307,
             3495921171572850,
             4358323859189496,
             31164825818013,
@@ -581571,7 +581575,8 @@
             3548178453850502,
             2181524575692978,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            2472385886282026
           ],
           "source_evidence": [
             4368684968752415,
@@ -581820,7 +581825,7 @@
             4097873975886547,
             377476945082671,
             4460881776019823,
-            2708307904304211,
+            3860461563992307,
             3495921171572850,
             4358323859189496,
             31164825818013,
@@ -582648,7 +582653,7 @@
             2094606214778753,
             4097873975886547,
             377476945082671,
-            2708307904304211,
+            3860461563992307,
             3495921171572850,
             2737223158188849,
             3813712748202203,
@@ -583029,7 +583034,8 @@
             2273321996836299,
             3548178453850502,
             2173604582140538,
-            1047931288274119
+            1047931288274119,
+            2472385886282026
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -789209,6 +789215,7 @@
       "3453390282486896": "Reviewed UTC instant storage and explicit offset validation, Intl formatting in the account's validated IANA timezone, Asia/Tehran default, current preference updates and failure without guessing the host timezone.",
       "1965216882789238": "Current date/time and calendar suites passed 22 assertions and account-time and direction suites passed 4 assertions. Both English and Persian Chromium settings journeys passed with a retryable load, keyboard selection and failed-save recovery. Reused three passing native timezone HTTP cases from exact run 42699842646 job 129441604092 because all listed API, session, migration and lock bytes match.",
       "2560341060233568": "Notification delivery settings use a keyboard-searchable IANA time-zone picker with Persian city names and the same option source as account settings. Persian clock inputs accept local digits and normalize to the same 24-hour value used by other date/time editors. Delivery window validation, receipt checks, account settings, contract time, invoice deadlines and electricity increase decisions passed browser coverage. Twenty-nine unit tests and 44 related browser cases passed. A rebuilt version also passed 16 notification, account zone and onboarding cases. Two real-API cases used an isolated migrated database. The first real-API run exposed an automation assumption that filling an already selected time zone opens its popup, so the test now clicks the picker before selecting. The initial build exceeded the electricity gzip budget. Removing two unused startup messages brought all 212 budgets within limits. Desktop and mobile captures include the live dev server, compiled preview and a 320 px check. Eleven record-dependent editors also opened and fit in a separate desktop and 320 px pass. Logs are in /tmp/barghsa-form-review/delivery-schedule-*.",
+      "2472385886282026": "Time zone search has a persistent label and a compact no-results message. Enter in search retains the selected draft without saving, and the real save button still commits the selected time zone. Verified in English and Persian through 320 px, with 36 browser checks, 5 unit checks, 212 bundle budgets and the web build passing. Logs are in /tmp/barghsa-form-review/timezone-search-enter-*.",
       "2028895706920505": "Verified the existing hook's dir field exposes the locale-derived rtl/ltr value and its flags serve existing callers. The root provider updates document direction and the shared UI provider on live language changes.",
       "3365176911590616": "The current direction unit case and five Chromium component cases passed. Verified horizontal keyboard navigation in both directions, vertical navigation, and live direction switching without losing selected state.",
       "4300091120806127": "The 27 exact local number cases passed. Intl.NumberFormat uses IRR with whole-rial precision, Persian and Western numeral options and locale-specific grouping, decimal and percentage display. Unsafe numeric values are refused.",
@@ -794499,13 +794506,13 @@
         "path": "apps/web/src/hooks/useAccountTime.test.tsx",
         "sha256": "0362048bfd281c205250cef68745a3f34e9f9a7c6680f163a8270f92c10ebac7"
       },
-      "2708307904304211": {
+      "3860461563992307": {
         "path": "apps/web/src/routes/_app/settings/timezone.tsx",
-        "sha256": "8c473af1424d925b6a1fc3c9254717060a2829b7c9e2ce8e5682ef6a3384268e"
+        "sha256": "c17d1ef168d47400315bc5f92684c884bf71b5ff4b57731bf53de7b7ddfb9e59"
       },
-      "257582767000969": {
+      "59404537695061": {
         "path": "apps/web/e2e/timezone-settings.spec.ts",
-        "sha256": "ab0e507f501a592569c8a4384850d5cc23563176d0d559b2d92bb0849075e9a1"
+        "sha256": "6d6793f6ad02129c42fbb0736b872454cb6fb264151e3f68a9aaa52378274335"
       },
       "3334263933466081": {
         "path": "apps/web/src/lib/timezone-options.ts",

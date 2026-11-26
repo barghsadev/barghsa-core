@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { timezoneCityName, timezoneText } from '@barghsa/i18n/timezone';
 import { ClockIcon, SearchIcon } from 'lucide-react';
-import { Button, Input } from '@barghsa/ui';
+import { Button, Input, Label } from '@barghsa/ui';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@barghsa/ui/form';
 import {
   usePreferenceSettingsOwner,
@@ -135,28 +135,36 @@ function SettingsTimezonePage() {
               {editor.source && (
                 <div className="grid min-w-0 gap-4 px-4 py-4 sm:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] sm:gap-5 sm:px-6">
                   <div className="min-w-0 space-y-2">
-                    <div className="relative">
-                      <SearchIcon
-                        className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-                        aria-hidden="true"
-                      />
-                      <Input
-                        type="search"
-                        value={searchQuery}
-                        onChange={(event) => {
-                          if (!scope.isLocked()) setSearchQuery(event.target.value);
-                        }}
-                        placeholder={copy('timezoneSearchExample')}
-                        aria-label={timezoneText('searchPlaceholder', locale)}
-                        className="ps-9"
-                        disabled={editor.locked}
-                      />
+                    <div className="space-y-1.5">
+                      <Label htmlFor="settings-timezone-search">
+                        {copy('timezoneSearchExample')}
+                      </Label>
+                      <div className="relative">
+                        <SearchIcon
+                          className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                          aria-hidden="true"
+                        />
+                        <Input
+                          id="settings-timezone-search"
+                          type="search"
+                          value={searchQuery}
+                          onChange={(event) => {
+                            if (!scope.isLocked()) setSearchQuery(event.target.value);
+                          }}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Enter' && !event.nativeEvent.isComposing)
+                              event.preventDefault();
+                          }}
+                          className="ps-9"
+                          disabled={editor.locked}
+                        />
+                      </div>
                     </div>
                     <FormField
                       control={editor.form.control}
                       name="timezone"
                       render={({ field }) => (
-                        <FormItem id="settings-timezone">
+                        <FormItem id="settings-timezone" hidden={timezoneOptions.length === 0}>
                           <FormLabel>{copy('timezoneZoneLabel')}</FormLabel>
                           <FormControl>
                             <select
@@ -191,7 +199,10 @@ function SettingsTimezonePage() {
                       )}
                     />
                     {timezoneOptions.length === 0 && (
-                      <p role="status" className="text-sm text-muted-foreground">
+                      <p
+                        role="status"
+                        className="rounded-md bg-muted/35 px-3 py-2 text-sm text-muted-foreground"
+                      >
                         {copy('timezoneNoMatches')}
                       </p>
                     )}
