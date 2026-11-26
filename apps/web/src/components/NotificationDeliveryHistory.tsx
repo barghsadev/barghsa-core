@@ -1,9 +1,11 @@
 import { useCompactRecords } from '../hooks/useCompactRecords.js';
 import { RecordFields } from './RecordFields.js';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import type { HistoryColumn } from './HistoryTable.js';
 import { useEffect, useId, useRef, useState } from 'react';
 import {
   LoadingStatus,
+  Badge,
   Button,
   CardListView,
   Dialog,
@@ -166,31 +168,57 @@ export function NotificationDeliveryHistory({
           {
             id: 'notificationId',
             label: label('notificationId'),
-            render: (row: DeliveryAttempt) => <bdi className="break-all">{row.notificationId}</bdi>,
-          },
-          {
-            id: 'channel',
-            label: label('channel'),
-            render: (row: DeliveryAttempt) => channelLabel(row.channel),
+            render: (row: DeliveryAttempt) => (
+              <div className="min-w-0 space-y-1">
+                <bdi className="wrap-anywhere">{row.notificationId}</bdi>
+                <p className="text-xs text-muted-foreground">{channelLabel(row.channel)}</p>
+              </div>
+            ),
           },
         ]
       : []),
-    { id: 'attempt', label: label('attempt'), render: (row) => numbers.number(row.attemptNumber) },
     {
-      id: 'date',
-      label: label('date'),
-      render: (row) => <time dateTime={row.createdAt}>{time.format(row.createdAt)}</time>,
+      id: 'attempt',
+      label: label('attempt'),
+      render: (row) => (
+        <div className="space-y-1">
+          <p className="font-medium tabular-nums">{numbers.number(row.attemptNumber)}</p>
+          <time className="block text-xs text-muted-foreground" dateTime={row.createdAt}>
+            {time.format(row.createdAt)}
+          </time>
+        </div>
+      ),
     },
-    { id: 'status', label: label('status'), render: (row) => label(row.status) },
+    {
+      id: 'status',
+      label: label('status'),
+      render: (row) => (
+        <Badge
+          variant={
+            row.status === 'delivered'
+              ? 'success'
+              : row.status === 'failed'
+                ? 'destructive'
+                : 'outline'
+          }
+        >
+          {label(row.status)}
+        </Badge>
+      ),
+    },
     {
       id: 'receipt',
       label: label('receipt'),
-      render: (row) => <bdi className="break-all">{row.providerRef ?? '—'}</bdi>,
-    },
-    {
-      id: 'latency',
-      label: label('latency'),
-      render: (row) => (row.latencyMs === null ? '—' : numbers.number(row.latencyMs)),
+      render: (row) => (
+        <div className="space-y-1">
+          <bdi className="wrap-anywhere">{row.providerRef ?? '—'}</bdi>
+          {row.latencyMs !== null && (
+            <p className="text-xs text-muted-foreground">
+              {label('latency')} <bdi>{numbers.number(row.latencyMs)}</bdi>
+            </p>
+          )}
+        </div>
+      ),
     },
     {
       id: 'error',
@@ -286,7 +314,11 @@ export function NotificationDeliveryHistory({
       <p className="text-sm">{label('attemptHelp')}</p>
       {loading && rows.length > 0 && <LoadingStatus>{label('loading')}</LoadingStatus>}
       {loading && rows.length === 0 ? (
-        <LoadingStatus>{label('loading')}</LoadingStatus>
+        <RecordListSkeleton
+          label={label('loading')}
+          view={compact ? 'card' : 'table'}
+          headings={columns.map((column) => String(column.label))}
+        />
       ) : error ? (
         <div role="alert">
           <p>{label('loadFailed')}</p>
@@ -306,7 +338,7 @@ export function NotificationDeliveryHistory({
         />
       ) : (
         <div
-          className="overflow-x-auto"
+          className="overflow-x-auto rounded-xl border bg-card"
           // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Keyboard users must be able to scroll this region.
           tabIndex={0}
           role="region"
@@ -315,7 +347,7 @@ export function NotificationDeliveryHistory({
         >
           <table className="w-full text-start text-sm">
             <caption className="sr-only">{label('title')}</caption>
-            <thead>
+            <thead className="bg-muted/40">
               <tr>
                 {columns.map((column) => (
                   <th scope="col" className="border-b p-2 text-start" key={column.id}>
@@ -328,7 +360,7 @@ export function NotificationDeliveryHistory({
               {rows.map((row) => (
                 <tr key={row.id}>
                   {columns.map((column) => (
-                    <td key={column.id} className="border-b p-2">
+                    <td key={column.id} className="border-b px-3 py-2 align-top">
                       {column.render(row)}
                     </td>
                   ))}

@@ -1,3 +1,5 @@
+import { RecordDetailSkeleton } from './RecordSkeleton.js';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import {
   Check as TableCheckIcon,
   RotateCw as TableRotateCwIcon,
@@ -20,7 +22,6 @@ import { useCallback, useState, useEffect, useId, useRef, useMemo } from 'react'
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import {
-  LoadingStatus,
   Button,
   Badge,
   DateCell,
@@ -630,7 +631,13 @@ export default function DeadLetterPanel({
               <p>{label('empty')}</p>
             )
           }
-          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+          loadingView={
+            recordId ? (
+              <RecordDetailSkeleton label={label('loading')} />
+            ) : (
+              <RecordListSkeleton label={label('loading')} view="card" headings={[]} />
+            )
+          }
           errorView={
             <div role="alert">
               <p>{label(queue.missing ? 'recordUnavailable' : 'loadFailed')}</p>
@@ -652,7 +659,15 @@ export default function DeadLetterPanel({
                   </bdi>
                 </span>
               </div>
-              <dl className="grid gap-4 text-sm sm:grid-cols-2">
+              <section aria-labelledby="delivery-cause">
+                <h2 id="delivery-cause" className="mb-2 font-semibold">
+                  {label('cause')}
+                </h2>
+                <p className="whitespace-pre-wrap rounded-lg bg-muted p-3 text-sm [overflow-wrap:anywhere]">
+                  {record.cause ?? '—'}
+                </p>
+              </section>
+              <dl className="grid gap-4 border-t pt-4 text-sm sm:grid-cols-2">
                 <div>
                   <dt className="text-muted-foreground">{label('recipient')}</dt>
                   <dd>
@@ -677,14 +692,6 @@ export default function DeadLetterPanel({
                   </div>
                 )}
               </dl>
-              <section aria-labelledby="delivery-cause">
-                <h2 id="delivery-cause" className="mb-2 font-semibold">
-                  {label('cause')}
-                </h2>
-                <p className="whitespace-pre-wrap rounded-lg bg-muted p-3 text-sm [overflow-wrap:anywhere]">
-                  {record.cause ?? '—'}
-                </p>
-              </section>
               {record.data && (
                 <details className="rounded-lg border p-3">
                   <summary className="touch-action cursor-pointer font-medium">

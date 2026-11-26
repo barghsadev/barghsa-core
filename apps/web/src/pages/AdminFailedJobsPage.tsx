@@ -1,3 +1,5 @@
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { Check as TableCheckIcon, RotateCw as TableRotateCwIcon } from 'lucide-react';
 import { TableActionIcon } from '../components/TableActionIcon.js';
 import { Link } from '@tanstack/react-router';
@@ -16,7 +18,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { BACKGROUND_JOB_TYPES } from '@barghsa/shared/admin';
 import {
-  LoadingStatus,
   Button,
   Badge,
   Label,
@@ -532,7 +533,13 @@ export default function AdminFailedJobsPage({
               <p>{label('empty')}</p>
             )
           }
-          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+          loadingView={
+            recordId ? (
+              <RecordDetailSkeleton label={label('loading')} />
+            ) : (
+              <RecordListSkeleton label={label('loading')} view="card" headings={[]} />
+            )
+          }
           errorView={
             <div role="alert">
               <p>{label(queue.missing ? 'recordUnavailable' : 'error')}</p>
@@ -551,7 +558,15 @@ export default function AdminFailedJobsPage({
                   </bdi>
                 </span>
               </div>
-              <dl className="grid gap-4 text-sm sm:grid-cols-2">
+              <section aria-labelledby="job-error">
+                <h2 id="job-error" className="mb-2 font-semibold">
+                  {label('errorMessage')}
+                </h2>
+                <p className="rounded-lg bg-muted p-3 text-sm whitespace-pre-wrap [overflow-wrap:anywhere]">
+                  {record.error ?? label('noError')}
+                </p>
+              </section>
+              <dl className="grid gap-4 border-t pt-4 text-sm sm:grid-cols-2">
                 <div className="sm:col-span-2">
                   <dt className="text-muted-foreground">{label('id')}</dt>
                   <dd>
@@ -584,14 +599,6 @@ export default function AdminFailedJobsPage({
                   </div>
                 )}
               </dl>
-              <section aria-labelledby="job-error">
-                <h2 id="job-error" className="mb-2 font-semibold">
-                  {label('errorMessage')}
-                </h2>
-                <p className="rounded-lg bg-muted p-3 text-sm whitespace-pre-wrap [overflow-wrap:anywhere]">
-                  {record.error ?? label('noError')}
-                </p>
-              </section>
               {jobActions(record)}
             </section>
           )}

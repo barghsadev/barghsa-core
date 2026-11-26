@@ -36,6 +36,8 @@ import {
   ListSearchInput,
   NativeSelect,
 } from '@barghsa/ui';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
+import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 import { OperationalQueueTable } from '../components/OperationalQueueTable.js';
 import { tGift } from '@barghsa/i18n/gifts';
 import { GIFT_CODE_CATEGORIES, type GiftCodeDto } from '@barghsa/shared/promotions';
@@ -514,7 +516,9 @@ export default function AdminGiftCodesPage({
             )}
           </h1>
           {showDetail && stats && (
-            <Badge variant="outline">{label(availability(stats.code, now))}</Badge>
+            <Badge variant={availability(stats.code, now) === 'active' ? 'success' : 'outline'}>
+              {label(availability(stats.code, now))}
+            </Badge>
           )}
         </div>
         {isEditorRoute && (
@@ -703,7 +707,13 @@ export default function AdminGiftCodesPage({
           empty={false}
           emptyView={null}
           retainContent={canRender}
-          loadingView={<LoadingStatus>{label('loading')}</LoadingStatus>}
+          loadingView={
+            record ? (
+              <RecordDetailSkeleton label={label('loading')} layout="payment" />
+            ) : (
+              <RecordListSkeleton label={label('loading')} view="card" headings={[]} />
+            )
+          }
           errorView={<p role="alert">{scope.denied ? label('denied') : label('error')}</p>}
         >
           {canRender && (
@@ -1173,7 +1183,7 @@ export default function AdminGiftCodesPage({
               )}
               {showDetail && stats && (
                 <section
-                  className="space-y-4 rounded-lg border bg-card p-4 md:p-6"
+                  className="space-y-4 rounded-xl border bg-card p-4 md:p-6"
                   aria-label={label('editor')}
                 >
                   <dl className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
@@ -1209,9 +1219,23 @@ export default function AdminGiftCodesPage({
                         ['restorationPolicy', restoration(stats.code)],
                       ] as const
                     ).map(([key, value]) => (
-                      <div key={key} className="min-w-0">
+                      <div
+                        key={key}
+                        className={
+                          key === 'discount'
+                            ? 'min-w-0 rounded-lg bg-muted/40 p-3 sm:col-span-2'
+                            : 'min-w-0'
+                        }
+                      >
                         <dt className="text-sm text-muted-foreground">{label(key!)}</dt>
-                        <dd className="mt-1 font-medium" dir="auto">
+                        <dd
+                          className={
+                            key === 'discount'
+                              ? 'mt-1 text-xl font-semibold tabular-nums'
+                              : 'mt-1 font-medium'
+                          }
+                          dir="auto"
+                        >
                           {value}
                         </dd>
                       </div>
@@ -1229,10 +1253,10 @@ export default function AdminGiftCodesPage({
               {stats && (showDetail || !workspace) && (
                 <section
                   aria-label={label('usageStats')}
-                  className="space-y-4 rounded-md border p-4"
+                  className="space-y-4 rounded-xl border bg-card p-4 md:p-6"
                 >
                   <h2 className="text-lg font-semibold">{label('usageStats')}</h2>
-                  <dl className="grid gap-4 sm:grid-cols-3">
+                  <dl className="grid gap-4 border-b pb-4 sm:grid-cols-3">
                     <div>
                       <dt className="text-sm text-muted-foreground">{label('consumed')}</dt>
                       <dd className="font-medium tabular-nums">
@@ -1343,7 +1367,11 @@ export default function AdminGiftCodesPage({
                         id: 'status',
                         label: label('status'),
                         render: (row) => (
-                          <Badge variant="outline">{label(availability(row, now))}</Badge>
+                          <Badge
+                            variant={availability(row, now) === 'active' ? 'success' : 'outline'}
+                          >
+                            {label(availability(row, now))}
+                          </Badge>
                         ),
                       },
                       {

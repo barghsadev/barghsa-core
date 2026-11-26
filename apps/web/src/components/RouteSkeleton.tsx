@@ -1,7 +1,8 @@
 import { PageLoading, Skeleton } from '@barghsa/ui';
 import { loadingText } from '@barghsa/i18n/loading-feedback';
+import { useContext } from 'react';
 import { useLocale } from '../hooks/useLocale.js';
-import { RouteFallbackLandmark } from './RouteFallbackLandmark.js';
+import { InsideRouteMain, RouteFallbackLandmark } from './RouteFallbackLandmark.js';
 
 interface RouteSkeletonProps {
   layout?: 'default' | 'admin';
@@ -11,26 +12,25 @@ interface RouteSkeletonProps {
 export function RouteSkeleton({ layout = 'default' }: RouteSkeletonProps) {
   const locale = useLocale();
   const admin = layout === 'admin';
+  const insideMain = useContext(InsideRouteMain);
+  const showSidebar = admin && !insideMain;
   const label = loadingText(admin ? 'loadingAdmin' : 'loading', locale);
-  const content = <PageLoading label={label} className={admin ? 'flex-1' : 'min-h-screen'} />;
   return (
     <RouteFallbackLandmark>
       <h1 className="sr-only">{label}</h1>
-      {admin ? (
-        <div className="flex min-h-screen bg-background">
+      <div className={showSidebar ? 'flex min-h-screen' : undefined}>
+        {showSidebar && (
           <div
             aria-hidden="true"
             className="hidden w-64 shrink-0 flex-col gap-4 border-e p-4 md:flex"
           >
-            {[70, 50, 80, 55, 65, 75].map((width, i) => (
-              <Skeleton key={i} className="h-4" style={{ width: `${width}%` }} />
+            {[1, 2, 3, 4, 5, 6].map((row) => (
+              <Skeleton key={row} className="h-4 w-3/4 even:w-1/2" />
             ))}
           </div>
-          {content}
-        </div>
-      ) : (
-        content
-      )}
+        )}
+        <PageLoading label={label} className={insideMain ? 'min-h-48' : 'min-h-screen'} />
+      </div>
     </RouteFallbackLandmark>
   );
 }
