@@ -48,7 +48,6 @@ const fa = {
   intelligence: 'هوش مصنوعی',
   configuration: 'تنظیمات سامانه',
   customers: 'مشتریان',
-  backToWorkspace: 'بازگشت به فضای کاری',
   support: 'راهنمایی و پشتیبانی',
   theme: 'حالت نمایش',
   themeDefault: 'پیش‌فرض',
@@ -71,7 +70,6 @@ const fa = {
   analyticsLoading: 'در حال بارگذاری انتخاب شما…',
   analyticsRetry: 'تلاش دوباره',
   analyticsError: 'ذخیره انتخاب شما ناموفق بود. دوباره تلاش کنید.',
-  dashboardDescription: 'وضعیت سفارش‌ها، پرداخت‌ها و درخواست‌های پشتیبانی را دنبال کنید.',
   view: 'مشاهده',
 };
 const en: Record<keyof typeof fa, string> = {
@@ -122,7 +120,6 @@ const en: Record<keyof typeof fa, string> = {
   intelligence: 'AI workspace',
   configuration: 'System settings',
   customers: 'Customers',
-  backToWorkspace: 'Back to workspace',
   support: 'Help & support',
   theme: 'Display theme',
   themeDefault: 'Default',
@@ -144,7 +141,6 @@ const en: Record<keyof typeof fa, string> = {
   analyticsLoading: 'Loading your choice…',
   analyticsRetry: 'Retry',
   analyticsError: 'Could not save your choice. Please try again.',
-  dashboardDescription: 'Keep track of orders, payments and support requests.',
   view: 'View',
 };
 export function shellText(key: keyof typeof fa, locale: 'en' | 'fa'): string {

@@ -3,7 +3,7 @@ import { Button, DatePicker, Input, datePickerCalendarDate } from '@barghsa/ui';
 import { accountTimeInputText } from '@barghsa/i18n/account-time-input';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { isoToDatetimeLocal } from '../lib/due-at-override.js';
-import { normalizeProfileDigits } from '../lib/profile-digits.js';
+import { RecordTimeInput } from './RecordTimeInput.js';
 
 type FieldFeedback = Pick<AriaAttributes, 'aria-invalid' | 'aria-describedby' | 'aria-required'>;
 
@@ -54,17 +54,6 @@ export function RecordDateTimeField({
     onChange(nextDay || nextClock ? `${nextDay}T${nextClock}` : '');
   }
 
-  function editClock(input: string) {
-    if (locale !== 'fa') {
-      update(day, input);
-      return;
-    }
-    const typed = normalizeProfileDigits(input);
-    if (!/^(?:\d{0,4}|\d{1,2}:\d{0,2})$/.test(typed)) return;
-    const separated = typed.replace(/^(\d{2})(\d+)$/, '$1:$2');
-    update(day, /^\d:\d{2}$/.test(separated) ? `0${separated}` : separated);
-  }
-
   return (
     <div className="min-w-0">
       <div id={entryId}>
@@ -110,20 +99,16 @@ export function RecordDateTimeField({
                   update(isoToDatetimeLocal(selection.toISOString(), timezone).slice(0, 10), clock);
               }}
             />
-            <Input
+            <RecordTimeInput
               {...feedback}
               id={`${id}-time`}
+              locale={locale}
               aria-label={`${label} · ${word(locale === 'fa' ? 'time24' : 'time')}`}
-              type={locale === 'fa' ? 'text' : 'time'}
-              dir="ltr"
-              inputMode={locale === 'fa' ? 'numeric' : undefined}
-              placeholder={locale === 'fa' ? '۰۰:۰۰' : undefined}
-              autoComplete="off"
               className="h-full min-h-11 w-full min-w-0"
               disabled={unavailable}
               value={clock}
               onBlur={onBlur}
-              onChange={(event) => editClock(event.target.value)}
+              onChange={(clock) => update(day, clock)}
             />
             {date && timezone && (
               <span className="sr-only" id={`${id}-selected-date`}>

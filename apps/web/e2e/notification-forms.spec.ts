@@ -143,16 +143,32 @@ for (const locale of ['en', 'fa'] as const)
       const windowForm = page
         .locator('form')
         .filter({ has: page.locator('#delivery-window-start') });
-      await expect(page.locator('#delivery-window-start')).toHaveAttribute('dir', 'ltr');
-      await page.locator('#delivery-window-start').fill('10:15');
-      await page.locator('#delivery-window-end').fill('12:15');
+      const zone = page.locator('#delivery-window-timezone');
+      await zone.fill('unknown timezone');
+      await expect(page.getByRole('option')).toHaveCount(0);
+      await zone.press('Escape');
+      await expect(zone).toHaveValue('UTC');
+      await zone.fill(locale === 'fa' ? 'Istan' : 'استانب');
+      await expect(page.getByRole('option', { name: /Europe\/Istanbul/ })).toBeVisible();
+      await expect(page.getByRole('option')).toHaveCount(1);
+      await zone.press('Enter');
+      await expect(zone).toHaveValue('Europe/Istanbul');
+
+      const start = page.locator('#delivery-window-start');
+      const end = page.locator('#delivery-window-end');
+      await expect(start).toHaveAttribute('dir', 'ltr');
+      await start.fill(locale === 'fa' ? '۱۰۱۵' : '10:15');
+      await expect(start).toHaveValue('10:15');
+      await end.fill(locale === 'fa' ? '۱۲:۱۵' : '12:15');
       await windowForm.locator('button[type=submit]').click();
-      await expect(page.locator('#delivery-window-end')).toBeFocused();
+      await expect(end).toBeFocused();
       expect(windowWrites).toHaveLength(0);
-      await page.locator('#delivery-window-end').fill('14:15');
+      await end.fill(locale === 'fa' ? '۱۴:۱۵' : '14:15');
       await windowForm.locator('button[type=submit]').click();
       await expect(windowForm).toContainText(text('window.saved'));
-      expect(windowWrites).toEqual([{ timezone: 'UTC', start_hour: 10.25, end_hour: 14.25 }]);
+      expect(windowWrites).toEqual([
+        { timezone: 'Europe/Istanbul', start_hour: 10.25, end_hour: 14.25 },
+      ]);
       const capture = locale === 'fa' && dark && info.project.name === 'mobile-safari';
       if (capture)
         await windowForm.screenshot({ path: '/tmp/barghsa-notification-window-fa-dark.png' });

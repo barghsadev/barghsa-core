@@ -3092,7 +3092,10 @@ for (const locale of ['en', 'fa'] as const)
     await page.goto('/admin/notifications/settings');
 
     const windowForm = page.locator('form').filter({ has: page.locator('#delivery-window-start') });
-    await page.locator('#delivery-window-timezone').selectOption('UTC');
+    const zone = page.locator('#delivery-window-timezone');
+    await zone.click();
+    await zone.fill('UTC');
+    await page.getByRole('option', { name: /^UTC\b/ }).click();
     await page.locator('#delivery-window-start').fill('10:15');
     await page.locator('#delivery-window-end').fill('14:15');
     await windowForm.locator('button[type=submit]').click();

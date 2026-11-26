@@ -1,5 +1,10 @@
 import { CommandFeedback } from './CommandFeedback.js';
 import { notificationFormText } from '@barghsa/i18n/notification-forms';
+import { accountTimeInputText } from '@barghsa/i18n/account-time-input';
+import { timezoneCityName, timezoneText } from '@barghsa/i18n/timezone';
+import { tPreferenceSettingsForms } from '@barghsa/i18n/preference-settings-forms';
+import { SearchIcon } from 'lucide-react';
+import { RecordTimeInput } from './RecordTimeInput.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 import {
   DEFAULT_DELIVERY_WINDOW,
@@ -14,9 +19,11 @@ import {
   LoadingStatus,
   Alert,
   Button,
-  Input,
+  ComboBox,
+  ComboBoxInput,
+  ComboBoxItem,
+  ComboBoxPopup,
   Label,
-  NativeSelect,
   ListRefreshButton,
 } from '@barghsa/ui';
 import { tWorkspace as t } from '@barghsa/i18n/workspace-admin';
@@ -45,15 +52,8 @@ import {
   recordEditorSurface,
 } from './RecordEditorLayout.js';
 import { responseRecord } from '../lib/content-catalogues.js';
+import { ALL_TIMEZONES, timezoneSearchTerms } from '../lib/timezone-options.js';
 
-const TIMEZONE_OPTIONS = [
-  'Asia/Tehran',
-  'UTC',
-  'Asia/Dubai',
-  'Europe/Berlin',
-  'Europe/London',
-  'America/New_York',
-];
 /** Newly scheduled daytime messages use this minute-precision window; existing schedules retain theirs. */
 export default function DeliveryWindowConfigPanel({
   uiLocale,
@@ -125,6 +125,10 @@ export default function DeliveryWindowConfigPanel({
   const scope = useCatalogueScope(clearPrivate);
   const resource = useCatalogueResource(scope, '/api/admin/config/delivery-window', validWindow);
   const config = resource.data;
+  const zones =
+    config && !ALL_TIMEZONES.includes(config.timezone)
+      ? [config.timezone, ...ALL_TIMEZONES]
+      : ALL_TIMEZONES;
   const recovered =
     recoveryAttempt !== null &&
     resource.readAttempt !== null &&
@@ -291,6 +295,7 @@ export default function DeliveryWindowConfigPanel({
     />
   );
   const busy = saving || editor.pending || !!command;
+  const timezoneField = editor.bind('timezone');
   return (
     <section aria-labelledby="delivery-window-title" className="min-w-0 space-y-4">
       <header className="flex min-w-0 flex-wrap items-start justify-between gap-3">
@@ -362,50 +367,101 @@ export default function DeliveryWindowConfigPanel({
             <RecordEditorSection title={notificationFormText('windowHours', uiLocale)}>
               <div className={recordEditorField}>
                 <Label htmlFor="delivery-window-timezone">{label('timezone')}</Label>
-                <NativeSelect
-                  id="delivery-window-timezone"
-                  dir="ltr"
-                  {...editor.bind('timezone')}
+                <ComboBox
+                  items={zones}
                   value={editor.values.timezone}
-                  onChange={(e) => {
-                    setSaved(false);
-                    editor.field('timezone')[1](e.target.value);
+                  openOnInputClick
+                  autoHighlight
+                  disabled={!ready || busy}
+                  filter={(zone, query) => {
+                    const search = timezoneSearchTerms(query);
+                    const city = timezoneCityName(zone, 'fa');
+                    return (
+                      timezoneSearchTerms(zone).includes(search) ||
+                      timezoneSearchTerms(city).includes(search)
+                    );
                   }}
-                  className="w-full [direction:ltr]"
+                  onValueChange={(zone) => {
+                    if (!zone) return;
+                    setSaved(false);
+                    editor.field('timezone')[1](zone);
+                  }}
                 >
-                  {!TIMEZONE_OPTIONS.includes(editor.values.timezone) && (
-                    <option value={editor.values.timezone}>{editor.values.timezone}</option>
-                  )}
-                  {TIMEZONE_OPTIONS.map((tz) => (
-                    <option key={tz} value={tz}>
-                      {tz}
-                    </option>
-                  ))}
-                </NativeSelect>
+                  <div className="relative">
+                    <SearchIcon
+                      aria-hidden="true"
+                      className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                    />
+                    <ComboBoxInput
+                      id="delivery-window-timezone"
+                      ref={timezoneField.ref}
+                      onBlur={timezoneField.onBlur}
+                      placeholder={timezoneText('searchPlaceholder', uiLocale)}
+                      className="h-11 ps-9"
+                      aria-required="true"
+                      aria-invalid={timezoneField['aria-invalid']}
+                      aria-describedby={timezoneField['aria-describedby']}
+                    />
+                  </div>
+                  <ComboBoxPopup
+                    className="w-(--anchor-width) min-w-0 p-1"
+                    dir={uiLocale === 'fa' ? 'rtl' : 'ltr'}
+                    emptyMessage={tPreferenceSettingsForms('timezoneNoMatches', uiLocale)}
+                  >
+                    {(zone: string) => {
+                      const city = timezoneCityName(zone, uiLocale);
+                      return (
+                        <ComboBoxItem key={zone} value={zone} className="min-h-10">
+                          <span className="flex min-w-0 flex-1 flex-wrap items-baseline justify-between gap-x-2">
+                            <bdi className="break-all">{zone}</bdi>
+                            {city && <bdi className="text-xs">{city}</bdi>}
+                          </span>
+                        </ComboBoxItem>
+                      );
+                    }}
+                  </ComboBoxPopup>
+                </ComboBox>
                 {feedback('timezone')}
               </div>
               <div className={recordEditorGrid}>
-                {(['startHour', 'endHour'] as const).map((name) => (
-                  <div key={name} className={recordEditorField}>
-                    <Label htmlFor={`delivery-window-${name === 'startHour' ? 'start' : 'end'}`}>
-                      {label(name === 'startHour' ? 'start' : 'end')}
-                    </Label>
-                    <Input
-                      id={`delivery-window-${name === 'startHour' ? 'start' : 'end'}`}
-                      type="time"
-                      dir="ltr"
-                      step="60"
-                      {...editor.bind(name)}
-                      value={editor.values[name]}
-                      onChange={(e) => {
-                        setSaved(false);
-                        editor.field(name)[1](e.target.value);
-                      }}
-                    />
-                    {feedback(name)}
-                  </div>
-                ))}
+                {(['startHour', 'endHour'] as const).map((name) => {
+                  const field = editor.bind(name);
+                  const boundary = name === 'startHour' ? 'start' : 'end';
+                  const id = `delivery-window-${boundary}`;
+                  return (
+                    <div key={name} className={recordEditorField}>
+                      <Label htmlFor={id}>{label(boundary)}</Label>
+                      <RecordTimeInput
+                        id={id}
+                        locale={uiLocale}
+                        className="min-h-11"
+                        step="60"
+                        {...field}
+                        aria-required="true"
+                        aria-describedby={
+                          [
+                            field['aria-describedby'],
+                            uiLocale === 'fa' && 'delivery-window-clock-format',
+                          ]
+                            .filter(Boolean)
+                            .join(' ') || undefined
+                        }
+                        value={editor.values[name]}
+                        onChange={(time) => {
+                          setSaved(false);
+                          editor.field(name)[1](time);
+                        }}
+                      />
+                      {feedback(name)}
+                    </div>
+                  );
+                })}
               </div>
+              {uiLocale === 'fa' && (
+                <p id="delivery-window-clock-format" className="text-xs text-muted-foreground">
+                  {accountTimeInputText('time24', uiLocale)}
+                </p>
+              )}
               {config && (
                 <p className="text-xs text-muted-foreground">
                   {label('current')}:{' '}
