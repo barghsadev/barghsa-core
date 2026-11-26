@@ -10,7 +10,7 @@ it('explains the configured green limit without changing the required quantity',
     details: [{ code: 'PRODUCT_MAX_KWH', systemKey: 'green', requiredKwh: '5', limitKwh: '4' }],
   };
   expect(await electricityQuoteError(response(body), 'en')).toContain(
-    'requires 5 kWh of Green electricity, but the product maximum is 4 kWh'
+    'The order needs 5 kWh of Green electricity. The limit is 4 kWh.'
   );
   const persian = await electricityQuoteError(response(body), 'fa');
   expect(persian).toContain('برق سبز');
@@ -24,7 +24,7 @@ it('explains a minimum and falls back for unexpected errors', async () => {
     details: [{ code: 'PRODUCT_MIN_KWH', systemKey: 'thermal', requiredKwh: '10' }],
   };
   expect(await electricityQuoteError(response(minimum), 'en')).toContain(
-    'minimum for Thermal electricity is 10 kWh'
+    'Order at least 10 kWh of Thermal electricity.'
   );
   expect(
     await electricityQuoteError(response({ message: 'internal details' }), 'en')

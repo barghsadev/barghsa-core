@@ -276,7 +276,7 @@ it('shows a quote conflict without a permanent loading message', async () => {
   await mount();
   await settlePreview();
   expect(container.querySelector('[role="alert"]')?.textContent).toContain(
-    'requires 5 kWh of Green electricity, but the product maximum is 4 kWh'
+    'The order needs 5 kWh of Green electricity. The limit is 4 kWh.'
   );
   expect(container.textContent).not.toContain('Calculating price');
 });

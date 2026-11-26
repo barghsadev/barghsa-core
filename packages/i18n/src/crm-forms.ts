@@ -5,6 +5,9 @@ import type { I18nDictionary, Locale } from './app.js';
 const fa: I18nDictionary = {
   'crm.legal.formSections': 'بخش‌های اطلاعات حقوقی',
   'crm.legal.registrationDetails': 'ثبت شرکت',
+  'crm.legal.dateCalendar': 'تقویم شمسی',
+  'crm.legal.dateManual': 'ورود تاریخ میلادی',
+  'crm.legal.clearDate': 'پاک کردن تاریخ',
   'crm.legal.companyContact': 'تماس و نشانی شرکت',
   'crm.legal.representativeDetails': 'مشخصات نماینده',
   'crm.legal.representativeAddress': 'نشانی نماینده',
@@ -53,6 +56,9 @@ const fa: I18nDictionary = {
 const en: I18nDictionary = {
   'crm.legal.formSections': 'Legal form sections',
   'crm.legal.registrationDetails': 'Company registration',
+  'crm.legal.dateCalendar': 'Use calendar',
+  'crm.legal.dateManual': 'Enter date manually',
+  'crm.legal.clearDate': 'Clear date',
   'crm.legal.companyContact': 'Company contact and address',
   'crm.legal.representativeDetails': 'Representative details',
   'crm.legal.representativeAddress': 'Representative address details',

@@ -450,7 +450,7 @@ it('shows the exact mandatory green limit conflict and blocks checkout', async (
   await fill('electricity-kwh', '100');
   await settlePreview();
   expect(container.querySelector('[role="alert"]')?.textContent).toContain(
-    'This order requires 5 kWh of Green electricity, but the product maximum is 4 kWh.'
+    'The order needs 5 kWh of Green electricity. The limit is 4 kWh.'
   );
   expect(next().disabled).toBe(true);
   expect(orderCalls()).toHaveLength(0);

@@ -1,4 +1,5 @@
 import { createFileRoute, lazyRouteComponent } from '@tanstack/react-router';
+import { CrmLegalEditor } from '../../../components/CrmLegalEditor.js';
 import { StaffRecordLoading } from '../../../components/RouteSkeleton.js';
 
 const Page = lazyRouteComponent(
@@ -7,7 +8,12 @@ const Page = lazyRouteComponent(
 );
 
 function EditLegalProfileRoute() {
-  return <Page profileId={Route.useParams().profileId} editor={{ kind: 'legal' }} />;
+  return (
+    <Page
+      profileId={Route.useParams().profileId}
+      editor={{ kind: 'legal', Component: CrmLegalEditor }}
+    />
+  );
 }
 
 export const Route = createFileRoute('/admin/crm/profiles/$profileId_/legal/edit')({

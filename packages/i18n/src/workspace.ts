@@ -583,9 +583,8 @@ export const fa: I18nDictionary = {
   'electricity.order.contractPending': 'پیش‌نویس قرارداد در انتظار انتشار',
   'electricity.order.documentsTitle': 'مدارک و پیش‌نیازهای قرارداد',
   'electricity.order.documentsNotice':
-    'برای بررسی مدارک درخواستی و ارسال نسخه امضاشده در صورت نیاز، قرارداد را باز کنید. پیش‌نیازهای نسخه فعلی در زیر نمایش داده می‌شوند.',
-  'electricity.order.documentsPending':
-    'مدارک و پیش‌نیازهای قرارداد پس از بررسی و انتشار قرارداد توسط کارکنان در دسترس قرار می‌گیرند.',
+    'در قرارداد، مدارک را بررسی و در صورت نیاز نسخه امضاشده را ارسال کنید.',
+  'electricity.order.documentsPending': 'مدارک و پیش‌نیازها پس از انتشار قرارداد در دسترس‌اند.',
   'electricity.order.contractStatus': 'وضعیت قرارداد',
   'electricity.order.nextAction.await_activation':
     'پرداخت و پذیرش قرارداد ثبت شده‌اند؛ فعال‌سازی در انتظار تکمیل پیش‌نیازهای قرارداد است.',
@@ -662,8 +661,7 @@ export const fa: I18nDictionary = {
   'electricity.order.cancellationRules': 'لغو و بازپرداخت',
   'electricity.order.cancellationRulesText':
     'در صورت لغو یا رد سفارش پرداخت‌شده، بازپرداخت طبق وضعیت پرداخت و قوانین قرارداد بررسی می‌شود.',
-  'electricity.order.paymentAfterSubmit':
-    'فاکتور سفارش ایجاد شده است. وضعیت پرداخت و روش‌های مجاز را در صفحه فاکتور بررسی کنید.',
+  'electricity.order.paymentAfterSubmit': 'فاکتور را برای دیدن وضعیت و روش‌های پرداخت باز کنید.',
   'electricity.order.paymentOptions': 'گزینه‌های پرداخت فاکتور: کیف پول یا ثبت رسید بانکی',
   'electricity.order.period.title': 'دوره تحویل و مقدار انرژی',
   'electricity.order.period.type': 'نوع دوره',
@@ -687,9 +685,8 @@ export const fa: I18nDictionary = {
   'electricity.order.supplyUnavailable': 'سفارش این محصول موقتاً در دسترس نیست.',
   'electricity.order.contactSupport': 'تماس با پشتیبانی',
   'electricity.order.productMaxConflict':
-    'سفارش به {required} کیلووات‌ساعت {product} نیاز دارد، اما سقف این محصول {limit} کیلووات‌ساعت است. مقدار سفارش را اصلاح کنید.',
-  'electricity.order.productMinConflict':
-    'حداقل مقدار {product} برابر {minimum} کیلووات‌ساعت است. مقدار سفارش را اصلاح کنید.',
+    'سفارش به {required} کیلووات‌ساعت {product} نیاز دارد. سقف {limit} است. مقدار سفارش را کم کنید.',
+  'electricity.order.productMinConflict': 'حداقل {minimum} کیلووات‌ساعت {product} سفارش دهید.',
   'electricity.order.averagePower': 'توان میانگین',
   'electricity.order.mandatoryGreen': 'سهم برق سبز طبق قانون به سفارش افزوده شده است.',
   'electricity.order.thermal': 'برق حرارتی',
@@ -715,7 +712,7 @@ export const fa: I18nDictionary = {
   'electricity.order.submitting': 'در حال ثبت سفارش…',
   'electricity.order.submit': 'ثبت سفارش',
   'electricity.order.unconfirmed':
-    'ثبت سفارش تأیید نشده است. می‌توانید همان سفارش را دوباره ارسال کنید. اگر از این صفحه خارج می‌شوید، پیش از ثبت سفارش جدید، سفارش‌های خود را بررسی کنید.',
+    'ثبت سفارش تأیید نشد. همین سفارش را دوباره ارسال کنید یا پیش از سفارش جدید، وضعیت سفارش‌ها را بررسی کنید.',
   'electricity.order.retrySubmission': 'ارسال دوباره همان سفارش',
   'electricity.order.checkOrders': 'بررسی سفارش‌ها',
   'electricity.order.addressLoadFailed':
@@ -1381,9 +1378,9 @@ export const englishMessages = {
   'electricity.order.contractPending': 'Contract draft awaiting publication',
   'electricity.order.documentsTitle': 'Contract documents and prerequisites',
   'electricity.order.documentsNotice':
-    'Open the contract to review requested documents and submit a signed copy if required. The current version’s prerequisites appear below.',
+    'Open the contract to review documents and upload a signed copy if required.',
   'electricity.order.documentsPending':
-    'Contract documents and prerequisites become available after staff review and publish the contract.',
+    'Documents and prerequisites appear when staff publish the contract.',
   'electricity.order.contractStatus': 'Contract status',
   'electricity.order.nextAction.await_activation':
     'Payment and acceptance are recorded. Activation is waiting for the contract prerequisites.',
@@ -1460,7 +1457,7 @@ export const englishMessages = {
   'electricity.order.cancellationRulesText':
     'If a paid order is cancelled or rejected, any refund is reviewed under the payment status and contract terms.',
   'electricity.order.paymentAfterSubmit':
-    'The order invoice has been created. Check its page for payment status and permitted methods.',
+    'Open the invoice to see payment status and available methods.',
   'electricity.order.paymentOptions': 'Invoice payment options: wallet or bank receipt',
   'electricity.order.period.title': 'Delivery period and energy',
   'electricity.order.period.type': 'Period type',
@@ -1485,9 +1482,8 @@ export const englishMessages = {
   'electricity.order.supplyUnavailable': 'Ordering this product is temporarily unavailable.',
   'electricity.order.contactSupport': 'Contact support',
   'electricity.order.productMaxConflict':
-    'This order requires {required} kWh of {product}, but the product maximum is {limit} kWh. Adjust the order quantity.',
-  'electricity.order.productMinConflict':
-    'The minimum for {product} is {minimum} kWh. Adjust the order quantity.',
+    'The order needs {required} kWh of {product}. The limit is {limit} kWh. Reduce the quantity.',
+  'electricity.order.productMinConflict': 'Order at least {minimum} kWh of {product}.',
   'electricity.order.averagePower': 'Average power',
   'electricity.order.mandatoryGreen': 'The mandatory green share has been added to this order.',
   'electricity.order.thermal': 'Thermal electricity',
@@ -1513,7 +1509,7 @@ export const englishMessages = {
   'electricity.order.submitting': 'Submitting order…',
   'electricity.order.submit': 'Submit Order',
   'electricity.order.unconfirmed':
-    'The order is unconfirmed. You can retry the same submission. If you leave this page, check your orders before starting a new one.',
+    'Order unconfirmed. Retry this submission or check your orders before placing another.',
   'electricity.order.retrySubmission': 'Retry the same order',
   'electricity.order.checkOrders': 'Check orders',
   'electricity.order.addressLoadFailed':

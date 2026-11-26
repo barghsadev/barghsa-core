@@ -1,8 +1,16 @@
-import { useId, useRef, useState, type RefObject } from 'react';
+import { useEffect, useId, useRef, useState, type RefObject } from 'react';
 import { z } from 'zod';
 import { useWizardForm as useDraftForm } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
-import { Button, Input, Label, NativeSelect, Textarea } from '@barghsa/ui';
+import {
+  Button,
+  DatePicker,
+  Input,
+  Label,
+  NativeSelect,
+  Textarea,
+  datePickerCalendarDate,
+} from '@barghsa/ui';
 import { tCrmForm as t } from '@barghsa/i18n/crm-forms';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
@@ -127,6 +135,13 @@ export function CrmLegalEditor({
     t('crm.profile.error.generic', locale)
   );
   const [pending, setPending] = useState<Changes | null>(null);
+  const [manualDate, setManualDate] = useState(false);
+  const focusDate = useRef(false);
+  useEffect(() => {
+    if (!focusDate.current) return;
+    focusDate.current = false;
+    document.getElementById(id + '-registrationDate')?.focus();
+  }, [id, manualDate]);
   const disabled = pending !== null || draft.form.formState.isSubmitting;
   const provinces = useGeographyOptions('/api/geography/provinces');
   const companies = useGeographyOptions('/api/geography/company-types');
@@ -321,6 +336,67 @@ export function CrmLegalEditor({
               testId={'crm-legal-' + field + '-retry'}
             />
           </>
+        ) : kind === 'date' ? (
+          <>
+            {manualDate ? (
+              <Input {...inputProps} type="date" dir="ltr" lang="en" />
+            ) : (
+              <DatePicker
+                id={fieldId}
+                label={label(field)}
+                locale={locale}
+                timezone="UTC"
+                compactLabel
+                showYearSelect
+                disabled={disabled}
+                className="min-h-11"
+                value={datePickerCalendarDate(values[field], 'UTC')}
+                triggerProps={{
+                  name: binding.name,
+                  ref: binding.ref,
+                  'aria-invalid': binding['aria-invalid'],
+                  'aria-describedby': binding['aria-describedby'],
+                }}
+                onBlur={binding.onBlur}
+                onChange={(date) =>
+                  change(
+                    field,
+                    date
+                      ? `${String(date.getFullYear()).padStart(4, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+                      : ''
+                  )
+                }
+              />
+            )}
+            <div className="flex flex-wrap gap-x-3">
+              <Button
+                type="button"
+                variant="link"
+                size="sm"
+                className="px-0"
+                onClick={() => {
+                  focusDate.current = true;
+                  setManualDate(!manualDate);
+                }}
+              >
+                {t(manualDate ? 'crm.legal.dateCalendar' : 'crm.legal.dateManual', locale)}
+              </Button>
+              {values[field] && (
+                <Button
+                  type="button"
+                  variant="link"
+                  size="sm"
+                  className="px-0"
+                  onClick={() => {
+                    change(field, '');
+                    document.getElementById(fieldId)?.focus();
+                  }}
+                >
+                  {t('crm.legal.clearDate', locale)}
+                </Button>
+              )}
+            </div>
+          </>
         ) : kind === 'textarea' ? (
           <Textarea
             {...inputProps}
@@ -339,17 +415,13 @@ export function CrmLegalEditor({
             }
             maxLength={max}
             dir={
-              kind === 'date' ||
-              kind === 'email' ||
-              kind === 'tel' ||
-              kind === 'postal' ||
-              kind === 'national'
+              kind === 'email' || kind === 'tel' || kind === 'postal' || kind === 'national'
                 ? 'ltr'
                 : undefined
             }
             inputMode={kind === 'postal' || kind === 'national' ? 'numeric' : undefined}
             autoComplete="off"
-            type={kind === 'date' || kind === 'email' || kind === 'tel' ? kind : 'text'}
+            type={kind === 'email' || kind === 'tel' ? kind : 'text'}
             className={help ? 'max-w-xs' : undefined}
           />
         )}

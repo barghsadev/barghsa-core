@@ -43,6 +43,14 @@ const label = (key: string, locale: Locale) =>
       (key === 'companyTypeId' ? 'companyType' : key.replace(/(Province|City)Id$/, '$1')),
     locale
   );
+const registrationDay = new Date(changes.registrationDate);
+const registrationDateLabel = (locale: Locale) =>
+  new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR' : 'en-US', {
+    timeZone: 'UTC',
+    year: 'numeric',
+    month: locale === 'fa' ? 'long' : 'short',
+    day: 'numeric',
+  }).format(registrationDay);
 
 async function setup(page: Page, locale: Locale, dark = false, allowed = true, archived = false) {
   await page.addInitScript((locale) => {
@@ -298,7 +306,41 @@ for (const locale of ['fa', 'en'] as const) {
           const control = form.getByLabel(label(field, locale), { exact: true });
           if (isLocationField(field)) await selectAddressLocation(page, control, placeName);
           else if (field === 'companyTypeId') await control.selectOption(value);
-          else if (locale === 'fa' && /(?:PostalCode|NationalId)$/.test(field))
+          else if (field === 'registrationDate') {
+            const parts = new Intl.DateTimeFormat(locale === 'fa' ? 'fa-IR-u-nu-latn' : 'en-US', {
+              timeZone: 'UTC',
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric',
+            }).formatToParts(registrationDay);
+            const part = (kind: string) => parts.find((entry) => entry.type === kind)!.value;
+            await control.press('ArrowDown');
+            const calendar = page.getByRole('dialog', { name: label(field, locale), exact: true });
+            await calendar.locator('select[class*="years_dropdown"]').selectOption(part('year'));
+            await calendar
+              .locator('select[class*="months_dropdown"]')
+              .selectOption(String(Number(part('month')) - 1));
+            const day = locale === 'fa' ? Number(part('day')).toLocaleString('fa-IR') : part('day');
+            const dayButton = calendar
+              .locator('[role=gridcell]:not([data-outside]) button')
+              .filter({ hasText: new RegExp(`^${day}$`) });
+            if (test.info().project.use.hasTouch) await dayButton.tap();
+            else await dayButton.click();
+            await expect(control).toHaveText(registrationDateLabel(locale));
+            await form
+              .getByRole('button', { name: tCrmForm('crm.legal.dateManual', locale), exact: true })
+              .click();
+            await expect(control).toBeFocused();
+            await expect(control).toHaveValue(value);
+            await form
+              .getByRole('button', {
+                name: tCrmForm('crm.legal.dateCalendar', locale),
+                exact: true,
+              })
+              .click();
+            await expect(control).toBeFocused();
+            await expect(control).toHaveText(registrationDateLabel(locale));
+          } else if (locale === 'fa' && /(?:PostalCode|NationalId)$/.test(field))
             await control.fill(value.replace(/\d/g, (digit) => '٠١٢٣٤٥٦٧٨٩'[Number(digit)]!));
           else await control.fill(value);
           if (field === 'officialProvinceId') {
@@ -382,10 +424,33 @@ for (const locale of ['fa', 'en'] as const) {
         await expect(page.locator('#panel-details')).toBeVisible();
         await expect(panel).toContainText('REG-NEW');
         await edit.click();
-        for (const [field, value] of Object.entries(changes))
-          await expect(form.getByLabel(label(field, locale), { exact: true })).toHaveValue(
-            isLocationField(field) ? placeName : value
-          );
+        for (const [field, value] of Object.entries(changes)) {
+          const control = form.getByLabel(label(field, locale), { exact: true });
+          if (field === 'registrationDate')
+            await expect(control).toHaveText(registrationDateLabel(locale));
+          else await expect(control).toHaveValue(isLocationField(field) ? placeName : value);
+        }
+        if (locale === 'fa' && !dark) {
+          const date = form.getByLabel(label('registrationDate', locale), { exact: true });
+          const clearDate = form.getByRole('button', {
+            name: tCrmForm('crm.legal.clearDate', locale),
+            exact: true,
+          });
+          await clearDate.click();
+          await expect(date).toBeFocused();
+          await expect(clearDate).toHaveCount(0);
+          expect(writes).toHaveLength(4);
+          await save.click();
+          await expect(dialog).toContainText(changes.registrationDate);
+          await confirm.click();
+          await expect(panel.getByRole('status')).toHaveText(t('crm.profile.edit.saved', locale));
+          expect(writes.at(-1)).toEqual({
+            legal: {
+              expectedUpdatedAt: '2026-09-01T01:00:00.654321Z',
+              changes: { registrationDate: null },
+            },
+          });
+        }
       }
     );
   }

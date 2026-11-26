@@ -9,7 +9,7 @@ import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { useWizardForm as useDraftForm, type WizardFieldBinding } from '../hooks/useWizardForm.js';
 import { useActionFieldErrors } from '../hooks/useActionFieldErrors.js';
-import { CrmLegalEditor } from '../components/CrmLegalEditor.js';
+import type { CrmLegalEditor } from '../components/CrmLegalEditor.js';
 import { CrmAddressEditor } from '../components/CrmAddressEditor.js';
 import { CrmLegalDocuments } from '../components/CrmLegalDocuments.js';
 import {
@@ -234,7 +234,8 @@ const profileActions = {
   archive: { kind: 'archive', title: 'crm.profile.archive.title' },
 } as const;
 type ProfileEditEntry =
-  | { kind: 'contact' | 'legal' }
+  | { kind: 'contact' }
+  | { kind: 'legal'; Component: typeof CrmLegalEditor }
   | { kind: 'address'; addressId: string }
   | { kind: 'action'; action: CrmProfileAction }
   | { kind: 'verification' };
@@ -878,7 +879,7 @@ function CrmProfileDetailContent({
         ) : (
           <>
             {editor.kind === 'legal' && legalInfo && (
-              <CrmLegalEditor
+              <editor.Component
                 key={profile.id}
                 profileId={profile.id}
                 legalInfo={legalInfo}
