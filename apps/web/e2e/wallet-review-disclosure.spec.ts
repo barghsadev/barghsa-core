@@ -138,7 +138,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#solar-contract-line-0-description').fill('Panel installation');
     await page.locator('#solar-contract-line-0-quantity').fill('2');
     await page.locator('#solar-contract-line-0-unit-price').fill('125000');
-    await page.locator('#solar-contract-line-0-vat-rate').fill('900');
+    await page.locator('#solar-contract-line-0-vat-rate').fill('9');
     await page.locator('#solar-contract-line-0-taxable').check();
     await page.getByTestId('solar-contract-form').locator('button[type=submit]').click();
     await expect(page.getByRole('dialog')).toBeVisible();

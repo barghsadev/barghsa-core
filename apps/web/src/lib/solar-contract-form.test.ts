@@ -33,21 +33,32 @@ const messages = Object.fromEntries(
     'description',
     'quantity',
     'unitPrice',
-    'vatRate',
+    'vatPercent',
     'isTaxable',
   ].map((key) => [key, key])
 );
 const schema = solarContractSchema(messages, contractOptions);
 it('preserves fixed int8 commercial value independent of invoice, zero prices/leading zeros, variable inactive draft and half-up/non-taxable VAT', () => {
   const draft = contractDraft();
-  draft.fixedAmount = '9223372036854775807';
+  draft.fixedAmount = '۹۲۲۳۳۷۲۰۳۶۸۵۴۷۷۵۸۰۷';
   draft.invoiceLines = [
-    { description: 'Taxed', quantity: '3', unitPrice: '00005', vatRate: '1000', isTaxable: true },
-    { description: 'Untaxed', quantity: '2', unitPrice: '60', vatRate: '5000', isTaxable: false },
-    { description: 'Free', quantity: '1', unitPrice: '0', vatRate: '10000', isTaxable: true },
+    {
+      description: 'Taxed',
+      quantity: '۳',
+      unitPrice: '۰۰۰۰۵',
+      vatPercent: '۱۰٫۰۰',
+      isTaxable: true,
+    },
+    { description: 'Untaxed', quantity: '2', unitPrice: '60', vatPercent: '50', isTaxable: false },
+    { description: 'Free', quantity: '1', unitPrice: '0', vatPercent: '100', isTaxable: true },
   ];
   expect(schema.safeParse(draft).success).toBe(true);
   const body = solarContractBody(draft, solarProfileId, solarCommandKey);
+  expect(body.commercialValue).toEqual({ kind: 'fixed', amountIrr: '9223372036854775807' });
+  expect(body.invoiceLines[0]).toMatchObject({ quantity: 3, unitPrice: '00005', vatRate: 1000 });
+  expect(solarContractFields(['invoiceLine0VatRate'], draft)).toEqual([
+    'invoiceLines.0.vatPercent',
+  ]);
   const review = contractReview(body);
   expect(review.data.invoiceLines.map((line) => line.vatAmount)).toEqual(['2', '0', '0']);
   expect(review.data.totals.total).toBe('137');
@@ -101,11 +112,11 @@ it.each([
     'invoiceLines.0.quantity',
   ],
   [
-    'VAT fractional',
+    'VAT beyond two decimal places',
     (d: ReturnType<typeof contractDraft>) => {
-      d.invoiceLines[0]!.vatRate = '1.5';
+      d.invoiceLines[0]!.vatPercent = '۱٫۵۰۱';
     },
-    'invoiceLines.0.vatRate',
+    'invoiceLines.0.vatPercent',
   ],
   [
     'zero invoice total',

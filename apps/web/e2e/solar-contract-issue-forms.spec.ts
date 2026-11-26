@@ -80,6 +80,10 @@ for (const [locale, theme] of [
   ['fa', 'dark'],
 ] as const) {
   const copy = (key: string) => tSolar(key, locale);
+  const typedNumber = (value: string) =>
+    locale === 'fa'
+      ? value.replace(/\d/g, (digit) => '۰۱۲۳۴۵۶۷۸۹'[Number(digit)]!).replace('.', '٫')
+      : value;
   for (const kind of ['template', 'document'] as const) {
     test(`solar ${kind === 'template' ? 'template and fixed value' : 'uploaded terms and variable VAT rows'} retains its exact contract issue command (${locale}, ${theme})`, async ({
       page,
@@ -156,12 +160,15 @@ for (const [locale, theme] of [
       await field('value-kind').selectOption('fixed');
       await expect(field('fixed-amount')).toHaveAttribute('aria-required', 'true');
       await expect(field('variable-description')).toHaveCount(0);
-      await field('fixed-amount').fill(maxAmount);
+      await field('fixed-amount').fill(typedNumber(maxAmount));
+      await expect(field('fixed-amount')).toHaveAccessibleDescription(
+        formatCurrencyIrr(maxAmount, locale)
+      );
       if (kind === 'document') await field('value-kind').selectOption('variable');
       await line(0, 'description').fill('  Panel installation  ');
-      await line(0, 'quantity').fill(kind === 'template' ? '2' : '3');
-      await line(0, 'unit-price').fill(kind === 'template' ? '125000' : '00005');
-      await line(0, 'vat-rate').fill(kind === 'template' ? '900' : '1000');
+      await line(0, 'quantity').fill(typedNumber(kind === 'template' ? '2' : '3'));
+      await line(0, 'unit-price').fill(typedNumber(kind === 'template' ? '125000' : '00005'));
+      await line(0, 'vat-rate').fill(typedNumber(kind === 'template' ? '9.25' : '10'));
       for (const name of ['description', 'quantity', 'unit-price', 'vat-rate'])
         await expect(line(0, name)).toHaveAttribute('aria-required', 'true');
       await expect(line(0, 'taxable')).not.toHaveAttribute('aria-required', 'true');
@@ -174,23 +181,23 @@ for (const [locale, theme] of [
         await line(1, 'description').fill('  Non-taxable permit  ');
         await line(1, 'quantity').fill('2');
         await line(1, 'unit-price').fill('10');
-        await line(1, 'vat-rate').fill('5000');
+        await line(1, 'vat-rate').fill('50');
         await line(1, 'taxable').uncheck();
         await page.getByTestId('solar-contract-add-line').click();
         await line(2, 'description').fill('  Commissioning  ');
         await line(2, 'quantity').fill('1');
         await line(2, 'unit-price').fill('100');
-        await line(2, 'vat-rate').fill('900');
+        await line(2, 'vat-rate').fill('9');
         await line(2, 'taxable').check();
       }
       const draftTotal = form.locator('dl').getByRole('definition').last();
       await line(0, 'taxable').check();
       await expect(draftTotal).toHaveText(
-        formatCurrencyIrr(kind === 'template' ? '272500' : '146', locale)
+        formatCurrencyIrr(kind === 'template' ? '273125' : '146', locale)
       );
       await line(0, 'unit-price').fill('invalid');
       await expect(draftTotal).toHaveCount(0);
-      await line(0, 'unit-price').fill(kind === 'template' ? '125000' : '00005');
+      await line(0, 'unit-price').fill(typedNumber(kind === 'template' ? '125000' : '00005'));
       await expect(page.locator('#solar-postal-reason')).toHaveCount(0);
       await form.dispatchEvent('submit');
       await expect(submit).toBeDisabled();
@@ -199,7 +206,9 @@ for (const [locale, theme] of [
       release();
       await focusedError(field('title'));
       await expect(field('text')).toHaveValue('  ' + terms + '  ');
-      await expect(line(0, 'unit-price')).toHaveValue(kind === 'template' ? '125000' : '00005');
+      await expect(line(0, 'unit-price')).toHaveValue(
+        typedNumber(kind === 'template' ? '125000' : '00005')
+      );
       await field('title').fill('  Solar installation agreement  ');
       state.previewMode = 'owned';
       await submit.click();
@@ -217,7 +226,7 @@ for (const [locale, theme] of [
         '  Final value depends on measured installation work  '
       );
       await field('value-kind').selectOption('fixed');
-      await expect(field('fixed-amount')).toHaveValue(maxAmount);
+      await expect(field('fixed-amount')).toHaveValue(typedNumber(maxAmount));
       if (kind === 'document') await field('value-kind').selectOption('variable');
       state.previewMode = 'mixed';
       await submit.click();
@@ -261,7 +270,7 @@ for (const [locale, theme] of [
                   description: 'Panel installation',
                   quantity: 2,
                   unitPrice: '125000',
-                  vatRate: 900,
+                  vatRate: 925,
                   isTaxable: true,
                 },
               ]
@@ -293,7 +302,7 @@ for (const [locale, theme] of [
       expect(quoted.scope.resourceId).toBe(input.idempotencyKey);
       expect(quoted.data.totals).toEqual(
         kind === 'template'
-          ? { currency: 'IRR', subtotal: '250000', vat: '22500', total: '272500' }
+          ? { currency: 'IRR', subtotal: '250000', vat: '23125', total: '273125' }
           : { currency: 'IRR', subtotal: '135', vat: '11', total: '146' }
       );
       if (kind === 'document')

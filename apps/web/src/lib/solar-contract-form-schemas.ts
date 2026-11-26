@@ -3,12 +3,14 @@ import {
   selectedSolarSource,
   solarContractBody,
   solarContractAmounts,
+  solarFixedAmount,
   solarInt8,
   solarRowPrice,
   solarInvoiceInteger,
   type SolarContractDraft,
   type SolarContractOptions,
 } from './solar-contract-form.js';
+import { vatBasisPoints } from './vat-form.js';
 export const inactiveSolarContractSchema = z.custom<SolarContractDraft>();
 export function solarContractSchema(
   messages: Record<string, string>,
@@ -33,12 +35,7 @@ export function solarContractSchema(
       issue(['source'], messages.source!, draft?.source);
     if (!['fixed', 'variable'].includes(draft?.valueKind))
       issue(['valueKind'], messages.valueKind!, draft?.valueKind);
-    else if (
-      draft.valueKind === 'fixed' &&
-      (typeof draft.fixedAmount !== 'string' ||
-        !/^(0|[1-9][0-9]{0,18})$/.test(draft.fixedAmount) ||
-        BigInt(draft.fixedAmount) > solarInt8)
-    )
+    else if (draft.valueKind === 'fixed' && solarFixedAmount(draft.fixedAmount) === null)
       issue(['fixedAmount'], messages.fixedAmount!, draft.fixedAmount);
     else if (
       draft.valueKind === 'variable' &&
@@ -61,12 +58,10 @@ export function solarContractSchema(
           line.description.trim().length > 1000
         )
           issue(['invoiceLines', index, 'description'], messages.description!, line?.description);
-        for (const [field, min, max] of [
-          ['quantity', 1, 2147483647],
-          ['vatRate', 0, 10000],
-        ] as const)
-          if (!solarInvoiceInteger(line?.[field], min, max))
-            issue(['invoiceLines', index, field], messages[field]!, line?.[field]);
+        if (!solarInvoiceInteger(line?.quantity, 1, 2_147_483_647))
+          issue(['invoiceLines', index, 'quantity'], messages.quantity!, line?.quantity);
+        if (typeof line?.vatPercent !== 'string' || vatBasisPoints(line.vatPercent) === null)
+          issue(['invoiceLines', index, 'vatPercent'], messages.vatPercent!, line?.vatPercent);
         if (!solarRowPrice(line?.unitPrice))
           issue(['invoiceLines', index, 'unitPrice'], messages.unitPrice!, line?.unitPrice);
         if (typeof line?.isTaxable !== 'boolean')

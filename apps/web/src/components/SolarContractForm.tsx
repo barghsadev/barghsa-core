@@ -29,6 +29,7 @@ import { tSolar } from '@barghsa/i18n/solar';
 import { tSolarContract } from '@barghsa/i18n/solar-contract';
 import { contractText } from '@barghsa/i18n/contracts';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
+import { tContractAuthoring } from '@barghsa/i18n/contract-authoring';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { toast } from '../lib/toast-api.js';
 import { useLocale } from '../hooks/useLocale.js';
@@ -38,6 +39,7 @@ import { withCsrf } from '../lib/csrf.js';
 import {
   emptySolarContract,
   draftSolarInvoiceTotals,
+  solarFixedAmount,
   emptySolarInvoice,
   solarContractBody,
   solarContractOptions,
@@ -139,7 +141,7 @@ function OwnedSolarContractForm({
     description: fieldCopy('descriptionInvalid'),
     quantity: fieldCopy('quantityInvalid'),
     unitPrice: fieldCopy('priceInvalid'),
-    vatRate: fieldCopy('vatInvalid'),
+    vatPercent: fieldCopy('vatInvalid'),
     isTaxable: fieldCopy('taxableInvalid'),
   };
   const form = useZodForm<SolarContractDraft>(
@@ -168,7 +170,7 @@ function OwnedSolarContractForm({
   };
   const draft = form.watch();
   for (let index = 0; index < draft.invoiceLines.length; index++)
-    for (const leaf of ['description', 'quantity', 'unitPrice', 'vatRate', 'isTaxable'] as const)
+    for (const leaf of ['description', 'quantity', 'unitPrice', 'vatPercent', 'isTaxable'] as const)
       names[`invoiceLines.${index}.${leaf}`] = messages[leaf];
   const showFields = useActionFieldErrors(form, names, copy('solarContractError'));
   const release = () => callbacks.current.coordination?.release(owner.current);
@@ -419,6 +421,7 @@ function OwnedSolarContractForm({
     review = captured?.review;
   const locked = !!captured;
   const draftTotals = editorPage ? draftSolarInvoiceTotals(draft.invoiceLines) : undefined;
+  const fixedAmount = draft.valueKind === 'fixed' ? solarFixedAmount(draft.fixedAmount) : null;
   const renderField = (
     name: FieldPath<SolarContractDraft>,
     id: string,
@@ -427,23 +430,25 @@ function OwnedSolarContractForm({
     kind: 'input' | 'textarea' | 'checkbox' = 'input',
     example?: string
   ) => {
+    const percent = name.endsWith('vatPercent');
     const numeric =
-      name === 'fixedAmount' ||
-      name.endsWith('unitPrice') ||
-      name.endsWith('quantity') ||
-      name.endsWith('vatRate');
+      name === 'fixedAmount' || name.endsWith('unitPrice') || name.endsWith('quantity') || percent;
     return (
       <FormField
         key={name}
         control={form.control}
         name={name}
         render={({ field }) => (
-          <FormItem id={id} className={recordEditorField}>
+          <FormItem
+            id={id}
+            className={kind === 'checkbox' ? `${recordEditorField} self-end` : recordEditorField}
+          >
             {kind === 'checkbox' ? (
-              <div className="flex items-center gap-2">
+              <FormLabel className="flex min-h-11 items-center gap-2 rounded-lg bg-muted/50 px-2.5">
                 <FormControl>
                   <input
                     type="checkbox"
+                    className="size-4 shrink-0 accent-primary"
                     name={field.name}
                     ref={field.ref}
                     onBlur={field.onBlur}
@@ -452,8 +457,8 @@ function OwnedSolarContractForm({
                     onChange={(event) => field.onChange(event.target.checked)}
                   />
                 </FormControl>
-                <FormLabel className="touch-label">{label}</FormLabel>
-              </div>
+                {label}
+              </FormLabel>
             ) : (
               <>
                 <FormLabel>{label}</FormLabel>
@@ -480,13 +485,21 @@ function OwnedSolarContractForm({
                       disabled={locked}
                       placeholder={example}
                       dir={numeric ? 'ltr' : undefined}
-                      inputMode={numeric ? 'numeric' : undefined}
+                      inputMode={percent ? 'decimal' : numeric ? 'numeric' : undefined}
                     />
                   )}
                 </FormControl>
               </>
             )}
-            <FormDescription>{help}</FormDescription>
+            <FormDescription>
+              {name === 'fixedAmount' && fixedAmount !== null ? (
+                <bdi className="font-medium text-foreground [overflow-wrap:anywhere]">
+                  {formatCurrencyIrr(fixedAmount, locale)}
+                </bdi>
+              ) : (
+                help
+              )}
+            </FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -612,7 +625,11 @@ function OwnedSolarContractForm({
                           <option value="variable">{contractCopy('variableContractValue')}</option>
                         </NativeSelect>
                       </FormControl>
-                      <FormDescription>{fieldCopy('valueHelp')}</FormDescription>
+                      <FormDescription>
+                        {field.value
+                          ? tContractAuthoring(`valueKindHelp.${field.value}`, locale)
+                          : fieldCopy('valueHelp')}
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -622,14 +639,14 @@ function OwnedSolarContractForm({
                     'fixedAmount',
                     'solar-contract-fixed-amount',
                     contractCopy('fixedContractAmount'),
-                    messages.fixedAmount
+                    tContractAuthoring('amountHelp', locale)
                   )}
                 {draft.valueKind === 'variable' &&
                   renderField(
                     'variableDescription',
                     'solar-contract-variable-description',
                     contractCopy('variableContractDescription'),
-                    messages.variableDescription,
+                    fieldCopy('variableHelp'),
                     'textarea',
                     fieldCopy('variableExample')
                   )}
@@ -640,7 +657,10 @@ function OwnedSolarContractForm({
               description={fieldCopy('lineHelp')}
             >
               {draft.invoiceLines.map((line, index) => (
-                <fieldset key={index} className="min-w-0 space-y-2.5 rounded-lg border px-3 pb-3">
+                <fieldset
+                  key={index}
+                  className="@container min-w-0 space-y-2.5 rounded-lg border px-3 pb-3"
+                >
                   <legend className="px-1 text-sm font-medium">
                     {fieldCopy('invoiceLine')} {(index + 1).toLocaleString(locale)}
                   </legend>
@@ -648,37 +668,37 @@ function OwnedSolarContractForm({
                     `invoiceLines.${index}.description`,
                     `solar-contract-line-${index}-description`,
                     copy('solarInvoiceDescription'),
-                    messages.description,
+                    fieldCopy('descriptionHelp'),
                     'input',
                     fieldCopy('lineExample')
                   )}
-                  <div className="grid min-w-0 grid-cols-2 gap-3 sm:grid-cols-3">
+                  <div className="grid min-w-0 grid-cols-2 gap-3 @xl:grid-cols-4">
                     {renderField(
                       `invoiceLines.${index}.quantity`,
                       `solar-contract-line-${index}-quantity`,
                       copy('solarInvoiceQuantity'),
-                      messages.quantity
+                      fieldCopy('quantityHelp')
                     )}
                     {renderField(
                       `invoiceLines.${index}.unitPrice`,
                       `solar-contract-line-${index}-unit-price`,
                       copy('solarInvoicePrice'),
-                      messages.unitPrice
+                      fieldCopy('priceHelp')
                     )}
                     {renderField(
-                      `invoiceLines.${index}.vatRate`,
+                      `invoiceLines.${index}.vatPercent`,
                       `solar-contract-line-${index}-vat-rate`,
                       copy('solarInvoiceVat'),
-                      messages.vatRate
+                      fieldCopy('vatHelp')
+                    )}
+                    {renderField(
+                      `invoiceLines.${index}.isTaxable`,
+                      `solar-contract-line-${index}-taxable`,
+                      copy('solarInvoiceTaxable'),
+                      fieldCopy('taxableHelp'),
+                      'checkbox'
                     )}
                   </div>
-                  {renderField(
-                    `invoiceLines.${index}.isTaxable`,
-                    `solar-contract-line-${index}-taxable`,
-                    copy('solarInvoiceTaxable'),
-                    messages.isTaxable,
-                    'checkbox'
-                  )}
                   {draft.invoiceLines.length > 1 && (
                     <Button
                       type="button"
@@ -729,10 +749,13 @@ function OwnedSolarContractForm({
                       [fieldCopy('draftInvoiceTotal'), draftTotals.total],
                     ] as const
                   ).map(([label, amount]) => (
-                    <div key={label} className="min-w-0">
+                    <div
+                      key={label}
+                      className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-3 sm:block"
+                    >
                       <dt className="text-muted-foreground">{label}</dt>
                       <dd className="wrap-anywhere font-medium">
-                        {formatCurrencyIrr(amount, locale)}
+                        <bdi>{formatCurrencyIrr(amount, locale)}</bdi>
                       </dd>
                     </div>
                   ))}

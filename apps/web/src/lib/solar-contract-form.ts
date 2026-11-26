@@ -1,5 +1,8 @@
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { parseContractCommercialValue } from './contracts.js';
+import { normalizeProfileDigits } from './profile-digits.js';
 import { receiptUuid } from './solar-postal-form.js';
+import { vatBasisPoints } from './vat-form.js';
 
 export interface SolarContractOptions {
   templates: Array<{ version_id: string; name: string; version_number: number }>;
@@ -9,7 +12,7 @@ export interface SolarInvoiceDraft {
   description: string;
   quantity: string;
   unitPrice: string;
-  vatRate: string;
+  vatPercent: string;
   isTaxable: boolean;
 }
 export interface SolarContractDraft {
@@ -26,7 +29,7 @@ export const emptySolarInvoice = (): SolarInvoiceDraft => ({
   description: '',
   quantity: '1',
   unitPrice: '',
-  vatRate: '0',
+  vatPercent: '0',
   isTaxable: false,
 });
 export const emptySolarContract = (): SolarContractDraft => ({
@@ -101,10 +104,23 @@ const uuid = (value: unknown): value is string => typeof value === 'string' && r
 const integer = (value: unknown, min: number, max: number): value is number =>
   typeof value === 'number' && Number.isSafeInteger(value) && value >= min && value <= max;
 export const solarInt8 = 9_223_372_036_854_775_807n;
-export const solarRowPrice = (value: unknown): value is string =>
-  typeof value === 'string' && /^[0-9]{1,19}$/.test(value) && BigInt(value) <= solarInt8;
+export function solarFixedAmount(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const parsed = parseContractCommercialValue({
+    kind: 'fixed',
+    amountIrr: normalizeProfileDigits(value),
+  });
+  return parsed?.kind === 'fixed' ? parsed.amountIrr : null;
+}
+export function solarRowPrice(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  const digits = normalizeProfileDigits(value);
+  return /^[0-9]{1,19}$/.test(digits) && BigInt(digits) <= solarInt8;
+}
 export const solarInvoiceInteger = (value: unknown, min: number, max: number) =>
-  typeof value === 'string' && !!value.trim() && integer(Number(value), min, max);
+  typeof value === 'string' &&
+  !!value.trim() &&
+  integer(Number(normalizeProfileDigits(value)), min, max);
 export function solarContractOptions(value: unknown): SolarContractOptions | null {
   if (
     !record(value) ||
@@ -156,13 +172,17 @@ export function selectedSolarSource(raw: string, options: SolarContractOptions) 
     : null;
 }
 function solarInvoiceLines(lines: SolarInvoiceDraft[]): SolarContractBody['invoiceLines'] {
-  return lines.map((line) => ({
-    description: line.description.trim(),
-    quantity: Number(line.quantity),
-    unitPrice: line.unitPrice,
-    vatRate: Number(line.vatRate),
-    isTaxable: line.isTaxable,
-  }));
+  return lines.map((line) => {
+    const vatRate = vatBasisPoints(line.vatPercent);
+    if (vatRate === null) throw new Error('Invalid VAT percent');
+    return {
+      description: line.description.trim(),
+      quantity: Number(normalizeProfileDigits(line.quantity)),
+      unitPrice: normalizeProfileDigits(line.unitPrice),
+      vatRate,
+      isTaxable: line.isTaxable,
+    };
+  });
 }
 
 export function solarContractBody(
@@ -180,7 +200,7 @@ export function solarContractBody(
     changeDescription: draft.changeDescription.trim(),
     commercialValue:
       draft.valueKind === 'fixed'
-        ? { kind: 'fixed', amountIrr: draft.fixedAmount }
+        ? { kind: 'fixed', amountIrr: normalizeProfileDigits(draft.fixedAmount) }
         : { kind: 'variable', description: draft.variableDescription.trim() },
     source:
       kind === 'template'
@@ -221,7 +241,7 @@ export function draftSolarInvoiceTotals(lines: SolarInvoiceDraft[]) {
       (line) =>
         solarInvoiceInteger(line.quantity, 1, 2_147_483_647) &&
         solarRowPrice(line.unitPrice) &&
-        solarInvoiceInteger(line.vatRate, 0, 10_000)
+        vatBasisPoints(line.vatPercent) !== null
     )
   )
     return undefined;
@@ -397,7 +417,7 @@ export function solarContractFields(fields: unknown[], draft: SolarContractDraft
       ['Description', 'description'],
       ['Quantity', 'quantity'],
       ['UnitPrice', 'unitPrice'],
-      ['VatRate', 'vatRate'],
+      ['VatRate', 'vatPercent'],
       ['IsTaxable', 'isTaxable'],
     ])
       owned['invoiceLine' + index + name] = 'invoiceLines.' + index + '.' + leaf;

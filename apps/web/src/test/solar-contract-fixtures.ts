@@ -29,7 +29,7 @@ export function contractDraft(): SolarContractDraft {
         description: 'Deposit',
         quantity: '1',
         unitPrice: '100000',
-        vatRate: '0',
+        vatPercent: '0',
         isTaxable: false,
       },
     ],
