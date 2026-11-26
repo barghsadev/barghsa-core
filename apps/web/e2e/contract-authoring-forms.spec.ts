@@ -138,6 +138,62 @@ for (const [locale, theme] of [
     await item.screenshot({ path });
   }
 
+  test(`keeps an older linked order when the draft review closes (${locale})`, async ({ page }) => {
+    const fixture = await setupContractAuthoring(page, locale, false);
+    const productTitle = { en: 'Green electricity', fa: 'برق سبز' };
+    const orderRow = {
+      serviceType: 'electricity',
+      createdAt: '2026-09-21T09:00:45.678Z',
+      productTitle,
+    };
+    const firstPage = Array.from({ length: 50 }, (_, index) => ({
+      ...orderRow,
+      id: `be000000-0000-4000-8000-${String(50 - index).padStart(12, '0')}`,
+    }));
+    const cursor = firstPage.at(-1)!.id;
+    const orderOptions = '**/api/admin/contracts/authoring-options?*';
+    await page.route(orderOptions, (route) => {
+      const params = new URL(route.request().url()).searchParams;
+      if (!params.has('profileId')) return route.fallback();
+      expect(params.get('profileId')).toBe(profileId);
+      expect(params.get('serviceType')).toBe('electricity');
+      return route.fulfill({
+        json:
+          params.get('before') === cursor
+            ? { orders: [{ ...orderRow, id: linkedOrderId }], nextBefore: null }
+            : { orders: firstPage, nextBefore: cursor },
+      });
+    });
+    await page.goto('/admin/contracts/new');
+    await draftField(page, 'draftProfile').selectOption(profileId);
+    const older = draftForm(page).getByRole('button', {
+      name: authoring('moreOrders'),
+      exact: true,
+    });
+    await older.click();
+    const select = draftField(page, 'draftOrder');
+    await select.selectOption(linkedOrderId);
+    await expect(select.locator('option:checked')).toContainText(productTitle[locale]);
+    await expect(select.locator('option:checked')).toContainText(linkedOrderId.slice(-8));
+    await expect(select.locator('option:checked')).not.toContainText(linkedOrderId);
+    await draftField(page, 'titleField').fill('Supply contract');
+    await draftField(page, 'draftTerms').fill('Supply terms');
+    await draftField(page, 'contextReason').fill('Create the draft');
+    await draftSubmit(page).click();
+    const refreshed = page.waitForResponse(
+      (response) => new URL(response.url()).searchParams.get('before') === cursor
+    );
+    await cancel(page);
+    await refreshed;
+    await expect(select).toBeEnabled();
+    await expect(select).toHaveValue(linkedOrderId);
+    await expect(select.locator('option')).toHaveCount(52);
+    await draftSubmit(page).click();
+    await confirm(page);
+    await expect.poll(() => fixture.state.writes.length).toBe(1);
+    expect(fixture.state.writes[0]!.body.orderId).toBe(linkedOrderId);
+  });
+
   test(`draft create and imported revision preserve scope and exact commands (${locale}, ${theme})`, async ({
     page,
   }, info) => {

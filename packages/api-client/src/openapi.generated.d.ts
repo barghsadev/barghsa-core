@@ -19260,6 +19260,7 @@ export interface operations {
     ContractController_authoringOptions: {
         parameters: {
             query?: {
+                serviceType?: "electricity" | "savings" | "solar";
                 before?: string;
                 profileId?: string;
                 search?: string;

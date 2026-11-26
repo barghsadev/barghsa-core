@@ -13,6 +13,7 @@ import { contractText } from '@barghsa/i18n/contracts';
 import { tContractAuthoring } from '@barghsa/i18n/contract-authoring';
 import { useLocale } from '../hooks/useLocale.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
+import { useAccountTime } from '../hooks/useAccountTime.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
 import { DocumentRequestError } from '../lib/documents.js';
 import {
@@ -58,6 +59,7 @@ export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
     const order = profileId !== undefined,
       fieldId = useId(),
       choiceId = id ?? fieldId + '-choice';
+    const time = useAccountTime(locale, order);
     const [search, setSearch] = useState(''),
       [query, setQuery] = useState('');
     const [rows, setRows] = useState<ContractAuthoringChoice[]>([]),
@@ -107,6 +109,7 @@ export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
       setFailed(false);
       callbacks.current.onOptions?.([]);
       const params = new URLSearchParams(order ? { profileId } : { search: query });
+      if (order && serviceType) params.set('serviceType', serviceType);
       if (cursor) params.set('before', cursor);
       void readContract<unknown>(`/api/admin/contracts/authoring-options?${params}`, {
         signal: abort.signal,
@@ -116,7 +119,11 @@ export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
           const parsed = contractAuthoringOptions(result, order);
           if (!parsed || (parsed.nextBefore === cursor && cursor !== null))
             throw new Error('Invalid authoring options');
-          const previous = cursor && available ? rowsRef.current : [];
+          // The list can refresh from the same cursor after the review closes.
+          const previous =
+            cursor && available
+              ? rowsRef.current.slice(0, rowsRef.current.findIndex((row) => row.id === cursor) + 1)
+              : [];
           if (parsed.rows.some((row) => previous.some((item) => item.id === row.id)))
             throw new Error('Repeated authoring option');
           const nextRows = [...previous, ...parsed.rows];
@@ -165,6 +172,23 @@ export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
       setQuery(search.trim());
       setRevision((n) => n + 1);
     }
+    const choices = (available ? rows : []).filter(
+      (row) => !order || row.serviceType === serviceType
+    );
+    const selectedOrder = order ? choices.find((row) => row.id === value) : undefined;
+    const orderDetails = (row: ContractAuthoringChoice) => {
+      const reference = `\u2066…${row.id.slice(-8)}\u2069`;
+      return row.createdAt && time.status === 'ready'
+        ? `${time.format(row.createdAt, { dateStyle: 'short' })} · ${reference}`
+        : reference;
+    };
+    const orderLabel = (row: ContractAuthoringChoice) => {
+      const title =
+        row.productTitle?.[locale]?.trim() ||
+        row.productTitle?.[locale === 'fa' ? 'en' : 'fa']?.trim() ||
+        word(row.serviceType!);
+      return `${title} · ${orderDetails(row)}`;
+    };
     return (
       <div className={order ? 'min-w-0' : recordEditorGrid}>
         {!order && (
@@ -225,16 +249,22 @@ export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
             }}
           >
             <option value="">{word(order ? 'draftNoOrder' : 'draftChooseProfile')}</option>
-            {(available ? rows : [])
-              .filter((row) => !order || row.serviceType === serviceType)
-              .map((row) => (
-                <option key={row.id} value={row.id}>
-                  {order
-                    ? `${word(row.serviceType!)} · ${row.id}`
-                    : `${row.title || word('draftUnnamedProfile')} · ${word(row.profileType === 'LEGAL' ? 'draftLegal' : 'draftIndividual')} · ${row.id.slice(-8)}`}
-                </option>
-              ))}
+            {choices.map((row) => (
+              <option key={row.id} value={row.id}>
+                {order
+                  ? orderLabel(row)
+                  : `${row.title || word('draftUnnamedProfile')} · ${word(row.profileType === 'LEGAL' ? 'draftLegal' : 'draftIndividual')} · ${row.id.slice(-8)}`}
+              </option>
+            ))}
           </NativeSelect>
+          {selectedOrder && (
+            <p
+              aria-hidden="true"
+              className="hidden text-xs text-muted-foreground max-[359px]:block"
+            >
+              {orderDetails(selectedOrder)}
+            </p>
+          )}
           {busy && (
             <p role="status" className="text-sm text-muted-foreground">
               {word('loading')}
@@ -255,8 +285,10 @@ export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
               </Button>
             </div>
           )}
-          {!busy && !failed && (!available || !rows.length) && (
-            <p className="text-sm text-muted-foreground">{word('draftNoMatches')}</p>
+          {!busy && !failed && !choices.length && (!order || !next) && (
+            <p className="text-sm text-muted-foreground">
+              {order ? tContractAuthoring('noOrdersForService', locale) : word('draftNoMatches')}
+            </p>
           )}
           {next && !failed && (
             <Button
@@ -270,7 +302,7 @@ export const ContractDraftChoices = forwardRef<HTMLSelectElement, Props>(
                 else setCursor(next);
               }}
             >
-              {word('next')}
+              {order ? tContractAuthoring('moreOrders', locale) : word('next')}
             </Button>
           )}
         </div>

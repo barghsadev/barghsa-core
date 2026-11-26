@@ -8,9 +8,11 @@ export const authoringQuery = z
   .object({
     search: z.string().trim().max(100).default(''),
     profileId: contractUuid.optional(),
+    serviceType: z.enum(['electricity', 'savings', 'solar']).optional(),
     before: contractUuid.optional(),
   })
-  .strict();
+  .strict()
+  .refine(({ profileId, serviceType }) => !serviceType || !!profileId);
 
 export const contractInvoiceOptionsQuery = z
   .object({ versionId: contractUuid, before: contractUuid.optional() })
@@ -64,13 +66,17 @@ export async function contractAuthoringOptions(
       id: string;
       serviceType: string;
       createdAt: Date;
+      productTitle: { en: string | null; fa: string | null };
     }>(
-      `SELECT o.id, o.order_type AS "serviceType", o.created_at AS "createdAt"
+      `SELECT o.id, o.order_type AS "serviceType", o.created_at AS "createdAt",
+           jsonb_build_object('en', product.title->>'en', 'fa', product.title->>'fa') AS "productTitle"
        FROM orders o JOIN profiles p ON p.id=o.profile_id
+         JOIN products product ON product.id=o.product_id
        WHERE o.profile_id=$1 AND NOT p.archived AND o.status<>'CANCELLED'
          AND ($2::uuid IS NULL OR o.id<$2)
+           AND ($3::text IS NULL OR o.order_type=$3)
        ORDER BY o.id DESC LIMIT 51`,
-      [input.profileId, input.before ?? null]
+      [input.profileId, input.before ?? null, input.serviceType ?? null]
     );
     return {
       orders: result.rows.slice(0, 50),

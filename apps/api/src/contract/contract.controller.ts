@@ -105,6 +105,7 @@ export class ContractController {
   @ApiQuery({ name: 'search', required: false, type: String, maxLength: 100 })
   @ApiQuery({ name: 'profileId', required: false, type: String, format: 'uuid' })
   @ApiQuery({ name: 'before', required: false, type: String, format: 'uuid' })
+  @ApiQuery({ name: 'serviceType', required: false, enum: ['electricity', 'savings', 'solar'] })
   authoringOptions(@Req() req: AuthenticatedRequest, @Query() query: unknown) {
     this.authorize(req, true);
     const input = parse(authoringQuery, query);

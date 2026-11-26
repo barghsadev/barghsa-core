@@ -11,7 +11,12 @@ type ProfileOptions = {
   nextBefore: string | null;
 };
 type OrderOptions = {
-  orders: Array<{ id: string; serviceType: string; createdAt: string }>;
+  orders: Array<{
+    id: string;
+    serviceType: string;
+    createdAt: string;
+    productTitle: { en: string | null; fa: string | null };
+  }>;
   nextBefore: string | null;
 };
 type ContractDto = Awaited<ReturnType<ContractService['get']>>;
@@ -269,7 +274,14 @@ it('limits draft profile lookup to contract writers, active names and stable pag
   expect(
     ((await (await send('/authoring-options?search=%25')).json()) as ProfileOptions).profiles
   ).toEqual([]);
-  for (const query of ['profileId=no', 'before=no', 'extra=1', 'search=' + 'x'.repeat(101)])
+  for (const query of [
+    'profileId=no',
+    'before=no',
+    'extra=1',
+    'serviceType=solar',
+    `profileId=${page.profiles[0]!.id}&serviceType=unknown`,
+    'search=' + 'x'.repeat(101),
+  ])
     expect((await send('/authoring-options?' + query)).status).toBe(400);
 });
 
@@ -281,22 +293,26 @@ it('pages draft order options within the selected profile and excludes cancelled
   const product = (
     await http.pool.query(
       "INSERT INTO products(type,title) VALUES('hardware',$1::jsonb) RETURNING id",
-      [JSON.stringify({ en: 'Draft product', fa: 'Draft product' })]
+      [JSON.stringify({ en: 'Green electricity', fa: 'برق سبز' })]
     )
   ).rows[0].id;
   await http.pool.query(
     `INSERT INTO orders(id,user_id,profile_id,product_id,order_type,status,snapshot_province_id,snapshot_city_id,snapshot_full_address,snapshot_postal_code)
-    SELECT gen_random_uuid(),$1,CASE WHEN n=53 THEN $3::uuid ELSE $2::uuid END,$4,'electricity',CASE WHEN n=52 THEN 'CANCELLED' ELSE 'PENDING' END,'p','c','address','1234567890'
-    FROM generate_series(1,53) n`,
+    SELECT gen_random_uuid(),$1,CASE WHEN n=53 THEN $3::uuid ELSE $2::uuid END,$4,
+      CASE WHEN n=54 THEN 'solar' ELSE 'electricity' END,
+      CASE WHEN n=52 THEN 'CANCELLED' ELSE 'PENDING' END,'p','c','address','1234567890'
+    FROM generate_series(1,54) n`,
     [user, id, other, product]
   );
-  const url = '/authoring-options?profileId=' + id;
+  const profileUrl = '/authoring-options?profileId=' + id;
+  const url = profileUrl + '&serviceType=electricity';
   const first = (await (await send(url)).json()) as OrderOptions;
   expect(first.orders).toHaveLength(50);
   expect(first.nextBefore).toBe(first.orders[49]!.id);
   expect(first.orders[0]).toMatchObject({
     serviceType: 'electricity',
     createdAt: expect.any(String),
+    productTitle: { en: 'Green electricity', fa: 'برق سبز' },
   });
   const second = (await (await send(url + '&before=' + first.nextBefore)).json()) as OrderOptions;
   expect(second.orders).toHaveLength(1);
@@ -304,6 +320,15 @@ it('pages draft order options within the selected profile and excludes cancelled
   expect(new Set([...first.orders, ...second.orders].map((o: { id: string }) => o.id)).size).toBe(
     51
   );
+  expect(
+    [...first.orders, ...second.orders].every(({ serviceType }) => serviceType === 'electricity')
+  ).toBe(true);
+  const solar = (await (await send(profileUrl + '&serviceType=solar')).json()) as OrderOptions;
+  expect(solar.orders).toEqual([expect.objectContaining({ serviceType: 'solar' })]);
+  expect(solar.nextBefore).toBeNull();
+  const legacy = (await (await send(profileUrl)).json()) as OrderOptions;
+  expect(legacy.orders).toHaveLength(50);
+  expect(legacy.nextBefore).toBe(legacy.orders[49]!.id);
   expect(
     ((await (await send('/authoring-options?profileId=' + randomUUID())).json()) as OrderOptions)
       .orders

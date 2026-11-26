@@ -213,6 +213,7 @@ export type ContractAuthoringChoice = {
   profileType?: 'INDIVIDUAL' | 'LEGAL';
   serviceType?: 'electricity' | 'savings' | 'solar';
   createdAt?: string;
+  productTitle?: { en: string | null; fa: string | null };
 };
 export function contractAuthoringOptions(
   value: unknown,
@@ -230,7 +231,11 @@ export function contractAuthoringOptions(
         (order
           ? typeof row.serviceType === 'string' &&
             ['electricity', 'savings', 'solar'].includes(row.serviceType) &&
-            instant(row.createdAt)
+            instant(row.createdAt) &&
+            (row.productTitle === undefined ||
+              (record(row.productTitle) &&
+                (row.productTitle.en === null || typeof row.productTitle.en === 'string') &&
+                (row.productTitle.fa === null || typeof row.productTitle.fa === 'string')))
           : typeof row.title === 'string' &&
             typeof row.profileType === 'string' &&
             ['INDIVIDUAL', 'LEGAL'].includes(row.profileType))
