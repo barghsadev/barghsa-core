@@ -10,7 +10,9 @@ import {
 import {
   Alert,
   Badge,
-  Input,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
   Label,
   ListRefreshButton,
   LoadingStatus,
@@ -27,8 +29,6 @@ import {
   RecordEditorActions,
   RecordEditorSection,
   recordEditorSurface,
-  recordEditorField,
-  recordEditorGrid,
 } from '../components/RecordEditorLayout.js';
 import { TeamActionDialog } from '../components/TeamActionDialog.js';
 import { useCatalogueEditor } from '../hooks/useCatalogueEditor.js';
@@ -118,6 +118,12 @@ export default function AdminOperationalRetentionPage({
   const error = catalogueRootMessage(editor.errors);
   const body = editor.action?.body;
   const proposed = record(body) && isOperationalRetention(body.policy) ? body.policy : null;
+  const reviewedPolicy =
+    saved && record(body) && body.expectedVersion === saved.version && proposed;
+  const changes =
+    saved && reviewedPolicy
+      ? operationalRetentionFields.filter(({ key }) => saved.policy[key] !== reviewedPolicy[key])
+      : [];
   const days = (value: number) => label('days').replace('{days}', numbers.number(value));
   const policySummary = (policy: OperationalRetention) => (
     <dl className="grid gap-2 rounded-md border p-3 sm:grid-cols-2">
@@ -226,8 +232,9 @@ export default function AdminOperationalRetentionPage({
       )}
       {saved && view === 'edit' && (
         <SettingsFormSection
-          title={label('savedPolicy')}
+          title={label('periods')}
           description={label('applyHelp')}
+          className="@container"
           noValidate
           aria-busy={editor.pending || undefined}
           onSubmit={(event) => {
@@ -273,65 +280,70 @@ export default function AdminOperationalRetentionPage({
           )}
           <fieldset
             disabled={editor.disabled || !saved.canEdit}
-            className="m-0 min-w-0 space-y-3 border-0 p-0"
+            className="m-0 grid min-w-0 gap-4 border-0 p-0 @2xl:grid-cols-2"
           >
             {policyGroups.map((group) => (
               <section
                 key={group.label}
                 aria-labelledby={`retention-${group.label}`}
-                className="space-y-2 border-t pt-3"
+                className="min-w-0 space-y-2 border-t pt-3"
               >
                 <h3 id={`retention-${group.label}`} className="font-semibold">
                   {label(group.label)}
                 </h3>
-                {group.label === 'traces' && (
-                  <p className="text-sm text-muted-foreground">{label('traceHelp')}</p>
-                )}
-                <div className={recordEditorGrid}>
+                <div className="divide-y rounded-lg border bg-muted/25 px-3 sm:px-4">
                   {group.fields.map(({ key, min, max }) => {
                     const [raw, setRaw] = editor.field(key);
                     const id = `retention-${key}`;
                     const binding = editor.bind(key);
                     return (
-                      <div key={key} className={recordEditorField}>
-                        <Label htmlFor={id}>{label(key)}</Label>
-                        <div className="flex min-w-0 items-center gap-3">
-                          <Input
+                      <div
+                        key={key}
+                        className="grid min-w-0 grid-cols-[minmax(0,1fr)_5.75rem] items-center gap-x-3 gap-y-2 py-3 sm:grid-cols-[minmax(0,1fr)_7rem]"
+                      >
+                        <div className="min-w-0 space-y-1">
+                          <Label htmlFor={id} className="leading-snug">
+                            {label(key)}
+                          </Label>
+                          <p id={`${id}-range`} className="text-xs text-muted-foreground">
+                            {label('allowedDays')
+                              .replace('{min}', numbers.number(min))
+                              .replace('{max}', numbers.number(max))}
+                          </p>
+                        </div>
+                        <InputGroup className="bg-background">
+                          <InputGroupInput
                             id={id}
                             {...binding}
-                            className="w-28 min-w-0"
+                            className="min-w-0 tabular-nums"
                             inputMode="numeric"
                             dir="ltr"
                             value={raw}
                             onChange={(event) => setRaw(event.target.value)}
                             aria-describedby={[
-                              `${id}-saved`,
                               `${id}-range`,
+                              key === 'priorityTracesDays' && 'retention-traces-help',
                               binding['aria-describedby'],
                             ]
                               .filter(Boolean)
                               .join(' ')}
                           />
-                          <p
-                            id={`${id}-saved`}
-                            className="min-w-0 border-s ps-3 text-sm text-muted-foreground"
-                          >
-                            {label('savedDays').replace(
-                              '{days}',
-                              numbers.number(saved.policy[key])
-                            )}
-                          </p>
-                        </div>
-                        <p id={`${id}-range`} className="text-sm text-muted-foreground">
-                          {label('allowedDays')
-                            .replace('{min}', numbers.number(min))
-                            .replace('{max}', numbers.number(max))}
-                        </p>
-                        {editor.feedback(key, true)}
+                          <InputGroupAddon align="inline-end" aria-hidden="true">
+                            {label('dayUnit')}
+                          </InputGroupAddon>
+                        </InputGroup>
+                        {binding['aria-invalid'] && (
+                          <div className="col-span-full">{editor.feedback(key, true)}</div>
+                        )}
                       </div>
                     );
                   })}
                 </div>
+                {group.label === 'traces' && (
+                  <p id="retention-traces-help" className="text-sm text-muted-foreground">
+                    {label('traceHelp')}
+                  </p>
+                )}
               </section>
             ))}
           </fieldset>
@@ -377,17 +389,46 @@ export default function AdminOperationalRetentionPage({
         <TeamActionDialog
           action={editor.action}
           onClose={editor.close}
-          confirmationDisabled={!editor.ready || editor.uncertain || !saved?.canEdit}
+          confirmationDisabled={
+            !editor.ready || editor.uncertain || !saved?.canEdit || !reviewedPolicy
+          }
           onDenied={editor.onDenied}
           onPendingChange={editor.onPendingChange}
           onUnconfirmed={editor.onUnconfirmed}
           onValidationError={editor.onValidationError}
           summary={
-            proposed && (
-              <div className="space-y-2">
-                <p className="font-medium">{label('proposedPeriods')}</p>
-                {policySummary(proposed)}
-              </div>
+            saved &&
+            reviewedPolicy && (
+              <section id="retention-change-review" aria-labelledby="retention-change-heading">
+                <h3 id="retention-change-heading" className="mb-2 text-sm font-semibold">
+                  {label('periodChanges')}
+                </h3>
+                {changes.length ? (
+                  <ul className="divide-y rounded-lg border bg-muted/35">
+                    {changes.map(({ key }) => (
+                      <li key={key} className="space-y-2 px-3 py-2.5">
+                        <p className="text-sm font-medium">{label(key)}</p>
+                        <dl className="grid grid-cols-2 gap-3 text-sm">
+                          <div>
+                            <dt className="text-xs text-muted-foreground">
+                              {label('savedPeriod')}
+                            </dt>
+                            <dd className="tabular-nums">{days(saved.policy[key])}</dd>
+                          </div>
+                          <div className="border-s ps-3">
+                            <dt className="text-xs text-muted-foreground">{label('newPeriod')}</dt>
+                            <dd className="font-semibold tabular-nums">
+                              {days(reviewedPolicy[key])}
+                            </dd>
+                          </div>
+                        </dl>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-muted-foreground">{label('noPeriodChanges')}</p>
+                )}
+              </section>
             )
           }
           onSuccess={async (result) => {
