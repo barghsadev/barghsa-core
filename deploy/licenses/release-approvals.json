@@ -4879,5 +4879,45 @@
     "approvedBy": "Majid Najafi (owner)",
     "reference": "docs/security/release-license-review.md#november-25-runtime-package-refresh",
     "conditions": "Keep the applicable copyright and license notices and the exact corresponding source and packaging patches where required. Preserve the license-choice, source availability, replacement and relinking obligations applicable to the distributed files. Verify these conditions against the final image before distribution. Resolve the nonstandard or mixed terms in the original notice. Map the grant and conditions to the files actually shipped."
+  },
+  {
+    "scope": "postgres-staging",
+    "purl": "pkg:deb/ubuntu/libgssapi-krb5-2@1.20.1-6ubuntu2.12?arch=amd64&distro=ubuntu-24.04",
+    "licenses": ["GPL-2.0-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-26-staging-postgresql-package-refresh",
+    "conditions": "Owner-approved policy exception for pkg:deb/ubuntu/libgssapi-krb5-2@1.20.1-6ubuntu2.12?arch=amd64&distro=ubuntu-24.04 in postgres-staging. Retain the applicable copyright and license notices and fulfill the applicable source and replacement obligations for the shipped files. Recorded follow-up from the review packet. Map the copyleft terms to shipped files. Verify notices and the exact corresponding source, including package patches where required."
+  },
+  {
+    "scope": "postgres-staging",
+    "purl": "pkg:deb/ubuntu/libk5crypto3@1.20.1-6ubuntu2.12?arch=amd64&distro=ubuntu-24.04",
+    "licenses": ["GPL-2.0-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-26-staging-postgresql-package-refresh",
+    "conditions": "Owner-approved policy exception for pkg:deb/ubuntu/libk5crypto3@1.20.1-6ubuntu2.12?arch=amd64&distro=ubuntu-24.04 in postgres-staging. Retain the applicable copyright and license notices and fulfill the applicable source and replacement obligations for the shipped files. Recorded follow-up from the review packet. Map the copyleft terms to shipped files. Verify notices and the exact corresponding source, including package patches where required."
+  },
+  {
+    "scope": "postgres-staging",
+    "purl": "pkg:deb/ubuntu/libkrb5-3@1.20.1-6ubuntu2.12?arch=amd64&distro=ubuntu-24.04",
+    "licenses": ["GPL-2.0-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-26-staging-postgresql-package-refresh",
+    "conditions": "Owner-approved policy exception for pkg:deb/ubuntu/libkrb5-3@1.20.1-6ubuntu2.12?arch=amd64&distro=ubuntu-24.04 in postgres-staging. Retain the applicable copyright and license notices and fulfill the applicable source and replacement obligations for the shipped files. Recorded follow-up from the review packet. Map the copyleft terms to shipped files. Verify notices and the exact corresponding source, including package patches where required."
+  },
+  {
+    "scope": "postgres-staging",
+    "purl": "pkg:deb/ubuntu/libkrb5support0@1.20.1-6ubuntu2.12?arch=amd64&distro=ubuntu-24.04",
+    "licenses": ["GPL-2.0-only"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-26-staging-postgresql-package-refresh",
+    "conditions": "Owner-approved policy exception for pkg:deb/ubuntu/libkrb5support0@1.20.1-6ubuntu2.12?arch=amd64&distro=ubuntu-24.04 in postgres-staging. Retain the applicable copyright and license notices and fulfill the applicable source and replacement obligations for the shipped files. Recorded follow-up from the review packet. Map the copyleft terms to shipped files. Verify notices and the exact corresponding source, including package patches where required."
+  },
+  {
+    "scope": "postgres-staging",
+    "purl": "pkg:deb/ubuntu/libtiff6@4.5.1%2Bgit230720-4ubuntu2.6?arch=amd64&distro=ubuntu-24.04",
+    "licenses": ["Hylafax"],
+    "approvedBy": "Majid Najafi (owner)",
+    "reference": "docs/security/release-license-review.md#november-26-staging-postgresql-package-refresh",
+    "conditions": "Owner-approved policy exception for pkg:deb/ubuntu/libtiff6@4.5.1+git230720-4ubuntu2.6?arch=amd64&distro=ubuntu-24.04 in postgres-staging. Retain the applicable copyright and license notices and fulfill the applicable source and replacement obligations for the shipped files. Recorded follow-up from the review packet. Resolve the nonstandard or mixed terms in the original notice. Map the grant and conditions to the files actually shipped."
   }
 ]

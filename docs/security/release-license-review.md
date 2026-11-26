@@ -1,6 +1,6 @@
 # v0.6.0 package-specific license review
 
-This is the owner-requested review packet. It records specific dispositions against the existing MIT, Apache-2.0, ISC, BSD-2-Clause and BSD-3-Clause allowlist. The GeoLite2 fallback is owner approved. The owner approved 388 exact exceptions on November 19, 2026, two additional Ubuntu package versions on November 20, and 13 updated runtime package entries on November 25.
+This is the owner-requested review packet. It records specific dispositions against the existing MIT, Apache-2.0, ISC, BSD-2-Clause and BSD-3-Clause allowlist. The GeoLite2 fallback is owner approved. The owner approved 388 exact exceptions on November 19, 2026, two additional Ubuntu package versions on November 20, 13 updated runtime package entries on November 25, and five staging PostgreSQL package versions on November 26.
 
 ## Owner approval on 2026-11-19
 
@@ -63,6 +63,20 @@ still checks the exact inventory of every candidate.
 
 [First preflight image report](https://github.com/barghsadev/barghsa-core/actions/runs/45682591020)
 and [matching runtime image inventory](https://github.com/barghsadev/barghsa-core/actions/runs/45683565791/artifacts/15056560067).
+
+## November 26 staging PostgreSQL package refresh
+
+On November 26, 2026, Majid Najafi approved five exact Ubuntu 24.04 amd64
+entries in the staging PostgreSQL image. The preflight reported
+`GPL-2.0-only` for `libgssapi-krb5-2`, `libk5crypto3`, `libkrb5-3` and
+`libkrb5support0` at `1.20.1-6ubuntu2.12`, and `Hylafax` for
+`libtiff6` at `4.5.1+git230720-4ubuntu2.6`. The reported license sets
+match the previously approved versions. [Preflight inventory](https://github.com/barghsadev/barghsa-core/actions/runs/45833694774/job/139956820114).
+
+The approval keeps the existing notice, corresponding-source, packaging
+patch and applicable replacement obligations. For `libtiff6`, review the
+original mixed terms and map the grant and conditions to the shipped files.
+Verify the conditions against the final image before distribution.
 
 ## Staging PostgreSQL supplement
 
