@@ -23,9 +23,11 @@ export interface ResendForm {
 
 export type TransportForm = SmtpForm | ResendForm;
 
+export const smtpSubmissionPorts = { STARTTLS: '587', TLS: '465' } as const;
+
 export const EMPTY_SMTP: SmtpForm = {
   host: '',
-  port: '587',
+  port: smtpSubmissionPorts.STARTTLS,
   security: 'STARTTLS',
   username: '',
   password: '',

@@ -166,7 +166,7 @@ for (const scenario of scenarios) {
     expect(host.querySelector<HTMLButtonElement>('form button[type=submit]')!.disabled).toBe(false);
     expect(host.querySelectorAll('tbody tr')).toHaveLength(1);
     if (scenario.name === 'sms') {
-      expect(host.querySelectorAll('form input[list="sms-events"]')).toHaveLength(1);
+      expect(host.querySelectorAll('form select[id$="-event"]')).toHaveLength(1);
     }
   });
   it(`${scenario.name}: changed saved version retains draft but blocks saving`, async () => {
@@ -334,12 +334,16 @@ it('SMS event-key retry is independent and preserves mappings through withdrawal
   await click('Retry event keys');
   expect(host.querySelector<HTMLInputElement>('#sms-key')!.value).toBe('synthetic-secret');
   expect(host.querySelector<HTMLButtonElement>('form button[type=submit]')!.disabled).toBe(true);
-  expect(host.querySelector<HTMLInputElement>('input[list=sms-events]')!.value).toBe('auth.otp');
+  const event = host.querySelector<HTMLSelectElement>('form select[id$="-event"]')!;
+  expect(event.value).toBe('auth.otp');
+  expect(event.disabled).toBe(true);
   failed = false;
   withdrawn = true;
   await click('Retry event keys');
   expect(host.textContent).toContain('Some mapped events are no longer available');
-  expect(host.querySelector<HTMLInputElement>('input[list=sms-events]')!.value).toBe('auth.otp');
+  expect(event.value).toBe('auth.otp');
+  expect(event.selectedOptions[0]?.disabled).toBe(true);
+  expect(event.selectedOptions[0]?.textContent).toContain('Unavailable');
   expect(
     fetcher.mock.calls.filter(
       ([u]) =>
@@ -347,7 +351,11 @@ it('SMS event-key retry is independent and preserves mappings through withdrawal
         !String(u).endsWith('/template-variable-choices')
     )
   ).toHaveLength(1);
-  await fill('input[list=sms-events]', 'invoice.created');
+  await act(async () => {
+    event.value = 'invoice.created';
+    event.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  expect(event.value).toBe('invoice.created');
   expect(host.querySelector<HTMLButtonElement>('form button[type=submit]')!.disabled).toBe(false);
 });
 it('SMS event permission denial hides catalogue and cancels a pending provider read', async () => {
@@ -391,7 +399,9 @@ it('SMS event-key failure does not hide the catalogue or prevent opening a local
   await act(async () => root.render(<QueryProvider>{<Sms />}</QueryProvider>));
   expect(host.textContent).toContain('Saved provider');
   await click('Edit draft');
-  expect(host.querySelector<HTMLInputElement>('input[list=sms-events]')!.value).toBe('auth.otp');
+  expect(host.querySelector<HTMLSelectElement>('form select[id$="-event"]')!.value).toBe(
+    'auth.otp'
+  );
   expect(host.querySelector<HTMLButtonElement>('form button[type=submit]')!.disabled).toBe(true);
   await fill('#sms-key', 'synthetic-secret');
   expect(host.querySelector<HTMLInputElement>('#sms-key')!.value).toBe('synthetic-secret');

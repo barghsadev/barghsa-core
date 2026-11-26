@@ -236,7 +236,8 @@ export default function AdminSmsProvidersPage({
     if (protectedAction && protectedAction.basis !== basis && !protectedDispatched.current)
       setProtectedAction(null);
   }, [basis, protectedAction]);
-  const invalidEvents = !!editor && editor.mappings.some((m) => !events.includes(m.event.trim()));
+  const invalidEvents =
+    !!editor && editor.mappings.some((m) => m.event && !events.includes(m.event));
   useEffect(() => {
     if (
       catalogue.data &&
@@ -1002,11 +1003,6 @@ export default function AdminSmsProvidersPage({
               </div>
             </RecordEditorSection>
             <RecordEditorSection title={text('mappings')}>
-              <datalist id="sms-events">
-                {events.map((event) => (
-                  <option key={event} value={event} />
-                ))}
-              </datalist>
               {form.errors.mappings && (
                 <p id={form.errorId('mappings')} role="alert" className="text-sm text-destructive">
                   {form.errors.mappings.message}
@@ -1050,22 +1046,36 @@ export default function AdminSmsProvidersPage({
                     <div className="grid min-w-0 gap-3 sm:grid-cols-3">
                       <div className={recordEditorField}>
                         <Label htmlFor={`${id}-event`}>{text('event')}</Label>
-                        <Input
+                        <NativeSelect
                           {...(index === 0 ? { ...form.bind('mappings'), ref: mappingRef } : {})}
                           id={`${id}-event`}
-                          dir="ltr"
+                          className="w-full min-w-0"
                           aria-invalid={form.errors.mappings ? true : undefined}
                           aria-describedby={
                             form.errors.mappings ? form.errorId('mappings') : undefined
                           }
                           aria-label={`${text('event')} ${index + 1}`}
-                          list="sms-events"
+                          disabled={!eventsReady}
                           value={m.event}
-                          maxLength={128}
                           required
                           aria-required="true"
                           onChange={(e) => changeMapping(m.id, { event: e.target.value })}
-                        />
+                        >
+                          <option value="" disabled>
+                            {providerFormText('chooseEvent', locale)}
+                          </option>
+                          {m.event && !events.includes(m.event) && (
+                            <option value={m.event} disabled>
+                              {m.event}
+                              {eventsReady && ` · ${providerFormText('unavailableEvent', locale)}`}
+                            </option>
+                          )}
+                          {events.map((event) => (
+                            <option key={event} value={event}>
+                              {event}
+                            </option>
+                          ))}
+                        </NativeSelect>
                       </div>
                       <div className={recordEditorField}>
                         <Label htmlFor={`${id}-language`}>{text('language')}</Label>

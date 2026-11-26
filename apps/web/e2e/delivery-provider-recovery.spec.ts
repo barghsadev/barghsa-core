@@ -340,7 +340,7 @@ for (const locale of ['en', 'fa'] as const)
         expect(field!.x).toBeGreaterThanOrEqual(bounds!.x);
         expect(field!.x + field!.width).toBeLessThanOrEqual(bounds!.x + bounds!.width);
       }
-      const eventField = page.locator('input[list=sms-events]');
+      const eventField = page.locator('form select[id$="-event"]');
       const language = page.getByRole('combobox', { name: `${text('language')} 1`, exact: true });
       const template = page.getByRole('textbox', { name: `${text('template')} 1`, exact: true });
       for (const control of [eventField, language, template]) {
@@ -359,11 +359,13 @@ for (const locale of ['en', 'fa'] as const)
       fail = true;
       await page.getByRole('button', { name: text('retryEvents'), exact: true }).click();
       await expect(page.getByRole('alert').filter({ hasText: text('eventsFailed') })).toBeVisible();
-      await expect(page.locator('input[list=sms-events]')).toHaveValue('auth.otp');
+      await expect(eventField).toHaveValue('auth.otp');
+      await expect(eventField).toBeDisabled();
       await expect(page.locator('#sms-key')).toHaveValue('synthetic-secret');
       await expect(page.locator('form button[type=submit]')).toBeDisabled();
       fail = false;
       await page.getByRole('button', { name: text('retryEvents'), exact: true }).click();
+      await expect(eventField).toBeEnabled();
       await expect(page.locator('form button[type=submit]')).toBeEnabled();
       await page.locator('form button[type=submit]').click();
       const dialog = page.getByRole('dialog');

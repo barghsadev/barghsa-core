@@ -64,6 +64,7 @@ import {
   emptyEmailDraft,
   savedForm,
   smtpConfig,
+  smtpSubmissionPorts,
   resendConfig,
   emailInvalidFields,
   emailConfigFor,
@@ -147,6 +148,7 @@ export default function AdminEmailProvidersPage({
   // Editor state
   const [showEditor, setShowEditor] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const customPort = useRef(false);
   const address = useRef('');
   const requested = useRef({ key: '', restore: false });
   const onSelect = workspace?.set;
@@ -307,6 +309,7 @@ export default function AdminEmailProvidersPage({
   }
   function openCreate(publish = true) {
     resetRecovery();
+    customPort.current = false;
     setEditId(null);
     setEditBasis(null);
     setEditStatus(null);
@@ -385,11 +388,15 @@ export default function AdminEmailProvidersPage({
     setTransport(next);
     // Reset the form when switching transports to avoid stale secret fields.
     generation.current++;
+    customPort.current = false;
     editor.form.reset({ ...emptyEmailDraft(), label });
   }
 
   function setField(key: keyof EmailDraft, value: string) {
+    if (key === 'port') customPort.current = true;
     editor.field(key)[1](value as EmailDraft[typeof key]);
+    if (key === 'security' && !editId && !customPort.current)
+      editor.field('port')[1](smtpSubmissionPorts[value as SmtpForm['security']]);
   }
 
   function offerStepUp(
@@ -1196,10 +1203,11 @@ function SmtpFields({
   const uiLocale = useLocale();
   const set = (k: keyof SmtpForm, v: string) => setField(k, v);
   const sec = (k: string) => providerText(`admin.providers.field.${k}`, uiLocale);
+  const standardPort = smtpSubmissionPorts[form.security];
   return (
     <>
       <RecordEditorSection title={providerFormText('connection', uiLocale)}>
-        <div className="grid min-w-0 grid-cols-2 gap-x-3 gap-y-2 sm:grid-cols-[minmax(0,1fr)_7rem_10rem] sm:gap-x-5">
+        <div className="grid min-w-0 grid-cols-2 gap-x-3 gap-y-2 sm:grid-cols-[minmax(0,1fr)_10rem_7rem] sm:gap-x-5">
           <Field
             binding={feedback.bind('host')}
             error={feedback.errors.host?.message}
@@ -1217,22 +1225,6 @@ function SmtpFields({
             />
           </Field>
           <Field
-            binding={feedback.bind('port')}
-            error={feedback.errors.port?.message}
-            errorId={feedback.errorId('port')}
-            label={sec('port')}
-            required
-          >
-            <Input
-              type="number"
-              dir="ltr"
-              min={1}
-              max={65535}
-              value={form.port}
-              onChange={(e) => set('port', e.target.value)}
-            />
-          </Field>
-          <Field
             binding={feedback.bind('security')}
             error={feedback.errors.security?.message}
             errorId={feedback.errorId('security')}
@@ -1247,6 +1239,33 @@ function SmtpFields({
               <option value="TLS">TLS</option>
             </NativeSelect>
           </Field>
+          <div className="min-w-0">
+            <Field
+              binding={feedback.bind('port')}
+              error={feedback.errors.port?.message}
+              errorId={feedback.errorId('port')}
+              label={sec('port')}
+              required
+            >
+              <Input
+                type="number"
+                dir="ltr"
+                min={1}
+                max={65535}
+                value={form.port}
+                onChange={(e) => set('port', e.target.value)}
+              />
+            </Field>
+            {form.port !== standardPort && !feedback.errors.port && (
+              <button
+                type="button"
+                className="mt-1 min-h-6 text-start text-xs font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                onClick={() => set('port', standardPort)}
+              >
+                {providerFormText('usePort', uiLocale).replace('{port}', standardPort)}
+              </button>
+            )}
+          </div>
         </div>
       </RecordEditorSection>
       <RecordEditorSection title={providerFormText('credentials', uiLocale)}>

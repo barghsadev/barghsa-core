@@ -159,7 +159,9 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('combobox', { name: `${text('language')} 1`, exact: true })
       .selectOption('fa');
     await panel.getByRole('button', { name: text('addMapping'), exact: true }).click();
-    await page.getByRole('combobox', { name: `${text('event')} 2`, exact: true }).fill('auth.otp');
+    await page
+      .getByRole('combobox', { name: `${text('event')} 2`, exact: true })
+      .selectOption('auth.otp');
     await page
       .getByRole('combobox', { name: `${text('language')} 2`, exact: true })
       .selectOption('en');
@@ -180,7 +182,9 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('combobox', { name: `${text('language')} 1`, exact: true })
       .selectOption('fa');
     await panel.getByRole('button', { name: text('addMapping'), exact: true }).click();
-    await page.getByRole('combobox', { name: `${text('event')} 2`, exact: true }).fill('auth.otp');
+    await page
+      .getByRole('combobox', { name: `${text('event')} 2`, exact: true })
+      .selectOption('auth.otp');
     await page
       .getByRole('combobox', { name: `${text('language')} 2`, exact: true })
       .selectOption('en');
@@ -253,9 +257,10 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(page.locator('#sms-key-hint')).toHaveText(text('keyHint'));
     await page.locator('#sms-timeout').fill('25');
     await panel.getByRole('button', { name: text('addMapping'), exact: true }).click();
+    await expect(panel.getByText(text('eventsChanged'), { exact: true })).toHaveCount(0);
     await page
       .getByRole('combobox', { name: `${text('event')} 2`, exact: true })
-      .fill('invoice.created');
+      .selectOption('invoice.created');
     await page.getByRole('textbox', { name: `${text('template')} 2`, exact: true }).fill('43');
     await page
       .getByRole('combobox', { name: `${text('variable')} 2.1`, exact: true })
@@ -275,7 +280,7 @@ for (const locale of ['en', 'fa'] as const) {
     await panel.getByRole('button', { name: text('addMapping'), exact: true }).click();
     await page
       .getByRole('combobox', { name: `${text('event')} 2`, exact: true })
-      .fill('invoice.created');
+      .selectOption('invoice.created');
     await page.getByRole('textbox', { name: `${text('template')} 2`, exact: true }).fill('43');
     await page
       .getByRole('combobox', { name: `${text('variable')} 2.1`, exact: true })
@@ -323,7 +328,9 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#sms-label').fill('Created SMS');
     await page.locator('#sms-sender').fill('3001');
     await page.locator('#sms-key').fill('new-test-secret');
-    await page.getByRole('combobox', { name: `${text('event')} 1`, exact: true }).fill('auth.otp');
+    await page
+      .getByRole('combobox', { name: `${text('event')} 1`, exact: true })
+      .selectOption('auth.otp');
     await page.getByRole('textbox', { name: `${text('template')} 1`, exact: true }).fill('42');
     await page.getByRole('combobox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
     await page.getByRole('textbox', { name: `${text('parameter')} 1.1`, exact: true }).fill('CODE');
@@ -338,7 +345,9 @@ for (const locale of ['en', 'fa'] as const) {
     await page.locator('#sms-label').fill('Created SMS');
     await page.locator('#sms-sender').fill('3001');
     await page.locator('#sms-key').fill('new-test-secret');
-    await page.getByRole('combobox', { name: `${text('event')} 1`, exact: true }).fill('auth.otp');
+    await page
+      .getByRole('combobox', { name: `${text('event')} 1`, exact: true })
+      .selectOption('auth.otp');
     await page.getByRole('textbox', { name: `${text('template')} 1`, exact: true }).fill('42');
     await page.getByRole('combobox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
     await page.getByRole('textbox', { name: `${text('parameter')} 1.1`, exact: true }).fill('CODE');

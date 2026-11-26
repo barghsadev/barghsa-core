@@ -247,11 +247,12 @@ for (const locale of ['en', 'fa'] as const) {
       await main.getByRole('link', { name: smsText('edit'), exact: true }).click();
       await page.locator('#sms-label').fill('Retained mapping draft');
       await page.locator('#sms-key').fill('synthetic-kept-key');
-      await page.locator('form input[list=sms-events]').fill('auth.otp');
+      const event = page.locator('form select[id$="-event"]');
+      await event.selectOption('auth.otp');
       await page.setViewportSize({ width: 1100, height: 900 });
       await expect(page.locator('#sms-label')).toHaveValue('Retained mapping draft');
       await expect(page.locator('#sms-key')).toHaveValue('synthetic-kept-key');
-      await expect(page.locator('form input[list=sms-events]')).toHaveValue('auth.otp');
+      await expect(event).toHaveValue('auth.otp');
       await expect(page.locator('form')).toHaveCount(1);
       await page.setViewportSize({ width: 390, height: 844 });
       expect(reads).toBe(1);

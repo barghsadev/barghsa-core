@@ -3113,7 +3113,9 @@ for (const locale of ['en', 'fa'] as const)
     await page.locator('#sms-label').fill(`Live SMS ${locale}`);
     await page.locator('#sms-key').fill('fixture-sms-write-only');
     await page.locator('#sms-sender').fill('3000');
-    await page.getByRole('combobox', { name: `${text('event')} 1`, exact: true }).fill(eventKey);
+    await page
+      .getByRole('combobox', { name: `${text('event')} 1`, exact: true })
+      .selectOption(eventKey);
     await page.getByRole('textbox', { name: `${text('template')} 1`, exact: true }).fill('42');
     await page.getByRole('combobox', { name: `${text('variable')} 1.1`, exact: true }).fill('code');
     await page.getByRole('textbox', { name: `${text('parameter')} 1.1`, exact: true }).fill('CODE');

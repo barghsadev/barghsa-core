@@ -4,6 +4,29 @@ import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { providerFormText } from '@barghsa/i18n/provider-forms';
 import AxeBuilder from '@axe-core/playwright';
 test.use({ viewport: { width: 390, height: 844 } });
+
+test('new SMTP drafts follow the chosen security default until a custom port is entered', async ({
+  page,
+}) => {
+  await setupCatalogueForms(page, 'en', false);
+  await page.route('**/api/admin/email-providers', (r) => r.fulfill({ json: [] }));
+  await page.goto('/admin/providers/email/new');
+  const port = page.locator('#email-provider-port');
+  const security = page.locator('#email-provider-security');
+  await expect(port).toHaveValue('587');
+  await security.selectOption('TLS');
+  await expect(port).toHaveValue('465');
+  await security.selectOption('STARTTLS');
+  await expect(port).toHaveValue('587');
+  await port.fill('2525');
+  await security.selectOption('TLS');
+  await expect(port).toHaveValue('2525');
+  await page.getByRole('button', { name: 'Use port 465' }).click();
+  await expect(port).toHaveValue('465');
+  await security.selectOption('STARTTLS');
+  await expect(port).toHaveValue('465');
+});
+
 for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true]) {
     test(`provider linked feedback and retained drafts (${locale}, ${dark ? 'dark' : 'light'})`, async ({
@@ -97,6 +120,14 @@ for (const locale of ['en', 'fa'] as const)
       );
       const port = page.locator('#email-provider-port');
       await expect(port).toHaveAttribute('aria-required', 'true');
+      await page.locator('#email-provider-security').selectOption('TLS');
+      await expect(port).toHaveValue('587');
+      await expect(
+        page.getByRole('button', {
+          name: providerFormText('usePort', locale).replace('{port}', '465'),
+        })
+      ).toBeVisible();
+      await page.locator('#email-provider-security').selectOption('STARTTLS');
       await expect(page.locator('#email-provider-transport')).toHaveAttribute(
         'aria-required',
         'true'
@@ -145,6 +176,8 @@ for (const locale of ['en', 'fa'] as const)
       await mapping.fill('0');
       await page.locator('form button[type=submit]').click();
       const event = page.getByRole('combobox', { name: `${text('event')} 1`, exact: true });
+      await expect(event.locator('option')).toHaveCount(2);
+      await expect(event.locator('option').first()).toBeDisabled();
       await expect(event).toHaveAttribute('aria-required', 'true');
       await expect(event).toBeFocused();
       await expect(event).toHaveAttribute('aria-invalid', 'true');
