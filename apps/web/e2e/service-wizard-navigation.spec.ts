@@ -431,7 +431,9 @@ for (const locale of ['en', 'fa'] as const)
     await page
       .getByLabel(tSaving('fullAddress', locale), { exact: true })
       .fill('Retained new address');
-    await page.getByLabel(tSaving('postalCode', locale), { exact: true }).fill('2345678901');
+    const postal = page.getByLabel(tSaving('postalCode', locale), { exact: true });
+    await postal.fill(locale === 'fa' ? '۲۳۴۵۶ – ۷۸۹۰۱' : '23456-78901');
+    await expect(postal).toHaveValue('2345678901');
     const save = page.getByRole('button', { name: tSaving('saveAddress', locale), exact: true });
     await expect(save).toBeDisabled();
     valid = true;

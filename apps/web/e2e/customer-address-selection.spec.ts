@@ -243,7 +243,8 @@ for (const locale of ['en', 'fa'] as const)
         surface === 'addresses' ? '#addresses-field-4' : '#profile-postal-code'
       );
       await full.fill('Retained address draft');
-      await postal.fill('2345678901');
+      await postal.fill('23456–78901');
+      await expect(postal).toHaveValue('2345678901');
       await expect(province).toBeDisabled();
       const geographyError = (key: string) =>
         page.getByRole('alert').filter({ hasText: t(key, locale) });
@@ -434,7 +435,8 @@ for (const locale of ['en', 'fa'] as const)
       await city.press('Enter');
       await expect(city).toHaveValue(locale === 'fa' ? 'شیراز' : 'Shiraz');
       await full.fill(' ');
-      await postal.fill('0000000000');
+      await postal.fill('12345-678901');
+      await expect(postal).toHaveValue('12345678901');
       await save.click();
       await expect(full).toBeFocused();
       await expect(full).toHaveAttribute('aria-invalid', 'true');
@@ -448,7 +450,8 @@ for (const locale of ['en', 'fa'] as const)
       );
       expect(state.writes).toHaveLength(0);
       await full.fill('  Retained address correction  ');
-      await postal.fill('2345678901');
+      await postal.fill('23456-78901');
+      await expect(postal).toHaveValue('2345678901');
       state.validationFields = ['postalCode'];
       await save.click();
       await expect.poll(() => state.writes.length).toBe(1);

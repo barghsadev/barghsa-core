@@ -8,7 +8,7 @@ import { tSettingsForms } from '@barghsa/i18n/settings-forms';
 import { validateNationalId, validatePostalCode } from '@barghsa/shared/validation';
 import { useLocale } from '../hooks/useLocale.js';
 import { useGeographyOptions } from '../hooks/useGeographyOptions.js';
-import { normalizeProfileDigits } from '../lib/profile-digits.js';
+import { normalizeProfileDigits, stripPostalCodeSeparators } from '../lib/profile-digits.js';
 import { GeographyLoadError } from './GeographyLoadError.js';
 import { GeographyPicker } from './GeographyPicker.js';
 import { TeamActionDialog } from './TeamActionDialog.js';
@@ -260,7 +260,11 @@ export function CrmLegalEditor({
       value: values[field],
       onChange: (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-      ) => change(field, event.target.value),
+      ) =>
+        change(
+          field,
+          kind === 'postal' ? stripPostalCodeSeparators(event.target.value) : event.target.value
+        ),
     };
     const dependencyField =
       field === 'officialCityId'
@@ -352,7 +356,7 @@ export function CrmLegalEditor({
               [help && fieldId + '-help', binding['aria-describedby']].filter(Boolean).join(' ') ||
               undefined
             }
-            maxLength={max}
+            maxLength={kind === 'postal' ? undefined : max}
             dir={
               kind === 'email' || kind === 'tel' || kind === 'postal' || kind === 'national'
                 ? 'ltr'

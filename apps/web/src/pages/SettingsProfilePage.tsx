@@ -37,6 +37,7 @@ import {
 import { useProfileSettingsEditor } from '../hooks/useProfileSettingsEditor.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { addressesText } from '@barghsa/i18n/addresses';
+import { stripPostalCodeSeparators } from '../lib/profile-digits.js';
 import { RecordEditorSection, recordEditorGrid } from '../components/RecordEditorLayout.js';
 import { GeographyPicker } from '../components/GeographyPicker.js';
 import {
@@ -804,7 +805,9 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
                           aria-required={addressRequired || undefined}
                           disabled={locked}
                           value={postalCode}
-                          onChange={(e) => change('postalCode', e.target.value)}
+                          onChange={(e) =>
+                            change('postalCode', stripPostalCodeSeparators(e.target.value))
+                          }
                           className="text-sm"
                         />
                       </FormControl>

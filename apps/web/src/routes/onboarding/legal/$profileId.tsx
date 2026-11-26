@@ -18,7 +18,7 @@ import { uploadLegalProfileDocument } from '../../../lib/invoice-bank-receipt-up
 import { useOnboardingDraft } from '../../../hooks/useOnboardingDraft.js';
 import { t } from '@barghsa/i18n/app';
 import { settingsDateEntryText } from '@barghsa/i18n/settings-forms';
-import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
+import { normalizeProfileDigits, stripPostalCodeSeparators } from '../../../lib/profile-digits.js';
 import { useState, useCallback, useRef, useMemo } from 'react';
 import { createFileRoute, useRouter, useParams } from '@tanstack/react-router';
 import { useLocale } from '../../../hooks/useLocale.js';
@@ -787,11 +787,12 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                           (value) =>
                             setRepresentative((previous) => ({
                               ...previous,
-                              representativePostalCode: normalizeProfileDigits(value),
+                              representativePostalCode: normalizeProfileDigits(
+                                stripPostalCodeSeparators(value)
+                              ),
                             })),
                           {
                             required: true,
-                            maxLength: 10,
                             inputMode: 'numeric',
                             autoComplete: 'postal-code',
                           }
@@ -1144,14 +1145,12 @@ function LegalProfileForm({ profileId }: { profileId: string }) {
                         ref={form.register('officialPostalCode').ref}
                         type="text"
                         inputMode="numeric"
-                        maxLength={10}
                         value={officialPostalCode}
-                        onChange={(e) => {
-                          const val = normalizeProfileDigits(e.target.value)
-                            .replace(/\D/g, '')
-                            .slice(0, 10);
-                          setOfficialPostalCode(val);
-                        }}
+                        onChange={(e) =>
+                          setOfficialPostalCode(
+                            normalizeProfileDigits(stripPostalCodeSeparators(e.target.value))
+                          )
+                        }
                         onBlur={() => handleBlur('officialPostalCode')}
                         disabled={locked}
                         aria-invalid={touched.officialPostalCode && !!errors.officialPostalCode}

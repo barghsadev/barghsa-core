@@ -296,7 +296,8 @@ for (const [locale, theme] of [
     await submit.click();
     await focusedError(postal);
     expect(state.addressWrites).toEqual([]);
-    await postal.fill('1234567890');
+    await postal.fill('12345-67890');
+    await expect(postal).toHaveValue('1234567890');
     await submit.click();
     await focusedError(note);
     expect(state.addressWrites).toEqual([]);

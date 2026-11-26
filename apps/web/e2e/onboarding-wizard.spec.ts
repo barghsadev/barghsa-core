@@ -861,7 +861,7 @@ for (const locale of ['en', 'fa'] as const) {
       await expect(input).toHaveAttribute('aria-required', 'true');
     }
     await page.locator('#fullAddress').fill(individual.fullAddress);
-    await page.locator('#postalCode').fill('۱۲۳۴۵۶۷۸۹۰');
+    await page.locator('#postalCode').fill('۱۲۳۴۵ – ۶۷۸۹۰');
     await next(page, locale);
     await expect(page.locator('fieldset:not([hidden]) > section')).toContainText('Saved Street');
     await expect(page.locator('fieldset:not([hidden]) > section')).toContainText('1234567890');
@@ -942,6 +942,9 @@ for (const locale of ['en', 'fa'] as const) {
     for (const field of ['representativeTitle', 'representativeRelationship']) {
       await expect(page.locator(`#${field}`)).toHaveAttribute('aria-required', 'true');
     }
+    const representativePostal = page.locator('#representativePostalCode');
+    await representativePostal.fill(locale === 'fa' ? '۱۲۳۴۵ - ۶۷۸۹۰' : '12345-67890');
+    await expect(representativePostal).toHaveValue('1234567890');
     await next(page, locale);
     await expect(page.locator('#legalName')).toHaveValue('Saved Company');
     for (const field of ['legalName', 'nationalIdentifier', 'registrationNumber']) {
@@ -1015,7 +1018,7 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(postal).toHaveAccessibleDescription(
       t('onboarding.legal.required.postalCode', locale)
     );
-    await postal.fill(legal.officialPostalCode);
+    await postal.fill(locale === 'fa' ? '۱۲۳۴۵-۶۷۸۹۰' : '12345-67890');
     await next(page, locale);
     await next(page, locale);
     expect(state.submissions).toHaveLength(0);

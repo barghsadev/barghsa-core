@@ -217,7 +217,7 @@ for (const locale of ['fa', 'en'] as const) {
       locale === 'fa' ? 'کد پستی ۱۰ رقمی' : '10-digit postal code'
     );
     expect(writes).toEqual([]);
-    await postal.fill(locale === 'fa' ? '۲۳۴۵۶۷۸۹۰۱' : '2345678901');
+    await postal.fill(locale === 'fa' ? '۲۳۴۵۶ - ۷۸۹۰۱' : '23456-78901');
     await panel.getByRole('form').screenshot({
       path: '/tmp/barghsa-crm-address-' + locale + '-' + test.info().project.name + '.png',
     });

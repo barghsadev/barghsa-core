@@ -14,7 +14,7 @@ import { useGeographyOptions } from '../../../hooks/useGeographyOptions.js';
 import { GeographyLoadError } from '../../../components/GeographyLoadError.js';
 import { useNumberFormatting } from '../../../hooks/useNumberFormatting.js';
 import { useLocale } from '../../../hooks/useLocale.js';
-import { normalizeProfileDigits } from '../../../lib/profile-digits.js';
+import { normalizeProfileDigits, stripPostalCodeSeparators } from '../../../lib/profile-digits.js';
 import { useCallback } from 'react';
 import { createFileRoute, useRouter, useParams } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
@@ -507,14 +507,12 @@ function IndividualProfileForm({ profileId }: { profileId: string }) {
                       inputMode="numeric"
                       required
                       aria-required="true"
-                      maxLength={10}
                       value={postalCode}
-                      onChange={(e) => {
-                        const val = normalizeProfileDigits(e.target.value)
-                          .replace(/\D/g, '')
-                          .slice(0, 10);
-                        setPostalCode(val);
-                      }}
+                      onChange={(e) =>
+                        setPostalCode(
+                          normalizeProfileDigits(stripPostalCodeSeparators(e.target.value))
+                        )
+                      }
                       onBlur={() => handleBlur('postalCode')}
                       disabled={locked}
                       placeholder={t('onboarding.individual.postalCode.placeholder', locale)}

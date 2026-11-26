@@ -367,7 +367,7 @@ for (const locale of ['fa', 'en'] as const) {
         await save.click();
         await expect(postal).toHaveAttribute('aria-invalid', 'true');
         expect(writes).toEqual([]);
-        await postal.fill(locale === 'fa' ? '۲۳۴۵۶۷۸۹۰۱' : changes.officialPostalCode);
+        await postal.fill(locale === 'fa' ? '۲۳۴۵۶ - ۷۸۹۰۱' : '23456-78901');
         const widths = await form.evaluate((element) => ({
           editor: element.clientWidth,
           available:

@@ -177,7 +177,8 @@ for (const locale of ['en', 'fa'] as const)
     );
     await expect(postalCode).toBeFocused();
     expect(writes).toHaveLength(0);
-    await postalCode.fill(locale === 'fa' ? '۲۳۴۵۶۷۸۹۰۱' : '2345678901');
+    await postalCode.fill(locale === 'fa' ? '۲۳۴۵۶ - ۷۸۹۰۱' : '23456-78901');
+    await expect(postalCode).toHaveValue(locale === 'fa' ? '۲۳۴۵۶۷۸۹۰۱' : '2345678901');
     await saveAddress.click();
     await expect(city).toHaveCount(0);
     expect(writes).toEqual([

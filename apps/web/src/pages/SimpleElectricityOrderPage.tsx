@@ -28,7 +28,7 @@ import { toast } from '../lib/toast-api.js';
 import { t } from '@barghsa/i18n/workspace';
 import { addressFormText, addressesText } from '@barghsa/i18n/addresses';
 import { validatePostalCode } from '@barghsa/shared/validation';
-import { normalizeProfileDigits } from '../lib/profile-digits.js';
+import { normalizeProfileDigits, stripPostalCodeSeparators } from '../lib/profile-digits.js';
 import { MapPinIcon, PlusIcon, Loader2Icon, CheckIcon, HomeIcon, PackageIcon } from 'lucide-react';
 import {
   SkeletonText,
@@ -2120,9 +2120,10 @@ function OwnedSimpleElectricityOrderPage() {
                                       {...bindAddressField('formPostalCode')}
                                       disabled={savingAddress}
                                       value={formPostalCode}
-                                      onChange={(e) => setFormPostalCode(e.target.value)}
+                                      onChange={(e) =>
+                                        setFormPostalCode(stripPostalCodeSeparators(e.target.value))
+                                      }
                                       dir="ltr"
-                                      maxLength={10}
                                     />
                                     {addressFieldError('formPostalCode')}
                                   </div>

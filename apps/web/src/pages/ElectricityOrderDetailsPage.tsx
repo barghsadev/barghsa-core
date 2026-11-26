@@ -10,6 +10,7 @@ import { ConfirmationFields } from '@barghsa/ui';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { toast } from '../lib/toast-api.js';
 import { isInvoiceUuid } from '../lib/invoice-uuid.js';
+import { stripPostalCodeSeparators } from '../lib/profile-digits.js';
 import { useRiskConfirmation } from '../hooks/useRiskConfirmation.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { useOwnedManualServerRead, useServerDetailQuery } from '../hooks/useServerQuery.js';
@@ -1166,7 +1167,14 @@ export function ElectricityOrderDetailsPage({
                                 <Input
                                   {...field}
                                   aria-required="true"
-                                  maxLength={name === 'fullAddress' ? 500 : 10}
+                                  maxLength={name === 'fullAddress' ? 500 : undefined}
+                                  onChange={(event) =>
+                                    field.onChange(
+                                      name === 'postalCode'
+                                        ? stripPostalCodeSeparators(event.target.value)
+                                        : event.target.value
+                                    )
+                                  }
                                   inputMode={name === 'postalCode' ? 'numeric' : 'text'}
                                   dir={name === 'postalCode' ? 'ltr' : 'auto'}
                                   disabled={!!correctionLock.owner}

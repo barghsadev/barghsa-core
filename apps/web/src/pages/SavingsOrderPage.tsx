@@ -33,7 +33,7 @@ import { useReviewedSubmission } from '../hooks/useReviewedSubmission.js';
 import { uuidReference } from '../lib/form-receipt.js';
 import { tSaving } from '@barghsa/i18n/saving';
 import { withCsrf } from '../lib/csrf.js';
-import { normalizeProfileDigits } from '../lib/profile-digits.js';
+import { normalizeProfileDigits, stripPostalCodeSeparators } from '../lib/profile-digits.js';
 import { useLocale } from '../hooks/useLocale.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 import { useFormDraft, type DraftSchema } from '../hooks/useFormDraft.js';
@@ -1435,14 +1435,12 @@ function OwnedSavingsOrderPage({ preferredPlanId }: { preferredPlanId: string | 
                                 autoComplete="postal-code"
                                 inputMode="numeric"
                                 dir="ltr"
-                                maxLength={10}
                                 {...bindAddressField('postalCode')}
                                 value={postalCode}
                                 onChange={(event) =>
                                   setPostalCode(
-                                    normalizeProfileDigits(event.target.value).replace(
-                                      /[^0-9]/g,
-                                      ''
+                                    normalizeProfileDigits(
+                                      stripPostalCodeSeparators(event.target.value)
                                     )
                                   )
                                 }

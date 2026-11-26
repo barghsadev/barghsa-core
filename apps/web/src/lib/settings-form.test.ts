@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { stripPostalCodeSeparators } from './profile-digits.js';
 import {
   addressPatch,
   addressReceipt,
@@ -87,6 +88,14 @@ const projection = (source: SettingsProfile) => ({
 });
 
 describe('settings forms confirm actual authorized receipts before clearing drafts', () => {
+  it('removes postal grouping separators while preserving letters, signs and extra digits', () => {
+    expect(stripPostalCodeSeparators(' ۱۲۳۴۵ — ۶۷۸۹۰ ')).toBe('۱۲۳۴۵۶۷۸۹۰');
+    expect(stripPostalCodeSeparators('١٢ ٣٤ ٥٦-٧٨٩٠')).toBe('١٢٣٤٥٦٧٨٩٠');
+    expect(stripPostalCodeSeparators('23456-789012')).toBe('23456789012');
+    expect(stripPostalCodeSeparators('-12345-67890')).toBe('-1234567890');
+    expect(stripPostalCodeSeparators('postal 12345-67890')).toBe('postal 1234567890');
+  });
+
   it('accepts actual legal detail with text company-type IDs and nullable legacy representatives', () => {
     expect(settingsProfile(legal, profileId)).toEqual(legal);
     expect(settingsProfile({ ...legal, legalInfo: null }, profileId)).not.toBeNull();

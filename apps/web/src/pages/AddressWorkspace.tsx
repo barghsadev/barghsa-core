@@ -8,6 +8,7 @@ import {
   type SavedAddressView,
 } from '../hooks/useSavedAddressSettingsEditor.js';
 import type { SavedAddress as Address } from '../lib/settings-form.js';
+import { stripPostalCodeSeparators } from '../lib/profile-digits.js';
 import { t } from '@barghsa/i18n/app';
 import { addressesText } from '@barghsa/i18n/addresses';
 import { tSettingsForms } from '@barghsa/i18n/settings-forms';
@@ -24,6 +25,7 @@ import {
   Alert,
   AlertDescription,
   EmptyState,
+  Input,
 } from '@barghsa/ui';
 
 import {
@@ -33,7 +35,7 @@ import {
   FormLabel,
   FormControl,
   FormMessage,
-  FormInput,
+  FormDescription,
   FormTextarea,
   FormSubmit,
 } from '@barghsa/ui/form';
@@ -575,23 +577,30 @@ export function AddressWorkspace({
                     className: 'max-h-44 min-h-16 resize-y placeholder-shown:[direction:inherit]',
                   }}
                 />
-                <FormInput
+                <FormField
                   control={form.control}
                   name="postalCode"
-                  id="addresses-field-4"
-                  label={t('settings.addresses.form.postalCode', locale)}
-                  description={tSettingsForms('postalCodeHelp', locale)}
-                  itemClassName="max-w-xs"
-                  reserveMessageSpace
-                  inputProps={{
-                    'aria-required': true,
-                    type: 'text',
-                    inputMode: 'numeric',
-                    autoComplete: 'postal-code',
-                    placeholder: t('settings.addresses.form.postalCodePlaceholder', locale),
-                    dir: 'ltr',
-                    maxLength: 10,
-                  }}
+                  render={({ field }) => (
+                    <FormItem id="addresses-field-4" className="max-w-xs">
+                      <FormLabel>{t('settings.addresses.form.postalCode', locale)}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          value={field.value ?? ''}
+                          onChange={(event) =>
+                            field.onChange(stripPostalCodeSeparators(event.target.value))
+                          }
+                          aria-required="true"
+                          inputMode="numeric"
+                          autoComplete="postal-code"
+                          placeholder={t('settings.addresses.form.postalCodePlaceholder', locale)}
+                          dir="ltr"
+                        />
+                      </FormControl>
+                      <FormDescription>{tSettingsForms('postalCodeHelp', locale)}</FormDescription>
+                      <FormMessage reserveSpace />
+                    </FormItem>
+                  )}
                 />
               </fieldset>
             </RecordEditorSection>
