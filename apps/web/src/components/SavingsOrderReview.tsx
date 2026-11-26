@@ -4,6 +4,7 @@ import { tSaving } from '@barghsa/i18n/saving';
 import { useLocale } from '../hooks/useLocale.js';
 import type { SavingQuote } from '../pages/SavingsOrderPage.js';
 import { SavingReviewPrice } from './SavingReviewPrice.js';
+import { SavingAgreementTerms } from './SavingAgreementTerms.js';
 import { StepReviewPage, type ReviewSection } from './StepReviewPage.js';
 
 interface Props {
@@ -131,17 +132,7 @@ export default function SavingsOrderReview({
             id: 'agreement',
             title: copy('stepAgreement'),
             content: (
-              <div className="space-y-2 text-sm">
-                <p dir="auto" className="font-medium wrap-anywhere">
-                  {quote.agreement.title}
-                </p>
-                <p
-                  dir="auto"
-                  className="max-h-80 overflow-y-auto whitespace-break-spaces wrap-anywhere rounded-md bg-muted/30 p-4"
-                >
-                  {quote.agreement.body}
-                </p>
-              </div>
+              <SavingAgreementTerms title={quote.agreement.title} body={quote.agreement.body} />
             ),
           },
         ]

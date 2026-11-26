@@ -352,9 +352,18 @@ test('saving activation reviews the persisted draft, rejects an incorrect versio
   page,
 }) => {
   await setupCatalogueForms(page, 'en', false);
+  const active = {
+    ...savingAgreement,
+    id: '86000000-0000-4000-8000-000000000002',
+    title: 'Current equipment terms',
+    body: 'We dispatch equipment after confirming the order.',
+    status: 'active' as const,
+    effective_from: '2026-10-01T00:00:00Z',
+  };
   let config = {
     ...savingAgreementConfig,
     agreements: [
+      active,
       {
         ...savingAgreement,
         status: 'draft' as 'draft' | 'active',
@@ -383,15 +392,31 @@ test('saving activation reviews the persisted draft, rejects an incorrect versio
     name: 'Review saved draft for activation',
     exact: true,
   });
-  await page.locator('#saving-agreement-title').fill('Unsaved edits');
+  const title = form.getByLabel('Agreement title', { exact: true });
+  const body = form.getByLabel('Agreement text', { exact: true });
+  await form.getByText('Preview at checkout', { exact: true }).click();
+  const updated = 'Delivery terms\n\nInstallation: <by appointment>';
+  await title.fill('Unsaved edits');
+  await body.fill(updated);
+  const preview = form.getByRole('paragraph').filter({ hasText: 'Installation: <by appointment>' });
+  await expect(preview).toBeVisible();
+  await expect(preview).toHaveJSProperty('textContent', updated);
+  await expect(preview).toHaveAttribute('dir', 'auto');
   await expect(openActivation).toHaveCount(0);
-  await page.locator('#saving-agreement-title').fill(savingAgreement.title);
+  await title.fill(savingAgreement.title);
+  await body.fill(savingAgreement.body);
   await openActivation.click();
   await expect(page).toHaveURL(
     `/admin/catalogue/saving_plan/${id}/configuration/activate-agreement`
   );
   await expect(form).toHaveCount(0);
-  await expect(page.getByText(savingAgreement.body, { exact: true })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Active agreement', exact: true })).toContainText(
+    active.body
+  );
+  await expect(page.getByRole('region', { name: 'Draft agreement', exact: true })).toContainText(
+    savingAgreement.body
+  );
+  await expect(page.getByText('The title and terms have changed.')).toBeVisible();
   await page.getByRole('button', { name: 'Activate agreement', exact: true }).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toContainText(savingAgreement.body);

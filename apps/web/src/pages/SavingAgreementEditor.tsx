@@ -1,11 +1,13 @@
 import {
   RecordEditorActions,
+  RecordEditorDisclosure,
   RecordEditorSection,
   recordEditorField,
   recordEditorSurface,
 } from '../components/RecordEditorLayout.js';
 import { CommandFeedback } from '../components/CommandFeedback.js';
 import { RecordCommandGuard } from '../components/RecordCommandGuard.js';
+import { SavingAgreementTerms } from '../components/SavingAgreementTerms.js';
 import { useCallback, type ReactNode } from 'react';
 import { Link } from '@tanstack/react-router';
 import { tCatalogue } from '@barghsa/i18n/catalogue';
@@ -83,6 +85,7 @@ export function SavingAgreementEditor({
   const publishing = mode === 'activate-agreement';
   const [title, setTitle] = editor.field('title'),
     [body, setBody] = editor.field('body');
+  const bodyBinding = editor.bind('body');
   const action = (
     path: string,
     title: string,
@@ -136,7 +139,7 @@ export function SavingAgreementEditor({
           {(overview || inline) && (
             <p className="text-sm text-muted-foreground">{label('agreementHelp')}</p>
           )}
-          {(overview || inline || publishing) && active && (
+          {(overview || inline || (publishing && !draft)) && active && (
             <details className="rounded-md border p-3">
               <summary className="cursor-pointer font-medium">
                 {label('activeAgreement')}: {active.title}
@@ -185,9 +188,18 @@ export function SavingAgreementEditor({
                   </div>
                   <div className={recordEditorField}>
                     <Label htmlFor="saving-agreement-body">{label('agreementBody')}</Label>
+                    {!inline && (
+                      <p id="saving-agreement-body-help" className="text-sm text-muted-foreground">
+                        {label('agreementBodyHelp')}
+                      </p>
+                    )}
                     <Textarea
                       id="saving-agreement-body"
-                      {...editor.bind('body')}
+                      {...bodyBinding}
+                      aria-describedby={
+                        bodyBinding['aria-describedby'] ??
+                        (!inline ? 'saving-agreement-body-help' : undefined)
+                      }
                       value={body}
                       dir="auto"
                       aria-required="true"
@@ -199,6 +211,19 @@ export function SavingAgreementEditor({
                     {(inline || editor.errors.body) && editor.feedback('body')}
                   </div>
                 </RecordEditorSection>
+                {!inline && (
+                  <RecordEditorDisclosure label={label('agreementCustomerPreview')}>
+                    <div className="rounded-lg border p-3">
+                      {title.trim() || body.trim() ? (
+                        <SavingAgreementTerms title={title.trim()} body={body.trim()} />
+                      ) : (
+                        <p className="text-sm text-muted-foreground">
+                          {label('agreementPreviewEmpty')}
+                        </p>
+                      )}
+                    </div>
+                  </RecordEditorDisclosure>
+                )}
                 <RecordEditorActions>
                   <Button type="submit" aria-busy={editor.pending || undefined}>
                     {editor.pending && (
@@ -250,28 +275,53 @@ export function SavingAgreementEditor({
             </p>
           )}
           {draft && (inline || publishing) && (
-            <div className="rounded-md border p-3">
-              <p className="font-medium break-words">
-                {label('draftAgreement')}: {draft.title}
-              </p>
-              {publishing && (
-                <>
-                  <p className="mt-1 text-sm text-muted-foreground">
+            <div className="min-w-0 space-y-3 rounded-lg border bg-card p-3 sm:p-4">
+              {publishing ? (
+                <div className="space-y-3">
+                  <p className="text-sm text-muted-foreground">
                     {label('agreementActivationHelp')}
                   </p>
-                  <p
-                    dir="auto"
-                    className="mt-3 max-h-72 overflow-y-auto whitespace-pre-wrap break-words rounded-lg bg-muted/45 p-3 text-sm"
-                  >
-                    {draft.body}
-                  </p>
-                </>
+                  {active && (
+                    <p className="text-sm font-medium">
+                      {label(
+                        active.title === draft.title
+                          ? active.body === draft.body
+                            ? 'agreementUnchanged'
+                            : 'agreementTextChanged'
+                          : active.body === draft.body
+                            ? 'agreementTitleChanged'
+                            : 'agreementTitleAndTextChanged'
+                      )}
+                    </p>
+                  )}
+                  <div className={active ? 'grid min-w-0 gap-3 md:grid-cols-2' : undefined}>
+                    {active && (
+                      <section
+                        aria-label={label('activeAgreement')}
+                        className="min-w-0 space-y-2 rounded-lg border p-3"
+                      >
+                        <h3 className="text-sm font-semibold">{label('activeAgreement')}</h3>
+                        <SavingAgreementTerms title={active.title} body={active.body} />
+                      </section>
+                    )}
+                    <section
+                      aria-label={label('draftAgreement')}
+                      className="min-w-0 space-y-2 rounded-lg border bg-primary/5 p-3"
+                    >
+                      <h3 className="text-sm font-semibold">{label('draftAgreement')}</h3>
+                      <SavingAgreementTerms title={draft.title} body={draft.body} />
+                    </section>
+                  </div>
+                </div>
+              ) : (
+                <p className="font-medium wrap-anywhere">
+                  {label('draftAgreement')}: {draft.title}
+                </p>
               )}
               {inline && unsaved && (
                 <p className="mt-2 text-sm text-muted-foreground">{label('saveAgreementFirst')}</p>
               )}
               <Button
-                className="mt-3"
                 disabled={editor.disabled || unsaved}
                 onClick={() => {
                   if (!unsaved && !editor.disabled)
