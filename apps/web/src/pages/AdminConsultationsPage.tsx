@@ -1398,6 +1398,7 @@ function OwnedAdminConsultationsPage({
     : [];
   const canUseDecision = !!decision && availableDecisions.includes(decision);
   const showPaidReason = decision ? decisionPaid : reasonPaid;
+  const decisionReview = staffCommand.current?.kind === 'reason' ? staffCommand.current : null;
   const canEditFee =
     current?.status === 'under_review' ||
     (current?.status === 'offer_pending' && !current.has_paid_invoice) ||
@@ -2460,8 +2461,13 @@ function OwnedAdminConsultationsPage({
                                     rows={decision ? 3 : 2}
                                     dir="auto"
                                     aria-required="true"
+                                    placeholder={
+                                      decisionLabel ? copy(decisionLabel + 'Example') : undefined
+                                    }
                                     aria-describedby={
-                                      decisionLabel ? 'consultation-reason-prompt' : undefined
+                                      decisionLabel
+                                        ? 'consultation-reason-prompt consultation-reason-visibility'
+                                        : undefined
                                     }
                                     disabled={
                                       !!action ||
@@ -2484,6 +2490,14 @@ function OwnedAdminConsultationsPage({
                                   )}
                                   invalid={!!fieldState.error?.message}
                                 />
+                                {decisionLabel && (
+                                  <p
+                                    id="consultation-reason-visibility"
+                                    className="text-xs text-muted-foreground"
+                                  >
+                                    {copy('decisionCustomerHistory')}
+                                  </p>
+                                )}
                               </FormItem>
                             )}
                           />
@@ -2500,7 +2514,7 @@ function OwnedAdminConsultationsPage({
                               loading={reasonForm.formState.isSubmitting || reviewLoading}
                               disabled={!canUseDecision || editorLocked || unconfirmed}
                             >
-                              {copy(decisionLabel)}
+                              {copy('reviewDecision')}
                             </Button>
                           ) : (
                             availableDecisions.map((option) => (
@@ -2818,6 +2832,25 @@ function OwnedAdminConsultationsPage({
                   staff
                 />
               </>
+            ) : decisionReview && !decisionReview.paid ? (
+              <div className="space-y-3 rounded-lg border bg-muted/25 p-4">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <span className="text-sm text-muted-foreground">{copy('decisionOutcome')}</span>
+                  <StatusBadge
+                    state={decisionReview.expectedStatus}
+                    {...consultationStatus(decisionReview.expectedStatus, copy)}
+                  />
+                </div>
+                <div className="space-y-1.5 border-t pt-3">
+                  <h3 className="text-sm font-semibold">
+                    {copy(decisionLabel ? decisionLabel + 'Field' : 'reason')}
+                  </h3>
+                  <p className="text-sm whitespace-pre-line wrap-anywhere" dir="auto">
+                    {decisionReview.reason}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{copy('decisionCustomerHistory')}</p>
+                </div>
+              </div>
             ) : undefined
           }
           onClose={() => {

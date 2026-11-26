@@ -429,7 +429,7 @@ for (const [locale, theme] of settings) {
     const openFee = () => page.locator('a[href$="/fee"]').click();
     const reason = page.locator('#consultation-reason');
     const form = page.getByRole('form', { name: copy('reasonFormTitle'), exact: true });
-    const requestInfo = page.getByRole('button', { name: copy('requestInfo'), exact: true });
+    const reviewDecision = form.getByRole('button', { name: copy('reviewDecision'), exact: true });
     const fee = page.getByLabel(copy('feeIrr'), { exact: true });
     const offerScope = page.getByRole('textbox', { name: copy('scope'), exact: true });
     const deliverables = page.getByRole('textbox', { name: copy('deliverables'), exact: true });
@@ -439,13 +439,21 @@ for (const [locale, theme] of settings) {
     await deliverables.fill('  Independent fee deliverables  ');
     await backToRequest.click();
     await openDecision('request-info');
+    await expect(reason).toHaveAccessibleDescription(
+      new RegExp(copy('decisionCustomerHistory').replace(/\.$/, ''))
+    );
     await reason.fill('ر'.repeat(2001));
-    await requestInfo.click();
+    await reviewDecision.click();
     await focusedError(reason);
     expect(state.staffWrites).toEqual([]);
     await reason.fill('ر'.repeat(2000));
-    await requestInfo.click();
+    await reviewDecision.click();
     let dialog = page.getByRole('dialog', { name: copy('requestInfo'), exact: true });
+    await expect(dialog.getByText('ر'.repeat(2000), { exact: true })).toBeVisible();
+    await expect(
+      dialog.getByText(copy('status_awaiting_customer_info'), { exact: true })
+    ).toBeVisible();
+    expect(state.staffWrites).toEqual([]);
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);
     await focusedError(reason);
@@ -454,7 +462,7 @@ for (const [locale, theme] of settings) {
     ]);
     await reason.fill('  Captured information request  ');
     state.staffMode = 'unsafe';
-    await requestInfo.click();
+    await reviewDecision.click();
     dialog = page.getByRole('dialog', { name: copy('requestInfo'), exact: true });
     await dialog.locator('button[type=submit]').click();
     await expect(dialog.getByRole('alert')).toBeVisible();
@@ -475,7 +483,7 @@ for (const [locale, theme] of settings) {
       path: info.outputPath(`consultation-staff-reason-${locale}-${theme}.png`),
     });
     state.staffMode = 'held';
-    await requestInfo.click();
+    await reviewDecision.click();
     dialog = page.getByRole('dialog', { name: copy('requestInfo'), exact: true });
     await expect(reason).toBeDisabled();
     await dialog.locator('button[type=submit]').click();
@@ -510,10 +518,10 @@ for (const [locale, theme] of settings) {
     await expect(dialog.locator('button[type=submit]')).toBeDisabled();
     await closeSettledDialog(dialog, locale);
     await expect(page.getByText(copy('actionUnconfirmed'), { exact: true })).toBeVisible();
-    await expect(requestInfo).toBeDisabled();
+    await expect(reviewDecision).toBeDisabled();
     const recovery = page.getByRole('button', { name: copy('retry'), exact: true });
     await recovery.click();
-    await expect(requestInfo).toBeDisabled();
+    await expect(reviewDecision).toBeDisabled();
     await expect(reason).toHaveValue('  Captured information request  ');
     await expect(backToRequest).toBeEnabled();
     expect(state.staffWrites).toHaveLength(beforeDuplicate);
@@ -538,12 +546,11 @@ for (const [locale, theme] of settings) {
     await page.getByRole('link', { name: /Paid buyer/ }).click();
     await openDecision('cancel');
     await reason.fill('پ'.repeat(1001));
-    const cancelRequest = page.getByRole('button', { name: copy('cancel'), exact: true });
-    await cancelRequest.click();
+    await reviewDecision.click();
     await focusedError(reason);
     expect(state.paidPreviews).toEqual([]);
     await reason.fill('پ'.repeat(1000));
-    await cancelRequest.click();
+    await reviewDecision.click();
     dialog = page.getByRole('dialog', { name: copy('cancel'), exact: true });
     await expect(dialog).toContainText(copy('paidResolutionReviewTitle'));
     expect(state.paidPreviews).toEqual([{ action: 'cancel', reason: 'پ'.repeat(1000) }]);
@@ -563,7 +570,7 @@ for (const [locale, theme] of settings) {
     await openDecision('cancel');
     await reason.fill('  Captured unpaid cancellation  ');
     state.staffMode = 'success';
-    await cancelRequest.click();
+    await reviewDecision.click();
     dialog = page.getByRole('dialog', { name: copy('cancel'), exact: true });
     await approveRiskConfirmation(page, locale, 'destructive');
     await dialog.locator('button[type=submit]').click();
@@ -603,8 +610,7 @@ for (const [locale, theme] of settings) {
     ).not.toContainText(captured.body.reason);
     state.staffMode = 'denied';
     // Complete uses the same nonfinancial field and receipt while preserving paid-close intent.
-    const complete = page.getByRole('button', { name: copy('complete'), exact: true });
-    await complete.click();
+    await reviewDecision.click();
     dialog = page.getByRole('dialog', { name: copy('complete'), exact: true });
     await dialog.locator('button[type=submit]').click();
     await expect(dialog).toHaveCount(0);

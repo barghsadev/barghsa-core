@@ -718,7 +718,9 @@ for (const locale of ['en', 'fa'] as const)
     await page
       .getByLabel(tStaffConsultation('completeField', locale), { exact: true })
       .fill('Consultation delivered');
-    await page.getByRole('button', { name: consultationCopy('complete', locale) }).click();
+    await page
+      .getByRole('button', { name: tStaffConsultation('reviewDecision', locale), exact: true })
+      .click();
     await page
       .getByRole('dialog')
       .getByRole('button', { name: appCopy('team.confirm', locale) })

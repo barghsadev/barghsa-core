@@ -245,13 +245,17 @@ for (const locale of ['en', 'fa'] as const)
         expect(box?.width).toBeGreaterThanOrEqual(44);
         expect(box?.height).toBeGreaterThanOrEqual(44);
       }
-      await detail.getByRole('button', { name: copy('reject'), exact: true }).click();
-      const reason = detail.getByRole('textbox', { name: copy('note'), exact: true });
+      await detail.getByRole('link', { name: copy('reject'), exact: true }).click();
+      await expect(page).toHaveURL(
+        new RegExp(`/admin/consultations/${rows[0]!.id}/decisions/reject(?:\\?|$)`)
+      );
+      const decision = page.getByRole('region', { name: copy('reject'), exact: true });
+      const reason = decision.getByRole('textbox', { name: copy('rejectField'), exact: true });
       await reason.fill('Private reason retained');
       const detailReads = details;
       await checkRoutePresentation(page, info, locale);
       await page.setViewportSize({ width: 1280, height: 900 });
-      await expect(detail).toBeVisible();
+      await expect(decision).toBeVisible();
       await expect(reason).toHaveCount(1);
       await expect(reason).toHaveValue('Private reason retained');
       expect(reads).toBe(1);
@@ -259,6 +263,8 @@ for (const locale of ['en', 'fa'] as const)
       expect(writes).toBe(0);
       await page.setViewportSize({ width: 390, height: 844 });
       await expect(reason).toHaveValue('Private reason retained');
+      await page.getByRole('link', { name: copy('backToFeeRequest'), exact: true }).click();
+      await expect(detail).toBeVisible();
       await page.getByRole('link', { name: copy('backToStaffRequests'), exact: true }).click();
       await expect(records).toHaveCount(2);
       await expect(reason).toHaveCount(0);

@@ -104,8 +104,8 @@ for (const [locale, theme] of [
   const cancel = (page: Page) =>
     dialog(page).getByRole('button', { name: t('team.cancel', locale), exact: true });
   const retry = (page: Page) => page.getByTestId('consultation-resolution-retry');
-  const button = (page: Page, key: string) =>
-    reasonForm(page).getByRole('button', { name: copy(key), exact: true });
+  const reviewDecision = (page: Page) =>
+    reasonForm(page).getByRole('button', { name: copy('reviewDecision'), exact: true });
   const refresh = (page: Page) =>
     page.getByRole('button', { name: copy('refresh'), exact: true }).first();
   async function withFeeEditor(page: Page, check: () => Promise<void>) {
@@ -191,9 +191,9 @@ for (const [locale, theme] of [
     await openDecision(page, action);
     await reason(page).focus();
     await reason(page).fill('x'.repeat(1001));
-    await button(page, action).click();
-    await expect(button(page, action)).toBeDisabled();
-    await button(page, action).dispatchEvent('click');
+    await reviewDecision(page).click();
+    await expect(reviewDecision(page)).toBeDisabled();
+    await reviewDecision(page).dispatchEvent('click');
     expect(state.previews).toEqual([]);
     release();
     await focusedError(reason(page));
@@ -201,11 +201,11 @@ for (const [locale, theme] of [
     await expect(reason(page)).toHaveValue('x'.repeat(1001));
     await reason(page).fill('  Close the paid service; return available payments  ');
     state.previewMode = 'owned';
-    await button(page, action).click();
+    await reviewDecision(page).click();
     await focusedError(reason(page));
     await expect(reason(page)).toHaveValue('  Close the paid service; return available payments  ');
     await expect(reasonForm(page)).not.toContainText('PRIVATE_RESOLUTION_SERVER_TEXT');
-    await inspect(page, reasonForm(page), 'form:has(#consultation-reason)', button(page, action));
+    await inspect(page, reasonForm(page), 'form:has(#consultation-reason)', reviewDecision(page));
     await fieldCapture(
       reason(page),
       info.outputPath(`consultation-closure-fields-${locale}-${theme}.png`)
@@ -215,22 +215,22 @@ for (const [locale, theme] of [
       reason: 'Close the paid service; return available payments',
     });
     state.previewMode = 'mixed';
-    await button(page, action).click();
+    await reviewDecision(page).click();
     await expect(page.locator('main[data-area=admin]').getByRole('alert')).toContainText(
       copy('loadError')
     );
     await expect(reason(page)).not.toHaveAttribute('aria-invalid', 'true');
     state.previewMode = 'foreign';
     const foreignPreviewCount = state.previews.length + 1;
-    await button(page, action).click();
+    await reviewDecision(page).click();
     await expect.poll(() => state.previews.length).toBe(foreignPreviewCount);
-    await expect(button(page, action)).toBeEnabled();
+    await expect(reviewDecision(page)).toBeEnabled();
     await expect(dialog(page)).toHaveCount(0);
     await expect(page.locator('main[data-area=admin]')).not.toContainText(
       'PRIVATE_RESOLUTION_SERVER_TEXT'
     );
     state.previewMode = 'success';
-    await button(page, action).click();
+    await reviewDecision(page).click();
     await expect(dialog(page)).toContainText(copy('paidResolutionCloseOutcome'));
     await expect(
       dialog(page).getByRole('heading', { name: copy(action), exact: true })
@@ -285,7 +285,7 @@ for (const [locale, theme] of [
     await expect(retry(page)).toHaveText(resolutionCopy('retryCaptured'));
     await expect(dialog(page)).toHaveCount(0);
     await expect(reason(page)).toBeDisabled();
-    await expect(button(page, action)).toBeDisabled();
+    await expect(reviewDecision(page)).toBeDisabled();
     await expect(reasonForm(page).getByRole('button')).toHaveCount(1);
     const reads = state.reads.length,
       previews = state.previews.length;
@@ -295,7 +295,7 @@ for (const [locale, theme] of [
     await back.dispatchEvent('click');
     await expect(page).toHaveURL(`/admin/consultations/${closureRequest}/decisions/${action}`);
     await refresh(page).dispatchEvent('click');
-    await button(page, action).dispatchEvent('click');
+    await reviewDecision(page).dispatchEvent('click');
     expect(state.reads).toHaveLength(reads);
     expect(state.previews).toHaveLength(previews);
     expect(state.shell.previews).toEqual([]);
@@ -371,7 +371,7 @@ for (const [locale, theme] of [
       .catch(() => {});
     await expect(reason(page)).toHaveValue('Fresh authorized recovery draft');
     state.previewMode = 'denied';
-    await button(page, 'recoverRefund').click();
+    await reviewDecision(page).click();
     await expect(reason(page)).toHaveCount(0);
     await expect(page.locator('main[data-area=admin]')).not.toContainText(
       'Fresh authorized recovery draft'
@@ -390,28 +390,23 @@ for (const [locale, theme] of [
     await companions(page);
     await openDecision(page, 'recover-refund');
     await reason(page).fill('x'.repeat(1001));
-    await button(page, 'recoverRefund').click();
+    await reviewDecision(page).click();
     await focusedError(reason(page));
     await reason(page).fill('  Recover the uncovered credit without closing service  ');
     state.previewMode = 'owned';
-    await button(page, 'recoverRefund').click();
+    await reviewDecision(page).click();
     await focusedError(reason(page));
     await preservedCompanions(page, 'recover-refund');
     await expect(reason(page)).toHaveValue(
       '  Recover the uncovered credit without closing service  '
     );
-    await inspect(
-      page,
-      reasonForm(page),
-      'form:has(#consultation-reason)',
-      button(page, 'recoverRefund')
-    );
+    await inspect(page, reasonForm(page), 'form:has(#consultation-reason)', reviewDecision(page));
     await fieldCapture(
       reason(page),
       info.outputPath(`consultation-recovery-fields-${locale}-${theme}.png`)
     );
     state.previewMode = 'success';
-    await button(page, 'recoverRefund').click();
+    await reviewDecision(page).click();
     await expect(dialog(page)).toContainText(copy('paidResolutionRecoveryOutcome'));
     const quoted = review(
       recoveryRequest,
@@ -468,7 +463,7 @@ for (const [locale, theme] of [
     await held.fulfill({ status: 503, json: {} }).catch(() => {});
     await expect(reason(page)).toBeDisabled();
     await expect(backToRequest(page)).toHaveAttribute('aria-disabled', 'true');
-    await expect(button(page, 'recoverRefund')).toBeDisabled();
+    await expect(reviewDecision(page)).toBeDisabled();
     await expect(reasonForm(page).getByRole('button')).toHaveCount(1);
     const reads = state.reads.length,
       previews = state.previews.length;
@@ -530,7 +525,7 @@ for (const [locale, theme] of [
     state.previewMode = 'held';
     await openDecision(page, 'cancel');
     await reason(page).fill('Old selected paid cancellation draft');
-    await button(page, 'cancel').click();
+    await reviewDecision(page).click();
     await expect.poll(() => !!state.heldPreview).toBe(true);
     const oldPreview = state.heldPreview!;
     state.previewMode = 'success';
@@ -551,7 +546,7 @@ for (const [locale, theme] of [
       .catch(() => {});
     await expect(reason(page)).toHaveValue('Current private closure draft');
     state.previewMode = 'missing';
-    await button(page, locale === 'en' ? 'cancel' : 'reject').click();
+    await reviewDecision(page).click();
     await expect(reason(page)).toHaveCount(0);
     await expect(page.locator('main[data-area=admin]')).not.toContainText(
       'Current private closure draft'
