@@ -29,10 +29,12 @@ export type TemplateVersionDraft = {
   files: File[];
   changeSummary: string;
 };
-export const emptyTemplateMetadata = (): TemplateMetadata => ({
+export const emptyTemplateMetadata = (
+  category: TemplateCategory = 'general'
+): TemplateMetadata => ({
   title: '',
   description: '',
-  category: 'general',
+  category,
 });
 export const emptyTemplateVersion = (): TemplateVersionDraft => ({
   retainedFileIds: [],

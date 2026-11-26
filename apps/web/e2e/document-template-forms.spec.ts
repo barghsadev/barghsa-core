@@ -85,6 +85,7 @@ for (const locale of ['en', 'fa'] as const) {
     const { word } = await setup(page, locale);
     const workspace = page.getByRole('region', { name: word('workspaceTitle') });
     const title = workspace.getByRole('textbox', { name: word('name'), exact: true });
+    const category = workspace.getByRole('combobox', { name: word('category'), exact: true });
     const heading = page
       .getByRole('main')
       .getByRole('heading', { name: templateDetail.title, exact: true });
@@ -100,14 +101,29 @@ for (const locale of ['en', 'fa'] as const) {
     await expect(heading).toBeVisible();
     await page.goForward();
     await expect(title).toHaveValue(templateDetail.title);
+    await page.goto(detailPath + '/edit?category=invoice');
+    await expect(category).toHaveValue(templateDetail.category);
     await page.goto('/admin/document-templates?selected=new&category=contract');
     await expect(page).toHaveURL('/admin/document-templates/new?category=contract');
     await expect(title).toHaveValue('');
+    await expect(category).toHaveValue('contract');
+    await expect(title).toHaveAttribute('placeholder', word('contractTitleExample'));
+    await expect(title).toHaveCSS('direction', locale === 'fa' ? 'rtl' : 'ltr');
+    await title.fill('Keep draft title');
+    await expect(title).toHaveCSS('direction', 'ltr');
+    await category.selectOption('invoice');
+    await expect(title).toHaveAttribute('placeholder', word('invoiceTitleExample'));
+    await page.getByRole('button', { name: word('refresh'), exact: true }).click();
+    await expect(category).toHaveValue('invoice');
+    await expect(title).toHaveValue('Keep draft title');
     await workspace.getByRole('button', { name: word('cancel'), exact: true }).click();
     await expect(page).toHaveURL(
       (url) => !url.searchParams.has('selected') && url.searchParams.get('category') === 'contract'
     );
     await expect(title).toHaveCount(0);
+    await page.getByRole('link', { name: word('add'), exact: true }).click();
+    await expect(page).toHaveURL('/admin/document-templates/new?category=contract');
+    await expect(category).toHaveValue('contract');
   });
 
   test(`template file link announces its pending read and can retry (${locale})`, async ({
@@ -197,6 +213,7 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await expect(category).toHaveAttribute('aria-required', 'true');
     await expect(details).not.toHaveAttribute('aria-required', 'true');
+    await expect(details).toHaveAccessibleDescription(word('descriptionHelp'));
     await title.fill('   ');
     await form.getByRole('button', { name: word('save'), exact: true }).click();
     await expect(title).toHaveAttribute('aria-invalid', 'true');
@@ -274,11 +291,14 @@ for (const locale of ['en', 'fa'] as const) {
     await page.route(`**/api/admin/document-templates/${newTemplate.id}`, (route) =>
       route.fulfill({ json: newTemplate })
     );
-    await page.goto('/admin/document-templates/new');
-    const newForm = page.getByRole('form', { name: word('edit'), exact: true });
+    await page.goto('/admin/document-templates/new?category=unknown');
+    const newForm = page.getByRole('form', { name: word('add'), exact: true });
     const newCategory = newForm.getByRole('combobox', { name: word('category'), exact: true });
+    await expect(newCategory).toHaveValue('general');
+    await page.goto('/admin/document-templates/new?category=invoice');
     await expect(newCategory).toHaveAttribute('aria-required', 'true');
-    await newCategory.selectOption('invoice');
+    await expect(newCategory).toHaveValue('invoice');
+    await expect(newForm.getByText(word('filesAfterSave'), { exact: true })).toBeVisible();
     await newForm.getByRole('textbox', { name: word('name'), exact: true }).fill(newTemplate.title);
     await newForm.getByRole('button', { name: word('save'), exact: true }).click();
     await confirm().click();
@@ -291,7 +311,8 @@ for (const locale of ['en', 'fa'] as const) {
     page,
   }, info) => {
     const { word, confirm, save, readFailed } = await setup(page, locale);
-    await page.goto(newVersionPath);
+    await page.getByRole('link', { name: word('publishVersion'), exact: true }).click();
+    await expect(page).toHaveURL(newVersionPath);
     const form = page.getByRole('form', { name: word('publishVersion'), exact: true });
     const upload = page.locator('#document-template-files');
     await expect(upload).toHaveAccessibleName(word('chooseFiles'));

@@ -2,7 +2,6 @@ import {
   RecordEditorActions,
   RecordEditorDisclosure,
   RecordEditorSection,
-  recordEditorGrid,
   recordEditorSurface,
   recordFilePicker,
   recordFilePickerAction,
@@ -123,6 +122,7 @@ function OwnedAdminDocumentTemplatesPage({
   const [localCategory, setCategory] = useState<Category | ''>('');
   const search = queries ? queries.query.search : localSearch;
   const category = queries ? queries.query.filters.category || '' : localCategory;
+  const creationCategory = category === 'contract' || category === 'invoice' ? category : 'general';
   useEffect(() => {
     if (queries) setSearchInput(search);
   }, [search]);
@@ -147,7 +147,10 @@ function OwnedAdminDocumentTemplatesPage({
         metadataErrors
       );
     },
-    { defaultValues: blank(), validationUnavailableMessage: word('validationUnavailable') }
+    {
+      defaultValues: blank(view === 'new' ? creationCategory : undefined),
+      validationUnavailableMessage: word('validationUnavailable'),
+    }
   );
   const version = useZodForm<TemplateVersionDraft>(
     async () => {
@@ -659,7 +662,7 @@ function OwnedAdminDocumentTemplatesPage({
                       onClick={() => {
                         if (owner.current) return;
                         resetWorkspace(null);
-                        editMetadata(blank());
+                        editMetadata(blank(creationCategory));
                         workspace.current?.focus();
                       }}
                     >
@@ -851,9 +854,9 @@ function OwnedAdminDocumentTemplatesPage({
                   <form
                     key={`metadata-${linkGeneration.current}`}
                     noValidate
-                    className={`${recordEditorSurface} [&_[data-slot=form-message]]:min-h-4`}
+                    className={recordEditorSurface}
                     onSubmit={save}
-                    aria-label={word('edit')}
+                    aria-label={word(selected ? 'edit' : 'add')}
                     onChangeCapture={(event) => {
                       if (owner.current) {
                         event.preventDefault();
@@ -866,16 +869,11 @@ function OwnedAdminDocumentTemplatesPage({
                         {metadata.formState.errors.root.validation.message}
                       </p>
                     )}
-                    <RecordEditorSection title={word('templateDetails')}>
-                      <div className={recordEditorGrid}>
-                        <FormInput
-                          control={metadata.control}
-                          name="title"
-                          label={word('name')}
-                          id="document-template-title"
-                          disabled={locked}
-                          inputProps={{ dir: 'auto', maxLength: 200, 'aria-required': true }}
-                        />
+                    <RecordEditorSection
+                      title={word('templateDetails')}
+                      {...(view === 'new' ? { description: word('filesAfterSave') } : {})}
+                    >
+                      <div className="grid min-w-0 gap-x-5 gap-y-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
                         <FormField
                           control={metadata.control}
                           name="category"
@@ -897,24 +895,41 @@ function OwnedAdminDocumentTemplatesPage({
                                   ))}
                                 </NativeSelect>
                               </FormControl>
-                              <FormMessage reserveSpace />
+                              <FormMessage />
                             </FormItem>
                           )}
+                        />
+                        <FormInput
+                          control={metadata.control}
+                          name="title"
+                          label={word('name')}
+                          id="document-template-title"
+                          disabled={locked}
+                          reserveMessageSpace={false}
+                          inputProps={{
+                            dir: 'auto',
+                            maxLength: 200,
+                            placeholder: word(`${draft.category}TitleExample`),
+                            className: 'placeholder-shown:[direction:inherit]',
+                            'aria-required': true,
+                          }}
                         />
                       </div>
                       <FormTextarea
                         control={metadata.control}
                         name="description"
                         label={word('details')}
+                        description={word('descriptionHelp')}
                         id="document-template-description"
                         disabled={locked}
+                        reserveMessageSpace={false}
                         inputProps={{
                           className:
                             'max-h-40 min-h-14 resize-y placeholder-shown:[direction:inherit]',
                           maxLength: 2000,
                           dir: 'auto',
                           rows: 2,
-                          placeholder: word('descriptionExample'),
+                          placeholder: word(`${draft.category}DescriptionExample`),
                         }}
                       />
                     </RecordEditorSection>
