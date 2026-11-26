@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { LoadingStatus, Button } from '@barghsa/ui';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import { t, type Locale } from '@barghsa/i18n/onboarding-drafts';
 import { useAccountTime } from '../hooks/useAccountTime.js';
 import { readWithDeadline } from '../lib/server-query-client.js';
@@ -80,9 +81,9 @@ export default function OnboardingDraftList({
       {page && page.drafts.length > 0 && (
         <>
           {time.notice}
-          <ul className="divide-y rounded-xl border bg-card px-4">
+          <ul className="space-y-3">
             {page.drafts.map((draft) => (
-              <li key={draft.id} className="space-y-2 py-4">
+              <li key={draft.id} className="space-y-2 rounded-xl border bg-card p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0 space-y-1">
                     <p className="font-medium break-words">
@@ -95,7 +96,9 @@ export default function OnboardingDraftList({
                     )}
                     <p className="text-xs text-muted-foreground">
                       {t(draft.updatedAt ? 'saved' : 'created', locale)}:{' '}
-                      {time.format(draft.updatedAt ?? draft.createdAt)}
+                      <time dateTime={draft.updatedAt ?? draft.createdAt}>
+                        {time.format(draft.updatedAt ?? draft.createdAt)}
+                      </time>
                     </p>
                   </div>
                   <Link
@@ -111,7 +114,7 @@ export default function OnboardingDraftList({
                     onClick={(event) => {
                       if (disabled) event.preventDefault();
                     }}
-                    className="shrink-0 rounded-md px-2 py-1 text-sm font-medium text-primary underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-disabled:opacity-50"
+                    className="inline-flex min-h-11 shrink-0 items-center rounded-md px-2 text-sm font-medium text-primary underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring aria-disabled:opacity-50"
                   >
                     {t(draft.expired ? 'restart' : draft.hasDraft ? 'resume' : 'start', locale)}
                   </Link>
@@ -124,7 +127,12 @@ export default function OnboardingDraftList({
           </ul>
         </>
       )}
-      {loading && <LoadingStatus className="text-sm">{t('loading', locale)}</LoadingStatus>}
+      {loading &&
+        (page ? (
+          <LoadingStatus className="text-sm">{t('loading', locale)}</LoadingStatus>
+        ) : (
+          <RecordListSkeleton label={t('loading', locale)} view="card" headings={[]} />
+        ))}
       {error && (
         <p role="alert" className="text-sm text-destructive">
           {t(error === 'denied' ? 'denied' : 'error', locale)}

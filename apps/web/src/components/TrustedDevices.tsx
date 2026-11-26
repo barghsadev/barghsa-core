@@ -1,5 +1,6 @@
 import type { RefObject } from 'react';
-import { Badge, LoadingStatus, Button } from '@barghsa/ui';
+import { Badge, Button } from '@barghsa/ui';
+import { RecordListSkeleton } from './RecordListSkeleton.js';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { trustedDeviceText, type TrustedDeviceTextKey } from '@barghsa/i18n/trusted-devices';
 import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
@@ -60,9 +61,11 @@ export function TrustedDevices({
       </div>
       <p className="text-sm text-muted-foreground">{text('description')}</p>
       {lists.loading.devices && (
-        <LoadingStatus className="text-sm text-muted-foreground">
-          {securitySettingsText('loading', locale)}
-        </LoadingStatus>
+        <RecordListSkeleton
+          label={securitySettingsText('loading', locale)}
+          view="card"
+          headings={[]}
+        />
       )}
       {lists.failed.devices && (
         <p role="alert" className="text-sm text-destructive">
@@ -73,7 +76,7 @@ export function TrustedDevices({
         <p className="text-sm text-muted-foreground">{text('empty')}</p>
       )}
       {devices.map((device) => (
-        <div key={device.id} className="rounded-lg border p-3 space-y-2">
+        <div key={device.id} className="space-y-3 rounded-lg border bg-background/40 p-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-sm font-medium">
@@ -99,22 +102,22 @@ export function TrustedDevices({
               {device.userAgent}
             </p>
           )}
-          <dl className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+          <dl className="grid grid-cols-2 gap-3 border-t pt-3 text-xs">
             <div>
-              <dt className="inline">IP: </dt>
-              <dd className="inline">
+              <dt className="text-muted-foreground">IP</dt>
+              <dd>
                 <bdi dir={device.ip ? 'ltr' : 'auto'}>{device.ip ?? text('unknownIp')}</bdi>
               </dd>
             </div>
             <div>
-              <dt className="inline">{text('trustedAt')}: </dt>
-              <dd className="inline">
+              <dt className="text-muted-foreground">{text('trustedAt')}</dt>
+              <dd>
                 <time dateTime={device.trustedAt}>{formatTimestamp(device.trustedAt)}</time>
               </dd>
             </div>
             <div>
-              <dt className="inline">{t('settings.security.expiresAt', locale)}: </dt>
-              <dd className="inline">
+              <dt className="text-muted-foreground">{t('settings.security.expiresAt', locale)}</dt>
+              <dd>
                 <time dateTime={device.expiresAt}>{formatTimestamp(device.expiresAt)}</time>
               </dd>
             </div>

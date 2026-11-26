@@ -1,4 +1,4 @@
-import { Skeleton } from '@barghsa/ui';
+import { RecordDetailSkeleton } from '../components/RecordSkeleton.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
 
 import { LegalProfileDocuments } from '../components/LegalProfileDocuments.js';
@@ -209,6 +209,8 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
     t('dashboard.profile.unnamed', locale);
   const profileType = t(`settings.profile.profileType.${isLegal ? 'LEGAL' : 'INDIVIDUAL'}`, locale);
   const badge = profile ? getStatusBadge(profile.status, locale) : null;
+  const legalNameForDisplay = isLegal ? profile?.legalInfo?.legalName : null;
+  const distinctLegalName = legalNameForDisplay === displayName ? null : legalNameForDisplay;
 
   const defaultProfileControl = availableProfiles.length > 0 && (
     <section aria-labelledby="default-profile-title" className="rounded-xl border bg-card p-4">
@@ -278,7 +280,7 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
               {t('settings.profile.title', locale)}
             </Link>
           )}
-          <h1 className="break-words text-2xl font-semibold">
+          <h1 className="wrap-anywhere text-2xl font-semibold sm:text-3xl">
             {edit ? (
               copy('editProfile')
             ) : profile ? (
@@ -308,15 +310,7 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
         )}
       </header>
 
-      {!edit && defaultProfileControl}
-
-      {/* Loading */}
-      {loading && (
-        <div className="text-center py-8 text-muted-foreground">
-          <Skeleton className="h-6 w-20 shrink-0" />
-          <p className="text-sm">{t('settings.profile.loading', locale)}</p>
-        </div>
-      )}
+      {loading && <RecordDetailSkeleton label={t('settings.profile.loading', locale)} />}
 
       {/* Error */}
       {!loading && error && (
@@ -342,34 +336,28 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
       {/* Profile detail form */}
       {!edit && !loading && profile && (
         <div className="space-y-4">
-          <section className="space-y-4 rounded-lg border bg-card p-4">
-            <h2 className="font-semibold">{t('settings.profile.identitySection', locale)}</h2>
-            <dl className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <dt className="text-sm text-muted-foreground">{copy('profileName')}</dt>
-                <dd className="break-words font-medium">
-                  <bdi>{displayName}</bdi>
-                </dd>
-              </div>
-              {isLegal && profile.legalInfo?.legalName && (
-                <div>
+          {(isIdentityLocked || distinctLegalName) && (
+            <section className="space-y-3 rounded-xl border bg-card p-4">
+              <h2 className="font-semibold">{t('settings.profile.identitySection', locale)}</h2>
+              {distinctLegalName && (
+                <dl>
                   <dt className="text-sm text-muted-foreground">
                     {t('settings.profile.legalName', locale)}
                   </dt>
                   <dd className="break-words font-medium">
-                    <bdi>{profile.legalInfo.legalName}</bdi>
+                    <bdi>{distinctLegalName}</bdi>
                   </dd>
-                </div>
+                </dl>
               )}
-            </dl>
-            {isIdentityLocked && (
-              <p className="flex items-start gap-2 text-sm text-muted-foreground">
-                <LockIcon className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                {copy('verifiedIdentity')}
-              </p>
-            )}
-          </section>
-          <section className="space-y-3 rounded-lg border bg-card p-4">
+              {isIdentityLocked && (
+                <p className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <LockIcon className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                  {copy('verifiedIdentity')}
+                </p>
+              )}
+            </section>
+          )}
+          <section className="space-y-3 rounded-xl border bg-card p-4">
             <h2 className="font-semibold">{t('settings.profile.addressSection', locale)}</h2>
             {savedMainAddress && (
               <p className="break-words text-sm">
@@ -393,6 +381,7 @@ export function SettingsProfilePage({ edit = true }: { edit?: boolean } = {}) {
           )}
         </div>
       )}
+      {!edit && defaultProfileControl}
       {edit && !loading && profile && (
         <Form {...form}>
           <form

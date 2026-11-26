@@ -5,8 +5,9 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import { t, type Locale } from '@barghsa/i18n/app';
 import { trustedDeviceText } from '@barghsa/i18n/trusted-devices';
 import { securitySettingsText } from '@barghsa/i18n/security-settings-forms';
-import { MonitorIcon, SmartphoneIcon, GlobeIcon, Trash2Icon, ShieldAlertIcon } from 'lucide-react';
-import { Badge, LoadingStatus, Button, buttonVariants } from '@barghsa/ui';
+import { MonitorIcon, SmartphoneIcon, Trash2Icon, ShieldAlertIcon } from 'lucide-react';
+import { Badge, Button, buttonVariants } from '@barghsa/ui';
+import { RecordListSkeleton } from '../../../components/RecordListSkeleton.js';
 import { telegramText } from '@barghsa/i18n/telegram';
 import { TrustedDevices } from '../../../components/TrustedDevices.js';
 import { SecurityRevocationDialog } from '../../../components/SecurityRevocationDialog.js';
@@ -96,34 +97,28 @@ function SessionDetails({
       ? countryNames[locale].of(countryCode)
       : undefined;
   return (
-    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+    <dl className="grid grid-cols-2 gap-3 border-t pt-3 text-xs">
+      {(['updatedAt', 'createdAt', 'expiresAt', 'idleDeadline'] as const).map((key) => (
+        <div key={key}>
+          <dt className="text-muted-foreground">{t(`settings.security.${key}`, locale)}</dt>
+          <dd>
+            <time dateTime={session[key]}>{formatTimestamp(session[key])}</time>
+          </dd>
+        </div>
+      ))}
+      <div>
+        <dt className="text-muted-foreground">{trustedDeviceText('location', locale)}</dt>
+        <dd>{country ?? trustedDeviceText('locationUnavailable', locale)}</dd>
+      </div>
       {session.deviceInfo?.ip && (
-        <span className="inline-flex items-center gap-1">
-          <GlobeIcon className="h-3 w-3" />
-          <bdi dir="ltr">{session.deviceInfo.ip}</bdi>
-        </span>
+        <div>
+          <dt className="text-muted-foreground">IP</dt>
+          <dd>
+            <bdi dir="ltr">{session.deviceInfo.ip}</bdi>
+          </dd>
+        </div>
       )}
-      <span>
-        {trustedDeviceText('location', locale)}:{' '}
-        {country ?? trustedDeviceText('locationUnavailable', locale)}
-      </span>
-      <span>
-        {t('settings.security.createdAt', locale)}:{' '}
-        <time dateTime={session.createdAt}>{formatTimestamp(session.createdAt)}</time>
-      </span>
-      <span>
-        {t('settings.security.updatedAt', locale)}:{' '}
-        <time dateTime={session.updatedAt}>{formatTimestamp(session.updatedAt)}</time>
-      </span>
-      <span>
-        {t('settings.security.expiresAt', locale)}:{' '}
-        <time dateTime={session.expiresAt}>{formatTimestamp(session.expiresAt)}</time>
-      </span>
-      <span>
-        {t('settings.security.idleDeadline', locale)}:{' '}
-        <time dateTime={session.idleDeadline}>{formatTimestamp(session.idleDeadline)}</time>
-      </span>
-    </div>
+    </dl>
   );
 }
 
@@ -177,7 +172,7 @@ function SettingsSecurityPage() {
     }
   }
   return (
-    <div className="mx-auto w-full max-w-xl space-y-6 p-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div className="mx-auto w-full max-w-5xl space-y-6 p-4" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
       <h1 className="text-2xl font-semibold">{t('settings.security.title', locale)}</h1>
       {scope.denied && <p role="alert">{text('denied')}</p>}
       {scope.isCurrent() && (
@@ -197,123 +192,123 @@ function SettingsSecurityPage() {
               {text('confirmed')}
             </p>
           )}
-          <section
-            aria-labelledby="sessions-heading"
-            className="rounded-xl border bg-card p-4 space-y-4"
-          >
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2
-                id="sessions-heading"
-                ref={sessionsHeading}
-                tabIndex={-1}
-                className="text-lg font-semibold"
-              >
-                {t('settings.security.sessionsTitle', locale)}
-              </h2>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                disabled={scope.locked || lists.loading.sessions}
-                onClick={() => void refresh('sessions')}
-              >
-                {text('refresh')}
-              </Button>
-            </div>
-            {lists.loading.sessions && (
-              <LoadingStatus className="text-sm text-muted-foreground">
-                {text('loading')}
-              </LoadingStatus>
-            )}
-            {lists.failed.sessions && (
-              <p role="alert" className="text-sm text-destructive">
-                {t('settings.security.error.load', locale)}
-              </p>
-            )}
-            <p className="text-sm text-muted-foreground">
-              {t('settings.security.sessionsDescription', locale)}
-            </p>
-            {ready && !sessions.length && (
-              <p className="text-sm text-muted-foreground">
-                {t('settings.security.noSessions', locale)}
-              </p>
-            )}
-            {current && (
-              <div className="rounded-lg border border-primary/30 bg-primary/5 p-4 space-y-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <MonitorIcon className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-medium">
-                    {getDeviceName(current.deviceInfo?.userAgent, locale)}
-                  </span>
-                  <Badge>{t('settings.security.currentSession', locale)}</Badge>
-                </div>
-                <SessionDetails session={current} locale={locale} formatTimestamp={time.format} />
-              </div>
-            )}
-            {others.map((session) => (
-              <div key={session.sessionId} className="rounded-lg border p-4 space-y-2">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <DeviceIcon deviceType={detectDeviceType(session.deviceInfo?.userAgent)} />
-                    <span className="text-sm font-medium">
-                      {getDeviceName(session.deviceInfo?.userAgent, locale)}
-                    </span>
-                  </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    disabled={scope.locked}
-                    ref={(node) => trackRevokeTrigger('session:' + session.sessionId, node)}
-                    onClick={(event) =>
-                      choose({ kind: 'session', target: session }, event.currentTarget)
-                    }
-                    className="gap-1"
-                  >
-                    <Trash2Icon className="h-3.5 w-3.5" />
-                    {t('settings.security.revoke', locale)}
-                  </Button>
-                </div>
-                <SessionDetails session={session} locale={locale} formatTimestamp={time.format} />
-              </div>
-            ))}
-            {others.length > 0 && (
-              <div className="pt-2">
+          <div className="grid items-start gap-4 lg:grid-cols-2">
+            <section
+              aria-labelledby="sessions-heading"
+              className="rounded-xl border bg-card p-4 space-y-4"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h2
+                  id="sessions-heading"
+                  ref={sessionsHeading}
+                  tabIndex={-1}
+                  className="text-lg font-semibold"
+                >
+                  {t('settings.security.sessionsTitle', locale)}
+                </h2>
                 <Button
                   type="button"
-                  variant="destructive"
-                  className="w-full gap-2 whitespace-normal bg-red-700 text-white hover:bg-red-800 dark:bg-red-700 dark:text-white dark:hover:bg-red-800"
-                  disabled={scope.locked}
-                  ref={(node) => trackRevokeTrigger('others', node)}
-                  onClick={(event) => choose({ kind: 'others' }, event.currentTarget)}
+                  size="sm"
+                  variant="outline"
+                  disabled={scope.locked || lists.loading.sessions}
+                  onClick={() => void refresh('sessions')}
                 >
-                  <ShieldAlertIcon className="h-4 w-4 shrink-0" />
-                  {t('settings.security.revokeAll', locale)}
+                  {text('refresh')}
                 </Button>
-                <p className="text-xs text-muted-foreground mt-1 text-center">
-                  {t('settings.security.revokeAllDescription', locale)}
-                </p>
               </div>
-            )}
-            {ready && others.length === 0 && sessions.length > 0 && (
-              <p className="text-sm text-center text-muted-foreground">
-                {t('settings.security.noOtherSessions', locale)}
+              {lists.loading.sessions && (
+                <RecordListSkeleton label={text('loading')} view="card" headings={[]} />
+              )}
+              {lists.failed.sessions && (
+                <p role="alert" className="text-sm text-destructive">
+                  {t('settings.security.error.load', locale)}
+                </p>
+              )}
+              <p className="text-sm text-muted-foreground">
+                {t('settings.security.sessionsDescription', locale)}
               </p>
-            )}
-          </section>
-          <TrustedDevices
-            locale={locale}
-            formatTimestamp={time.format}
-            deviceName={getDeviceName}
-            scope={scope}
-            lists={lists}
-            heading={devicesHeading}
-            refresh={() => void refresh('devices')}
-            choose={(target, trigger) => choose({ kind: 'trust', target }, trigger)}
-            chooseAll={(trigger) => choose({ kind: 'allTrust' }, trigger)}
-            trackRevokeTrigger={(id, node) => trackRevokeTrigger('trust:' + id, node)}
-            trackRevokeAllTrigger={(node) => trackRevokeTrigger('allTrust', node)}
-          />
+              {ready && !sessions.length && (
+                <p className="text-sm text-muted-foreground">
+                  {t('settings.security.noSessions', locale)}
+                </p>
+              )}
+              {current && (
+                <div className="rounded-lg border border-primary/30 bg-primary/5 p-4 space-y-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <MonitorIcon className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium">
+                      {getDeviceName(current.deviceInfo?.userAgent, locale)}
+                    </span>
+                    <Badge>{t('settings.security.currentSession', locale)}</Badge>
+                  </div>
+                  <SessionDetails session={current} locale={locale} formatTimestamp={time.format} />
+                </div>
+              )}
+              {others.map((session) => (
+                <div key={session.sessionId} className="rounded-lg border p-4 space-y-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <DeviceIcon deviceType={detectDeviceType(session.deviceInfo?.userAgent)} />
+                      <span className="text-sm font-medium">
+                        {getDeviceName(session.deviceInfo?.userAgent, locale)}
+                      </span>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={scope.locked}
+                      ref={(node) => trackRevokeTrigger('session:' + session.sessionId, node)}
+                      onClick={(event) =>
+                        choose({ kind: 'session', target: session }, event.currentTarget)
+                      }
+                      className="gap-1"
+                    >
+                      <Trash2Icon className="h-3.5 w-3.5" />
+                      {t('settings.security.revoke', locale)}
+                    </Button>
+                  </div>
+                  <SessionDetails session={session} locale={locale} formatTimestamp={time.format} />
+                </div>
+              ))}
+              {others.length > 0 && (
+                <div className="pt-2">
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    className="w-full gap-2 whitespace-normal bg-red-700 text-white hover:bg-red-800 dark:bg-red-700 dark:text-white dark:hover:bg-red-800"
+                    disabled={scope.locked}
+                    ref={(node) => trackRevokeTrigger('others', node)}
+                    onClick={(event) => choose({ kind: 'others' }, event.currentTarget)}
+                  >
+                    <ShieldAlertIcon className="h-4 w-4 shrink-0" />
+                    {t('settings.security.revokeAll', locale)}
+                  </Button>
+                  <p className="text-xs text-muted-foreground mt-1 text-center">
+                    {t('settings.security.revokeAllDescription', locale)}
+                  </p>
+                </div>
+              )}
+              {ready && others.length === 0 && sessions.length > 0 && (
+                <p className="text-sm text-center text-muted-foreground">
+                  {t('settings.security.noOtherSessions', locale)}
+                </p>
+              )}
+            </section>
+            <TrustedDevices
+              locale={locale}
+              formatTimestamp={time.format}
+              deviceName={getDeviceName}
+              scope={scope}
+              lists={lists}
+              heading={devicesHeading}
+              refresh={() => void refresh('devices')}
+              choose={(target, trigger) => choose({ kind: 'trust', target }, trigger)}
+              chooseAll={(trigger) => choose({ kind: 'allTrust' }, trigger)}
+              trackRevokeTrigger={(id, node) => trackRevokeTrigger('trust:' + id, node)}
+              trackRevokeAllTrigger={(node) => trackRevokeTrigger('allTrust', node)}
+            />
+          </div>
           <Link
             to="/settings/security/telegram"
             disabled={scope.locked}
