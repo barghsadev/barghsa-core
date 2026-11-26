@@ -69,17 +69,20 @@ export interface SolarReview {
 }
 type BuildingType = 'building_apartment' | 'non_household';
 type GridType = 'on_grid' | 'off_grid';
+const siteCategories = ['agricultural', 'industrial'] as const;
+const installationSurfaces = ['land', 'rooftop', 'both'] as const;
+const siteRelationships = ['owner', 'tenant', 'authorized_operator'] as const;
 interface SolarDraft {
   buildingType: BuildingType;
   propertyForm: 'apartment' | 'villa';
   structuralFrame: 'concrete' | 'steel' | 'other';
   buildingCompletionDate: string;
   totalUnits: string;
-  siteCategory: 'agricultural' | 'industrial';
-  installationSurface: 'land' | 'rooftop' | 'both';
+  siteCategory: '' | (typeof siteCategories)[number];
+  installationSurface: '' | (typeof installationSurfaces)[number];
   usableAreaSqm: string;
   siteAddressId: string;
-  siteRelationship: 'owner' | 'tenant' | 'authorized_operator';
+  siteRelationship: '' | (typeof siteRelationships)[number];
   siteDescription: string;
   gridType: GridType;
   billIdentifier: string;
@@ -93,9 +96,9 @@ const solarDraftSchema: DraftSchema<SolarDraft> = {
       !['building_apartment', 'non_household'].includes(String(data.buildingType)) ||
       !['apartment', 'villa'].includes(String(data.propertyForm)) ||
       !['concrete', 'steel', 'other'].includes(String(data.structuralFrame)) ||
-      !['agricultural', 'industrial'].includes(String(data.siteCategory)) ||
-      !['land', 'rooftop', 'both'].includes(String(data.installationSurface)) ||
-      !['owner', 'tenant', 'authorized_operator'].includes(String(data.siteRelationship)) ||
+      !['', ...siteCategories].includes(String(data.siteCategory)) ||
+      !['', ...installationSurfaces].includes(String(data.installationSurface)) ||
+      !['', ...siteRelationships].includes(String(data.siteRelationship)) ||
       !['on_grid', 'off_grid'].includes(String(data.gridType)) ||
       [
         'buildingCompletionDate',
@@ -177,11 +180,11 @@ export function SolarRequestPage() {
         structuralFrame: z.enum(['concrete', 'steel', 'other']),
         buildingCompletionDate: z.string(),
         totalUnits: z.string(),
-        siteCategory: z.enum(['agricultural', 'industrial']),
-        installationSurface: z.enum(['land', 'rooftop', 'both']),
+        siteCategory: z.enum(['', ...siteCategories]),
+        installationSurface: z.enum(['', ...installationSurfaces]),
         usableAreaSqm: z.string(),
         siteAddressId: z.string(),
-        siteRelationship: z.enum(['owner', 'tenant', 'authorized_operator']),
+        siteRelationship: z.enum(['', ...siteRelationships]),
         siteDescription: z.string(),
         gridType: z.enum(['on_grid', 'off_grid']),
         billIdentifier: z.string(),
@@ -197,6 +200,12 @@ export function SolarRequestPage() {
           if (value.propertyForm === 'apartment' && !unitsValid(value.totalUnits))
             invalid('totalUnits', solarIntakeText('unitsFormat', locale));
         } else {
+          if (!value.siteCategory)
+            invalid('siteCategory', solarIntakeText('chooseSiteCategory', locale));
+          if (!value.installationSurface)
+            invalid('installationSurface', solarIntakeText('chooseInstallationSurface', locale));
+          if (!value.siteRelationship)
+            invalid('siteRelationship', solarIntakeText('chooseSiteRelationship', locale));
           if (!areaValid(value.usableAreaSqm))
             invalid('usableAreaSqm', solarIntakeText('areaFormat', locale));
         }
@@ -213,11 +222,11 @@ export function SolarRequestPage() {
       structuralFrame: 'concrete',
       buildingCompletionDate: '',
       totalUnits: '',
-      siteCategory: 'agricultural',
-      installationSurface: 'land',
+      siteCategory: '',
+      installationSurface: '',
       usableAreaSqm: '',
       siteAddressId: '',
-      siteRelationship: 'owner',
+      siteRelationship: '',
       siteDescription: '',
       gridType: 'on_grid',
       billIdentifier: '',
@@ -368,7 +377,10 @@ export function SolarRequestPage() {
   const propertyValid = (value: SolarDraft) =>
     addresses.some((address) => address.id === value.siteAddressId) &&
     (value.buildingType === 'non_household'
-      ? areaValid(value.usableAreaSqm)
+      ? value.siteCategory !== '' &&
+        value.installationSurface !== '' &&
+        value.siteRelationship !== '' &&
+        areaValid(value.usableAreaSqm)
       : completionDateValid(value.buildingCompletionDate) &&
         (value.propertyForm === 'villa' || unitsValid(value.totalUnits)));
   const gridValid = (value: SolarDraft) =>
@@ -999,13 +1011,17 @@ export function SolarRequestPage() {
                               id="solar-site-category"
                               className="w-full"
                               {...fields.bind('siteCategory')}
+                              required
                               aria-required="true"
                               value={siteCategory}
                               onChange={(e) =>
                                 setSiteCategory(e.target.value as typeof siteCategory)
                               }
                             >
-                              {(['agricultural', 'industrial'] as const).map((item) => (
+                              <option value="" disabled>
+                                {solarIntakeText('chooseSiteCategory', locale)}
+                              </option>
+                              {siteCategories.map((item) => (
                                 <option key={item} value={item}>
                                   {copy(item)}
                                 </option>
@@ -1020,13 +1036,17 @@ export function SolarRequestPage() {
                               id="solar-installation-surface"
                               className="w-full"
                               {...fields.bind('installationSurface')}
+                              required
                               aria-required="true"
                               value={installationSurface}
                               onChange={(e) =>
                                 setInstallationSurface(e.target.value as typeof installationSurface)
                               }
                             >
-                              {(['land', 'rooftop', 'both'] as const).map((item) => (
+                              <option value="" disabled>
+                                {solarIntakeText('chooseInstallationSurface', locale)}
+                              </option>
+                              {installationSurfaces.map((item) => (
                                 <option key={item} value={item}>
                                   {copy(item)}
                                 </option>
@@ -1063,13 +1083,17 @@ export function SolarRequestPage() {
                               id="solar-site-relationship"
                               className="w-full"
                               {...fields.bind('siteRelationship')}
+                              required
                               aria-required="true"
                               value={siteRelationship}
                               onChange={(e) =>
                                 setSiteRelationship(e.target.value as typeof siteRelationship)
                               }
                             >
-                              {(['owner', 'tenant', 'authorized_operator'] as const).map((item) => (
+                              <option value="" disabled>
+                                {solarIntakeText('chooseSiteRelationship', locale)}
+                              </option>
+                              {siteRelationships.map((item) => (
                                 <option key={item} value={item}>
                                   {copy(
                                     item === 'authorized_operator' ? 'authorizedOperator' : item

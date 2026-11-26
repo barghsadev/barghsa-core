@@ -193,6 +193,19 @@ it.each([
         );
         input.dispatchEvent(new Event('input', { bubbles: true }));
       });
+      for (const [id, value] of [
+        ['solar-site-category', 'industrial'],
+        ['solar-installation-surface', 'rooftop'],
+        ['solar-site-relationship', 'tenant'],
+      ] as const) {
+        const select = container.querySelector<HTMLSelectElement>(`#${id}`)!;
+        expect(select.value).toBe('');
+        expect(submit.disabled).toBe(true);
+        await act(async () => {
+          select.value = value;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+      }
       await act(async () => submit.click());
       expect(container.querySelector('#solar-area')).toBeNull();
       expect(container.querySelector('#solar-bill')).not.toBeNull();
@@ -270,6 +283,15 @@ it('restores a solar draft before showing the form', async () => {
     );
     expect(container.querySelector('#solar-area')).not.toBeNull();
     expect((container.querySelector('#solar-area') as HTMLInputElement).value).toBe('250');
+    expect(container.querySelector<HTMLSelectElement>('#solar-site-category')?.value).toBe(
+      data.siteCategory
+    );
+    expect(container.querySelector<HTMLSelectElement>('#solar-installation-surface')?.value).toBe(
+      data.installationSurface
+    );
+    expect(container.querySelector<HTMLSelectElement>('#solar-site-relationship')?.value).toBe(
+      data.siteRelationship
+    );
     expect(container.textContent).toContain('Roof survey pending');
     expect(container.querySelector<HTMLSelectElement>('#solar-site-address-id')?.value).toBe(
       secondaryAddress.id

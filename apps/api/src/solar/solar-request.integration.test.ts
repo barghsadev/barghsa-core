@@ -104,6 +104,7 @@ it('saves and resumes a scoped solar draft without losing incomplete fields', as
     gridType: 'off_grid',
     billIdentifier: '',
   };
+  const incomplete = { ...data, siteCategory: '', installationSurface: '', siteRelationship: '' };
   expect(
     (
       await request(
@@ -126,12 +127,22 @@ it('saves and resumes a scoped solar draft without losing incomplete fields', as
   const saved = await request('/api/solar/requests/draft', 'PUT', {
     profileId,
     currentStep: 1,
-    data,
+    data: incomplete,
   });
   expect(saved.status, http.logs()).toBe(200);
-  expect(await saved.json()).toMatchObject({ currentStep: 1, data });
+  expect(await saved.json()).toMatchObject({ currentStep: 1, data: incomplete });
+  expect(await (await request(path, 'GET')).json()).toMatchObject({
+    currentStep: 1,
+    data: incomplete,
+  });
   expect(
-    (await request('/api/solar/requests/draft', 'PUT', { profileId, currentStep: 1, data })).status
+    (
+      await request('/api/solar/requests/draft', 'PUT', {
+        profileId,
+        currentStep: 1,
+        data: incomplete,
+      })
+    ).status
   ).toBe(200);
   expect(
     (
@@ -293,6 +304,18 @@ it('submits both solar request types, captures agreement, and creates no contrac
     gridType: 'off_grid',
     agreementAccepted: true,
   };
+  for (const field of ['siteCategory', 'installationSurface', 'siteRelationship'] as const) {
+    const incomplete = { ...siteInput, [field]: '' };
+    expect((await request('/api/solar/requests/review', 'POST', incomplete)).status).toBe(400);
+    expect(
+      (
+        await request('/api/solar/requests', 'POST', {
+          ...incomplete,
+          expectedReviewHash: 'b'.repeat(64),
+        })
+      ).status
+    ).toBe(400);
+  }
   const badSite = await request('/api/solar/requests/review', 'POST', {
     ...siteInput,
     siteAddressId: randomUUID(),

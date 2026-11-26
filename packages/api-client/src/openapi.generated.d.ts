@@ -35262,15 +35262,15 @@ export interface operations {
                         /** @enum {string} */
                         gridType: "on_grid" | "off_grid";
                         /** @enum {string} */
-                        installationSurface: "land" | "rooftop" | "both";
+                        installationSurface: "" | "land" | "rooftop" | "both";
                         /** @enum {string} */
                         propertyForm: "apartment" | "villa";
                         siteAddressId: string;
                         /** @enum {string} */
-                        siteCategory: "agricultural" | "industrial";
+                        siteCategory: "" | "agricultural" | "industrial";
                         siteDescription: string;
                         /** @enum {string} */
-                        siteRelationship: "owner" | "tenant" | "authorized_operator";
+                        siteRelationship: "" | "owner" | "tenant" | "authorized_operator";
                         /** @enum {string} */
                         structuralFrame: "concrete" | "steel" | "other";
                         totalUnits: string;

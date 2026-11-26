@@ -1141,7 +1141,12 @@ for (const locale of ['en', 'fa'] as const)
         expect(draft?.data).toMatchObject({
           buildingType,
           ...(buildingType === 'non_household'
-            ? { usableAreaSqm: '250' }
+            ? {
+                usableAreaSqm: '250',
+                siteCategory: '',
+                installationSurface: '',
+                siteRelationship: '',
+              }
             : { propertyForm: 'villa', buildingCompletionDate: '2020-01-01' }),
         });
 
@@ -1161,6 +1166,10 @@ for (const locale of ['en', 'fa'] as const)
           .getByRole('button', { name: t('settings.addresses.form.save', locale), exact: true })
           .click();
         await expect(page).toHaveURL(/\/solar\/requests\/new\?step=1$/);
+        const next = page.getByRole('button', {
+          name: t('electricity.order.next', locale),
+          exact: true,
+        });
         if (buildingType === 'non_household') {
           await expect(page.locator('#solar-area')).toHaveValue('250');
           for (const key of ['siteCategory', 'installationSurface', 'usableArea', 'relationship'])
@@ -1171,6 +1180,17 @@ for (const locale of ['en', 'fa'] as const)
           await expect(
             page.getByLabel(tSolar('description', locale), { exact: true })
           ).not.toHaveAttribute('aria-required', 'true');
+          for (const [key, value] of [
+            ['siteCategory', 'industrial'],
+            ['installationSurface', 'rooftop'],
+            ['relationship', 'tenant'],
+          ] as const) {
+            const field = page.getByLabel(tSolar(key, locale), { exact: true });
+            await expect(field).toHaveValue('');
+            await expect(next).toBeDisabled();
+            await field.selectOption(value);
+          }
+          await expect(next).toBeEnabled();
         } else
           await expect(page.locator('#solar-completion-hint time')).toHaveAttribute(
             'datetime',
@@ -1190,9 +1210,7 @@ for (const locale of ['en', 'fa'] as const)
             .screenshot({
               path: `${process.env.BARGHSA_SCREENSHOT_DIR}/solar-address-restored-${test.info().project.name}.png`,
             });
-        await page
-          .getByRole('button', { name: t('electricity.order.next', locale), exact: true })
-          .click();
+        await next.click();
         await page.getByLabel(tSolar('offGrid', locale)).check();
         await page.getByLabel(tSolar('agreement', locale)).check();
         await page
@@ -1213,7 +1231,12 @@ for (const locale of ['en', 'fa'] as const)
         expect(submission).toMatchObject({
           buildingType,
           ...(buildingType === 'non_household'
-            ? { usableAreaSqm: 250 }
+            ? {
+                usableAreaSqm: 250,
+                siteCategory: 'industrial',
+                installationSurface: 'rooftop',
+                siteRelationship: 'tenant',
+              }
             : { propertyForm: 'villa', buildingCompletionDate: '2020-01-01' }),
           siteAddressId: siteAddress.id,
           gridType: 'off_grid',

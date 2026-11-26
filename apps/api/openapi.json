@@ -46360,6 +46360,7 @@
                       },
                       "installationSurface": {
                         "enum": [
+                          "",
                           "land",
                           "rooftop",
                           "both"
@@ -46379,6 +46380,7 @@
                       },
                       "siteCategory": {
                         "enum": [
+                          "",
                           "agricultural",
                           "industrial"
                         ],
@@ -46390,6 +46392,7 @@
                       },
                       "siteRelationship": {
                         "enum": [
+                          "",
                           "owner",
                           "tenant",
                           "authorized_operator"
