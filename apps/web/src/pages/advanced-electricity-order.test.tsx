@@ -1,3 +1,4 @@
+import { simpleElectricityOrderText } from '@barghsa/i18n/simple-electricity-order';
 import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
@@ -297,7 +298,7 @@ it('keeps an unavailable draft closed until a retry restores the saved step', as
   draftLoadFailures = 1;
   await mount();
   expect(container.querySelector('[role="alert"]')?.textContent).toContain(
-    t('electricity.order.draftLoadFailed', 'en')
+    simpleElectricityOrderText('draftLoadFailed', 'en')
   );
   expect(container.querySelector('nav')).toBeNull();
 
@@ -346,7 +347,7 @@ it.each([
   );
   await mount();
   const error = container.querySelector('[role="alert"]');
-  expect(error?.textContent).toContain(t('electricity.order.draftLoadFailed', 'en'));
+  expect(error?.textContent).toContain(simpleElectricityOrderText('draftLoadFailed', 'en'));
   expect(container.querySelector('nav')).toBeNull();
   invalid = false;
   await act(async () => error!.querySelector('button')!.click());
@@ -377,7 +378,7 @@ it.each([
   );
   await mount();
   const error = container.querySelector('[role="alert"]');
-  expect(error?.textContent).toContain(t('electricity.order.draftLoadFailed', 'en'));
+  expect(error?.textContent).toContain(simpleElectricityOrderText('draftLoadFailed', 'en'));
   expect(container.querySelector('nav')).toBeNull();
   invalid = false;
   await act(async () => error!.querySelector('button')!.click());
@@ -410,7 +411,7 @@ it('keeps mixed-profile addresses out of advanced checkout and recovers with an 
   await mount();
 
   const error = container.querySelector('[role="alert"]');
-  expect(error?.textContent).toContain(t('electricity.order.draftLoadFailed', 'en'));
+  expect(error?.textContent).toContain(simpleElectricityOrderText('draftLoadFailed', 'en'));
   expect(container.querySelector('nav')).toBeNull();
   expect(container.textContent).not.toContain('Private foreign street');
   expect(container.textContent).not.toContain(owned.fullAddress);

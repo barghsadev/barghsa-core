@@ -9,6 +9,7 @@ import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState }
 import { Link, useBlocker, useNavigate } from '@tanstack/react-router';
 import { LoadingStatus, Button, Card, CardContent, DateTimePicker, Input } from '@barghsa/ui';
 import { t } from '@barghsa/i18n/app';
+import { simpleElectricityOrderText } from '@barghsa/i18n/simple-electricity-order';
 import { toast } from '../lib/toast-api.js';
 import { AdvancedElectricityReview } from '../components/AdvancedElectricityReview.js';
 import {
@@ -691,7 +692,7 @@ export function AdvancedElectricityOrderPage() {
     return (
       <>
         {statusHeading}
-        <LoadingStatus>{t('electricity.order.draftLoading', locale)}</LoadingStatus>
+        <LoadingStatus>{simpleElectricityOrderText('draftLoading', locale)}</LoadingStatus>
       </>
     );
   if (loadError || !profileId || !options)
@@ -699,7 +700,7 @@ export function AdvancedElectricityOrderPage() {
       <>
         {statusHeading}
         <div role="alert" className="space-y-3">
-          <p>{t('electricity.order.draftLoadFailed', locale)}</p>
+          <p>{simpleElectricityOrderText('draftLoadFailed', locale)}</p>
           <Button
             type="button"
             variant="outline"

@@ -1,3 +1,4 @@
+import { simpleElectricityOrderText } from '@barghsa/i18n/simple-electricity-order';
 import { approveVisibleConfirmation } from '../test/confirmation.js';
 import { QueryProvider, QueryComponentProvider } from '../test/query-provider.js';
 import { AccountUserProvider } from '../hooks/useAccountUser.js';
@@ -268,7 +269,7 @@ it.each([
   );
   await mount();
   const error = container.querySelector('[role="alert"]');
-  expect(error?.textContent).toContain(t('electricity.order.draftLoadFailed', 'en'));
+  expect(error?.textContent).toContain(simpleElectricityOrderText('draftLoadFailed', 'en'));
   expect(container.querySelector('nav')).toBeNull();
   const retry = [...container.querySelectorAll('button')].find(
     (button) => button.textContent === t('electricity.order.retry', 'en')

@@ -78,7 +78,7 @@ for (const [locale, funding] of [
           userId: bank.context === 'staff' ? 'finance-reviewer' : 'buyer',
           requiresTosAcceptance: false,
           ...(funding === 'bank'
-            ? { operatingContext: bank.context, navigation: fullNavigation(bank.context) }
+            ? { operatingContext: bank.context, navigation: fullNavigation(bank.context, 'LEGAL') }
             : {}),
         },
       })

@@ -1192,7 +1192,7 @@ function OwnedSimpleElectricityOrderPage() {
       <div className="flex min-h-[50vh] items-center justify-center">
         <h1 className="sr-only">{t('electricity.order.title', locale)}</h1>
         <LoadingStatus className="text-muted-foreground">
-          {t('electricity.order.checking', locale)}
+          {simpleElectricityOrderText('checkingProfile', locale)}
         </LoadingStatus>
       </div>
     );
@@ -1206,10 +1206,8 @@ function OwnedSimpleElectricityOrderPage() {
       >
         <h1 className="sr-only">{t('electricity.order.title', locale)}</h1>
         <p role="alert">
-          {t(
-            verificationError
-              ? 'electricity.order.checkFailed'
-              : 'electricity.order.error.noProfile',
+          {simpleElectricityOrderText(
+            verificationError ? 'profileCheckFailed' : 'noProfile',
             locale
           )}
         </p>
@@ -1253,10 +1251,7 @@ function OwnedSimpleElectricityOrderPage() {
         <h1 className="sr-only">{t('electricity.order.title', locale)}</h1>
         {draftLoading && <SkeletonText lines={2} />}
         <p role={draftError ? 'alert' : 'status'}>
-          {t(
-            draftError ? 'electricity.order.draftLoadFailed' : 'electricity.order.draftLoading',
-            locale
-          )}
+          {simpleElectricityOrderText(draftError ? 'draftLoadFailed' : 'draftLoading', locale)}
         </p>
         {draftError && (
           <Button onClick={() => setDraftRetry((value) => value + 1)}>
@@ -2014,7 +2009,7 @@ function OwnedSimpleElectricityOrderPage() {
                                 )}
                                 {cityError && (
                                   <div role="alert" className="space-y-2">
-                                    <p>{t('electricity.order.cityLoadFailed', locale)}</p>
+                                    <p>{simpleElectricityOrderText('cityLoadFailed', locale)}</p>
                                     <Button onClick={cityOptions.retry}>
                                       {t('electricity.order.retry', locale)}
                                     </Button>

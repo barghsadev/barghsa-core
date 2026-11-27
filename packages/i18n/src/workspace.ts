@@ -619,8 +619,6 @@ export const fa: I18nDictionary = {
   'electricity.order.revision.currentCity': 'شهر فعلی',
   'electricity.order.revision.selectCity': 'شهر را انتخاب کنید',
   'electricity.order.title': 'ثبت سفارش برق',
-  'electricity.order.description':
-    'دوره، مقدار برق و آدرس تحویل را انتخاب کنید. مبلغ نهایی پیش از ثبت نمایش داده می‌شود.',
   'electricity.order.steps': 'مراحل ثبت سفارش',
   'formWizard.invalidField': 'این بخش را بررسی و اصلاح کنید.',
   'formWizard.current': 'مرحلهٔ فعلی',
@@ -646,8 +644,6 @@ export const fa: I18nDictionary = {
   'electricity.order.unsaved.address': 'پیش از ذخیره پیش‌نویس، نشانی جدید را ذخیره یا لغو کنید.',
   'electricity.order.draftSaveFailed': 'پیش‌نویس ذخیره نشد. دوباره تلاش کنید.',
   'electricity.order.unsaved.discardSaved': 'حذف پیش‌نویس ذخیره‌شده و خروج',
-  'electricity.order.draftLoadFailed': 'پیش‌نویس بارگذاری نشد. دوباره تلاش کنید.',
-  'electricity.order.draftLoading': 'در حال بارگذاری پیش‌نویس…',
   'electricity.order.applyGiftFirst': 'کد هدیه را اعمال کنید یا پاک کنید.',
   'electricity.order.profile': 'پروفایل',
   'electricity.order.walletBalance': 'موجودی کیف پول',
@@ -663,8 +659,6 @@ export const fa: I18nDictionary = {
     'در صورت لغو یا رد سفارش پرداخت‌شده، بازپرداخت طبق وضعیت پرداخت و قوانین قرارداد بررسی می‌شود.',
   'electricity.order.paymentAfterSubmit': 'فاکتور را برای دیدن وضعیت و روش‌های پرداخت باز کنید.',
   'electricity.order.paymentOptions': 'گزینه‌های پرداخت فاکتور: کیف پول یا ثبت رسید بانکی',
-  'electricity.order.period.title': 'دوره تحویل و مقدار انرژی',
-  'electricity.order.period.type': 'نوع دوره',
   'electricity.order.period.monthly': 'ماهانه',
   'electricity.order.period.weekly': 'هفتگی',
   'electricity.order.period.selection': 'دوره انتخابی',
@@ -717,10 +711,6 @@ export const fa: I18nDictionary = {
   'electricity.order.checkOrders': 'بررسی سفارش‌ها',
   'electricity.order.addressLoadFailed':
     'بارگذاری آدرس‌های ذخیره‌شده انجام نشد. پیش از ایجاد سفارش دوباره تلاش کنید.',
-  'electricity.order.cityLoadFailed': 'بارگذاری شهرهای این استان انجام نشد. دوباره تلاش کنید.',
-  'electricity.order.checking': 'در حال بررسی وضعیت پروفایل…',
-  'electricity.order.checkFailed':
-    'بررسی وضعیت پروفایل انجام نشد. پیش از ایجاد سفارش دوباره تلاش کنید.',
   'electricity.order.error.create': 'ایجاد سفارش با خطا مواجه شد',
   'electricity.order.success.create': 'سفارش برق ثبت شد.',
   'electricity.order.success.title': 'سفارش ثبت شد',
@@ -1414,8 +1404,6 @@ export const englishMessages = {
   'electricity.order.revision.currentCity': 'Current city',
   'electricity.order.revision.selectCity': 'Select a city',
   'electricity.order.title': 'Place Electricity Order',
-  'electricity.order.description':
-    'Choose a delivery period, energy quantity and address. Review the total before submitting.',
   'electricity.order.steps': 'Order steps',
   'formWizard.invalidField': 'Check and correct this field.',
   'formWizard.current': 'Current step',
@@ -1441,8 +1429,6 @@ export const englishMessages = {
   'electricity.order.unsaved.address': 'Save or cancel the new address before saving your draft.',
   'electricity.order.draftSaveFailed': 'Could not save your draft. Please retry.',
   'electricity.order.unsaved.discardSaved': 'Delete saved draft and leave',
-  'electricity.order.draftLoadFailed': 'Could not load your draft. Please retry.',
-  'electricity.order.draftLoading': 'Loading your draft…',
   'electricity.order.applyGiftFirst': 'Apply or clear the gift code before continuing.',
   'electricity.order.profile': 'Profile',
   'electricity.order.walletBalance': 'Wallet balance',
@@ -1459,8 +1445,6 @@ export const englishMessages = {
   'electricity.order.paymentAfterSubmit':
     'Open the invoice to see payment status and available methods.',
   'electricity.order.paymentOptions': 'Invoice payment options: wallet or bank receipt',
-  'electricity.order.period.title': 'Delivery period and energy',
-  'electricity.order.period.type': 'Period type',
   'electricity.order.period.monthly': 'Monthly',
   'electricity.order.period.weekly': 'Weekly',
   'electricity.order.period.selection': 'Selected period',
@@ -1514,10 +1498,6 @@ export const englishMessages = {
   'electricity.order.checkOrders': 'Check orders',
   'electricity.order.addressLoadFailed':
     'Could not load saved addresses. Try again before creating an order.',
-  'electricity.order.cityLoadFailed': 'Could not load cities for this province. Try again.',
-  'electricity.order.checking': 'Checking profile eligibility…',
-  'electricity.order.checkFailed':
-    'Could not check profile eligibility. Try again before creating an order.',
   'electricity.order.error.create': 'Failed to create order',
   'electricity.order.success.create': 'Electricity order submitted.',
   'electricity.order.success.title': 'Order Submitted',

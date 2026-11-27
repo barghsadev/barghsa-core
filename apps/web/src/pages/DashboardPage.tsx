@@ -404,7 +404,8 @@ export function DashboardPage({ locale: localeOverride }: { locale?: Locale } = 
   ).filter(
     ({ accessPath }) => navigation?.area === 'customer' && navigation.paths.includes(accessPath)
   );
-  const canOrder = services.some(({ to }) => to === '/electricity');
+  const canOrder =
+    navigation?.profileType === 'LEGAL' && services.some(({ to }) => to === '/electricity');
 
   return (
     <div

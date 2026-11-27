@@ -19,7 +19,7 @@ for (const isStaff of [false, true]) {
         json: {
           userId: 'viewer',
           isStaff,
-          navigation: fullNavigation(isStaff ? 'staff' : 'customer'),
+          navigation: fullNavigation(isStaff ? 'staff' : 'customer', 'LEGAL'),
           requiresTosAcceptance: false,
         },
       })

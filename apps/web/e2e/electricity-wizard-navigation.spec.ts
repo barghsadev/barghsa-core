@@ -7,6 +7,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { t } from '@barghsa/i18n/app';
 import { simpleElectricityOrderText } from '@barghsa/i18n/simple-electricity-order';
+import { shellText } from '@barghsa/i18n/shell';
 import { t as fundingText } from '@barghsa/i18n/workspace';
 import { fullNavigation } from './navigation-fixture';
 import { checkRoutePresentation } from './route-presentation';
@@ -51,6 +52,64 @@ const path = (mode: Mode) =>
   mode === 'simple' ? '/electricity/order' : '/electricity/orders/new/advanced';
 const field = (page: Page, mode: Mode) =>
   page.locator(mode === 'simple' ? '#electricity-kwh' : '#advanced-thermal');
+
+for (const [mode, locale] of [
+  ['simple', 'fa'],
+  ['advanced', 'en'],
+] as const) {
+  test(`${mode} electricity asks for a company profile before reading a draft (${locale})`, async ({
+    page,
+  }) => {
+    await fixture(page, mode, locale);
+    await page.route('**/api/auth/user', (route) =>
+      route.fulfill({
+        json: {
+          isStaff: false,
+          userId: 'buyer',
+          requiresTosAcceptance: false,
+          navigation: { ...fullNavigation('customer', 'INDIVIDUAL'), profileId },
+        },
+      })
+    );
+    await page.route('**/api/profiles', (route) =>
+      route.fulfill({
+        json: {
+          profiles: [
+            { id: profileId, profileType: 'INDIVIDUAL', status: 'VERIFIED', isDefault: true },
+          ],
+          activeProfileId: profileId,
+          hasDefault: true,
+        },
+      })
+    );
+    const draftReads: string[] = [];
+    await page.route('**/api/electricity/drafts/**', (route) => {
+      draftReads.push(route.request().method());
+      return route.fulfill({ status: 404, json: { error: { code: 'NOT_FOUND:RESOURCE' } } });
+    });
+
+    await page.goto(path(mode));
+    const main = page.getByRole('main');
+    await expect(
+      main.getByRole('heading', { name: simpleElectricityOrderText('companyProfileTitle', locale) })
+    ).toBeVisible();
+    await expect(
+      main.getByRole('link', { name: fundingText('dashboard.profile.manage', locale) })
+    ).toHaveAttribute('href', '/settings/profile');
+    expect(draftReads).toEqual([]);
+
+    await page.goto('/electricity');
+    await expect(
+      main.getByRole('heading', { name: simpleElectricityOrderText('companyProfileTitle', locale) })
+    ).toBeVisible();
+    await expect(main.locator('a[href^="/electricity/orders/new"]')).toHaveCount(0);
+
+    await page.goto('/app');
+    await expect(main.getByRole('heading', { name: shellText('home', locale) })).toBeVisible();
+    await expect(main.locator('a[href^="/electricity/orders/new"]')).toHaveCount(0);
+    expect(draftReads).toEqual([]);
+  });
+}
 
 for (const mode of ['simple', 'advanced'] as const)
   for (const locale of ['en', 'fa'] as const)
@@ -150,7 +209,7 @@ for (const locale of ['en', 'fa'] as const)
     await expect(city).toBeDisabled();
     const error = page
       .getByRole('alert')
-      .filter({ hasText: t('electricity.order.cityLoadFailed', locale) });
+      .filter({ hasText: simpleElectricityOrderText('cityLoadFailed', locale) });
     await expect(error).toBeVisible();
     await page.locator('#order-address-fullAddress').fill('Retained power address');
     const postalCode = page.locator('#order-address-postalCode');
@@ -560,10 +619,11 @@ for (const locale of ['en', 'fa'] as const) {
         return route.fulfill({ json: { addresses } });
       });
       await page.goto(`${path(mode)}?step=4`);
-      const errorKey = mode === 'simple' ? 'addressLoadFailed' : 'draftLoadFailed';
-      const alert = page
-        .getByRole('alert')
-        .filter({ hasText: t(`electricity.order.${errorKey}`, locale) });
+      const errorMessage =
+        mode === 'simple'
+          ? t('electricity.order.addressLoadFailed', locale)
+          : simpleElectricityOrderText('draftLoadFailed', locale);
+      const alert = page.getByRole('alert').filter({ hasText: errorMessage });
       await expect(alert).toBeVisible();
       await expect(page.getByText(privateAddress)).toHaveCount(0);
       await expect(page.getByText(address.fullAddress)).toHaveCount(0);

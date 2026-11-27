@@ -9,11 +9,15 @@ import { Badge, Button, ListPage, PageHeader, buttonVariants } from '@barghsa/ui
 import { t } from '@barghsa/i18n/workspace';
 import { shellText } from '@barghsa/i18n/shell';
 import { useLocale } from '../hooks/useLocale.js';
+import { useNavigation } from '../hooks/useNavigation.js';
 import { useNumberFormatting } from '../hooks/useNumberFormatting.js';
+import ElectricityCompanyProfileNotice from '../components/ElectricityCompanyProfileNotice.js';
 import { RecordListSkeleton } from '../components/RecordListSkeleton.js';
 
 export default function ElectricityIndexPage() {
   const locale = useLocale();
+  const navigation = useNavigation();
+  const companyProfileRequired = !!navigation && navigation.profileType !== 'LEGAL';
   const numbers = useNumberFormatting(locale);
   const [products, setProducts] = useState<ElectricityCatalogueProduct[]>([]);
   const [state, setState] = useState<'loading' | 'ready' | 'error' | 'denied'>('loading');
@@ -55,7 +59,7 @@ export default function ElectricityIndexPage() {
         title={shellText('buyElectricity', locale)}
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            {offersStandardOrder && state === 'ready' && (
+            {!companyProfileRequired && offersStandardOrder && state === 'ready' && (
               <Link
                 to="/electricity/orders/new"
                 className={buttonVariants({ className: 'min-h-11' })}
@@ -63,17 +67,19 @@ export default function ElectricityIndexPage() {
                 {t('electricity.catalogue.createDraft', locale)}
               </Link>
             )}
-            {offersStandardOrder && state === 'loading' && (
+            {!companyProfileRequired && offersStandardOrder && state === 'loading' && (
               <Button disabled className="min-h-11">
                 {t('electricity.catalogue.createDraft', locale)}
               </Button>
             )}
-            <Link
-              to="/electricity/orders/new/advanced"
-              className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
-            >
-              {t('electricity.catalogue.advancedOrder', locale)}
-            </Link>
+            {!companyProfileRequired && (
+              <Link
+                to="/electricity/orders/new/advanced"
+                className={buttonVariants({ variant: 'outline', className: 'min-h-11' })}
+              >
+                {t('electricity.catalogue.advancedOrder', locale)}
+              </Link>
+            )}
             <Link
               to="/electricity/orders"
               className={buttonVariants({ variant: 'ghost', className: 'min-h-11' })}
@@ -83,6 +89,7 @@ export default function ElectricityIndexPage() {
           </div>
         }
       />
+      {companyProfileRequired && <ElectricityCompanyProfileNotice heading="h2" />}
       <ListPage role="region" aria-labelledby="electricity-comparison">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 id="electricity-comparison" className="text-xl font-semibold">
