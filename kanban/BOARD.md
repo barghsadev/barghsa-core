@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-26. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-28. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.1**. Next milestone: **v0.6.0**.
 
@@ -106,7 +106,7 @@ All four services have a safe browse → intake → review → payment where app
 | `02-auth-users-admin.md#T-11.01.01` | done | Recorded batch work | Account/profile closure request and blocker evaluation |
 | `02-auth-users-admin.md#T-11.01.02` | done | Recorded batch work | Portable customer data export |
 | `02-auth-users-admin.md#T-11.01.03` | done | Recorded batch work | Closure execution, revocation, retention and anonymization |
-| `02-auth-users-admin.md#T-11.02.01` | done | Recorded batch work | Explicit operating context in session and authorization policy |
+| `02-auth-users-admin.md#T-11.02.01` | done | Recorded batch work | Explicit operating context in session and authorization policy (P2 defect) |
 | `02-auth-users-admin.md#T-11.02.02` | done | Recorded batch work | Context-isolation integration and E2E tests |
 | `02-auth-users-admin.md#T-11.03.01` | done | Recorded batch work | Atomic staff user/profile creation without customer onboarding |
 | `03-core-business.md#T-03.01.01.01` | done | Earlier acceptance_verified | Create `products` table with columns: `id` (UUIDv7 PK), `type` (enum: `consultation`, `electricity`, `hardware`, `saving_plan`), `system_key` (nullable unique — used for immutable system products like electricity types), `title` (localized JSONB), `description` (localized JSONB, nullable), `price` (bigint nullable, in IRR), `status` (enum: `active`, `inactive`, `archived`), `created_at`, `updated_at` |

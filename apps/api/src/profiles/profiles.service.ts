@@ -24,7 +24,10 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { ConfigCacheService } from '../config-cache/config-cache.service.js';
 import { NotificationsService } from '../notifications/notifications.service.js';
 import type { ValidatedSession } from '../session/session.service.js';
-import { requireCurrentSession } from '../session/session-step-up.js';
+import {
+  requireCurrentCustomerSession,
+  requireCurrentSession,
+} from '../session/session-step-up.js';
 import { readWithCurrentAccount } from '../session/account-session-read.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { idempotentMutation } from '../database/idempotency.js';
@@ -502,9 +505,16 @@ export class ProfilesService {
       ).rows[0];
       if (!account || account.disabled_at)
         throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
-      if (account.is_staff || account.is_admin || account.has_roles)
-        throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
-      if (!transaction) await requireCurrentSession(client, actor);
+      if (!transaction) await requireCurrentCustomerSession(client, actor);
+      // Preserve the single personal profile limit for staff accounts, including legacy accounts
+      // that were provisioned without a profile. The account lock serializes this check.
+      if (account.is_staff || account.is_admin || account.has_roles) {
+        const existing = await client.query('SELECT 1 FROM profiles WHERE user_id=$1 LIMIT 1', [
+          userId,
+        ]);
+        if (profileType !== 'INDIVIDUAL' || existing.rows.length)
+          throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+      }
 
       // If the user has no default profile yet, set this one as default.
       const existing = await client.query(
@@ -528,7 +538,7 @@ export class ProfilesService {
       );
 
       if (!transaction) {
-        await requireCurrentSession(client, actor);
+        await requireCurrentCustomerSession(client, actor);
         await client.query('COMMIT');
       }
       this.logger.log(

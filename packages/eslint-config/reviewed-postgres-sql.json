@@ -47,7 +47,7 @@
   "apps/api/src/orders/orders.service.ts": "3ed5f12f178b43478be297bc358bb5456770e2871a3326cae5fd02430b03a1b8",
   "apps/api/src/profiles/agent-activity.ts": "f406e0d5426ee31ad6d4edd20589f32fe0e13f5fd4726aee3a81c14c2d9e4580",
   "apps/api/src/profiles/profile-context.ts": "af60a9ca1bda412f65e7192c228a6cb7a9739054b4dd38ecf62dc17f20f6c205",
-  "apps/api/src/profiles/profiles.service.ts": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7",
+  "apps/api/src/profiles/profiles.service.ts": "e5dffd8ba1b3b0e4c1fd351c9c12ae520dd45c390596a64e7387e93540378b82",
   "apps/api/src/provider-config/email-circuit-breaker.service.ts": "6b757138195823aa1a8576f1d208af0dfa224cb187d223bce64069481a1b6052",
   "apps/api/src/provider-config/email-provider-config.service.ts": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2",
   "apps/api/src/provider-config/provider-mutation.ts": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d",

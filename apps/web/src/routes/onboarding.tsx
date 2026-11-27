@@ -10,7 +10,7 @@ export const Route = createFileRoute('/onboarding')({
       throw redirect({ to: '/login', replace: true });
     }
     if (session.operatingContext === 'staff') throw redirect({ to: '/app', replace: true });
-    return { onboardingUserId: session.userId };
+    return { onboardingUserId: session.userId, staffAccount: session.isStaff };
   },
   component: () => (
     <main id="main-content" tabIndex={-1}>

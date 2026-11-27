@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
+import type { OnboardingJourney } from '../profiles/onboarding-journeys.service.js';
 
 let fixture: Awaited<ReturnType<typeof startHttpFixture>>;
 const userId = randomUUID();
@@ -67,6 +68,9 @@ it('separates staff and customer authority across rotations and rejects stale cr
     headers: auth(originalSessionId, originalCsrf),
   });
   expect(staffProfiles.status).toBe(403);
+  const draftList = (sessionId: string, csrf: string) =>
+    fetch(`${fixture.base}/api/onboarding/drafts`, { headers: auth(sessionId, csrf) });
+  expect((await draftList(originalSessionId, originalCsrf)).status).toBe(403);
 
   const customerResponse = await switchTo(originalSessionId, originalCsrf, 'customer');
   expect(customerResponse.status, await customerResponse.clone().text()).toBe(200);
@@ -112,6 +116,46 @@ it('separates staff and customer authority across rotations and rejects stale cr
       })
     ).status
   ).toBe(200);
+
+  const drafts = await draftList(customer.sessionId, customer.csrf);
+  expect(drafts.status).toBe(200);
+  expect(await drafts.json()).toEqual({ drafts: [], nextAfter: null });
+  expect((await draftList(originalSessionId, originalCsrf)).status).toBe(401);
+  const onboarding = (path: string, body: unknown) =>
+    fetch(`${fixture.base}/api/onboarding/${path}`, {
+      method: 'POST',
+      headers: {
+        ...auth(customer.sessionId, customer.csrf),
+        'X-CSRF-Token': customer.csrf,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+  expect((await onboarding('start', { profileType: 'LEGAL' })).status).toBe(403);
+  expect(
+    (
+      await onboarding('journeys', {
+        requestId: randomUUID(),
+        profileTypes: ['INDIVIDUAL', 'LEGAL'],
+      })
+    ).status
+  ).toBe(403);
+  const setup = { requestId: randomUUID(), profileTypes: ['INDIVIDUAL'] };
+  const started = await onboarding('journeys', setup);
+  expect(started.status).toBe(201);
+  const journey = (await started.json()) as OnboardingJourney;
+  expect(journey.profiles).toEqual([expect.objectContaining({ status: 'DRAFT' })]);
+  expect(await (await onboarding('journeys', setup)).json()).toEqual(journey);
+  const selectedProfileId = journey.profiles[0]!.id;
+  await fixture.pool.query("UPDATE profiles SET status='ACTIVE' WHERE id=$1", [selectedProfileId]);
+  const finished = await onboarding(`journeys/${journey.id}/finish`, { selectedProfileId });
+  expect(finished.status).toBe(200);
+  expect(await finished.json()).toMatchObject({
+    completed: true,
+    activeProfileId: selectedProfileId,
+  });
+  expect((await onboarding('start', { profileType: 'INDIVIDUAL' })).status).toBe(403);
+  expect((await onboarding('journeys', { ...setup, requestId: randomUUID() })).status).toBe(403);
   const staffJob = randomUUID();
   const customerJob = randomUUID();
   await fixture.pool.query(
@@ -137,6 +181,7 @@ it('separates staff and customer authority across rotations and rejects stale cr
   const staffResponse = await switchTo(customer.sessionId, customer.csrf, 'staff');
   expect(staffResponse.status, await staffResponse.clone().text()).toBe(200);
   const staff = rotatedCredentials(staffResponse);
+  expect((await draftList(staff.sessionId, staff.csrf)).status).toBe(403);
   expect(
     (await fetch(`${fixture.base}/api/profiles`, { headers: auth(staff.sessionId, staff.csrf) }))
       .status

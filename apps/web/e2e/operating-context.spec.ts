@@ -1,5 +1,6 @@
 import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
+import { t } from '@barghsa/i18n/app';
 import { shellText } from '@barghsa/i18n/shell';
 import { workspaceModeText } from '@barghsa/i18n/workspace-mode';
 
@@ -137,13 +138,34 @@ test('dual-role user can onboard only in customer context', async ({ page }) => 
       },
     })
   );
+  await page.route('**/api/auth/sessions/context', (route) => {
+    const { context } = route.request().postDataJSON() as { context: 'staff' | 'customer' };
+    operatingContext = context;
+    return route.fulfill({ json: { operatingContext } });
+  });
+  await page.route('**/api/profiles', (route) => route.fulfill({ json: { profiles: [] } }));
+  await page.route('**/api/onboarding/journeys/active', (route) =>
+    route.fulfill({ json: { journey: null } })
+  );
+  await page.route('**/api/onboarding/drafts', (route) =>
+    route.fulfill({ json: { drafts: [], nextAfter: null } })
+  );
 
   await page.goto('/onboarding');
   await expect(page).toHaveURL(/\/app$/);
   await expect(page.locator('main[data-area=admin]')).toBeVisible();
 
-  operatingContext = 'customer';
-  await page.goto('/onboarding');
+  await page.evaluate(() => {
+    document.cookie = 'barghsa_csrf=test-csrf; path=/';
+  });
+  await page.getByRole('button', { name: shellText('accountMenu', 'en'), exact: true }).click();
+  await page.getByRole('button', { name: workspaceModeText('toCustomer', 'en') }).click();
   await expect(page).toHaveURL(/\/onboarding\/?$/);
-  await expect(page.locator('h1')).toBeVisible();
+  await page.getByRole('checkbox', { name: t('onboarding.profile.individual', 'en') }).check();
+  await expect(
+    page.getByRole('button', { name: t('onboarding.type.continue', 'en') })
+  ).toBeEnabled();
+  await expect(
+    page.getByRole('checkbox', { name: t('onboarding.profile.legal', 'en') })
+  ).toHaveCount(0);
 });

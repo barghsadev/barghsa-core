@@ -4,7 +4,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import { z } from 'zod';
 import type { ValidatedSession } from '../session/session.service.js';
 import type { PoolClient } from 'pg';
-import { requireCurrentSession } from '../session/session-step-up.js';
+import { requireCurrentCustomerSession } from '../session/session-step-up.js';
 import { readOnboardingDraftState } from './onboarding-draft-state.js';
 import { readWizardDraftTtl } from '../common/wizard-draft-retention.js';
 
@@ -71,21 +71,16 @@ export const onboardingDraftInputSchema = z
 
 @Injectable()
 export class OnboardingDraftsService {
-  private async lockActor(client: PoolClient, actor: Actor, customerOnly = false) {
+  private async lockActor(client: PoolClient, actor: Actor) {
     // Match session validation's user -> session lock order, including audit foreign keys.
     const account = (
-      await client.query(
-        `SELECT disabled_at,is_staff,is_admin,
-        EXISTS(SELECT 1 FROM user_roles WHERE user_id=$1) AS has_roles
-        FROM users WHERE user_id=$1 FOR UPDATE`,
-        [actor.userId]
-      )
+      await client.query('SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [
+        actor.userId,
+      ])
     ).rows[0];
     if (!account || account.disabled_at)
       throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
-    if (customerOnly && (account.is_staff || account.is_admin || account.has_roles))
-      throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
-    await requireCurrentSession(client, actor);
+    await requireCurrentCustomerSession(client, actor);
   }
 
   async list(actor: Actor, query: unknown) {
@@ -95,7 +90,7 @@ export class OnboardingDraftsService {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      await this.lockActor(client, actor, true);
+      await this.lockActor(client, actor);
       const ttl = await readWizardDraftTtl(client);
       const result = await client.query(
         `SELECT p.id,p.profile_type,
@@ -122,7 +117,7 @@ export class OnboardingDraftsService {
         hasDraft: row.has_draft as boolean,
         expired: row.expired as boolean,
       }));
-      await requireCurrentSession(client, actor);
+      await requireCurrentCustomerSession(client, actor);
       await client.query('COMMIT');
       return { drafts, nextAfter: result.rows.length > 50 ? drafts.at(-1)!.id : null };
     } catch (error) {
@@ -159,7 +154,7 @@ export class OnboardingDraftsService {
           [actor.userId, profileId, draft.version]
         );
       }
-      await requireCurrentSession(client, actor);
+      await requireCurrentCustomerSession(client, actor);
       await client.query('COMMIT');
       return { version: draft.version, data: draft.data };
     } catch (error) {
@@ -201,7 +196,7 @@ export class OnboardingDraftsService {
          VALUES(uuid_generate_v7(),$1,'onboarding_draft_saved',jsonb_build_object('profileId',$2::text,'version',$3::integer),uuid_generate_v7(),NOW())`,
         [actor.userId, profileId, version]
       );
-      await requireCurrentSession(client, actor);
+      await requireCurrentCustomerSession(client, actor);
       await client.query('COMMIT');
       return { version, data: parsed.data.data };
     } catch (error) {

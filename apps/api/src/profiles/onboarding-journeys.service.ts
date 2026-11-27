@@ -4,7 +4,7 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import type { PoolClient } from 'pg';
 import { z } from 'zod';
 import type { ValidatedSession } from '../session/session.service.js';
-import { requireCurrentSession } from '../session/session-step-up.js';
+import { requireCurrentCustomerSession } from '../session/session-step-up.js';
 import { readWithCurrentAccount } from '../session/account-session-read.js';
 import { ProfilesService } from './profiles.service.js';
 
@@ -62,17 +62,12 @@ export class OnboardingJourneysService {
   constructor(private readonly profiles: ProfilesService) {}
 
   private async requireCustomer(client: PoolClient, actor: Actor) {
-    const result = await client.query(
-      `SELECT u.disabled_at, u.is_staff, u.is_admin,
-       EXISTS(SELECT 1 FROM user_roles r WHERE r.user_id=u.user_id) AS has_roles
-       FROM users u WHERE u.user_id=$1 FOR UPDATE`,
-      [actor.userId]
-    );
+    const result = await client.query('SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [
+      actor.userId,
+    ]);
     const user = result.rows[0];
     if (!user || user.disabled_at) fail(ErrorCodes.AUTH_UNAUTHENTICATED.code, 401);
-    if (user.is_staff || user.is_admin || user.has_roles)
-      fail(ErrorCodes.AUTHZ_FORBIDDEN.code, 403);
-    await requireCurrentSession(client, actor);
+    await requireCurrentCustomerSession(client, actor);
   }
 
   private async project(
@@ -192,7 +187,7 @@ export class OnboardingJourneysService {
         await this.audit(client, actor.userId, 'onboarding_journey_started', row.id);
       }
       const result = await this.project(client, actor.userId, row);
-      await requireCurrentSession(client, actor);
+      await requireCurrentCustomerSession(client, actor);
       await client.query('COMMIT');
       return result;
     } catch (error) {
@@ -255,7 +250,7 @@ export class OnboardingJourneysService {
         )
           conflict();
       }
-      await requireCurrentSession(client, actor);
+      await requireCurrentCustomerSession(client, actor);
       await client.query('COMMIT');
       return journey;
     } catch (error) {

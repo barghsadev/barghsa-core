@@ -191,14 +191,11 @@ it('requires a valid request identity, live session, and CSRF protection', async
   ).toBe(403);
   expect(await counts()).toEqual({ profiles: 0, journeys: 0, audits: 0 });
 });
-for (const mode of ['is_staff', 'is_admin', 'disabled_at'])
-  it(`rejects account ${mode} before creating profiles`, async () => {
-    await http.pool.query(
-      `UPDATE users SET ${mode}=${mode === 'disabled_at' ? 'NOW()' : 'true'} WHERE user_id='setup-owner'`
-    );
-    expect((await start()).status).toBe(mode === 'disabled_at' ? 401 : 403);
-    expect(await counts()).toEqual({ profiles: 0, journeys: 0, audits: 0 });
-  });
+it('rejects a disabled account before creating profiles', async () => {
+  await http.pool.query("UPDATE users SET disabled_at=NOW() WHERE user_id='setup-owner'");
+  expect((await start()).status).toBe(401);
+  expect(await counts()).toEqual({ profiles: 0, journeys: 0, audits: 0 });
+});
 for (const action of ['fail', 'expire'])
   it(`rolls back both drafts, default and setup when start audit ${action}s`, async () => {
     await http.pool.query(
@@ -331,9 +328,12 @@ it('returns the remaining profile after completing the first and preserves legal
   ).toBe('VERIFIED');
 });
 
-it('rechecks staff eligibility before finishing an existing customer setup', async () => {
+it('denies staff context when finishing an existing customer setup', async () => {
   const journey = await ready();
   await http.pool.query("UPDATE users SET is_staff=true WHERE user_id='setup-owner'");
+  await http.pool.query("UPDATE sessions SET operating_context='staff' WHERE session_id=$1", [
+    session,
+  ]);
   expect((await finish(journey)).status).toBe(403);
   expect((await state(journey)).completed_at).toBeNull();
 });

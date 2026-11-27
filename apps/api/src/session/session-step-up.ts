@@ -1,6 +1,6 @@
 import { HttpException, Logger } from '@nestjs/common';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import { SessionService, type ValidatedSession } from './session.service.js';
+import { SessionService, type OperatingContext, type ValidatedSession } from './session.service.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 
 const logger = new Logger('SessionStepUp');
@@ -35,14 +35,18 @@ export async function requireCurrentSession(
   client: { query(sql: string, params?: unknown[]): Promise<{ rows: Record<string, unknown>[] }> },
   actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
   expectedRevokedAt?: Date
-): Promise<{ stepUpVerifiedAt: Date | null; stepUpFresh: boolean }> {
+): Promise<{
+  stepUpVerifiedAt: Date | null;
+  stepUpFresh: boolean;
+  operatingContext: OperatingContext;
+}> {
   await client.query(
     'SELECT session_id FROM sessions WHERE session_id=$1 AND user_id=$2 FOR UPDATE',
     [actor.sessionId, actor.userId]
   );
   // Read the database clock after any lock wait, including on the final check.
   const result = await client.query(
-    `SELECT csrf_token, step_up_verified_at,
+    `SELECT csrf_token, step_up_verified_at, operating_context,
        set_config('barghsa.actor_user_id',user_id,true) AS actor_user_scope,
        set_config('barghsa.actor_context',operating_context,true) AS actor_context_scope,
        set_config('barghsa.actor_session_id',session_id::text,true) AS actor_session_scope,
@@ -66,7 +70,17 @@ export async function requireCurrentSession(
   return {
     stepUpVerifiedAt: session.step_up_verified_at as Date | null,
     stepUpFresh: session.fresh === true,
+    operatingContext: session.operating_context as OperatingContext,
   };
+}
+
+export async function requireCurrentCustomerSession(
+  client: Parameters<typeof requireCurrentSession>[0],
+  actor: Parameters<typeof requireCurrentSession>[1]
+): Promise<void> {
+  const session = await requireCurrentSession(client, actor);
+  if (session.operatingContext !== 'customer')
+    throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
 }
 
 /** Require recent step-up in addition to the same current-session boundary. */

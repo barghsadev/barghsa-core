@@ -18,16 +18,30 @@ import { RecordEditorActions, recordEditorSurface } from '../../components/Recor
 export const Route = createFileRoute('/onboarding/')({ component: OnboardingPage });
 type ProfileType = 'INDIVIDUAL' | 'LEGAL';
 const OnboardingDraftList = lazy(() => import('../../components/OnboardingDraftList.js'));
-const types = ['INDIVIDUAL', 'LEGAL'] as const;
+const personalTypes = ['INDIVIDUAL'] as const;
+const types = [...personalTypes, 'LEGAL'] as const;
 
 function OnboardingPage() {
-  const { onboardingUserId } = Route.useRouteContext();
-  return <OnboardingContent key={onboardingUserId} accountId={onboardingUserId} />;
+  const { onboardingUserId, staffAccount } = Route.useRouteContext();
+  return (
+    <OnboardingContent
+      key={onboardingUserId}
+      accountId={onboardingUserId}
+      staffAccount={staffAccount}
+    />
+  );
 }
 
-function OnboardingContent({ accountId }: { accountId: string }) {
+function OnboardingContent({
+  accountId,
+  staffAccount,
+}: {
+  accountId: string;
+  staffAccount: boolean;
+}) {
   const locale = useLocale();
   const router = useRouter();
+  const availableTypes = staffAccount ? personalTypes : types;
   const [draftListReady, setDraftListReady] = useState(false);
   const [selected, setSelected] = useState<ProfileType[]>([]);
   const [journey, setJourney] = useState<OnboardingJourney | null>(null);
@@ -153,11 +167,13 @@ function OnboardingContent({ accountId }: { accountId: string }) {
             <div className="px-4 py-4 sm:px-6">
               <fieldset disabled={submitting || error} className="min-w-0 space-y-2.5">
                 <legend className="font-semibold">{t('onboarding.type.prompt', locale)}</legend>
-                <p className="text-sm text-muted-foreground">
-                  {t('onboarding.journey.chooseHelp', locale)}
-                </p>
+                {!staffAccount && (
+                  <p className="text-sm text-muted-foreground">
+                    {t('onboarding.journey.chooseHelp', locale)}
+                  </p>
+                )}
                 <div className="grid gap-2">
-                  {types.map((type) => {
+                  {availableTypes.map((type) => {
                     const key = type === 'INDIVIDUAL' ? 'individual' : 'legal';
                     const ProfileIcon = type === 'INDIVIDUAL' ? UserRound : Building2;
                     return (
@@ -184,7 +200,7 @@ function OnboardingContent({ accountId }: { accountId: string }) {
                           onChange={() => {
                             requestId.current = null;
                             setSelected((previous) =>
-                              types.filter((candidate) =>
+                              availableTypes.filter((candidate) =>
                                 candidate === type
                                   ? !previous.includes(type)
                                   : previous.includes(candidate)

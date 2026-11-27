@@ -196,8 +196,8 @@ it('keeps a staff account on its sole verified profile and preserves authorship 
   const sessionId = randomUUID();
   const csrf = randomUUID();
   await http.pool.query(
-    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
-     VALUES($1,$2,$3,$4,now()+interval '1 day',now()+interval '30 minutes')`,
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,operating_context,expires_at,idle_deadline)
+     VALUES($1,$2,$3,$4,'customer',now()+interval '1 day',now()+interval '30 minutes')`,
     [sessionId, userId, csrf, randomUUID()]
   );
   const attempted = await fetch(`${http.base}/api/onboarding/start`, {
@@ -207,7 +207,7 @@ it('keeps a staff account on its sole verified profile and preserves authorship 
       'X-CSRF-Token': csrf,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ profileType: 'LEGAL' }),
+    body: JSON.stringify({ profileType: 'INDIVIDUAL' }),
   });
   expect(attempted.status, await attempted.clone().text()).toBe(403);
   expect(

@@ -36,7 +36,9 @@ const transactionalClient = {
     if (sql.startsWith('SELECT session_id FROM sessions WHERE session_id=$1 AND user_id=$2'))
       return Promise.resolve({ rows: [{ session_id: 'session-1' }] });
     if (sql.startsWith('SELECT csrf_token, step_up_verified_at,'))
-      return Promise.resolve({ rows: [{ csrf_token: 'csrf', active: true }] });
+      return Promise.resolve({
+        rows: [{ csrf_token: 'csrf', active: true, operating_context: 'customer' }],
+      });
     return mockClient.query(sql, params);
   },
   release: mockClient.release,
